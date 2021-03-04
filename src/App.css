@@ -1,0 +1,57 @@
+.App {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.mapContainer {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.overlay {
+  width: 100%;
+  display: inline-flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  z-index: 1 !important;
+  padding-top: 1rem;
+  padding-left: 1rem;
+}
+.navbar {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+}
+.navbar .nav-item{
+  margin-right: 10px;
+}
+.navbar{
+  justify-content: flex-start !important;
+}
+.navbar-text {
+  padding-right: 1rem;
+}
+
+.overlay button,
+input {
+  margin-right: 1rem;
+}
+body {
+}
+.docs-story .css-11xgcgt{
+  z-index:10000;
+}
+.docs-story .css-1wjen9k{
+  min-height:400px;
+}
