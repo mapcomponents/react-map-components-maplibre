@@ -18,8 +18,7 @@ const MlCreatePdfButton = () => {
       <Button
         variant="light"
         onClick={() => {
-          mapContext.setLoadingMsg("Erzeuge Pdf");
-          createPdf(mapContext.map, mapContext.setLoading);
+          createPdf(mapContext.map, () => {});
         }}
       >
         <BiPrinter></BiPrinter>
