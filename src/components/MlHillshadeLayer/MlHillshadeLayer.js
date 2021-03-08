@@ -26,7 +26,6 @@ const MlHillshadeLayer = () => {
     if (!mapContext.map) return;
 
     return () => {
-      console.log("cleanup");
       componentCleanup();
     };
   }, []);
@@ -34,9 +33,6 @@ const MlHillshadeLayer = () => {
   useEffect(() => {
     if (!mapContext.map) return;
 
-    //
-    //
-    console.log("create hillshade");
     // cleanup fragments left in MapLibre-gl from previous component uses
     componentCleanup();
 
