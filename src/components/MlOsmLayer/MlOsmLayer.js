@@ -16,7 +16,6 @@ const MlOsmLayer = () => {
     if (!mapContext.map) return;
 
     return () => {
-      console.log("cleanup");
       if (
         mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)
       ) {

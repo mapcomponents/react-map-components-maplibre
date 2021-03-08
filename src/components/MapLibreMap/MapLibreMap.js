@@ -29,6 +29,8 @@ const MapLibreMap = (props) => {
         lat: 53.1409349,
         zoom: 10,
         container: mapContainer.current,
+        accessToken:
+          "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA",
       };
 
       map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
