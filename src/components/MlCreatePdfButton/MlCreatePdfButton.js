@@ -3,8 +3,8 @@ import { MapContext } from "react-map-components-core";
 
 import createPdf from "./lib/createPdf.js";
 
-import { BiPrinter } from "react-icons/bi";
-import Button from "react-bootstrap/Button";
+import PrinterIcon from "@material-ui/icons/Print";
+import Button from "@material-ui/core/Button";
 
 /**
  * MlCreatePdfButton returns a Button that will create a PDF version of the current map view (dimensions adjusted to fit Din A4 Paper).
@@ -16,12 +16,13 @@ const MlCreatePdfButton = () => {
   return (
     <>
       <Button
-        variant="light"
+        color="primary"
+        variant="contained"
         onClick={() => {
-          createPdf(mapContext.map, () => {});
+          createPdf(mapContext.map, null, () => {});
         }}
       >
-        <BiPrinter></BiPrinter>
+        <PrinterIcon />
       </Button>
     </>
   );

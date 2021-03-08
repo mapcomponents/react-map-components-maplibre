@@ -1,6 +1,8 @@
 import React from "react";
 
 import MlCreatePdfButton from "./MlCreatePdfButton";
+
+import TopToolbar from "../../ui_components/TopToolbar";
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -17,11 +19,9 @@ export default {
 };
 
 const Template = (args) => (
-  <>
-    <div className="navbar">
-      <MlCreatePdfButton />
-    </div>
-  </>
+  <TopToolbar>
+    <MlCreatePdfButton />
+  </TopToolbar>
 );
 
 // <MapLibreMap options={args.options} />
