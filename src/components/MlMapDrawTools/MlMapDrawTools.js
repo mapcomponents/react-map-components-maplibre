@@ -3,16 +3,17 @@ import "./MlMapDrawTools.css";
 
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
-//import CustomPolygonMode from "./custom-polygon-mode";
-//import CustomSelectMode from "./custom-select-mode";
-//import CustomDirectSelectMode from "./custom-direct-select-mode";
+import CustomPolygonMode from "./custom-polygon-mode";
+import CustomSelectMode from "./custom-select-mode";
+import CustomDirectSelectMode from "./custom-direct-select-mode";
 
 import { MapContext } from "react-map-components-core";
 
-import Nav from "react-bootstrap/Nav";
-//import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
+import DeleteIcon from "@material-ui/icons/DeleteForever";
+import Button from "@material-ui/core/Button";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 function MlMapDrawTools() {
   const draw = useRef(null);
@@ -56,12 +57,12 @@ function MlMapDrawTools() {
 
       draw.current = new MapboxDraw({
         displayControlsDefault: false,
-        //defaultMode: "custom_select",
+        defaultMode: "custom_select",
         modes: Object.assign(
           {
-            //            custom_polygon: CustomPolygonMode,
-            //            custom_select: CustomSelectMode,
-            //            custom_direct_select: CustomDirectSelectMode,
+            custom_polygon: CustomPolygonMode,
+            custom_select: CustomSelectMode,
+            custom_direct_select: CustomDirectSelectMode,
           },
           MapboxDraw.modes
         ),
@@ -132,79 +133,88 @@ function MlMapDrawTools() {
 
   return (
     <>
-      <Nav.Item as="li" key={1}>
-        <Button
-          variant={drawModeActive ? "warning" : "light"}
-          onClick={() => setDrawModeActive(!drawModeActive)}
-        >
-          Draw
-        </Button>
-      </Nav.Item>
+      <Button
+        color="primary"
+        variant={drawModeActive ? "contained" : "outlined"}
+        onClick={() => setDrawModeActive(!drawModeActive)}
+        style={{
+          marginLeft: "10px",
+        }}
+      >
+        Draw
+      </Button>
       {drawModeActive && (
         <>
-          <Nav.Item as="li" key={2}>
-            <Button
-              variant={
-                currentDrawMode === "custom_select" ||
-                currentDrawMode === "custom_direct_select"
-                  ? "warning"
-                  : "light"
-              }
-              onClick={() => setCurrentDrawMode("custom_select")}
-            >
-              Select
-            </Button>
-          </Nav.Item>
-          <Nav.Item as="li" key={4}>
-            <Button
-              variant="light"
-              onClick={() => {
-                localStorage.setItem("storedMapFeatures", "");
-                setStoredMapFeatures(null);
-                setDrawnFeatures([]);
-                draw.current.deleteAll();
-              }}
-            >
-              Clear
-            </Button>
-          </Nav.Item>
-          <Nav.Item as="li" key={3}>
-            <Button
-              variant={
-                currentDrawMode === "custom_polygon" ? "warning" : "light"
-              }
-              onClick={() =>
-                setCurrentDrawMode(
-                  currentDrawMode !== "custom_polygon"
-                    ? "custom_polygon"
-                    : "custom_select"
-                )
-              }
-            >
-              Polygon
-            </Button>
-          </Nav.Item>
+          <Button
+            variant={
+              currentDrawMode === "custom_select" ||
+              currentDrawMode === "custom_direct_select"
+                ? "contained"
+                : "outlined"
+            }
+            onClick={() => setCurrentDrawMode("custom_select")}
+            style={{
+              marginLeft: "10px",
+            }}
+          >
+            Select
+          </Button>
+          <Button
+            variant={
+              currentDrawMode === "custom_polygon" ? "contained" : "outlined"
+            }
+            onClick={() =>
+              setCurrentDrawMode(
+                currentDrawMode !== "custom_polygon"
+                  ? "custom_polygon"
+                  : "custom_select"
+              )
+            }
+            style={{
+              marginLeft: "10px",
+            }}
+          >
+            Polygon
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              localStorage.setItem("storedMapFeatures", "");
+              setStoredMapFeatures(null);
+              setDrawnFeatures([]);
+              draw.current.deleteAll();
+            }}
+            style={{
+              marginLeft: "10px",
+            }}
+          >
+            <DeleteIcon></DeleteIcon>
+          </Button>
           <div
             style={{
               position: "absolute",
-              left: "17px",
-              top: "60px",
+              left: "34px",
+              top: "96px",
               backgroundColor: "#f8f9fa",
               borderRadius: "4px",
               width: "150px",
               height: "200px",
             }}
           >
-            <ListGroup>
+            <List dense={false}>
               {drawnFeatures.map((feature, id) => (
-                <ListGroup.Item
+                <ListItem
                   key={id}
-                  active={selectedFeatureId === feature.id}
+                  style={{
+                    color: "#000",
+                    backgroundColor:
+                      selectedFeatureId === feature.id ? "#00ffff" : "#fff",
+                  }}
                 >
-                  {feature.type} {id}
-                </ListGroup.Item>
+                  <ListItemText primary={feature.type} secondary={id} />
+                </ListItem>
               ))}
-            </ListGroup>
+            </List>
           </div>
         </>
       )}

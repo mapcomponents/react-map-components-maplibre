@@ -2,6 +2,7 @@ import React from "react";
 
 import MlMapDrawTools from "./MlMapDrawTools";
 
+import TopToolbar from "../../ui_components/TopToolbar";
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -13,9 +14,9 @@ export default {
 
 const Template = (args) => {
   return (
-    <div className="navbar">
+    <TopToolbar>
       <MlMapDrawTools />
-    </div>
+    </TopToolbar>
   );
 };
 
