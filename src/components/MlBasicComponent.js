@@ -16,7 +16,7 @@ const MlBasicComponent = (props) => {
       // e.g.: remove the layer
       // mapContext.map.removeLayer(layerRef.current);
     };
-  }, []);
+  });
 
   useEffect(() => {
     if (!mapContext.map) return;

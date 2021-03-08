@@ -9,20 +9,34 @@ import Button from "@material-ui/core/Button";
 const MlOsmLayer = () => {
   const mapContext = useContext(MapContext);
 
-  const layerRef = useRef(null);
   const [showLayer, setShowLayer] = useState(true);
+  const idPostfixRef = useRef(new Date().getTime());
 
   useEffect(() => {
     if (!mapContext.map) return;
 
-    return () => {};
+    return () => {
+      console.log("cleanup");
+      if (
+        mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)
+      ) {
+        mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
+      }
+      if (
+        mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)
+      ) {
+        mapContext.map.removeSource(
+          "raster-tile-source-" + idPostfixRef.current
+        );
+      }
+    };
   }, []);
 
   useEffect(() => {
     if (!mapContext.map) return;
 
     // Add the new layer to the openlayers instance once it is available
-    mapContext.map.addSource("raster-tiles", {
+    mapContext.map.addSource("raster-tile-source-" + idPostfixRef.current, {
       type: "raster",
       tiles: [
         "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
@@ -32,27 +46,31 @@ const MlOsmLayer = () => {
         'Map tiles by <a target="_top" rel="noopener" href="http://stamen.com">Stamen Design</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>',
     });
     mapContext.map.addLayer({
-      id: "simple-tiles",
+      id: "raster-tile-layer-" + idPostfixRef.current,
       type: "raster",
-      source: "raster-tiles",
+      source: "raster-tile-source-" + idPostfixRef.current,
       minzoom: 0,
       maxzoom: 22,
     });
-    //mapContext.map.addLayer({
-    //     style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
-    // /     center: [8.607, 53.1409349],
-    // /     maxBounds: [
-    // /       [1.40625, 43.452919],
-    // /       [17.797852, 55.973798],
-    // /     ],
-    // /   });
   }, [mapContext.map]);
 
   useEffect(() => {
-    if (!layerRef.current) return;
+    if (!mapContext.map) return;
 
-    // Control layer visibility using the state variable "showLayer"
-    layerRef.current.setVisible(showLayer);
+    // toggle layer visibility by changing the layout object's visibility property
+    if (showLayer) {
+      mapContext.map.setLayoutProperty(
+        "raster-tile-layer-" + idPostfixRef.current,
+        "visibility",
+        "visible"
+      );
+    } else {
+      mapContext.map.setLayoutProperty(
+        "raster-tile-layer-" + idPostfixRef.current,
+        "visibility",
+        "none"
+      );
+    }
   }, [showLayer]);
 
   return (

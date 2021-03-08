@@ -1,6 +1,8 @@
 import React from "react";
 
 import MlOsmLayer from "./MlOsmLayer";
+import TopToolbar from "../../ui_components/TopToolbar";
+
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -16,7 +18,11 @@ export default {
   },
 };
 
-const Template = (args) => <MlOsmLayer />;
+const Template = () => (
+  <TopToolbar>
+    <MlOsmLayer />
+  </TopToolbar>
+);
 
 // <MapLibreMap options={args.options} />
 export const ExampleConfig = Template.bind({});
