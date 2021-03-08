@@ -26,9 +26,6 @@ const Template = (args) => (
 
 // <MapLibreMap options={args.options} />
 export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {
-  storyshots: { disable: true },
-};
 //ExampleConfig.args = {
 //  //  options: {
 //  //    style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",

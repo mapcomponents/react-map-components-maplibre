@@ -3,9 +3,9 @@ import "./MlMapDrawTools.css";
 
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import CustomPolygonMode from "./custom-polygon-mode";
-import CustomSelectMode from "./custom-select-mode";
-import CustomDirectSelectMode from "./custom-direct-select-mode";
+//import CustomPolygonMode from "./custom-polygon-mode";
+//import CustomSelectMode from "./custom-select-mode";
+//import CustomDirectSelectMode from "./custom-direct-select-mode";
 
 import { MapContext } from "react-map-components-core";
 
@@ -56,12 +56,12 @@ function MlMapDrawTools() {
 
       draw.current = new MapboxDraw({
         displayControlsDefault: false,
-        defaultMode: "custom_select",
+        //defaultMode: "custom_select",
         modes: Object.assign(
           {
-            custom_polygon: CustomPolygonMode,
-            custom_select: CustomSelectMode,
-            custom_direct_select: CustomDirectSelectMode,
+            //            custom_polygon: CustomPolygonMode,
+            //            custom_select: CustomSelectMode,
+            //            custom_direct_select: CustomDirectSelectMode,
           },
           MapboxDraw.modes
         ),

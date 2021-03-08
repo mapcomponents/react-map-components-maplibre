@@ -22,26 +22,28 @@ const MapLibreMap = (props) => {
   useEffect(() => {
     mapContext.setLoading(true);
 
-    // TODO: adjust defaults
-    let defaultOptions = {
-      lng: 8.607,
-      lat: 53.1409349,
-      zoom: 10,
-      container: mapContainer.current,
-    };
+    if (mapContainer.current) {
+      // TODO: adjust defaults
+      let defaultOptions = {
+        lng: 8.607,
+        lat: 53.1409349,
+        zoom: 10,
+        container: mapContainer.current,
+      };
 
-    map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
+      map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
 
-    map.current.on("load", () => {
-      mapContext.setMap(map.current);
-    });
+      map.current.on("load", () => {
+        mapContext.setMap(map.current);
+      });
 
-    window.map = map.current;
+      window.map = map.current;
+    }
 
     return () => {
       map.current.remove();
     };
-  }, []);
+  }, [mapContainer]);
 
   return <div ref={mapContainer} className="mapContainer" />;
 };

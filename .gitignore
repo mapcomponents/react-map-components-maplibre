@@ -11,6 +11,7 @@
 
 # production
 /build
+/src/__image_snapshots__
 
 # misc
 .DS_Store

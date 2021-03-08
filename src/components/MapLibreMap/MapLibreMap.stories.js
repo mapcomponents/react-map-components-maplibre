@@ -33,6 +33,4 @@ ExampleConfig.args = {
     ],
   },
 };
-ExampleConfig.parameters = {
-  storyshots: { disable: true },
-};
+ExampleConfig.parameters = {};

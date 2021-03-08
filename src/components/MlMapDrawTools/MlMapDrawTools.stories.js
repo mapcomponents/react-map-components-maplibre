@@ -9,11 +9,9 @@ export default {
   title: "MapComponents/MlMapDrawTools",
   component: MlMapDrawTools,
   argTypes: {},
-  storyshots: { disable: true },
 };
 
 const Template = (args) => {
-  console.log(MlMapDrawTools);
   return (
     <div className="navbar">
       <MlMapDrawTools />
@@ -22,7 +20,7 @@ const Template = (args) => {
 };
 
 export const ExampleConfig = Template.bind({});
-ExampleConfig.storyshots = { disable: true };
+
 ExampleConfig.args = {
   //  colora: "#ffffff",
   //  options: {
