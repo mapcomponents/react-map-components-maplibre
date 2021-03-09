@@ -10,7 +10,9 @@ export const decorators = [
       <MapLibreMap
         options={{
           style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
-          center: [8.607, 53.1409349],
+          //center: [8.607, 53.1409349],
+          zoom: 13,
+          center: [7.0851268, 50.73884],
           maxBounds: [
             [1.40625, 43.452919],
             [17.797852, 55.973798],
