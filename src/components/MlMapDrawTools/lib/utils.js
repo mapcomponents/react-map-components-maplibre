@@ -40,7 +40,10 @@ const drawUtils = {
   },
   getDrawInstance: (map) => {
     for (var i = map._controls.length - 1; i >= 0; i--) {
-      if (map._controls[i].constructor.name === "MapboxDraw") {
+      if (
+        map._controls[i].constructor.name === "MapboxDraw" ||
+        map._controls[i].constructor.name === "ye"
+      ) {
         return map._controls[i];
       }
     }

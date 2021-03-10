@@ -27,7 +27,7 @@ function MlMapDrawTools() {
   const [storedMapFeatures, setStoredMapFeatures] = useState(null);
 
   const [drawnFeatures, setDrawnFeatures] = useState([]);
-  const [drawModeActive, setDrawModeActive] = useState(false);
+  const [drawModeActive, setDrawModeActive] = useState(true);
   const [currentDrawMode, setCurrentDrawMode] = useState("custom_select");
   const [selectedFeatureId, setSelectedFeatureId] = useState("");
 
@@ -137,9 +137,7 @@ function MlMapDrawTools() {
         color="primary"
         variant={drawModeActive ? "contained" : "outlined"}
         onClick={() => setDrawModeActive(!drawModeActive)}
-        style={{
-          marginLeft: "10px",
-        }}
+        style={{}}
       >
         Draw
       </Button>
@@ -153,9 +151,7 @@ function MlMapDrawTools() {
                 : "outlined"
             }
             onClick={() => setCurrentDrawMode("custom_select")}
-            style={{
-              marginLeft: "10px",
-            }}
+            style={{}}
           >
             Select
           </Button>
@@ -170,9 +166,7 @@ function MlMapDrawTools() {
                   : "custom_select"
               )
             }
-            style={{
-              marginLeft: "10px",
-            }}
+            style={{}}
           >
             Polygon
           </Button>
@@ -184,9 +178,7 @@ function MlMapDrawTools() {
               setDrawnFeatures([]);
               draw.current.deleteAll();
             }}
-            style={{
-              marginLeft: "10px",
-            }}
+            style={{}}
           >
             <DeleteIcon></DeleteIcon>
           </Button>

@@ -35,6 +35,13 @@ const MlOsmLayer = () => {
     if (!mapContext.map) return;
 
     // Add the new layer to the openlayers instance once it is available
+    //mapContext.map.addSource("vector-tile-source-" + idPostfixRef.current, {
+    //  type: "vector",
+    //  style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
+    //  tileSize: 512,
+    //  attribution: "",
+    //});
+
     mapContext.map.addSource("raster-tile-source-" + idPostfixRef.current, {
       type: "raster",
       tiles: [

@@ -27,31 +27,6 @@
   padding-top: 1rem;
   padding-left: 1rem;
 }
-.navbar {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 1000;
-}
-.navbar .nav-item{
-  margin-right: 10px;
-}
-.navbar{
-  justify-content: flex-start !important;
-}
-.navbar-text {
-  padding-right: 1rem;
-}
-
-.overlay button,
-input {
-  margin-right: 1rem;
-}
-body {
-}
-.docs-story .css-11xgcgt{
-  z-index:10000;
-}
-.docs-story .css-1wjen9k{
-  min-height:400px;
+.MuiToolbar-root .MuiButtonBase-root{
+  margin-right: 8px;
 }
