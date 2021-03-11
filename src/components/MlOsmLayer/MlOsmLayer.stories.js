@@ -3,6 +3,8 @@ import React from "react";
 import MlOsmLayer from "./MlOsmLayer";
 import TopToolbar from "../../ui_components/TopToolbar";
 
+import mapContextDecorator from "../../decorators/MapContextDecorator";
+
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -16,6 +18,7 @@ export default {
       },
     },
   },
+  decorators: mapContextDecorator,
 };
 
 const Template = () => (

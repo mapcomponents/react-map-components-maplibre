@@ -3,6 +3,9 @@ import React from "react";
 import MlMapDrawTools from "./MlMapDrawTools";
 
 import TopToolbar from "../../ui_components/TopToolbar";
+
+import mapContextDecorator from "../../decorators/MapContextDecorator";
+
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -10,6 +13,7 @@ export default {
   title: "MapComponents/MlMapDrawTools",
   component: MlMapDrawTools,
   argTypes: {},
+  decorators: mapContextDecorator,
 };
 
 const Template = (args) => {

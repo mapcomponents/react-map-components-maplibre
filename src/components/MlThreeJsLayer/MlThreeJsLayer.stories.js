@@ -2,6 +2,9 @@ import React from "react";
 
 import TopToolbar from "../../ui_components/TopToolbar";
 import MlThreeJsLayer from "./MlThreeJsLayer";
+
+import mapContextDecorator from "../../decorators/MapContextDecorator";
+
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -15,6 +18,7 @@ export default {
       },
     },
   },
+  decorators: mapContextDecorator,
 };
 
 const Template = (args) => (

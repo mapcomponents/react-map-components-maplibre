@@ -7,11 +7,14 @@ import TopToolbar from "../../ui_components/TopToolbar";
 import { MlOsmLayer } from "../";
 import MlDraggableFeatureLayer from "./MlDraggableFeatureLayer";
 
+import mapContextDecorator from "../../decorators/MapContextDecorator";
+
 import "../../App.css";
 
 let MlDraggableFeatureLayerStories = {
   title: "MapComponents/MlDraggableFeatureLayer",
   component: MlDraggableFeatureLayer,
+  decorators: mapContextDecorator,
 };
 
 export default MlDraggableFeatureLayerStories;

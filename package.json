@@ -51,7 +51,7 @@
       "last 1 safari version"
     ]
   },
-  "prettier":{
+  "prettier": {
     "tabWidth": 2,
     "printWidth": 85,
     "arrowParens": "always"
