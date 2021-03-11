@@ -51,6 +51,11 @@
       "last 1 safari version"
     ]
   },
+  "prettier":{
+    "tabWidth": 2,
+    "printWidth": 85,
+    "arrowParens": "always"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.13.9",
     "@storybook/addon-actions": "^6.1.15",
