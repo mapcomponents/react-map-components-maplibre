@@ -26,9 +26,9 @@ initStoryshots({
      * set the page viewport size
      * wait before taking screenshot to give uncontrollable animations time to complete (Highcharts)
      */
-    //beforeScreenshot: async (page, { context: { kind, story }, url }) => {
-    //  //await page.waitFor(10000);
-    //},
+    beforeScreenshot: async (page, { context: { kind, story }, url }) => {
+      await page.waitForTimeout(10000);
+    },
 
     /**
      * Emulate a collection of viewport dimensions
