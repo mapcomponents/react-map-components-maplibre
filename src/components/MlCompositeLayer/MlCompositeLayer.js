@@ -38,43 +38,46 @@ const MlCompositeLayer = () => {
       if (!mapContext.map.getLayer(layerName)) {
         console.log("style loaded");
         console.log(mapContext.map.style.stylesheet.name);
-        mapContext.map.addLayer({
-          id: layerName,
-          type: "fill-extrusion",
-          source: "openmaptiles",
-          "source-layer": "building",
-          minzoom: 14,
-          paint: {
-            "fill-extrusion-color": "hsl(35, 8%, 85%)",
-            "fill-extrusion-height": {
-              property: "render_height",
-              type: "identity",
+        mapContext.map.addLayer(
+          {
+            id: layerName,
+            type: "fill-extrusion",
+            source: "openmaptiles",
+            "source-layer": "building",
+            minzoom: 14,
+            paint: {
+              "fill-extrusion-color": "hsl(196, 61%, 83%)",
+              "fill-extrusion-height": {
+                property: "render_height",
+                type: "identity",
+              },
+              "fill-extrusion-base": {
+                property: "render_min_height",
+                type: "identity",
+              },
+              "fill-extrusion-opacity": 0.4,
             },
-            "fill-extrusion-base": {
-              property: "render_min_height",
-              type: "identity",
-            },
-            "fill-extrusion-opacity": 0.8,
+            //    id: "3d-buildings",
+            //    source: "openmaptiles",
+            //    "source-layer": "building",
+            //    //filter: ["==", "extrude", "true"],
+            //    type: "fill-extrusion",
+            //    minzoom: 15,
+            //    paint: {
+            //      "fill-extrusion-color": "hsl(35, 8%, 85%)",
+            //      "fill-extrusion-height": {
+            //        property: "render_height",
+            //        type: "identity",
+            //      },
+            //      "fill-extrusion-base": {
+            //        property: "render_min_height",
+            //        type: "identity",
+            //      },
+            //      "fill-extrusion-opacity": 0.8,
+            //    },
           },
-          //    id: "3d-buildings",
-          //    source: "openmaptiles",
-          //    "source-layer": "building",
-          //    //filter: ["==", "extrude", "true"],
-          //    type: "fill-extrusion",
-          //    minzoom: 15,
-          //    paint: {
-          //      "fill-extrusion-color": "hsl(35, 8%, 85%)",
-          //      "fill-extrusion-height": {
-          //        property: "render_height",
-          //        type: "identity",
-          //      },
-          //      "fill-extrusion-base": {
-          //        property: "render_min_height",
-          //        type: "identity",
-          //      },
-          //      "fill-extrusion-opacity": 0.8,
-          //    },
-        });
+          "waterway-name"
+        );
       }
 
       //setTimeout(() => {

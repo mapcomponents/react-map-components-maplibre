@@ -18,7 +18,6 @@ export default MlDraggableFeatureLayerStories;
 
 const Template = () => (
   <TopToolbar>
-    <MlOsmLayer />
     <MlDraggableFeatureLayer />
   </TopToolbar>
 );

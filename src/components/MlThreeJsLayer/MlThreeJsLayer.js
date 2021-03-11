@@ -163,7 +163,7 @@ const MlThreeJsLayer = () => {
       mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
     }
     mapContext.map.setCenter([7.132122000552613, 50.716405378037706]);
-    mapContext.map.setZoom(16);
+    mapContext.map.setZoom(15);
     mapContext.map.setPitch(45);
   }, [mapContext.map]);
 

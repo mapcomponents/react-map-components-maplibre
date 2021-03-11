@@ -235,9 +235,11 @@ const MlDraggableFeatureLayer = (props) => {
         color="primary"
         variant={flightRangeVisible ? "contained" : "outlined"}
         onClick={() => {
-          setFlightRangeVisible(!flightRangeVisible);
-          flightRangeVisible_.current = !flightRangeVisible;
-          vectorSourceRef.current.changed();
+          if (vectorSourceRef.current) {
+            setFlightRangeVisible(!flightRangeVisible);
+            flightRangeVisible_.current = !flightRangeVisible;
+            vectorSourceRef.current.changed();
+          }
         }}
       >
         Fluggebiet zeigen
