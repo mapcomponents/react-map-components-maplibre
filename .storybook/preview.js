@@ -14,6 +14,7 @@ export const decorators = [
           zoom: 14.5,
           //pitch: 45,
           style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
+          //style:"https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
           //center: [8.607, 53.1409349],
           //          zoom: 13,
           center: [7.0851268, 50.73884],
