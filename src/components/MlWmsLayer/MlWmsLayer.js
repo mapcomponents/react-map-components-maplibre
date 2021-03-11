@@ -16,9 +16,7 @@ const MlWmsLayer = (props) => {
     if (mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
       mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
     }
-    if (
-      mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)
-    ) {
+    if (mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)) {
       mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
     }
   };
