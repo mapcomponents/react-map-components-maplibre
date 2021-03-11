@@ -12,10 +12,11 @@ const MlCompositeLayer = () => {
   const layerRef = useRef(null);
   const [showLayer, setShowLayer] = useState(true);
   const idPostfixRef = useRef(new Date().getTime());
+  const layerName = "building-3d";
 
   const componentCleanup = () => {
-    if (mapContext.map.getLayer("3d-buildings")) {
-      mapContext.map.removeLayer("3d-buildings");
+    if (mapContext.map.getLayer(layerName)) {
+      mapContext.map.removeLayer(layerName);
     }
   };
 
@@ -33,50 +34,73 @@ const MlCompositeLayer = () => {
     // cleanup fragments left in MapLibre-gl from previous component uses
     componentCleanup();
 
-    mapContext.map.setStyle("mapbox://styles/mapbox/light-v10");
-    mapContext.map.addLayer({
-      id: "3d-buildings",
-      source: "composite",
-      "source-layer": "building",
-      filter: ["==", "extrude", "true"],
-      type: "fill-extrusion",
-      minzoom: 15,
-      paint: {
-        "fill-extrusion-color": "#aaa",
+    let addCompositeLayer = () => {
+      if (!mapContext.map.getLayer(layerName)) {
+        console.log("style loaded");
+        console.log(mapContext.map.style.stylesheet.name);
+        mapContext.map.addLayer({
+          id: layerName,
+          type: "fill-extrusion",
+          source: "openmaptiles",
+          "source-layer": "building",
+          minzoom: 14,
+          paint: {
+            "fill-extrusion-color": "hsl(35, 8%, 85%)",
+            "fill-extrusion-height": {
+              property: "render_height",
+              type: "identity",
+            },
+            "fill-extrusion-base": {
+              property: "render_min_height",
+              type: "identity",
+            },
+            "fill-extrusion-opacity": 0.8,
+          },
+          //    id: "3d-buildings",
+          //    source: "openmaptiles",
+          //    "source-layer": "building",
+          //    //filter: ["==", "extrude", "true"],
+          //    type: "fill-extrusion",
+          //    minzoom: 15,
+          //    paint: {
+          //      "fill-extrusion-color": "hsl(35, 8%, 85%)",
+          //      "fill-extrusion-height": {
+          //        property: "render_height",
+          //        type: "identity",
+          //      },
+          //      "fill-extrusion-base": {
+          //        property: "render_min_height",
+          //        type: "identity",
+          //      },
+          //      "fill-extrusion-opacity": 0.8,
+          //    },
+        });
+      }
 
-        // use an 'interpolate' expression to add a smooth transition effect to the
-        // buildings as the user zooms in
-        "fill-extrusion-height": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          15,
-          0,
-          15.05,
-          ["get", "height"],
-        ],
-        "fill-extrusion-base": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          15,
-          0,
-          15.05,
-          ["get", "min_height"],
-        ],
-        "fill-extrusion-opacity": 0.6,
-      },
-    });
+      //setTimeout(() => {
+      //  mapContext.map.setStyle(
+      //    "https://wms.wheregroup.com/tileserver/style/osm-bright.json"
+      //  );
+      //}, 5000);
+    };
+
+    //mapContext.map.once("styledata", addCompositeLayer);
+    //mapContext.map.setStyle("mapbox://styles/mapbox/light-v10");
+    addCompositeLayer();
+    mapContext.map.setZoom(16.5);
+    mapContext.map.setPitch(45);
   }, [mapContext.map]);
 
   useEffect(() => {
     if (!mapContext.map) return;
 
-    // toggle layer visibility by changing the layout object's visibility property
-    if (showLayer) {
-      mapContext.map.setLayoutProperty("3d-buildings", "visibility", "visible");
-    } else {
-      mapContext.map.setLayoutProperty("3d-buildings", "visibility", "none");
+    if (mapContext.map.getLayer(layerName)) {
+      // toggle layer visibility by changing the layout object's visibility property
+      if (showLayer) {
+        mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
+      } else {
+        mapContext.map.setLayoutProperty(layerName, "visibility", "none");
+      }
     }
     //
   }, [showLayer, mapContext]);
