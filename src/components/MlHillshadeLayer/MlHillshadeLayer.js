@@ -46,6 +46,8 @@ const MlHillshadeLayer = () => {
       type: "hillshade",
     });
     mapContext.map.setLayoutProperty("hillshading", "visibility", "visible");
+    mapContext.map.setZoom(10);
+    //mapContext.map.setPitch(45);
   }, [mapContext.map]);
 
   useEffect(() => {
