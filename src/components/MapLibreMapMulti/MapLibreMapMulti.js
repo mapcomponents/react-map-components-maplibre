@@ -11,7 +11,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
  * MapLibreMap returns the html node that will be used by MapLibre-gl to render the map.
  * This Component must be kept unaware of any related components that interact with the MapLibre-gl instance.
  */
-const MapLibreMap = (props) => {
+const MapLibreMapMulti = (props) => {
   const map = useRef(null);
   const mapContainer = useRef(null);
 
@@ -34,10 +34,8 @@ const MapLibreMap = (props) => {
       map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
 
       map.current.on("load", () => {
-        mapContext.setMap(map.current);
+        mapContext.registerMap(props.map_id, map.current);
       });
-
-      window.map = map.current;
     }
 
     return () => {
@@ -48,8 +46,8 @@ const MapLibreMap = (props) => {
   return <div ref={mapContainer} className="mapContainer" />;
 };
 
-MapLibreMap.propTypes = {
+MapLibreMapMulti.propTypes = {
   options: PropTypes.object,
 };
 
-export default MapLibreMap;
+export default MapLibreMapMulti;
