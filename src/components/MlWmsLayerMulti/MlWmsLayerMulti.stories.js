@@ -24,6 +24,7 @@ const Template = (args) => (
       url={args.url}
       layer={args.layer}
       sourceOptions={args.sourceOptions}
+      mapId="map_2"
     />
   </TopToolbar>
 );

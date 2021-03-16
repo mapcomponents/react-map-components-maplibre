@@ -1,11 +1,11 @@
 import React from "react";
 
-import { MultiMapComponentsProvider } from "react-map-components-core";
+import { MapComponentsProvider } from "react-map-components-core";
 import MapLibreMapMulti from "../components/MapLibreMapMulti/MapLibreMapMulti";
 
 const decorators = [
   (Story) => (
-    <MultiMapComponentsProvider>
+    <MapComponentsProvider>
       <Story />
       <div className="maps">
         <MapLibreMapMulti
@@ -45,7 +45,7 @@ const decorators = [
           }}
         />
       </div>
-    </MultiMapComponentsProvider>
+    </MapComponentsProvider>
   ),
 ];
 

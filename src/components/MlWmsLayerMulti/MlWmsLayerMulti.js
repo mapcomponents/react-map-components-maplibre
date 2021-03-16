@@ -12,17 +12,42 @@ const MlWmsLayerMulti = (props) => {
   const [showLayer, setShowLayer] = useState(true);
   const idPostfixRef = useRef(new Date().getTime());
 
+  const mapExists = () => {
+    if (!props.mapId) {
+      return false;
+    }
+    if (mapContext.mapIds.indexOf(props.mapId) === -1) {
+      return false;
+    }
+
+    return true;
+  };
+
   const cleanup = () => {
-    //    if (mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
-    //      mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
-    //    }
-    //    if (mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)) {
-    //      mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
-    //    }
+    if (mapExists()) {
+      if (
+        mapContext.maps[props.mapId].getLayer(
+          "raster-tile-layer-" + idPostfixRef.current
+        )
+      ) {
+        mapContext.maps[props.mapId].removeLayer(
+          "raster-tile-layer-" + idPostfixRef.current
+        );
+      }
+      if (
+        mapContext.maps[props.mapId].getSource(
+          "raster-tile-source-" + idPostfixRef.current
+        )
+      ) {
+        mapContext.maps[props.mapId].removeSource(
+          "raster-tile-source-" + idPostfixRef.current
+        );
+      }
+    }
   };
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapExists()) return;
 
     return () => {
       cleanup();
@@ -30,23 +55,29 @@ const MlWmsLayerMulti = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    console.log(mapContext);
+    if (!mapExists()) return;
 
     cleanup();
 
+    console.log("HALLO");
     // Add the new layer to the openlayers instance once it is available
-    mapContext.map.addSource("raster-tile-source-" + idPostfixRef.current, {
-      type: "raster",
-      tiles: [
-        props.url +
-          "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" +
-          props.layer,
-      ],
-      tileSize: 256,
-      attribution: "",
-      //...props.sourceOptions,
-    });
-    mapContext.map.addLayer({
+    mapContext.maps[props.mapId].addSource(
+      "raster-tile-source-" + idPostfixRef.current,
+      {
+        type: "raster",
+        tiles: [
+          props.url +
+            "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" +
+            props.layer,
+        ],
+        tileSize: 256,
+        attribution: "",
+        //...props.sourceOptions,
+      }
+    );
+
+    mapContext.maps[props.mapId].addLayer({
       id: "raster-tile-layer-" + idPostfixRef.current,
       type: "raster",
       source: "raster-tile-source-" + idPostfixRef.current,
@@ -54,24 +85,24 @@ const MlWmsLayerMulti = (props) => {
       maxzoom: 10,
       ...props.sourceOptions,
     });
-  }, [mapContext.map]);
+  }, [mapContext.mapIds]);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapExists()) return;
 
     // toggle layer visibility by changing the layout object's visibility property
     if (showLayer) {
-      //      mapContext.map.setLayoutProperty(
-      //        "raster-tile-layer-" + idPostfixRef.current,
-      //        "visibility",
-      //        "visible"
-      //      );
+      mapContext.maps[props.mapId].setLayoutProperty(
+        "raster-tile-layer-" + idPostfixRef.current,
+        "visibility",
+        "visible"
+      );
     } else {
-      //      mapContext.map.setLayoutProperty(
-      //        "raster-tile-layer-" + idPostfixRef.current,
-      //        "visibility",
-      //        "none"
-      //      );
+      mapContext.maps[props.mapId].setLayoutProperty(
+        "raster-tile-layer-" + idPostfixRef.current,
+        "visibility",
+        "none"
+      );
     }
   }, [showLayer]);
 

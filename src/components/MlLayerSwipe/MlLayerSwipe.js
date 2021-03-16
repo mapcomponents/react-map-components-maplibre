@@ -1,4 +1,6 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
+import compare from "mapbox-gl-compare";
+import "./style.css";
 import { MapContext } from "react-map-components-core";
 
 import Button from "@material-ui/core/Button";
@@ -12,17 +14,27 @@ const MlLayerSwipe = (props) => {
   const [showLayer, setShowLayer] = useState(true);
   const idPostfixRef = useRef(new Date().getTime());
 
-  const cleanup = () => {
-    if (mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
-      mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
+  const mapExists = () => {
+    if (!props.map1Id || !props.map2Id) {
+      return false;
     }
-    if (mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)) {
-      mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
+    if (
+      mapContext.mapIds.indexOf(props.map1Id) === -1 ||
+      mapContext.mapIds.indexOf(props.map2Id) === -1
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const cleanup = () => {
+    if (mapExists()) {
     }
   };
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapExists()) return;
 
     return () => {
       cleanup();
@@ -30,50 +42,23 @@ const MlLayerSwipe = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    console.log("COMPARE 1");
+    console.log(mapContext.newMapTrigger);
+    console.log(JSON.stringify(mapContext.mapIds));
+    if (!mapExists()) return;
 
-    cleanup();
+    console.log("COMPARE 2");
 
-    // Add the new layer to the openlayers instance once it is available
-    //    mapContext.map.addSource("raster-tile-source-" + idPostfixRef.current, {
-    //      type: "raster",
-    //      tiles: [
-    //        props.url +
-    //          "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" +
-    //          props.layer,
-    //      ],
-    //      tileSize: 256,
-    //      attribution: "",
-    //      //...props.sourceOptions,
-    //    });
-    //    mapContext.map.addLayer({
-    //      id: "raster-tile-layer-" + idPostfixRef.current,
-    //      type: "raster",
-    //      source: "raster-tile-source-" + idPostfixRef.current,
-    //      minzoom: 0,
-    //      maxzoom: 10,
-    //      ...props.sourceOptions,
-    //    });
-  }, [mapContext.map]);
-
-  useEffect(() => {
-    if (!mapContext.map) return;
-
-    // toggle layer visibility by changing the layout object's visibility property
-    if (showLayer) {
-      mapContext.map.setLayoutProperty(
-        "raster-tile-layer-" + idPostfixRef.current,
-        "visibility",
-        "visible"
-      );
-    } else {
-      mapContext.map.setLayoutProperty(
-        "raster-tile-layer-" + idPostfixRef.current,
-        "visibility",
-        "none"
-      );
-    }
-  }, [showLayer]);
+    window.compare = new compare(
+      mapContext.maps[props.map1Id],
+      mapContext.maps[props.map2Id],
+      ".maps",
+      {
+        // Set this to enable comparing two maps by mouse movement:
+        // mousemove: true
+      }
+    );
+  }, [mapContext.mapIds]);
 
   return (
     <Button
@@ -81,7 +66,7 @@ const MlLayerSwipe = (props) => {
       variant={showLayer ? "contained" : "outlined"}
       onClick={() => setShowLayer(!showLayer)}
     >
-      WMS
+      Layer Swipe
     </Button>
   );
 };
