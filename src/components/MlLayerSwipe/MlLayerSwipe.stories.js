@@ -1,6 +1,7 @@
 import React from "react";
 
 import MlLayerSwipe from "./MlLayerSwipe";
+import MlWmsLayerMulti from "../MlWmsLayerMulti/MlWmsLayerMulti";
 import TopToolbar from "../../ui_components/TopToolbar";
 
 import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
@@ -20,6 +21,15 @@ export default {
 
 const Template = (args) => (
   <TopToolbar>
+    <MlWmsLayerMulti
+      url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
+      layer="nw_uraufnahme_rw"
+      sourceOptions={{
+        minzoom: 13,
+        maxzoom: 20,
+      }}
+      mapId="map_1"
+    />
     <MlLayerSwipe map1Id="map_1" map2Id="map_2" />
   </TopToolbar>
 );

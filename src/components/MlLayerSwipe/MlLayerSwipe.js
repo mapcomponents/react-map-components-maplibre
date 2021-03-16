@@ -12,7 +12,7 @@ const MlLayerSwipe = (props) => {
   const mapContext = useContext(MapContext);
 
   const [showLayer, setShowLayer] = useState(true);
-  const idPostfixRef = useRef(new Date().getTime());
+  const compareRef = useRef(null);
 
   const mapExists = () => {
     if (!props.map1Id || !props.map2Id) {
@@ -29,16 +29,16 @@ const MlLayerSwipe = (props) => {
   };
 
   const cleanup = () => {
-    if (mapExists()) {
+    if (compareRef.current) {
+      compareRef.current.remove();
+      compareRef.current = null;
     }
   };
 
   useEffect(() => {
     if (!mapExists()) return;
 
-    return () => {
-      cleanup();
-    };
+    return cleanup;
   }, []);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const MlLayerSwipe = (props) => {
 
     console.log("COMPARE 2");
 
-    window.compare = new compare(
+    compareRef.current = new compare(
       mapContext.maps[props.map1Id],
       mapContext.maps[props.map2Id],
       ".maps",

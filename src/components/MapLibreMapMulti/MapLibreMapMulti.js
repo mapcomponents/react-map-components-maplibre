@@ -40,6 +40,7 @@ const MapLibreMapMulti = (props) => {
 
     return () => {
       map.current.remove();
+      map.current = null;
     };
   }, [mapContainer]);
 
