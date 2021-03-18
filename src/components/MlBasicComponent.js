@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useCallback } from "react";
 
 import { MapContext } from "react-map-components-core";
 
@@ -18,14 +18,14 @@ const MlBasicComponent = (props) => {
     return null;
   };
 
-  const mapExists = () => {
+  const mapExists = useCallback(() => {
     if (props.mapId && mapContext.mapIds.indexOf(props.mapId) === -1) {
       return false;
     } else if (!props.mapId && !mapContext.map) {
       return false;
     }
     return true;
-  };
+  }, [props, mapContext]);
 
   useEffect(() => {
     if (!mapExists()) return;
@@ -41,7 +41,7 @@ const MlBasicComponent = (props) => {
     if (!mapExists()) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance
-  }, [mapContext.mapIds]);
+  }, [mapContext.mapIds, mapExists]);
 
   return <></>;
 };
