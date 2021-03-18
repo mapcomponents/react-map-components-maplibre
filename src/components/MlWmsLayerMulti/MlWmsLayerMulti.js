@@ -85,6 +85,7 @@ const MlWmsLayerMulti = (props) => {
       maxzoom: 10,
       ...props.sourceOptions,
     });
+    console.log("WMS Layer added to " + props.mapId);
   }, [mapContext.mapIds]);
 
   useEffect(() => {

@@ -28,33 +28,6 @@ function Compare(a, b, container, options) {
   this._onMouseUp = this._onMouseUp.bind(this);
   this._onTouchEnd = this._onTouchEnd.bind(this);
   this._ev = new EventEmitter();
-  this._swiper = document.createElement("div");
-  this._swiper.className = this._horizontal
-    ? "compare-swiper-horizontal"
-    : "compare-swiper-vertical";
-
-  this._controlContainer = document.createElement("div");
-  this._controlContainer.className = this._horizontal
-    ? "mapboxgl-compare mapboxgl-compare-horizontal"
-    : "mapboxgl-compare";
-  this._controlContainer.className = this._controlContainer.className;
-  this._controlContainer.appendChild(this._swiper);
-
-  if (typeof container === "string" && document.body.querySelectorAll) {
-    // get container with a selector
-    var appendTarget = document.body.querySelectorAll(container)[0];
-    if (!appendTarget) {
-      throw new Error("Cannot find element with specified container selector.");
-    }
-    appendTarget.appendChild(this._controlContainer);
-  } else if (container instanceof Element && container.appendChild) {
-    // get container directly
-    container.appendChild(this._controlContainer);
-  } else {
-    throw new Error(
-      "Invalid container specified. Must be CSS selector or HTML element."
-    );
-  }
 
   this._bounds = b.getContainer().getBoundingClientRect();
   var swiperPosition =
@@ -73,17 +46,9 @@ function Compare(a, b, container, options) {
     a.getContainer().addEventListener("mousemove", this._onMove);
     b.getContainer().addEventListener("mousemove", this._onMove);
   }
-
-  this._swiper.addEventListener("mousedown", this._onDown);
-  this._swiper.addEventListener("touchstart", this._onDown);
 }
 
 Compare.prototype = {
-  _setPointerEvents: function (v) {
-    this._controlContainer.style.pointerEvents = v;
-    this._swiper.style.pointerEvents = v;
-  },
-
   _onDown: function (e) {
     if (e.touches) {
       document.addEventListener("touchmove", this._onMove);
@@ -99,25 +64,20 @@ Compare.prototype = {
     var pos = this._horizontal
       ? "translate(0, " + x + "px)"
       : "translate(" + x + "px, 0)";
-    this._controlContainer.style.transform = pos;
-    this._controlContainer.style.WebkitTransform = pos;
-    console.log("asd qwe");
-    var clipB = "circle(200px at 50% 50%)";
+    var magnifyRadius = parseInt(this._bounds.height - 500);
+    var clipB =
+      "circle(" +
+      magnifyRadius +
+      "px at " +
+      parseInt((x / this._bounds.width) * 100) +
+      "% 55%)";
 
     //clip-path: circle(60px at 50% 50%);
     this._mapB.getContainer().style.clipPath = clipB;
     this.currentPosition = x;
   },
 
-  _onMove: function (e) {
-    if (this.options && this.options.mousemove) {
-      this._setPointerEvents(e.touches ? "auto" : "none");
-    }
-
-    this._horizontal
-      ? this._setPosition(this._getY(e))
-      : this._setPosition(this._getX(e));
-  },
+  _onMove: function (e) {},
 
   _onMouseUp: function () {
     document.removeEventListener("mousemove", this._onMove);
@@ -207,10 +167,6 @@ Compare.prototype = {
       bContainer.style.clip = null;
       bContainer.removeEventListener("mousemove", this._onMove);
     }
-
-    this._swiper.removeEventListener("mousedown", this._onDown);
-    this._swiper.removeEventListener("touchstart", this._onDown);
-    this._controlContainer.remove();
   },
 };
 

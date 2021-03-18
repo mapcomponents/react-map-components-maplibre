@@ -1,3 +1,24 @@
+#root {
+      position: absolute;
+    min-height: 400px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.docs-story {
+  min-height: 400px;
+  display:flex;
+  align-items:stretch;
+}
+.docs-story > div:first-child {
+  width:100%;
+}
+.MuiToolbar-root .MuiButtonBase-root{
+  margin-right: 8px;
+
+}
+
 .App {
   position: absolute;
   top: 0;

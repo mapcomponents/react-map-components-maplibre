@@ -28,7 +28,7 @@ const Template = (args) => (
         minzoom: 13,
         maxzoom: 20,
       }}
-      mapId="map_1"
+      mapId={args.wmsLayerMapId}
     />
     <MlLayerMagnify map1Id="map_1" map2Id="map_2" />
   </TopToolbar>
@@ -36,5 +36,7 @@ const Template = (args) => (
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+ExampleConfig.args = {
+  wmsLayerMapId: "map_1",
+};
 //

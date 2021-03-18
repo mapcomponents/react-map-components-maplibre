@@ -63,15 +63,7 @@ const MlLayerMagnify = (props) => {
     }
   }, [mapContext.mapIds]);
 
-  return (
-    <Button
-      color="primary"
-      variant={showLayer ? "contained" : "outlined"}
-      onClick={() => setShowLayer(!showLayer)}
-    >
-      Layer Swipe
-    </Button>
-  );
+  return <></>;
 };
 
 export default MlLayerMagnify;
