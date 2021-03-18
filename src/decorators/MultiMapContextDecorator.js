@@ -18,12 +18,12 @@ const decorators = [
             style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
             //style:"https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
             //center: [8.607, 53.1409349],
-            //          zoom: 13,
+            //zoom: 13,
             center: [7.0851268, 50.73884],
-            //          maxBounds: [
-            //            [1.40625, 43.452919],
-            //            [17.797852, 55.973798],
-            //          ],
+            //maxBounds: [
+            //  [1.40625, 43.452919],
+            //  [17.797852, 55.973798],
+            //],
           }}
         />
         <MapLibreMap
@@ -36,12 +36,12 @@ const decorators = [
             //style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
             style: "https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
             //center: [8.607, 53.1409349],
-            //          zoom: 13,
+            //zoom: 13,
             center: [7.0851268, 50.73884],
-            //          maxBounds: [
-            //            [1.40625, 43.452919],
-            //            [17.797852, 55.973798],
-            //          ],
+            //maxBounds: [
+            //  [1.40625, 43.452919],
+            //  [17.797852, 55.973798],
+            //],
           }}
         />
       </div>
