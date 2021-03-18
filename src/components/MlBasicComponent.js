@@ -34,6 +34,9 @@ const MlBasicComponent = (props) => {
       // try to remove anything this component has added to the MapLibre-gl instance
       // e.g.: remove the layer
       // mapContext.map.removeLayer(layerRef.current);
+      if (props.cleanup) {
+        props.cleanup();
+      }
     };
   });
 
@@ -41,6 +44,9 @@ const MlBasicComponent = (props) => {
     if (!mapExists()) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance
+    if (props.mapIsReady) {
+      props.mapIsReady();
+    }
   }, [mapContext.mapIds, mapExists]);
 
   return <></>;
