@@ -34,14 +34,20 @@ const MapLibreMap = (props) => {
       map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
 
       map.current.on("load", () => {
-        mapContext.setMap(map.current);
+        if (props.mapId) {
+          mapContext.registerMap(props.mapId, map.current);
+        } else {
+          mapContext.setMap(map.current);
+        }
       });
 
+      // TODO: remove this line
       window.map = map.current;
     }
 
     return () => {
       map.current.remove();
+      map.current = null;
     };
   }, [mapContainer]);
 

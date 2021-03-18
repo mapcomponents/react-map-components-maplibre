@@ -1,15 +1,15 @@
 import React from "react";
 
 import { MapComponentsProvider } from "react-map-components-core";
-import MapLibreMapMulti from "../components/MapLibreMapMulti/MapLibreMapMulti";
+import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 
 const decorators = [
   (Story) => (
     <MapComponentsProvider>
       <Story />
       <div className="maps">
-        <MapLibreMapMulti
-          map_id="map_1"
+        <MapLibreMap
+          mapId="map_1"
           options={{
             //style: "mapbox://styles/mapbox/light-v10",
             //center: [-87.62712, 41.89033],
@@ -26,8 +26,8 @@ const decorators = [
             //          ],
           }}
         />
-        <MapLibreMapMulti
-          map_id="map_2"
+        <MapLibreMap
+          mapId="map_2"
           options={{
             //style: "mapbox://styles/mapbox/light-v10",
             //center: [-87.62712, 41.89033],
