@@ -35,7 +35,7 @@ const MlBasicComponent = (props) => {
       // e.g.: remove the layer
       // mapContext.map.removeLayer(layerRef.current);
       if (typeof props.cleanup === "function") {
-        props.cleanup();
+        props.cleanup(getMap());
       }
     };
   });
@@ -45,7 +45,7 @@ const MlBasicComponent = (props) => {
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance
     if (typeof props.mapIsReady === "function") {
-      props.mapIsReady();
+      props.mapIsReady(getMap());
     }
   }, [mapContext.mapIds, mapExists]);
 
