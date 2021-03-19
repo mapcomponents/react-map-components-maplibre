@@ -10,16 +10,16 @@ const MlVectorTileLayer = (props) => {
   const mapContext = useContext(MapContext);
 
   const [showLayer, setShowLayer] = useState(true);
+  const layerName = "vector-tile-layer-";
+  const sourceName = "vector-tile-source-";
   const idPostfixRef = useRef(new Date().getTime());
 
   const cleanup = () => {
-    if (mapContext.map.getLayer("vector-tile-layer-" + idPostfixRef.current)) {
-      mapContext.map.removeLayer("vector-tile-layer-" + idPostfixRef.current);
+    if (mapContext.map.getLayer(layerName + idPostfixRef.current)) {
+      mapContext.map.removeLayer(layerName + idPostfixRef.current);
     }
-    if (
-      mapContext.map.getSource("vector-tile-source-" + idPostfixRef.current)
-    ) {
-      mapContext.map.removeSource("vector-tile-source-" + idPostfixRef.current);
+    if (mapContext.map.getSource(sourceName + idPostfixRef.current)) {
+      mapContext.map.removeSource(sourceName + idPostfixRef.current);
     }
   };
 
@@ -37,7 +37,7 @@ const MlVectorTileLayer = (props) => {
     cleanup();
 
     // Add the new layer to the openlayers instance once it is available
-    mapContext.map.addSource("vector-tile-source-" + idPostfixRef.current, {
+    mapContext.map.addSource(sourceName + idPostfixRef.current, {
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
@@ -45,8 +45,8 @@ const MlVectorTileLayer = (props) => {
       //...props.sourceOptions,
     });
     mapContext.map.addLayer({
-      id: "vector-tile-layer-" + idPostfixRef.current,
-      source: "vector-tile-source-" + idPostfixRef.current,
+      id: layerName + idPostfixRef.current,
+      source: sourceName + idPostfixRef.current,
       type: "line",
       "source-layer": props.sourceLayer,
       minzoom: 0,
@@ -70,13 +70,13 @@ const MlVectorTileLayer = (props) => {
     // toggle layer visibility by changing the layout object's visibility property
     if (showLayer) {
       mapContext.map.setLayoutProperty(
-        "vector-tile-layer-" + idPostfixRef.current,
+        layerName + idPostfixRef.current,
         "visibility",
         "visible"
       );
     } else {
       mapContext.map.setLayoutProperty(
-        "vector-tile-layer-" + idPostfixRef.current,
+        layerName + idPostfixRef.current,
         "visibility",
         "none"
       );
