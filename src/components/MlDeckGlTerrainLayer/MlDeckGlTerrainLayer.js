@@ -31,13 +31,15 @@ const MlDeckGlTerrainLayer = () => {
 
   let rotateCamera = useCallback(
     (timestamp) => {
-      // clamp the rotation between 0 -360 degrees
-      // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-      mapContext.map.rotateTo((timestamp / 100) % 360, { duration: 0 });
-      // Request the next frame of the animation.
-      console.log(showLayer);
-      if (showLayerRef.current) {
-        requestAnimationFrame(rotateCamera);
+      if (mapContext.map) {
+        // clamp the rotation between 0 -360 degrees
+        // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+        mapContext.map.rotateTo((timestamp / 100) % 360, { duration: 0 });
+        // Request the next frame of the animation.
+        console.log(showLayer);
+        if (showLayerRef.current) {
+          requestAnimationFrame(rotateCamera);
+        }
       }
     },
     [showLayerRef, mapContext.map]
@@ -95,7 +97,7 @@ const MlDeckGlTerrainLayer = () => {
         variant={showLayer ? "contained" : "outlined"}
         onClick={() => setShowLayer(!showLayer)}
       >
-        DB Verspätungen im Güterverkehr 2016 (deck.gl)
+        Terrain Layer
       </Button>
     </>
   );
