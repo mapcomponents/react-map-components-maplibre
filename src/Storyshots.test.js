@@ -13,7 +13,7 @@ initStoryshots({
      */
     //customizePage: (page) => page,
 
-    testTimeout: 30000,
+    testTimeout: 60000,
     /**
      * puppeteer.goto options
      * @link https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options
@@ -27,7 +27,7 @@ initStoryshots({
      * wait before taking screenshot to give uncontrollable animations time to complete (Highcharts)
      */
     beforeScreenshot: async (page, { context: { kind, story }, url }) => {
-      await page.waitForTimeout(10000);
+      await page.waitForTimeout(20000);
     },
 
     /**
