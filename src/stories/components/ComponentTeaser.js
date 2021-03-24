@@ -7,8 +7,8 @@ const ComponentTeaser = (props) => {
       <span>
         <strong>{props.options.title}</strong>
         <p>
-          Test Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich. Zwölf
-          Boxkämpfer jagen Viktor quer über den großen Sylter Deich.
+          Test2 Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich.
+          Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich.
           {props.options.description}
         </p>
       </span>
