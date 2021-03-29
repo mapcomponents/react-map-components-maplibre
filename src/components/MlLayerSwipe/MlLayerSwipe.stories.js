@@ -12,6 +12,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export default {
   title: "MapComponents/MlLayerSwipe",
   component: MlLayerSwipe,
+  tags: ["bla", "blub"],
+  type: "blubtype",
+  justSomeProp: 123,
   argTypes: {
     url: {},
     layer: {},
