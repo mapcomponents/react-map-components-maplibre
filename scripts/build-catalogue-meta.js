@@ -14,5 +14,5 @@ glob("src/components/**/*.meta.json", options, function (er, files) {
   }
 
   let data = JSON.stringify(mc_meta);
-  fs.writeFileSync("public/mc_meta.json", data);
+  fs.writeFileSync("public/catalogue/mc_meta.json", data);
 });

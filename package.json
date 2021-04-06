@@ -43,7 +43,8 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "storybook-docs": "start-storybook --docs --no-manager-cache",
-    "build-catalogue-meta": "node scripts/build-catalogue-meta.js"
+    "build-catalogue-meta": "node scripts/build-catalogue-meta.js",
+    "build-catalogue-markdown-docs": "node scripts/build-catalogue-markdown-docs.js"
   },
   "eslintConfig": {
     "extends": [
@@ -86,6 +87,7 @@
     "glob": "^7.1.6",
     "puppeteer": "^8.0.0",
     "react-test-renderer": "^17.0.1",
+    "showdown": "^1.9.1",
     "ts-jest": "^26.5.3"
   }
 }
