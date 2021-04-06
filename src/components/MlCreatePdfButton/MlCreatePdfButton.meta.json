@@ -1,0 +1,7 @@
+{
+  "name": "MlCreatePdfButton",
+  "title": "Einfacher Kartendruck",
+  "description": "Erzeugt eine PDF Datei aus der aktuellen Kartenansicht.",
+  "tags": [ "Map add-on" ],
+  "category": "add-ons"
+}

@@ -1,7 +1,7 @@
 {
   "name": "MlLayerMagnify",
-  "title": "Kartenvorhang",
-  "description": "Kertenvorhangs blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus.",
+  "title": "Kartenlupe",
+  "description": "Kertenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus.",
   "tags": [ "Map add-on" ],
   "category": "add-ons"
 }

@@ -1,0 +1,7 @@
+{
+  "name": "MlVectorTileLayer",
+  "title": "Vektorenkacheln",
+  "description": "Baustein: Vektorenkacheln/Vector Tiles (der Anwendung/Karte hinzufügen)",
+  "tags": [ "Map layer" ],
+  "category": "layer"
+}

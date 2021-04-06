@@ -1,7 +1,7 @@
 {
   "name": "MlMapDrawTools",
-  "title": "Kartenvorhang",
-  "description": "Kertenvorhangs blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus.",
+  "title": "Skizzen Werkzeug",
+  "description": "Ermöglicht das Zeichnen von.",
   "tags": [ "Map add-on" ],
   "category": "add-ons"
 }
