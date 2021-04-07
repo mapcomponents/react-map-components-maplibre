@@ -19,7 +19,7 @@ glob("src/components/**/*.doc.de.md", options, function (er, files) {
     let rawdata = fs.readFileSync(files[i]);
     let html = converter.makeHtml(rawdata + "");
     fs.writeFileSync(
-      "public/catalogue/" + getComponentNameFromPath(files[i]) + ".html",
+      "public/catalogue/" + getComponentNameFromPath(files[i]) + ".de.html",
       html
     );
   }
