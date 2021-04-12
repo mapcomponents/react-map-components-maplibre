@@ -3,5 +3,6 @@
   "title": "Kartenlupe",
   "description": "Kertenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus.",
   "tags": [ "Map add-on" ],
-  "category": "add-ons"
+  "category": "add-ons",
+  "price": 5000
 }
