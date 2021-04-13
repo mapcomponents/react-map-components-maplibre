@@ -20,23 +20,25 @@ export default {
 };
 
 const Template = (args) => (
-  <TopToolbar>
-    <MlWmsLayerMulti
-      url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
-      layer="nw_uraufnahme_rw"
-      sourceOptions={{
-        minzoom: 13,
-        maxzoom: 20,
-      }}
-      mapId={args.wmsLayerMapId}
-    />
+  <>
+    <TopToolbar>
+      <MlWmsLayerMulti
+        url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
+        layer="nw_uraufnahme_rw"
+        sourceOptions={{
+          minzoom: 13,
+          maxzoom: 20,
+        }}
+        mapId={args.wmsLayerMapId}
+      />
+    </TopToolbar>
     <MlLayerMagnify map1Id="map_1" map2Id="map_2" />
-  </TopToolbar>
+  </>
 );
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
-  wmsLayerMapId: "map_1",
+  wmsLayerMapId: "map_2",
 };
 //

@@ -30,7 +30,7 @@ const Template = (args) => (
           minzoom: 13,
           maxzoom: 20,
         }}
-        mapId="map_1"
+        mapId="map_2"
       />
     </TopToolbar>
     <MlLayerSwipe map1Id="map_1" map2Id="map_2" />
