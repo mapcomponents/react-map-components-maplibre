@@ -3,5 +3,7 @@
   "title": "Bienen Flugradiusrechner",
   "description": "",
   "tags": [ "Map add-on" ],
-  "category": "add-ons"
+  "category": "add-ons",
+  "type": "application",
+  "components": [ "MlVectorTileLayer", "MlMapDrawTools", "MlCreatePdfButton"] 
 }

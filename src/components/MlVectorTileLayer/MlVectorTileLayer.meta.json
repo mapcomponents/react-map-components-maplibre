@@ -3,5 +3,7 @@
   "title": "Vektorenkacheln",
   "description": "Baustein: Vektorenkacheln/Vector Tiles (der Anwendung/Karte hinzufügen)",
   "tags": [ "Map layer" ],
-  "category": "layer"
+  "category": "layer",
+  "type": "component",
+  "price": 5000
 }

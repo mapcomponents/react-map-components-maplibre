@@ -3,5 +3,7 @@
   "title": "Skizzen Werkzeug",
   "description": "Ermöglicht das Zeichnen von.",
   "tags": [ "Map add-on" ],
-  "category": "add-ons"
+  "category": "add-ons",
+  "type": "component",
+  "price": 5000
 }
