@@ -11,6 +11,9 @@ import Button from "@material-ui/core/Button";
 const MlLayerSwipe = (props) => {
   const mapContext = useContext(MapContext);
 
+  const [swipeX, setSwipeX] = useState(50);
+  const swipeXRef = useRef(50);
+
   const [showLayer, setShowLayer] = useState(true);
   const compareRef = useRef(null);
 
@@ -49,25 +52,79 @@ const MlLayerSwipe = (props) => {
 
     console.log("COMPARE 2");
 
-    compareRef.current = new compare(
-      mapContext.maps[props.map1Id],
-      mapContext.maps[props.map2Id],
-      ".maps",
-      {
-        // Set this to enable comparing two maps by mouse movement:
-        // mousemove: true
-      }
-    );
+    //  compareRef.current = new compare(
+    //    mapContext.maps[props.map1Id],
+    //    mapContext.maps[props.map2Id],
+    //    ".maps",
+    //    {
+    //      // Set this to enable comparing two maps by mouse movement:
+    //      // mousemove: true
+    //    }
+    //  );
   }, [mapContext.mapIds]);
 
+  const onMove = (e) => {
+    //let bounds = mapContext.map.getTarget().getBoundingClientRect();
+    let clientX =
+      e.clientX ||
+      (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+        ? e.touches[0].clientX
+        : 0);
+
+    //clientX -= bounds.x;
+    //let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
+
+    //if (swipeXRef.current !== swipeX_tmp) {
+    //  setSwipeX(swipeX_tmp);
+    //  swipeXRef.current = swipeX_tmp;
+    //  mapContext.map.render();
+    //}
+  };
+
+  const onDown = (e) => {
+    if (e.touches) {
+      document.addEventListener("touchmove", onMove);
+      document.addEventListener("touchend", onTouchEnd);
+    } else {
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onMouseUp);
+    }
+  };
+
+  const onTouchEnd = () => {
+    document.removeEventListener("touchmove", onMove);
+    document.removeEventListener("touchend", onTouchEnd);
+  };
+
+  const onMouseUp = () => {
+    document.removeEventListener("mousemove", onMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  };
+
   return (
-    <Button
-      color="primary"
-      variant={showLayer ? "contained" : "outlined"}
-      onClick={() => setShowLayer(!showLayer)}
-    >
-      Layer Swipe
-    </Button>
+    <div
+      style={{
+        position: "absolute",
+        left: swipeX + "%",
+        top: "50%",
+        borderRadius: "50%",
+        width: "100px",
+        height: "100px",
+        background: "#0066ff",
+        border: "3px solid #eaebf1",
+        cursor: "pointer",
+        zIndex: "20",
+        marginLeft: "-50px",
+        marginTop: "-50px",
+        textAlign: "center",
+        lineHeight: "91px",
+        fontSize: "2em",
+        color: "#fafafa",
+        userSelect: "none",
+      }}
+      onTouchStart={onDown}
+      onMouseDown={onDown}
+    ></div>
   );
 };
 
