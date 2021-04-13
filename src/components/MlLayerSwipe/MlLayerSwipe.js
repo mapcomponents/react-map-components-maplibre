@@ -1,9 +1,7 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
-import compare from "mapbox-gl-compare";
+import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
 import { MapContext } from "react-map-components-core";
-
-import Button from "@material-ui/core/Button";
 
 /**
  * MlLayerSwipe returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
@@ -14,7 +12,6 @@ const MlLayerSwipe = (props) => {
   const [swipeX, setSwipeX] = useState(50);
   const swipeXRef = useRef(50);
 
-  const [showLayer, setShowLayer] = useState(true);
   const compareRef = useRef(null);
 
   const mapExists = () => {
@@ -45,40 +42,35 @@ const MlLayerSwipe = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log("COMPARE 1");
-    console.log(mapContext.newMapTrigger);
-    console.log(JSON.stringify(mapContext.mapIds));
     if (!mapExists()) return;
 
-    console.log("COMPARE 2");
-
-    //  compareRef.current = new compare(
-    //    mapContext.maps[props.map1Id],
-    //    mapContext.maps[props.map2Id],
-    //    ".maps",
-    //    {
-    //      // Set this to enable comparing two maps by mouse movement:
-    //      // mousemove: true
-    //    }
-    //  );
+    syncMove(mapContext.maps[props.map1Id], mapContext.maps[props.map2Id]);
+    onMove({ clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2 });
   }, [mapContext.mapIds]);
 
   const onMove = (e) => {
-    //let bounds = mapContext.map.getTarget().getBoundingClientRect();
+    if (!mapExists()) return;
+
+    let bounds = mapContext.map.getCanvas().getBoundingClientRect();
     let clientX =
       e.clientX ||
       (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
         ? e.touches[0].clientX
         : 0);
 
-    //clientX -= bounds.x;
-    //let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
+    clientX -= bounds.x;
+    let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
 
-    //if (swipeXRef.current !== swipeX_tmp) {
-    //  setSwipeX(swipeX_tmp);
-    //  swipeXRef.current = swipeX_tmp;
-    //  mapContext.map.render();
-    //}
+    if (swipeXRef.current !== swipeX_tmp) {
+      setSwipeX(swipeX_tmp);
+      swipeXRef.current = swipeX_tmp;
+      console.log(swipeXRef.current);
+
+      var clipA =
+        "rect(0, " + (swipeXRef.current * bounds.width) / 100 + "px, 999em, 0)";
+
+      mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
+    }
   };
 
   const onDown = (e) => {
@@ -113,7 +105,7 @@ const MlLayerSwipe = (props) => {
         background: "#0066ff",
         border: "3px solid #eaebf1",
         cursor: "pointer",
-        zIndex: "20",
+        zIndex: "110",
         marginLeft: "-50px",
         marginTop: "-50px",
         textAlign: "center",

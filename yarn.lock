@@ -12668,13 +12668,6 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-mapbox-gl-compare@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/mapbox-gl-compare/-/mapbox-gl-compare-0.4.0.tgz#b7398ec8a51534e8c00601f3c53e939c10064c19"
-  integrity sha512-12PnJRbPK45wYbCj/gGlfgLW3FxzzGSpYFsMCDmo0xiGwoCgpLeXAsMsXZ4yQblP/YFTxOs2mePcYUkNbfVegA==
-  dependencies:
-    "@mapbox/mapbox-gl-sync-move" "^0.3.0"
-
 mapbox-gl@^1.0.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-1.13.1.tgz#322efe75ab4c764fc4c776da1506aad58d5a5b9d"
