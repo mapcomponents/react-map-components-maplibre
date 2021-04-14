@@ -12,10 +12,38 @@ If no attribute mapId is provided the map component is expected to work with the
 
 ```
 ./src/components/{component_name}/
-├── {component_name}.doc.de.md // description text, that is shown on the catalogue component detail page below the main image
-├── {component_name}.js // react component implementation
-├── {component_name}.meta.json // additional meta data regarding the component, this file is required for the component to become listed in the catalogue
-└── {component_name}.stories.js // example implementation of a component in context with all required dependent components to showcase the basic functionality of a single component. Decorators to choose from are located in ./src/decorators/. During development the command ```yarn storybook``` will start a server (localhost:6006) with live reload functionality. In case of example applications the stories are used as a wrapper to make the application available in the storybook build that is later used to access working demos from within the catalogue.
+├── {component_name}.doc.de.md
+├── {component_name}.meta.json 
+├── {component_name}.js 
+└── {component_name}.stories.js
 ```
 
+### MlThreeJsLayer.js
 
+React component implementation
+
+### MlThreeJsLayer.meta.json
+
+Additional meta data regarding the component, this file is required for the component to become listed in the catalogue
+
+```
+{
+  "name": "{component_name}",
+  "title": "", // german component title
+  "description": "", // german short description
+  "tags": [ "Map add-on" ], // list of tags
+  "category": "add-ons", // category
+  "type": "component", // type "component" or "application"
+  "price": 5000 // price in € (int)
+}
+```
+
+### MlThreeJsLayer.doc.de.md
+
+Description text, that is shown on the catalogue component detail page below the main image
+
+### MlThreeJsLayer.stories.js
+
+Example implementation of a component in context with all required dependent components to showcase the basic functionality of a single component. Decorators to choose from are located in ./src/decorators/. During development the command ```yarn storybook``` will start a server (localhost:6006) with live reload functionality. In case of example applications the stories are used as a wrapper to make the application available in the storybook build that is later used to access working demos from within the catalogue.
+
+Storybook stories are also used to generate screenshots of each component. The command ```yarn test``` (requires a running instance of ```yarn storybook``` at localhost:6006) will run automated visual regression tests for each defined story using the storyshots plugin and place the resulting screenshots in ./src/__image_snapshots__/. A curated list of component story screenshots is located in ./public/__image_snapshots__/. Screenshots that turned out well can be manually copied into this folder and committed to git to be used in the next catalogue build.
