@@ -18,11 +18,11 @@ If no attribute mapId is provided the map component is expected to work with the
 └── {component_name}.stories.js
 ```
 
-### MlThreeJsLayer.js
+### {component_name}.js
 
 React component implementation
 
-### MlThreeJsLayer.meta.json
+### {component_name}.meta.json
 
 Additional meta data regarding the component, this file is required for the component to become listed in the catalogue
 
@@ -38,11 +38,11 @@ Additional meta data regarding the component, this file is required for the comp
 }
 ```
 
-### MlThreeJsLayer.doc.de.md
+### {component_name}.doc.de.md
 
 Description text, that is shown on the catalogue component detail page below the main image
 
-### MlThreeJsLayer.stories.js
+### {component_name}.stories.js
 
 Example implementation of a component in context with all required dependent components to showcase the basic functionality of a single component. Decorators to choose from are located in ./src/decorators/. During development the command ```yarn storybook``` will start a server (localhost:6006) with live reload functionality. In case of example applications the stories are used as a wrapper to make the application available in the storybook build that is later used to access working demos from within the catalogue.
 
