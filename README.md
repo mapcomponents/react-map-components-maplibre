@@ -28,13 +28,13 @@ Additional meta data regarding the component, this file is required for the comp
 
 ```
 {
-  "name": "{component_name}",
-  "title": "", // german component title
-  "description": "", // german short description
-  "tags": [ "Map add-on" ], // list of tags
-  "category": "add-ons", // category
-  "type": "component", // type "component" or "application"
-  "price": 5000 // price in € (int)
+  "name":        "{component_name}", // must be identical to the react component name
+  "title":       "",                 // german component title
+  "description": "",                 // german short description
+  "tags":        [ "Map add-on" ],   // list of tags
+  "category":    "add-ons",          // category
+  "type":        "component",        // type "component" or "application"
+  "price":       5000                // price in € (int)
 }
 ```
 
