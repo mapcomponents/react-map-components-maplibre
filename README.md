@@ -28,13 +28,13 @@ Additional meta data regarding the component, this file is required for the comp
 
 ```
 {
-  "name":        "{component_name}", // must be identical to the react component name
-  "title":       "",                 // german component title
-  "description": "",                 // german short description
-  "tags":        [ "Map add-on" ],   // list of tags
-  "category":    "add-ons",          // category
-  "type":        "component",        // type "component" or "application"
-  "price":       5000                // price in € (int)
+  "name":        "{component_name}", // must be identical to the react component name (string)
+  "title":       "",                 // german component title (string)
+  "description": "",                 // german short description (string)
+  "tags":        [ "Map add-on" ],   // list of tags (Array<string>)
+  "category":    "add-ons",          // category (string)
+  "type":        "component",        // type "component" or "application" (string)
+  "price":       5000                // price in € (integer)
 }
 ```
 
@@ -47,3 +47,5 @@ Description text, that is shown on the catalogue component detail page below the
 Example implementation of a component in context with all required dependent components to showcase the basic functionality of a single component. Decorators to choose from are located in ./src/decorators/. During development the command ```yarn storybook``` will start a server (localhost:6006) with live reload functionality. In case of example applications the stories are used as a wrapper to make the application available in the storybook build that is later used to access working demos from within the catalogue.
 
 Storybook stories are also used to generate screenshots of each component. The command ```yarn test``` (requires a running instance of ```yarn storybook``` at localhost:6006) will run automated visual regression tests for each defined story using the storyshots plugin and place the resulting screenshots in ./src/__image_snapshots__/. A curated list of component story screenshots is located in ./public/__image_snapshots__/. Screenshots that turned out well can be manually copied into this folder and committed to git to be used in the next catalogue build.
+
+More information on writing storybook stories for react components: https://storybook.js.org/docs/react/get-started/browse-stories
