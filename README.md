@@ -1,5 +1,23 @@
 # MapComponents MapLibre
 
+## Getting started
+
+1. Clone the repository 
+2. ```cd``` into the folder and 
+3. Run ```yarn``` to install all dependencies.
+4. Run ```yarn storybook``` to start the storybook server. It will watch files for changes and hot-reload affected components. If cleanup functions are incomplete it can be required to reload the browser.
+
+### Create a new component
+
+1. Duplicate the folder MlComponentTemplate
+2. Rename (the "MlComponentTemplate" part) of the new folder and the containing files to whatever you want to call the new component. It must start with a capital letter because it is a react component and preferably start with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
+3. The new component should become available within your storybook webinterface. Start the component development inside the component file (former MlComponentTemplate.js) and see the changes reflected in your browser.
+4. Once the component is ready to be published to the MapComponents catalogue, remove the ```_``` from the meta.json file ({component_name}.meta_.json) and it will be included in the next release.
+
+### Create a new example application
+
+1. Follow all steps of "Create a new component"
+2. Change the value of the property "type" in {component_name}.meta.json to "application"
 
 ## Anatomy of a MapComponent
 
@@ -49,3 +67,5 @@ Example implementation of a component in context with all required dependent com
 Storybook stories are also used to generate screenshots of each component. The command ```yarn test``` (requires a running instance of ```yarn storybook``` at localhost:6006) will run automated visual regression tests for each defined story using the storyshots plugin and place the resulting screenshots in ```./src/__image_snapshots__/```. A curated list of component story screenshots is located in ```./public/__image_snapshots__/```. Screenshots that turned out well can be manually copied into this folder and committed to git to be used in the next catalogue build.
 
 More information on writing storybook stories for react components: https://storybook.js.org/docs/react/get-started/browse-stories
+
+
