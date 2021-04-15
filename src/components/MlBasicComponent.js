@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback } from "react";
+import React, { useEffect, useContext } from "react";
 
 import { MapContext } from "react-map-components-core";
 
@@ -8,46 +8,27 @@ const MlBasicComponent = (props) => {
   // const layerRef = useRef(null);
   const mapContext = useContext(MapContext);
 
-  const getMap = () => {
-    if (props.mapId && mapContext.mapIds.indexOf(props.mapId) === -1) {
-      return mapContext.maps[props.mapId];
-    } else if (!props.mapId && mapContext.map) {
-      return mapContext.map;
-    }
-
-    return null;
-  };
-
-  const mapExists = useCallback(() => {
-    if (props.mapId && mapContext.mapIds.indexOf(props.mapId) === -1) {
-      return false;
-    } else if (!props.mapId && !mapContext.map) {
-      return false;
-    }
-    return true;
-  }, [props, mapContext]);
-
   useEffect(() => {
-    if (!mapExists()) return;
+    if (!mapContext.mapExists()) return;
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       // try to remove anything this component has added to the MapLibre-gl instance
       // e.g.: remove the layer
       // mapContext.map.removeLayer(layerRef.current);
       if (typeof props.cleanup === "function") {
-        props.cleanup(getMap());
+        props.cleanup(mapContext.getMap(props.mapId));
       }
     };
   });
 
   useEffect(() => {
-    if (!mapExists()) return;
+    if (!mapContext.mapExists(props.mapId)) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance
     if (typeof props.mapIsReady === "function") {
-      props.mapIsReady(getMap());
+      props.mapIsReady(mapContext.getMap(props.mapId));
     }
-  }, [mapContext.mapIds, mapExists]);
+  }, [mapContext.mapIds, mapContext, props]);
 
   return <></>;
 };
