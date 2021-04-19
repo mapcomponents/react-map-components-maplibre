@@ -176,14 +176,12 @@ const MlLaermkarte = (props) => {
         var alongRoute = turf.along(turf.lineString(route), step * kmPerStep)
           .geometry.coordinates;
 
-        console.log(step * kmPerStep, routeDistance);
         if (step * kmPerStep < routeDistance) {
           //data.features[0].geometry.coordinates.push(coordinates[i]);
           //map.getSource("trace").setData(data);
           mapContext.map.panTo(alongRoute);
           step++;
         } else if (zoom > 11) {
-          console.log("ZIEL");
           zoom = zoom - zoomSteps;
           mapContext.map.setZoom(zoom);
         } else {
