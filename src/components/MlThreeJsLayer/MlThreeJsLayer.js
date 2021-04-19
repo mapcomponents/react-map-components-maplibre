@@ -73,8 +73,7 @@ const MlThreeJsLayer = () => {
       /* Since our 3D model is in real world meters, a scale transform needs to be
        * applied since the CustomLayerInterface expects units in MercatorCoordinates.
        */
-      scale:
-        modelAsMercatorCoordinate.meterInMercatorCoordinateUnits() + 0.00000003,
+      scale: modelAsMercatorCoordinate.meterInMercatorCoordinateUnits() + 0.00000003,
     };
 
     //var THREE = window.THREE;
@@ -162,7 +161,6 @@ const MlThreeJsLayer = () => {
     if (mapContext.map.getLayer(layerName)) {
       mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
     }
-    mapContext.map.setCenter([7.132122000552613, 50.716405378037706]);
     mapContext.map.setZoom(15);
     mapContext.map.setPitch(45);
   }, [mapContext.map]);

@@ -45,7 +45,7 @@ const material = {
   specularColor: [51, 51, 51],
 };
 
-export const colorRange = [
+const colorRange = [
   [1, 152, 189],
   [73, 227, 206],
   [216, 254, 181],
