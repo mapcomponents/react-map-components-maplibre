@@ -13,10 +13,11 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 const toGeoJSON = require("./gpxConverter");
 /**
- * MlHillshadeLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
-const MlGPXViewer = () => {
+const MlGPXViewer = (props) => {
   const mapContext = useContext(MapContext);
+  const mapId = props.mapId;
   const sourceName = "import-source";
   const layerNameLines = "importer-layer-lines";
   const layerNamePoints = "importer-layer-points";
@@ -34,16 +35,22 @@ const MlGPXViewer = () => {
   });
 
   const componentCleanup = () => {
+    let map = null;
+    if (mapId) {
+      map = mapContext.maps[mapId];
+    } else {
+      map = mapContext.map;
+    }
     [layerNameLines, layerNamePoints].forEach((layerName) => {
-      if (mapContext.map.getLayer(layerName)) {
-        mapContext.map.removeLayer(layerName);
+      if (map.getLayer(layerName)) {
+        map.removeLayer(layerName);
       }
     });
 
-    if (mapContext.map.getSource(sourceName)) {
-      mapContext.map.removeSource(sourceName);
+    if (map.getSource(sourceName)) {
+      map.removeSource(sourceName);
     }
-    mapContext.map.getCanvas().style.cursor = "";
+    map.getCanvas().style.cursor = "";
     popup.remove();
   };
 
@@ -57,18 +64,24 @@ const MlGPXViewer = () => {
 
   useEffect(() => {
     if (!mapContext.map) return;
+    let map = null;
+    if (mapId) {
+      map = mapContext.maps[mapId];
+    } else {
+      map = mapContext.map;
+    }
 
     // cleanup fragments left in MapLibre-gl from previous component uses
     componentCleanup();
-
-    mapContext.map.addSource(sourceName, {
+    
+    map.addSource(sourceName, {
       type: "geojson",
       data: {
         type: "FeatureCollection",
         features: [],
       },
     });
-    mapContext.map.addLayer({
+    map.addLayer({
       id: layerNameLines,
       source: sourceName,
       type: "line",
@@ -77,7 +90,7 @@ const MlGPXViewer = () => {
         "line-color": "rgba(212, 55, 23,0.5)",
       },
     });
-    mapContext.map.addLayer({
+    map.addLayer({
       id: layerNamePoints,
       source: sourceName,
       type: "circle",
@@ -89,11 +102,11 @@ const MlGPXViewer = () => {
     });
 
     [layerNameLines, layerNamePoints].forEach((layerName) => {
-      mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
+      map.setLayoutProperty(layerName, "visibility", "visible");
     });
-    mapContext.map.on("mouseenter", layerNamePoints, (e) => {
+    map.on("mouseenter", layerNamePoints, (e) => {
       // Change the cursor style as a UI indicator.
-      mapContext.map.getCanvas().style.cursor = "pointer";
+      map.getCanvas().style.cursor = "pointer";
 
       const coordinates = e.features[0].geometry.coordinates.slice();
       const description = e.features[0].properties.desc;
@@ -109,15 +122,15 @@ const MlGPXViewer = () => {
       // Populate the popup and set its coordinates
 
       // based on the feature found.
-      popup.setLngLat(coordinates).setHTML(name).addTo(mapContext.map);
+      popup.setLngLat(coordinates).setHTML(name).addTo(map);
     });
 
-    mapContext.map.on("mouseleave", "places", function () {
-      mapContext.map.getCanvas().style.cursor = "";
+    map.on("mouseleave", "places", function () {
+      map.getCanvas().style.cursor = "";
       popup.remove();
     });
 
-    mapContext.map.setZoom(10);
+    map.setZoom(10);
   }, [mapContext.map]);
 
   useEffect(() => {
@@ -157,10 +170,16 @@ const MlGPXViewer = () => {
 
   useEffect(() => {
     if (!mapContext.map) return;
+    let map = null;
+    if (mapId) {
+      map = mapContext.maps[mapId];
+    } else {
+      map = mapContext.map;
+    }
     const visibility = showLayer ? "visible" : "none";
 
     [layerNameLines, layerNamePoints].forEach((layerName) => {
-      mapContext.map.setLayoutProperty(layerName, "visibility", visibility);
+      map.setLayoutProperty(layerName, "visibility", visibility);
     });
   }, [showLayer, mapContext]);
 
@@ -186,6 +205,12 @@ const MlGPXViewer = () => {
   };
 
   const addGPXToMap = (gpxAsString) => {
+    let map = null;
+    if (mapId) {
+      map = mapContext.maps[mapId];
+    } else {
+      map = mapContext.map;
+    }
     try {
       setMetaData([]);
       const domParser = new DOMParser();
@@ -208,9 +233,9 @@ const MlGPXViewer = () => {
         }
       });
       const data = toGeoJSON.gpx(gpxDoc);
-      mapContext.map.getSource(sourceName).setData(data);
+      map.getSource(sourceName).setData(data);
       const bounds = bbox(data);
-      mapContext.map.fitBounds(bounds);
+      map.fitBounds(bounds);
     } catch (e) {
       console.log(e);
     }
@@ -308,7 +333,7 @@ const MlGPXViewer = () => {
             top: "50%",
             position: "absolute",
             left: "50%",
-            "-ms-transform": "translate(-50%, -50%)",
+            msTransform: "translate(-50%, -50%)",
             transform: " translate(-50%, -50%)",
           }}
           noWrap

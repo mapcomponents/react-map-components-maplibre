@@ -1,7 +1,6 @@
 import React from "react";
 
-import TopToolbar from "../../ui_components/TopToolbar";
-import MlDropzoneImporter from "./MlDropzoneImporter";
+import MlGPXViewer from "./MlGPXViewer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
@@ -24,7 +23,7 @@ export default {
 const Template = (args) => (
   <>
     
-    <MlDropzoneImporter />
+    <MlGPXViewer />
   </>
 );
 
