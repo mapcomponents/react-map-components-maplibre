@@ -32,7 +32,7 @@ const Template = (args) => (
         mapId={args.wmsLayerMapId}
       />
     </TopToolbar>
-    <MlLayerMagnify map1Id="map_1" map2Id="map_2" />
+    <MlLayerMagnify map1Id="map_1" map2Id="map_2"  magnifierRadius={args.magnifierRadius}/>
   </>
 );
 
@@ -40,5 +40,6 @@ export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
   wmsLayerMapId: "map_2",
+  magnifierRadius: 100
 };
-//
+
