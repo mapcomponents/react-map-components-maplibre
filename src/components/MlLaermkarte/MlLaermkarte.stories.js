@@ -17,7 +17,11 @@ export default {
   decorators: mapContext3DDecorator,
 };
 
-const Template = (args) => <MlLaermkarte />;
+const Template = (args) => (
+  <>
+    <MlLaermkarte />
+  </>
+);
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
