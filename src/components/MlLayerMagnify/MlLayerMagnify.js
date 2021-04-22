@@ -15,7 +15,9 @@ const MlLayerMagnify = (props) => {
   const [swipeY, setSwipeY] = useState(50);
   const swipeYRef = useRef(50);
 
-  const [magnifierRadius, setMagnifierRadius] = useState(200);
+  const magnifierRadiusProp = props.magnifierRadius || 200;
+
+  const [magnifierRadius, setMagnifierRadius] = useState(magnifierRadiusProp);
 
   const compareRef = useRef(null);
 
@@ -96,7 +98,7 @@ const MlLayerMagnify = (props) => {
       console.log(swipeXRef.current);
 
       mapContext.maps[props.map2Id].getContainer().style.clipPath =
-        "circle(200px at " +
+        `circle(${magnifierRadius}px at ` +
         (swipeXRef.current * bounds.width) / 100 +
         "px " +
         (swipeYRef.current * bounds.height) / 100 +
