@@ -2,6 +2,7 @@ import React from "react";
 
 import MlLaermkarte from "./MlLaermkarte";
 import MlCompositeLayer from "../MlCompositeLayer/MlCompositeLayer";
+import MlCameraFollowPath from "../MlCameraFollowPath/MlCameraFollowPath";
 import { SimpleDataProvider } from "react-map-components-core";
 
 //import mapContext3DDecorator from "../../decorators/MapContext3DDecorator";
@@ -28,7 +29,9 @@ const Template = (args) => (
         paint={{
           "fill-extrusion-color": "hsl(30, 30, 30)",
         }}
+        minZoom={14}
       />
+      <MlCameraFollowPath></MlCameraFollowPath>
     </SimpleDataProvider>
   </>
 );
