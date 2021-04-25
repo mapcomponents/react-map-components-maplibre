@@ -17,7 +17,6 @@
     "d3": "^6.6.0",
     "jspdf": "^2.3.0",
     "kepler.gl": "^2.5.0",
-    "mapbox-print-pdf": "^0.4.3",
     "maplibre-gl": "^1.13.0-rc.5",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",

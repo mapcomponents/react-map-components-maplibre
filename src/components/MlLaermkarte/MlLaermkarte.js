@@ -16,9 +16,6 @@ import TopToolbar from "../../ui_components/TopToolbar";
 
 //import Tooltip from "@material-ui/core/Tooltip";
 import Tooltip from "@material-ui/core/Tooltip";
-import MlCreatePdfButton from "../MlCreatePdfButton/MlCreatePdfButton";
-import printPdf from "mapbox-print-pdf";
-import { jsPDF } from "jspdf";
 
 function ValueLabelComponent(props) {
   const { children, open, value } = props;
@@ -32,46 +29,17 @@ function ValueLabelComponent(props) {
 
 const DATA_URL = "/assets/laerm.json"; // eslint-disable-line
 
-function downloadObjectAsJson(exportObj, exportName) {
-  var dataStr =
-    "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-  var downloadAnchorNode = document.createElement("a");
-  downloadAnchorNode.setAttribute("href", dataStr);
-  downloadAnchorNode.setAttribute("download", exportName + ".json");
-  document.body.appendChild(downloadAnchorNode); // required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-}
-
-const material = {
-  ambient: 0.8,
-  diffuse: 0.5,
-  shininess: 20,
-  specularColor: [51, 51, 51],
-};
-
-const colorRange = [
-  [1, 152, 189, 80],
-  [73, 227, 206, 90],
-  [216, 254, 181, 100],
-  [254, 237, 177, 110],
-  [254, 173, 84, 120],
-  [209, 55, 78, 150],
-];
-
 const MlLaermkarte = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
   const initializedRef = useRef(false);
   const layerRef = useRef(null);
-  const deckRef = useRef(null);
   const mapContext = useContext(MapContext);
   const deckGlContext = useContext(DeckGlContext);
   const simpleDataContext = useContext(SimpleDataContext);
   const layerName = "deckgl-layer";
   const [layerOpacity, setLayerOpacity] = useState(50);
   const [radius, setRadius] = useState(30);
-  const [tooltipContent, setTooltipContent] = useState("");
 
   const deckLayerProps = {
     id: layerName,
@@ -83,7 +51,14 @@ const MlLaermkarte = (props) => {
     },
     bearing: 10,
     type: HexagonLayer,
-    colorRange: colorRange,
+    colorRange: [
+      [1, 152, 189, 80],
+      [73, 227, 206, 90],
+      [216, 254, 181, 100],
+      [254, 237, 177, 110],
+      [254, 173, 84, 120],
+      [209, 55, 78, 150],
+    ],
     coverage: 0.9,
     elevationRange: [30, 75],
     elevationScale: 0.3,
@@ -95,7 +70,12 @@ const MlLaermkarte = (props) => {
     pickable: true,
     radius: 15,
     upperPercentile: 100,
-    material,
+    material: {
+      ambient: 0.8,
+      diffuse: 0.5,
+      shininess: 20,
+      specularColor: [51, 51, 51],
+    },
     transitions: {
       //elevationScale: 3000,
       //getElevationValue: 3000,
@@ -158,16 +138,13 @@ const MlLaermkarte = (props) => {
     });
   }, [layerOpacity]);
 
-  //
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId)) return;
     return () => {
-      if (mapContext.map.getLayer(layerName)) {
-        console.log("REMOVE LAYER");
-        layerRef.current.deck.setProps({
+      if (deckGlContext.deckGl) {
+        deckGlContext.deckGl.setProps({
           layers: [],
         });
-        mapContext.map.removeLayer(layerName);
         initializedRef.current = false;
       }
     };
@@ -261,24 +238,7 @@ const MlLaermkarte = (props) => {
           max={1.0}
           style={{ maxWidth: "200px" }}
         />
-        <MlCreatePdfButton></MlCreatePdfButton>
-        <Button
-          onClick={() => {
-            //          var imgData = mapContext.map.getCanvas().toDataURL("image/png");
-            //          var doc = new jsPDF("p", "mm");
-            //          doc.addImage(imgData, "PNG", 10, 10, 400, 400);
-            //          doc.save("sample-file.pdf");
-            var pdf = new jsPDF("p", "pt", "a4");
-
-            pdf.addHTML(document.body, function () {
-              pdf.output("map.pdf");
-            });
-          }}
-        >
-          PDF
-        </Button>
       </TopToolbar>
-      {tooltipContent}
     </>
   );
 };
