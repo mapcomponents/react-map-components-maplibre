@@ -3,10 +3,22 @@ import { MapContext } from "react-map-components-core";
 
 import Button from "@material-ui/core/Button";
 
+const paintDefaults = {
+  "fill-extrusion-color": "hsl(196, 61%, 83%)",
+  "fill-extrusion-height": {
+    property: "render_height",
+    type: "identity",
+  },
+  "fill-extrusion-base": {
+    property: "render_min_height",
+    type: "identity",
+  },
+  "fill-extrusion-opacity": 1,
+};
 /**
  * MlCompositeLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  */
-const MlCompositeLayer = () => {
+const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
   const mapContext = useContext(MapContext);
 
   const layerRef = useRef(null);
@@ -38,60 +50,41 @@ const MlCompositeLayer = () => {
       if (!mapContext.map.getLayer(layerName)) {
         console.log("style loaded");
         console.log(mapContext.map.style.stylesheet.name);
-        mapContext.map.addLayer(
-          {
-            id: layerName,
-            type: "fill-extrusion",
-            source: "openmaptiles",
-            "source-layer": "building",
-            minzoom: 14,
-            paint: {
-              "fill-extrusion-color": "hsl(196, 61%, 83%)",
-              "fill-extrusion-height": {
-                property: "render_height",
-                type: "identity",
-              },
-              "fill-extrusion-base": {
-                property: "render_min_height",
-                type: "identity",
-              },
-              "fill-extrusion-opacity": 0.4,
-            },
-            //    id: "3d-buildings",
-            //    source: "openmaptiles",
-            //    "source-layer": "building",
-            //    //filter: ["==", "extrude", "true"],
-            //    type: "fill-extrusion",
-            //    minzoom: 15,
-            //    paint: {
-            //      "fill-extrusion-color": "hsl(35, 8%, 85%)",
-            //      "fill-extrusion-height": {
-            //        property: "render_height",
-            //        type: "identity",
-            //      },
-            //      "fill-extrusion-base": {
-            //        property: "render_min_height",
-            //        type: "identity",
-            //      },
-            //      "fill-extrusion-opacity": 0.8,
-            //    },
-          },
-          "waterway-name"
-        );
-      }
 
-      //setTimeout(() => {
-      //  mapContext.map.setStyle(
-      //    "https://wms.wheregroup.com/tileserver/style/osm-bright.json"
-      //  );
-      //}, 5000);
+        let lastLabelLayerId = false;
+        if (mapContext.map.getLayer("waterway-name")) {
+          lastLabelLayerId = "waterway-name";
+        }
+
+        if (mapContext.map.getLayer("poi_label")) {
+          lastLabelLayerId = "poi_label";
+        }
+
+        if (lastLabelLayerId) {
+          console.log({
+            ...paint,
+          });
+          mapContext.map.addLayer(
+            {
+              id: layerName,
+              type: "fill-extrusion",
+              source: sourceId || "openmaptiles",
+              "source-layer": sourceLayer || "building",
+              minzoom: minZoom || 14,
+              paint: {
+                ...paintDefaults,
+                ...paint,
+              },
+            },
+            lastLabelLayerId
+          );
+        }
+      }
     };
 
-    //mapContext.map.once("styledata", addCompositeLayer);
-    //mapContext.map.setStyle("mapbox://styles/mapbox/light-v10");
     addCompositeLayer();
-    mapContext.map.setZoom(16.5);
-    mapContext.map.setPitch(45);
+    //mapContext.map.setZoom(16.5);
+    //mapContext.map.setPitch(45);
   }, [mapContext.map]);
 
   useEffect(() => {
