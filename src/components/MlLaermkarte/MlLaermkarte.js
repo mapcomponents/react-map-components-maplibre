@@ -1,12 +1,10 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 
 import { MapContext, SimpleDataContext } from "react-map-components-core";
+import DeckGlContext from "../../deckgl_components/DeckGlContext";
 
-import { AmbientLight, PointLight, LightingEffect } from "@deck.gl/core";
 import { HexagonLayer } from "@deck.gl/aggregation-layers";
 import { ScatterplotLayer } from "@deck.gl/layers";
-import { MapboxLayer } from "@deck.gl/mapbox";
-import { Deck } from "@deck.gl/core";
 import * as d3 from "d3";
 import * as turf from "@turf/turf";
 
@@ -45,36 +43,10 @@ function downloadObjectAsJson(exportObj, exportName) {
   downloadAnchorNode.remove();
 }
 
-const route = [
-  [7.09222, 50.725055],
-  //[7.1579, 50.681],
-  [7.0577, 50.7621],
-];
-const ambientLight = new AmbientLight({
-  color: [255, 255, 255],
-  intensity: 1.0,
-});
-
-const pointLight1 = new PointLight({
-  color: [255, 255, 255],
-  intensity: 0.8,
-  position: [-0.144528, 49.739968, 80000],
-});
-
-const pointLight2 = new PointLight({
-  color: [255, 255, 255],
-  intensity: 0.8,
-  position: [-3.807751, 54.104682, 8000],
-});
-
-const lightingEffect = new LightingEffect({
-  ambientLight,
-});
-
 const material = {
   ambient: 0.8,
-  //diffuse: 0.5,
-  //shininess: 20,
+  diffuse: 0.5,
+  shininess: 20,
   specularColor: [51, 51, 51],
 };
 
@@ -86,14 +58,6 @@ const colorRange = [
   [254, 173, 84, 120],
   [209, 55, 78, 150],
 ];
-//const colorRange = [
-//  [1, 152, 189],
-//  [73, 227, 206],
-//  [216, 254, 181],
-//  [254, 237, 177],
-//  [254, 173, 84],
-//  [209, 55, 78],
-//];
 
 const MlLaermkarte = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -102,6 +66,7 @@ const MlLaermkarte = (props) => {
   const layerRef = useRef(null);
   const deckRef = useRef(null);
   const mapContext = useContext(MapContext);
+  const deckGlContext = useContext(DeckGlContext);
   const simpleDataContext = useContext(SimpleDataContext);
   const layerName = "deckgl-layer";
   const [layerOpacity, setLayerOpacity] = useState(50);
@@ -109,7 +74,6 @@ const MlLaermkarte = (props) => {
   const [tooltipContent, setTooltipContent] = useState("");
 
   const deckLayerProps = {
-    effects: [lightingEffect],
     id: layerName,
     onClick: (obj) => {
       console.log(obj);
@@ -159,10 +123,10 @@ const MlLaermkarte = (props) => {
   };
 
   useEffect(() => {
-    if (!layerRef.current) return;
+    if (!deckGlContext.deckGl) return;
 
     console.log("update props");
-    layerRef.current.deck.setProps({
+    deckGlContext.deckGl.setProps({
       layers: [
         new HexagonLayer({
           ...deckLayerProps,
@@ -174,21 +138,9 @@ const MlLaermkarte = (props) => {
   }, [radius]);
 
   useEffect(() => {
-    if (!layerRef.current) return;
+    if (!deckGlContext.deckGl) return;
 
-    //console.log(layerRef.current);
-    //layerRef.current.setProps({
-    //  colorRange: [
-    //    [1, 152, 189, 80],
-    //    [73, 227, 206, 90],
-    //    [216, 254, 181, 100],
-    //    [254, 237, 177, 110],
-    //    [254, 173, 84, 120],
-    //    [50, 55, 78, 150],
-    //  ],
-    //});
-
-    layerRef.current.deck.setProps({
+    deckGlContext.deckGl.setProps({
       layers: [
         new HexagonLayer({
           ...deckLayerProps,
@@ -225,42 +177,38 @@ const MlLaermkarte = (props) => {
     if (
       !simpleDataContext.data ||
       !mapContext.mapExists() ||
-      (mapContext.mapExists() && simpleDataContext.data && initializedRef.current)
+      !deckGlContext.deckGl ||
+      (deckGlContext.deckGl &&
+        mapContext.mapExists() &&
+        simpleDataContext.data &&
+        initializedRef.current)
     )
       return;
 
     initializedRef.current = true;
     console.log(simpleDataContext.data);
     console.log(mapContext.getMap());
+    console.log("deckGlLayer am Start");
 
-    let deck = new Deck({
-      gl: mapContext.map.painter.context.gl,
+    window.hexLayer = deckGlContext.maplibreLayer;
+
+    deckGlContext.deckGl.setProps({
       layers: [
         new HexagonLayer({
           ...deckLayerProps,
           data: simpleDataContext.data.features,
+          radius: radius,
         }),
       ],
-      getTooltip: ({ object }) => object && object.message,
     });
-
-    layerRef.current = new MapboxLayer({
-      id: layerName,
-      deck,
-    });
-
-    window.hexLayer = layerRef.current;
-    //downloadObjectAsJson(data);
-    mapContext.map.addLayer(layerRef.current, "poi_label");
-
-    //deck.setProps({
-    //  layers: [new HexagonLayer({ ...deckLayerProps })],
-    //});
-    // move camera along line
-    mapContext.map.setCenter(route[0]);
-    mapContext.map.setZoom(18);
-    mapContext.map.setPitch(60);
-  }, [mapContext.mapIds, mapContext, radius, setRadius, simpleDataContext.data]);
+  }, [
+    mapContext.mapIds,
+    mapContext,
+    deckGlContext.deckGl,
+    radius,
+    setRadius,
+    simpleDataContext.data,
+  ]);
 
   return (
     <>
@@ -316,10 +264,15 @@ const MlLaermkarte = (props) => {
         <MlCreatePdfButton></MlCreatePdfButton>
         <Button
           onClick={() => {
-            var imgData = mapContext.map.getCanvas().toDataURL("image/png");
-            var doc = new jsPDF("p", "mm");
-            doc.addImage(imgData, "PNG", 10, 10, 400, 400);
-            doc.save("sample-file.pdf");
+            //          var imgData = mapContext.map.getCanvas().toDataURL("image/png");
+            //          var doc = new jsPDF("p", "mm");
+            //          doc.addImage(imgData, "PNG", 10, 10, 400, 400);
+            //          doc.save("sample-file.pdf");
+            var pdf = new jsPDF("p", "pt", "a4");
+
+            pdf.addHTML(document.body, function () {
+              pdf.output("map.pdf");
+            });
           }}
         >
           PDF

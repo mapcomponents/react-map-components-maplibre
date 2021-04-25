@@ -3,18 +3,18 @@ import React, { useEffect, useContext, useRef } from "react";
 import * as turf from "@turf/turf";
 import { MapContext } from "react-map-components-core";
 
-const route = [
-  [7.09222, 50.725055],
-  //[7.1579, 50.681],
-  [7.0577, 50.7621],
-];
-
 const MlCameraFollowPath = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
   const mapContext = useContext(MapContext);
   const initializedRef = useRef(false);
   const clearIntervalRef = useRef(false);
+
+  const route = props.path || [
+    [7.09222, 50.725055],
+    //[7.1579, 50.681],
+    [7.0577, 50.7621],
+  ];
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId)) return;
@@ -35,11 +35,12 @@ const MlCameraFollowPath = (props) => {
     initializedRef.current = true;
     var animationDuration = 80000;
     var cameraAltitude = 4000;
-    var kmPerStep = 0.04;
+    var kmPerStep = 0.01;
     var routeDistance = turf.lineDistance(turf.lineString(route));
 
     var step = 1;
     var zoom = 18;
+    mapContext.map.setZoom(zoom);
     var zoomSteps = 0.04;
 
     var timer = window.setInterval(function () {
