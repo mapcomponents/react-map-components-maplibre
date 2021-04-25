@@ -2,7 +2,8 @@ import React from "react";
 
 import MlLaermkarte from "./MlLaermkarte";
 
-import mapContext3DDecorator from "../../decorators/MapContext3DDecorator";
+//import mapContext3DDecorator from "../../decorators/MapContext3DDecorator";
+import mapContextDecorator from "../../decorators/MapContextKlokantechBasicDecorator";
 
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,7 +15,7 @@ export default {
     url: {},
     layer: {},
   },
-  decorators: mapContext3DDecorator,
+  decorators: mapContextDecorator,
 };
 
 const Template = (args) => (

@@ -5,6 +5,7 @@ import maplibregl from "maplibre-gl";
 
 import { AmbientLight, PointLight, LightingEffect } from "@deck.gl/core";
 import { HexagonLayer } from "@deck.gl/aggregation-layers";
+import { Deck } from "@deck.gl/core";
 import { ScatterplotLayer } from "@deck.gl/layers";
 import { MapboxLayer } from "@deck.gl/mapbox";
 import * as d3 from "d3";
@@ -98,7 +99,8 @@ const MlLaermkarte = (props) => {
   const mapContext = useContext(MapContext);
   const layerName = "deckgl-layer";
   const [layerOpacity, setLayerOpacity] = useState(50);
-  const [radius, setRadius] = useState(20);
+  const [radius, setRadius] = useState(30);
+  const [tooltipContent, setTooltipContent] = useState("");
 
   useEffect(() => {
     if (!layerRef.current) return;
@@ -171,12 +173,13 @@ const MlLaermkarte = (props) => {
           point.properties.dba = f.properties.dba;
         });
         var options = { gridType: "points", property: "dba" };
-        let pointGrid = turf.interpolate(points, 0.05, options);
+        let pointGrid = turf.interpolate(points, 0.01, options);
 
         return turf.pointsWithinPolygon(pointGrid, f).features;
       });
 
       data = turf.featureCollection([].concat.apply([], data));
+      console.log(data.length);
       layerRef.current = new MapboxLayer({
         effects: [lightingEffect],
         id: layerName,
@@ -187,20 +190,33 @@ const MlLaermkarte = (props) => {
         //getPosition: (d) => d.position,
         //getRadius: (d) => d.radius,
         //opacity: 0.3,
+        //onHover: (obj) => console.log(obj),
+        onClick: (obj) => {
+          console.log(obj);
+          //mapContext.map.zoomIn();
+          //mapContext.map.panTo(obj.coordinate);
+          setRadius(radius - 5);
+        },
+        bearing: 10,
         type: HexagonLayer,
         colorRange: colorRange,
-        coverage: 1,
+        coverage: 0.9,
         data: data.features,
         elevationRange: [30, 75],
         elevationScale: 0.5,
         extruded: true,
+        autoHighlight: true,
         getPosition: (d) => {
           return d.geometry.coordinates;
         },
         pickable: true,
-        radius: 10,
+        radius: radius,
         upperPercentile: 100,
         material,
+        transitions: {
+          elevationScale: 3000,
+          getElevationValue: 3000,
+        },
         getColorValue: (points) => {
           let elVal = points.reduce((acc, point) => {
             if (!point.properties && point.source.properties)
@@ -225,17 +241,17 @@ const MlLaermkarte = (props) => {
 
       window.hexLayer = layerRef.current;
       //downloadObjectAsJson(data);
-      mapContext.map.addLayer(layerRef.current, "water_name_line");
+      mapContext.map.addLayer(layerRef.current, "poi_label");
 
       // move camera along line
       var animationDuration = 80000;
       var cameraAltitude = 4000;
-      var kmPerStep = 0.1;
+      var kmPerStep = 0.05;
       var routeDistance = turf.lineDistance(turf.lineString(route));
 
       var step = 1;
       var zoom = 18;
-      var zoomSteps = 0.01;
+      var zoomSteps = 0.04;
 
       //var timer = window.setInterval(function () {
       //  var alongRoute = turf.along(turf.lineString(route), step * kmPerStep)
@@ -255,9 +271,9 @@ const MlLaermkarte = (props) => {
       //}, 70);
     });
     mapContext.map.setCenter(route[0]);
-    mapContext.map.setZoom(14);
+    mapContext.map.setZoom(15);
     mapContext.map.setPitch(75);
-  }, [mapContext.mapIds, mapContext]);
+  }, [mapContext.mapIds, mapContext, radius, setRadius]);
 
   return (
     <>
@@ -311,6 +327,7 @@ const MlLaermkarte = (props) => {
           style={{ maxWidth: "200px" }}
         />
       </TopToolbar>
+      {tooltipContent}
     </>
   );
 };
