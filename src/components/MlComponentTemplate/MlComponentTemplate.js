@@ -15,7 +15,7 @@ const MlComponentTemplate = (props) => {
       // e.g.: remove the layer
       // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
     };
-  });
+  }, []);
 
   useEffect(() => {
     if (!mapContext.mapExists()) return;
