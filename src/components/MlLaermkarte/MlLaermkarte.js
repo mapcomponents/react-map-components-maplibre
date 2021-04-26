@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useMemo, useState, useEffect, useContext } from "react";
 
 import { MapContext, SimpleDataContext } from "react-map-components-core";
 import DeckGlContext from "../../deckgl_components/DeckGlContext";
@@ -48,59 +48,62 @@ const MlLaermkarte = (props) => {
   const layerName = "deckgl-layer";
   const [layerOpacity, setLayerOpacity] = useState(0.8);
   const [radius, setRadius] = useState(16);
+  const [elevationScale, setElevationScale] = useState(0.3);
 
-  const deckLayerProps = {
-    id: layerName,
-    onClick: (obj) => {
-      console.log(obj);
-      //mapContext.map.zoomIn();
-      //mapContext.map.panTo(obj.coordinate);
-      //setRadius(radius - 5);
-    },
-    type: HexagonLayer,
-    colorRange: getColorRange(layerOpacity),
-    coverage: 0.9,
-    elevationRange: [30, 75],
-    elevationScale: 0.3,
-    extruded: true,
-    autoHighlight: true,
-    getPosition: (d) => {
-      return d.geometry.coordinates;
-    },
-    pickable: true,
-    radius: 20,
-    upperPercentile: 100,
-    material: {
-      ambient: 0.8,
-      diffuse: 0.5,
-      shininess: 20,
-      specularColor: [51, 51, 51],
-    },
-    transitions: {
-      //elevationScale: 3000,
-      //getElevationValue: 3000,
-    },
-    getColorValue: (points) => {
-      let elVal = points.reduce((acc, point) => {
-        if (!point.properties && point.source.properties)
-          return acc < point.source.properties.dba
-            ? point.source.properties.dba
-            : acc;
-        return acc < point.properties.dba ? point.properties.dba : acc;
-      }, -Infinity);
-      return Math.round(elVal);
-    },
-    getElevationValue: (points) => {
-      let elVal = points.reduce((acc, point) => {
-        if (!point.properties && point.source.properties)
-          return acc < point.source.properties.dba
-            ? point.source.properties.dba
-            : acc;
-        return acc < point.properties.dba ? point.properties.dba : acc;
-      }, -Infinity);
-      return Math.round(elVal);
-    },
-  };
+  const deckLayerProps = useMemo(() => {
+    return {
+      id: layerName,
+      onClick: (obj) => {
+        console.log(obj);
+        //mapContext.map.zoomIn();
+        //mapContext.map.panTo(obj.coordinate);
+        //setRadius(radius - 5);
+      },
+      data: simpleDataContext.data ? simpleDataContext.data.features : [],
+      type: HexagonLayer,
+      colorRange: getColorRange(layerOpacity),
+      coverage: 0.9,
+      elevationRange: [30, 75],
+      elevationScale: elevationScale,
+      extruded: true,
+      autoHighlight: true,
+      getPosition: (d) => {
+        return d.geometry.coordinates;
+      },
+      pickable: true,
+      radius: radius,
+      upperPercentile: 100,
+      material: {
+        ambient: 0.8,
+        diffuse: 0.5,
+        shininess: 20,
+        specularColor: [51, 51, 51],
+      },
+      transitions: {
+        elevationScale: 1500,
+      },
+      getColorValue: (points) => {
+        let elVal = points.reduce((acc, point) => {
+          if (!point.properties && point.source.properties)
+            return acc < point.source.properties.dba
+              ? point.source.properties.dba
+              : acc;
+          return acc < point.properties.dba ? point.properties.dba : acc;
+        }, -Infinity);
+        return Math.round(elVal);
+      },
+      getElevationValue: (points) => {
+        let elVal = points.reduce((acc, point) => {
+          if (!point.properties && point.source.properties)
+            return acc < point.source.properties.dba
+              ? point.source.properties.dba
+              : acc;
+          return acc < point.properties.dba ? point.properties.dba : acc;
+        }, -Infinity);
+        return Math.round(elVal);
+      },
+    };
+  }, [radius, layerOpacity, simpleDataContext.data, elevationScale]);
 
   useEffect(() => {
     if (!deckGlContext.deckGl) return;
@@ -110,26 +113,10 @@ const MlLaermkarte = (props) => {
       layers: [
         new HexagonLayer({
           ...deckLayerProps,
-          data: simpleDataContext.data.features,
-          radius: radius,
         }),
       ],
     });
-  }, [radius]);
-
-  useEffect(() => {
-    if (!deckGlContext.deckGl) return;
-
-    deckGlContext.deckGl.setProps({
-      layers: [
-        new HexagonLayer({
-          ...deckLayerProps,
-          data: simpleDataContext.data.features,
-          colorRange: getColorRange(),
-        }),
-      ],
-    });
-  }, [layerOpacity]);
+  }, [radius, layerOpacity, elevationScale]);
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId)) return;
@@ -156,11 +143,9 @@ const MlLaermkarte = (props) => {
       return;
 
     initializedRef.current = true;
-    console.log(simpleDataContext.data);
-    console.log(mapContext.getMap());
-    console.log("deckGlLayer am Start");
 
-    window.hexLayer = deckGlContext.maplibreLayer;
+    // for debugging
+    window.DeckGlMapLibreLayer = deckGlContext.maplibreLayer;
 
     deckGlContext.deckGl.setProps({
       layers: [
@@ -175,6 +160,8 @@ const MlLaermkarte = (props) => {
     mapContext.mapIds,
     mapContext,
     deckGlContext.deckGl,
+    deckGlContext.maplibreLayer,
+    deckLayerProps,
     radius,
     setRadius,
     simpleDataContext.data,
@@ -196,14 +183,13 @@ const MlLaermkarte = (props) => {
         <Slider
           value={radius}
           onChange={(ev, value) => {
-            //console.log(value);
             setRadius(value);
           }}
           getAriaValueText={(value) => value}
           aria-labelledby="discrete-slider"
           valueLabelDisplay="auto"
           ValueLabelComponent={ValueLabelComponent}
-          step={3}
+          step={5}
           marks
           min={10}
           max={70}
@@ -218,7 +204,6 @@ const MlLaermkarte = (props) => {
         <Slider
           value={layerOpacity}
           onChange={(ev, value) => {
-            //console.log(value);
             setLayerOpacity(value);
           }}
           getAriaValueText={(value) => value}
@@ -229,7 +214,28 @@ const MlLaermkarte = (props) => {
           marks
           min={0.01}
           max={1.0}
-          style={{ maxWidth: "200px" }}
+          style={{ marginRight: "10px", maxWidth: "200px" }}
+        />
+        <Typography
+          id="discrete-slider"
+          style={{ color: "#121212", marginRight: "5px" }}
+        >
+          Höhe
+        </Typography>
+        <Slider
+          value={elevationScale}
+          onChange={(ev, value) => {
+            setElevationScale(value);
+          }}
+          getAriaValueText={(value) => value}
+          aria-labelledby="discrete-slider"
+          valueLabelDisplay="auto"
+          ValueLabelComponent={ValueLabelComponent}
+          step={0.1}
+          marks
+          min={0}
+          max={4.0}
+          style={{ marginRight: "10px", maxWidth: "200px" }}
         />
       </TopToolbar>
     </>

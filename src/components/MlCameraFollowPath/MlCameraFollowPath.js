@@ -52,16 +52,19 @@ const MlCameraFollowPath = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     initializedRef.current = true;
-    var animationDuration = 80000;
-    var cameraAltitude = 4000;
-    var kmPerStep = 0.01;
+    var kmPerStep = props.kmPerStep || 0.01;
     var routeDistance = turf.lineDistance(turf.lineString(route));
 
+    var zoomOutTo = props.zoomOutTo || 14;
+    var stepDuration = props.stepDuration || 70;
     var step = 1;
-    var zoom = 18;
+    var zoom = props.initialZoom || 18;
     mapContext.map.setZoom(zoom);
     var zoomSteps = 0.04;
     disableInteractivity();
+    if (mapContext.map.getZoom() !== zoom) {
+      mapContext.map.setZoom(zoom);
+    }
 
     var timer = window.setInterval(function () {
       if (clearIntervalRef.current) {
@@ -81,14 +84,14 @@ const MlCameraFollowPath = (props) => {
             ]),
             turf.point(alongRoute)
           ),
-          duration: 69,
+          duration: stepDuration,
           essential: true,
         });
 
         step++;
 
         console.log("PAN MOVE");
-      } else if (zoom > 14) {
+      } else if (zoom > zoomOutTo) {
         zoom = zoom - zoomSteps;
         mapContext.map.setZoom(zoom);
         console.log("ZOOM OUT");
@@ -97,8 +100,15 @@ const MlCameraFollowPath = (props) => {
         console.log("ENABLE CONTROLS");
         enableInteractivity();
       }
-    }, 70);
-  }, [mapContext.mapIds, mapContext]);
+    }, stepDuration);
+  }, [
+    mapContext.mapIds,
+    mapContext,
+    props,
+    disableInteractivity,
+    enableInteractivity,
+    route,
+  ]);
 
   return <></>;
 };

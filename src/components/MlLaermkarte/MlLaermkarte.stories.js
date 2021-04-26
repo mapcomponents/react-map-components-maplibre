@@ -61,7 +61,7 @@ const Template = (args) => {
             }}
             minZoom={13}
           />
-          <MlCameraFollowPath path={route}></MlCameraFollowPath>
+          <MlCameraFollowPath path={route} kmPerStep={0.008}></MlCameraFollowPath>
         </SimpleDataProvider>
       </DeckGlProvider>
     </>
