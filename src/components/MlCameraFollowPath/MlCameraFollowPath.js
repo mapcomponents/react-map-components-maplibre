@@ -27,6 +27,25 @@ const MlCameraFollowPath = (props) => {
     };
   }, []);
 
+  const disableInteractivity = () => {
+    mapContext.map["scrollZoom"].disable();
+    mapContext.map["boxZoom"].disable();
+    mapContext.map["dragRotate"].disable();
+    mapContext.map["dragPan"].disable();
+    mapContext.map["keyboard"].disable();
+    mapContext.map["doubleClickZoom"].disable();
+    mapContext.map["touchZoomRotate"].disable();
+  };
+  const enableInteractivity = () => {
+    mapContext.map["scrollZoom"].enable();
+    mapContext.map["boxZoom"].enable();
+    mapContext.map["dragRotate"].enable();
+    mapContext.map["dragPan"].enable();
+    mapContext.map["keyboard"].enable();
+    mapContext.map["doubleClickZoom"].enable();
+    mapContext.map["touchZoomRotate"].enable();
+  };
+
   useEffect(() => {
     if (!mapContext.mapExists() || initializedRef.current) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
@@ -42,27 +61,18 @@ const MlCameraFollowPath = (props) => {
     var zoom = 18;
     mapContext.map.setZoom(zoom);
     var zoomSteps = 0.04;
+    disableInteractivity();
 
     var timer = window.setInterval(function () {
       if (clearIntervalRef.current) {
         window.clearInterval(timer);
+        enableInteractivity();
       }
 
       var alongRoute = turf.along(turf.lineString(route), step * kmPerStep).geometry
         .coordinates;
 
       if (step * kmPerStep < routeDistance) {
-        //data.features[0].geometry.coordinates.push(coordinates[i]);
-        //map.getSource("trace").setData(data);
-        //mapContext.map.setBearing(
-        //  turf.bearing(
-        //    turf.point([
-        //      mapContext.map.getCenter().lng,
-        //      mapContext.map.getCenter().lat,
-        //    ]),
-        //    turf.point(alongRoute)
-        //  )
-        //);
         mapContext.map.panTo(alongRoute, {
           bearing: turf.bearing(
             turf.point([
@@ -72,13 +82,20 @@ const MlCameraFollowPath = (props) => {
             turf.point(alongRoute)
           ),
           duration: 69,
+          essential: true,
         });
+
         step++;
+
+        console.log("PAN MOVE");
       } else if (zoom > 14) {
         zoom = zoom - zoomSteps;
         mapContext.map.setZoom(zoom);
+        console.log("ZOOM OUT");
       } else {
         window.clearInterval(timer);
+        console.log("ENABLE CONTROLS");
+        enableInteractivity();
       }
     }, 70);
   }, [mapContext.mapIds, mapContext]);

@@ -27,18 +27,26 @@ function ValueLabelComponent(props) {
   );
 }
 
+const getColorRange = (layerOpacity) => [
+  [1, 152, 189, Math.round(80 * layerOpacity)],
+  [73, 227, 206, Math.round(90 * layerOpacity)],
+  [216, 254, 181, Math.round(100 * layerOpacity)],
+  [254, 237, 177, Math.round(110 * layerOpacity)],
+  [254, 173, 84, Math.round(120 * layerOpacity)],
+  [209, 55, 78, Math.round(150 * layerOpacity)],
+];
+
 const DATA_URL = "/assets/laerm.json"; // eslint-disable-line
 
 const MlLaermkarte = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
   const initializedRef = useRef(false);
-  const layerRef = useRef(null);
   const mapContext = useContext(MapContext);
   const deckGlContext = useContext(DeckGlContext);
   const simpleDataContext = useContext(SimpleDataContext);
   const layerName = "deckgl-layer";
-  const [layerOpacity, setLayerOpacity] = useState(50);
+  const [layerOpacity, setLayerOpacity] = useState(0.8);
   const [radius, setRadius] = useState(16);
 
   const deckLayerProps = {
@@ -50,14 +58,7 @@ const MlLaermkarte = (props) => {
       //setRadius(radius - 5);
     },
     type: HexagonLayer,
-    colorRange: [
-      [1, 152, 189, 80],
-      [73, 227, 206, 90],
-      [216, 254, 181, 100],
-      [254, 237, 177, 110],
-      [254, 173, 84, 120],
-      [209, 55, 78, 150],
-    ],
+    colorRange: getColorRange(layerOpacity),
     coverage: 0.9,
     elevationRange: [30, 75],
     elevationScale: 0.3,
@@ -124,14 +125,7 @@ const MlLaermkarte = (props) => {
         new HexagonLayer({
           ...deckLayerProps,
           data: simpleDataContext.data.features,
-          colorRange: [
-            [1, 152, 189, Math.round(80 * layerOpacity)],
-            [73, 227, 206, Math.round(90 * layerOpacity)],
-            [216, 254, 181, Math.round(100 * layerOpacity)],
-            [254, 237, 177, Math.round(110 * layerOpacity)],
-            [254, 173, 84, Math.round(120 * layerOpacity)],
-            [209, 55, 78, Math.round(150 * layerOpacity)],
-          ],
+          colorRange: getColorRange(),
         }),
       ],
     });

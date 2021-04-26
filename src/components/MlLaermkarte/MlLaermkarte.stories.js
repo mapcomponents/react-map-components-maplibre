@@ -59,7 +59,7 @@ const Template = (args) => {
             paint={{
               "fill-extrusion-color": "hsl(30, 30, 30)",
             }}
-            minZoom={12}
+            minZoom={13}
           />
           <MlCameraFollowPath path={route}></MlCameraFollowPath>
         </SimpleDataProvider>
