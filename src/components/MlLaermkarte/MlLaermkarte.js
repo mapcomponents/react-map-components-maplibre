@@ -39,7 +39,7 @@ const MlLaermkarte = (props) => {
   const simpleDataContext = useContext(SimpleDataContext);
   const layerName = "deckgl-layer";
   const [layerOpacity, setLayerOpacity] = useState(50);
-  const [radius, setRadius] = useState(30);
+  const [radius, setRadius] = useState(16);
 
   const deckLayerProps = {
     id: layerName,
@@ -49,7 +49,6 @@ const MlLaermkarte = (props) => {
       //mapContext.map.panTo(obj.coordinate);
       //setRadius(radius - 5);
     },
-    bearing: 10,
     type: HexagonLayer,
     colorRange: [
       [1, 152, 189, 80],
@@ -68,7 +67,7 @@ const MlLaermkarte = (props) => {
       return d.geometry.coordinates;
     },
     pickable: true,
-    radius: 15,
+    radius: 20,
     upperPercentile: 100,
     material: {
       ambient: 0.8,
@@ -210,9 +209,9 @@ const MlLaermkarte = (props) => {
           aria-labelledby="discrete-slider"
           valueLabelDisplay="auto"
           ValueLabelComponent={ValueLabelComponent}
-          step={2}
+          step={3}
           marks
-          min={15}
+          min={10}
           max={70}
           style={{ marginRight: "10px", maxWidth: "200px" }}
         />

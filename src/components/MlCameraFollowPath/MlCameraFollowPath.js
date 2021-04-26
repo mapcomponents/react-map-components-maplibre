@@ -10,9 +10,9 @@ const MlCameraFollowPath = (props) => {
   const initializedRef = useRef(false);
   const clearIntervalRef = useRef(false);
 
+  // default path, for testing default behaviour
   const route = props.path || [
     [7.09222, 50.725055],
-    //[7.1579, 50.681],
     [7.0577, 50.7621],
   ];
 
@@ -54,7 +54,25 @@ const MlCameraFollowPath = (props) => {
       if (step * kmPerStep < routeDistance) {
         //data.features[0].geometry.coordinates.push(coordinates[i]);
         //map.getSource("trace").setData(data);
-        mapContext.map.panTo(alongRoute);
+        //mapContext.map.setBearing(
+        //  turf.bearing(
+        //    turf.point([
+        //      mapContext.map.getCenter().lng,
+        //      mapContext.map.getCenter().lat,
+        //    ]),
+        //    turf.point(alongRoute)
+        //  )
+        //);
+        mapContext.map.panTo(alongRoute, {
+          bearing: turf.bearing(
+            turf.point([
+              mapContext.map.getCenter().lng,
+              mapContext.map.getCenter().lat,
+            ]),
+            turf.point(alongRoute)
+          ),
+          duration: 69,
+        });
         step++;
       } else if (zoom > 14) {
         zoom = zoom - zoomSteps;
