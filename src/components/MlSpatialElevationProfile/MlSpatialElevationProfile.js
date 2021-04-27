@@ -19,7 +19,7 @@ const MlSpatialElevationProfile = ({elevationFactor = 1, mapId = null }) => {
   console.log(elevationFactor)
 
   const createStep = (x, y, z, x2, y2) => {
-    const summand = 0.00001;
+    const summand = 0.00020;
     return polygon(
       [
         [
