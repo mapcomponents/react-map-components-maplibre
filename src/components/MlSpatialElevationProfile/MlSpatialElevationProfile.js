@@ -59,7 +59,7 @@ const MlSpatialElevationProfile = ({elevationFactor = 1, mapId = null }) => {
       type: "fill-extrusion",
       paint: {
         "fill-extrusion-height": ["get", "height"],
-        "fill-extrusion-opacity": 1,
+        "fill-extrusion-opacity": 0.9,
         "fill-extrusion-color": [
           "interpolate",
           ["linear"],
@@ -97,9 +97,9 @@ const MlSpatialElevationProfile = ({elevationFactor = 1, mapId = null }) => {
     
     const min = Math.min(...heights);
    
-    const max = Math.max(...heights)-min;
+    let max = Math.max(...heights)-min;
     
-    
+    max = max ===0 ? 1 : max;
    
     map.setPaintProperty(layerName, "fill-extrusion-color", [
       "interpolate",
