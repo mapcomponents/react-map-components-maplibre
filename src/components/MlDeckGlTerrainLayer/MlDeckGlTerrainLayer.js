@@ -67,12 +67,12 @@ const MlDeckGlTerrainLayer = () => {
       }),
       "water-name-lakeline"
     );
-    setTimeout(() => {
-      map.setZoom(13);
-      map.setPitch(45);
-      map.setCenter({ lng: 11.647776401389137, lat: 46.48726512556033 });
-      rotateCamera(0);
-    }, 500);
+    //    setTimeout(() => {
+    //      map.setZoom(13);
+    //      map.setPitch(45);
+    //      map.setCenter({ lng: 11.647776401389137, lat: 46.48726512556033 });
+    //      rotateCamera(0);
+    //    }, 500);
   };
 
   useEffect(() => {

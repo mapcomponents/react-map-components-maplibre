@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext, useCallback, useRef, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 
 import Button from "@material-ui/core/Button";
@@ -15,6 +15,7 @@ const MlThreeJsLayer = () => {
   const layerRef = useRef(null);
   const layerName = "3d-model";
   const [showLayer, setShowLayer] = useState(true);
+  const [play, setPlay] = useState(false);
   const showLayerRef = useRef(true);
   const idPostfixRef = useRef(new Date().getTime());
 
@@ -27,16 +28,24 @@ const MlThreeJsLayer = () => {
     }
   };
 
-  let rotateCamera = (timestamp) => {
-    // clamp the rotation between 0 -360 degrees
-    // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-    mapContext.map.rotateTo((timestamp / 100) % 360, { duration: 0 });
-    // Request the next frame of the animation.
-    console.log(showLayer);
-    if (showLayerRef.current) {
-      requestAnimationFrame(rotateCamera);
+  let rotateCamera = useCallback(
+    (timestamp) => {
+      if (!play || !mapContext.map) return;
+      // clamp the rotation between 0 -360 degrees
+      // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+      mapContext.map.rotateTo((timestamp / 100) % 360, { duration: 0 });
+      // Request the next frame of the animation.
+      if (showLayerRef.current && play) {
+        requestAnimationFrame(rotateCamera);
+      }
+    },
+    [play]
+  );
+  useEffect(() => {
+    if (play) {
+      //rotateCamera(0);
     }
-  };
+  }, [play]);
 
   useEffect(() => {
     if (!mapContext.map) return;
@@ -109,7 +118,7 @@ const MlThreeJsLayer = () => {
         var loader = new GLTFLoader();
         loader.load(
           //"/assets/3D/posttower_simple.gltf",
-          "/assets/3D/posttower.gltf",
+          "/assets/3D/posttower_wh.gltf.glb",
           //"https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf",
           function (gltf) {
             this.scene.add(gltf.scene);
@@ -170,6 +179,7 @@ const MlThreeJsLayer = () => {
     if (mapContext.map.getLayer(layerName)) {
       mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
     }
+    mapContext.map.setCenter([7.130255969902919, 50.7143656091998]);
     mapContext.map.setZoom(15);
     mapContext.map.setPitch(45);
   }, [mapContext.map]);
@@ -181,25 +191,37 @@ const MlThreeJsLayer = () => {
       // toggle layer visibility by changing the layout object's visibility property
       if (showLayer) {
         mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
-        rotateCamera(0);
       } else {
         mapContext.map.setLayoutProperty(layerName, "visibility", "none");
       }
     }
     //
-  }, [showLayer, mapContext, rotateCamera]);
+  }, [showLayer, mapContext]);
 
   return (
-    <Button
-      color="primary"
-      variant={showLayer ? "contained" : "outlined"}
-      onClick={() => {
-        setShowLayer(!showLayer);
-        showLayerRef.current = !showLayer;
-      }}
-    >
-      ThreeJs
-    </Button>
+    <>
+      <Button
+        color="primary"
+        variant={showLayer ? "contained" : "outlined"}
+        onClick={() => {
+          setShowLayer(!showLayer);
+          showLayerRef.current = !showLayer;
+        }}
+      >
+        3D
+      </Button>
+      {/**
+      <Button
+        color="primary"
+        variant={play ? "contained" : "outlined"}
+        onClick={() => {
+          setPlay(!play);
+        }}
+      >
+        Play
+      </Button>
+      **/}
+    </>
   );
 };
 
