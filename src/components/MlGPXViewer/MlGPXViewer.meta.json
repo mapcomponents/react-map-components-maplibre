@@ -4,6 +4,6 @@
   "description": "",
   "tags": ["Map add-on"],
   "category": "add-ons",
-  "type": "application",
+  "type": "component",
   "price": 5000
 }
