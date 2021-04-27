@@ -24,6 +24,7 @@ const MlWanderApp = (props) => {
           mapId="map_2"
         />
       </TopToolbar>
+      <MlGPXViewer mapId="map_1" />
 
       <GeoJsonProvider>
         <MlGPXViewer mapId="map_1" />
