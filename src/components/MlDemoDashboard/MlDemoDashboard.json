@@ -1,0 +1,9 @@
+{
+  "name": "MlDemoDashboard",
+  "title": "MlDemoDashboard",
+  "description": "",
+  "tags": ["Map add-on"],
+  "category": "add-ons",
+  "type": "application",
+  "price": 5000
+}

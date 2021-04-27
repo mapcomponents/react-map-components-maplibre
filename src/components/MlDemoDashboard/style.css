@@ -1,0 +1,16 @@
+
+
+.smallMap {
+
+    
+    
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.smallMap > .mapContainer {
+    margin: 1rem;
+    width: 95% !important;
+    height: 95% !important;
+
+}
