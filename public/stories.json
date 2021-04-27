@@ -3,71 +3,95 @@
   "globalParameters": {},
   "kindParameters": {
     "Core/Introduction": {
-      "fileName": 2348,
+      "fileName": 1485,
       "framework": "react"
     },
     "Core/MapLibreMap": {
-      "fileName": 1969,
+      "fileName": 1451,
+      "framework": "react"
+    },
+    "MapComponents/MlCameraFollowPath": {
+      "fileName": 1452,
       "framework": "react"
     },
     "MapComponents/MlComponentTemplate": {
-      "fileName": 2360,
+      "fileName": 1492,
       "framework": "react"
     },
     "MapComponents/MlCompositeLayer": {
-      "fileName": 1970,
+      "fileName": 1453,
       "framework": "react"
     },
     "MapComponents/MlCreatePdfButton": {
-      "fileName": 2354,
+      "fileName": 1488,
       "framework": "react"
     },
     "MapComponents/MlDeckGlLayer": {
-      "fileName": 2361,
+      "fileName": 1493,
       "framework": "react"
     },
     "MapComponents/MlDeckGlTerrainLayer": {
-      "fileName": 2362,
+      "fileName": 1494,
+      "framework": "react"
+    },
+    "MapComponents/MlDemoDashboard": {
+      "fileName": 1483,
+      "framework": "react"
+    },
+    "MapComponents/MlGPXViewer": {
+      "fileName": 1462,
       "framework": "react"
     },
     "MapComponents/MlHillshadeLayer": {
-      "fileName": 2363,
+      "fileName": 1467,
       "framework": "react"
     },
-    "MapComponents/MlKeplerGlLayer": {
-      "fileName": 2357,
+    "Applications/MlLaermkarte": {
+      "fileName": 1489,
+      "framework": "react"
+    },
+    "Applications/MlLaermkarteOld": {
+      "fileName": 1495,
       "framework": "react"
     },
     "MapComponents/MlLayerMagnify": {
-      "fileName": 2364,
+      "fileName": 1468,
       "framework": "react"
     },
     "MapComponents/MlLayerSwipe": {
-      "fileName": 2365,
+      "fileName": 1496,
       "framework": "react"
     },
     "MapComponents/MlMapDrawTools": {
-      "fileName": 2350,
+      "fileName": 1486,
       "framework": "react"
     },
     "MapComponents/MlMobilerImker": {
-      "fileName": 2355,
+      "fileName": 1490,
       "framework": "react"
     },
     "MapComponents/MlOsmLayer": {
-      "fileName": 2366,
+      "fileName": 1497,
+      "framework": "react"
+    },
+    "MapComponents/MlSpatialElevationProfile": {
+      "fileName": 1480,
       "framework": "react"
     },
     "MapComponents/MlThreeJsLayer": {
-      "fileName": 2367,
+      "fileName": 1498,
       "framework": "react"
     },
     "MapComponents/MlVectorTileLayer": {
-      "fileName": 2368,
+      "fileName": 1499,
+      "framework": "react"
+    },
+    "Applications/MlWanderApp": {
+      "fileName": 1500,
       "framework": "react"
     },
     "MapComponents/MlWmsLayer": {
-      "fileName": 2369,
+      "fileName": 1501,
       "framework": "react"
     }
   },
@@ -90,6 +114,16 @@
       "story": "Example Config",
       "parameters": {
         "__id": "core-maplibremap--example-config",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlcamerafollowpath--example-config": {
+      "id": "mapcomponents-mlcamerafollowpath--example-config",
+      "name": "Example Config",
+      "kind": "MapComponents/MlCameraFollowPath",
+      "story": "Example Config",
+      "parameters": {
+        "__id": "mapcomponents-mlcamerafollowpath--example-config",
         "__isArgsStory": true
       }
     },
@@ -143,6 +177,26 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mldemodashboard--example-config": {
+      "id": "mapcomponents-mldemodashboard--example-config",
+      "name": "Example Config",
+      "kind": "MapComponents/MlDemoDashboard",
+      "story": "Example Config",
+      "parameters": {
+        "__id": "mapcomponents-mldemodashboard--example-config",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlgpxviewer--example-config": {
+      "id": "mapcomponents-mlgpxviewer--example-config",
+      "name": "Example Config",
+      "kind": "MapComponents/MlGPXViewer",
+      "story": "Example Config",
+      "parameters": {
+        "__id": "mapcomponents-mlgpxviewer--example-config",
+        "__isArgsStory": true
+      }
+    },
     "mapcomponents-mlhillshadelayer--example-config": {
       "id": "mapcomponents-mlhillshadelayer--example-config",
       "name": "Example Config",
@@ -153,13 +207,23 @@
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlkeplergllayer--example-config": {
-      "id": "mapcomponents-mlkeplergllayer--example-config",
+    "applications-mllaermkarte--example-config": {
+      "id": "applications-mllaermkarte--example-config",
       "name": "Example Config",
-      "kind": "MapComponents/MlKeplerGlLayer",
+      "kind": "Applications/MlLaermkarte",
       "story": "Example Config",
       "parameters": {
-        "__id": "mapcomponents-mlkeplergllayer--example-config",
+        "__id": "applications-mllaermkarte--example-config",
+        "__isArgsStory": true
+      }
+    },
+    "applications-mllaermkarteold--example-config": {
+      "id": "applications-mllaermkarteold--example-config",
+      "name": "Example Config",
+      "kind": "Applications/MlLaermkarteOld",
+      "story": "Example Config",
+      "parameters": {
+        "__id": "applications-mllaermkarteold--example-config",
         "__isArgsStory": true
       }
     },
@@ -213,6 +277,16 @@
         "__isArgsStory": false
       }
     },
+    "mapcomponents-mlspatialelevationprofile--example-config": {
+      "id": "mapcomponents-mlspatialelevationprofile--example-config",
+      "name": "Example Config",
+      "kind": "MapComponents/MlSpatialElevationProfile",
+      "story": "Example Config",
+      "parameters": {
+        "__id": "mapcomponents-mlspatialelevationprofile--example-config",
+        "__isArgsStory": true
+      }
+    },
     "mapcomponents-mlthreejslayer--example-config": {
       "id": "mapcomponents-mlthreejslayer--example-config",
       "name": "Example Config",
@@ -230,6 +304,16 @@
       "story": "Example Config",
       "parameters": {
         "__id": "mapcomponents-mlvectortilelayer--example-config",
+        "__isArgsStory": true
+      }
+    },
+    "applications-mlwanderapp--example-config": {
+      "id": "applications-mlwanderapp--example-config",
+      "name": "Example Config",
+      "kind": "Applications/MlWanderApp",
+      "story": "Example Config",
+      "parameters": {
+        "__id": "applications-mlwanderapp--example-config",
         "__isArgsStory": true
       }
     },
