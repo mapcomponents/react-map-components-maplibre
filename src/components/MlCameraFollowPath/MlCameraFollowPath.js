@@ -59,8 +59,8 @@ const MlCameraFollowPath = (props) => {
     var stepDuration = props.stepDuration || 70;
     var step = 1;
     var zoom = props.initialZoom || 18;
-    mapContext.map.setZoom(zoom);
     var zoomSteps = 0.04;
+
     disableInteractivity();
     if (mapContext.map.getZoom() !== zoom) {
       mapContext.map.setZoom(zoom);

@@ -46,7 +46,6 @@ const Template = (args) => {
     if (!mapContext.mapExists()) return;
 
     mapContext.map.setCenter(route[0]);
-    mapContext.map.setZoom(18);
     mapContext.map.setPitch(60);
   }, [mapContext.map]);
 
@@ -61,7 +60,12 @@ const Template = (args) => {
             }}
             minZoom={13}
           />
-          <MlCameraFollowPath path={route} kmPerStep={0.008}></MlCameraFollowPath>
+          <MlCameraFollowPath
+            path={route}
+            initialZoom={15.8}
+            zoomOutTo={16.6}
+            kmPerStep={0.008}
+          ></MlCameraFollowPath>
         </SimpleDataProvider>
       </DeckGlProvider>
     </>
