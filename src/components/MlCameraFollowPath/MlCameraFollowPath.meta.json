@@ -1,9 +1,9 @@
 {
   "name": "MlCameraFollowPath",
-  "title": "",
+  "title": "Camerafahrt entlang eines Pfades",
   "description": "",
   "tags": [],
   "category": "",
   "type": "component",
-  "price": 0
+  "price": 1000
 }
