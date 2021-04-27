@@ -5,6 +5,6 @@
   "tags": [],
   "category": "",
   "type": "application",
-  "components": [ "SimpleDataProvider", "MlDeckGlLayer", "MlCompositeLayer", "MlCameraFollowPath"] ,
+  "components": [ "MlDeckGlLayer", "MlCompositeLayer", "MlCameraFollowPath"] ,
   "price": 12000
 }

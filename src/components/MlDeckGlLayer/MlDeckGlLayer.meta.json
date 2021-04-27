@@ -1,7 +1,7 @@
 {
-  "name": "MlLayerMagnify",
-  "title": "Kartenvorhang",
-  "description": "Kertenvorhangs blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus.",
+  "name": "MlDeckGlLayer",
+  "title": "3D Cluster Diagramm",
+  "description": "",
   "tags": ["Map add-on"],
   "category": "add-ons",
   "type": "component",
