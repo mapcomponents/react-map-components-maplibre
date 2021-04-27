@@ -3,6 +3,7 @@ import React from "react";
 import MlGPXViewer from "./MlGPXViewer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
+import GeoJsonProvider from  './util/GeoJsonProvider'
 
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -22,8 +23,9 @@ export default {
 
 const Template = (args) => (
   <>
-    
-    <MlGPXViewer />
+    <GeoJsonProvider>
+    <MlGPXViewer/>
+    </GeoJsonProvider>
   </>
 );
 
