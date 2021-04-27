@@ -1,16 +1,17 @@
 import React from "react";
 
-import MlGPXViewer from "./MlGPXViewer";
+import TopToolbar from "../../ui_components/TopToolbar";
+import MlSpatialElevationProfile from "./MlSpatialElevationProfile";
+import MlGPXViewer from "../MlGPXViewer/MlGPXViewer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
-import GeoJsonProvider from  './util/GeoJsonProvider'
-
+import GeoJsonProvider from "../MlGPXViewer/util/GeoJsonProvider";
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default {
-  title: "MapComponents/MlGPXViewer",
-  component: MlGPXViewer,
+  title: "MapComponents/MlSpatialElevationProfile",
+  component: MlSpatialElevationProfile,
   argTypes: {
     options: {
       control: {
@@ -24,7 +25,8 @@ export default {
 const Template = (args) => (
   <>
     <GeoJsonProvider>
-    <MlGPXViewer/>
+      <MlGPXViewer />
+      <MlSpatialElevationProfile />
     </GeoJsonProvider>
   </>
 );
