@@ -1,9 +1,10 @@
 {
   "name": "MlWanderApp",
-  "title": "",
+  "title": "Wanderwege",
   "description": "",
   "tags": [],
   "category": "",
   "type": "application",
+  "components": [ "MlGPXViewer", "MlHillshadeLayer", "MlLayerMagnify"],
   "price": 0
 }

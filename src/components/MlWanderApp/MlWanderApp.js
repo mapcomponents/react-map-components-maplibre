@@ -28,7 +28,6 @@ const MlWanderApp = (props) => {
 
       <GeoJsonProvider>
         <MlGPXViewer mapId="map_1" />
-      
       </GeoJsonProvider>
       <MlLayerMagnify map1Id="map_1" map2Id="map_2" magnifierRadius={20} />
       <MlHillshadeLayer />
