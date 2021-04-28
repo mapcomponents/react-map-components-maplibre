@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 import GeoJsonContext from "../MlGPXViewer/util/GeoJsonContext";
-import { polygon } from "@turf/helpers";
-import { distance } from "@turf/turf";
+import { polygon,lineString } from "@turf/helpers";
+import { distance,lineOffset } from "@turf/turf";
 
 
 
@@ -20,13 +20,21 @@ const MlSpatialElevationProfile = ({elevationFactor = 1, mapId = null }) => {
 
   const createStep = (x, y, z, x2, y2) => {
     const summand = 0.00020;
+    const line = lineString([[x,y], [x2,y2]]);
+    const offsetLine = lineOffset(line,5, {units: 'meters'});
+    const x3 = offsetLine.geometry.coordinates[0][0];
+    const y3 = offsetLine.geometry.coordinates[0][1];
+    const x4 = offsetLine.geometry.coordinates[1][0];
+    const y4 = offsetLine.geometry.coordinates[1][1];
+    
     return polygon(
       [
         [
           [x, y],
           [x2, y2],
-          [x2, y2 + summand],
-          [x, y + summand],
+          
+          [x4, y4],
+          [x3,y3],
           [x, y],
         ],
       ],
@@ -163,7 +171,7 @@ const MlSpatialElevationProfile = ({elevationFactor = 1, mapId = null }) => {
 
     const newData = dataSource.getEmptyFeatureCollection();
     newData.features = points;
-    console.log(newData);
+    
     map.getSource(sourceName)?.setData(newData);
   }, [dataSource.data]);
 
