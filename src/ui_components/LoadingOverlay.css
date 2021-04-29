@@ -1,0 +1,9 @@
+.loadingOverlay-fadein {
+  opacity: 1;
+  transition: all 150ms linear;
+}
+
+.loadingOverlay-fadeout {
+  opacity: 0;
+  transition: all 1700ms linear;
+}
