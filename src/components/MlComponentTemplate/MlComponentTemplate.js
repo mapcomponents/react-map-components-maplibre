@@ -18,7 +18,7 @@ const MlComponentTemplate = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!mapContext.mapExists()) return;
+    if (!mapContext.mapExists(props.mapId)) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     mapContext
