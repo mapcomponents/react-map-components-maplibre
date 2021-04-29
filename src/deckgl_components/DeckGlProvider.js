@@ -28,17 +28,11 @@ const lightingEffect = new LightingEffect({
   ambientLight,
 });
 
-const DeckGlProvider = ({ init, onDone, children }) => {
+const DeckGlProvider = ({ children }) => {
   const mapContext = useContext(MapContext);
 
   const [deckGl, setDeckGl] = useState(null);
   const layerRef = useState(null);
-
-  useEffect(() => {
-    if (typeof init === "function") {
-      init();
-    }
-  }, []);
 
   useEffect(() => {
     if (!mapContext.map) return;
@@ -58,10 +52,6 @@ const DeckGlProvider = ({ init, onDone, children }) => {
 
     mapContext.map.addLayer(layerRef.current, "poi_label");
 
-    if (typeof onDone === "function") {
-      console.log("hide overlay");
-      onDone();
-    }
     setDeckGl(deck);
   }, [mapContext.map]);
 

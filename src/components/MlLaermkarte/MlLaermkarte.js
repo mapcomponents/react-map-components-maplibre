@@ -119,6 +119,10 @@ const MlLaermkarte = (props) => {
   }, [radius, layerOpacity, elevationScale]);
 
   useEffect(() => {
+    if (typeof props.init === "function") {
+      props.init();
+    }
+
     if (!mapContext.mapExists(props.mapId)) return;
     return () => {
       if (deckGlContext.deckGl) {
@@ -156,6 +160,11 @@ const MlLaermkarte = (props) => {
         }),
       ],
     });
+
+    if (typeof props.onDone === "function") {
+      console.log("hide overlay");
+      props.onDone();
+    }
   }, [
     mapContext.mapIds,
     mapContext,

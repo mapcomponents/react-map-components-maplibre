@@ -53,14 +53,14 @@ const Template = (args) => {
 
   return (
     <>
-      <DeckGlProvider
-        init={() => loadingOverlayContext.setControlled(true)}
-        onDone={() =>
-          setTimeout(() => loadingOverlayContext.setLoadingDone(true), 1200)
-        }
-      >
+      <DeckGlProvider>
         <SimpleDataProvider format="json" url="/assets/laerm_points.json">
-          <MlLaermkarte />
+          <MlLaermkarte
+            init={() => loadingOverlayContext.setControlled(true)}
+            onDone={() =>
+              setTimeout(() => loadingOverlayContext.setLoadingDone(true), 1200)
+            }
+          />
           <MlCompositeLayer
             paint={{
               "fill-extrusion-color": "hsl(30, 30, 30)",
@@ -70,7 +70,7 @@ const Template = (args) => {
           <MlCameraFollowPath
             path={route}
             initialZoom={15.8}
-            zoomOutTo={16.6}
+            zoomOutTo={13.6}
             kmPerStep={0.008}
           ></MlCameraFollowPath>
         </SimpleDataProvider>
