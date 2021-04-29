@@ -26,7 +26,7 @@ function LoadingOverlay() {
         justifyContent: "center",
       }}
     >
-      <video autoPlay loop muted>
+      <video autoPlay muted>
         <source src="/assets/wh.mp4" type="video/mp4" />
       </video>
     </div>

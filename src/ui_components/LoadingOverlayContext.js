@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useCallback, useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import { MapContext } from "react-map-components-core";
 
@@ -9,48 +9,45 @@ const LoadingOverlayProvider = ({ children }) => {
   const mapContext = useContext(MapContext);
 
   const [controlled, setControlled] = useState(false);
-  const [loadingDone, setLoadingDone] = useState(true);
+  const [loadingDone, setLoadingDone] = useState(false);
   const [visible, setVisible] = useState(true);
   const [fadeoutAnimation, setFadeoutAnimation] = useState(false);
   const mapJobsRef = useRef({});
-  const [mapJobs, setMapJobs] = useState({});
+  const [checkIdleTrigger, setCheckIdleTrigger] = useState(0);
+
+  const createOnMapIdleFunction = useCallback((mapId) => () => {
+    mapJobsRef.current[mapId] = true;
+    setCheckIdleTrigger(Math.random());
+  });
 
   const fadeOut = () => {
+    setFadeoutAnimation(true);
     setTimeout(() => {
-      setFadeoutAnimation(true);
-      setTimeout(() => {
-        setVisible(false);
-      }, 1700);
-    }, 2700);
+      setVisible(false);
+    }, 1700);
   };
 
   useEffect(() => {
     if (!mapContext.map || controlled) return;
 
-    for (var key in mapJobs) {
-      if (!mapJobs[key]) return;
+    for (var key in mapJobsRef.current) {
+      if (!mapJobsRef.current[key]) return;
     }
 
-    //fadeOut();
-  }, [mapJobs, controlled]);
+    fadeOut();
+  }, [checkIdleTrigger, mapJobsRef, controlled, mapContext]);
 
   useEffect(() => {
-    console.log("MAPLIBRE INSTANCE SPOTTED");
-
     for (var i = 0, len = mapContext.mapIds.length; i < len; i++) {
-      if (Object.keys(mapJobsRef.current).indexOf(mapContext.mapIds[i]) !== -1) {
-        setControlled(true);
-
+      if (Object.keys(mapJobsRef.current).indexOf(mapContext.mapIds[i]) === -1) {
         let mapId = mapContext.mapIds[i] + "";
+
         mapJobsRef.current[mapId] = false;
-        mapContext.getMap(mapId).on("idle", () => {
-          console.log("IDLE " + mapId);
-          mapJobsRef.current[mapId] = true;
-          setMapJobs(mapJobsRef.current);
-        });
+
+        mapContext.getMap(mapId).on("idle", createOnMapIdleFunction(mapId));
       }
     }
-  }, [mapContext, mapContext.mapIds]);
+  }, [mapContext, mapContext.mapIds, mapJobsRef, createOnMapIdleFunction]);
 
   useEffect(() => {
     if (loadingDone) {
