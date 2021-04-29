@@ -1,14 +1,12 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useRef, useContext, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 
 import MlBasicComponent from "../MlBasicComponent";
 import Button from "@material-ui/core/Button";
-import maplibregl from "maplibre-gl";
 import * as d3 from "d3";
 
 import { AmbientLight, PointLight, LightingEffect } from "@deck.gl/core";
 import { HexagonLayer } from "@deck.gl/aggregation-layers";
-import { ScatterplotLayer } from "@deck.gl/layers";
 import { MapboxLayer } from "@deck.gl/mapbox";
 
 // Source data CSV
@@ -54,36 +52,33 @@ const colorRange = [
   [209, 55, 78],
 ];
 
-function getTooltip({ object }) {
-  if (!object) {
-    return null;
-  }
-  const lat = object.position[1];
-  const lng = object.position[0];
-  const count = object.points.length;
-
-  return `\
-    latitude: ${Number.isFinite(lat) ? lat.toFixed(6) : ""}
-    longitude: ${Number.isFinite(lng) ? lng.toFixed(6) : ""}
-    ${count} Accidents`;
-}
-
 /**
- * MlDeckGlLayer adds kepler.gl layer to the maplibre-gl instance.
+ * MlDeckGlLayer adds deck.gl hexagonlayer to the maplibre-gl instance.
  */
-const MlDeckGlLayer = () => {
+const MlDeckGlLayer = ({ init, onDone }) => {
   const mapContext = useContext(MapContext);
   const [showLayer, setShowLayer] = useState(true);
   const layerName = "deckgl-layer";
+  const initializedRef = useRef(false);
 
-  const cleanup = (map) => {
-    if (map.getLayer(layerName)) {
-      map.removeLayer(layerName);
+  useEffect(() => {
+    if (typeof init === "function") {
+      init();
     }
-  };
+
+    return () => {
+      if (mapContext.mapExists() && mapContext.getMap().getLayer(layerName)) {
+        mapContext.getMap().removeLayer(layerName);
+      }
+    };
+  }, []);
 
   const mapIsReady = (map) => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
     console.log("load heatmap data");
+
     d3.csv(DATA_URL).then((response) => {
       const data = response.map((d) => {
         return {
@@ -124,6 +119,10 @@ const MlDeckGlLayer = () => {
         }),
         "water-name-lakeline"
       );
+      if (typeof onDone === "function") {
+        console.log("hide overlay");
+        onDone();
+      }
     });
     map.setZoom(6);
     map.setPitch(45);
@@ -143,7 +142,7 @@ const MlDeckGlLayer = () => {
 
   return (
     <>
-      <MlBasicComponent cleanup={cleanup} mapIsReady={mapIsReady}></MlBasicComponent>
+      <MlBasicComponent mapIsReady={mapIsReady}></MlBasicComponent>
       <Button
         color="primary"
         variant={showLayer ? "contained" : "outlined"}

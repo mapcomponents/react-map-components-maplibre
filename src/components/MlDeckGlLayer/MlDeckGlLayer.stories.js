@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 
 import TopToolbar from "../../ui_components/TopToolbar";
 import MlDeckGlLayer from "./MlDeckGlLayer";
-import MlCompositeLayer from "../MlCompositeLayer/MlCompositeLayer";
 
+import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 import "../../App.css";
@@ -23,11 +23,21 @@ export default {
 };
 //<MlCompositeLayer />
 
-const Template = (args) => (
-  <TopToolbar>
-    <MlDeckGlLayer />
-  </TopToolbar>
-);
+const Template = (args) => {
+  const loadingOverlayContext = useContext(LoadingOverlayContext);
+
+  useEffect(() => {
+    console.log(loadingOverlayContext);
+  }, []);
+  return (
+    <TopToolbar>
+      <MlDeckGlLayer
+        init={() => loadingOverlayContext.setControlled(true)}
+        onDone={() => loadingOverlayContext.setLoadingDone(true)}
+      />
+    </TopToolbar>
+  );
+};
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};

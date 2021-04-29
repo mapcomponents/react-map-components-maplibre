@@ -21,10 +21,13 @@ const LoadingOverlayProvider = ({ children }) => {
   });
 
   const fadeOut = () => {
-    setFadeoutAnimation(true);
+    // add another setTimeout as MapLibre appear to fire idle before all tiles have rendered
     setTimeout(() => {
-      setVisible(false);
-    }, 1700);
+      setFadeoutAnimation(true);
+      setTimeout(() => {
+        setVisible(false);
+      }, 1700);
+    }, 900);
   };
 
   useEffect(() => {

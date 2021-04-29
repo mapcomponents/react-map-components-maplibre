@@ -38,30 +38,28 @@ import styles from "./assets/jss/material-dashboard-react/views/dashboardStyle.j
 
 const useStyles = makeStyles(styles);
 
-
 export default function Dashboard({ children }) {
   const [open, setIsOpen] = useState(false);
   const toogleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
-  
+
   const classes = useStyles();
   return (
-    <div>
-    <Drawer variant="persistent" anchor="left" open={open}>
-    <Typography
-      variant="h6"
-      style={{
-        textAlign: "center",
-        padding: "1em",
-      }}
-      noWrap
-    >
-      Menü
-    </Typography>
-    <Divider />
-    
-  </Drawer>
+    <div style={{ backgroundColor: "#fafafa" }}>
+      <Drawer variant="persistent" anchor="left" open={open}>
+        <Typography
+          variant="h6"
+          style={{
+            textAlign: "center",
+            padding: "1em",
+          }}
+          noWrap
+        >
+          Menü
+        </Typography>
+        <Divider />
+      </Drawer>
       <IconButton
         onClick={toogleDrawer}
         style={{

@@ -5,6 +5,7 @@ import MlCompositeLayer from "../MlCompositeLayer/MlCompositeLayer";
 import MlCameraFollowPath from "../MlCameraFollowPath/MlCameraFollowPath";
 import { MapContext, SimpleDataProvider } from "react-map-components-core";
 import DeckGlProvider from "../../deckgl_components/DeckGlProvider";
+import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";
 
 //import mapContext3DDecorator from "../../decorators/MapContext3DDecorator";
 import mapContextDecorator from "../../decorators/MapContextKlokantechBasicDecorator";
@@ -41,6 +42,7 @@ const route = [
 
 const Template = (args) => {
   const mapContext = useContext(MapContext);
+  const loadingOverlayContext = useContext(LoadingOverlayContext);
 
   useEffect(() => {
     if (!mapContext.mapExists()) return;
@@ -51,7 +53,12 @@ const Template = (args) => {
 
   return (
     <>
-      <DeckGlProvider>
+      <DeckGlProvider
+        init={() => loadingOverlayContext.setControlled(true)}
+        onDone={() =>
+          setTimeout(() => loadingOverlayContext.setLoadingDone(true), 1200)
+        }
+      >
         <SimpleDataProvider format="json" url="/assets/laerm_points.json">
           <MlLaermkarte />
           <MlCompositeLayer
