@@ -9,7 +9,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 /**
  * MlThreeJsLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  */
-const MlThreeJsLayer = () => {
+const MlThreeJsLayer = ({ init, onDone }) => {
   const mapContext = useContext(MapContext);
 
   const layerRef = useRef(null);
@@ -48,6 +48,10 @@ const MlThreeJsLayer = () => {
   }, [play]);
 
   useEffect(() => {
+    if (typeof init === "function") {
+      init();
+    }
+
     if (!mapContext.map) return;
 
     return () => {
@@ -113,6 +117,9 @@ const MlThreeJsLayer = () => {
           //"https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf",
           function (gltf) {
             this.scene.add(gltf.scene);
+            if (typeof onDone === "function") {
+              onDone();
+            }
           }.bind(this)
         );
         var loader = new GLTFLoader();
