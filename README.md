@@ -68,4 +68,10 @@ Storybook stories are also used to generate screenshots of each component. The c
 
 More information on writing storybook stories for react components: https://storybook.js.org/docs/react/get-started/browse-stories
 
+## LoadingOverlay and LoadingOverlayProvider (currently located in ./ui_components/)
 
+The loading overlay component is added in the storybook decorator.
+Without any further configuration it will listen for new MapLibre instances registered in MapContext and fade out once all of them have fired an "IDLE" event. For more precise control the LoadingOverlayContext provides a ```loadingOverlayContext.setControlled(true)``` function that will, if called with true as first parameter, switch the LoadingOverlay to manual control. Once the application has loaded completely call the ```loadingOverlayContext.setLoadingDone(true)``` function to trigger the LoadingOverlay Component to fade out.
+
+For decorator integration examples check the storybook decorators located in ./decorators/.
+For controlled LoadingOverlay examples please see MlLaermkarte (story & component).
