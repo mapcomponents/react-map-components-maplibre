@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 
 import { LoadingOverlayContext } from "../ui_components/LoadingOverlayContext";
+
+import FadeLoader from "react-spinners/FadeLoader";
 import "./LoadingOverlay.css";
 
 function LoadingOverlay() {
@@ -22,13 +24,16 @@ function LoadingOverlay() {
         zIndex: 1000000,
         overflow: "hidden",
         display: visible ? "flex" : "none",
-        alignItems: "stretch",
+        alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <video autoPlay muted>
-        <source src="/assets/wh.mp4" type="video/mp4" />
-      </video>
+      <FadeLoader
+        color={"#ababab"}
+        loading={visible}
+        css={{ display: "block", borderColor: "red" }}
+        size={50}
+      />
     </div>
   );
 }

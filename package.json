@@ -32,6 +32,7 @@
     "react-router": "^5.2.0",
     "react-router-redux": "^4.0.8",
     "react-scripts": "4.0.1",
+    "react-spinners": "^0.10.6",
     "redux": "^4.0.5",
     "styled-components": "^5.2.1",
     "three": "^0.126.1",
@@ -53,7 +54,7 @@
     "storybook-docs": "start-storybook --docs --no-manager-cache",
     "build-catalogue-meta": "node scripts/build-catalogue-meta.js",
     "build-catalogue-markdown-docs": "node scripts/build-catalogue-markdown-docs.js",
-    "create-component":"./scripts/create-map-component.sh"
+    "create-component": "./scripts/create-map-component.sh"
   },
   "eslintConfig": {
     "extends": [
