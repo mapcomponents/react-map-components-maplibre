@@ -9,10 +9,9 @@
 
 ### Create a new component
 
-1. Duplicate the folder MlComponentTemplate
-2. Rename (the "MlComponentTemplate" part) of the new folder and the containing files to whatever you want to call the new component. It must start with a capital letter because it is a react component and preferably start with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
-3. The new component should become available within your storybook webinterface. Start the component development inside the component file (former MlComponentTemplate.js) and see the changes reflected in your browser.
-4. Once the component is ready to be published to the MapComponents catalogue, remove the ```_``` from the meta.json file ({component_name}.meta_.json) and it will be included in the next release.
+2. Run ```yarn create-component {component-name}``` to create a new Map-component based on ./src/components/MlComponentTemplate/. It must start with a capital letter because it is a react component and preferably start with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
+2. The new component should become available within your storybook webinterface. Start the component development inside the component file (former MlComponentTemplate.js) and see the changes reflected in your browser.
+3. Once the component is ready to be published to the MapComponents catalogue, remove the ```_``` from the meta.json file ({component_name}.meta_.json) and it will be included in the next release.
 
 ### Create a new example application
 

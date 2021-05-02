@@ -52,7 +52,8 @@
     "build-storybook": "build-storybook -s public",
     "storybook-docs": "start-storybook --docs --no-manager-cache",
     "build-catalogue-meta": "node scripts/build-catalogue-meta.js",
-    "build-catalogue-markdown-docs": "node scripts/build-catalogue-markdown-docs.js"
+    "build-catalogue-markdown-docs": "node scripts/build-catalogue-markdown-docs.js",
+    "create-component":"./scripts/create-map-component.sh"
   },
   "eslintConfig": {
     "extends": [
