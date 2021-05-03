@@ -23,6 +23,7 @@ export default {
 };
 
 const Template = (args) => {
+  const mapContext = useContext(MapContext);
   const [dataUrl, setDataUrl] = useState("");
   const initializedRef = useRef(false);
 
@@ -32,6 +33,12 @@ const Template = (args) => {
       setDataUrl("https://opensky-network.org/api/states/all?vv=" + Math.random());
     }, 10000);
   };
+
+  useEffect(() => {
+    if (mapContext.map) {
+      mapContext.map.setZoom(8.5);
+    }
+  }, [mapContext.map]);
 
   useEffect(() => {
     console.log("ONCE");

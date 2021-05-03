@@ -19,7 +19,7 @@ const MlIconLayer = (props) => {
   const currentFrame = useRef(null);
   const timer = useRef(null);
   const fetchEverySeconds = 10;
-  const framesPerFetch = fetchEverySeconds * 30; // 60fps, 10 second intervals
+  const framesPerFetch = fetchEverySeconds * 30; // 30fps, 10 second intervals
 
   const rawDataRef = useRef([]);
   const [data, setData] = useState([]);
@@ -65,7 +65,7 @@ const MlIconLayer = (props) => {
   }, [data]);
 
   const animationFrame = () => {
-    if (!simpleDataContext.data) return;
+    if (!simpleDataContext.data || currentFrame.current > framesPerFetch) return;
     let airplanes_tmp = rawDataRef.current;
     airplanes_tmp = airplanes_tmp.map((d) => {
       const [longitude, latitude] = d.interpolatePos(
