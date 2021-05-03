@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import * as d3 from "d3";
 
 import MlIconLayer from "./MlIconLayer";
@@ -23,20 +23,22 @@ export default {
 };
 
 const Template = (args) => {
-  const mapContext = useContext(MapContext);
-  const loadingOverlayContext = useContext(LoadingOverlayContext);
-
-  const [dataUrl, setDataUrl] = useState(
-    "https://opensky-network.org/api/states/all"
-  );
+  const [dataUrl, setDataUrl] = useState("");
+  const initializedRef = useRef(false);
 
   const renewDataUrl = () => {
-    setDataUrl(dataUrl);
-    setTimeout(renewDataUrl, 10000);
+    console.log("set data url");
+    setTimeout(() => {
+      setDataUrl("https://opensky-network.org/api/states/all?vv=" + Math.random());
+    }, 10000);
   };
 
   useEffect(() => {
-    renewDataUrl();
+    console.log("ONCE");
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      renewDataUrl();
+    }
   }, []);
 
   return (
@@ -58,7 +60,7 @@ const Template = (args) => {
           ),
         })}
         data_property="states"
-        loadingDone={(sdp) => {}}
+        onData={renewDataUrl}
       >
         <MlIconLayer />
       </SimpleDataProvider>

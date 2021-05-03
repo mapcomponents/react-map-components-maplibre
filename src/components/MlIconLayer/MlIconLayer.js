@@ -15,22 +15,38 @@ const MlIconLayer = (props) => {
   const deckGlContext = useContext(DeckGlContext);
   const simpleDataContext = useContext(SimpleDataContext);
   const initializedRef = useRef(false);
-  const layerName = "deckgl-iconlayer";
+  const layerName = "deckgl-layer";
   const currentFrame = useRef(null);
   const timer = useRef(null);
   const fetchEverySeconds = 10;
   const framesPerFetch = fetchEverySeconds * 30; // 60fps, 10 second intervals
 
-  const deckLayerProps = useMemo(() => {
-    if (simpleDataContext.data) {
-      //      console.log(
-      //        "New Data loaded. Number of planes: " + simpleDataContext.data.length
-      //      );
+  const rawDataRef = useRef([]);
+  const [data, setData] = useState([]);
+
+  const startAnimation = () => {
+    if (timer.current) {
+      timer.current.stop();
     }
+    currentFrame.current = 0;
+    timer.current = d3.timer(animationFrame);
+  };
+
+  useEffect(() => {
+    if (!simpleDataContext.data) {
+      return;
+    }
+    //console.log("simpleDataContext data set");
+    //console.log(new Error().stack);
+    rawDataRef.current = [...simpleDataContext.data];
+    startAnimation();
+  }, [simpleDataContext.data]);
+
+  const deckLayerProps = useMemo(() => {
     return {
       id: layerName,
       type: IconLayer,
-      data: simpleDataContext.data,
+      data,
       pickable: false,
       iconAtlas: Airplane,
       iconMapping: {
@@ -46,21 +62,12 @@ const MlIconLayer = (props) => {
       getIcon: (d) => "airplane",
       getAngle: (d) => 45 + (d.true_track * 180) / Math.PI,
     };
-  }, [simpleDataContext.data]);
-
-  const startAnimation = () => {
-    if (timer.current) {
-      timer.current.stop();
-    }
-    currentFrame.current = 0;
-    timer.current = d3.timer(animationFrame);
-  };
+  }, [data]);
 
   const animationFrame = () => {
-    //console.log("asd");
-    let airplanes_tmp = simpleDataContext.data;
+    if (!simpleDataContext.data) return;
+    let airplanes_tmp = rawDataRef.current;
     airplanes_tmp = airplanes_tmp.map((d) => {
-      //console.log("cal new ll");
       const [longitude, latitude] = d.interpolatePos(
         currentFrame.current / framesPerFetch
       );
@@ -71,7 +78,7 @@ const MlIconLayer = (props) => {
       };
     });
     currentFrame.current += 1;
-    simpleDataContext.setData(airplanes_tmp);
+    setData(airplanes_tmp);
   };
   const cleanup = () => {
     // This is the cleanup function, it is called when this react component is removed from react-dom
