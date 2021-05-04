@@ -41,8 +41,9 @@ const DeckGlProvider = ({ children }) => {
     let deck = new Deck({
       gl: mapContext.map.painter.context.gl,
       layers: [],
-      getTooltip: ({ object }) => object && object.message,
     });
+
+    window.deck = deck;
 
     layerRef.current = new MapboxLayer({
       id: "deckgl-layer",

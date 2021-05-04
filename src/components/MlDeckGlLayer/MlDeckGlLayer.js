@@ -88,37 +88,37 @@ const MlDeckGlLayer = ({ init, onDone }) => {
       });
       console.log("Add deckgl Layer");
 
-      map.addLayer(
-        new MapboxLayer({
-          effects: [lightingEffect],
-          id: layerName,
-          //type: ScatterplotLayer,
-          //data: [
-          //  { position: [7.0851268, 50.73884], color: [255, 0, 0], radius: 1000 },
-          //],
-          //getPosition: (d) => d.position,
-          //getColor: (d) => d.color,
-          //getRadius: (d) => d.radius,
-          //opacity: 0.3,
-          type: HexagonLayer,
-          colorRange: colorRange,
-          coverage: 1,
-          data: data,
-          elevationRange: [0, 3000],
-          elevationScale: data && data.length ? 50 : 0,
-          extruded: true,
-          getPosition: (d) => d.coordinates,
-          pickable: true,
-          radius: 10000,
-          upperPercentile: 100,
-          material,
+      let mapBoxLayer = new MapboxLayer({
+        effects: [lightingEffect],
+        id: layerName,
+        //type: ScatterplotLayer,
+        //data: [
+        //  { position: [7.0851268, 50.73884], color: [255, 0, 0], radius: 1000 },
+        //],
+        //getPosition: (d) => d.position,
+        //getColor: (d) => d.color,
+        //getRadius: (d) => d.radius,
+        //opacity: 0.3,
+        type: HexagonLayer,
+        colorRange: colorRange,
+        coverage: 1,
+        data: data,
+        elevationRange: [0, 3000],
+        elevationScale: data && data.length ? 50 : 0,
+        extruded: true,
+        getPosition: (d) => d.coordinates,
+        pickable: true,
+        radius: 10000,
+        upperPercentile: 100,
+        material,
+        autoHighlight: true,
+        transitions: {
+          elevationScale: 3000,
+        },
+      });
+      window.mapBoxLayer = mapBoxLayer;
 
-          transitions: {
-            elevationScale: 3000,
-          },
-        }),
-        "water-name-lakeline"
-      );
+      map.addLayer(mapBoxLayer, "water-name-lakeline");
       if (typeof onDone === "function") {
         console.log("hide overlay");
         onDone();

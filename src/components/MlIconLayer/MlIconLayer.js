@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import { MapContext, SimpleDataContext } from "react-map-components-core";
 import DeckGlContext from "../../deckgl_components/DeckGlContext";
 
+import { MapboxLayer } from "@deck.gl/mapbox";
 import { IconLayer } from "@deck.gl/layers";
 
 import Airplane from "./assets/airplane-icon.png";
@@ -15,14 +16,17 @@ const MlIconLayer = (props) => {
   const deckGlContext = useContext(DeckGlContext);
   const simpleDataContext = useContext(SimpleDataContext);
   const initializedRef = useRef(false);
-  const layerName = "deckgl-layer";
+  const layerName = "icondeckgl-layer";
   const currentFrame = useRef(null);
   const timer = useRef(null);
   const fetchEverySeconds = 10;
   const framesPerFetch = fetchEverySeconds * 30; // 30fps, 10 second intervals
+  const DeckMlLayerRef = useRef();
 
   const rawDataRef = useRef([]);
   const [data, setData] = useState([]);
+
+  const [hoverInfo, setHoverInfo] = useState({});
 
   const startAnimation = () => {
     if (timer.current) {
@@ -47,7 +51,7 @@ const MlIconLayer = (props) => {
       id: layerName,
       type: IconLayer,
       data,
-      pickable: false,
+      pickable: true,
       iconAtlas: Airplane,
       iconMapping: {
         airplane: {
@@ -56,10 +60,27 @@ const MlIconLayer = (props) => {
           width: 512,
           height: 512,
         },
+        blue_airplane: {
+          x: 512,
+          y: 0,
+          width: 512,
+          height: 512,
+        },
       },
       sizeScale: 20,
+      autoHighlight: true,
+      onHover: (d) => {
+        if (d.picked) {
+          console.log(d);
+          setHoverInfo(d);
+        } else {
+          setHoverInfo({});
+        }
+      },
       getPosition: (d) => [d.longitude, d.latitude],
-      getIcon: (d) => "airplane",
+      getIcon: (d) => {
+        return d.origin_country === "Germany" ? "blue_airplane" : "airplane";
+      },
       getAngle: (d) => 45 + (d.true_track * 180) / Math.PI,
     };
   }, [data]);
@@ -97,10 +118,10 @@ const MlIconLayer = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!deckGlContext.deckGl) return;
+    if (!DeckMlLayerRef.current) return;
 
     //console.log("update props");
-    deckGlContext.deckGl.setProps({
+    DeckMlLayerRef.current.deck.setProps({
       layers: [
         new IconLayer({
           ...deckLayerProps,
@@ -113,26 +134,32 @@ const MlIconLayer = (props) => {
     if (
       !simpleDataContext.data ||
       !mapContext.mapExists() ||
-      !deckGlContext.deckGl ||
-      (deckGlContext.deckGl &&
-        mapContext.mapExists() &&
-        simpleDataContext.data &&
-        initializedRef.current)
+      (mapContext.mapExists() && simpleDataContext.data && initializedRef.current)
     )
       return;
 
     initializedRef.current = true;
 
     // for debugging
-    window.DeckGlMapLibreLayer = deckGlContext.maplibreLayer;
+    //window.DeckGlMapLibreLayer = deckGlContext.maplibreLayer;
 
-    deckGlContext.deckGl.setProps({
-      layers: [
-        new IconLayer({
-          ...deckLayerProps,
-        }),
-      ],
+    //deckGlContext.deckGl.setProps({
+    //  layers: [
+    //    new IconLayer({
+    //      ...deckLayerProps,
+    //    }),
+    //  ],
+    //});
+    DeckMlLayerRef.current = new MapboxLayer({
+      id: layerName,
+      type: IconLayer,
+      ...deckLayerProps,
+      data: simpleDataContext.data,
     });
+
+    window.mapBoxLayer = DeckMlLayerRef.current;
+
+    mapContext.map.addLayer(DeckMlLayerRef.current, "poi_label");
 
     startAnimation();
 
@@ -141,7 +168,61 @@ const MlIconLayer = (props) => {
     }
   }, [mapContext.mapIds, mapContext, simpleDataContext.data]);
 
-  return <></>;
+  function renderTooltip(info) {
+    const { object, x, y } = info;
+
+    if (!object) {
+      return null;
+    }
+
+    return (
+      <div
+        className="tooltip"
+        style={{
+          padding: "8px",
+          borderRadius: "4px",
+          border: "1px solid rgba(12, 12, 120, .9)",
+          backgroundColor: "rgba(12, 12, 120, .5)",
+          color: "rgb(255, 255, 255)",
+          opacity: 1,
+          left: x,
+          top: y,
+          marginTop: "20px",
+          marginLeft: "20px",
+          display: "flex",
+        }}
+      >
+        <div style={{ paddingRight: "10px" }}>
+          Callsign:
+          <br />
+          {object.altitude && (
+            <>
+              Höhe:
+              <br />
+            </>
+          )}
+          Land:
+          <br />
+          Geschwindigkeit:
+        </div>
+        <div style={{ fontWeight: "bold" }}>
+          {object.callsign}
+          <br />
+          {object.altitude && (
+            <>
+              {object.altitude}m
+              <br />
+            </>
+          )}
+          {object.origin_country}
+          <br />
+          {object.velocity}mph
+        </div>
+      </div>
+    );
+  }
+
+  return <>{renderTooltip(hoverInfo)}</>;
 };
 
 export default MlIconLayer;

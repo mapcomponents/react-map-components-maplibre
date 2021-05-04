@@ -49,29 +49,29 @@ const Template = (args) => {
   }, []);
 
   return (
-    <DeckGlProvider>
-      <SimpleDataProvider
-        format="json"
-        url={dataUrl}
-        formatData={(d) => ({
-          callsign: d[1],
-          longitude: d[5],
-          latitude: d[6],
-          velocity: d[9],
-          altitude: d[13],
-          origin_country: d[2],
-          true_track: -d[10],
-          interpolatePos: d3.geoInterpolate(
-            [d[5], d[6]],
-            destinationPoint(d[5], d[6], d[9] * 10, d[10])
-          ),
-        })}
-        data_property="states"
-        onData={renewDataUrl}
-      >
-        <MlIconLayer />
-      </SimpleDataProvider>
-    </DeckGlProvider>
+    <SimpleDataProvider
+      format="json"
+      url={dataUrl}
+      formatData={(d) => ({
+        callsign: d[1],
+        lon: d[5],
+        lat: d[6],
+        longitude: d[5],
+        latitude: d[6],
+        velocity: d[9],
+        altitude: d[13],
+        origin_country: d[2],
+        true_track: -d[10],
+        interpolatePos: d3.geoInterpolate(
+          [d[5], d[6]],
+          destinationPoint(d[5], d[6], d[9] * 10, d[10])
+        ),
+      })}
+      data_property="states"
+      onData={renewDataUrl}
+    >
+      <MlIconLayer />
+    </SimpleDataProvider>
   );
 };
 
