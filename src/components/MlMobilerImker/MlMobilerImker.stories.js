@@ -7,13 +7,10 @@ import MlMobilerImker from "./MlMobilerImker";
 import Legend from "../../ui_components/Legend";
 import { MapComponentsProvider } from "react-map-components-core";
 
-import mapContextDecorator from "../../decorators/MultiMapContextDecorator";
-
 export default {
   title: "MapComponents/MlMobilerImker",
   component: MlMobilerImker,
-  argTypes: {},
-  decorators: mapContextDecorator,
+  argTypes: {}
 };
 
 const Template = (args) => {
