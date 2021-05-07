@@ -37,9 +37,9 @@ const MlMobilerImker = () => {
   const classes = useStyles();
 
   const mapContext = useContext(MapContext);
-  const flightRadiusList = [1, 1.5, 2, 2.5, 3];
+  const flightRadiusList = [0.3, 1, 1.5, 2, 2.5, 3];
   const [selectedMainFlightRadius, setSelectedMainFlightRadius] = useState(1.5);
-  const selectedMainFlightRadiusRef = useRef(1);
+  const selectedMainFlightRadiusRef = useRef(0.3);
   let searchRadius;
 
   // removes the current and add a new "joinedDataLayer" which is for the joinedData inside the selectedMainFlightRadius
@@ -200,7 +200,7 @@ const MlMobilerImker = () => {
       return false;
     });
 
-    //joined = unionOfPolygonArray(joined)
+    joined = unionOfPolygonArray(joined)
 
     let coveredFeatures = [];
     let partialFeatures = joined.filter(function(feature) {
@@ -361,8 +361,10 @@ const MlMobilerImker = () => {
         for (let i in makeUnionArray) {
           tempPolArray.splice(tempPolArray.indexOf(makeUnionArray[i]), 1);
         }
-        console.log(tempPolArray)
+
+        console.log(polyArray)
         console.log(makeUnionArray)
+        console.log(tempPolArray)
 
         filteredJoined.push(tempUnion)
         foundOverlapBoolean = false;
@@ -370,37 +372,9 @@ const MlMobilerImker = () => {
 
     }
 
+    console.log(tempPolArray)
+    if(tempPolArray.includes(makeUnionArray[0])) console.log("NOOOOO");
     filteredJoined = [...filteredJoined, ...tempPolArray]
-
-    /*for(let i=0; i<polyArray.length;i++){
-      let tempPolyArray = []
-      for (let k=i; k<polyArray.length;k++){
-        if (polyArray[i] !== polyArray[k]) {
-          if (turf.booleanOverlap(polyArray[i], polyArray[k])) {
-            if (polyArray[i].properties.class === polyArray[k].properties.class && polyArray[i]._geometry.type !== "MultiPolygon") {
-              //delete tempUnion.geometry
-              tempPolyArray = [...tempPolyArray, polyArray[i], polyArray[k]]
-              filterboolean = true;
-              //console.log(filteredJoined[filteredJoined.length-1])
-            }
-          }
-        }
-      }
-      if(filterboolean){
-        let tempUnion = tempPolyArray[0]
-        delete tempPolyArray[0]
-        tempPolyArray.map((row) => {
-          //console.log(row)
-          //console.log(tempUnion)
-          tempUnion = turf.union(tempUnion, row)
-        })
-        tempUnion.properties.class = polyArray[i].properties.class
-        tempUnion._geometry = tempUnion.geometry
-
-        filteredJoined.push(tempUnion)
-        filterboolean = false
-      }else {filteredJoined.push(polyArray[i]);}
-    }*/
 
     return filteredJoined;
   }

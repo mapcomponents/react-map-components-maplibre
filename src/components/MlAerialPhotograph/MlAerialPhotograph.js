@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { MapContext } from "react-map-components-core";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
 
-const MlArielPhotograph = () => {
+const MlAerialPhotograph = () => {
 
   const idPostfixRef = useRef(new Date().getTime());
   const mapContext = useContext(MapContext);
@@ -96,4 +96,4 @@ const MlArielPhotograph = () => {
   );
 };
 
-export default MlArielPhotograph;
+export default MlAerialPhotograph;
