@@ -7,7 +7,6 @@ import route from "./assets/route.json";
 
 const MlLaufwettbewerbApp = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
   const mapContext = useContext(MapContext);
 
   useEffect(() => {
