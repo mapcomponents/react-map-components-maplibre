@@ -53,7 +53,7 @@ const MlWmsLayer = (props) => {
       minzoom: 0,
       maxzoom: 10,
       ...props.sourceOptions,
-    });
+    }, props.belowLayerId);
   }, [mapContext.map]);
 
   useEffect(() => {
