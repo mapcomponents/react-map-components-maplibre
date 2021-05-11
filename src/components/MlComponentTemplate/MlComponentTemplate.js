@@ -4,11 +4,9 @@ import { MapContext } from "react-map-components-core";
 
 const MlComponentTemplate = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
   const mapContext = useContext(MapContext);
 
   useEffect(() => {
-    if (!mapContext.mapExists(props.mapId)) return;
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       // try to remove anything this component has added to the MapLibre-gl instance
