@@ -1,0 +1,10 @@
+.mlMap {
+    width: 200px;
+    min-height: 80vh;
+}
+
+.mlMap > .mapContainer {
+    width: 100%;
+    height: 100%;
+
+}
