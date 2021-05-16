@@ -25,6 +25,22 @@ const MlLaufwettbewerbApp = (props) => {
   };
 
   useEffect(() => {
+    if (progressDataByDate) {
+      let displayDateDateObj = new Date(displayDate);
+      let totalKm = 0;
+      for (var key in progressDataByDate) {
+        if (displayDateDateObj - new Date(key) > 0) {
+          console.log(key + " added");
+          totalKm += progressDataByDate[key];
+        }
+      }
+      console.log(totalKm);
+
+      setRouteProgressInKm(totalKm);
+    }
+  }, [displayDate]);
+
+  useEffect(() => {
     if (rawProgressData.length) {
       let byDate = {};
       let byUser = {};
@@ -95,7 +111,10 @@ const MlLaufwettbewerbApp = (props) => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={3}>
-          <Paper elevation={3}></Paper>
+          <Paper elevation={3}>
+            <h2>{displayDate}</h2>
+            <h3>{routeProgressInKm}</h3>
+          </Paper>
         </Grid>
         <Grid item xs={6} className="mlMap">
           <MapLibreMap
@@ -137,12 +156,10 @@ const MlLaufwettbewerbApp = (props) => {
             alignContent: "stretch",
           }}
         >
-          <Paper elevation={3}>
-            <DailyProgressChart
-              data={progressDataByDate}
-              onClick={(date) => console.log(date)}
-            />
-          </Paper>
+          <DailyProgressChart
+            data={progressDataByDate}
+            onClick={(date) => setDisplayDate(date.x)}
+          />
         </Grid>
       </Grid>
     </>

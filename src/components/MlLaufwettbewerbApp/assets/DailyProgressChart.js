@@ -18,6 +18,10 @@ function DailyProgressChart(props) {
     }
 
     console.log(data);
+    data.sort(function (a, b) {
+      return new Date(a.x) - new Date(b.x);
+    });
+
     setData([
       {
         id: "Tagesfortschritt",
@@ -30,6 +34,11 @@ function DailyProgressChart(props) {
   return (
     <>
       <ResponsiveLine
+        onClick={(point) => {
+          if (typeof props.onClick === "function") {
+            props.onClick(point.data);
+          }
+        }}
         data={data}
         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
         xScale={{ type: "point" }}
@@ -41,6 +50,14 @@ function DailyProgressChart(props) {
           reverse: false,
         }}
         yFormat=" >-.2f"
+        xFormat={(data) => {
+          return new Date(data).toLocaleDateString("de-DE", {
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+        }}
         axisTop={null}
         axisRight={null}
         axisBottom={{
@@ -48,7 +65,7 @@ function DailyProgressChart(props) {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "transportation",
+          legend: "Datum",
           legendOffset: 36,
           legendPosition: "middle",
         }}
@@ -57,7 +74,7 @@ function DailyProgressChart(props) {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "count",
+          legend: "Km",
           legendOffset: -40,
           legendPosition: "middle",
         }}
@@ -66,6 +83,11 @@ function DailyProgressChart(props) {
         pointBorderWidth={2}
         pointBorderColor={{ from: "serieColor" }}
         pointLabelYOffset={-12}
+        tooltip={(data) => {
+          return (
+            data.point.data.xFormatted + ": " + data.point.data.yFormatted + " Km"
+          );
+        }}
         useMesh={true}
         legends={[
           {
