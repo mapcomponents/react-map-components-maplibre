@@ -143,28 +143,18 @@ const MlLaufwettbewerbApp = (props) => {
           item
           xs={12}
           style={{
-            minHeight: "33vh",
+            height: "33vh",
             display: "flex",
             alignItems: "stretch",
             alignContent: "stretch",
+            overflow: "hidden",
           }}
         >
-          <Paper
-            elevation={3}
-            style={{
-              display: "flex",
-              alignItems: "stretch",
-              alignContent: "stretch",
-              overflow: "hidden",
-              width: "100%",
-            }}
-          >
-            <DailyProgressChart
-              data={progressDataByDate}
-              onClick={(date) => setDisplayDate(date.x)}
-              displayDate={displayDate}
-            />
-          </Paper>
+          <DailyProgressChart
+            data={progressDataByDate}
+            onClick={(date) => setDisplayDate(date.x)}
+            displayDate={displayDate}
+          />
         </Grid>
       </Grid>
     </>

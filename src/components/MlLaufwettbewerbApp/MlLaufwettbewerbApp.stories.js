@@ -18,7 +18,9 @@ export default storyoptions;
 
 const Template = (args) => (
   <>
-    <MlLaufwettbewerbApp />
+    <div className="lw_map">
+      <MlLaufwettbewerbApp />
+    </div>
   </>
 );
 

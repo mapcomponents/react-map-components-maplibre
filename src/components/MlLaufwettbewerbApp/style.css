@@ -8,7 +8,7 @@
     left: initial;
     bottom: initial;
 }
-.mapContainer {
+.lw_map .mapContainer {
     position: relative;
     height: 100%;
     width: 100%;
@@ -18,14 +18,14 @@
     bottom: initial;
     z-index: 100;
 }
-.mlMap {
+.lw_map .mlMap {
     width: 100%;
     min-height: 65vh;
     display: flex;
     align-items:stretch;
 }
 
-.mlMap > .mapContainer {
+.lw_map .mlMap > .mapContainer {
     width: 100%;
     height: 100%;
     z-index: unset;
