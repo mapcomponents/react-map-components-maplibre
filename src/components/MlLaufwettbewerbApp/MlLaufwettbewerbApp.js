@@ -137,7 +137,7 @@ const MlLaufwettbewerbApp = (props) => {
               geojson={routeProgressFeature}
               paint={{
                 "line-color": "rgb(100,100,200)",
-                "line-width": 10,
+                "line-width": 6,
               }}
               type="line"
             />
@@ -156,10 +156,22 @@ const MlLaufwettbewerbApp = (props) => {
             alignContent: "stretch",
           }}
         >
-          <DailyProgressChart
-            data={progressDataByDate}
-            onClick={(date) => setDisplayDate(date.x)}
-          />
+          <Paper
+            elevation={3}
+            style={{
+              display: "flex",
+              alignItems: "stretch",
+              alignContent: "stretch",
+              overflow: "hidden",
+              width: "100%",
+            }}
+          >
+            <DailyProgressChart
+              data={progressDataByDate}
+              onClick={(date) => setDisplayDate(date.x)}
+              displayDate={displayDate}
+            />
+          </Paper>
         </Grid>
       </Grid>
     </>

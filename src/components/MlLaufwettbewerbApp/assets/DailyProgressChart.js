@@ -40,7 +40,8 @@ function DailyProgressChart(props) {
           }
         }}
         data={data}
-        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+        margin={{ top: 20, right: 70, bottom: 30, left: 60 }}
+        enableCrosshair={false}
         xScale={{ type: "point" }}
         yScale={{
           type: "linear",
@@ -59,6 +60,12 @@ function DailyProgressChart(props) {
           });
         }}
         axisTop={null}
+        onMouseEnter={(_data, event) => {
+          event.target.style.cursor = "pointer";
+        }}
+        onMouseLeave={(_data, event) => {
+          event.target.style.cursor = "inherit";
+        }}
         axisRight={null}
         axisBottom={{
           orient: "bottom",
@@ -68,21 +75,51 @@ function DailyProgressChart(props) {
           legend: "Datum",
           legendOffset: 36,
           legendPosition: "middle",
+          format: (data) => {
+            return new Date(data).toLocaleDateString("de-DE", {
+              month: "numeric",
+              day: "numeric",
+            });
+          },
         }}
         axisLeft={{
           orient: "left",
           tickSize: 5,
+          tickValues: [15, 30, 45, 60, 75],
           tickPadding: 5,
           tickRotation: 0,
           legend: "Km",
           legendOffset: -40,
           legendPosition: "middle",
         }}
-        pointSize={10}
+        colors={(data) => {
+          return "#64c864";
+        }}
         pointColor={{ theme: "background" }}
         pointBorderWidth={2}
         pointBorderColor={{ from: "serieColor" }}
         pointLabelYOffset={-12}
+        pointSymbol={(data) => {
+          let fill = "none";
+          let stroke = data.borderColor;
+
+          if (new Date(data.datum.x) - new Date(props.displayDate) < 0) {
+            fill = "#9797e6";
+          }
+          if (data.datum.x === props.displayDate) {
+            fill = "#6464c8";
+          }
+          return (
+            <>
+              <circle
+                r={6}
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={data.borderWidth}
+              />
+            </>
+          );
+        }}
         tooltip={(data) => {
           return (
             data.point.data.xFormatted + ": " + data.point.data.yFormatted + " Km"
