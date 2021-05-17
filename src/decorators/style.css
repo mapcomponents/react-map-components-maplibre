@@ -1,0 +1,36 @@
+#root {
+  background-color: #000;
+  position: absolute;
+  min-height: 400px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.docs-story {
+  min-height: 400px;
+  display: flex;
+  align-items: stretch;
+}
+.docs-story > div:first-child {
+  width: 100%;
+}
+
+.App {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.fullscreen_map .mapContainer {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
