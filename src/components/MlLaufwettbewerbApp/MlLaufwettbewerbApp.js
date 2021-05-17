@@ -3,9 +3,14 @@ import React, { useState, useEffect, useContext } from "react";
 import MapLibreMap from "../MapLibreMap/MapLibreMap";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import DailyProgressChart from "./assets/DailyProgressChart";
+import Leaderboard from "./assets/Leaderboard";
 import { MapContext } from "react-map-components-core";
 import { Grid, Paper } from "@material-ui/core";
 import route from "./assets/route.json";
+// https://repo.wheregroup.com/api/v4/users?per_page=100&page=2&exclude_external=true&exclude_internal=true
+// https://docs.gitlab.com/ee/api/users.html
+// https://docs.gitlab.com/ce/api/#pagination
+import user_data from "./assets/users.json";
 import * as turf from "@turf/turf";
 
 const MlLaufwettbewerbApp = (props) => {
@@ -16,6 +21,7 @@ const MlLaufwettbewerbApp = (props) => {
   const [rawProgressData, setRawProgressData] = useState([]);
   const [progressDataByDate, setProgressDataByDate] = useState({});
   const [progressDataByUser, setProgressDataByUser] = useState({});
+  const [users, setUsers] = useState([]);
   const [displayDate, setDisplayDate] = useState("2021-06-07");
 
   const fetchProgressData = () => {
@@ -34,7 +40,24 @@ const MlLaufwettbewerbApp = (props) => {
         }
       }
 
-      setRouteProgressInKm(totalKm);
+      setRouteProgressInKm(Math.round(totalKm * 100) / 100);
+
+      let byUser = {};
+      for (var i = 0, len = rawProgressData.length; i < len; i++) {
+        if (displayDateDateObj - new Date(rawProgressData[i].date) > 0) {
+          let distance = Math.round(rawProgressData[i].distance * 100) / 100;
+
+          if (typeof byUser[rawProgressData[i].user_id] === "undefined") {
+            byUser[rawProgressData[i].user_id] = 0;
+          }
+          byUser[rawProgressData[i].user_id] += distance;
+        }
+      }
+
+      for (let key in byUser) {
+        byUser[key] = Math.round(byUser[key] * 100) / 100;
+      }
+      setProgressDataByUser(byUser);
     }
   }, [displayDate]);
 
@@ -66,9 +89,16 @@ const MlLaufwettbewerbApp = (props) => {
         byDate[key] = Math.round(byDate[key] * 100) / 100;
       }
 
-      setRouteProgressInKm(totalKm);
+      setRouteProgressInKm(Math.round(totalKm * 100) / 100);
       setProgressDataByDate(byDate);
       setProgressDataByUser(byUser);
+
+      // map mock_user_ids to users
+      let user_ids = Object.keys(byUser);
+      for (var i = 0, len = user_data.length; i < len; i++) {
+        user_data[i].id = user_ids.pop();
+      }
+      setUsers(user_data);
     }
   }, [rawProgressData]);
 
@@ -104,10 +134,18 @@ const MlLaufwettbewerbApp = (props) => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={3}>
-          <Paper elevation={3}>
-            <h2>{displayDate}</h2>
-            <h3>{routeProgressInKm}</h3>
-          </Paper>
+          <h1>Laufwettbewerb</h1>
+          <p>Anzeigedatum:</p>
+          <h2>
+            {new Date(displayDate).toLocaleDateString("de-DE", {
+              weekday: "short",
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </h2>
+          <p>Gelaufene Kilometer:</p>
+          <h3>{routeProgressInKm} Km</h3>
         </Grid>
         <Grid item xs={6} className="mlMap">
           <MapLibreMap
@@ -137,7 +175,11 @@ const MlLaufwettbewerbApp = (props) => {
           )}
         </Grid>
         <Grid item xs={3}>
-          <Paper elevation={3}></Paper>
+          <Leaderboard
+            route={route}
+            users={users}
+            progressDataByUser={progressDataByUser}
+          />
         </Grid>
         <Grid
           item
