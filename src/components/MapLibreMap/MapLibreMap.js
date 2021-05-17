@@ -20,6 +20,13 @@ const MapLibreMap = (props) => {
   const mapOptions = props.options;
 
   useEffect(() => {
+    return () => {
+      map.current.remove();
+      map.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
     if (mapContainer.current) {
       // TODO: adjust defaults
       let defaultOptions = {
@@ -44,11 +51,7 @@ const MapLibreMap = (props) => {
       // TODO: remove this line
       window.map = map.current;
     }
-
-    return () => {
-      map.current.remove();
-      map.current = null;
-    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapContainer]);
 
   return <div ref={mapContainer} className="mapContainer" />;

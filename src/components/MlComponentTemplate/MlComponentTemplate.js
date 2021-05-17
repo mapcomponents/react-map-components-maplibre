@@ -22,7 +22,7 @@ const MlComponentTemplate = (props) => {
     mapContext
       .getMap(props.mapId)
       .setCenter([7.132122000552613, 50.716405378037706]);
-  }, [mapContext.mapIds, mapContext]);
+  }, [mapContext.mapIds, mapContext, props.mapId]);
 
   return <></>;
 };

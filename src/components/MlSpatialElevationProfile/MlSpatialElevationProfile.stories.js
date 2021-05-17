@@ -9,7 +9,7 @@ import GeoJsonProvider from "../MlGPXViewer/util/GeoJsonProvider";
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlSpatialElevationProfile",
   component: MlSpatialElevationProfile,
   argTypes: {
@@ -21,6 +21,7 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => (
   <>

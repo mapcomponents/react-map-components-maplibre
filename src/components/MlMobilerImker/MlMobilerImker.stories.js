@@ -9,12 +9,13 @@ import { MapComponentsProvider } from "react-map-components-core";
 
 import mapContextDecorator from "../../decorators/MultiMapContextDecorator";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlMobilerImker",
   component: MlMobilerImker,
   argTypes: {},
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => {
   return (

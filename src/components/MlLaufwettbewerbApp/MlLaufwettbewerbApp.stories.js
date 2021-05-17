@@ -5,7 +5,7 @@ import MlLaufwettbewerbApp from "./MlLaufwettbewerbApp";
 import emptyMapContextDecorator from "../../decorators/EmptyMapContextDecorator";
 import "./style.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlLaufwettbewerbApp",
   component: MlLaufwettbewerbApp,
   argTypes: {
@@ -14,6 +14,7 @@ export default {
   },
   decorators: emptyMapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => (
   <>

@@ -9,7 +9,7 @@ import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator"
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlLayerSwipe",
   name: "MlLayerSwipe",
   component: MlLayerSwipe,
@@ -19,6 +19,7 @@ export default {
   },
   decorators: multiMapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => (
   <>

@@ -9,7 +9,7 @@ import mapContextDecorator from "../../decorators/MapContextDecorator";
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlDeckGlTerrainLayer",
   component: MlDeckGlTerrainLayer,
   argTypes: {
@@ -21,6 +21,7 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 //<MlCompositeLayer />
 
 const Template = (args) => (

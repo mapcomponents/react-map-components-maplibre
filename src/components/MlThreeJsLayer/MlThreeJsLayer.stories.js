@@ -9,7 +9,7 @@ import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlThreeJsLayer",
   component: MlThreeJsLayer,
   argTypes: {
@@ -21,6 +21,7 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => {
   const loadingOverlayContext = useContext(LoadingOverlayContext);

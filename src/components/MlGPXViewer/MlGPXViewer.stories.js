@@ -3,12 +3,12 @@ import React from "react";
 import MlGPXViewer from "./MlGPXViewer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
-import GeoJsonProvider from  './util/GeoJsonProvider'
+import GeoJsonProvider from "./util/GeoJsonProvider";
 
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlGPXViewer",
   component: MlGPXViewer,
   argTypes: {
@@ -20,11 +20,12 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => (
   <>
     <GeoJsonProvider>
-    <MlGPXViewer/>
+      <MlGPXViewer />
     </GeoJsonProvider>
   </>
 );

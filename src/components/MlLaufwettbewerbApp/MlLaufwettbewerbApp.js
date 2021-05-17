@@ -30,11 +30,9 @@ const MlLaufwettbewerbApp = (props) => {
       let totalKm = 0;
       for (var key in progressDataByDate) {
         if (displayDateDateObj - new Date(key) > 0) {
-          console.log(key + " added");
           totalKm += progressDataByDate[key];
         }
       }
-      console.log(totalKm);
 
       setRouteProgressInKm(totalKm);
     }
@@ -84,11 +82,6 @@ const MlLaufwettbewerbApp = (props) => {
   }, [routeProgressInKm]);
 
   useEffect(() => {
-    // console.log(turf.length(route, { units: "kilometers" }));
-    // let tmpRouteProgess = turf.lineChunk(route, 245);
-    // if (typeof tmpRouteProgess.features[0] !== "undefined") {
-    //   setRouteProgress(tmpRouteProgess.features[0]);
-    // }
     fetchProgressData();
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom

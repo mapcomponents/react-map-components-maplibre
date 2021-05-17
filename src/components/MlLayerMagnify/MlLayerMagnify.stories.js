@@ -9,7 +9,7 @@ import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator"
 import "../../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlLayerMagnify",
   component: MlLayerMagnify,
   argTypes: {
@@ -18,6 +18,7 @@ export default {
   },
   decorators: multiMapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => (
   <>
@@ -32,7 +33,11 @@ const Template = (args) => (
         mapId={args.wmsLayerMapId}
       />
     </TopToolbar>
-    <MlLayerMagnify map1Id="map_1" map2Id="map_2"  magnifierRadius={args.magnifierRadius}/>
+    <MlLayerMagnify
+      map1Id="map_1"
+      map2Id="map_2"
+      magnifierRadius={args.magnifierRadius}
+    />
   </>
 );
 
@@ -40,6 +45,5 @@ export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
   wmsLayerMapId: "map_2",
-  magnifierRadius: 100
+  magnifierRadius: 100,
 };
-

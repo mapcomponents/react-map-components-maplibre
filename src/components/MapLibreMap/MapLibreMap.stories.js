@@ -4,7 +4,7 @@ import MapLibreMap from "./MapLibreMap";
 import { MapComponentsProvider } from "react-map-components-core";
 import "../../App.css";
 
-export default {
+const storyoptions = {
   title: "Core/MapLibreMap",
   component: MapLibreMap,
   argTypes: {
@@ -15,6 +15,7 @@ export default {
     },
   },
 };
+export default storyoptions;
 
 const Template = (args) => (
   <MapComponentsProvider>
