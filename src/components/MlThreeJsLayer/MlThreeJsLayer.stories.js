@@ -6,9 +6,6 @@ import MlThreeJsLayer from "./MlThreeJsLayer";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlThreeJsLayer",
   component: MlThreeJsLayer,

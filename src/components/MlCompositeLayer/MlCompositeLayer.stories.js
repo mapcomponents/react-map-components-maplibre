@@ -5,9 +5,6 @@ import MlCompositeLayer from "./MlCompositeLayer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlCompositeLayer",
   component: MlCompositeLayer,

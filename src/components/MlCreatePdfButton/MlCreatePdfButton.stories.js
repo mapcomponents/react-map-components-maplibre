@@ -6,9 +6,6 @@ import TopToolbar from "../../ui_components/TopToolbar";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlCreatePdfButton",
   component: MlCreatePdfButton,

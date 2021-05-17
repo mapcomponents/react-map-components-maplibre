@@ -4,9 +4,6 @@ import MlGeoJsonLayer from "./MlGeoJsonLayer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlGeoJsonLayer",
   component: MlGeoJsonLayer,

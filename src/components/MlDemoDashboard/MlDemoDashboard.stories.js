@@ -5,7 +5,6 @@ import MapLibreMap from "../MapLibreMap/MapLibreMap";
 import mapContextDecorator from "../../decorators/MapContextDashboardDecorator";
 import { SimpleDataProvider } from "react-map-components-core";
 import "./style.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import MlCompositeLayer from "../MlCompositeLayer/MlCompositeLayer";
 import TopToolbar from "../../ui_components/TopToolbar";
 

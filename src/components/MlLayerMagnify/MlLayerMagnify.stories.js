@@ -6,9 +6,6 @@ import TopToolbar from "../../ui_components/TopToolbar";
 
 import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlLayerMagnify",
   component: MlLayerMagnify,

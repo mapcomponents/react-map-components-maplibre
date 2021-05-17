@@ -10,9 +10,6 @@ import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext
 //import mapContext3DDecorator from "../../decorators/MapContext3DDecorator";
 import mapContextDecorator from "../../decorators/MapContextKlokantechBasicDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "Applications/MlLaermkarte",
   component: MlLaermkarte,

@@ -6,8 +6,6 @@ import MlGPXViewer from "../MlGPXViewer/MlGPXViewer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 import GeoJsonProvider from "../MlGPXViewer/util/GeoJsonProvider";
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const storyoptions = {
   title: "MapComponents/MlSpatialElevationProfile",

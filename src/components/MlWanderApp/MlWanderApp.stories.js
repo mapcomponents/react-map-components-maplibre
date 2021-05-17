@@ -4,9 +4,6 @@ import MlWanderApp from "./MlWanderApp";
 
 import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "Applications/MlWanderApp",
   component: MlWanderApp,

@@ -6,9 +6,6 @@ import MlDeckGlLayer from "./MlDeckGlLayer";
 import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlDeckGlLayer",
   component: MlDeckGlLayer,

@@ -4,9 +4,6 @@ import MlComponentTemplate from "./MlComponentTemplate";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlComponentTemplate",
   component: MlComponentTemplate,

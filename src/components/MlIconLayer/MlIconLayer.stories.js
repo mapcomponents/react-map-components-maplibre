@@ -9,9 +9,6 @@ import { MapContext, SimpleDataProvider } from "react-map-components-core";
 import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";
 import destinationPoint from "./assets/destinationPoint";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
 const storyoptions = {
   title: "MapComponents/MlIconLayer",
   component: MlIconLayer,
