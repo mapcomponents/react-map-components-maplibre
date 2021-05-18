@@ -4,14 +4,16 @@ import TopToolbar from "../../ui_components/TopToolbar";
 import MlMobilerImker from "./MlMobilerImker";
 import Legend from "../../ui_components/Legend";
 import { MapComponentsProvider } from "react-map-components-core";
-
-import mapContextDecorator from "../../decorators/MultiMapContextDecorator";
+import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
   title: "MapComponents/MlMobilerImker",
   component: MlMobilerImker,
-  argTypes: {},
-  decorators: mapContextDecorator,
+    argTypes: {
+        url: {},
+        layer: {},
+    },
+    decorators: mapContextDecorator,
 };
 export default storyoptions;
 
@@ -26,3 +28,5 @@ const Template = (args) => {
 };
 
 export const ExampleConfig = Template.bind({});
+ExampleConfig.parameters = {};
+ExampleConfig.args = {};

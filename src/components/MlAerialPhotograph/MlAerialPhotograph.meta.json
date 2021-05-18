@@ -5,6 +5,10 @@
   "tags": [],
   "category": "",
   "type": "application",
+<<<<<<< HEAD
+  "components": [ "MlVectorTileLayer", "MlWMSLayer", "MlCreatePdfButton"],
+=======
   "components": [ "MlVectorTileLayer", "MlWMSLayer"],
+>>>>>>> 671872b1c2a5dd5616fcff969787ad5260a96103
   "price": 12000
 }

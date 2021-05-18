@@ -46,6 +46,7 @@ const MlWmsLayer = (props) => {
       attribution: "",
       //...props.sourceOptions,
     });
+
     mapContext.map.addLayer(
       {
         id: "raster-tile-layer-" + idPostfixRef.current,
