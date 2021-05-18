@@ -1,22 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ResponsiveLine } from "@nivo/line";
+import React, { useMemo, useEffect, useState } from "react";
+import { Line } from "@nivo/line";
+import { useTheme } from "@material-ui/core/styles";
+import { AutoSizer } from "react-virtualized";
 
 function DailyProgressChart(props) {
   const [data, setData] = useState([]);
+
+  const theme = useTheme();
 
   useEffect(() => {
     if (!props.data) return;
 
     let dateKeys = Object.keys(props.data);
-    let data = [];
+    let dataTmp = [];
     for (var i = 0, len = dateKeys.length; i < len; i++) {
-      data.push({
+      dataTmp.push({
         y: parseFloat(props.data[dateKeys[i]]),
         x: dateKeys[i],
       });
     }
 
-    data.sort(function (a, b) {
+    dataTmp.sort(function (a, b) {
       return new Date(a.x) - new Date(b.x);
     });
 
@@ -24,22 +28,41 @@ function DailyProgressChart(props) {
       {
         id: "Km/Tag",
         color: "hsl(45, 70%, 50%)",
-        data: data,
+        data: dataTmp,
       },
     ]);
 
-    if (data.length && typeof props.onClick === "function") {
-      props.onClick(data[data.length - 1].x);
+    if (dataTmp.length && typeof props.onClick === "function") {
+      props.onClick(dataTmp[dataTmp.length - 1].x);
     }
   }, [props.data]);
 
+  const chartTheme = useMemo(() => {
+    return {
+      textColor: theme.palette.text.primary,
+      axis: {
+        fontSize: "14px",
+        tickColor: "#eee",
+      },
+      grid: {
+        line: {
+          stroke: theme.palette.chart.gridColor,
+          strokeWidth: 1,
+        },
+      },
+    };
+  }, [theme]);
+
   return (
-    <>
-      {data.length && (
-        <ResponsiveLine
+    <AutoSizer>
+      {({ height, width }) => (
+        <Line
+          height={height}
+          width={width}
+          theme={chartTheme}
           onClick={(point) => {
             if (typeof props.onClick === "function") {
-              props.onClick(point.data);
+              props.onClick(point.data.x);
             }
           }}
           data={data}
@@ -96,21 +119,21 @@ function DailyProgressChart(props) {
             legendPosition: "middle",
           }}
           colors={(data) => {
-            return "#64c864";
+            return theme.palette.primary.main;
           }}
           pointColor={{ theme: "background" }}
           pointBorderWidth={2}
           pointBorderColor={{ from: "serieColor" }}
           pointLabelYOffset={-12}
           pointSymbol={(data) => {
-            let fill = "#64c864";
-            let stroke = data.borderColor;
+            let fill = theme.palette.primary.main;
+            let stroke = theme.palette.primary.main;
 
             if (new Date(data.datum.x) - new Date(props.displayDate) < 0) {
-              fill = "#9797e6";
+              fill = theme.palette.secondary.light;
             }
             if (data.datum.x === props.displayDate) {
-              fill = "#6464c8";
+              fill = theme.palette.secondary.dark;
             }
             return (
               <>
@@ -157,7 +180,7 @@ function DailyProgressChart(props) {
           ]}
         />
       )}
-    </>
+    </AutoSizer>
   );
 }
 

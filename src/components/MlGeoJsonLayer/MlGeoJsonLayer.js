@@ -31,6 +31,22 @@ const MlGeoJsonLayer = (props) => {
   useEffect(() => {
     if (
       !mapContext.mapExists(props.mapId) ||
+      !mapContext.getMap(props.mapId).getLayer(layerId + idPostfixRef.current)
+    )
+      return;
+    // the MapLibre-gl instance (mapContext.map) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+    for (var key in props.paint) {
+      mapContext
+        .getMap(props.mapId)
+        .setPaintProperty(layerId + idPostfixRef.current, key, props.paint[key]);
+    }
+  }, [props.paint]);
+
+  useEffect(() => {
+    if (
+      !mapContext.mapExists(props.mapId) ||
       !mapContext.getMap(props.mapId).getSource(layerId + idPostfixRef.current)
     )
       return;

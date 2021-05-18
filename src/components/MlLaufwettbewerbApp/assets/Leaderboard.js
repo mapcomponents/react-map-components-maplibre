@@ -4,6 +4,7 @@ import * as turf from "@turf/turf";
 
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { useTheme } from "@material-ui/core/styles";
 
 import LeaderboardEntry from "./LeaderboardEntry";
 
@@ -14,6 +15,9 @@ function Leaderboard({ users, progressDataByUser, route }) {
   const [displayLeaders, setDisplayLeaders] = useState([]);
   const [individualProgress, setIndividualProgress] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
+  const [selectedUser, setSelectedUser] = useState(false);
+
+  const theme = useTheme();
 
   useEffect(() => {
     let tmpUsers = [...users];
@@ -37,6 +41,16 @@ function Leaderboard({ users, progressDataByUser, route }) {
   }, [users, progressDataByUser]);
 
   useEffect(() => {
+    console.log(
+      currentPage * usersPerPage,
+      currentPage * usersPerPage + usersPerPage
+    );
+    console.log(
+      leaders.slice(
+        currentPage * usersPerPage,
+        currentPage * usersPerPage + usersPerPage
+      )
+    );
     setDisplayLeaders(
       leaders.slice(
         currentPage * usersPerPage,
@@ -71,7 +85,7 @@ function Leaderboard({ users, progressDataByUser, route }) {
           <Button disabled={true}>{currentPage + 1}</Button>
           <Button
             onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={(currentPage + 1) * usersPerPage >= users.length}
+            disabled={(currentPage + 1) * usersPerPage >= leaders.length}
           >
             {">>"}
           </Button>
@@ -81,7 +95,9 @@ function Leaderboard({ users, progressDataByUser, route }) {
         <LeaderboardEntry
           onMouseOver={() => showIndividualProgress(data.distance)}
           onMouseLeave={() => setIndividualProgress(false)}
-          key={"lb_" + data.id}
+          onClick={() => setSelectedUser(data)}
+          selectedUser={selectedUser}
+          key={"lb_" + data.username}
           data={data}
         />
       ))}
@@ -89,8 +105,8 @@ function Leaderboard({ users, progressDataByUser, route }) {
         <MlGeoJsonLayer
           geojson={individualProgress}
           paint={{
-            "line-color": "rgb(200,100,100)",
-            "line-width": 10,
+            "line-color": theme.palette.error.dark,
+            "line-width": 6,
           }}
           type="line"
         />

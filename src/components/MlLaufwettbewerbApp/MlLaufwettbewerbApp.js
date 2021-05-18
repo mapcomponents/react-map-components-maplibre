@@ -1,17 +1,26 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useMemo, useState, useEffect, useContext } from "react";
 
 import MapLibreMap from "../MapLibreMap/MapLibreMap";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import DailyProgressChart from "./assets/DailyProgressChart";
+import Header from "./assets/Header";
 import Leaderboard from "./assets/Leaderboard";
 import { MapContext } from "react-map-components-core";
 import { Grid, Paper } from "@material-ui/core";
 import route from "./assets/route.json";
+
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { createMuiTheme, makeStyles, ThemeProvider } from "@material-ui/core/styles";
+
 // https://repo.wheregroup.com/api/v4/users?per_page=100&page=2&exclude_external=true&exclude_internal=true
 // https://docs.gitlab.com/ee/api/users.html
 // https://docs.gitlab.com/ce/api/#pagination
 import user_data from "./assets/users.json";
 import * as turf from "@turf/turf";
+
+import colorTheme_default from "./assets/themes/default";
+import colorTheme_dark from "./assets/themes/dark";
+import layoutTheme_default from "./assets/themes/layoutTheme_default";
 
 const MlLaufwettbewerbApp = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -23,6 +32,12 @@ const MlLaufwettbewerbApp = (props) => {
   const [progressDataByUser, setProgressDataByUser] = useState({});
   const [users, setUsers] = useState([]);
   const [displayDate, setDisplayDate] = useState("2021-06-07");
+  const [darkMode, setDarkMode] = useState(false);
+
+  const colorTheme = useMemo(() => {
+    return createMuiTheme(darkMode ? colorTheme_dark : colorTheme_default);
+  }, [darkMode]);
+  const layoutTheme = createMuiTheme({});
 
   const fetchProgressData = () => {
     fetch("/assets/laufwettbewerb_mock_data.json")
@@ -130,75 +145,99 @@ const MlLaufwettbewerbApp = (props) => {
       .setCenter({ lng: 9.830202291394698, lat: 50.55342033900138 });
   }, [mapContext.mapIds, mapContext]);
 
+  const routePaint = useMemo(() => {
+    return {
+      "line-color": colorTheme.palette.primary.main,
+      "line-width": 10,
+    };
+  }, [colorTheme]);
+  const progressPaint = useMemo(() => {
+    return {
+      "line-color": colorTheme.palette.secondary.main,
+      "line-width": 6,
+    };
+  }, [colorTheme]);
+
   return (
     <>
-      <Grid container spacing={3}>
-        <Grid item xs={3}>
-          <h1>Laufwettbewerb</h1>
-          <p>Anzeigedatum:</p>
-          <h2>
-            {new Date(displayDate).toLocaleDateString("de-DE", {
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </h2>
-          <p>Gelaufene Kilometer:</p>
-          <h3>{routeProgressInKm} Km</h3>
-        </Grid>
-        <Grid item xs={6} className="mlMap">
-          <MapLibreMap
-            options={{
-              zoom: 14.5,
-              style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
-              center: [7.0851268, 50.73884],
-            }}
-          />
-          <MlGeoJsonLayer
-            geojson={route}
-            paint={{
-              "line-color": "rgb(100,200,100)",
-              "line-width": 10,
-            }}
-            type="line"
-          />
-          {routeProgressFeature && (
-            <MlGeoJsonLayer
-              geojson={routeProgressFeature}
-              paint={{
-                "line-color": "rgb(100,100,200)",
-                "line-width": 6,
+      <ThemeProvider theme={layoutTheme}>
+        <ThemeProvider theme={colorTheme}>
+          <CssBaseline />
+          <Grid
+            container
+            spacing={3}
+            style={{ flexDirection: "column", flexWrap: "no-wrap" }}
+          >
+            <Grid item xs={12}>
+              <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={3} style={{ flexDirection: "row" }}>
+                <Grid item xs={12} md={3}>
+                  <p>Anzeigedatum:</p>
+                  <h2>
+                    {new Date(displayDate).toLocaleDateString("de-DE", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </h2>
+                  <p>Gelaufene Kilometer:</p>
+                  <h3>{routeProgressInKm} Km</h3>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  className="mlMap"
+                  style={{ minHeight: "400px" }}
+                >
+                  <MapLibreMap
+                    options={{
+                      zoom: 14.5,
+                      style: "mapbox://styles/mapbox/dark-v9",
+                      center: [7.0851268, 50.73884],
+                    }}
+                  />
+                  <MlGeoJsonLayer geojson={route} paint={routePaint} type="line" />
+                  {routeProgressFeature && (
+                    <MlGeoJsonLayer
+                      geojson={routeProgressFeature}
+                      paint={progressPaint}
+                      type="line"
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <Leaderboard
+                    route={route}
+                    users={users}
+                    progressDataByUser={progressDataByUser}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              style={{
+                display: "flex",
+                alignItems: "stretch",
+                alignContent: "stretch",
+                overflow: "hidden",
+                minHeight: "200px",
               }}
-              type="line"
-            />
-          )}
-        </Grid>
-        <Grid item xs={3}>
-          <Leaderboard
-            route={route}
-            users={users}
-            progressDataByUser={progressDataByUser}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          style={{
-            height: "33vh",
-            display: "flex",
-            alignItems: "stretch",
-            alignContent: "stretch",
-            overflow: "hidden",
-          }}
-        >
-          <DailyProgressChart
-            data={progressDataByDate}
-            onClick={(date) => setDisplayDate(date.x)}
-            displayDate={displayDate}
-          />
-        </Grid>
-      </Grid>
+            >
+              <DailyProgressChart
+                data={progressDataByDate}
+                onClick={(date) => setDisplayDate(date)}
+                displayDate={displayDate}
+              />
+            </Grid>
+          </Grid>
+        </ThemeProvider>
+      </ThemeProvider>
     </>
   );
 };

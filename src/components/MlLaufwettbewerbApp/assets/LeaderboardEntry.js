@@ -3,8 +3,17 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+import { useTheme } from "@material-ui/core/styles";
 
-function LeaderboardEntry({ data, onMouseOver, onMouseLeave }) {
+function LeaderboardEntry({
+  data,
+  onMouseOver,
+  onMouseLeave,
+  onClick,
+  selectedUser,
+}) {
+  const theme = useTheme();
+
   return (
     <Card
       style={{
@@ -13,9 +22,15 @@ function LeaderboardEntry({ data, onMouseOver, onMouseLeave }) {
         alignContent: "stretch",
         alignItems: "stretch",
         marginTop: "10px",
+        cursor: "pointer",
+        backgroundColor:
+          selectedUser && selectedUser.username === data.username
+            ? theme.palette.action.selected
+            : "initial",
       }}
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
       <CardMedia
         style={{

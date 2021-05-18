@@ -35,6 +35,7 @@
     "react-router-redux": "^4.0.8",
     "react-scripts": "4.0.1",
     "react-spinners": "^0.10.6",
+    "react-virtualized": "^9.22.3",
     "redux": "^4.0.5",
     "styled-components": "^5.2.1",
     "three": "^0.126.1",
