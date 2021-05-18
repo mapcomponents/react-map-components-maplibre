@@ -16,6 +16,7 @@
 
 /public/catalogue/
 
+/.idea
 # misc
 .DS_Store
 .env.local
