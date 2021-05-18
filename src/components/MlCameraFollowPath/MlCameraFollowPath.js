@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useCallback, useContext, useRef, useMemo } from "react";
 
 import * as turf from "@turf/turf";
 import { MapContext } from "react-map-components-core";
@@ -11,13 +11,16 @@ const MlCameraFollowPath = (props) => {
   const clearIntervalRef = useRef(false);
 
   // default path, for testing default behaviour
-  const route = props.path || [
-    [7.09222, 50.725055],
-    [7.0577, 50.7621],
-  ];
+  const route = useMemo(
+    () =>
+      props.path || [
+        [7.09222, 50.725055],
+        [7.0577, 50.7621],
+      ],
+    [props.path]
+  );
 
   useEffect(() => {
-    if (!mapContext.mapExists(props.mapId)) return;
     return () => {
       clearIntervalRef.current = true;
       // This is the cleanup function, it is called when this react component is removed from react-dom
@@ -27,7 +30,7 @@ const MlCameraFollowPath = (props) => {
     };
   }, []);
 
-  const disableInteractivity = () => {
+  const disableInteractivity = useCallback(() => {
     mapContext.map["scrollZoom"].disable();
     mapContext.map["boxZoom"].disable();
     mapContext.map["dragRotate"].disable();
@@ -35,8 +38,8 @@ const MlCameraFollowPath = (props) => {
     mapContext.map["keyboard"].disable();
     mapContext.map["doubleClickZoom"].disable();
     mapContext.map["touchZoomRotate"].disable();
-  };
-  const enableInteractivity = () => {
+  }, [mapContext.map]);
+  const enableInteractivity = useCallback(() => {
     mapContext.map["scrollZoom"].enable();
     mapContext.map["boxZoom"].enable();
     mapContext.map["dragRotate"].enable();
@@ -44,7 +47,7 @@ const MlCameraFollowPath = (props) => {
     mapContext.map["keyboard"].enable();
     mapContext.map["doubleClickZoom"].enable();
     mapContext.map["touchZoomRotate"].enable();
-  };
+  }, [mapContext.map]);
 
   useEffect(() => {
     if (!mapContext.mapExists() || initializedRef.current) return;

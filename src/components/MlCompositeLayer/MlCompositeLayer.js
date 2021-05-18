@@ -21,9 +21,7 @@ const paintDefaults = {
 const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
   const mapContext = useContext(MapContext);
 
-  const layerRef = useRef(null);
   const [showLayer, setShowLayer] = useState(true);
-  const idPostfixRef = useRef(new Date().getTime());
   const layerName = "building-3d";
 
   const componentCleanup = () => {
@@ -33,8 +31,6 @@ const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
   };
 
   useEffect(() => {
-    if (!mapContext.map) return;
-
     return () => {
       componentCleanup();
     };
@@ -48,9 +44,6 @@ const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
 
     let addCompositeLayer = () => {
       if (!mapContext.map.getLayer(layerName)) {
-        console.log("style loaded");
-        console.log(mapContext.map.style.stylesheet.name);
-
         let lastLabelLayerId = false;
         if (mapContext.map.getLayer("waterway-name")) {
           lastLabelLayerId = "waterway-name";
@@ -85,7 +78,7 @@ const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
     addCompositeLayer();
     //mapContext.map.setZoom(16.5);
     //mapContext.map.setPitch(45);
-  }, [mapContext.map]);
+  }, [mapContext.map, componentCleanup, minZoom, paint, sourceId, sourceLayer]);
 
   useEffect(() => {
     if (!mapContext.map) return;

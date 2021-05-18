@@ -4,10 +4,7 @@ import MlWanderApp from "./MlWanderApp";
 
 import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-export default {
+const storyoptions = {
   title: "Applications/MlWanderApp",
   component: MlWanderApp,
   argTypes: {
@@ -16,8 +13,9 @@ export default {
   },
   decorators: multiMapContextDecorator,
 };
+export default storyoptions;
 
-const Template = (args) =>  <MlWanderApp wmsLayerMapId={args.wmsLayerMapId} />;
+const Template = (args) => <MlWanderApp wmsLayerMapId={args.wmsLayerMapId} />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};

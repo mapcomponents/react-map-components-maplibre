@@ -1,0 +1,33 @@
+/* reset base styles */
+#root {
+     background-color: #fff;
+  position: static;
+  min-height:initial;
+    top: initial;
+    right: initial;
+    left: initial;
+    bottom: initial;
+}
+.lw_map .mapContainer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    top: initial;
+    right: initial;
+    left: initial;
+    bottom: initial;
+    z-index: 100;
+}
+.lw_map .mlMap {
+    width: 100%;
+    min-height: 65vh;
+    display: flex;
+    align-items:stretch;
+}
+
+.lw_map .mlMap > .mapContainer {
+    width: 100%;
+    height: 100%;
+    z-index: unset;
+    border-radius: 4px;
+}

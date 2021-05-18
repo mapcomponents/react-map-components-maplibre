@@ -6,10 +6,7 @@ import MlDeckGlLayer from "./MlDeckGlLayer";
 import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-export default {
+const storyoptions = {
   title: "MapComponents/MlDeckGlLayer",
   component: MlDeckGlLayer,
   argTypes: {
@@ -21,6 +18,7 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 //<MlCompositeLayer />
 
 const Template = (args) => {

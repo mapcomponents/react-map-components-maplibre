@@ -46,14 +46,18 @@ const MlWmsLayer = (props) => {
       attribution: "",
       //...props.sourceOptions,
     });
-    mapContext.map.addLayer({
-      id: "raster-tile-layer-" + idPostfixRef.current,
-      type: "raster",
-      source: "raster-tile-source-" + idPostfixRef.current,
-      minzoom: 0,
-      maxzoom: 10,
-      ...props.sourceOptions,
-    }, props.belowLayerId);
+
+    mapContext.map.addLayer(
+      {
+        id: "raster-tile-layer-" + idPostfixRef.current,
+        type: "raster",
+        source: "raster-tile-source-" + idPostfixRef.current,
+        minzoom: 0,
+        maxzoom: 10,
+        ...props.sourceOptions,
+      },
+      props.belowLayerId
+    );
   }, [mapContext.map]);
 
   useEffect(() => {

@@ -9,10 +9,7 @@ import { MapContext, SimpleDataProvider } from "react-map-components-core";
 import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";
 import destinationPoint from "./assets/destinationPoint";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-export default {
+const storyoptions = {
   title: "MapComponents/MlIconLayer",
   component: MlIconLayer,
   argTypes: {
@@ -21,6 +18,7 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => {
   const mapContext = useContext(MapContext);

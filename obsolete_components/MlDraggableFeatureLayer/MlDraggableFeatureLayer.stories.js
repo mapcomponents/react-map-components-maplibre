@@ -9,8 +9,6 @@
 //
 //import mapContextDecorator from "../../decorators/MapContextDecorator";
 //
-//import "../../App.css";
-//
 //let MlDraggableFeatureLayerStories = {
 //  title: "MapComponents/MlDraggableFeatureLayer",
 //  component: MlDraggableFeatureLayer,

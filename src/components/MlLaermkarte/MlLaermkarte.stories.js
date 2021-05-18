@@ -10,10 +10,7 @@ import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext
 //import mapContext3DDecorator from "../../decorators/MapContext3DDecorator";
 import mapContextDecorator from "../../decorators/MapContextKlokantechBasicDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-export default {
+const storyoptions = {
   title: "Applications/MlLaermkarte",
   component: MlLaermkarte,
   argTypes: {
@@ -22,6 +19,7 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const route = [
   //[7.09222, 50.725055],

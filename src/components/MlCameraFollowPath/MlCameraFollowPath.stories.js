@@ -4,10 +4,7 @@ import MlCameraFollowPath from "./MlCameraFollowPath";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-export default {
+const storyoptions = {
   title: "MapComponents/MlCameraFollowPath",
   component: MlCameraFollowPath,
   argTypes: {
@@ -16,6 +13,7 @@ export default {
   },
   decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => <MlCameraFollowPath />;
 

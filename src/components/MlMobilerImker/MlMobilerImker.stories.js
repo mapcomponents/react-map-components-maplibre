@@ -1,14 +1,12 @@
 import React from "react";
 
 import TopToolbar from "../../ui_components/TopToolbar";
-import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import MlMobilerImker from "./MlMobilerImker";
 import Legend from "../../ui_components/Legend";
 import { MapComponentsProvider } from "react-map-components-core";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlMobilerImker",
   component: MlMobilerImker,
     argTypes: {
@@ -17,6 +15,7 @@ export default {
     },
     decorators: mapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => {
   return (

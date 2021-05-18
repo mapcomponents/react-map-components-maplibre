@@ -1,16 +1,15 @@
-
-
 .smallMap {
+  min-height: 200px;
 
-    
-    
-    width: 200px !important;
-    height: 200px !important;
+  display: flex;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+.smallMap .MuiButtonBase-root {
+  display: none;
 }
 
 .smallMap > .mapContainer {
-    margin: 1rem;
-    width: 95% !important;
-    height: 95% !important;
-
+  width: 100%;
 }
