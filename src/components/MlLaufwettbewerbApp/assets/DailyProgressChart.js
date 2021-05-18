@@ -27,6 +27,10 @@ function DailyProgressChart(props) {
         data: data,
       },
     ]);
+
+    if (data.length && typeof props.onClick === "function") {
+      props.onClick(data[data.length - 1].x);
+    }
   }, [props.data]);
 
   return (
