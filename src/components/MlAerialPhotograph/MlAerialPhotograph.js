@@ -1,22 +1,24 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
+import * as turf from "@turf/turf";
 
 const MlAerialPhotograph = () => {
 
-  const idPostfixRef = useRef(new Date().getTime());
   const mapContext = useContext(MapContext);
   const [legendData, setLegendData] = useState({
-    id: "meep",
-    class: "boop"
+    name: "",
+    class: "",
+    x: "",
+    y: "",
+    z: ""
   });
-  let legendDataRef = useRef({});
 
   useEffect(() => {
     if (!mapContext.map) return;
 
 
-    mapContext.map.transform._maxZoom = 14.99;
+    mapContext.map.transform._maxZoom = 19.99;
 
     mapContext.map.addLayer({
       id: "mapData",
@@ -39,56 +41,76 @@ const MlAerialPhotograph = () => {
     });
 
     mapContext.map.addLayer({
-      id: "mountainData",
+      id: "placeData",
       source: "openmaptiles",
-      "source-layer": "mountain_peak",
-      type: "fill",
+      "source-layer": "poi",
+      type: "circle",
+      filter: ["has", "name"],
       paint: {
-        "fill-opacity": 0.5
+        "circle-opacity": 0,
+        "circle-radius": {
+          stops: [[0, 0], [20, 500]],
+          base: 2
+        }
+
       }
     });
 
     mapContext.map.addLayer({
-      id: "placeData",
+      id: "riverData",
       source: "openmaptiles",
-      "source-layer": "place",
-      type: "fill",
+      type: "line",
+      "source-layer": "waterway",
+      filter: ["==", "class", "river"],
       paint: {
-        "fill-opacity": 0.5
+        "line-opacity": 0,
+        "line-width": 150
       }
-    });
+    })
 
     mapContext.map.on("mousemove", function(e) {
-      let features = mapContext.map.queryRenderedFeatures(e.point, { layers: ["mapData", "greenData", "mountainData", "placeData"] });
+      let features = mapContext.map.queryRenderedFeatures(e.point, {layers: ["mapData", "greenData", "placeData", "riverData"]});
+      //let bigFeatures = mapContext.map.queryRenderedFeatures(e.point, {layers: ["cityData"]})
+      //let cityName = bigFeatures.find(element => element.properties.class === "city") || {properties: {name: ""}}
+      let closestFeature = getClosestFeature(features, Object.values(e.point))
       if (features[0]) {
-        if(features.length>1 && (features[0].properties.class !== features[1].properties.class)){
-        console.log(features)
-        }
-        setLegendData(features[0]);
-        legendDataRef.current = {
-          id: features[0].id,
-          class: features[0].properties.class,
-          x: features[0]._vectorTileFeature._x,
-          y: features[0]._vectorTileFeature._y,
-          z: features[0]._vectorTileFeature._z,
-
-        };
+        setLegendData({
+          name: closestFeature.properties.name,
+          class: closestFeature.properties.class,
+          x: closestFeature._vectorTileFeature._x,
+          y: closestFeature._vectorTileFeature._y,
+          z: closestFeature._vectorTileFeature._z,
+        });
       }
-
     });
   }, [mapContext.map]);
+
+
+  function getClosestFeature(featureCollection, mousePoint, identifier){
+    identifier = identifier || true;
+    let closestFeature = featureCollection[0]
+    for(let i in featureCollection){
+      if(featureCollection[i].layer["source-layer"] === identifier) {
+        if (turf.distance(turf.center(featureCollection[i]), mousePoint) > turf.distance(turf.center(closestFeature), mousePoint)) {
+          closestFeature = featureCollection[i]
+        }
+      }
+    }
+    return closestFeature
+  }
 
   return (
     <>
       <MlWmsLayer
         url="https://www.wms.nrw.de/geobasis/wms_nw_dop"
         layer="nw_dop_rgb"
-        sourceOptions={{ maxzoom: 15 }}
+        sourceOptions={{ maxzoom: 20 }}
+        belowLayerId = "waterway-name"
       />
       <hr style={{ width: "100%", color: "black", padding: "none", height: "3px" }} />
       <ul style={{ "paddingLeft": 0 }}>
-        {Object.keys(legendDataRef.current).map((key) => (
-            <li> {`${key}: ${legendDataRef.current[key]}`} </li>
+        {Object.keys(legendData).map((key) => (
+            <li> {`${key}: ${legendData[key] || ""}`} </li>
           )
         )}
       </ul>

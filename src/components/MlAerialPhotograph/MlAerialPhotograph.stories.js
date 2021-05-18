@@ -16,7 +16,7 @@ export default {
         layer: {},
     },
 
-    decorator: MapContextDecorator
+    decorators: MapContextDecorator
 };
 
 const Template = (args) => {
