@@ -5,7 +5,7 @@ import { MapContext } from "react-map-components-core";
 const MlGeoJsonLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
-  const idPostfixRef = useRef(new Date().getTime());
+  const idPostfixRef = useRef(props.idSuffix || new Date().getTime());
   const layerId = props.layerId || "MlGeoJsonLayer-";
 
   useEffect(() => {
