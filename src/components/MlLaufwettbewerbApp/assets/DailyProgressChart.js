@@ -50,6 +50,7 @@ function DailyProgressChart(props) {
           strokeWidth: 1,
         },
       },
+      tooltip: { container: { minWidth: "100px" } },
     };
   }, [theme]);
 
@@ -148,7 +149,21 @@ function DailyProgressChart(props) {
           }}
           tooltip={(data) => {
             return (
-              data.point.data.xFormatted + ": " + data.point.data.yFormatted + " Km"
+              <div
+                style={{
+                  minWidth: "140px",
+                  backgroundColor: "rgba(20,20,20,0.7)",
+                  border: "2px solid rgba(40,40,40,0.8)",
+                  color: "#fcfcfc",
+                  padding: "4px",
+                  borderRadius: "3px",
+                }}
+              >
+                {data.point.data.xFormatted}
+                <br />
+                {data.point.data.yFormatted}
+                Km
+              </div>
             );
           }}
           useMesh={true}
