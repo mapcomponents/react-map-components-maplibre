@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, useContext } from "react";
 
 import MapLibreMap from "../MapLibreMap/MapLibreMap";
+import MlLayer from "../MlLayer/MlLayer";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import DailyProgressChart from "./assets/DailyProgressChart";
 import Header from "./assets/Header";
@@ -8,6 +9,7 @@ import Leaderboard from "./assets/Leaderboard";
 import { MapContext } from "react-map-components-core";
 import { Grid, Paper } from "@material-ui/core";
 import route from "./assets/route.json";
+import germanyGeoJson from "./assets/json/germany.geo.json";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
@@ -158,26 +160,23 @@ const MlLaufwettbewerbApp = (props) => {
     if (!mapContext.mapExists(props.mapId)) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-    mapContext.getMap(props.mapId).setZoom(6.1);
-    mapContext.getMap(props.mapId).setPitch(45);
-    mapContext.getMap(props.mapId).setBearing(-42);
-    mapContext
-      .getMap(props.mapId)
-      .setCenter({ lng: 9.830202291394698, lat: 50.55342033900138 });
+    var bbox = turf.bbox(route);
+    console.log([
+      [bbox[0], bbox[1]],
+      [bbox[2], bbox[3]],
+    ]);
+    mapContext.getMap(props.mapId).fitBounds(
+      [
+        [bbox[0], bbox[1]],
+        [bbox[2], bbox[3]],
+      ],
+      { bearing: -42, pitch: 45 }
+    );
+    //mapContext.getMap(props.mapId).setZoom(6.1);
+    //mapContext
+    //  .getMap(props.mapId)
+    //  .setCenter({ lng: 9.830202291394698, lat: 50.55342033900138 });
   }, [mapContext.mapIds, mapContext]);
-
-  const routePaint = useMemo(() => {
-    return {
-      "line-color": colorTheme.palette.primary.main,
-      "line-width": 10,
-    };
-  }, [colorTheme]);
-  const progressPaint = useMemo(() => {
-    return {
-      "line-color": colorTheme.palette.secondary.main,
-      "line-width": 6,
-    };
-  }, [colorTheme]);
 
   return (
     <>
@@ -217,18 +216,133 @@ const MlLaufwettbewerbApp = (props) => {
                   <MapLibreMap
                     options={{
                       zoom: 14.5,
-                      style: "mapbox://styles/mapbox/dark-v9",
+                      //style: "https://demotiles.maplibre.org/style.json",
+                      style: {
+                        version: 8,
+                        name: "Blank",
+                        center: [0, 0],
+                        zoom: 0,
+                        sources: {},
+                        sprite:
+                          "https://raw.githubusercontent.com/openmaptiles/osm-liberty-gl-style/gh-pages/sprites/osm-liberty",
+                        glyphs:
+                          "mapbox://fonts/openmaptiles/{fontstack}/{range}.pbf",
+                        layers: [
+                          {
+                            id: "background",
+                            type: "background",
+                            paint: {
+                              "background-color": "#ffffff",
+                            },
+                          },
+                        ],
+                        id: "blank",
+                      },
+
                       center: [7.0851268, 50.73884],
                     }}
                   />
-                  <MlGeoJsonLayer geojson={route} paint={routePaint} type="line" />
+                  <MlLayer
+                    idSuffix="backgroundColor"
+                    options={{
+                      type: "background",
+                      paint: {
+                        "background-color": colorTheme.palette.background.default,
+                      },
+                    }}
+                  />
+                  <MlGeoJsonLayer
+                    geojson={germanyGeoJson}
+                    idSuffix="germanyGeoJsonFill"
+                    paint={{
+                      "fill-color": colorTheme.palette.action.focus,
+                    }}
+                    type="fill"
+                  />
+                  <MlGeoJsonLayer
+                    geojson={germanyGeoJson}
+                    idSuffix="germanyGeoJsonLine"
+                    paint={{
+                      "line-color": colorTheme.palette.info.main,
+                      "line-width": 4,
+                    }}
+                    type="line"
+                  />
+                  <MlGeoJsonLayer
+                    geojson={route}
+                    idSuffix="routeGeoJson"
+                    paint={{
+                      "line-color": colorTheme.palette.primary.main,
+                      "line-width": 10,
+                    }}
+                    type="line"
+                  />
                   {routeProgressFeature && (
                     <MlGeoJsonLayer
                       geojson={routeProgressFeature}
-                      paint={progressPaint}
+                      idSuffix="progressGeoJson"
+                      paint={{
+                        "line-color": colorTheme.palette.secondary.main,
+                        "line-width": 6,
+                      }}
                       type="line"
                     />
                   )}
+                  <MlLayer
+                    idSuffix="CityLabels"
+                    options={{
+                      type: "symbol",
+                      source: {
+                        type: "geojson",
+                        data: {
+                          type: "FeatureCollection",
+                          features: [
+                            {
+                              type: "Feature",
+                              properties: {
+                                description: "Bonn",
+                              },
+                              geometry: {
+                                type: "Point",
+                                coordinates: [7.085006973885085, 50.738673903252966],
+                              },
+                            },
+                            {
+                              type: "Feature",
+                              properties: {
+                                description: "Berlin",
+                              },
+                              geometry: {
+                                type: "Point",
+                                coordinates: [13.330454571384802, 52.4928702653268],
+                              },
+                            },
+                            {
+                              type: "Feature",
+                              properties: {
+                                description: "Freiburg",
+                              },
+                              geometry: {
+                                type: "Point",
+                                coordinates: [7.842812454054702, 47.989065548092675],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      layout: {
+                        "text-field": ["get", "description"],
+                        "text-radial-offset": 0.5,
+                        "text-anchor": "bottom",
+                        "text-offset": [0, -300],
+                      },
+                      paint: {
+                        "text-color": colorTheme.palette.text.primary,
+                        "text-halo-color": colorTheme.palette.background.default,
+                        "text-halo-width": 2,
+                      },
+                    }}
+                  ></MlLayer>
                 </Grid>
                 <Grid item xs={12} md={3} style={{ maxHeight: "520px" }}>
                   <Leaderboard
