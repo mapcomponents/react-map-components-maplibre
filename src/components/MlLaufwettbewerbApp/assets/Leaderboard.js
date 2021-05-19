@@ -8,7 +8,7 @@ import { useTheme } from "@material-ui/core/styles";
 
 import LeaderboardEntry from "./LeaderboardEntry";
 
-const usersPerPage = 5;
+const usersPerPage = 6;
 
 function Leaderboard({ users, progressDataByUser, route }) {
   const [leaders, setLeaders] = useState([]);

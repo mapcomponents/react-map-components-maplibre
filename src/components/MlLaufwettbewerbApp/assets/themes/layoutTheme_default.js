@@ -1,4 +1,11 @@
 const colorTheme = {
+  overrides: {
+    MuiPaper: {
+      root: {
+        padding: "10px",
+      },
+    },
+  },
   typography: {
     h5: {
       fontSize: "1.0rem",

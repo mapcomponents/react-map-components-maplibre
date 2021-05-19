@@ -16,7 +16,9 @@ function LeaderboardEntry({
 
   return (
     <Card
+      elevation={1}
       style={{
+        padding: 0,
         display: "flex",
         flexDirection: "row",
         alignContent: "stretch",

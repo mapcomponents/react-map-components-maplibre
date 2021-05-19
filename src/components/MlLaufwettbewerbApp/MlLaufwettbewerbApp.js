@@ -3,6 +3,7 @@ import React, { useMemo, useState, useEffect, useContext } from "react";
 import MapLibreMap from "../MapLibreMap/MapLibreMap";
 import MlLayer from "../MlLayer/MlLayer";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
+import MlImageMarkerLayer from "../MlImageMarkerLayer/MlImageMarkerLayer";
 import DailyProgressChart from "./assets/DailyProgressChart";
 import Header from "./assets/Header";
 import Leaderboard from "./assets/Leaderboard";
@@ -42,9 +43,14 @@ const MlLaufwettbewerbApp = (props) => {
   const [displayDate, setDisplayDate] = useState("2021-06-07");
   const [darkMode, setDarkMode] = useState(false);
 
+  const [routeProgressPosition, setRouteProgressPosition] = useState(false);
+
   const colorTheme = useMemo(() => {
     return responsiveFontSizes(
-      createMuiTheme(darkMode ? colorTheme_dark : colorTheme_default)
+      createMuiTheme({
+        ...layoutTheme_default,
+        ...(darkMode ? colorTheme_dark : colorTheme_default),
+      })
     );
   }, [darkMode]);
 
@@ -142,6 +148,24 @@ const MlLaufwettbewerbApp = (props) => {
       let tmpRouteProgess = turf.lineChunk(route, routeProgressInKm);
       if (typeof tmpRouteProgess.features[0] !== "undefined") {
         setRouteProgressFeature(tmpRouteProgess.features[0]);
+        setRouteProgressPosition({
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {
+                description: "Bonn",
+              },
+              geometry: {
+                type: "Point",
+                coordinates:
+                  tmpRouteProgess.features[0].geometry.coordinates[
+                    tmpRouteProgess.features[0].geometry.coordinates.length - 1
+                  ],
+              },
+            },
+          ],
+        });
       }
     }
   }, [routeProgressInKm]);
@@ -185,162 +209,202 @@ const MlLaufwettbewerbApp = (props) => {
           <CssBaseline />
           <Grid
             container
-            spacing={3}
+            spacing={2}
             style={{ flexFlow: "column", flex: 1, flexWrap: "no-wrap" }}
           >
             <Grid item xs={12} style={{ flex: 0 }}>
               <Header darkMode={darkMode} setDarkMode={setDarkMode} />
             </Grid>
             <Grid item xs={12} style={{ flex: 1, display: "flex" }}>
-              <Grid container spacing={3} style={{ flexDirection: "row", flex: 1 }}>
+              <Grid container spacing={2} style={{ flexDirection: "row", flex: 1 }}>
                 <Grid item xs={12} md={3}>
-                  <p>Anzeigedatum:</p>
-                  <h2>
-                    {new Date(displayDate).toLocaleDateString("de-DE", {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </h2>
-                  <p>Gelaufene Kilometer:</p>
-                  <h3>{routeProgressInKm} Km</h3>
+                  <Paper elevation={1}>
+                    <p>Anzeigedatum:</p>
+                    <h2>
+                      {new Date(displayDate).toLocaleDateString("de-DE", {
+                        weekday: "short",
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </h2>
+                    <p>Gelaufene Kilometer:</p>
+                    <h3>{routeProgressInKm} Km</h3>
+                  </Paper>
                 </Grid>
                 <Grid
                   item
                   xs={12}
                   md={6}
                   className="mlMap"
-                  style={{ minHeight: "400px" }}
+                  style={{ minHeight: "400px", display: "flex" }}
                 >
-                  <MapLibreMap
-                    options={{
-                      zoom: 14.5,
-                      //style: "https://demotiles.maplibre.org/style.json",
-                      style: {
-                        version: 8,
-                        name: "Blank",
-                        center: [0, 0],
-                        zoom: 0,
-                        sources: {},
-                        sprite:
-                          "https://raw.githubusercontent.com/openmaptiles/osm-liberty-gl-style/gh-pages/sprites/osm-liberty",
-                        glyphs:
-                          "mapbox://fonts/openmaptiles/{fontstack}/{range}.pbf",
-                        layers: [
-                          {
-                            id: "background",
-                            type: "background",
-                            paint: {
-                              "background-color": "rgba(0,0,0,0)",
-                            },
-                          },
-                        ],
-                        id: "blank",
-                      },
-
-                      center: [7.0851268, 50.73884],
-                    }}
-                  />
-                  <MlGeoJsonLayer
-                    geojson={germanyGeoJson}
-                    idSuffix="germanyGeoJsonFill"
-                    paint={{
-                      "fill-color": colorTheme.palette.action.focus,
-                    }}
-                    type="fill"
-                  />
-                  <MlGeoJsonLayer
-                    geojson={germanyGeoJson}
-                    idSuffix="germanyGeoJsonLine"
-                    paint={{
-                      "line-color": colorTheme.palette.info.main,
-                      "line-width": 4,
-                    }}
-                    type="line"
-                  />
-                  <MlGeoJsonLayer
-                    geojson={route}
-                    idSuffix="routeGeoJson"
-                    paint={{
-                      "line-color": colorTheme.palette.primary.main,
-                      "line-width": 10,
-                    }}
-                    type="line"
-                  />
-                  {routeProgressFeature && (
-                    <MlGeoJsonLayer
-                      geojson={routeProgressFeature}
-                      idSuffix="progressGeoJson"
-                      paint={{
-                        "line-color": colorTheme.palette.secondary.main,
-                        "line-width": 6,
-                      }}
-                      type="line"
-                    />
-                  )}
-                  <MlLayer
-                    idSuffix="CityLabels"
-                    options={{
-                      type: "symbol",
-                      source: {
-                        type: "geojson",
-                        data: {
-                          type: "FeatureCollection",
-                          features: [
+                  <Paper elevation={1} style={{ flex: 1, padding: 0 }}>
+                    <MapLibreMap
+                      options={{
+                        zoom: 14.5,
+                        //style: "https://demotiles.maplibre.org/style.json",
+                        style: {
+                          version: 8,
+                          name: "Blank",
+                          center: [0, 0],
+                          zoom: 0,
+                          sources: {},
+                          sprite:
+                            "https://raw.githubusercontent.com/openmaptiles/osm-liberty-gl-style/gh-pages/sprites/osm-liberty",
+                          glyphs:
+                            "mapbox://fonts/openmaptiles/{fontstack}/{range}.pbf",
+                          layers: [
                             {
-                              type: "Feature",
-                              properties: {
-                                description: "Bonn",
-                              },
-                              geometry: {
-                                type: "Point",
-                                coordinates: [7.085006973885085, 50.738673903252966],
-                              },
-                            },
-                            {
-                              type: "Feature",
-                              properties: {
-                                description: "Berlin",
-                              },
-                              geometry: {
-                                type: "Point",
-                                coordinates: [13.330454571384802, 52.4928702653268],
-                              },
-                            },
-                            {
-                              type: "Feature",
-                              properties: {
-                                description: "Freiburg",
-                              },
-                              geometry: {
-                                type: "Point",
-                                coordinates: [7.842812454054702, 47.989065548092675],
+                              id: "background",
+                              type: "background",
+                              paint: {
+                                "background-color": "rgba(0,0,0,0)",
                               },
                             },
                           ],
+                          id: "blank",
                         },
-                      },
-                      layout: {
-                        "text-field": ["get", "description"],
-                        "text-radial-offset": 0.5,
-                        "text-anchor": "bottom",
-                        "text-offset": [0, -300],
-                      },
-                      paint: {
-                        "text-color": colorTheme.palette.text.primary,
-                        "text-halo-color": colorTheme.palette.background.default,
-                        "text-halo-width": 2,
-                      },
-                    }}
-                  ></MlLayer>
+
+                        center: [7.0851268, 50.73884],
+                      }}
+                    />
+                    <MlGeoJsonLayer
+                      geojson={germanyGeoJson}
+                      idSuffix="germanyGeoJsonFill"
+                      paint={{
+                        "fill-color": colorTheme.palette.action.focus,
+                      }}
+                      type="fill"
+                    />
+                    <MlGeoJsonLayer
+                      geojson={germanyGeoJson}
+                      idSuffix="germanyGeoJsonLine"
+                      paint={{
+                        "line-color": colorTheme.palette.info.main,
+                        "line-width": 4,
+                      }}
+                      type="line"
+                    />
+                    <MlGeoJsonLayer
+                      geojson={route}
+                      idSuffix="routeGeoJson"
+                      paint={{
+                        "line-color": colorTheme.palette.primary.main,
+                        "line-width": 10,
+                      }}
+                      type="line"
+                    />
+                    {routeProgressFeature && (
+                      <MlGeoJsonLayer
+                        geojson={routeProgressFeature}
+                        idSuffix="progressGeoJson"
+                        paint={{
+                          "line-color": colorTheme.palette.secondary.main,
+                          "line-width": 6,
+                        }}
+                        type="line"
+                      />
+                    )}
+                    {routeProgressPosition && (
+                      <MlImageMarkerLayer
+                        geojson={routeProgressPosition}
+                        idSuffix="progressPositionGeoJson"
+                        imgSrc="/assets/marker.png"
+                        options={{
+                          type: "symbol",
+                          source: {
+                            type: "geojson",
+                            data: {
+                              ...routeProgressPosition,
+                            },
+                          },
+                          layout: {
+                            "icon-size": 0.05,
+                            "icon-offset": [0, -350],
+                          },
+                        }}
+                        paint={{
+                          "line-color": colorTheme.palette.secondary.main,
+                          "line-width": 6,
+                        }}
+                        type="line"
+                      />
+                    )}
+                    <MlLayer
+                      idSuffix="CityLabels"
+                      options={{
+                        type: "symbol",
+                        source: {
+                          type: "geojson",
+                          data: {
+                            type: "FeatureCollection",
+                            features: [
+                              {
+                                type: "Feature",
+                                properties: {
+                                  description: "Bonn",
+                                },
+                                geometry: {
+                                  type: "Point",
+                                  coordinates: [
+                                    7.085006973885085,
+                                    50.738673903252966,
+                                  ],
+                                },
+                              },
+                              {
+                                type: "Feature",
+                                properties: {
+                                  description: "Berlin",
+                                },
+                                geometry: {
+                                  type: "Point",
+                                  coordinates: [
+                                    13.330454571384802,
+                                    52.4928702653268,
+                                  ],
+                                },
+                              },
+                              {
+                                type: "Feature",
+                                properties: {
+                                  description: "Freiburg",
+                                },
+                                geometry: {
+                                  type: "Point",
+                                  coordinates: [
+                                    7.842812454054702,
+                                    47.989065548092675,
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        layout: {
+                          "text-field": ["get", "description"],
+                          "text-radial-offset": 0.5,
+                          "text-anchor": "bottom",
+                          "text-offset": [0, -300],
+                        },
+                        paint: {
+                          "text-color": colorTheme.palette.text.primary,
+                          "text-halo-color": colorTheme.palette.background.default,
+                          "text-halo-width": 2,
+                        },
+                      }}
+                    ></MlLayer>
+                  </Paper>
                 </Grid>
-                <Grid item xs={12} md={3} style={{ maxHeight: "520px" }}>
-                  <Leaderboard
-                    route={route}
-                    users={users}
-                    progressDataByUser={progressDataByUser}
-                  />
+                <Grid item xs={12} md={3} style={{ flex: "1", display: "flex" }}>
+                  <Paper elevation={1} style={{ flex: 1 }}>
+                    <Leaderboard
+                      route={route}
+                      users={users}
+                      progressDataByUser={progressDataByUser}
+                    />
+                  </Paper>
                 </Grid>
               </Grid>
             </Grid>
@@ -350,13 +414,16 @@ const MlLaufwettbewerbApp = (props) => {
               style={{
                 minHeight: "200px",
                 flex: 0,
+                display: "flex",
               }}
             >
-              <DailyProgressChart
-                data={progressDataByDate}
-                onClick={(date) => setDisplayDate(date)}
-                displayDate={displayDate}
-              />
+              <Paper elevation={1} style={{ flex: 1 }}>
+                <DailyProgressChart
+                  data={progressDataByDate}
+                  onClick={(date) => setDisplayDate(date)}
+                  displayDate={displayDate}
+                />
+              </Paper>
             </Grid>
           </Grid>
         </ThemeProvider>
