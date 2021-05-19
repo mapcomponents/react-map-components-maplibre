@@ -187,13 +187,13 @@ const MlLaufwettbewerbApp = (props) => {
           <Grid
             container
             spacing={3}
-            style={{ flexDirection: "column", flexWrap: "no-wrap" }}
+            style={{ flexFlow: "column", flex: 1, flexWrap: "no-wrap" }}
           >
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ flex: 0 }}>
               <Header darkMode={darkMode} setDarkMode={setDarkMode} />
             </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={3} style={{ flexDirection: "row" }}>
+            <Grid item xs={12} style={{ flex: 1, display: "flex" }}>
+              <Grid container spacing={3} style={{ flexDirection: "row", flex: 1 }}>
                 <Grid item xs={12} md={3}>
                   <p>Anzeigedatum:</p>
                   <h2>
@@ -244,6 +244,7 @@ const MlLaufwettbewerbApp = (props) => {
               xs={12}
               style={{
                 minHeight: "200px",
+                flex: 0,
               }}
             >
               <DailyProgressChart

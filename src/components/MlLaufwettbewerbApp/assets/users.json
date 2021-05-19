@@ -80,14 +80,6 @@
     "web_url": "https://repo.wheregroup.com/tzanger"
   },
   {
-    "id": 184,
-    "name": "Raphael Weiss",
-    "username": "rweiss",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/rweiss"
-  },
-  {
     "id": 178,
     "name": "Dominik Szill",
     "username": "dszill",
@@ -192,14 +184,6 @@
     "web_url": "https://repo.wheregroup.com/saliferova"
   },
   {
-    "id": 84,
-    "name": "Igor Nachtigall",
-    "username": "inachtigall",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/inachtigall"
-  },
-  {
     "id": 76,
     "name": "Fabian Jenzen",
     "username": "fjenzen",
@@ -280,28 +264,12 @@
     "web_url": "https://repo.wheregroup.com/oknopp"
   },
   {
-    "id": 38,
-    "name": "Paul Schell",
-    "username": "paul.schell",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/38/avatar.png",
-    "web_url": "https://repo.wheregroup.com/paul.schell"
-  },
-  {
     "id": 37,
     "name": "Frederik",
     "username": "fhaefker",
     "state": "active",
     "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/37/avatar.png",
     "web_url": "https://repo.wheregroup.com/fhaefker"
-  },
-  {
-    "id": 36,
-    "name": "Mohamed Tahrioui",
-    "username": "ransomware",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/36/avatar.png",
-    "web_url": "https://repo.wheregroup.com/ransomware"
   },
   {
     "id": 35,
@@ -318,22 +286,6 @@
     "state": "active",
     "avatar_url": null,
     "web_url": "https://repo.wheregroup.com/pknappstein"
-  },
-  {
-    "id": 33,
-    "name": "Jan Berghoff-Flüel",
-    "username": "jberghoff-flueel",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/jberghoff-flueel"
-  },
-  {
-    "id": 31,
-    "name": "Peter",
-    "username": "pkoenig",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/pkoenig"
   },
   {
     "id": 30,

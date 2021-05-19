@@ -1,4 +1,7 @@
 /* reset base styles */
+body{
+  display: flex !important;
+}
 #root {
   background-color: #fff;
   position: static;
@@ -7,6 +10,12 @@
   right: initial;
   left: initial;
   bottom: initial;
+  display:flex;
+  flex: 1;
+}
+.lw_map {
+  display:flex;
+  flex:1;
 }
 .lw_map .mapContainer {
   position: relative;
