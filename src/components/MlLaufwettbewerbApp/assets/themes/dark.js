@@ -1,10 +1,11 @@
-import { lime, cyan } from "@material-ui/core/colors";
+import { yellow, lime, cyan } from "@material-ui/core/colors";
 
 const colorTheme = {
   palette: {
     type: "dark",
     primary: cyan,
     secondary: lime,
+    info: yellow,
     background: {
       default: "#222222",
     },

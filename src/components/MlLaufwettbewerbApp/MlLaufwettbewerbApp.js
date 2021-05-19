@@ -59,7 +59,7 @@ const MlLaufwettbewerbApp = (props) => {
 
     let byUser = {};
     for (var i = 0, len = rawProgressData.length; i < len; i++) {
-      if (displayDateDateObj - new Date(rawProgressData[i].date) > 0) {
+      if (displayDateDateObj - new Date(rawProgressData[i].date) >= 0) {
         let distance = Math.round(rawProgressData[i].distance * 100) / 100;
 
         if (typeof byUser[rawProgressData[i].user_id] === "undefined") {
@@ -81,7 +81,7 @@ const MlLaufwettbewerbApp = (props) => {
       let displayDateDateObj = new Date(displayDate);
       let totalKm = 0;
       for (var key in progressDataByDate) {
-        if (displayDateDateObj - new Date(key) > 0) {
+        if (displayDateDateObj - new Date(key) >= 0) {
           totalKm += progressDataByDate[key];
         }
       }
@@ -232,7 +232,7 @@ const MlLaufwettbewerbApp = (props) => {
                             id: "background",
                             type: "background",
                             paint: {
-                              "background-color": "#ffffff",
+                              "background-color": "rgba(0,0,0,0)",
                             },
                           },
                         ],
@@ -240,15 +240,6 @@ const MlLaufwettbewerbApp = (props) => {
                       },
 
                       center: [7.0851268, 50.73884],
-                    }}
-                  />
-                  <MlLayer
-                    idSuffix="backgroundColor"
-                    options={{
-                      type: "background",
-                      paint: {
-                        "background-color": colorTheme.palette.background.default,
-                      },
                     }}
                   />
                   <MlGeoJsonLayer
