@@ -152,14 +152,6 @@
     "web_url": "https://repo.wheregroup.com/fpolakowski"
   },
   {
-    "id": 134,
-    "name": "Lina Dillmann",
-    "username": "ldillmann",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/134/avatar.png",
-    "web_url": "https://repo.wheregroup.com/ldillmann"
-  },
-  {
     "id": 132,
     "name": "Stephen Brieden",
     "username": "sbrieden",
@@ -336,14 +328,6 @@
     "web_url": "https://repo.wheregroup.com/jberghoff-flueel"
   },
   {
-    "id": 32,
-    "name": "Jochen Schultz",
-    "username": "jschultz",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/32/avatar.png",
-    "web_url": "https://repo.wheregroup.com/jschultz"
-  },
-  {
     "id": 31,
     "name": "Peter",
     "username": "pkoenig",
@@ -360,14 +344,6 @@
     "web_url": "https://repo.wheregroup.com/kartoffelfee"
   },
   {
-    "id": 28,
-    "name": "Dominique Seelen",
-    "username": "dom173",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/dom173"
-  },
-  {
     "id": 26,
     "name": "Stefan Winkelmann",
     "username": "swinkelmann",
@@ -376,36 +352,12 @@
     "web_url": "https://repo.wheregroup.com/swinkelmann"
   },
   {
-    "id": 25,
-    "name": "Charlotte Toma",
-    "username": "Charly",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/25/avatar.png",
-    "web_url": "https://repo.wheregroup.com/Charly"
-  },
-  {
     "id": 24,
     "name": "Paul",
     "username": "Schmidt",
     "state": "active",
     "avatar_url": null,
     "web_url": "https://repo.wheregroup.com/Schmidt"
-  },
-  {
-    "id": 23,
-    "name": "Jens Schaefermeyer",
-    "username": "jschaefermeyer",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/jschaefermeyer"
-  },
-  {
-    "id": 22,
-    "name": "Toni Pignataro",
-    "username": "topi",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/topi"
   },
   {
     "id": 21,
@@ -424,14 +376,6 @@
     "web_url": "https://repo.wheregroup.com/thekla.wirkus"
   },
   {
-    "id": 14,
-    "name": "Uli Rothstein",
-    "username": "uli.rothstein",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/uli.rothstein"
-  },
-  {
     "id": 13,
     "name": "Astrid Emde",
     "username": "aemde",
@@ -448,38 +392,6 @@
     "web_url": "https://repo.wheregroup.com/dpatzke"
   },
   {
-    "id": 11,
-    "name": "Verena Diewald",
-    "username": "verendi",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/11/avatar.png",
-    "web_url": "https://repo.wheregroup.com/verendi"
-  },
-  {
-    "id": 10,
-    "name": "Arne Schubert",
-    "username": "atd",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/10/avatar.png",
-    "web_url": "https://repo.wheregroup.com/atd"
-  },
-  {
-    "id": 9,
-    "name": "Konstantin Dimow",
-    "username": "kdimow",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/9/avatar.png",
-    "web_url": "https://repo.wheregroup.com/kdimow"
-  },
-  {
-    "id": 8,
-    "name": "Axel Schaefer",
-    "username": "axs",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/8/Foto_AXS_klein.jpg",
-    "web_url": "https://repo.wheregroup.com/axs"
-  },
-  {
     "id": 7,
     "name": "Thorsten Hildebrand",
     "username": "ThorstenHi",
@@ -488,43 +400,11 @@
     "web_url": "https://repo.wheregroup.com/ThorstenHi"
   },
   {
-    "id": 6,
-    "name": "Andreas Schmitz",
-    "username": "hwbllmnn",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/6/4431c44d1be23f0c86e58b85f01053a5.png",
-    "web_url": "https://repo.wheregroup.com/hwbllmnn"
-  },
-  {
-    "id": 5,
-    "name": "Tomy",
-    "username": "Tkeller91",
-    "state": "blocked",
-    "avatar_url": null,
-    "web_url": "https://repo.wheregroup.com/Tkeller91"
-  },
-  {
-    "id": 4,
-    "name": "Raphael Syed",
-    "username": "syerad",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/4/pic.png",
-    "web_url": "https://repo.wheregroup.com/syerad"
-  },
-  {
     "id": 3,
     "name": "Arash Rashid Pour",
     "username": "rpour",
     "state": "active",
     "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/3/avatar.png",
     "web_url": "https://repo.wheregroup.com/rpour"
-  },
-  {
-    "id": 2,
-    "name": "Andriy Oblivantsev",
-    "username": "eSlider",
-    "state": "blocked",
-    "avatar_url": "https://repo.wheregroup.com/uploads/-/system/user/avatar/2/1188335.jpg",
-    "web_url": "https://repo.wheregroup.com/eSlider"
   }
 ]

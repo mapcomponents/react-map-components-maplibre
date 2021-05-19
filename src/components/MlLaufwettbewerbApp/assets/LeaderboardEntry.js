@@ -44,7 +44,7 @@ function LeaderboardEntry({
       />
       <div>
         <CardContent>
-          <Typography component="h5" variant="h5">
+          <Typography component="h5" variant="h5" style={{ fontSize: "1rem" }}>
             {data.name}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">

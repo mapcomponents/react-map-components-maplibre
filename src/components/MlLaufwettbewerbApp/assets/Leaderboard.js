@@ -22,6 +22,7 @@ function Leaderboard({ users, progressDataByUser, route }) {
   useEffect(() => {
     let tmpUsers = [...users];
     for (var i = 0, len = users.length; i < len; i++) {
+      tmpUsers[i].distance = 0;
       if (typeof progressDataByUser[tmpUsers[i].id] !== "undefined") {
         tmpUsers[i].distance = progressDataByUser[tmpUsers[i].id];
       }
@@ -51,6 +52,7 @@ function Leaderboard({ users, progressDataByUser, route }) {
         currentPage * usersPerPage + usersPerPage
       )
     );
+
     setDisplayLeaders(
       leaders.slice(
         currentPage * usersPerPage,

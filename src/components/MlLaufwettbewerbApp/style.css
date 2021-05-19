@@ -45,3 +45,6 @@ html, body {
 body {
   padding: 0 !important;
 }
+.mapboxgl-control-container{
+  display: none;
+}

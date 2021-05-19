@@ -10,7 +10,12 @@ import { Grid, Paper } from "@material-ui/core";
 import route from "./assets/route.json";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { createMuiTheme, makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  responsiveFontSizes,
+  makeStyles,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 
 // https://repo.wheregroup.com/api/v4/users?per_page=100&page=2&exclude_external=true&exclude_internal=true
 // https://docs.gitlab.com/ee/api/users.html
@@ -21,6 +26,7 @@ import * as turf from "@turf/turf";
 import colorTheme_default from "./assets/themes/default";
 import colorTheme_dark from "./assets/themes/dark";
 import layoutTheme_default from "./assets/themes/layoutTheme_default";
+const layoutTheme = createMuiTheme(layoutTheme_default);
 
 const MlLaufwettbewerbApp = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -35,14 +41,37 @@ const MlLaufwettbewerbApp = (props) => {
   const [darkMode, setDarkMode] = useState(false);
 
   const colorTheme = useMemo(() => {
-    return createMuiTheme(darkMode ? colorTheme_dark : colorTheme_default);
+    return responsiveFontSizes(
+      createMuiTheme(darkMode ? colorTheme_dark : colorTheme_default)
+    );
   }, [darkMode]);
-  const layoutTheme = createMuiTheme({});
 
   const fetchProgressData = () => {
     fetch("/assets/laufwettbewerb_mock_data.json")
       .then((response) => response.json())
       .then((progressData) => setRawProgressData(progressData));
+  };
+
+  const calculateProgressDataByUser = (rawProgressData) => {
+    let displayDateDateObj = new Date(displayDate);
+
+    let byUser = {};
+    for (var i = 0, len = rawProgressData.length; i < len; i++) {
+      if (displayDateDateObj - new Date(rawProgressData[i].date) > 0) {
+        let distance = Math.round(rawProgressData[i].distance * 100) / 100;
+
+        if (typeof byUser[rawProgressData[i].user_id] === "undefined") {
+          byUser[rawProgressData[i].user_id] = 0;
+        }
+        byUser[rawProgressData[i].user_id] += distance;
+      }
+    }
+
+    for (let key in byUser) {
+      byUser[key] = Math.round(byUser[key] * 100) / 100;
+    }
+
+    return byUser;
   };
 
   useEffect(() => {
@@ -57,22 +86,7 @@ const MlLaufwettbewerbApp = (props) => {
 
       setRouteProgressInKm(Math.round(totalKm * 100) / 100);
 
-      let byUser = {};
-      for (var i = 0, len = rawProgressData.length; i < len; i++) {
-        if (displayDateDateObj - new Date(rawProgressData[i].date) > 0) {
-          let distance = Math.round(rawProgressData[i].distance * 100) / 100;
-
-          if (typeof byUser[rawProgressData[i].user_id] === "undefined") {
-            byUser[rawProgressData[i].user_id] = 0;
-          }
-          byUser[rawProgressData[i].user_id] += distance;
-        }
-      }
-
-      for (let key in byUser) {
-        byUser[key] = Math.round(byUser[key] * 100) / 100;
-      }
-      setProgressDataByUser(byUser);
+      setProgressDataByUser(calculateProgressDataByUser(rawProgressData));
     }
   }, [displayDate]);
 
@@ -111,7 +125,11 @@ const MlLaufwettbewerbApp = (props) => {
       // map mock_user_ids to users
       let user_ids = Object.keys(byUser);
       for (var i = 0, len = user_data.length; i < len; i++) {
-        user_data[i].id = user_ids.pop();
+        if (user_data[i].avatar_url) {
+          user_data[i].id = user_ids.pop();
+        } else {
+          user_data[i].id = false;
+        }
       }
       setUsers(user_data);
     }
@@ -128,6 +146,9 @@ const MlLaufwettbewerbApp = (props) => {
 
   useEffect(() => {
     fetchProgressData();
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 1500);
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
     };
@@ -209,7 +230,7 @@ const MlLaufwettbewerbApp = (props) => {
                     />
                   )}
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={3} style={{ maxHeight: "520px" }}>
                   <Leaderboard
                     route={route}
                     users={users}
@@ -222,10 +243,6 @@ const MlLaufwettbewerbApp = (props) => {
               item
               xs={12}
               style={{
-                display: "flex",
-                alignItems: "stretch",
-                alignContent: "stretch",
-                overflow: "hidden",
                 minHeight: "200px",
               }}
             >
