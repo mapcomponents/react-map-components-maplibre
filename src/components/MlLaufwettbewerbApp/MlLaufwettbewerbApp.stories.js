@@ -2,6 +2,7 @@ import React from "react";
 
 import MlLaufwettbewerbApp from "./MlLaufwettbewerbApp";
 
+import { AppContextProvider } from "./assets/AppContext";
 import emptyMapContextDecorator from "../../decorators/EmptyMapContextDecorator";
 import "./style.css";
 
@@ -18,9 +19,11 @@ export default storyoptions;
 
 const Template = (args) => (
   <>
-    <div className="lw_map">
-      <MlLaufwettbewerbApp />
-    </div>
+    <AppContextProvider>
+      <div className="lw_map">
+        <MlLaufwettbewerbApp />
+      </div>
+    </AppContextProvider>
   </>
 );
 

@@ -8,6 +8,7 @@ import DailyProgressChart from "./assets/DailyProgressChart";
 import Header from "./assets/Header";
 import Leaderboard from "./assets/Leaderboard";
 import { MapContext } from "react-map-components-core";
+import { AppContext } from "./assets/AppContext";
 import { Grid, Paper } from "@material-ui/core";
 import route from "./assets/route.json";
 import germanyGeoJson from "./assets/json/germany.geo.json";
@@ -34,13 +35,13 @@ const layoutTheme = createMuiTheme(layoutTheme_default);
 const MlLaufwettbewerbApp = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
+  const appContext = useContext(AppContext);
   const [routeProgressFeature, setRouteProgressFeature] = useState();
   const [routeProgressInKm, setRouteProgressInKm] = useState(0);
   const [rawProgressData, setRawProgressData] = useState([]);
   const [progressDataByDate, setProgressDataByDate] = useState({});
   const [progressDataByUser, setProgressDataByUser] = useState({});
   const [users, setUsers] = useState([]);
-  const [displayDate, setDisplayDate] = useState("2021-06-07");
   const [darkMode, setDarkMode] = useState(false);
 
   const [routeProgressPosition, setRouteProgressPosition] = useState(false);
@@ -61,7 +62,7 @@ const MlLaufwettbewerbApp = (props) => {
   };
 
   const calculateProgressDataByUser = (rawProgressData) => {
-    let displayDateDateObj = new Date(displayDate);
+    let displayDateDateObj = new Date(appContext.displayDate);
 
     let byUser = {};
     for (var i = 0, len = rawProgressData.length; i < len; i++) {
@@ -84,7 +85,7 @@ const MlLaufwettbewerbApp = (props) => {
 
   useEffect(() => {
     if (progressDataByDate) {
-      let displayDateDateObj = new Date(displayDate);
+      let displayDateDateObj = new Date(appContext.displayDate);
       let totalKm = 0;
       for (var key in progressDataByDate) {
         if (displayDateDateObj - new Date(key) >= 0) {
@@ -96,7 +97,7 @@ const MlLaufwettbewerbApp = (props) => {
 
       setProgressDataByUser(calculateProgressDataByUser(rawProgressData));
     }
-  }, [displayDate]);
+  }, [appContext.displayDate]);
 
   useEffect(() => {
     if (rawProgressData.length) {
@@ -221,7 +222,7 @@ const MlLaufwettbewerbApp = (props) => {
                   <Paper elevation={1}>
                     <p>Anzeigedatum:</p>
                     <h2>
-                      {new Date(displayDate).toLocaleDateString("de-DE", {
+                      {new Date(appContext.displayDate).toLocaleDateString("de-DE", {
                         weekday: "short",
                         year: "numeric",
                         month: "short",
@@ -420,8 +421,8 @@ const MlLaufwettbewerbApp = (props) => {
               <Paper elevation={1} style={{ flex: 1 }}>
                 <DailyProgressChart
                   data={progressDataByDate}
-                  onClick={(date) => setDisplayDate(date)}
-                  displayDate={displayDate}
+                  onClick={(date) => appContext.setDisplayDate(date)}
+                  displayDate={appContext.displayDate}
                 />
               </Paper>
             </Grid>
