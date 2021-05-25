@@ -1,3 +1,5 @@
+import "typeface-muli";
+
 const colorTheme = {
   overrides: {
     MuiPaper: {
@@ -7,6 +9,7 @@ const colorTheme = {
     },
   },
   typography: {
+    fontFamily: "Muli",
     h5: {
       fontSize: "1.0rem",
       "@media (min-width:600px)": {

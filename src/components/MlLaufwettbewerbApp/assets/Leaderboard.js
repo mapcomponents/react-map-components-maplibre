@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import MlGeoJsonLayer from "../../MlGeoJsonLayer/MlGeoJsonLayer";
 import * as turf from "@turf/turf";
 
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { useTheme } from "@material-ui/core/styles";
+import { AppContext } from "./AppContext";
 
 import LeaderboardEntry from "./LeaderboardEntry";
 
 const usersPerPage = 6;
 
-function Leaderboard({ users, progressDataByUser, route }) {
+function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
   const [displayLeaders, setDisplayLeaders] = useState([]);
   const [individualProgress, setIndividualProgress] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedUser, setSelectedUser] = useState(false);
+  const appContext = useContext(AppContext);
 
   const theme = useTheme();
 
   useEffect(() => {
-    let tmpUsers = [...users];
-    for (var i = 0, len = users.length; i < len; i++) {
+    let tmpUsers = [...appContext.users];
+    for (var i = 0, len = appContext.users.length; i < len; i++) {
       tmpUsers[i].distance = 0;
-      if (typeof progressDataByUser[tmpUsers[i].id] !== "undefined") {
-        tmpUsers[i].distance = progressDataByUser[tmpUsers[i].id];
+      if (typeof appContext.progressDataByUser[tmpUsers[i].id] !== "undefined") {
+        tmpUsers[i].distance = appContext.progressDataByUser[tmpUsers[i].id];
       }
     }
 
@@ -39,7 +41,7 @@ function Leaderboard({ users, progressDataByUser, route }) {
     });
 
     setLeaders(tmpUsers);
-  }, [users, progressDataByUser]);
+  }, [appContext.users, appContext.progressDataByUser]);
 
   useEffect(() => {
     console.log(
@@ -63,7 +65,7 @@ function Leaderboard({ users, progressDataByUser, route }) {
 
   const showIndividualProgress = (distance) => {
     if (distance > 0) {
-      let tmpRouteProgess = turf.lineChunk(route, distance);
+      let tmpRouteProgess = turf.lineChunk(appContext.route, distance);
       if (typeof tmpRouteProgess.features[0] !== "undefined") {
         setIndividualProgress(tmpRouteProgess.features[0]);
       }

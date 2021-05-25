@@ -5,12 +5,12 @@ import MlLayer from "../MlLayer/MlLayer";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import MlImageMarkerLayer from "../MlImageMarkerLayer/MlImageMarkerLayer";
 import DailyProgressChart from "./assets/DailyProgressChart";
+import StatsSidebar from "./assets/StatsSidebar";
 import Header from "./assets/Header";
 import Leaderboard from "./assets/Leaderboard";
 import { MapContext } from "react-map-components-core";
 import { AppContext } from "./assets/AppContext";
 import { Grid, Paper } from "@material-ui/core";
-import route from "./assets/route.json";
 import germanyGeoJson from "./assets/json/germany.geo.json";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -24,7 +24,6 @@ import {
 // https://repo.wheregroup.com/api/v4/users?per_page=100&page=2&exclude_external=true&exclude_internal=true
 // https://docs.gitlab.com/ee/api/users.html
 // https://docs.gitlab.com/ce/api/#pagination
-import user_data from "./assets/users.json";
 import * as turf from "@turf/turf";
 
 import colorTheme_default from "./assets/themes/default";
@@ -36,15 +35,7 @@ const MlLaufwettbewerbApp = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const appContext = useContext(AppContext);
-  const [routeProgressFeature, setRouteProgressFeature] = useState();
-  const [routeProgressInKm, setRouteProgressInKm] = useState(0);
-  const [rawProgressData, setRawProgressData] = useState([]);
-  const [progressDataByDate, setProgressDataByDate] = useState({});
-  const [progressDataByUser, setProgressDataByUser] = useState({});
-  const [users, setUsers] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-
-  const [routeProgressPosition, setRouteProgressPosition] = useState(false);
 
   const colorTheme = useMemo(() => {
     return responsiveFontSizes(
@@ -55,137 +46,11 @@ const MlLaufwettbewerbApp = (props) => {
     );
   }, [darkMode]);
 
-  const fetchProgressData = () => {
-    fetch("/assets/laufwettbewerb_mock_data.json")
-      .then((response) => response.json())
-      .then((progressData) => setRawProgressData(progressData));
-  };
-
-  const calculateProgressDataByUser = (rawProgressData) => {
-    let displayDateDateObj = new Date(appContext.displayDate);
-
-    let byUser = {};
-    for (var i = 0, len = rawProgressData.length; i < len; i++) {
-      if (displayDateDateObj - new Date(rawProgressData[i].date) >= 0) {
-        let distance = Math.round(rawProgressData[i].distance * 100) / 100;
-
-        if (typeof byUser[rawProgressData[i].user_id] === "undefined") {
-          byUser[rawProgressData[i].user_id] = 0;
-        }
-        byUser[rawProgressData[i].user_id] += distance;
-      }
-    }
-
-    for (let key in byUser) {
-      byUser[key] = Math.round(byUser[key] * 100) / 100;
-    }
-
-    return byUser;
-  };
-
-  useEffect(() => {
-    if (progressDataByDate) {
-      let displayDateDateObj = new Date(appContext.displayDate);
-      let totalKm = 0;
-      for (var key in progressDataByDate) {
-        if (displayDateDateObj - new Date(key) >= 0) {
-          totalKm += progressDataByDate[key];
-        }
-      }
-
-      setRouteProgressInKm(Math.round(totalKm * 100) / 100);
-
-      setProgressDataByUser(calculateProgressDataByUser(rawProgressData));
-    }
-  }, [appContext.displayDate]);
-
-  useEffect(() => {
-    if (rawProgressData.length) {
-      let byDate = {};
-      let byUser = {};
-      let totalKm = 0;
-      for (var i = 0, len = rawProgressData.length; i < len; i++) {
-        let distance = Math.round(rawProgressData[i].distance * 100) / 100;
-
-        totalKm += distance;
-
-        if (typeof byDate[rawProgressData[i].date] === "undefined") {
-          byDate[rawProgressData[i].date] = 0;
-        }
-        byDate[rawProgressData[i].date] += distance;
-
-        if (typeof byUser[rawProgressData[i].user_id] === "undefined") {
-          byUser[rawProgressData[i].user_id] = 0;
-        }
-        byUser[rawProgressData[i].user_id] += distance;
-      }
-
-      for (let key in byUser) {
-        byUser[key] = Math.round(byUser[key] * 100) / 100;
-      }
-      for (let key in byDate) {
-        byDate[key] = Math.round(byDate[key] * 100) / 100;
-      }
-
-      setRouteProgressInKm(Math.round(totalKm * 100) / 100);
-      setProgressDataByDate(byDate);
-      setProgressDataByUser(byUser);
-
-      // map mock_user_ids to users
-      let user_ids = Object.keys(byUser);
-      for (var i = 0, len = user_data.length; i < len; i++) {
-        if (user_data[i].avatar_url) {
-          user_data[i].id = user_ids.pop();
-        } else {
-          user_data[i].id = false;
-        }
-      }
-      setUsers(user_data);
-    }
-  }, [rawProgressData]);
-
-  useEffect(() => {
-    if (routeProgressInKm > 0) {
-      let tmpRouteProgess = turf.lineChunk(route, routeProgressInKm);
-      if (typeof tmpRouteProgess.features[0] !== "undefined") {
-        setRouteProgressFeature(tmpRouteProgess.features[0]);
-        setRouteProgressPosition({
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              properties: {
-                description: "Bonn",
-              },
-              geometry: {
-                type: "Point",
-                coordinates:
-                  tmpRouteProgess.features[0].geometry.coordinates[
-                    tmpRouteProgess.features[0].geometry.coordinates.length - 1
-                  ],
-              },
-            },
-          ],
-        });
-      }
-    }
-  }, [routeProgressInKm]);
-
-  useEffect(() => {
-    fetchProgressData();
-    setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
-    }, 1500);
-    return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-    };
-  }, []);
-
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId)) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-    var bbox = turf.bbox(route);
+    var bbox = turf.bbox(appContext.route);
     console.log([
       [bbox[0], bbox[1]],
       [bbox[2], bbox[3]],
@@ -220,17 +85,7 @@ const MlLaufwettbewerbApp = (props) => {
               <Grid container spacing={2} style={{ flexDirection: "row", flex: 1 }}>
                 <Grid item xs={12} md={3}>
                   <Paper elevation={1}>
-                    <p>Anzeigedatum:</p>
-                    <h2>
-                      {new Date(appContext.displayDate).toLocaleDateString("de-DE", {
-                        weekday: "short",
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </h2>
-                    <p>Gelaufene Kilometer:</p>
-                    <h3>{routeProgressInKm} Km</h3>
+                    <StatsSidebar></StatsSidebar>
                   </Paper>
                 </Grid>
                 <Grid
@@ -288,7 +143,7 @@ const MlLaufwettbewerbApp = (props) => {
                       type="line"
                     />
                     <MlGeoJsonLayer
-                      geojson={route}
+                      geojson={appContext.route}
                       idSuffix="routeGeoJson"
                       paint={{
                         "line-color": colorTheme.palette.primary.main,
@@ -296,9 +151,9 @@ const MlLaufwettbewerbApp = (props) => {
                       }}
                       type="line"
                     />
-                    {routeProgressFeature && (
+                    {appContext.routeProgressFeature && (
                       <MlGeoJsonLayer
-                        geojson={routeProgressFeature}
+                        geojson={appContext.routeProgressFeature}
                         idSuffix="progressGeoJson"
                         paint={{
                           "line-color": colorTheme.palette.secondary.main,
@@ -307,9 +162,9 @@ const MlLaufwettbewerbApp = (props) => {
                         type="line"
                       />
                     )}
-                    {routeProgressPosition && (
+                    {appContext.routeProgressPosition && (
                       <MlImageMarkerLayer
-                        geojson={routeProgressPosition}
+                        geojson={appContext.routeProgressPosition}
                         idSuffix="progressPositionGeoJson"
                         imgSrc="/assets/marker.png"
                         options={{
@@ -317,7 +172,7 @@ const MlLaufwettbewerbApp = (props) => {
                           source: {
                             type: "geojson",
                             data: {
-                              ...routeProgressPosition,
+                              ...appContext.routeProgressPosition,
                             },
                           },
                           layout: {
@@ -400,11 +255,7 @@ const MlLaufwettbewerbApp = (props) => {
                 </Grid>
                 <Grid item xs={12} md={3} style={{ flex: "1", display: "flex" }}>
                   <Paper elevation={1} style={{ flex: 1 }}>
-                    <Leaderboard
-                      route={route}
-                      users={users}
-                      progressDataByUser={progressDataByUser}
-                    />
+                    <Leaderboard />
                   </Paper>
                 </Grid>
               </Grid>
@@ -420,7 +271,7 @@ const MlLaufwettbewerbApp = (props) => {
             >
               <Paper elevation={1} style={{ flex: 1 }}>
                 <DailyProgressChart
-                  data={progressDataByDate}
+                  data={appContext.progressDataByDate}
                   onClick={(date) => appContext.setDisplayDate(date)}
                   displayDate={appContext.displayDate}
                 />
