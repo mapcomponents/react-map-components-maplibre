@@ -7,9 +7,10 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { useTheme } from "@material-ui/core/styles";
 import { AppContext } from "./AppContext";
 
+import List from "@material-ui/core/List";
 import LeaderboardEntry from "./LeaderboardEntry";
 
-const usersPerPage = 6;
+const usersPerPage = 8;
 
 function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
@@ -95,16 +96,18 @@ function Leaderboard() {
           </Button>
         </ButtonGroup>
       </div>
-      {displayLeaders.map((data) => (
-        <LeaderboardEntry
-          onMouseOver={() => showIndividualProgress(data.distance)}
-          onMouseLeave={() => setIndividualProgress(false)}
-          onClick={() => setSelectedUser(data)}
-          selectedUser={selectedUser}
-          key={"lb_" + data.username}
-          data={data}
-        />
-      ))}
+      <List>
+        {displayLeaders.map((data) => (
+          <LeaderboardEntry
+            onMouseOver={() => showIndividualProgress(data.distance)}
+            onMouseLeave={() => setIndividualProgress(false)}
+            onClick={() => setSelectedUser(data)}
+            selectedUser={selectedUser}
+            key={"lb_" + data.username}
+            data={data}
+          />
+        ))}
+      </List>
       {individualProgress && (
         <MlGeoJsonLayer
           geojson={individualProgress}
