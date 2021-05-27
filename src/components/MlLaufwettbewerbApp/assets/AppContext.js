@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import { MapContext } from "react-map-components-core";
 
 import * as turf from "@turf/turf";
+
+// https://repo.wheregroup.com/api/v4/users?per_page=100&page=2&exclude_external=true&exclude_internal=true
+// https://docs.gitlab.com/ee/api/users.html
+// https://docs.gitlab.com/ce/api/#pagination
 import user_data from "./users.json";
 import route from "./route.json";
 
@@ -18,6 +22,7 @@ const AppContextProvider = ({ children }) => {
   const [rawProgressData, setRawProgressData] = useState([]);
   const [routeProgressPosition, setRouteProgressPosition] = useState(false);
   const [users, setUsers] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     if (rawProgressData.length) {
@@ -170,6 +175,8 @@ const AppContextProvider = ({ children }) => {
     setRouteProgressPosition,
     users,
     setUsers,
+    darkMode,
+    setDarkMode,
   };
 
   return <AppStateProvider value={value}>{children}</AppStateProvider>;

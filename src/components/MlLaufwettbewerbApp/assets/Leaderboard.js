@@ -16,6 +16,7 @@ function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
   const [displayLeaders, setDisplayLeaders] = useState([]);
   const [individualProgress, setIndividualProgress] = useState({});
+  const [selectedProgress, setSelectedProgress] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedUser, setSelectedUser] = useState(false);
   const appContext = useContext(AppContext);
@@ -45,17 +46,6 @@ function Leaderboard() {
   }, [appContext.users, appContext.progressDataByUser]);
 
   useEffect(() => {
-    console.log(
-      currentPage * usersPerPage,
-      currentPage * usersPerPage + usersPerPage
-    );
-    console.log(
-      leaders.slice(
-        currentPage * usersPerPage,
-        currentPage * usersPerPage + usersPerPage
-      )
-    );
-
     setDisplayLeaders(
       leaders.slice(
         currentPage * usersPerPage,
@@ -63,6 +53,15 @@ function Leaderboard() {
       )
     );
   }, [leaders, currentPage]);
+
+  useEffect(() => {
+    if (typeof selectedUser.distance !== "undefined" && selectedUser.distance > 0) {
+      let tmpRouteProgess = turf.lineChunk(appContext.route, selectedUser.distance);
+      if (typeof tmpRouteProgess.features[0] !== "undefined") {
+        setSelectedProgress(tmpRouteProgess.features[0]);
+      }
+    }
+  }, [selectedUser, appContext.route]);
 
   const showIndividualProgress = (distance) => {
     if (distance > 0) {
@@ -82,13 +81,17 @@ function Leaderboard() {
           aria-label="contained primary button group"
         >
           <Button
+            size="small"
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 0}
           >
             {"<<"}
           </Button>
-          <Button disabled={true}>{currentPage + 1}</Button>
+          <Button size="small" disabled={true}>
+            {currentPage + 1}
+          </Button>
           <Button
+            size="small"
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={(currentPage + 1) * usersPerPage >= leaders.length}
           >
@@ -97,17 +100,32 @@ function Leaderboard() {
         </ButtonGroup>
       </div>
       <List>
-        {displayLeaders.map((data) => (
-          <LeaderboardEntry
-            onMouseOver={() => showIndividualProgress(data.distance)}
-            onMouseLeave={() => setIndividualProgress(false)}
-            onClick={() => setSelectedUser(data)}
-            selectedUser={selectedUser}
-            key={"lb_" + data.username}
-            data={data}
-          />
+        {displayLeaders.map((data, idx) => (
+          <>
+            <LeaderboardEntry
+              onMouseOver={() => showIndividualProgress(data.distance)}
+              onMouseLeave={() => setIndividualProgress(false)}
+              onClick={() => setSelectedUser(data)}
+              selectedUser={selectedUser}
+              key={"lb_" + data.username}
+              data={data}
+            />
+            {idx % (usersPerPage - 1) !== 0 && (
+              <hr style={{ padding: 0, margin: "0 0 0 5%", width: "90%" }} />
+            )}
+          </>
         ))}
       </List>
+      {selectedUser && (
+        <MlGeoJsonLayer
+          geojson={selectedProgress}
+          paint={{
+            "line-color": theme.palette.success.dark,
+            "line-width": 6,
+          }}
+          type="line"
+        />
+      )}
       {individualProgress && (
         <MlGeoJsonLayer
           geojson={individualProgress}

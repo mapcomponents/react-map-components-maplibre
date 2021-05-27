@@ -1,8 +1,8 @@
-import { yellow, blueGrey } from "@material-ui/core/colors";
+import { yellow, lightBlue } from "@material-ui/core/colors";
 
 const colorTheme = {
   palette: {
-    primary: blueGrey,
+    primary: lightBlue,
     secondary: yellow,
     chart: {
       gridColor: "#ebebeb",

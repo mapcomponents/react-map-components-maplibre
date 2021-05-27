@@ -41,8 +41,9 @@ function DailyProgressChart(props) {
   const chartTheme = useMemo(() => {
     return {
       textColor: theme.palette.text.primary,
+      fontFamily: "Muli",
+      fontSize: "14px",
       axis: {
-        fontSize: "14px",
         tickColor: "#eee",
       },
       grid: {
@@ -51,7 +52,12 @@ function DailyProgressChart(props) {
           strokeWidth: 1,
         },
       },
-      tooltip: { container: { minWidth: "100px" } },
+      tooltip: {
+        container: {
+          fontFamily: "Muli",
+          minWidth: "100px",
+        },
+      },
     };
   }, [theme]);
 
@@ -128,8 +134,8 @@ function DailyProgressChart(props) {
           pointBorderColor={{ from: "serieColor" }}
           pointLabelYOffset={-12}
           pointSymbol={(data) => {
-            let fill = theme.palette.primary.main;
-            let stroke = theme.palette.primary.main;
+            let fill = theme.palette.primary.dark;
+            let stroke = theme.palette.primary.dark;
 
             if (new Date(data.datum.x) - new Date(props.displayDate) < 0) {
               fill = theme.palette.secondary.light;

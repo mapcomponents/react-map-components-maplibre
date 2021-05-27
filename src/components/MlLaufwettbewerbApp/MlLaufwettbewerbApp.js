@@ -21,9 +21,6 @@ import {
   ThemeProvider,
 } from "@material-ui/core/styles";
 
-// https://repo.wheregroup.com/api/v4/users?per_page=100&page=2&exclude_external=true&exclude_internal=true
-// https://docs.gitlab.com/ee/api/users.html
-// https://docs.gitlab.com/ce/api/#pagination
 import * as turf from "@turf/turf";
 
 import colorTheme_default from "./assets/themes/default";
@@ -35,16 +32,15 @@ const MlLaufwettbewerbApp = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const appContext = useContext(AppContext);
-  const [darkMode, setDarkMode] = useState(false);
 
   const colorTheme = useMemo(() => {
     return responsiveFontSizes(
       createMuiTheme({
         ...layoutTheme_default,
-        ...(darkMode ? colorTheme_dark : colorTheme_default),
+        ...(appContext.darkMode ? colorTheme_dark : colorTheme_default),
       })
     );
-  }, [darkMode]);
+  }, [appContext.darkMode]);
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId)) return;
@@ -79,14 +75,12 @@ const MlLaufwettbewerbApp = (props) => {
             style={{ flexFlow: "column", flex: 1, flexWrap: "no-wrap" }}
           >
             <Grid item xs={12} style={{ flex: 0 }}>
-              <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+              <Header />
             </Grid>
             <Grid item xs={12} style={{ flex: 1, display: "flex" }}>
               <Grid container spacing={2} style={{ flexDirection: "row", flex: 1 }}>
                 <Grid item xs={12} md={3}>
-                  <Paper elevation={1}>
-                    <StatsSidebar></StatsSidebar>
-                  </Paper>
+                  <StatsSidebar />
                 </Grid>
                 <Grid
                   item
@@ -137,7 +131,7 @@ const MlLaufwettbewerbApp = (props) => {
                       geojson={germanyGeoJson}
                       idSuffix="germanyGeoJsonLine"
                       paint={{
-                        "line-color": colorTheme.palette.info.main,
+                        "line-color": colorTheme.palette.warning.light,
                         "line-width": 4,
                       }}
                       type="line"
@@ -146,7 +140,7 @@ const MlLaufwettbewerbApp = (props) => {
                       geojson={appContext.route}
                       idSuffix="routeGeoJson"
                       paint={{
-                        "line-color": colorTheme.palette.primary.main,
+                        "line-color": colorTheme.palette.primary.dark,
                         "line-width": 10,
                       }}
                       type="line"
