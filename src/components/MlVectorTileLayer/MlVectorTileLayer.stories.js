@@ -31,7 +31,16 @@ ExampleConfig.parameters = {};
 ExampleConfig.args = {
   url:
     "https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf",
-  sourceLayer: "landuse",
+  layers: {
+    landuseLine: {
+      "source-layer": "landuse",
+      layout: {
+        "line-cap": "round",
+        "line-join": "round",
+      },
+      paint: { "line-width": 1, "line-color": "#ff0000" },
+    },
+  },
   sourceOptions: {
     minzoom: 0,
     maxzoom: 20,

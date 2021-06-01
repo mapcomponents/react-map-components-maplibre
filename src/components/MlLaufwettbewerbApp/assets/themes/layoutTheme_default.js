@@ -1,6 +1,16 @@
 import "typeface-muli";
 
 const colorTheme = {
+  map: {
+    highway: {
+      color: "rgb(122,122,122)",
+      opacity: 0.1,
+    },
+    water: {
+      color: "#71b8f1",
+      opacity: 1,
+    },
+  },
   classes: {
     label: {
       //fontWeight: "bold",

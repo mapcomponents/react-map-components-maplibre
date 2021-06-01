@@ -1,8 +1,6 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 
-import Button from "@material-ui/core/Button";
-
 /**
  * MlVectorTileLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  */
@@ -13,10 +11,13 @@ const MlVectorTileLayer = (props) => {
   const layerName = "vector-tile-layer-";
   const sourceName = "vector-tile-source-";
   const idPostfixRef = useRef(new Date().getTime());
+  const layerIdsRef = useRef({});
 
   const cleanup = () => {
-    if (mapContext.map.getLayer(layerName + idPostfixRef.current)) {
-      mapContext.map.removeLayer(layerName + idPostfixRef.current);
+    for (let key in layerIdsRef.current) {
+      if (mapContext.map.getLayer(layerIdsRef.current[key])) {
+        mapContext.map.removeLayer(layerIdsRef.current[key]);
+      }
     }
     if (mapContext.map.getSource(sourceName + idPostfixRef.current)) {
       mapContext.map.removeSource(sourceName + idPostfixRef.current);
@@ -44,25 +45,48 @@ const MlVectorTileLayer = (props) => {
       attribution: "",
       //...props.sourceOptions,
     });
-    mapContext.map.addLayer({
-      id: layerName + idPostfixRef.current,
-      source: sourceName + idPostfixRef.current,
-      type: "line",
-      "source-layer": props.sourceLayer,
-      minzoom: 0,
-      maxzoom: 10,
-      layout: {
-        "line-cap": "round",
-        "line-join": "round",
-      },
-      paint: {
-        "line-opacity": 0.5,
-        "line-color": "rgb(80, 80, 80)",
-        "line-width": 2,
-      },
-      ...props.sourceOptions,
-    });
+
+    for (let key in props.layers) {
+      let layerId = layerName + "_" + key + "_" + idPostfixRef.current;
+      layerIdsRef.current[key] = layerId;
+
+      mapContext.map.addLayer({
+        id: layerId,
+        source: sourceName + idPostfixRef.current,
+        type: "line",
+        minzoom: 0,
+        maxzoom: 22,
+        layout: {},
+        paint: {
+          "line-opacity": 0.5,
+          "line-color": "rgb(80, 80, 80)",
+          "line-width": 2,
+        },
+        ...props.layers[key],
+      });
+    }
   }, [mapContext.map]);
+
+  useEffect(() => {
+    if (!mapContext.mapExists(props.mapId)) return;
+    // the MapLibre-gl instance (mapContext.map) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+    for (var key in props.layers) {
+      if (mapContext.map.getLayer(layerIdsRef.current[key])) {
+        for (let paintKey in props.layers[key].paint) {
+          console.log(props.layers[key].paint[paintKey]);
+          mapContext
+            .getMap(props.mapId)
+            .setPaintProperty(
+              layerIdsRef.current[key],
+              paintKey,
+              props.layers[key].paint[paintKey]
+            );
+        }
+      }
+    }
+  }, [props.layers]);
 
   useEffect(() => {
     if (!mapContext.map) return;
@@ -83,15 +107,7 @@ const MlVectorTileLayer = (props) => {
     }
   }, [showLayer]);
 
-  return (
-    <Button
-      color="primary"
-      variant={showLayer ? "contained" : "outlined"}
-      onClick={() => setShowLayer(!showLayer)}
-    >
-      Vector Tile Layer
-    </Button>
-  );
+  return <></>;
 };
 
 export default MlVectorTileLayer;

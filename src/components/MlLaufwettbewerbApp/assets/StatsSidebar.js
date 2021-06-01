@@ -4,11 +4,25 @@ import { useTheme } from "@material-ui/core/styles";
 import { AppContext } from "./AppContext";
 import { Grid, Paper, Typography } from "@material-ui/core";
 
+function StatsBlock({ label, progress }) {
+  const theme = useTheme();
+
+  return (
+    <Grid item xs={6}>
+      <Paper elevation={1}>
+        <Typography style={theme.classes.label}>{label}</Typography>
+        <Typography variant="h3">
+          {String(parseFloat(progress).toFixed(2)).replace(".", ",")} km
+        </Typography>
+      </Paper>
+    </Grid>
+  );
+}
+
 function StatsSidebar() {
   const appContext = useContext(AppContext);
   const theme = useTheme();
 
-  console.log(theme);
   return (
     <>
       <Grid container spacing={2} style={{ flexDirection: "row", flex: 1 }}>
@@ -27,41 +41,25 @@ function StatsSidebar() {
         <Grid item xs={12}>
           <Paper elevation={1}>
             <Typography style={theme.classes.label}>Gelaufene Kilometer:</Typography>
-            <Typography variant="h2">{appContext.routeProgressInKm} Km</Typography>
+            <Typography variant="h2">{appContext.routeProgressInKm} km</Typography>
           </Paper>
         </Grid>
-        <Grid item xs={6}>
-          <Paper elevation={1}>
-            <Typography style={theme.classes.label}>Team Bonn:</Typography>
-            <Typography variant="h3">
-              {Math.round(appContext.routeProgressInKm * 0.7 * 100) / 100} Km
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper elevation={1}>
-            <Typography style={theme.classes.label}>Team Berlin:</Typography>
-            <Typography variant="h3">
-              {Math.round(appContext.routeProgressInKm * 0.12 * 100) / 100} Km
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper elevation={1}>
-            <Typography style={theme.classes.label}>Team Freiburg:</Typography>
-            <Typography variant="h3">
-              {Math.round(appContext.routeProgressInKm * 0.14 * 100) / 100} Km
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper elevation={1}>
-            <Typography style={theme.classes.label}>Hamburg:</Typography>
-            <Typography variant="h3">
-              {Math.round(appContext.routeProgressInKm * 0.04 * 100) / 100} Km
-            </Typography>
-          </Paper>
-        </Grid>
+        <StatsBlock
+          label="Team Bonn:"
+          progress={appContext.routeProgressInKm * 0.7}
+        />
+        <StatsBlock
+          label="Team Berlin:"
+          progress={appContext.routeProgressInKm * 0.12}
+        />
+        <StatsBlock
+          label="Team Freiburg:"
+          progress={appContext.routeProgressInKm * 0.14}
+        />
+        <StatsBlock
+          label="Hamburg:"
+          progress={appContext.routeProgressInKm * 0.04}
+        />
       </Grid>
     </>
   );

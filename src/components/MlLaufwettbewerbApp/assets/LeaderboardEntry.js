@@ -63,9 +63,11 @@ function LeaderboardEntry({
         </ListItemAvatar>
         <ListItemText
           primaryTypographyProps={{ style: theme.classes.participantName }}
-          secondaryTypographyProps={{ style: theme.classes.participantPerformance }}
+          secondaryTypographyProps={{
+            style: theme.classes.participantPerformance,
+          }}
           primary={data.name}
-          secondary={data.distance + " Km"}
+          secondary={String(data.distance).replace(".", ",") + " km"}
         />
       </ListItem>
     </>

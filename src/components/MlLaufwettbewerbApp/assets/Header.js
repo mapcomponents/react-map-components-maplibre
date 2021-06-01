@@ -24,7 +24,7 @@ function Header() {
           }}
           alt=""
         />
-        <h1 style={{ margin: 0, padding: 0 }}>Laufwettbewerb</h1>
+        <h1 style={{ margin: 0, padding: 0 }}>Lauf-Contest</h1>
       </Grid>
       <Grid xs={6} item style={{ display: "flex", justifyContent: "flex-end" }}>
         <FormControlLabel
