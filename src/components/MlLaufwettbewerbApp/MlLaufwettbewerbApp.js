@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useContext } from "react";
+import React, { useMemo, useEffect, useContext } from "react";
 
 import MapLibreMap from "../MapLibreMap/MapLibreMap";
 import MlLayer from "../MlLayer/MlLayer";
@@ -18,7 +18,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import {
   createMuiTheme,
   responsiveFontSizes,
-  makeStyles,
   ThemeProvider,
 } from "@material-ui/core/styles";
 
@@ -131,7 +130,7 @@ const MlLaufwettbewerbApp = (props) => {
                         paint: {
                           "line-opacity": colorTheme.map.water.opacity,
                           "line-color": colorTheme.map.water.color,
-                          "line-width": 2,
+                          "line-width": 1,
                         },
                       },
                       water: {

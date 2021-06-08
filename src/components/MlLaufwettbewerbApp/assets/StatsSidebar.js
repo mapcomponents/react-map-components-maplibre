@@ -41,7 +41,9 @@ function StatsSidebar() {
         <Grid item xs={12}>
           <Paper elevation={1}>
             <Typography style={theme.classes.label}>Gelaufene Kilometer:</Typography>
-            <Typography variant="h2">{appContext.routeProgressInKm} km</Typography>
+            <Typography variant="h2">
+              {String(appContext.routeProgressInKm).replace(".", ",")} km
+            </Typography>
           </Paper>
         </Grid>
         <StatsBlock

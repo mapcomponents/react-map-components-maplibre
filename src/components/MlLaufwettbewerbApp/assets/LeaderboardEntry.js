@@ -1,8 +1,4 @@
-import React, { useState } from "react";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
+import React from "react";
 
 import Avatar from "@material-ui/core/Avatar";
 import ListItem from "@material-ui/core/ListItem";
@@ -16,6 +12,7 @@ function LeaderboardEntry({
   onMouseLeave,
   onClick,
   selectedUser,
+  position,
 }) {
   const theme = useTheme();
 
@@ -66,7 +63,7 @@ function LeaderboardEntry({
           secondaryTypographyProps={{
             style: theme.classes.participantPerformance,
           }}
-          primary={data.name}
+          primary={position + ". " + data.name}
           secondary={String(data.distance).replace(".", ",") + " km"}
         />
       </ListItem>

@@ -3,11 +3,11 @@ import { yellow, lime, cyan } from "@material-ui/core/colors";
 const colorTheme = {
   map: {
     highway: {
-      color: "rgb(222,222,222)",
+      color: "rgb(0,222,0)",
       opacity: 0.1,
     },
     water: {
-      color: "#73e8f7",
+      color: "rgb(0,222,0)",
       opacity: 1,
     },
   },

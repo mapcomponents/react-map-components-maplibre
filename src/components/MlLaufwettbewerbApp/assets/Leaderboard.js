@@ -109,6 +109,7 @@ function Leaderboard() {
               selectedUser={selectedUser}
               key={"lb_" + data.username}
               data={data}
+              position={1 + idx + usersPerPage * currentPage}
             />
             {idx % (usersPerPage - 1) !== 0 && (
               <hr style={{ padding: 0, margin: "0 0 0 5%", width: "90%" }} />
