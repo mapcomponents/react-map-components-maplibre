@@ -44,11 +44,7 @@ const MlGeoJsonLayer = (props) => {
     for (var key in props.paint) {
       mapContext
         .getMap(props.mapId)
-        .setPaintProperty(
-          layerId + idPostfixRef.current,
-          key,
-          props.paint[key]
-        );
+        .setPaintProperty(layerId + idPostfixRef.current, key, props.paint[key]);
     }
   }, [props.paint, layerId, mapContext, props.mapId]);
 
@@ -62,9 +58,8 @@ const MlGeoJsonLayer = (props) => {
       return;
     }
     if (
-      typeof transitionGeojsonDataRef.current[
-        currentTransitionStepRef.current
-      ] !== "undefined"
+      typeof transitionGeojsonDataRef.current[currentTransitionStepRef.current] !==
+      "undefined"
     ) {
       let newData =
         currentTransitionStepRef.current + 1 ===
@@ -72,9 +67,8 @@ const MlGeoJsonLayer = (props) => {
           ? props.geojson
           : turf.lineString([
               ...transitionGeojsonCommonDataRef.current,
-              ...transitionGeojsonDataRef.current[
-                currentTransitionStepRef.current
-              ].geometry.coordinates,
+              ...transitionGeojsonDataRef.current[currentTransitionStepRef.current]
+                .geometry.coordinates,
             ]);
 
       mapRef.current.getSource(layerId + idPostfixRef.current).setData(newData);
@@ -86,8 +80,7 @@ const MlGeoJsonLayer = (props) => {
       currentTransitionStepRef.current++;
       if (
         transitionInProgressRef.current &&
-        currentTransitionStepRef.current <
-          transitionGeojsonDataRef.current.length
+        currentTransitionStepRef.current < transitionGeojsonDataRef.current.length
       ) {
         setTimeout(showNextTransitionSegment, msPerStep);
       } else {
@@ -102,6 +95,7 @@ const MlGeoJsonLayer = (props) => {
   const transitionToGeojson = useCallback(
     (newGeojson) => {
       // create the transition geojson between oldGeojsonRef.current and props.geojson
+      console.log("start transition");
 
       // create a geojson that contains no common point between the two line features
       let transitionCoordinatesShort = [];
@@ -156,6 +150,8 @@ const MlGeoJsonLayer = (props) => {
         reverseOrder = true;
       }
 
+      console.log(shorterGeojson);
+      console.log(longerGeojson);
       if (longerGeojson && shorterGeojson) {
         for (
           var i = 0, len = longerGeojson.geometry.coordinates.length;
@@ -175,9 +171,7 @@ const MlGeoJsonLayer = (props) => {
             );
           } else {
             if (typeof longerGeojson.geometry.coordinates[i] !== "undefined") {
-              transitionCoordinatesLong.push(
-                longerGeojson.geometry.coordinates[i]
-              );
+              transitionCoordinatesLong.push(longerGeojson.geometry.coordinates[i]);
             }
             if (typeof shorterGeojson.geometry.coordinates[i] !== "undefined") {
               transitionCoordinatesShort.push(
@@ -200,34 +194,36 @@ const MlGeoJsonLayer = (props) => {
       // create props.transitionTime / msPerStep (=: transitionSteps) Versions of transitionGeojsonCommonDataRef.current + transitionCoordinates making the transitionCoordinates transitionCoordinatesDistance / transitionSteps longer on each step
 
       let transitionSteps = props.transitionTime / msPerStep;
-      let srcCoordinatesDistance = srcCoordinates.length > 1
-        ? Math.round(turf.length(turf.lineString(srcCoordinates)))
-        : 0;
-      let targetCoordinatesDistance = targetCoordinates.length > 1
-        ? Math.round(turf.length(turf.lineString(targetCoordinates)))
-        : 0;
-      let transitionDistance =
-        targetCoordinatesDistance + srcCoordinatesDistance;
+      let srcCoordinatesDistance =
+        srcCoordinates.length > 1
+          ? Math.round(turf.length(turf.lineString(srcCoordinates)))
+          : 0;
+      let targetCoordinatesDistance =
+        targetCoordinates.length > 1
+          ? Math.round(turf.length(turf.lineString(targetCoordinates)))
+          : 0;
+      let transitionDistance = targetCoordinatesDistance + srcCoordinatesDistance;
 
       let srcCoordinatesShare = srcCoordinatesDistance / transitionDistance;
-      let srcTransitionSteps = Math.round(
-        transitionSteps * srcCoordinatesShare
-      );
-      let srcPerStepDistance = Math.round(
-        srcCoordinatesDistance / transitionSteps
-      );
+      let srcTransitionSteps = Math.round(transitionSteps * srcCoordinatesShare);
+      let srcPerStepDistance =
+        Math.round((srcCoordinatesDistance / srcTransitionSteps) * 100) / 100;
 
-      let targetCoordinatesShare =
-        targetCoordinatesDistance / transitionDistance;
+      let targetCoordinatesShare = targetCoordinatesDistance / transitionDistance;
       let targetTransitionSteps = Math.round(
         transitionSteps * targetCoordinatesShare
       );
-      let targetPerStepDistance = Math.round(
-        targetCoordinatesDistance / transitionSteps
-      );
+      let targetPerStepDistance =
+        Math.round((targetCoordinatesDistance / targetTransitionSteps) * 100) / 100;
 
       transitionGeojsonDataRef.current = [];
 
+      console.log(
+        "src steps: " +
+          srcTransitionSteps +
+          " target steps: " +
+          targetTransitionSteps
+      );
       // use srcPerStepDistance as src coordinates are always animated backwards
       let loopStepDistance = srcCoordinatesDistance;
       for (i = 0; i < srcTransitionSteps; i++) {
@@ -255,6 +251,8 @@ const MlGeoJsonLayer = (props) => {
       }
       transitionGeojsonDataRef.current.push(props.geojson);
 
+      console.log(targetPerStepDistance);
+      console.log(transitionGeojsonDataRef.current);
 
       currentTransitionStepRef.current = 1;
       transitionInProgressRef.current = true;
@@ -305,9 +303,7 @@ const MlGeoJsonLayer = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     if (
-      !mapContext
-        .getMap(props.mapId)
-        .getSource(layerId + idPostfixRef.current) &&
+      !mapContext.getMap(props.mapId).getSource(layerId + idPostfixRef.current) &&
       props.geojson
     ) {
       let geojson = props.geojson;
