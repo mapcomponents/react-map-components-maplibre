@@ -95,7 +95,7 @@ const MlGeoJsonLayer = (props) => {
   const transitionToGeojson = useCallback(
     (newGeojson) => {
       // create the transition geojson between oldGeojsonRef.current and props.geojson
-      console.log("start transition");
+      //console.log("start transition");
 
       // create a geojson that contains no common point between the two line features
       let transitionCoordinatesShort = [];
@@ -150,8 +150,8 @@ const MlGeoJsonLayer = (props) => {
         reverseOrder = true;
       }
 
-      console.log(shorterGeojson);
-      console.log(longerGeojson);
+      //console.log(shorterGeojson);
+      //console.log(longerGeojson);
       if (longerGeojson && shorterGeojson) {
         for (
           var i = 0, len = longerGeojson.geometry.coordinates.length;
@@ -218,41 +218,59 @@ const MlGeoJsonLayer = (props) => {
 
       transitionGeojsonDataRef.current = [];
 
-      console.log(
-        "src steps: " +
-          srcTransitionSteps +
-          " target steps: " +
-          targetTransitionSteps
-      );
       // use srcPerStepDistance as src coordinates are always animated backwards
       let loopStepDistance = srcCoordinatesDistance;
-      for (i = 0; i < srcTransitionSteps; i++) {
-        loopStepDistance -= srcPerStepDistance;
-        if (loopStepDistance <= 0) {
-          loopStepDistance = 0.1;
-        }
-        let tmpChunks = turf.lineChunk(
-          turf.lineString(srcCoordinates),
-          loopStepDistance
-        );
-        transitionGeojsonDataRef.current.push(tmpChunks.features[0]);
+      if (loopStepDistance <= 0) {
+        loopStepDistance = 0.1;
       }
-      loopStepDistance = 0;
-      for (i = 0; i < targetTransitionSteps; i++) {
-        loopStepDistance += targetPerStepDistance;
-        if (loopStepDistance <= 0) {
-          loopStepDistance = 0.1;
-        }
-        let tmpChunks = turf.lineChunk(
-          turf.lineString(targetCoordinates),
-          loopStepDistance
+      let tmpLinestring = {};
+      let tmpChunks = {};
+
+      if (srcCoordinates.length > 1) {
+        tmpChunks = turf.lineChunk(
+          turf.lineString(srcCoordinates),
+          srcPerStepDistance
+          //{reverse:true}
         );
-        transitionGeojsonDataRef.current.push(tmpChunks.features[0]);
+        // for some reason turf.lineChunk returns the full lineString as element 0, chunks start at 1
+        tmpLinestring = tmpChunks.features[1];
+        for (i = 1; i < srcTransitionSteps; i++) {
+          transitionGeojsonDataRef.current.push(tmpLinestring);
+          if (typeof tmpChunks.features[i + 1] !== "undefined") {
+            tmpLinestring = turf.lineString([
+              ...tmpLinestring.geometry.coordinates,
+              ...tmpChunks.features[i + 1].geometry.coordinates,
+            ]);
+          } else {
+            transitionGeojsonDataRef.current.push(tmpLinestring);
+            break;
+          }
+        }
+        transitionGeojsonDataRef.current.reverse();
+      }
+
+      if (targetCoordinates.length > 1) {
+        loopStepDistance = 0;
+        tmpChunks = turf.lineChunk(
+          turf.lineString(targetCoordinates),
+          targetPerStepDistance
+        );
+        // for some reason turf.lineChunk returns the full lineString as element 0, chunks start at 1
+        tmpLinestring = tmpChunks.features[1];
+        for (i = 1; i < targetTransitionSteps; i++) {
+          transitionGeojsonDataRef.current.push(tmpLinestring);
+          if (typeof tmpChunks.features[i + 1] !== "undefined") {
+            tmpLinestring = turf.lineString([
+              ...tmpLinestring.geometry.coordinates,
+              ...tmpChunks.features[i + 1].geometry.coordinates,
+            ]);
+          } else {
+            transitionGeojsonDataRef.current.push(tmpLinestring);
+            break;
+          }
+        }
       }
       transitionGeojsonDataRef.current.push(props.geojson);
-
-      console.log(targetPerStepDistance);
-      console.log(transitionGeojsonDataRef.current);
 
       currentTransitionStepRef.current = 1;
       transitionInProgressRef.current = true;
