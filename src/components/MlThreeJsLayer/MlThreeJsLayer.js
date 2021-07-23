@@ -124,8 +124,8 @@ const MlThreeJsLayer = ({ init, onDone }) => {
         );
         var loader = new GLTFLoader();
         loader.load(
-          //"/assets/3D/posttower_simple.gltf",
-          "/assets/3D/posttower_wh.gltf.glb",
+          "/assets/3D/posttower.gltf",
+          //"/assets/3D/posttower_wh.gltf.glb",
           //"https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf",
           function (gltf) {
             this.scene.add(gltf.scene);
