@@ -2,6 +2,8 @@
   "name": "react-map-components-maplibre",
   "version": "0.1.0",
   "private": true,
+  "module": "dist/index.esm.js",
+  "source": "src/index.js",
   "dependencies": {
     "@deck.gl/aggregation-layers": "^8.4.13",
     "@deck.gl/core": "^8.4.13",
@@ -50,7 +52,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "rollup -c",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
@@ -84,7 +86,10 @@
     "arrowParens": "always"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.14.5",
     "@babel/preset-env": "^7.13.9",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@storybook/addon-actions": "^6.1.15",
     "@storybook/addon-essentials": "^6.1.15",
     "@storybook/addon-jest": "^6.1.21",
@@ -101,6 +106,8 @@
     "glob": "^7.1.6",
     "puppeteer": "^8.0.0",
     "react-test-renderer": "^17.0.1",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "showdown": "^1.9.1",
     "ts-jest": "^26.5.3"
   }
