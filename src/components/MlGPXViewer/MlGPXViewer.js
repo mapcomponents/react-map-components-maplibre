@@ -11,13 +11,13 @@ import { Popup } from "maplibre-gl";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import GeoJsonContext from './util/GeoJsonContext'
+import GeoJsonContext from "./util/GeoJsonContext";
 const toGeoJSON = require("./gpxConverter");
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
 const MlGPXViewer = (props) => {
-  console.log(GeoJsonContext)
+  console.log(GeoJsonContext);
   const dataSource = useContext(GeoJsonContext);
   console.log(dataSource);
   const mapContext = useContext(MapContext);
@@ -46,12 +46,12 @@ const MlGPXViewer = (props) => {
       map = mapContext.map;
     }
     [layerNameLines, layerNamePoints].forEach((layerName) => {
-      if (map.getLayer(layerName)) {
+      if (map.style && map.getLayer(layerName)) {
         map.removeLayer(layerName);
       }
     });
 
-    if (map.getSource(sourceName)) {
+    if (map.style && map.getSource(sourceName)) {
       map.removeSource(sourceName);
     }
     map.getCanvas().style.cursor = "";
@@ -77,7 +77,7 @@ const MlGPXViewer = (props) => {
 
     // cleanup fragments left in MapLibre-gl from previous component uses
     componentCleanup();
-    
+
     map.addSource(sourceName, {
       type: "geojson",
       data: dataSource.data,
@@ -234,7 +234,7 @@ const MlGPXViewer = (props) => {
         }
       });
       const data = toGeoJSON.gpx(gpxDoc);
-      dataSource.setData(data)
+      dataSource.setData(data);
       map.getSource(sourceName).setData(data);
       const bounds = bbox(data);
       map.fitBounds(bounds);
@@ -343,7 +343,6 @@ const MlGPXViewer = (props) => {
           Gpx-Datei ablegen
         </Typography>
       </div>
-    
     </>
   );
 };

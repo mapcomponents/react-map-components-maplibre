@@ -20,10 +20,10 @@ const MlThreeJsLayer = ({ init, onDone }) => {
   const idPostfixRef = useRef(new Date().getTime());
 
   const componentCleanup = () => {
-    if (mapContext.map.getLayer(layerName)) {
+    if (mapContext.map.style && mapContext.map.getLayer(layerName)) {
       mapContext.map.removeLayer(layerName);
     }
-    if (mapContext.map.getSource(layerName + "-source")) {
+    if (mapContext.map.style && mapContext.map.getSource(layerName + "-source")) {
       mapContext.map.removeSource(layerName + "-source");
     }
   };

@@ -17,16 +17,16 @@ const MlOsmLayer = () => {
 
     return () => {
       if (
+        mapContext.map.style &&
         mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)
       ) {
         mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
       }
       if (
+        mapContext.map.style &&
         mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)
       ) {
-        mapContext.map.removeSource(
-          "raster-tile-source-" + idPostfixRef.current
-        );
+        mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
       }
     };
   }, []);
@@ -44,9 +44,7 @@ const MlOsmLayer = () => {
 
     mapContext.map.addSource("raster-tile-source-" + idPostfixRef.current, {
       type: "raster",
-      tiles: [
-        "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
-      ],
+      tiles: ["https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"],
       tileSize: 256,
       attribution:
         'Map tiles by <a target="_top" rel="noopener" href="http://stamen.com">Stamen Design</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>',

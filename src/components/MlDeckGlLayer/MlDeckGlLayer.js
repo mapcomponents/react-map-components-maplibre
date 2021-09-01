@@ -67,7 +67,11 @@ const MlDeckGlLayer = ({ init, onDone }) => {
     }
 
     return () => {
-      if (mapContext.mapExists() && mapContext.getMap().getLayer(layerName)) {
+      if (
+        mapContext.mapExists() &&
+        mapContext.getMap().style &&
+        mapContext.getMap().getLayer(layerName)
+      ) {
         mapContext.getMap().removeLayer(layerName);
       }
     };

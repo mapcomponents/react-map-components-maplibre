@@ -23,10 +23,10 @@ const MlGeoJsonLayer = (props) => {
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
-      if (mapObject && mapObject.getLayer(layerSourceId)) {
+      if (mapObject && mapObject.style && mapObject.getLayer(layerSourceId)) {
         mapObject.removeLayer(layerSourceId);
       }
-      if (mapObject && mapObject.getSource(layerSourceId)) {
+      if (mapObject && mapObject.style && mapObject.getSource(layerSourceId)) {
         mapObject.removeSource(layerSourceId);
       }
     };
@@ -35,6 +35,7 @@ const MlGeoJsonLayer = (props) => {
   useEffect(() => {
     if (
       !mapContext.mapExists(props.mapId) ||
+      !mapContext.getMap(props.mapId).style ||
       !mapContext.getMap(props.mapId).getLayer(layerId + idPostfixRef.current)
     )
       return;

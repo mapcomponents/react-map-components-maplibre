@@ -25,7 +25,7 @@ const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
   const layerName = "building-3d";
 
   const componentCleanup = () => {
-    if (mapContext.map.getLayer(layerName)) {
+    if (mapContext.map.style && mapContext.map.getLayer(layerName)) {
       mapContext.map.removeLayer(layerName);
     }
   };
