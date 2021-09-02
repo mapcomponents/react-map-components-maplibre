@@ -152,6 +152,7 @@ var MapLibreMap = function MapLibreMap(props) {
   var mapOptions = props.options;
   useEffect(function () {
     return function () {
+      mapContext.removeMap(props.mapId);
       map.current.remove();
       map.current = null;
     };
@@ -281,6 +282,7 @@ var MlComponentTemplate = function MlComponentTemplate(props) {
       // try to remove anything this component has added to the MapLibre-gl instance
       // e.g.: remove the layer
       // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
+      // check for the existence of map.style before calling getLayer or getSource
     };
   }, []);
   useEffect(function () {
@@ -323,7 +325,7 @@ var MlCompositeLayer = function MlCompositeLayer(_ref) {
   var layerName = "building-3d";
 
   var componentCleanup = function componentCleanup() {
-    if (mapContext.map.style && mapContext.map.getLayer(layerName)) {
+    if (mapContext.map && mapContext.map.style && mapContext.map.getLayer(layerName)) {
       mapContext.map.removeLayer(layerName);
     }
   };
@@ -816,11 +818,11 @@ var MlHillshadeLayer = function MlHillshadeLayer() {
   var idPostfixRef = useRef(new Date().getTime());
 
   var componentCleanup = function componentCleanup() {
-    if (mapContext.map.style && mapContext.map.getLayer("hillshading")) {
+    if (mapContext.map && mapContext.map.style && mapContext.map.getLayer("hillshading")) {
       mapContext.map.removeLayer("hillshading");
     }
 
-    if (mapContext.map.style && mapContext.map.getSource("hillshading-source")) {
+    if (mapContext.map && mapContext.map.style && mapContext.map.getSource("hillshading-source")) {
       mapContext.map.removeSource("hillshading-source");
     }
   };
@@ -877,11 +879,11 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
     return function () {
       if (mapContext.getMap(props.mapId)) {
         // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getLayer(layerId)) {
+        if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getLayer(layerId)) {
           mapContext.getMap(props.mapId).removeLayer(layerId);
         }
 
-        if (mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getSource(layerId)) {
+        if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getSource(layerId)) {
           mapContext.getMap(props.mapId).removeSource(layerId);
         }
       }
@@ -1188,11 +1190,11 @@ var MlLayer = function MlLayer(props) {
     return function () {
       if (mapContext.getMap(props.mapId)) {
         // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getLayer(layerId)) {
+        if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getLayer(layerId)) {
           mapContext.getMap(props.mapId).removeLayer(layerId);
         }
 
-        if (mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getSource(layerId)) {
+        if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getSource(layerId)) {
           mapContext.getMap(props.mapId).removeSource(layerId);
         }
       }
@@ -1247,11 +1249,11 @@ var MlOsmLayer = function MlOsmLayer() {
   useEffect(function () {
     if (!mapContext.map) return;
     return function () {
-      if (mapContext.map.style && mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
+      if (mapContext.map && mapContext.map.style && mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
         mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
       }
 
-      if (mapContext.map.style && mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)) {
+      if (mapContext.map && mapContext.map.style && mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)) {
         mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
       }
     };
@@ -1316,12 +1318,12 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
 
   var cleanup = function cleanup() {
     for (var key in layerIdsRef.current) {
-      if (mapContext.map.style && mapContext.map.getLayer(layerIdsRef.current[key])) {
+      if (mapContext.map && mapContext.map.style && mapContext.map.getLayer(layerIdsRef.current[key])) {
         mapContext.map.removeLayer(layerIdsRef.current[key]);
       }
     }
 
-    if (mapContext.map.style && mapContext.map.getSource(sourceName + idPostfixRef.current)) {
+    if (mapContext.map && mapContext.map.getSource(sourceName + idPostfixRef.current)) {
       mapContext.map.removeSource(sourceName + idPostfixRef.current);
     }
   };
@@ -1402,12 +1404,14 @@ var MlWmsLayer = function MlWmsLayer(props) {
   var idPostfixRef = useRef(new Date().getTime());
 
   var cleanup = function cleanup() {
-    if (mapContext.map.style && mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
-      mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
-    }
+    if (mapContext.mapExists(props.mapId)) {
+      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getLayer("raster-tile-layer-" + idPostfixRef.current)) {
+        mapContext.maps[props.mapId].removeLayer("raster-tile-layer-" + idPostfixRef.current);
+      }
 
-    if (mapContext.map.style && mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)) {
-      mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
+      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getSource("raster-tile-source-" + idPostfixRef.current)) {
+        mapContext.maps[props.mapId].removeSource("raster-tile-source-" + idPostfixRef.current);
+      }
     }
   };
 
@@ -1482,11 +1486,11 @@ var MlWmsLayerMulti = function MlWmsLayerMulti(props) {
 
   var cleanup = function cleanup() {
     if (mapExists()) {
-      if (mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getLayer("raster-tile-layer-" + idPostfixRef.current)) {
+      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getLayer("raster-tile-layer-" + idPostfixRef.current)) {
         mapContext.maps[props.mapId].removeLayer("raster-tile-layer-" + idPostfixRef.current);
       }
 
-      if (mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getSource("raster-tile-source-" + idPostfixRef.current)) {
+      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getSource("raster-tile-source-" + idPostfixRef.current)) {
         mapContext.maps[props.mapId].removeSource("raster-tile-source-" + idPostfixRef.current);
       }
     }

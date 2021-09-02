@@ -15,12 +15,14 @@ const MlImageMarkerLayer = (props) => {
       if (mapContext.getMap(props.mapId)) {
         // This is the cleanup function, it is called when this react component is removed from react-dom
         if (
+          mapContext.getMap(props.mapId) &&
           mapContext.getMap(props.mapId).style &&
           mapContext.getMap(props.mapId).getLayer(layerId)
         ) {
           mapContext.getMap(props.mapId).removeLayer(layerId);
         }
         if (
+          mapContext.getMap(props.mapId) &&
           mapContext.getMap(props.mapId).style &&
           mapContext.getMap(props.mapId).getSource(layerId)
         ) {

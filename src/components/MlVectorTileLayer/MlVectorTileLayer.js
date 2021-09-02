@@ -16,6 +16,7 @@ const MlVectorTileLayer = (props) => {
   const cleanup = () => {
     for (let key in layerIdsRef.current) {
       if (
+        mapContext.map &&
         mapContext.map.style &&
         mapContext.map.getLayer(layerIdsRef.current[key])
       ) {
@@ -23,7 +24,7 @@ const MlVectorTileLayer = (props) => {
       }
     }
     if (
-      mapContext.map.style &&
+      mapContext.map &&
       mapContext.map.getSource(sourceName + idPostfixRef.current)
     ) {
       mapContext.map.removeSource(sourceName + idPostfixRef.current);

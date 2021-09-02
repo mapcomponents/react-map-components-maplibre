@@ -46,7 +46,7 @@ const MlDeckGlTerrainLayer = () => {
   );
 
   const cleanup = (map) => {
-    if (map.getLayer(layerName)) {
+    if (map && map.style && map.getLayer(layerName)) {
       map.removeLayer(layerName);
     }
   };

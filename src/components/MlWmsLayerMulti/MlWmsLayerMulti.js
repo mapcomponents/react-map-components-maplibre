@@ -26,6 +26,7 @@ const MlWmsLayerMulti = (props) => {
   const cleanup = () => {
     if (mapExists()) {
       if (
+        mapContext.maps[props.mapId] &&
         mapContext.maps[props.mapId].style &&
         mapContext.maps[props.mapId].getLayer(
           "raster-tile-layer-" + idPostfixRef.current
@@ -36,6 +37,7 @@ const MlWmsLayerMulti = (props) => {
         );
       }
       if (
+        mapContext.maps[props.mapId] &&
         mapContext.maps[props.mapId].style &&
         mapContext.maps[props.mapId].getSource(
           "raster-tile-source-" + idPostfixRef.current

@@ -17,12 +17,14 @@ const MlOsmLayer = () => {
 
     return () => {
       if (
+        mapContext.map &&
         mapContext.map.style &&
         mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)
       ) {
         mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
       }
       if (
+        mapContext.map &&
         mapContext.map.style &&
         mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)
       ) {

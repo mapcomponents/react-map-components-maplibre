@@ -105,7 +105,7 @@
     "canvas": "^2.7.0",
     "glob": "^7.1.6",
     "puppeteer": "^8.0.0",
-    "react-test-renderer": "^17.0.1",
+    "react-test-renderer": "^17.0.2",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "showdown": "^1.9.1",

@@ -14,10 +14,18 @@ const MlHillshadeLayer = () => {
   const idPostfixRef = useRef(new Date().getTime());
 
   const componentCleanup = () => {
-    if (mapContext.map.style && mapContext.map.getLayer("hillshading")) {
+    if (
+      mapContext.map &&
+      mapContext.map.style &&
+      mapContext.map.getLayer("hillshading")
+    ) {
       mapContext.map.removeLayer("hillshading");
     }
-    if (mapContext.map.style && mapContext.map.getSource("hillshading-source")) {
+    if (
+      mapContext.map &&
+      mapContext.map.style &&
+      mapContext.map.getSource("hillshading-source")
+    ) {
       mapContext.map.removeSource("hillshading-source");
     }
   };

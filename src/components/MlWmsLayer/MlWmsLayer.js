@@ -13,17 +13,29 @@ const MlWmsLayer = (props) => {
   const idPostfixRef = useRef(new Date().getTime());
 
   const cleanup = () => {
-    if (
-      mapContext.map.style &&
-      mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)
-    ) {
-      mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
-    }
-    if (
-      mapContext.map.style &&
-      mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)
-    ) {
-      mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
+    if (mapContext.mapExists(props.mapId)) {
+      if (
+        mapContext.maps[props.mapId] &&
+        mapContext.maps[props.mapId].style &&
+        mapContext.maps[props.mapId].getLayer(
+          "raster-tile-layer-" + idPostfixRef.current
+        )
+      ) {
+        mapContext.maps[props.mapId].removeLayer(
+          "raster-tile-layer-" + idPostfixRef.current
+        );
+      }
+      if (
+        mapContext.maps[props.mapId] &&
+        mapContext.maps[props.mapId].style &&
+        mapContext.maps[props.mapId].getSource(
+          "raster-tile-source-" + idPostfixRef.current
+        )
+      ) {
+        mapContext.maps[props.mapId].removeSource(
+          "raster-tile-source-" + idPostfixRef.current
+        );
+      }
     }
   };
 

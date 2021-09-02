@@ -42,5 +42,5 @@ export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
   wmsLayerMapId: "map_2",
-  magnifierRadius: 100,
+  magnifierRadius: 200,
 };

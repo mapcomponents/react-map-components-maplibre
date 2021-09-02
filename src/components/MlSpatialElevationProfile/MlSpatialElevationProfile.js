@@ -13,8 +13,6 @@ const MlSpatialElevationProfile = ({ elevationFactor = 1, mapId = null }) => {
   const sourceName = "elevationprofile";
   const layerName = "elevationprofile-layer";
 
-  console.log(elevationFactor);
-
   const createStep = (x, y, z, x2, y2) => {
     const summand = 0.0002;
     const line = lineString([

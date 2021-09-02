@@ -12,6 +12,7 @@ const MlComponentTemplate = (props) => {
       // try to remove anything this component has added to the MapLibre-gl instance
       // e.g.: remove the layer
       // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
+      // check for the existence of map.style before calling getLayer or getSource
     };
   }, []);
 

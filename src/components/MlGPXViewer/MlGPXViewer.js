@@ -45,16 +45,18 @@ const MlGPXViewer = (props) => {
     } else {
       map = mapContext.map;
     }
-    [layerNameLines, layerNamePoints].forEach((layerName) => {
-      if (map.style && map.getLayer(layerName)) {
-        map.removeLayer(layerName);
-      }
-    });
+    if (map) {
+      [layerNameLines, layerNamePoints].forEach((layerName) => {
+        if (map.style && map.getLayer(layerName)) {
+          map.removeLayer(layerName);
+        }
+      });
 
-    if (map.style && map.getSource(sourceName)) {
-      map.removeSource(sourceName);
+      if (map.style && map.getSource(sourceName)) {
+        map.removeSource(sourceName);
+      }
+      map.getCanvas().style.cursor = "";
     }
-    map.getCanvas().style.cursor = "";
     popup.remove();
   };
 
