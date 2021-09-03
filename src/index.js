@@ -1,4 +1,5 @@
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
+export { default as MapLibreMapDebug } from "./components/MapLibreMapDebug/MapLibreMap";
 //export { default as MlAerialPhotograph } from "./components/MlAerialPhotograph/MlAerialPhotograph";
 export { default as MlCameraFollowPath } from "./components/MlCameraFollowPath/MlCameraFollowPath";
 export { default as MlComponentTemplate } from "./components/MlComponentTemplate/MlComponentTemplate";
