@@ -12,7 +12,7 @@ export { default as MlGeoJsonLayer } from "./components/MlGeoJsonLayer/MlGeoJson
 export { default as MlHillshadeLayer } from "./components/MlHillshadeLayer/MlHillshadeLayer";
 //export { default as MlIconLayer } from "./components/MlIconLayer/MlIconLayer";
 export { default as MlImageMarkerLayer } from "./components/MlImageMarkerLayer/MlImageMarkerLayer";
-export { default as MlLaermkarte } from "./components/MlLaermkarte/MlLaermkarte";
+//export { default as MlLaermkarte } from "./components/MlLaermkarte/MlLaermkarte";
 //export { default as MlLaufwettbewerbApp } from "./components/MlLaufwettbewerbApp/MlLaufwettbewerbApp";
 export { default as MlLayer } from "./components/MlLayer/MlLayer";
 //export { default as MlLayerMagnify } from "./components/MlLayerMagnify/MlLayerMagnify";

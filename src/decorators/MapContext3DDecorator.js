@@ -6,7 +6,7 @@ import "./style.css";
 
 const decorators = [
   (Story) => (
-    <div class="fullscreen_map">
+    <div className="fullscreen_map">
       <MapComponentsProvider>
         <Story />
         <MapLibreMap
