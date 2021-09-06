@@ -27,3 +27,4 @@ export { default as MlVectorTileLayer } from "./components/MlVectorTileLayer/MlV
 //export { default as MlWanderApp } from "./components/MlWanderApp/MlWanderApp";
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
 export { default as MlWmsLayerMulti } from "./components/MlWmsLayerMulti/MlWmsLayerMulti";
+export { default as MlFeatureEditor } from "./components/MlFeatureEditor/MlFeatureEditor";

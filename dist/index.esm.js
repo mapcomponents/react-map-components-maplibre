@@ -1,21 +1,25 @@
 import React, { useRef, useContext, useEffect, useMemo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { MapContext, SimpleDataContext } from 'react-map-components-core';
+import { MapContext } from 'react-map-components-core';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import maplibregl$1 from 'maplibre-gl/dist/maplibre-gl-unminified';
 import { lineDistance, lineString, along, bearing, point, length, lineChunk } from '@turf/turf';
 import Button from '@material-ui/core/Button';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@material-ui/icons/Print';
-import { HexagonLayer } from '@deck.gl/aggregation-layers';
-import '@deck.gl/layers';
-import 'd3';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import { isVertex as isVertex$1, isEscapeKey, isEnterKey, noTarget, isOfMetaType, isFeature, isShiftDown, isActiveFeature, isShiftMousedown, isInactiveFeature } from '@mapbox/mapbox-gl-draw/src/lib/common_selectors';
+import doubleClickZoom from '@mapbox/mapbox-gl-draw/src/lib/double_click_zoom';
+import { geojsonTypes, cursors, types, events, activeStates, meta, updateActions, classes } from '@mapbox/mapbox-gl-draw/src/constants';
+import isEventAtCoordinates from '@mapbox/mapbox-gl-draw/src/lib/is_event_at_coordinates';
+import createVertex from '@mapbox/mapbox-gl-draw/src/lib/create_vertex';
+import mouseEventPoint from '@mapbox/mapbox-gl-draw/src/lib/mouse_event_point';
+import createSupplementaryPoints from '@mapbox/mapbox-gl-draw/src/lib/create_supplementary_points';
+import StringSet from '@mapbox/mapbox-gl-draw/src/lib/string_set';
+import constrainFeatureMovement from '@mapbox/mapbox-gl-draw/src/lib/constrain_feature_movement';
+import moveFeatures from '@mapbox/mapbox-gl-draw/src/lib/move_features';
 
 function _defineProperty(obj, key, value) {
   if (key in obj) {
@@ -187,6 +191,58 @@ var MapLibreMap = function MapLibreMap(props) {
 };
 
 MapLibreMap.propTypes = {
+  options: PropTypes.object
+};
+
+/**
+ * The MapLibreMap component will create the MapLibre-gl instance and set the reference at MapContext.map after the MapLibre-gl load event has fired. That way (since the map refence is created using the useState hook) you can use the react useEffect hook in depending components to access the MapLibre-gl instance like ```useEffect(() => { \/** code *\/ }, [mapContext.map])``` and be sure the code is executed once the MapLibre-gl instance has fired the load event.
+ *
+ * MapLibreMap returns the html node that will be used by MapLibre-gl to render the map.
+ * This Component must be kept unaware of any related components that interact with the MapLibre-gl instance.
+ */
+
+var MapLibreMap$1 = function MapLibreMap(props) {
+  var map = useRef(null);
+  var mapContainer = useRef(null);
+  var mapContext = useContext(MapContext);
+  var mapOptions = props.options;
+  useEffect(function () {
+    return function () {
+      mapContext.removeMap(props.mapId);
+      map.current.remove();
+      map.current = null;
+    };
+  }, []);
+  useEffect(function () {
+    if (mapContainer.current) {
+      // TODO: adjust defaults
+      var defaultOptions = {
+        lng: 8.607,
+        lat: 53.1409349,
+        zoom: 10,
+        container: mapContainer.current,
+        accessToken: "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA"
+      };
+      map.current = new maplibregl$1.Map(_objectSpread2(_objectSpread2({}, defaultOptions), mapOptions));
+      map.current.on("load", function () {
+        if (props.mapId) {
+          mapContext.registerMap(props.mapId, map.current);
+        } else {
+          mapContext.setMap(map.current);
+        }
+      }); // TODO: remove this line
+
+      window.map = map.current;
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  }, [mapContainer]);
+  return /*#__PURE__*/React.createElement("div", {
+    ref: mapContainer,
+    className: "mapContainer"
+  });
+};
+
+MapLibreMap$1.propTypes = {
   options: PropTypes.object
 };
 
@@ -943,243 +999,6 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
-var DeckGlContext = /*#__PURE__*/React.createContext({});
-var DeckGlContextProvider = DeckGlContext.Provider;
-
-var useStyles = makeStyles(function (theme) {
-  return {
-    root: {
-      flexGrow: 1,
-      zIndex: 120,
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0
-    },
-    AppBar: {
-      backgroundColor: "#fafafa",
-      minHeight: "62px"
-    }
-  };
-});
-function TopToolbar(props) {
-  var classes = useStyles();
-  return /*#__PURE__*/React.createElement("div", {
-    className: classes.root
-  }, /*#__PURE__*/React.createElement(AppBar, {
-    className: classes.AppBar,
-    position: "static"
-  }, /*#__PURE__*/React.createElement(Toolbar, null, props.children)));
-}
-
-function ValueLabelComponent(props) {
-  var children = props.children,
-      open = props.open,
-      value = props.value;
-  return /*#__PURE__*/React.createElement(Tooltip, {
-    open: open,
-    enterTouchDelay: 0,
-    placement: "top",
-    title: value
-  }, children);
-}
-
-var getColorRange = function getColorRange(layerOpacity) {
-  return [[1, 152, 189, Math.round(80 * layerOpacity)], [73, 227, 206, Math.round(90 * layerOpacity)], [216, 254, 181, Math.round(100 * layerOpacity)], [254, 237, 177, Math.round(110 * layerOpacity)], [254, 173, 84, Math.round(120 * layerOpacity)], [209, 55, 78, Math.round(150 * layerOpacity)]];
-};
-
-var MlLaermkarte = function MlLaermkarte(props) {
-  // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
-  var initializedRef = useRef(false);
-  var mapContext = useContext(MapContext);
-  var deckGlContext = useContext(DeckGlContext);
-  var simpleDataContext = useContext(SimpleDataContext);
-  var layerName = "deckgl-layer";
-
-  var _useState = useState(0.8),
-      _useState2 = _slicedToArray(_useState, 2),
-      layerOpacity = _useState2[0],
-      setLayerOpacity = _useState2[1];
-
-  var _useState3 = useState(16),
-      _useState4 = _slicedToArray(_useState3, 2),
-      radius = _useState4[0],
-      setRadius = _useState4[1];
-
-  var _useState5 = useState(0.3),
-      _useState6 = _slicedToArray(_useState5, 2),
-      elevationScale = _useState6[0],
-      setElevationScale = _useState6[1];
-
-  var deckLayerProps = useMemo(function () {
-    return {
-      id: layerName,
-      onClick: function onClick(obj) {
-        console.log(obj); //mapContext.map.zoomIn();
-        //mapContext.map.panTo(obj.coordinate);
-        //setRadius(radius - 5);
-      },
-      data: simpleDataContext.data ? simpleDataContext.data.features : [],
-      type: HexagonLayer,
-      colorRange: getColorRange(layerOpacity),
-      coverage: 0.9,
-      elevationRange: [30, 75],
-      elevationScale: elevationScale,
-      extruded: true,
-      autoHighlight: true,
-      getPosition: function getPosition(d) {
-        return d.geometry.coordinates;
-      },
-      pickable: true,
-      radius: radius,
-      upperPercentile: 100,
-      material: {
-        ambient: 0.8,
-        diffuse: 0.5,
-        shininess: 20,
-        specularColor: [51, 51, 51]
-      },
-      transitions: {
-        elevationScale: 1500
-      },
-      getColorValue: function getColorValue(points) {
-        var elVal = points.reduce(function (acc, point) {
-          if (!point.properties && point.source.properties) return acc < point.source.properties.dba ? point.source.properties.dba : acc;
-          return acc < point.properties.dba ? point.properties.dba : acc;
-        }, -Infinity);
-        return Math.round(elVal);
-      },
-      getElevationValue: function getElevationValue(points) {
-        var elVal = points.reduce(function (acc, point) {
-          if (!point.properties && point.source.properties) return acc < point.source.properties.dba ? point.source.properties.dba : acc;
-          return acc < point.properties.dba ? point.properties.dba : acc;
-        }, -Infinity);
-        return Math.round(elVal);
-      }
-    };
-  }, [radius, layerOpacity, simpleDataContext.data, elevationScale]);
-  useEffect(function () {
-    if (!deckGlContext.deckGl) return;
-    console.log("update props");
-    deckGlContext.deckGl.setProps({
-      layers: [new HexagonLayer(_objectSpread2({}, deckLayerProps))]
-    });
-  }, [radius, layerOpacity, elevationScale]);
-  useEffect(function () {
-    if (typeof props.init === "function") {
-      props.init();
-    }
-
-    if (!mapContext.mapExists(props.mapId)) return;
-    return function () {
-      if (deckGlContext.deckGl) {
-        deckGlContext.deckGl.setProps({
-          layers: []
-        });
-        initializedRef.current = false;
-      }
-    };
-  }, []);
-  useEffect(function () {
-    if (!simpleDataContext.data || !mapContext.mapExists() || !deckGlContext.deckGl || deckGlContext.deckGl && mapContext.mapExists() && simpleDataContext.data && initializedRef.current) return;
-    initializedRef.current = true; // for debugging
-
-    window.DeckGlMapLibreLayer = deckGlContext.maplibreLayer;
-    deckGlContext.deckGl.setProps({
-      layers: [new HexagonLayer(_objectSpread2(_objectSpread2({}, deckLayerProps), {}, {
-        data: simpleDataContext.data.features,
-        radius: radius
-      }))]
-    });
-
-    if (typeof props.onDone === "function") {
-      console.log("hide overlay");
-      props.onDone();
-    }
-  }, [mapContext.mapIds, mapContext, deckGlContext.deckGl, deckGlContext.maplibreLayer, deckLayerProps, radius, setRadius, simpleDataContext.data]);
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(TopToolbar, {
-    style: {
-      alignItems: "flex-end"
-    }
-  }, /*#__PURE__*/React.createElement(Typography, {
-    id: "discrete-slider",
-    style: {
-      color: "#121212",
-      marginRight: "5px"
-    }
-  }, "Radius"), /*#__PURE__*/React.createElement(Slider, {
-    value: radius,
-    onChange: function onChange(ev, value) {
-      setRadius(value);
-    },
-    getAriaValueText: function getAriaValueText(value) {
-      return value;
-    },
-    "aria-labelledby": "discrete-slider",
-    valueLabelDisplay: "auto",
-    ValueLabelComponent: ValueLabelComponent,
-    step: 5,
-    marks: true,
-    min: 10,
-    max: 70,
-    style: {
-      marginRight: "10px",
-      maxWidth: "200px"
-    }
-  }), /*#__PURE__*/React.createElement(Typography, {
-    id: "discrete-slider",
-    style: {
-      color: "#121212",
-      marginRight: "5px"
-    }
-  }, "Deckkraft"), /*#__PURE__*/React.createElement(Slider, {
-    value: layerOpacity,
-    onChange: function onChange(ev, value) {
-      setLayerOpacity(value);
-    },
-    getAriaValueText: function getAriaValueText(value) {
-      return value;
-    },
-    "aria-labelledby": "discrete-slider",
-    valueLabelDisplay: "auto",
-    ValueLabelComponent: ValueLabelComponent,
-    step: 0.02,
-    marks: true,
-    min: 0.01,
-    max: 1.0,
-    style: {
-      marginRight: "10px",
-      maxWidth: "200px"
-    }
-  }), /*#__PURE__*/React.createElement(Typography, {
-    id: "discrete-slider",
-    style: {
-      color: "#121212",
-      marginRight: "5px"
-    }
-  }, "H\xF6he"), /*#__PURE__*/React.createElement(Slider, {
-    value: elevationScale,
-    onChange: function onChange(ev, value) {
-      setElevationScale(value);
-    },
-    getAriaValueText: function getAriaValueText(value) {
-      return value;
-    },
-    "aria-labelledby": "discrete-slider",
-    valueLabelDisplay: "auto",
-    ValueLabelComponent: ValueLabelComponent,
-    step: 0.1,
-    marks: true,
-    min: 0,
-    max: 4.0,
-    style: {
-      marginRight: "10px",
-      maxWidth: "200px"
-    }
-  })));
-};
-
 var MlLayer = function MlLayer(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   var mapContext = useContext(MapContext);
@@ -1542,5 +1361,1002 @@ var MlWmsLayerMulti = function MlWmsLayerMulti(props) {
   }, "WMS");
 };
 
-export { MapLibreMap, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlGeoJsonLayer, MlHillshadeLayer, MlImageMarkerLayer, MlLaermkarte, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer, MlWmsLayerMulti };
+var CustomPolygonMode = {};
+
+CustomPolygonMode.onSetup = function () {
+  console.log("Change mode: custom polygon");
+  var polygon = this.newFeature({
+    type: geojsonTypes.FEATURE,
+    properties: {},
+    geometry: {
+      type: geojsonTypes.POLYGON,
+      coordinates: [[]]
+    }
+  });
+  this.addFeature(polygon);
+  this.clearSelectedFeatures();
+  doubleClickZoom.disable(this);
+  this.updateUIClasses({
+    mouse: cursors.ADD
+  });
+  this.activateUIButton(types.POLYGON);
+  this.setActionableState({
+    trash: true
+  });
+  return {
+    polygon: polygon,
+    currentVertexPosition: 0
+  };
+};
+
+CustomPolygonMode.clickAnywhere = function (state, e) {
+  if (state.currentVertexPosition > 0 && isEventAtCoordinates(e, state.polygon.coordinates[0][state.currentVertexPosition - 1])) {
+    return this.changeMode("custom_select", {
+      featureIds: [state.polygon.id]
+    });
+  }
+
+  this.updateUIClasses({
+    mouse: cursors.ADD
+  });
+  state.polygon.updateCoordinate("0.".concat(state.currentVertexPosition), e.lngLat.lng, e.lngLat.lat);
+  state.currentVertexPosition++;
+  state.polygon.updateCoordinate("0.".concat(state.currentVertexPosition), e.lngLat.lng, e.lngLat.lat);
+  this.map.fire(events.CREATE, {
+    features: [state.polygon.toGeoJSON()]
+  });
+};
+
+CustomPolygonMode.clickOnVertex = function (state) {
+  return this.changeMode("custom_select", {
+    featureIds: [state.polygon.id]
+  });
+};
+
+CustomPolygonMode.onMouseMove = function (state, e) {
+  state.polygon.updateCoordinate("0.".concat(state.currentVertexPosition), e.lngLat.lng, e.lngLat.lat);
+
+  if (isVertex$1(e)) {
+    this.updateUIClasses({
+      mouse: cursors.POINTER
+    });
+  }
+};
+
+CustomPolygonMode.onTap = CustomPolygonMode.onClick = function (state, e) {
+  if (isVertex$1(e)) return this.clickOnVertex(state, e);
+  return this.clickAnywhere(state, e);
+};
+
+CustomPolygonMode.onKeyUp = function (state, e) {
+  if (isEscapeKey(e)) {
+    this.deleteFeature([state.polygon.id], {
+      silent: true
+    });
+    this.changeMode("custom_select");
+  } else if (isEnterKey(e)) {
+    this.changeMode("custom_select", {
+      featureIds: [state.polygon.id]
+    });
+  }
+};
+
+CustomPolygonMode.onStop = function (state) {
+  this.updateUIClasses({
+    mouse: cursors.NONE
+  });
+  doubleClickZoom.enable(this);
+  this.activateUIButton(); // check to see if we've deleted this feature
+
+  if (this.getFeature(state.polygon.id) === undefined) return; //remove last added coordinate
+
+  state.polygon.removeCoordinate("0.".concat(state.currentVertexPosition));
+
+  if (state.polygon.isValid()) {
+    this.map.fire(events.CREATE, {
+      features: [state.polygon.toGeoJSON()]
+    });
+  } else {
+    this.deleteFeature([state.polygon.id], {
+      silent: true
+    });
+    this.changeMode("custom_select", {}, {
+      silent: true
+    });
+  }
+};
+
+CustomPolygonMode.toDisplayFeatures = function (state, geojson, display) {
+  var isActivePolygon = geojson.properties.id === state.polygon.id;
+  geojson.properties.active = isActivePolygon ? activeStates.ACTIVE : activeStates.INACTIVE;
+  if (!isActivePolygon) return display(geojson); // Don't render a polygon until it has two positions
+  // (and a 3rd which is just the first repeated)
+
+  if (geojson.geometry.coordinates.length === 0) return;
+  var coordinateCount = geojson.geometry.coordinates[0].length; // 2 coordinates after selecting a draw type
+  // 3 after creating the first point
+
+  if (coordinateCount < 3) {
+    return;
+  }
+
+  geojson.properties.meta = meta.FEATURE;
+  display(createVertex(state.polygon.id, geojson.geometry.coordinates[0][0], "0.0", false));
+
+  if (coordinateCount > 3) {
+    // Add a start position marker to the map, clicking on this will finish the feature
+    // This should only be shown when we're in a valid spot
+    var endPos = geojson.geometry.coordinates[0].length - 3;
+    display(createVertex(state.polygon.id, geojson.geometry.coordinates[0][endPos], "0.".concat(endPos), false));
+  }
+
+  if (coordinateCount <= 4) {
+    // If we've only drawn two positions (plus the closer),
+    // make a LineString instead of a Polygon
+    var lineCoordinates = [[geojson.geometry.coordinates[0][0][0], geojson.geometry.coordinates[0][0][1]], [geojson.geometry.coordinates[0][1][0], geojson.geometry.coordinates[0][1][1]]]; // create an initial vertex so that we can track the first point on mobile devices
+
+    display({
+      type: geojsonTypes.FEATURE,
+      properties: geojson.properties,
+      geometry: {
+        coordinates: lineCoordinates,
+        type: geojsonTypes.LINE_STRING
+      }
+    });
+
+    if (coordinateCount === 3) {
+      return;
+    }
+  } // render the Polygon
+
+
+  return display(geojson);
+};
+
+CustomPolygonMode.onTrash = function (state) {
+  this.deleteFeature([state.polygon.id], {
+    silent: true
+  });
+  this.changeMode("custom_select");
+};
+
+var move_features = function move_features(features, delta, allFeatures) {
+  var constrainedDelta = constrainFeatureMovement(features.map(function (feature) {
+    return feature.toGeoJSON();
+  }), delta);
+  features.forEach(function (feature) {
+    var currentCoordinates = feature.getCoordinates();
+
+    var moveCoordinate = function moveCoordinate(coord) {
+      var point = {
+        lng: coord[0] + constrainedDelta.lng,
+        lat: coord[1] + constrainedDelta.lat
+      };
+      return [point.lng, point.lat];
+    };
+
+    var moveRing = function moveRing(ring) {
+      return ring.map(function (coord) {
+        return moveCoordinate(coord);
+      });
+    };
+
+    var moveMultiPolygon = function moveMultiPolygon(multi) {
+      return multi.map(function (ring) {
+        return moveRing(ring);
+      });
+    };
+
+    var nextCoordinates;
+
+    if (feature.type === geojsonTypes.POINT) {
+      nextCoordinates = moveCoordinate(currentCoordinates);
+    } else if (feature.type === geojsonTypes.LINE_STRING || feature.type === geojsonTypes.MULTI_POINT) {
+      nextCoordinates = currentCoordinates.map(moveCoordinate);
+    } else if (feature.type === geojsonTypes.POLYGON || feature.type === geojsonTypes.MULTI_LINE_STRING) {
+      nextCoordinates = currentCoordinates.map(moveRing);
+    } else if (feature.type === geojsonTypes.MULTI_POLYGON) {
+      nextCoordinates = currentCoordinates.map(moveMultiPolygon);
+    }
+
+    feature.incomingCoords(nextCoordinates);
+  });
+};
+
+var drawUtils = {
+  getMatchingVertices: function getMatchingVertices(vertex, featureId, allFeatures, map) {
+    // number of decimals should probably be dynamic depending on zoom level
+    var decimals = 5;
+    var matchingVertices = [];
+    var v_lng = vertex[0].toFixed(decimals);
+    var v_lat = vertex[1].toFixed(decimals);
+
+    for (var i = 0; i < allFeatures.length; i++) {
+      if (allFeatures[i].id !== featureId) {
+        for (var k = 0; k < allFeatures[i].geometry.coordinates.length; k++) {
+          for (var m = 0; m < allFeatures[i].geometry.coordinates[k].length; m++) {
+            if (v_lng === allFeatures[i].geometry.coordinates[k][m][0].toFixed(decimals) && v_lat === allFeatures[i].geometry.coordinates[k][m][1].toFixed(decimals)) {
+              matchingVertices.push({
+                featureId: allFeatures[i].id,
+                coord_path: k + "." + m,
+                //feature: map.getFeature(allFeatures[i].id),
+                lng: allFeatures[i].geometry.coordinates[k][m][0],
+                lat: allFeatures[i].geometry.coordinates[k][m][1]
+              });
+            }
+          }
+        }
+      }
+    }
+
+    return matchingVertices;
+  },
+  getDrawInstance: function getDrawInstance(map) {
+    for (var i = map._controls.length - 1; i >= 0; i--) {
+      if (map._controls[i].constructor.name === "MapboxDraw" || map._controls[i].constructor.name === "ye") {
+        return map._controls[i];
+      }
+    }
+
+    return null;
+  }
+};
+
+var CustomSelectMode = {};
+
+CustomSelectMode.onSetup = function (opts) {
+  var _this = this;
+
+  console.log("Change mode: custom select"); // turn the opts into state.
+
+  var state = {
+    dragMoveLocation: null,
+    boxSelectStartLocation: null,
+    boxSelectElement: undefined,
+    boxSelecting: false,
+    canBoxSelect: false,
+    dragMoving: false,
+    canDragMove: false,
+    initiallySelectedFeatureIds: opts.featureIds || []
+  };
+  this.setSelected(state.initiallySelectedFeatureIds.filter(function (id) {
+    return _this.getFeature(id) !== undefined;
+  }));
+  this.fireActionable();
+  this.setActionableState({
+    combineFeatures: true,
+    uncombineFeatures: true,
+    trash: true
+  });
+  return state;
+};
+
+CustomSelectMode.fireUpdate = function () {
+  this.map.fire(events.UPDATE, {
+    action: updateActions.MOVE,
+    features: this.getSelected().map(function (f) {
+      return f.toGeoJSON();
+    })
+  });
+};
+
+CustomSelectMode.fireActionable = function () {
+  var _this2 = this;
+
+  var selectedFeatures = this.getSelected();
+  var multiFeatures = selectedFeatures.filter(function (feature) {
+    return _this2.isInstanceOf("MultiFeature", feature);
+  });
+  var combineFeatures = false;
+
+  if (selectedFeatures.length > 1) {
+    combineFeatures = true;
+    var featureType = selectedFeatures[0].type.replace("Multi", "");
+    selectedFeatures.forEach(function (feature) {
+      if (feature.type.replace("Multi", "") !== featureType) {
+        combineFeatures = false;
+      }
+    });
+  }
+
+  var uncombineFeatures = multiFeatures.length > 0;
+  var trash = selectedFeatures.length > 0;
+  this.setActionableState({
+    combineFeatures: combineFeatures,
+    uncombineFeatures: uncombineFeatures,
+    trash: trash
+  });
+};
+
+CustomSelectMode.getUniqueIds = function (allFeatures) {
+  if (!allFeatures.length) return [];
+  var ids = allFeatures.map(function (s) {
+    return s.properties.id;
+  }).filter(function (id) {
+    return id !== undefined;
+  }).reduce(function (memo, id) {
+    memo.add(id);
+    return memo;
+  }, new StringSet());
+  return ids.values();
+};
+
+CustomSelectMode.stopExtendedInteractions = function (state) {
+  if (state.boxSelectElement) {
+    if (state.boxSelectElement.parentNode) state.boxSelectElement.parentNode.removeChild(state.boxSelectElement);
+    state.boxSelectElement = null;
+  }
+
+  this.map.dragPan.enable();
+  state.boxSelecting = false;
+  state.canBoxSelect = false;
+  state.dragMoving = false;
+  state.canDragMove = false;
+};
+
+CustomSelectMode.onStop = function () {
+  doubleClickZoom.enable(this);
+};
+
+CustomSelectMode.onMouseMove = function (state) {
+  // On mousemove that is not a drag, stop extended interactions.
+  // This is useful if you drag off the canvas, release the button,
+  // then move the mouse back over the canvas --- we don't allow the
+  // interaction to continue then, but we do let it continue if you held
+  // the mouse button that whole time
+  return this.stopExtendedInteractions(state);
+};
+
+CustomSelectMode.onMouseOut = function (state) {
+  // As soon as you mouse leaves the canvas, update the feature
+  if (state.dragMoving) return this.fireUpdate();
+};
+
+CustomSelectMode.onTap = CustomSelectMode.onClick = function (state, e) {
+  // Click (with or without shift) on no feature
+  if (noTarget(e)) return this.clickAnywhere(state, e); // also tap
+
+  if (isOfMetaType(meta.VERTEX)(e)) return this.clickOnVertex(state, e); //tap
+
+  if (isFeature(e)) return this.clickOnFeature(state, e);
+};
+
+CustomSelectMode.clickAnywhere = function (state) {
+  var _this3 = this;
+
+  // Clear the re-render selection
+  var wasSelected = this.getSelectedIds();
+
+  if (wasSelected.length) {
+    this.clearSelectedFeatures();
+    wasSelected.forEach(function (id) {
+      return _this3.doRender(id);
+    });
+  }
+
+  doubleClickZoom.enable(this);
+  this.stopExtendedInteractions(state);
+};
+
+CustomSelectMode.clickOnVertex = function (state, e) {
+  // Enter direct select mode
+  this.changeMode("custom_direct_select", {
+    featureId: e.featureTarget.properties.parent,
+    coordPath: e.featureTarget.properties.coord_path,
+    startPos: e.lngLat //    groupMove_vertices: matchingVertices,
+
+  });
+  this.updateUIClasses({
+    mouse: cursors.MOVE
+  });
+};
+
+CustomSelectMode.startOnActiveFeature = function (state, e) {
+  // Stop any already-underway extended interactions
+  this.stopExtendedInteractions(state); // Disable map.dragPan immediately so it can't start
+
+  this.map.dragPan.disable(); // Re-render it and enable drag move
+
+  this.doRender(e.featureTarget.properties.id); // Set up the state for drag moving
+
+  state.canDragMove = true;
+  state.dragMoveLocation = e.lngLat;
+};
+
+CustomSelectMode.clickOnFeature = function (state, e) {
+  var _this4 = this;
+
+  // Stop everything
+  doubleClickZoom.disable(this);
+  this.stopExtendedInteractions(state);
+  var isShiftClick = isShiftDown(e);
+  var selectedFeatureIds = this.getSelectedIds();
+  var featureId = e.featureTarget.properties.id;
+  var isFeatureSelected = this.isSelected(featureId); // Click (without shift) on any selected feature but a point
+
+  if (!isShiftClick && isFeatureSelected && this.getFeature(featureId).type !== geojsonTypes.POINT) {
+    // Enter direct select mode
+    return this.changeMode("custom_direct_select", {
+      featureId: featureId
+    });
+  } // Shift-click on a selected feature
+
+
+  if (isFeatureSelected && isShiftClick) {
+    // Deselect it
+    this.deselect(featureId);
+    this.updateUIClasses({
+      mouse: cursors.POINTER
+    });
+
+    if (selectedFeatureIds.length === 1) {
+      doubleClickZoom.enable(this);
+    } // Shift-click on an unselected feature
+
+  } else if (!isFeatureSelected && isShiftClick) {
+    // Add it to the selection
+    this.select(featureId);
+    this.updateUIClasses({
+      mouse: cursors.MOVE
+    }); // Click (without shift) on an unselected feature
+  } else if (!isFeatureSelected && !isShiftClick) {
+    // Make it the only selected feature
+    selectedFeatureIds.forEach(function (id) {
+      return _this4.doRender(id);
+    });
+    this.setSelected(featureId);
+    this.updateUIClasses({
+      mouse: cursors.MOVE
+    });
+  } // No matter what, re-render the clicked feature
+
+
+  this.doRender(featureId);
+};
+
+CustomSelectMode.onMouseDown = function (state, e) {
+  if (isActiveFeature(e)) return this.startOnActiveFeature(state, e);
+  if (this.drawConfig.boxSelect && isShiftMousedown(e)) return this.startBoxSelect(state, e);
+};
+
+CustomSelectMode.startBoxSelect = function (state, e) {
+  this.stopExtendedInteractions(state);
+  this.map.dragPan.disable(); // Enable box select
+
+  state.boxSelectStartLocation = mouseEventPoint(e.originalEvent, this.map.getContainer());
+  state.canBoxSelect = true;
+};
+
+CustomSelectMode.onTouchStart = function (state, e) {
+  if (isActiveFeature(e)) return this.startOnActiveFeature(state, e);
+};
+
+CustomSelectMode.onDrag = function (state, e) {
+  if (state.canDragMove) return this.dragMove(state, e);
+  if (this.drawConfig.boxSelect && state.canBoxSelect) return this.whileBoxSelect(state, e);
+};
+
+CustomSelectMode.whileBoxSelect = function (state, e) {
+  state.boxSelecting = true;
+  this.updateUIClasses({
+    mouse: cursors.ADD
+  }); // Create the box node if it doesn't exist
+
+  if (!state.boxSelectElement) {
+    state.boxSelectElement = document.createElement("div");
+    state.boxSelectElement.classList.add(classes.BOX_SELECT);
+    this.map.getContainer().appendChild(state.boxSelectElement);
+  } // Adjust the box node's width and xy position
+
+
+  var current = mouseEventPoint(e.originalEvent, this.map.getContainer());
+  var minX = Math.min(state.boxSelectStartLocation.x, current.x);
+  var maxX = Math.max(state.boxSelectStartLocation.x, current.x);
+  var minY = Math.min(state.boxSelectStartLocation.y, current.y);
+  var maxY = Math.max(state.boxSelectStartLocation.y, current.y);
+  var translateValue = "translate(".concat(minX, "px, ").concat(minY, "px)");
+  state.boxSelectElement.style.transform = translateValue;
+  state.boxSelectElement.style.WebkitTransform = translateValue;
+  state.boxSelectElement.style.width = "".concat(maxX - minX, "px");
+  state.boxSelectElement.style.height = "".concat(maxY - minY, "px");
+};
+
+CustomSelectMode.dragMove = function (state, e) {
+  // Dragging when drag move is enabled
+  state.dragMoving = true;
+  e.originalEvent.stopPropagation();
+  var delta = {
+    lng: e.lngLat.lng - state.dragMoveLocation.lng,
+    lat: e.lngLat.lat - state.dragMoveLocation.lat
+  };
+  move_features(this.getSelected(), delta);
+  state.dragMoveLocation = e.lngLat;
+};
+
+CustomSelectMode.onMouseUp = function (state, e) {
+  var _this5 = this;
+
+  // End any extended interactions
+  if (state.dragMoving) {
+    this.fireUpdate();
+  } else if (state.boxSelecting) {
+    var bbox = [state.boxSelectStartLocation, mouseEventPoint(e.originalEvent, this.map.getContainer())];
+    var featuresInBox = this.featuresAt(null, bbox, "click");
+    var idsToSelect = this.getUniqueIds(featuresInBox).filter(function (id) {
+      return !_this5.isSelected(id);
+    });
+
+    if (idsToSelect.length) {
+      this.select(idsToSelect);
+      idsToSelect.forEach(function (id) {
+        return _this5.doRender(id);
+      });
+      this.updateUIClasses({
+        mouse: cursors.MOVE
+      });
+    }
+  }
+
+  this.stopExtendedInteractions(state);
+};
+
+CustomSelectMode.toDisplayFeatures = function (state, geojson, display) {
+  geojson.properties.active = this.isSelected(geojson.properties.id) ? activeStates.ACTIVE : activeStates.INACTIVE;
+  display(geojson);
+  this.fireActionable();
+  if (geojson.properties.active !== activeStates.ACTIVE || geojson.geometry.type === geojsonTypes.POINT) return;
+  createSupplementaryPoints(geojson).forEach(display);
+};
+
+CustomSelectMode.onTrash = function () {
+  this.deleteFeature(this.getSelectedIds());
+  this.fireActionable();
+};
+
+CustomSelectMode.onCombineFeatures = function () {
+  var selectedFeatures = this.getSelected();
+  if (selectedFeatures.length === 0 || selectedFeatures.length < 2) return;
+  var coordinates = [],
+      featuresCombined = [];
+  var featureType = selectedFeatures[0].type.replace("Multi", "");
+
+  for (var i = 0; i < selectedFeatures.length; i++) {
+    var feature = selectedFeatures[i];
+
+    if (feature.type.replace("Multi", "") !== featureType) {
+      return;
+    }
+
+    if (feature.type.includes("Multi")) {
+      feature.getCoordinates().forEach(function (subcoords) {
+        coordinates.push(subcoords);
+      });
+    } else {
+      coordinates.push(feature.getCoordinates());
+    }
+
+    featuresCombined.push(feature.toGeoJSON());
+  }
+
+  if (featuresCombined.length > 1) {
+    var multiFeature = this.newFeature({
+      type: geojsonTypes.FEATURE,
+      properties: featuresCombined[0].properties,
+      geometry: {
+        type: "Multi".concat(featureType),
+        coordinates: coordinates
+      }
+    });
+    this.addFeature(multiFeature);
+    this.deleteFeature(this.getSelectedIds(), {
+      silent: true
+    });
+    this.setSelected([multiFeature.id]);
+    this.map.fire(events.COMBINE_FEATURES, {
+      createdFeatures: [multiFeature.toGeoJSON()],
+      deletedFeatures: featuresCombined
+    });
+  }
+
+  this.fireActionable();
+};
+
+CustomSelectMode.onUncombineFeatures = function () {
+  var _this6 = this;
+
+  var selectedFeatures = this.getSelected();
+  if (selectedFeatures.length === 0) return;
+  var createdFeatures = [];
+  var featuresUncombined = [];
+
+  var _loop = function _loop(i) {
+    var feature = selectedFeatures[i];
+
+    if (_this6.isInstanceOf("MultiFeature", feature)) {
+      feature.getFeatures().forEach(function (subFeature) {
+        _this6.addFeature(subFeature);
+
+        subFeature.properties = feature.properties;
+        createdFeatures.push(subFeature.toGeoJSON());
+
+        _this6.select([subFeature.id]);
+      });
+
+      _this6.deleteFeature(feature.id, {
+        silent: true
+      });
+
+      featuresUncombined.push(feature.toGeoJSON());
+    }
+  };
+
+  for (var i = 0; i < selectedFeatures.length; i++) {
+    _loop(i);
+  }
+
+  if (createdFeatures.length > 1) {
+    this.map.fire(events.UNCOMBINE_FEATURES, {
+      createdFeatures: createdFeatures,
+      deletedFeatures: featuresUncombined
+    });
+  }
+
+  this.fireActionable();
+};
+
+var isVertex = isOfMetaType(meta.VERTEX);
+var isMidpoint = isOfMetaType(meta.MIDPOINT);
+var DirectSelect = {}; // INTERNAL FUCNTIONS
+
+DirectSelect.fireUpdate = function () {
+  this.map.fire(events.UPDATE, {
+    action: updateActions.CHANGE_COORDINATES,
+    features: this.getSelected().map(function (f) {
+      return f.toGeoJSON();
+    })
+  });
+};
+
+DirectSelect.fireActionable = function (state) {
+  this.setActionableState({
+    combineFeatures: false,
+    uncombineFeatures: false,
+    trash: state.selectedCoordPaths.length > 0
+  });
+};
+
+DirectSelect.startDragging = function (state, e) {
+  this.map.dragPan.disable();
+  state.canDragMove = true;
+  state.dragMoveLocation = e.lngLat;
+};
+
+DirectSelect.stopDragging = function (state) {
+  this.map.dragPan.enable();
+  state.dragMoving = false;
+  state.canDragMove = false;
+  state.dragMoveLocation = null;
+};
+
+DirectSelect.onVertex = function (state, e) {
+  this.startDragging(state, e);
+  var about = e.featureTarget.properties;
+  var selectedIndex = state.selectedCoordPaths.indexOf(about.coord_path);
+
+  if (!isShiftDown(e) && selectedIndex === -1) {
+    state.selectedCoordPaths = [about.coord_path];
+  } else if (isShiftDown(e) && selectedIndex === -1) {
+    state.selectedCoordPaths.push(about.coord_path);
+  } // currently this work with single selected vertices only
+
+
+  var allFeatures = drawUtils.getDrawInstance(this.map).getAll();
+  var matchingVertices = drawUtils.getMatchingVertices(e.featureTarget._geometry.coordinates, e.featureTarget.properties.parent, allFeatures.features, this.map);
+  state.groupMove_vertices = matchingVertices;
+
+  for (var i = 0; i < state.groupMove_vertices.length; i++) {
+    state.groupMove_vertices[i].feature = this.getFeature(state.groupMove_vertices[i].featureId);
+  }
+
+  var selectedCoordinates = this.pathsToCoordinates(state.featureId, state.selectedCoordPaths);
+  this.setSelectedCoordinates(selectedCoordinates);
+};
+
+DirectSelect.onMidpoint = function (state, e) {
+  this.startDragging(state, e);
+  var about = e.featureTarget.properties;
+  state.feature.addCoordinate(about.coord_path, about.lng, about.lat);
+  this.fireUpdate();
+  state.selectedCoordPaths = [about.coord_path];
+};
+
+DirectSelect.pathsToCoordinates = function (featureId, paths) {
+  return paths.map(function (coord_path) {
+    return {
+      feature_id: featureId,
+      coord_path: coord_path
+    };
+  });
+};
+
+DirectSelect.onFeature = function (state, e) {
+  if (state.selectedCoordPaths.length === 0) this.startDragging(state, e);else this.stopDragging(state);
+};
+
+DirectSelect.dragFeature = function (state, e, delta) {
+  moveFeatures(this.getSelected(), delta);
+  state.dragMoveLocation = e.lngLat;
+};
+
+DirectSelect.dragVertex = function (state, e, delta) {
+  var selectedCoords = state.selectedCoordPaths.map(function (coord_path) {
+    return state.feature.getCoordinate(coord_path);
+  });
+  var selectedCoordPoints = selectedCoords.map(function (coords) {
+    return {
+      type: geojsonTypes.FEATURE,
+      properties: {},
+      geometry: {
+        type: geojsonTypes.POINT,
+        coordinates: coords
+      }
+    };
+  });
+  var constrainedDelta = constrainFeatureMovement(selectedCoordPoints, delta);
+
+  for (var i = 0; i < selectedCoords.length; i++) {
+    var coord = selectedCoords[i];
+    state.feature.updateCoordinate(state.selectedCoordPaths[i], coord[0] + constrainedDelta.lng, coord[1] + constrainedDelta.lat);
+
+    for (var k = 0; k < state.groupMove_vertices.length; k++) {
+      var coord_path_m = state.groupMove_vertices[k].coord_path.split(".");
+
+      if (typeof coord_path_m[0] !== "undefined" && typeof coord_path_m[1] !== "undefined" && typeof state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]] !== "undefined" && typeof state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]][coord_path_m[1]] !== "undefined") {
+        var coord_m = state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]][coord_path_m[1]];
+        state.groupMove_vertices[k].feature.updateCoordinate(state.groupMove_vertices[k].coord_path, coord_m[0] + constrainedDelta.lng, coord_m[1] + constrainedDelta.lat);
+      }
+    }
+  }
+};
+
+DirectSelect.clickNoTarget = function () {
+  this.changeMode("custom_select");
+};
+
+DirectSelect.clickInactive = function () {
+  this.changeMode("custom_select");
+};
+
+DirectSelect.clickActiveFeature = function (state) {
+  state.selectedCoordPaths = [];
+  this.clearSelectedCoordinates();
+  state.feature.changed();
+}; // EXTERNAL FUNCTIONS
+
+
+DirectSelect.onSetup = function (opts) {
+  var featureId = opts.featureId;
+  var feature = this.getFeature(featureId);
+
+  if (!feature) {
+    throw new Error("You must provide a featureId to enter direct_select mode");
+  }
+
+  if (feature.type === geojsonTypes.POINT) {
+    throw new TypeError("direct_select mode doesn't handle point features");
+  }
+
+  var state = {
+    featureId: featureId,
+    feature: feature,
+    dragMoveLocation: opts.startPos || null,
+    dragMoving: false,
+    canDragMove: false,
+    selectedCoordPaths: opts.coordPath ? [opts.coordPath] : [],
+    groupMove_vertices: opts.groupMove_vertices ? opts.groupMove_vertices : []
+  };
+  this.setSelectedCoordinates(this.pathsToCoordinates(featureId, state.selectedCoordPaths));
+  this.setSelected(featureId);
+  doubleClickZoom.disable(this);
+  this.setActionableState({
+    trash: true
+  });
+  return state;
+};
+
+DirectSelect.onStop = function () {
+  doubleClickZoom.enable(this);
+  this.clearSelectedCoordinates();
+};
+
+DirectSelect.toDisplayFeatures = function (state, geojson, push) {
+  if (state.featureId === geojson.properties.id) {
+    geojson.properties.active = activeStates.ACTIVE;
+    push(geojson);
+    createSupplementaryPoints(geojson, {
+      map: this.map,
+      midpoints: true,
+      selectedPaths: state.selectedCoordPaths
+    }).forEach(push);
+  } else {
+    geojson.properties.active = activeStates.INACTIVE;
+    push(geojson);
+  }
+
+  this.fireActionable(state);
+};
+
+DirectSelect.onTrash = function (state) {
+  // Uses number-aware sorting to make sure '9' < '10'. Comparison is reversed because we want them
+  // in reverse order so that we can remove by index safely.
+  state.selectedCoordPaths.sort(function (a, b) {
+    return b.localeCompare(a, "en", {
+      numeric: true
+    });
+  }).forEach(function (id) {
+    return state.feature.removeCoordinate(id);
+  });
+  this.fireUpdate();
+  state.selectedCoordPaths = [];
+  this.clearSelectedCoordinates();
+  this.fireActionable(state);
+
+  if (state.feature.isValid() === false) {
+    this.deleteFeature([state.featureId]);
+    this.changeMode("custom_select", {});
+  }
+};
+
+DirectSelect.onMouseMove = function (state, e) {
+  // On mousemove that is not a drag, stop vertex movement.
+  var isFeature = isActiveFeature(e);
+  var onVertex = isVertex(e);
+  var noCoords = state.selectedCoordPaths.length === 0;
+  if (isFeature && noCoords) this.updateUIClasses({
+    mouse: cursors.MOVE
+  });else if (onVertex && !noCoords) this.updateUIClasses({
+    mouse: cursors.MOVE
+  });else this.updateUIClasses({
+    mouse: cursors.NONE
+  });
+  this.stopDragging(state);
+};
+
+DirectSelect.onMouseOut = function (state) {
+  // As soon as you mouse leaves the canvas, update the feature
+  if (state.dragMoving) this.fireUpdate();
+};
+
+DirectSelect.onTouchStart = DirectSelect.onMouseDown = function (state, e) {
+  if (isVertex(e)) return this.onVertex(state, e);
+  if (isActiveFeature(e)) return this.onFeature(state, e);
+  if (isMidpoint(e)) return this.onMidpoint(state, e);
+};
+
+DirectSelect.onDrag = function (state, e) {
+  if (state.canDragMove !== true) return;
+  state.dragMoving = true;
+  e.originalEvent.stopPropagation();
+  var delta = {
+    lng: e.lngLat.lng - state.dragMoveLocation.lng,
+    lat: e.lngLat.lat - state.dragMoveLocation.lat
+  };
+  if (state.selectedCoordPaths.length > 0) this.dragVertex(state, e, delta);else this.dragFeature(state, e, delta);
+  state.dragMoveLocation = e.lngLat;
+};
+
+DirectSelect.onClick = function (state, e) {
+  if (noTarget(e)) return this.clickNoTarget(state, e);
+  if (isActiveFeature(e)) return this.clickActiveFeature(state, e);
+  if (isInactiveFeature(e)) return this.clickInactive(state, e);
+  this.stopDragging(state);
+};
+
+DirectSelect.onTap = function (state, e) {
+  if (noTarget(e)) return this.clickNoTarget(state, e);
+  if (isActiveFeature(e)) return this.clickActiveFeature(state, e);
+  if (isInactiveFeature(e)) return this.clickInactive(state, e);
+};
+
+DirectSelect.onTouchEnd = DirectSelect.onMouseUp = function (state) {
+  if (state.dragMoving) {
+    this.fireUpdate();
+  }
+
+  this.stopDragging(state);
+};
+
+function MlFeatureEditor(props) {
+  var draw = useRef(null);
+  var mapContext = useContext(MapContext);
+
+  var _useState = useState(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      drawToolsInitialized = _useState2[0],
+      setDrawToolsInitialized = _useState2[1];
+
+  var _useState3 = useState(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      drawToolsReady = _useState4[0],
+      setDrawToolsReady = _useState4[1];
+
+  var _useState5 = useState(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      mouseUpTrigger = _useState6[0],
+      setMouseUpTrigger = _useState6[1];
+
+  var _useState7 = useState([]),
+      _useState8 = _slicedToArray(_useState7, 2),
+      drawnFeatures = _useState8[0],
+      setDrawnFeatures = _useState8[1];
+
+  var modeChangeHandler = function modeChangeHandler(e) {
+    console.log("MlFeatureEditor mode change to " + e.mode); //setDrawMode(e.mode);
+  };
+
+  var mouseUpHandler = function mouseUpHandler() {
+    console.log("mouseup");
+    setMouseUpTrigger(Math.random());
+  };
+
+  useEffect(function () {
+    return function () {
+      if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style) {
+        mapContext.map.off("draw.modechange", modeChangeHandler);
+        mapContext.map.off("mouseup", mouseUpHandler);
+      }
+    };
+  }, []);
+  useEffect(function () {
+    if (mapContext.getMap(props.mapId) && !drawToolsInitialized) {
+      setDrawToolsInitialized(true);
+
+      if (mapContext.getMap(props.mapId).getSource("mapbox-gl-draw-cold") && draw.current && typeof draw.current.remove !== "undefined") {
+        // remove old Mapbox-gl-Draw from Mapbox instance when hot-reloading this component during development
+        draw.current.remove();
+      }
+
+      draw.current = new MapboxDraw({
+        displayControlsDefault: false,
+        defaultMode: props.mode,
+        modes: Object.assign({
+          custom_polygon: CustomPolygonMode,
+          custom_select: CustomSelectMode,
+          custom_direct_select: DirectSelect
+        }, MapboxDraw.modes)
+      });
+      mapContext.map.on("draw.modechange", modeChangeHandler); // sadly there is no featureAdd event available in MapLibre
+
+      mapContext.map.addControl(draw.current, "top-left");
+      mapContext.map.on("mouseup", mouseUpHandler);
+      setDrawToolsReady(true);
+    }
+  }, [mapContext.map, mapContext, props, drawnFeatures, drawToolsInitialized]);
+  useEffect(function () {
+    if (draw.current && props.geojson && props.geojson.geometry && props.geojson.geometry.coordinates) {
+      draw.current.set({
+        type: "FeatureCollection",
+        features: [props.geojson]
+      });
+    }
+  }, [props.geojson, drawToolsReady]);
+  useEffect(function () {
+    if (draw.current) {
+      // update drawnFeatures state object
+      var currentFeatureCollection = draw.current.getAll();
+
+      if (typeof props.onChange === "function") {
+        props.onChange(currentFeatureCollection.features);
+      }
+    }
+  }, [mouseUpTrigger, props]);
+  useEffect(function () {
+    if (props.mode && draw.current) {
+      draw.current.changeMode(props.mode);
+    }
+  }, [props.mode]);
+  return /*#__PURE__*/React.createElement(React.Fragment, null);
+}
+
+export { MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlHillshadeLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer, MlWmsLayerMulti };
 //# sourceMappingURL=index.esm.js.map
