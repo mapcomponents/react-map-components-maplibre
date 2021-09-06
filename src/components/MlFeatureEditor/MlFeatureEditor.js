@@ -40,7 +40,11 @@ function MlFeatureEditor(props) {
   }, []);
 
   useEffect(() => {
-    if (mapContext.getMap(props.mapId) && !drawToolsInitialized) {
+    if (
+      mapContext.getMap(props.mapId) &&
+      mapContext.getMap(props.mapId).style &&
+      !drawToolsInitialized
+    ) {
       let mapObj = mapContext.getMap(props.mapId);
       setDrawToolsInitialized(true);
       if (

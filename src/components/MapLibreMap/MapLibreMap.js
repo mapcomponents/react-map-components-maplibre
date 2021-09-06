@@ -21,6 +21,7 @@ const MapLibreMap = (props) => {
 
   useEffect(() => {
     return () => {
+      console.log("remove map");
       mapContext.removeMap(props.mapId);
       map.current.remove();
       map.current = null;

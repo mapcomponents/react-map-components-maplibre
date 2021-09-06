@@ -156,6 +156,7 @@ var MapLibreMap = function MapLibreMap(props) {
   var mapOptions = props.options;
   useEffect(function () {
     return function () {
+      console.log("remove map");
       mapContext.removeMap(props.mapId);
       map.current.remove();
       map.current = null;
@@ -2308,7 +2309,7 @@ function MlFeatureEditor(props) {
     };
   }, []);
   useEffect(function () {
-    if (mapContext.getMap(props.mapId) && !drawToolsInitialized) {
+    if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && !drawToolsInitialized) {
       var mapObj = mapContext.getMap(props.mapId);
       setDrawToolsInitialized(true);
 
