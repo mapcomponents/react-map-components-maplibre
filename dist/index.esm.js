@@ -156,7 +156,6 @@ var MapLibreMap = function MapLibreMap(props) {
   var mapOptions = props.options;
   useEffect(function () {
     return function () {
-      console.log("remove map");
       mapContext.removeMap(props.mapId);
       map.current.remove();
       map.current = null;
@@ -173,7 +172,7 @@ var MapLibreMap = function MapLibreMap(props) {
         accessToken: "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA"
       };
       map.current = new maplibregl.Map(_objectSpread2(_objectSpread2({}, defaultOptions), mapOptions));
-      map.current.on("load", function () {
+      map.current.once("load", function () {
         if (props.mapId) {
           mapContext.registerMap(props.mapId, map.current);
         } else {
