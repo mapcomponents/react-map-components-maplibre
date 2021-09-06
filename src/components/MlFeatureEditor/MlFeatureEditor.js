@@ -58,10 +58,9 @@ function MlFeatureEditor(props) {
         draw.current.remove();
       }
 
-      console.log(1);
       draw.current = new MapboxDraw({
         displayControlsDefault: false,
-        defaultMode: props.mode,
+        defaultMode: props.mode || "custom_select",
         modes: Object.assign(
           {
             custom_polygon: CustomPolygonMode,
@@ -72,16 +71,12 @@ function MlFeatureEditor(props) {
         ),
       });
 
-      console.log(2);
       mapObj.on("draw.modechange", modeChangeHandler);
 
-      console.log(3);
       mapObj.addControl(draw.current, "top-left");
 
-      console.log(4);
       mapObj.on("mouseup", mouseUpHandler);
 
-      console.log(5);
       setDrawToolsReady(true);
     }
   }, [mapContext.map, mapContext, props, drawnFeatures, drawToolsInitialized]);
@@ -98,14 +93,14 @@ function MlFeatureEditor(props) {
   }, [props.geojson, drawToolsReady]);
 
   useEffect(() => {
-    if (draw.current) {
+    if (draw.current && mouseUpTrigger) {
       // update drawnFeatures state object
       let currentFeatureCollection = draw.current.getAll();
       if (typeof props.onChange === "function") {
         props.onChange(currentFeatureCollection.features);
       }
     }
-  }, [mouseUpTrigger, props]);
+  }, [mouseUpTrigger, props.onChange]);
 
   useEffect(() => {
     if (props.mode && draw.current) {
