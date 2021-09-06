@@ -21,7 +21,6 @@ const MapLibreMap = (props) => {
 
   useEffect(() => {
     return () => {
-      console.log("remove map");
       mapContext.removeMap(props.mapId);
       map.current.remove();
       map.current = null;
@@ -42,7 +41,7 @@ const MapLibreMap = (props) => {
 
       map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
 
-      map.current.on("load", () => {
+      map.current.once("load", () => {
         if (props.mapId) {
           mapContext.registerMap(props.mapId, map.current);
         } else {
