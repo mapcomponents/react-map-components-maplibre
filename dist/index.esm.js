@@ -2318,6 +2318,7 @@ function MlFeatureEditor(props) {
         draw.current.remove();
       }
 
+      console.log(1);
       draw.current = new MapboxDraw({
         displayControlsDefault: false,
         defaultMode: props.mode,
@@ -2327,9 +2328,13 @@ function MlFeatureEditor(props) {
           custom_direct_select: DirectSelect
         }, MapboxDraw.modes)
       });
+      console.log(2);
       mapObj.on("draw.modechange", modeChangeHandler);
+      console.log(3);
       mapObj.addControl(draw.current, "top-left");
+      console.log(4);
       mapObj.on("mouseup", mouseUpHandler);
+      console.log(5);
       setDrawToolsReady(true);
     }
   }, [mapContext.map, mapContext, props, drawnFeatures, drawToolsInitialized]);
