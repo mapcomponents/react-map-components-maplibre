@@ -41,9 +41,12 @@ function MlFeatureEditor(props) {
 
   useEffect(() => {
     if (mapContext.getMap(props.mapId) && !drawToolsInitialized) {
+      let mapObj = mapContext.getMap(props.mapId);
       setDrawToolsInitialized(true);
       if (
-        mapContext.getMap(props.mapId).getSource("mapbox-gl-draw-cold") &&
+        mapObj &&
+        mapObj.style &&
+        mapObj.getSource("mapbox-gl-draw-cold") &&
         draw.current &&
         typeof draw.current.remove !== "undefined"
       ) {
@@ -64,12 +67,11 @@ function MlFeatureEditor(props) {
         ),
       });
 
-      mapContext.map.on("draw.modechange", modeChangeHandler);
+      mapObj.on("draw.modechange", modeChangeHandler);
 
-      // sadly there is no featureAdd event available in MapLibre
-      mapContext.map.addControl(draw.current, "top-left");
+      mapObj.addControl(draw.current, "top-left");
 
-      mapContext.map.on("mouseup", mouseUpHandler);
+      mapObj.on("mouseup", mouseUpHandler);
 
       setDrawToolsReady(true);
     }

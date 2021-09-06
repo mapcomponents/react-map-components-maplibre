@@ -2309,9 +2309,10 @@ function MlFeatureEditor(props) {
   }, []);
   useEffect(function () {
     if (mapContext.getMap(props.mapId) && !drawToolsInitialized) {
+      var mapObj = mapContext.getMap(props.mapId);
       setDrawToolsInitialized(true);
 
-      if (mapContext.getMap(props.mapId).getSource("mapbox-gl-draw-cold") && draw.current && typeof draw.current.remove !== "undefined") {
+      if (mapObj && mapObj.style && mapObj.getSource("mapbox-gl-draw-cold") && draw.current && typeof draw.current.remove !== "undefined") {
         // remove old Mapbox-gl-Draw from Mapbox instance when hot-reloading this component during development
         draw.current.remove();
       }
@@ -2325,10 +2326,9 @@ function MlFeatureEditor(props) {
           custom_direct_select: DirectSelect
         }, MapboxDraw.modes)
       });
-      mapContext.map.on("draw.modechange", modeChangeHandler); // sadly there is no featureAdd event available in MapLibre
-
-      mapContext.map.addControl(draw.current, "top-left");
-      mapContext.map.on("mouseup", mouseUpHandler);
+      mapObj.on("draw.modechange", modeChangeHandler);
+      mapObj.addControl(draw.current, "top-left");
+      mapObj.on("mouseup", mouseUpHandler);
       setDrawToolsReady(true);
     }
   }, [mapContext.map, mapContext, props, drawnFeatures, drawToolsInitialized]);
