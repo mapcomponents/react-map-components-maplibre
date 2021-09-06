@@ -2350,7 +2350,7 @@ function MlFeatureEditor(props) {
         props.onChange(currentFeatureCollection.features);
       }
     }
-  }, [mouseUpTrigger, props.onChange]);
+  }, [mouseUpTrigger]);
   useEffect(function () {
     if (props.mode && draw.current) {
       draw.current.changeMode(props.mode);

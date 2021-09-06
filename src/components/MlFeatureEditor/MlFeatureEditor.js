@@ -100,7 +100,7 @@ function MlFeatureEditor(props) {
         props.onChange(currentFeatureCollection.features);
       }
     }
-  }, [mouseUpTrigger, props.onChange]);
+  }, [mouseUpTrigger]);
 
   useEffect(() => {
     if (props.mode && draw.current) {
