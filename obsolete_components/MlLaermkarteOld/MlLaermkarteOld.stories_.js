@@ -6,7 +6,6 @@ import MlLaermkarte from "./MlLaermkarteOld";
 import mapContextDecorator from "../../decorators/MapContextKlokantechBasicDecorator";
 
 import "../../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 export default {
   title: "Applications/MlLaermkarteOld",

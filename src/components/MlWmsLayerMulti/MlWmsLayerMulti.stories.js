@@ -6,7 +6,6 @@
 //import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
 //
 //import "../../App.css";
-//import "bootstrap/dist/css/bootstrap.min.css";
 //
 //export default {
 //  title: "MapComponents/MlWmsLayerMulti",
