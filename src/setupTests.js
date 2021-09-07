@@ -1,7 +1,8 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
-import "@testing-library/jest-dom";
+import React, { useContext } from "react";
+import { configure } from "enzyme";
+import "jest-enzyme";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+import { MapContext, MapComponentsProvider } from "map-components-core";
+import { mount, configure } from "enzyme";
 
-window.URL.createObjectURL = function () {};
+configure({ adapter: new Adapter() });
