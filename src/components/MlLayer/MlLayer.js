@@ -6,19 +6,19 @@ const MlLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const layerInitializedRef = useRef(false);
+  const mapRef = useRef(null);
   const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const layerId = (props.layerId || "MlLayer-") + idSuffixRef.current;
 
   useEffect(() => {
     return () => {
-      let mapObj = mapContext.getMap(props.mapId);
-      if (mapObj) {
+      if (mapRef.current) {
         // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (mapObj.style && mapObj.getLayer(layerId)) {
-          mapObj.removeLayer(layerId);
+        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
+          mapRef.current.removeLayer(layerId);
         }
-        if (mapObj.style && mapObj.getSource(layerId)) {
-          mapObj.removeSource(layerId);
+        if (mapRef.current.style && mapRef.current.getSource(layerId)) {
+          mapRef.current.removeSource(layerId);
         }
       }
     };
@@ -60,7 +60,8 @@ const MlLayer = (props) => {
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    if (!mapContext.getMap(props.mapId).getLayer(layerId)) {
+    mapRef.current = mapContext.getMap(props.mapId);
+    if (!mapRef.current.getLayer(layerId)) {
       layerInitializedRef.current = true;
       mapContext.getMap(props.mapId).addLayer({ id: layerId, ...props.options });
     }
