@@ -6,26 +6,19 @@ const MlLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const layerInitializedRef = useRef(false);
-  const idPostfixRef = useRef(props.idSuffix || new Date().getTime());
-  const layerId = (props.layerId || "MlLayer-") + idPostfixRef.current;
+  const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
+  const layerId = (props.layerId || "MlLayer-") + idSuffixRef.current;
 
   useEffect(() => {
     return () => {
-      if (mapContext.getMap(props.mapId)) {
+      let mapObj = mapContext.getMap(props.mapId);
+      if (mapObj) {
         // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (
-          mapContext.getMap(props.mapId) &&
-          mapContext.getMap(props.mapId).style &&
-          mapContext.getMap(props.mapId).getLayer(layerId)
-        ) {
-          mapContext.getMap(props.mapId).removeLayer(layerId);
+        if (mapObj.style && mapObj.getLayer(layerId)) {
+          mapObj.removeLayer(layerId);
         }
-        if (
-          mapContext.getMap(props.mapId) &&
-          mapContext.getMap(props.mapId).style &&
-          mapContext.getMap(props.mapId).getSource(layerId)
-        ) {
-          mapContext.getMap(props.mapId).removeSource(layerId);
+        if (mapObj.style && mapObj.getSource(layerId)) {
+          mapObj.removeSource(layerId);
         }
       }
     };
