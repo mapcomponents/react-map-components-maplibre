@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { MapContext } from "react-map-components-core";
 
-import maplibregl from "maplibre-gl";
+import maplibregl from "maplibre-gl/dist/maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
