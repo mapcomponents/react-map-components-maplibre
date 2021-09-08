@@ -37,6 +37,10 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
     ...originalModule,
     GeolocateControl: jest.fn(),
     Map: function () {
+      var self = this;
+      this.layers = [];
+      this.sources = [];
+
       return {
         addControl: jest.fn(),
         on: jest.fn(),
@@ -44,17 +48,25 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
           callback();
         },
         remove: jest.fn(),
-        addSource: jest.fn(),
+        addSource: (id, source) => {
+          self.sources.push(id);
+        },
+        getSource: (id) => {
+          if (self.sources.indexOf(id) !== -1) {
+            return { setData: jest.fn() };
+          }
+          return false;
+        },
         removeSource: jest.fn(),
         addLayer: jest.fn(),
+        getLayer: jest.fn(),
+        removeLayer: jest.fn(),
         off: jest.fn(),
         setLayerZoomRange: jest.fn(),
-        getLayer: jest.fn(),
         addImage: jest.fn(),
         loadImage: jest.fn(),
         removeImage: jest.fn(),
         hasImage: jest.fn(),
-        getSource: jest.fn().mockReturnValue({ setData: jest.fn() }),
         project: jest.fn(),
       };
     },
