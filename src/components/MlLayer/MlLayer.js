@@ -60,10 +60,8 @@ const MlLayer = (props) => {
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    console.log(props.options);
     if (!mapContext.getMap(props.mapId).getLayer(layerId)) {
       layerInitializedRef.current = true;
-      console.log(layerId);
       mapContext.getMap(props.mapId).addLayer({ id: layerId, ...props.options });
     }
   }, [mapContext.mapIds, mapContext, props, layerId]);
