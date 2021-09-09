@@ -26,7 +26,6 @@ const Template = (args) => {
   const initializedRef = useRef(false);
 
   const renewDataUrl = () => {
-    console.log("set data url");
     setTimeout(() => {
       setDataUrl("https://opensky-network.org/api/states/all?vv=" + Math.random());
     }, 10000);
@@ -39,7 +38,6 @@ const Template = (args) => {
   }, [mapContext.map]);
 
   useEffect(() => {
-    console.log("ONCE");
     if (!initializedRef.current) {
       initializedRef.current = true;
       renewDataUrl();

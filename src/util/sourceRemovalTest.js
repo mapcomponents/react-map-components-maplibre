@@ -7,7 +7,9 @@ const sourceRemovalTest = (
   ComponentName,
   Component,
   regexLayerNameTest,
-  humanReadableLayerName
+  humanReadableLayerName,
+  beforeWrapperInit,
+  afterWrapperInit
 ) => {
   const TestComponent = (props) => {
     const [layerVisible, setLayerVisible] = useState(true);
@@ -58,7 +60,15 @@ const sourceRemovalTest = (
         humanReadableLayerName +
         "' to the MapLibre instance",
       async () => {
+        if (typeof beforeWrapperInit === "function") {
+          await beforeWrapperInit();
+        }
+
         const wrapper = createWrapper();
+
+        if (typeof afterWrapperInit === "function") {
+          await afterWrapperInit();
+        }
 
         wrapper.find(".trigger_refresh").simulate("click");
 
@@ -73,7 +83,15 @@ const sourceRemovalTest = (
         humanReadableLayerName +
         "' from the MapLibre instance",
       async () => {
+        if (typeof beforeWrapperInit === "function") {
+          await beforeWrapperInit();
+        }
+
         const wrapper = createWrapper();
+
+        if (typeof afterWrapperInit === "function") {
+          await afterWrapperInit();
+        }
 
         wrapper.find(".trigger_refresh").simulate("click");
 

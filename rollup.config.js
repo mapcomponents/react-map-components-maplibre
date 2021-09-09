@@ -15,5 +15,5 @@ export default {
     }),
     del({ targets: ["dist/*"] }),
   ],
-  //  external: ["prop-types","d3", ...Object.keys(pkg.peerDependencies || {})],
+  external: ["prop-types", "d3", ...Object.keys(pkg.peerDependencies || {})],
 };

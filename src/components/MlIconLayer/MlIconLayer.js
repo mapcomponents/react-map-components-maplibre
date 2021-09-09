@@ -13,6 +13,7 @@ const MlIconLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
   const mapContext = useContext(MapContext);
+  const mapRef = useRef(null);
   const deckGlContext = useContext(DeckGlContext);
   const simpleDataContext = useContext(SimpleDataContext);
   const initializedRef = useRef(false);
@@ -40,7 +41,6 @@ const MlIconLayer = (props) => {
     if (!simpleDataContext.data) {
       return;
     }
-    //console.log("simpleDataContext data set");
     //console.log(new Error().stack);
     rawDataRef.current = [...simpleDataContext.data];
     startAnimation();
@@ -109,6 +109,19 @@ const MlIconLayer = (props) => {
     if (timer.current) {
       timer.current.stop();
     }
+    if (mapRef.current) {
+      if (mapRef.current.style) {
+        if (mapRef.current.getLayer(layerName)) {
+          mapRef.current.removeLayer(layerName);
+        }
+
+        if (mapRef.current.getSource(layerName)) {
+          mapRef.current.removeSource(layerName);
+        }
+      }
+
+      mapRef.current = null;
+    }
   };
 
   useEffect(() => {
@@ -120,7 +133,6 @@ const MlIconLayer = (props) => {
   useEffect(() => {
     if (!DeckMlLayerRef.current) return;
 
-    //console.log("update props");
     DeckMlLayerRef.current.deck.setProps({
       layers: [
         new IconLayer({
@@ -133,12 +145,15 @@ const MlIconLayer = (props) => {
   useEffect(() => {
     if (
       !simpleDataContext.data ||
-      !mapContext.mapExists() ||
-      (mapContext.mapExists() && simpleDataContext.data && initializedRef.current)
+      !mapContext.mapExists(props.mapId) ||
+      (mapContext.mapExists(props.mapId) &&
+        simpleDataContext.data &&
+        initializedRef.current)
     )
       return;
 
     initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
 
     // for debugging
     //window.DeckGlMapLibreLayer = deckGlContext.maplibreLayer;
@@ -159,7 +174,7 @@ const MlIconLayer = (props) => {
 
     window.mapBoxLayer = DeckMlLayerRef.current;
 
-    mapContext.map.addLayer(DeckMlLayerRef.current, "poi_label");
+    mapRef.current.addLayer(DeckMlLayerRef.current, "poi_label");
 
     startAnimation();
 

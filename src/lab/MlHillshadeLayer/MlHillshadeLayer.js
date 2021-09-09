@@ -6,66 +6,65 @@ import Button from "@material-ui/core/Button";
 /**
  * MlHillshadeLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  */
-const MlHillshadeLayer = () => {
+const MlHillshadeLayer = (props) => {
   const mapContext = useContext(MapContext);
+  const mapRef = useRef(null);
 
   const layerRef = useRef(null);
   const [showLayer, setShowLayer] = useState(true);
   const idPostfixRef = useRef(new Date().getTime());
 
   const componentCleanup = () => {
-    if (
-      mapContext.map &&
-      mapContext.map.style &&
-      mapContext.map.getLayer("hillshading")
-    ) {
-      mapContext.map.removeLayer("hillshading");
-    }
-    if (
-      mapContext.map &&
-      mapContext.map.style &&
-      mapContext.map.getSource("hillshading-source")
-    ) {
-      mapContext.map.removeSource("hillshading-source");
+    if (mapRef.current) {
+      if (
+        mapRef.current &&
+        mapRef.current.style &&
+        mapRef.current.getLayer("hillshading")
+      ) {
+        mapRef.current.removeLayer("hillshading");
+      }
+      if (
+        mapRef.current &&
+        mapRef.current.style &&
+        mapRef.current.getSource("hillshading-source")
+      ) {
+        mapRef.current.removeSource("hillshading-source");
+      }
+      mapRef.current = null;
     }
   };
 
   useEffect(() => {
-    if (!mapContext.map) return;
-
-    return () => {
-      componentCleanup();
-    };
+    return componentCleanup;
   }, []);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapContext.mapExists(props.mapId)) return;
 
-    // cleanup fragments left in MapLibre-gl from previous component uses
-    componentCleanup();
+    mapRef.current = mapContext.getMap(props.mapId);
 
-    mapContext.map.addSource("hillshading-source", {
+    mapRef.current.addSource("hillshading-source", {
       type: "raster-dem",
       url: "mapbox://mapbox.terrain-rgb",
     });
-    mapContext.map.addLayer({
+    mapRef.current.addLayer({
       id: "hillshading",
       source: "hillshading-source",
       type: "hillshade",
     });
-    mapContext.map.setLayoutProperty("hillshading", "visibility", "visible");
-    mapContext.map.setZoom(10);
-    //mapContext.map.setPitch(45);
-  }, [mapContext.map]);
+    mapRef.current.setLayoutProperty("hillshading", "visibility", "visible");
+    mapRef.current.setZoom(10);
+    //mapRef.current.setPitch(45);
+  }, [mapContext.mapIds]);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapRef.current) return;
 
     // toggle layer visibility by changing the layout object's visibility property
     if (showLayer) {
-      mapContext.map.setLayoutProperty("hillshading", "visibility", "visible");
+      mapRef.current.setLayoutProperty("hillshading", "visibility", "visible");
     } else {
-      mapContext.map.setLayoutProperty("hillshading", "visibility", "none");
+      mapRef.current.setLayoutProperty("hillshading", "visibility", "none");
     }
     //
   }, [showLayer, mapContext]);

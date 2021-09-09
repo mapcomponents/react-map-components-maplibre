@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { mount, configure } from "enzyme";
+import { mount } from "enzyme";
 import { MapContext, MapComponentsProvider } from "react-map-components-core";
 import MapLibreMap from "./../components/MapLibreMap/MapLibreMap";
 
@@ -7,7 +7,10 @@ const layerRemovalTest = (
   ComponentName,
   Component,
   regexLayerNameTest,
-  humanReadableLayerName
+  humanReadableLayerName,
+  beforeWrapperInit,
+  afterWrapperInit,
+  createWrapperFunction
 ) => {
   const TestComponent = (props) => {
     const [layerVisible, setLayerVisible] = useState(true);
@@ -43,12 +46,14 @@ const layerRemovalTest = (
     );
   };
 
-  const createWrapper = () =>
-    mount(
-      <MapComponentsProvider>
-        <TestComponent />
-      </MapComponentsProvider>
-    );
+  const createWrapper =
+    (typeof createWrapperFunction === "function" && createWrapperFunction) ||
+    (() =>
+      mount(
+        <MapComponentsProvider>
+          <TestComponent />
+        </MapComponentsProvider>
+      ));
 
   describe(ComponentName, () => {
     it(
@@ -56,7 +61,15 @@ const layerRemovalTest = (
         humanReadableLayerName +
         "' to the MapLibre instance",
       async () => {
-        const wrapper = createWrapper();
+        if (typeof beforeWrapperInit === "function") {
+          await beforeWrapperInit();
+        }
+
+        const wrapper = createWrapper(TestComponent);
+
+        if (typeof afterWrapperInit === "function") {
+          await afterWrapperInit();
+        }
 
         wrapper.find(".trigger_refresh").simulate("click");
 
@@ -71,7 +84,15 @@ const layerRemovalTest = (
         humanReadableLayerName +
         "' from the MapLibre instance",
       async () => {
-        const wrapper = createWrapper();
+        if (typeof beforeWrapperInit === "function") {
+          await beforeWrapperInit();
+        }
+
+        const wrapper = createWrapper(TestComponent);
+
+        if (typeof afterWrapperInit === "function") {
+          await afterWrapperInit();
+        }
 
         wrapper.find(".trigger_refresh").simulate("click");
 

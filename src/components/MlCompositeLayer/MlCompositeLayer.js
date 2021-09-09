@@ -20,24 +20,26 @@ const paintDefaults = {
  */
 const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
   const mapContext = useContext(MapContext);
+  const mapRef = useRef(null);
 
   const [showLayer, setShowLayer] = useState(true);
   const layerName = "building-3d";
 
   const componentCleanup = () => {
-    if (
-      mapContext.map &&
-      mapContext.map.style &&
-      mapContext.map.getLayer(layerName)
-    ) {
-      mapContext.map.removeLayer(layerName);
+    if (mapRef.current) {
+      if (mapRef.current.style && mapRef.current.getLayer(layerName)) {
+        mapRef.current.removeLayer(layerName);
+      }
+      if (mapRef.current.style && mapRef.current.getSource(layerName)) {
+        mapRef.current.removeSource(layerName);
+      }
+
+      mapRef.current = null;
     }
   };
 
   useEffect(() => {
-    return () => {
-      componentCleanup();
-    };
+    return componentCleanup;
   }, []);
 
   useEffect(() => {
@@ -57,42 +59,36 @@ const MlCompositeLayer = ({ paint, sourceId, sourceLayer, minZoom }) => {
           lastLabelLayerId = "poi_label";
         }
 
-        if (lastLabelLayerId) {
-          console.log({
-            ...paint,
-          });
-          mapContext.map.addLayer(
-            {
-              id: layerName,
-              type: "fill-extrusion",
-              source: sourceId || "openmaptiles",
-              "source-layer": sourceLayer || "building",
-              minzoom: minZoom || 14,
-              paint: {
-                ...paintDefaults,
-                ...paint,
-              },
+        mapContext.map.addLayer(
+          {
+            id: layerName,
+            type: "fill-extrusion",
+            source: sourceId || "openmaptiles",
+            "source-layer": sourceLayer || "building",
+            minzoom: minZoom || 14,
+            paint: {
+              ...paintDefaults,
+              ...paint,
             },
-            lastLabelLayerId
-          );
-        }
+          },
+          lastLabelLayerId
+        );
       }
     };
 
     addCompositeLayer();
-    //mapContext.map.setZoom(16.5);
-    //mapContext.map.setPitch(45);
-  }, [mapContext.map, componentCleanup, minZoom, paint, sourceId, sourceLayer]);
+  }, [mapContext.map, minZoom, paint, sourceId, sourceLayer]);
 
   useEffect(() => {
     if (!mapContext.map) return;
 
-    if (mapContext.map.getLayer(layerName)) {
+    mapRef.current = mapContext.map;
+    if (mapRef.current.getLayer(layerName)) {
       // toggle layer visibility by changing the layout object's visibility property
       if (showLayer) {
-        mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
+        mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
       } else {
-        mapContext.map.setLayoutProperty(layerName, "visibility", "none");
+        mapRef.current.setLayoutProperty(layerName, "visibility", "none");
       }
     }
     //

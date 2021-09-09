@@ -22,9 +22,11 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
           callback();
         },
         remove: jest.fn(),
-        addSource: (source) => {
-          if (typeof source.id !== "undefined") {
-            self.sources.push(source.id);
+        addSource: (id, source) => {
+          if (typeof id.id !== "undefined") {
+            self.sources.push(id);
+          } else if (typeof id !== "undefined") {
+            self.sources.push(id);
           }
         },
         getSource: (id) => {
@@ -42,7 +44,10 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
         addLayer: (layer) => {
           if (typeof layer.id !== "undefined") {
             self.layers.push(layer.id);
-            if (typeof layer.source !== "undefined") {
+            if (
+              typeof layer.source !== "undefined" &&
+              typeof layer.source === "object"
+            ) {
               self.sources.push(layer.id);
             }
           }
@@ -61,11 +66,20 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
         },
         off: jest.fn(),
         setLayerZoomRange: jest.fn(),
+        setLayoutProperty: jest.fn(),
         addImage: jest.fn(),
         loadImage: jest.fn(),
         removeImage: jest.fn(),
         hasImage: jest.fn(),
         project: jest.fn(),
+        setZoom: jest.fn(),
+        setPitch: jest.fn(),
+        setCenter: jest.fn(),
+        getCanvas: () => ({
+          style: {
+            cursor: "",
+          },
+        }),
         style: {},
         layers: this.layers,
         sources: this.sources,

@@ -17,11 +17,10 @@ const toGeoJSON = require("./gpxConverter");
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
 const MlGPXViewer = (props) => {
-  console.log(GeoJsonContext);
   const dataSource = useContext(GeoJsonContext);
-  console.log(dataSource);
   const mapContext = useContext(MapContext);
   const mapId = props.mapId;
+  const mapRef = useRef(null);
   const sourceName = "import-source";
   const layerNameLines = "importer-layer-lines";
   const layerNamePoints = "importer-layer-points";
@@ -39,52 +38,37 @@ const MlGPXViewer = (props) => {
   });
 
   const componentCleanup = () => {
-    let map = null;
-    if (mapId) {
-      map = mapContext.maps[mapId];
-    } else {
-      map = mapContext.map;
-    }
-    if (map) {
-      [layerNameLines, layerNamePoints].forEach((layerName) => {
-        if (map.style && map.getLayer(layerName)) {
-          map.removeLayer(layerName);
-        }
-      });
+    if (mapRef.current) {
+      if (mapRef.current.style) {
+        [layerNameLines, layerNamePoints].forEach((layerName) => {
+          if (mapRef.current.getLayer(layerName)) {
+            mapRef.current.removeLayer(layerName);
+          }
+        });
 
-      if (map.style && map.getSource(sourceName)) {
-        map.removeSource(sourceName);
+        if (mapRef.current.getSource(sourceName)) {
+          mapRef.current.removeSource(sourceName);
+        }
+        mapRef.current.getCanvas().style.cursor = "";
       }
-      map.getCanvas().style.cursor = "";
+      mapRef.current = null;
     }
     popup.remove();
   };
 
   useEffect(() => {
-    if (!mapContext.map) return;
-
-    return () => {
-      componentCleanup();
-    };
+    return componentCleanup;
   }, []);
 
   useEffect(() => {
-    if (!mapContext.map) return;
-    let map = null;
-    if (mapId) {
-      map = mapContext.maps[mapId];
-    } else {
-      map = mapContext.map;
-    }
+    if (!mapContext.mapExists(mapId)) return;
+    mapRef.current = mapContext.getMap(mapId);
 
-    // cleanup fragments left in MapLibre-gl from previous component uses
-    componentCleanup();
-
-    map.addSource(sourceName, {
+    mapRef.current.addSource(sourceName, {
       type: "geojson",
       data: dataSource.data,
     });
-    map.addLayer({
+    mapRef.current.addLayer({
       id: layerNameLines,
       source: sourceName,
       type: "line",
@@ -93,7 +77,7 @@ const MlGPXViewer = (props) => {
         "line-color": "rgba(212, 55, 23,0.5)",
       },
     });
-    map.addLayer({
+    mapRef.current.addLayer({
       id: layerNamePoints,
       source: sourceName,
       type: "circle",
@@ -105,11 +89,11 @@ const MlGPXViewer = (props) => {
     });
 
     [layerNameLines, layerNamePoints].forEach((layerName) => {
-      map.setLayoutProperty(layerName, "visibility", "visible");
+      mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
     });
-    map.on("mouseenter", layerNamePoints, (e) => {
+    mapRef.current.on("mouseenter", layerNamePoints, (e) => {
       // Change the cursor style as a UI indicator.
-      map.getCanvas().style.cursor = "pointer";
+      mapRef.current.getCanvas().style.cursor = "pointer";
 
       const coordinates = e.features[0].geometry.coordinates.slice();
       const description = e.features[0].properties.desc;
@@ -128,12 +112,12 @@ const MlGPXViewer = (props) => {
       popup.setLngLat(coordinates).setHTML(name).addTo(map);
     });
 
-    map.on("mouseleave", "places", function () {
-      map.getCanvas().style.cursor = "";
+    mapRef.current.on("mouseleave", "places", function () {
+      mapRef.current.getCanvas().style.cursor = "";
       popup.remove();
     });
 
-    map.setZoom(10);
+    mapRef.current.setZoom(10);
   }, [mapContext.map]);
 
   useEffect(() => {
@@ -182,7 +166,7 @@ const MlGPXViewer = (props) => {
     const visibility = showLayer ? "visible" : "none";
 
     [layerNameLines, layerNamePoints].forEach((layerName) => {
-      map.setLayoutProperty(layerName, "visibility", visibility);
+      mapRef.current.setLayoutProperty(layerName, "visibility", visibility);
     });
   }, [showLayer, mapContext]);
 
@@ -208,12 +192,7 @@ const MlGPXViewer = (props) => {
   };
 
   const addGPXToMap = (gpxAsString) => {
-    let map = null;
-    if (mapId) {
-      map = mapContext.maps[mapId];
-    } else {
-      map = mapContext.map;
-    }
+    if (!mapRef.current) return;
     try {
       setMetaData([]);
       const domParser = new DOMParser();
@@ -237,13 +216,14 @@ const MlGPXViewer = (props) => {
       });
       const data = toGeoJSON.gpx(gpxDoc);
       dataSource.setData(data);
-      map.getSource(sourceName).setData(data);
+      mapRef.current.getSource(sourceName).setData(data);
       const bounds = bbox(data);
-      map.fitBounds(bounds);
+      mapRef.current.fitBounds(bounds);
     } catch (e) {
       console.log(e);
     }
   };
+
   const toogleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
