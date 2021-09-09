@@ -5,7 +5,7 @@ import MlCameraFollowPath from "./MlCameraFollowPath";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlCameraFollowPath",
+  title: "MapComponentsLab/MlCameraFollowPath",
   component: MlCameraFollowPath,
   argTypes: {
     url: {},
