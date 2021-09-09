@@ -20,6 +20,8 @@ const MlLayer = (props) => {
         if (mapRef.current.style && mapRef.current.getSource(layerId)) {
           mapRef.current.removeSource(layerId);
         }
+
+        mapRef.current = null;
       }
     };
   }, []);

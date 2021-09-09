@@ -34,7 +34,6 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
           return false;
         },
         removeSource: (id) => {
-          console.log("Remove Source");
           const sourcePosition = self.sources.indexOf(id);
           if (sourcePosition !== -1) {
             self.sources.splice(sourcePosition, 1);

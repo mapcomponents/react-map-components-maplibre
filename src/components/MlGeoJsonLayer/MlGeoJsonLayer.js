@@ -8,7 +8,7 @@ const msPerStep = 50;
 const MlGeoJsonLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
-  const idPostfixRef = useRef(props.idSuffix || new Date().getTime());
+  const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const oldGeojsonRef = useRef(null);
   const mapRef = useRef(null);
   const transitionInProgressRef = useRef(false);
@@ -19,15 +19,19 @@ const MlGeoJsonLayer = (props) => {
 
   useEffect(() => {
     let mapObject = mapContext.getMap(props.mapId);
-    let layerSourceId = layerId + idPostfixRef.current;
+    let layerSourceId = layerId + idSuffixRef.current;
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
-      if (mapObject && mapObject.style && mapObject.getLayer(layerSourceId)) {
-        mapObject.removeLayer(layerSourceId);
-      }
-      if (mapObject && mapObject.style && mapObject.getSource(layerSourceId)) {
-        mapObject.removeSource(layerSourceId);
+      if (mapRef.current) {
+        if (mapRef.current.style && mapRef.current.getLayer(layerSourceId)) {
+          mapRef.current.removeLayer(layerSourceId);
+        }
+        if (mapRef.current.style && mapRef.current.getSource(layerSourceId)) {
+          mapRef.current.removeSource(layerSourceId);
+        }
+
+        mapRef.current = null;
       }
     };
   }, []);
@@ -36,7 +40,7 @@ const MlGeoJsonLayer = (props) => {
     if (
       !mapContext.mapExists(props.mapId) ||
       !mapContext.getMap(props.mapId).style ||
-      !mapContext.getMap(props.mapId).getLayer(layerId + idPostfixRef.current)
+      !mapContext.getMap(props.mapId).getLayer(layerId + idSuffixRef.current)
     )
       return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
@@ -45,13 +49,13 @@ const MlGeoJsonLayer = (props) => {
     for (var key in props.paint) {
       mapContext
         .getMap(props.mapId)
-        .setPaintProperty(layerId + idPostfixRef.current, key, props.paint[key]);
+        .setPaintProperty(layerId + idSuffixRef.current, key, props.paint[key]);
     }
   }, [props.paint, layerId, mapContext, props.mapId]);
 
   const showNextTransitionSegment = useCallback(() => {
     if (
-      typeof mapRef.current.getSource(layerId + idPostfixRef.current) ===
+      typeof mapRef.current.getSource(layerId + idSuffixRef.current) ===
         "undefined" ||
       !transitionInProgressRef.current
     ) {
@@ -72,7 +76,7 @@ const MlGeoJsonLayer = (props) => {
                 .geometry.coordinates,
             ]);
 
-      mapRef.current.getSource(layerId + idPostfixRef.current).setData(newData);
+      mapRef.current.getSource(layerId + idSuffixRef.current).setData(newData);
 
       if (typeof props.onTransitionFrame === "function") {
         props.onTransitionFrame(newData);
@@ -283,7 +287,7 @@ const MlGeoJsonLayer = (props) => {
   useEffect(() => {
     if (
       !mapContext.mapExists(props.mapId) ||
-      !mapContext.getMap(props.mapId).getSource(layerId + idPostfixRef.current)
+      !mapContext.getMap(props.mapId).getSource(layerId + idSuffixRef.current)
     )
       return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
@@ -302,7 +306,7 @@ const MlGeoJsonLayer = (props) => {
     } else {
       mapContext
         .getMap(props.mapId)
-        .getSource(layerId + idPostfixRef.current)
+        .getSource(layerId + idSuffixRef.current)
         .setData(props.geojson);
     }
     oldGeojsonRef.current = props.geojson;
@@ -322,7 +326,7 @@ const MlGeoJsonLayer = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     if (
-      !mapContext.getMap(props.mapId).getSource(layerId + idPostfixRef.current) &&
+      !mapContext.getMap(props.mapId).getSource(layerId + idSuffixRef.current) &&
       props.geojson
     ) {
       let geojson = props.geojson;
@@ -341,7 +345,7 @@ const MlGeoJsonLayer = (props) => {
 
       mapContext.getMap(props.mapId).addLayer(
         {
-          id: layerId + idPostfixRef.current,
+          id: layerId + idSuffixRef.current,
           source: {
             type: "geojson",
             data: geojson,
