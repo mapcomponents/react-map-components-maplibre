@@ -9,6 +9,7 @@ var mockMapLibreMethods = {
   off: jest.fn(),
   addControl: jest.fn(),
   removeControl: jest.fn(),
+  hasControl: jest.fn(() => true),
 };
 export { mockMapLibreMethods };
 

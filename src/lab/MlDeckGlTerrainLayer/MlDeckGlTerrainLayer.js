@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useEffect, useState, useCallback } from "react";
 import { MapContext } from "react-map-components-core";
 
-import MlBasicComponent from "../MlBasicComponent";
+import MlBasicComponent from "../../components/MlBasicComponent";
 import Button from "@material-ui/core/Button";
 import maplibregl from "maplibre-gl";
 import * as d3 from "d3";

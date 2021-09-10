@@ -109,7 +109,7 @@ const MlGPXViewer = (props) => {
       // Populate the popup and set its coordinates
 
       // based on the feature found.
-      popup.setLngLat(coordinates).setHTML(name).addTo(map);
+      popup.setLngLat(coordinates).setHTML(name).addTo(mapRef.current);
     });
 
     mapRef.current.on("mouseleave", "places", function () {
@@ -118,7 +118,7 @@ const MlGPXViewer = (props) => {
     });
 
     mapRef.current.setZoom(10);
-  }, [mapContext.map]);
+  }, [mapContext.mapIds]);
 
   useEffect(() => {
     const dropZoneCurrent = dropZone.current;

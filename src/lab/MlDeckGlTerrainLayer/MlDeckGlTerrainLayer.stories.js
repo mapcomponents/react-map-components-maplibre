@@ -2,7 +2,7 @@ import React from "react";
 
 import TopToolbar from "../../ui_components/TopToolbar";
 import MlDeckGlTerrainLayer from "./MlDeckGlTerrainLayer";
-import MlCompositeLayer from "../MlCompositeLayer/MlCompositeLayer";
+import MlCompositeLayer from "../../components/MlCompositeLayer/MlCompositeLayer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 

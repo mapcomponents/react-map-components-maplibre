@@ -4,6 +4,7 @@ import { MapContext } from "react-map-components-core";
 
 const MlImageMarkerLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+  const mapRef = useRef(null);
   const mapContext = useContext(MapContext);
   const layerInitializedRef = useRef(false);
   const idPostfixRef = useRef(props.idSuffix || new Date().getTime());
@@ -12,30 +13,23 @@ const MlImageMarkerLayer = (props) => {
 
   useEffect(() => {
     return () => {
-      if (mapContext.getMap(props.mapId)) {
+      if (mapRef.current) {
         // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (
-          mapContext.getMap(props.mapId) &&
-          mapContext.getMap(props.mapId).style &&
-          mapContext.getMap(props.mapId).getLayer(layerId)
-        ) {
-          mapContext.getMap(props.mapId).removeLayer(layerId);
+        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
+          mapRef.current.removeLayer(layerId);
         }
-        if (
-          mapContext.getMap(props.mapId) &&
-          mapContext.getMap(props.mapId).style &&
-          mapContext.getMap(props.mapId).getSource(layerId)
-        ) {
-          mapContext.getMap(props.mapId).removeSource(layerId);
+        if (mapRef.current.style && mapRef.current.getSource(layerId)) {
+          mapRef.current.removeSource(layerId);
         }
+        mapRef.current = null;
       }
     };
   }, []);
 
   useEffect(() => {
     if (
-      !mapContext.mapExists(props.mapId) ||
-      !mapContext.getMap(props.mapId).getLayer(layerId) ||
+      !mapRef.current ||
+      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId)) ||
       !props.options
     )
       return;
@@ -61,23 +55,25 @@ const MlImageMarkerLayer = (props) => {
   const addLayer = useCallback(() => {
     let tmpOptions = {
       id: layerId,
+      layout: {},
       ...props.options,
     };
     tmpOptions.layout["icon-image"] = imageIdRef.current;
-    mapContext.getMap(props.mapId).addLayer(tmpOptions);
+    mapRef.current.addLayer(tmpOptions);
   }, [mapContext, props.options, props, imageIdRef, layerId]);
 
   useEffect(() => {
     if (
-      !mapContext.mapExists(props.mapId) ||
-      !mapContext.getMap(props.mapId).getSource(layerId)
+      !mapRef.current ||
+      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId)) ||
+      !props.options
     ) {
       return;
     }
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    mapContext.getMap(props.mapId).getSource(layerId).setData(props.geojson);
+    mapRef.current.getSource(layerId).setData(props.geojson);
   }, [props.geojson, layerId, mapContext, props]);
 
   useEffect(() => {
@@ -87,23 +83,20 @@ const MlImageMarkerLayer = (props) => {
       layerInitializedRef.current
     )
       return;
+
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+    mapRef.current = mapContext.getMap(props.mapId);
 
-    if (!mapContext.getMap(props.mapId).getLayer(layerId)) {
-      layerInitializedRef.current = true;
-      if (!mapContext.getMap(props.mapId).hasImage(imageIdRef.current)) {
-        mapContext
-          .getMap(props.mapId)
-          .loadImage(props.imgSrc, function (error, image) {
-            if (error) throw error;
-            mapContext.getMap(props.mapId).addImage(imageIdRef.current, image);
-            addLayer();
-          });
-      } else {
-        addLayer();
-      }
+    layerInitializedRef.current = true;
+
+    if (props.imgSrc) {
+      mapRef.current.loadImage(props.imgSrc, function (error, image) {
+        if (error) throw error;
+        mapRef.current.addImage(imageIdRef.current, image);
+      });
     }
+    addLayer();
   }, [mapContext.mapIds, mapContext, props, layerId, addLayer]);
 
   return <></>;
