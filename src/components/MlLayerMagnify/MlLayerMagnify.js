@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext, useCallback, useRef, useEffect, useState } from "react";
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
 import { MapContext } from "react-map-components-core";
@@ -9,19 +9,19 @@ import { MapContext } from "react-map-components-core";
  */
 const MlLayerMagnify = (props) => {
   const mapContext = useContext(MapContext);
+  const syncMoveInitializedRef = useRef(false);
+  const syncCleanupFunctionRef = useRef(null);
 
   const [swipeX, setSwipeX] = useState(50);
   const swipeXRef = useRef(50);
   const [swipeY, setSwipeY] = useState(50);
   const swipeYRef = useRef(50);
 
-  const magnifierRadiusProp = props.magnifierRadius || 200;
+  const magnifierRadiusRef = useRef(props.magnifierRadius || 200);
 
-  const [magnifierRadius, setMagnifierRadius] = useState(magnifierRadiusProp);
+  const [magnifierRadius, setMagnifierRadius] = useState(magnifierRadiusRef.current);
 
-  const compareRef = useRef(null);
-
-  const mapExists = () => {
+  const mapExists = useCallback(() => {
     if (!props.map1Id || !props.map2Id) {
       return false;
     }
@@ -33,7 +33,7 @@ const MlLayerMagnify = (props) => {
     }
 
     return true;
-  };
+  }, [props, mapContext]);
 
   const onResize = () => {
     if (!mapExists()) return;
@@ -47,64 +47,100 @@ const MlLayerMagnify = (props) => {
 
   const cleanup = () => {
     window.removeEventListener("resize", onResize);
-    if (compareRef.current) {
-      compareRef.current.remove();
-      compareRef.current = null;
+    if (
+      syncCleanupFunctionRef.current &&
+      typeof syncCleanupFunctionRef.current === "function"
+    ) {
+      console.log("cleanup syncmove");
+      console.log("cleanup syncmove");
+
+      syncCleanupFunctionRef.current();
     }
   };
 
   useEffect(() => {
-    if (!mapExists()) return;
-
     window.addEventListener("resize", onResize);
     return cleanup;
   }, []);
 
   useEffect(() => {
-    if (!mapExists()) return;
+    if (!mapExists() || syncMoveInitializedRef.current) return;
+    syncMoveInitializedRef.current = true;
+    syncCleanupFunctionRef.current = syncMove(
+      mapContext.maps[props.map1Id],
+      mapContext.maps[props.map2Id]
+    );
 
-    syncMove(mapContext.maps[props.map1Id], mapContext.maps[props.map2Id]);
+    if (
+      mapContext.maps[props.map1Id].getCanvas().clientWidth >
+        mapContext.maps[props.map1Id].getCanvas().clientHeight &&
+      magnifierRadiusRef.current * 2 >
+        mapContext.maps[props.map1Id].getCanvas().clientHeight
+    ) {
+      magnifierRadiusRef.current = Math.floor(
+        mapContext.maps[props.map1Id].getCanvas().clientHeight / 2
+      );
+      setMagnifierRadius(magnifierRadiusRef.current);
+    }
+
+    if (
+      mapContext.maps[props.map1Id].getCanvas().clientHeight >
+        mapContext.maps[props.map1Id].getCanvas().clientWidth &&
+      magnifierRadiusRef.current * 2 >
+        mapContext.maps[props.map1Id].getCanvas().clientWidth
+    ) {
+      magnifierRadiusRef.current = Math.floor(
+        mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
+      );
+      setMagnifierRadius(magnifierRadiusRef.current);
+    }
+
     onMove({
       clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
       clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2,
     });
   }, [mapContext.mapIds]);
 
-  const onMove = (e) => {
-    if (!mapExists()) return;
+  const onMove = useCallback(
+    (e) => {
+      if (!mapExists()) return;
 
-    let bounds = mapContext.map.getCanvas().getBoundingClientRect();
-    let clientX =
-      e.clientX ||
-      (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
-        ? e.touches[0].clientX
-        : 0);
-    let clientY =
-      e.clientY ||
-      (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
-        ? e.touches[0].clientY
-        : 0);
+      let bounds = mapContext.map.getCanvas().getBoundingClientRect();
+      let clientX =
+        e.clientX ||
+        (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+          ? e.touches[0].clientX
+          : 0);
+      let clientY =
+        e.clientY ||
+        (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+          ? e.touches[0].clientY
+          : 0);
 
-    clientX -= bounds.x;
-    clientY -= bounds.y;
-    let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
-    let swipeY_tmp = ((clientY / bounds.height) * 100).toFixed(2);
+      clientX -= bounds.x;
+      clientY -= bounds.y;
+      let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
+      let swipeY_tmp = ((clientY / bounds.height) * 100).toFixed(2);
 
-    if (swipeXRef.current !== swipeX_tmp || swipeYRef.current !== swipeY_tmp) {
-      setSwipeX(swipeX_tmp);
-      swipeXRef.current = swipeX_tmp;
-      setSwipeY(swipeY_tmp);
-      swipeYRef.current = swipeY_tmp;
-      console.log(swipeXRef.current);
+      if (swipeXRef.current !== swipeX_tmp || swipeYRef.current !== swipeY_tmp) {
+        setSwipeX(swipeX_tmp);
+        swipeXRef.current = swipeX_tmp;
+        setSwipeY(swipeY_tmp);
+        swipeYRef.current = swipeY_tmp;
+        console.log(swipeXRef.current);
+        console.log(swipeYRef.current);
+        console.log(magnifierRadius);
 
-      mapContext.maps[props.map2Id].getContainer().style.clipPath =
-        `circle(${magnifierRadius}px at ` +
-        (swipeXRef.current * bounds.width) / 100 +
-        "px " +
-        (swipeYRef.current * bounds.height) / 100 +
-        "px)";
-    }
-  };
+        mapContext.maps[props.map2Id].getContainer().style.clipPath =
+          `circle(${magnifierRadiusRef.current}px at ` +
+          (swipeXRef.current * bounds.width) / 100 +
+          "px " +
+          (swipeYRef.current * bounds.height) / 100 +
+          "px)";
+      }
+    },
+    [magnifierRadius, mapContext, mapExists, props]
+  );
 
   const onDown = (e) => {
     if (e.touches) {
