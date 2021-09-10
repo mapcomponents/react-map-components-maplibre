@@ -10,6 +10,7 @@ import CustomDirectSelectMode from "./custom-direct-select-mode";
 import { MapContext } from "react-map-components-core";
 
 function MlFeatureEditor(props) {
+  const mapRef = useRef(null);
   const draw = useRef(null);
   const mapContext = useContext(MapContext);
 
@@ -32,25 +33,29 @@ function MlFeatureEditor(props) {
 
   useEffect(() => {
     return () => {
-      if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style) {
-        mapContext.map.off("draw.modechange", modeChangeHandler);
-        mapContext.map.off("mouseup", mouseUpHandler);
+      if (mapRef.current) {
+        if (mapRef.current.style) {
+          mapRef.current.off("draw.modechange", modeChangeHandler);
+          mapRef.current.off("mouseup", mouseUpHandler);
+        }
+        mapRef.current.removeControl(draw.current, "top-left");
+        mapRef.current = null;
       }
     };
   }, []);
 
   useEffect(() => {
     if (
-      mapContext.getMap(props.mapId) &&
+      mapContext.mapExists(props.mapId) &&
       mapContext.getMap(props.mapId).style &&
       !drawToolsInitialized
     ) {
-      let mapObj = mapContext.getMap(props.mapId);
+      mapRef.current = mapContext.getMap(props.mapId);
       setDrawToolsInitialized(true);
       if (
-        mapObj &&
-        mapObj.style &&
-        mapObj.getSource("mapbox-gl-draw-cold") &&
+        mapRef.current &&
+        mapRef.current.style &&
+        mapRef.current.getSource("mapbox-gl-draw-cold") &&
         draw.current &&
         typeof draw.current.remove !== "undefined"
       ) {
@@ -71,11 +76,11 @@ function MlFeatureEditor(props) {
         ),
       });
 
-      mapObj.on("draw.modechange", modeChangeHandler);
+      mapRef.current.on("draw.modechange", modeChangeHandler);
 
-      mapObj.addControl(draw.current, "top-left");
+      mapRef.current.addControl(draw.current, "top-left");
 
-      mapObj.on("mouseup", mouseUpHandler);
+      mapRef.current.on("mouseup", mouseUpHandler);
 
       setDrawToolsReady(true);
     }

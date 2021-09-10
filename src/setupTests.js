@@ -4,6 +4,14 @@ import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 
 import { mount, configure } from "enzyme";
 
+var mockMapLibreMethods = {
+  on: jest.fn(),
+  off: jest.fn(),
+  addControl: jest.fn(),
+  removeControl: jest.fn(),
+};
+export { mockMapLibreMethods };
+
 jest.mock("maplibre-gl/dist/maplibre-gl", () => {
   const originalModule = jest.requireActual("maplibre-gl/dist/maplibre-gl");
 
@@ -16,8 +24,6 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
       this.sources = [];
 
       return {
-        addControl: jest.fn(),
-        on: jest.fn(),
         once: (eventName, callback) => {
           callback();
         },
@@ -64,7 +70,6 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
             self.layers.splice(layerPosition, 1);
           }
         },
-        off: jest.fn(),
         setLayerZoomRange: jest.fn(),
         setLayoutProperty: jest.fn(),
         addImage: jest.fn(),
@@ -83,6 +88,7 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
         style: {},
         layers: this.layers,
         sources: this.sources,
+        ...mockMapLibreMethods,
       };
     },
     NavigationControl: jest.fn(),
