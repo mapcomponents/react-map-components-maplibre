@@ -1,7 +1,7 @@
-import constrainFeatureMovement from "@mapbox/mapbox-gl-draw/src/lib/constrain_feature_movement";
-import * as Constants from "@mapbox/mapbox-gl-draw/src/constants";
+import constrainFeatureMovement from "./constrain_feature_movement";
+import * as Constants from "./constants";
 
-const move_features = function (features, delta, allFeatures) {
+export default function (features, delta) {
   const constrainedDelta = constrainFeatureMovement(
     features.map((feature) => feature.toGeoJSON()),
     delta
@@ -39,5 +39,4 @@ const move_features = function (features, delta, allFeatures) {
 
     feature.incomingCoords(nextCoordinates);
   });
-};
-export default move_features;
+}

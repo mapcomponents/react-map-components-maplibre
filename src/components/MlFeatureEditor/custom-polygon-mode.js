@@ -1,8 +1,8 @@
-import * as CommonSelectors from "@mapbox/mapbox-gl-draw/src/lib/common_selectors";
-import doubleClickZoom from "@mapbox/mapbox-gl-draw/src/lib/double_click_zoom";
-import * as Constants from "@mapbox/mapbox-gl-draw/src/constants";
-import isEventAtCoordinates from "@mapbox/mapbox-gl-draw/src/lib/is_event_at_coordinates";
-import createVertex from "@mapbox/mapbox-gl-draw/src/lib/create_vertex";
+import * as CommonSelectors from "./lib/common_selectors";
+import doubleClickZoom from "./lib/double_click_zoom";
+import * as Constants from "./lib/constants";
+import isEventAtCoordinates from "./lib/is_event_at_coordinates";
+import createVertex from "./lib/create_vertex";
 
 const CustomPolygonMode = {};
 
@@ -137,12 +137,7 @@ CustomPolygonMode.toDisplayFeatures = function (state, geojson, display) {
   }
   geojson.properties.meta = Constants.meta.FEATURE;
   display(
-    createVertex(
-      state.polygon.id,
-      geojson.geometry.coordinates[0][0],
-      "0.0",
-      false
-    )
+    createVertex(state.polygon.id, geojson.geometry.coordinates[0][0], "0.0", false)
   );
   if (coordinateCount > 3) {
     // Add a start position marker to the map, clicking on this will finish the feature
@@ -161,14 +156,8 @@ CustomPolygonMode.toDisplayFeatures = function (state, geojson, display) {
     // If we've only drawn two positions (plus the closer),
     // make a LineString instead of a Polygon
     const lineCoordinates = [
-      [
-        geojson.geometry.coordinates[0][0][0],
-        geojson.geometry.coordinates[0][0][1],
-      ],
-      [
-        geojson.geometry.coordinates[0][1][0],
-        geojson.geometry.coordinates[0][1][1],
-      ],
+      [geojson.geometry.coordinates[0][0][0], geojson.geometry.coordinates[0][0][1]],
+      [geojson.geometry.coordinates[0][1][0], geojson.geometry.coordinates[0][1][1]],
     ];
     // create an initial vertex so that we can track the first point on mobile devices
     display({

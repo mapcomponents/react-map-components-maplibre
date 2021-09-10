@@ -7,7 +7,7 @@ import MlCompositeLayer from "../MlCompositeLayer/MlCompositeLayer";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlDeckGlTerrainLayer",
+  title: "MapComponentsLab/MlDeckGlTerrainLayer",
   component: MlDeckGlTerrainLayer,
   argTypes: {
     options: {

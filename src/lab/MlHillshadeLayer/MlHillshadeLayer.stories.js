@@ -6,7 +6,7 @@ import MlHillshadeLayer from "./MlHillshadeLayer";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlHillshadeLayer",
+  title: "MapComponentsLab/MlHillshadeLayer",
   component: MlHillshadeLayer,
   argTypes: {
     options: {

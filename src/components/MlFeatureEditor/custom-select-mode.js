@@ -1,9 +1,9 @@
-import * as CommonSelectors from "@mapbox/mapbox-gl-draw/src/lib/common_selectors";
-import doubleClickZoom from "@mapbox/mapbox-gl-draw/src/lib/double_click_zoom";
-import * as Constants from "@mapbox/mapbox-gl-draw/src/constants";
-import mouseEventPoint from "@mapbox/mapbox-gl-draw/src/lib/mouse_event_point";
-import createSupplementaryPoints from "@mapbox/mapbox-gl-draw/src/lib/create_supplementary_points";
-import StringSet from "@mapbox/mapbox-gl-draw/src/lib/string_set";
+import * as CommonSelectors from "./lib/common_selectors";
+import doubleClickZoom from "./lib/double_click_zoom";
+import * as Constants from "./lib/constants";
+import mouseEventPoint from "./lib/mouse_event_point";
+import createSupplementaryPoints from "./lib/create_supplementary_points";
+import StringSet from "./lib/string_set";
 import moveFeatures from "./lib/move_features";
 import drawUtils from "./lib/utils";
 
@@ -214,8 +214,7 @@ CustomSelectMode.clickOnFeature = function (state, e) {
 };
 
 CustomSelectMode.onMouseDown = function (state, e) {
-  if (CommonSelectors.isActiveFeature(e))
-    return this.startOnActiveFeature(state, e);
+  if (CommonSelectors.isActiveFeature(e)) return this.startOnActiveFeature(state, e);
   if (this.drawConfig.boxSelect && CommonSelectors.isShiftMousedown(e))
     return this.startBoxSelect(state, e);
 };
@@ -232,8 +231,7 @@ CustomSelectMode.startBoxSelect = function (state, e) {
 };
 
 CustomSelectMode.onTouchStart = function (state, e) {
-  if (CommonSelectors.isActiveFeature(e))
-    return this.startOnActiveFeature(state, e);
+  if (CommonSelectors.isActiveFeature(e)) return this.startOnActiveFeature(state, e);
 };
 
 CustomSelectMode.onDrag = function (state, e) {

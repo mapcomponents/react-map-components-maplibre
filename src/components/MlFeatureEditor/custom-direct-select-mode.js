@@ -4,12 +4,12 @@ import {
   isActiveFeature,
   isInactiveFeature,
   isShiftDown,
-} from "@mapbox/mapbox-gl-draw/src/lib/common_selectors";
-import createSupplementaryPoints from "@mapbox/mapbox-gl-draw/src/lib/create_supplementary_points";
-import constrainFeatureMovement from "@mapbox/mapbox-gl-draw/src/lib/constrain_feature_movement";
-import doubleClickZoom from "@mapbox/mapbox-gl-draw/src/lib/double_click_zoom";
-import * as Constants from "@mapbox/mapbox-gl-draw/src/constants";
-import moveFeatures from "@mapbox/mapbox-gl-draw/src/lib/move_features";
+} from "./lib/common_selectors";
+import createSupplementaryPoints from "./lib/create_supplementary_points";
+import constrainFeatureMovement from "./lib/constrain_feature_movement";
+import doubleClickZoom from "./lib/double_click_zoom";
+import * as Constants from "./lib/constants";
+import moveFeatures from "./lib/move_features";
 import drawUtils from "./lib/utils";
 
 const isVertex = isOfMetaType(Constants.meta.VERTEX);
@@ -130,9 +130,8 @@ DirectSelect.dragVertex = function (state, e, delta) {
       if (
         typeof coord_path_m[0] !== "undefined" &&
         typeof coord_path_m[1] !== "undefined" &&
-        typeof state.groupMove_vertices[k].feature.coordinates[
-          coord_path_m[0]
-        ] !== "undefined" &&
+        typeof state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]] !==
+          "undefined" &&
         typeof state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]][
           coord_path_m[1]
         ] !== "undefined"
@@ -244,8 +243,7 @@ DirectSelect.onMouseMove = function (state, e) {
   const isFeature = isActiveFeature(e);
   const onVertex = isVertex(e);
   const noCoords = state.selectedCoordPaths.length === 0;
-  if (isFeature && noCoords)
-    this.updateUIClasses({ mouse: Constants.cursors.MOVE });
+  if (isFeature && noCoords) this.updateUIClasses({ mouse: Constants.cursors.MOVE });
   else if (onVertex && !noCoords)
     this.updateUIClasses({ mouse: Constants.cursors.MOVE });
   else this.updateUIClasses({ mouse: Constants.cursors.NONE });
