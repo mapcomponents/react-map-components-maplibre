@@ -19,24 +19,20 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = () => (
+const Template = (props) => (
   <TopToolbar>
-    <MlOsmLayer />
+    <MlOsmLayer {...props} />
   </TopToolbar>
 );
 
 // <MapLibreMap options={args.options} />
 export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {
-  //storyshots: { disable: true },
+ExampleConfig.args = {
+  sourceOptions: {
+    tiles: ["https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"],
+    attribution:
+        'Map tiles by <a target="_top" rel="noopener" href="http://stamen.com">Stamen Design</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>',
+
+  },
+  layerOptions: {}
 };
-//ExampleConfig.args = {
-//  //  options: {
-//  //    style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
-//  //    center: [8.607, 53.1409349],
-//  //    maxBounds: [
-//  //      [1.40625, 43.452919],
-//  //      [17.797852, 55.973798],
-//  //    ],
-//  //  },
-//};

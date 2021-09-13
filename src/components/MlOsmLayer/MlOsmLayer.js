@@ -6,72 +6,64 @@ import Button from "@material-ui/core/Button";
 /**
  * MlOsmLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  */
-const MlOsmLayer = () => {
+const MlOsmLayer = (props) => {
   const mapContext = useContext(MapContext);
+  const mapRef = useRef(null);
+  const layerInitializedRef = useRef(false);
 
   const [showLayer, setShowLayer] = useState(true);
   const idPostfixRef = useRef(new Date().getTime());
 
   useEffect(() => {
-    if (!mapContext.map) return;
 
     return () => {
-      if (
-        mapContext.map &&
-        mapContext.map.style &&
-        mapContext.map.getLayer("raster-tile-layer-" + idPostfixRef.current)
-      ) {
-        mapContext.map.removeLayer("raster-tile-layer-" + idPostfixRef.current);
-      }
-      if (
-        mapContext.map &&
-        mapContext.map.style &&
-        mapContext.map.getSource("raster-tile-source-" + idPostfixRef.current)
-      ) {
-        mapContext.map.removeSource("raster-tile-source-" + idPostfixRef.current);
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (mapRef.current) {
+        if (mapRef.current.style && mapRef.current.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
+          mapRef.current.removeLayer("raster-tile-layer-" + idPostfixRef.current);
+        }
+        if (mapRef.current.style && mapRef.current.getSource("raster-tile-source-" + idPostfixRef.current)) {
+          mapRef.current.removeSource("raster-tile-source-" + idPostfixRef.current);
+        }
+
+        mapRef.current = null;
       }
     };
   }, []);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapContext.mapExists(props.mapId) || layerInitializedRef.current) return;
 
-    // Add the new layer to the openlayers instance once it is available
-    //mapContext.map.addSource("vector-tile-source-" + idPostfixRef.current, {
-    //  type: "vector",
-    //  style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
-    //  tileSize: 512,
-    //  attribution: "",
-    //});
+    layerInitializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
 
-    mapContext.map.addSource("raster-tile-source-" + idPostfixRef.current, {
+    mapRef.current.addSource("raster-tile-source-" + idPostfixRef.current, {
       type: "raster",
-      tiles: ["https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"],
       tileSize: 256,
-      attribution:
-        'Map tiles by <a target="_top" rel="noopener" href="http://stamen.com">Stamen Design</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>',
+      ...props.sourceOptions
     });
-    mapContext.map.addLayer({
+    mapRef.current.addLayer({
       id: "raster-tile-layer-" + idPostfixRef.current,
       type: "raster",
       source: "raster-tile-source-" + idPostfixRef.current,
       minzoom: 0,
       maxzoom: 22,
+      ...props.layerOptions
     });
-  }, [mapContext.map]);
+  }, [mapContext.mapIds]);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapRef.current) return;
 
     // toggle layer visibility by changing the layout object's visibility property
     if (showLayer) {
-      mapContext.map.setLayoutProperty(
+      mapRef.current.setLayoutProperty(
         "raster-tile-layer-" + idPostfixRef.current,
         "visibility",
         "visible"
       );
     } else {
-      mapContext.map.setLayoutProperty(
+      mapRef.current.setLayoutProperty(
         "raster-tile-layer-" + idPostfixRef.current,
         "visibility",
         "none"
