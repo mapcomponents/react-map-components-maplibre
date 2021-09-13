@@ -46,9 +46,7 @@ const MlLayerMagnify = (props) => {
 
   const cleanup = () => {
     window.removeEventListener("resize", onResize);
-    console.log("hier 1");
     if (syncCleanupFunctionRef.current) {
-      console.log("hier 2");
       syncCleanupFunctionRef.current();
     }
   };
@@ -57,45 +55,6 @@ const MlLayerMagnify = (props) => {
     window.addEventListener("resize", onResize);
     return cleanup;
   }, []);
-
-  useEffect(() => {
-    if (!mapExists() || syncMoveInitializedRef.current) return;
-    syncMoveInitializedRef.current = true;
-    syncCleanupFunctionRef.current = syncMove(
-      mapContext.maps[props.map1Id],
-      mapContext.maps[props.map2Id]
-    );
-    console.log(syncCleanupFunctionRef.current);
-
-    if (
-      mapContext.maps[props.map1Id].getCanvas().clientWidth >
-        mapContext.maps[props.map1Id].getCanvas().clientHeight &&
-      magnifierRadiusRef.current * 2 >
-        mapContext.maps[props.map1Id].getCanvas().clientHeight
-    ) {
-      magnifierRadiusRef.current = Math.floor(
-        mapContext.maps[props.map1Id].getCanvas().clientHeight / 2
-      );
-      setMagnifierRadius(magnifierRadiusRef.current);
-    }
-
-    if (
-      mapContext.maps[props.map1Id].getCanvas().clientHeight >
-        mapContext.maps[props.map1Id].getCanvas().clientWidth &&
-      magnifierRadiusRef.current * 2 >
-        mapContext.maps[props.map1Id].getCanvas().clientWidth
-    ) {
-      magnifierRadiusRef.current = Math.floor(
-        mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
-      );
-      setMagnifierRadius(magnifierRadiusRef.current);
-    }
-
-    onMove({
-      clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
-      clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2,
-    });
-  }, [mapContext.mapIds]);
 
   const onMove = useCallback(
     (e) => {
@@ -132,8 +91,47 @@ const MlLayerMagnify = (props) => {
           "px)";
       }
     },
-    [magnifierRadius, mapContext, mapExists, props]
+    [mapContext, mapExists, props]
   );
+
+  useEffect(() => {
+    if (!mapExists() || syncMoveInitializedRef.current) return;
+
+    syncMoveInitializedRef.current = true;
+    syncCleanupFunctionRef.current = syncMove(
+      mapContext.maps[props.map1Id],
+      mapContext.maps[props.map2Id]
+    );
+
+    if (
+      mapContext.maps[props.map1Id].getCanvas().clientWidth >
+        mapContext.maps[props.map1Id].getCanvas().clientHeight &&
+      magnifierRadiusRef.current * 2 >
+        mapContext.maps[props.map1Id].getCanvas().clientHeight
+    ) {
+      magnifierRadiusRef.current = Math.floor(
+        mapContext.maps[props.map1Id].getCanvas().clientHeight / 2
+      );
+      setMagnifierRadius(magnifierRadiusRef.current);
+    }
+
+    if (
+      mapContext.maps[props.map1Id].getCanvas().clientHeight >
+        mapContext.maps[props.map1Id].getCanvas().clientWidth &&
+      magnifierRadiusRef.current * 2 >
+        mapContext.maps[props.map1Id].getCanvas().clientWidth
+    ) {
+      magnifierRadiusRef.current = Math.floor(
+        mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
+      );
+      setMagnifierRadius(magnifierRadiusRef.current);
+    }
+
+    onMove({
+      clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
+      clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2,
+    });
+  }, [mapContext.mapIds, mapContext.maps, mapExists, props, onMove]);
 
   const onDown = (e) => {
     if (e.touches) {
