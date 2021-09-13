@@ -20,7 +20,6 @@ const MlGeoJsonLayer = (props) => {
   const layerId = props.layerId || "MlGeoJsonLayer-";
 
   useEffect(() => {
-    let mapObject = mapContext.getMap(props.mapId);
     let layerSourceId = layerId + idSuffixRef.current;
 
     return () => {
