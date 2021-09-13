@@ -46,13 +46,13 @@ React component implementation
 
 To make sure a component cleans up the MapLibre instance after it has been removed from reactDOM declare a reference to the map instance using the useRef hook. 
 
-**Reference declaration**
+**- Reference declaration**
 
 ```
   const mapRef = useRef(null);
 ```
 
-**Component cleanup function**
+**- Component cleanup function**
 
 After everything has been undone it is important to set the map reference (mapRef.current) to null.
 
@@ -74,7 +74,7 @@ After everything has been undone it is important to set the map reference (mapRe
   }, []);
 ```
 
-**Reference population**
+**- Reference population**
 
 This happens within the effect where the targeted (through props.mapId) map instance is discovered for the first time.
 
