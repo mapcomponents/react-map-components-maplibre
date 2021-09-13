@@ -157,12 +157,8 @@ const MlGPXViewer = (props) => {
 
   useEffect(() => {
     if (!mapContext.map) return;
-    let map = null;
-    if (mapId) {
-      map = mapContext.maps[mapId];
-    } else {
-      map = mapContext.map;
-    }
+
+    mapRef.current = mapContext.getMap(mapId);
     const visibility = showLayer ? "visible" : "none";
 
     [layerNameLines, layerNamePoints].forEach((layerName) => {

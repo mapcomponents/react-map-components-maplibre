@@ -38,7 +38,6 @@ const MlLayerMagnify = (props) => {
   const onResize = () => {
     if (!mapExists()) return;
 
-    console.log("resize");
     onMove({
       clientX: swipeXRef.current,
       clientY: swipeYRef.current,
@@ -47,13 +46,9 @@ const MlLayerMagnify = (props) => {
 
   const cleanup = () => {
     window.removeEventListener("resize", onResize);
-    if (
-      syncCleanupFunctionRef.current &&
-      typeof syncCleanupFunctionRef.current === "function"
-    ) {
-      console.log("cleanup syncmove");
-      console.log("cleanup syncmove");
-
+    console.log("hier 1");
+    if (syncCleanupFunctionRef.current) {
+      console.log("hier 2");
       syncCleanupFunctionRef.current();
     }
   };
@@ -70,6 +65,7 @@ const MlLayerMagnify = (props) => {
       mapContext.maps[props.map1Id],
       mapContext.maps[props.map2Id]
     );
+    console.log(syncCleanupFunctionRef.current);
 
     if (
       mapContext.maps[props.map1Id].getCanvas().clientWidth >
@@ -127,9 +123,6 @@ const MlLayerMagnify = (props) => {
         swipeXRef.current = swipeX_tmp;
         setSwipeY(swipeY_tmp);
         swipeYRef.current = swipeY_tmp;
-        console.log(swipeXRef.current);
-        console.log(swipeYRef.current);
-        console.log(magnifierRadius);
 
         mapContext.maps[props.map2Id].getContainer().style.clipPath =
           `circle(${magnifierRadiusRef.current}px at ` +
