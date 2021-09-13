@@ -32,12 +32,55 @@ If no attribute mapId is provided the map component is expected to work with the
 ├── {component_name}.doc.de.md
 ├── {component_name}.meta.json 
 ├── {component_name}.js 
+├── {component_name}.test.js 
 └── {component_name}.stories.js
 ```
 
 ### {component_name}.js
 
 React component implementation
+
+#### Common conventions
+
+##### Cleanup functions
+
+To make sure a component cleans up the MapLibre instance after it has been removed from reactDOM declare a reference to the map instance using the useRef hook. 
+
+**Reference declaration**
+
+```
+  const mapRef = useRef(null);
+```
+
+**Component cleanup function**
+
+After everything has been undone it is important to set the map reference (mapRef.current) to null.
+
+```
+  useEffect(() => {
+    return () => {
+      // This is the cleanup function, it is called when this react component is removed from reactDOM
+      if (mapRef.current) {
+        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
+          mapRef.current.removeLayer(layerId);
+        }
+        if (mapRef.current.style && mapRef.current.getSource(layerSourceId)) {
+          mapRef.current.removeSource(layerSourceId);
+        }
+
+        mapRef.current = null;
+      }
+    };
+  }, []);
+```
+
+**Reference population**
+
+This happens within the effect where the targeted (through props.mapId) map instance is discovered for the first time.
+
+```
+  mapRef.current = mapContext.getMap(props.mapId);
+```
 
 ### {component_name}.meta.json
 
