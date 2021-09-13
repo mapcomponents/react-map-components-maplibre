@@ -11,16 +11,8 @@ import PrinterIcon from '@material-ui/icons/Print';
 import { lineString, length, lineChunk, lineDistance, along, bearing, point } from '@turf/turf';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import { isVertex as isVertex$1, isEscapeKey, isEnterKey, noTarget, isOfMetaType, isFeature, isShiftDown, isActiveFeature, isShiftMousedown, isInactiveFeature } from '@mapbox/mapbox-gl-draw/src/lib/common_selectors';
-import doubleClickZoom from '@mapbox/mapbox-gl-draw/src/lib/double_click_zoom';
-import { geojsonTypes, cursors, types, events, activeStates, meta, updateActions, classes } from '@mapbox/mapbox-gl-draw/src/constants';
-import isEventAtCoordinates from '@mapbox/mapbox-gl-draw/src/lib/is_event_at_coordinates';
-import createVertex from '@mapbox/mapbox-gl-draw/src/lib/create_vertex';
-import mouseEventPoint from '@mapbox/mapbox-gl-draw/src/lib/mouse_event_point';
-import createSupplementaryPoints from '@mapbox/mapbox-gl-draw/src/lib/create_supplementary_points';
-import StringSet from '@mapbox/mapbox-gl-draw/src/lib/string_set';
-import constrainFeatureMovement from '@mapbox/mapbox-gl-draw/src/lib/constrain_feature_movement';
-import moveFeatures from '@mapbox/mapbox-gl-draw/src/lib/move_features';
+import Point from '@mapbox/point-geometry';
+import extent from '@mapbox/geojson-extent';
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -790,74 +782,9 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
-/**
- * MlHillshadeLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
- */
-
-var MlHillshadeLayer = function MlHillshadeLayer() {
-  var mapContext = useContext(MapContext);
-  var layerRef = useRef(null);
-
-  var _useState = useState(true),
-      _useState2 = _slicedToArray(_useState, 2),
-      showLayer = _useState2[0],
-      setShowLayer = _useState2[1];
-
-  var idPostfixRef = useRef(new Date().getTime());
-
-  var componentCleanup = function componentCleanup() {
-    if (mapContext.map && mapContext.map.style && mapContext.map.getLayer("hillshading")) {
-      mapContext.map.removeLayer("hillshading");
-    }
-
-    if (mapContext.map && mapContext.map.style && mapContext.map.getSource("hillshading-source")) {
-      mapContext.map.removeSource("hillshading-source");
-    }
-  };
-
-  useEffect(function () {
-    if (!mapContext.map) return;
-    return function () {
-      componentCleanup();
-    };
-  }, []);
-  useEffect(function () {
-    if (!mapContext.map) return; // cleanup fragments left in MapLibre-gl from previous component uses
-
-    componentCleanup();
-    mapContext.map.addSource("hillshading-source", {
-      type: "raster-dem",
-      url: "mapbox://mapbox.terrain-rgb"
-    });
-    mapContext.map.addLayer({
-      id: "hillshading",
-      source: "hillshading-source",
-      type: "hillshade"
-    });
-    mapContext.map.setLayoutProperty("hillshading", "visibility", "visible");
-    mapContext.map.setZoom(10); //mapContext.map.setPitch(45);
-  }, [mapContext.map]);
-  useEffect(function () {
-    if (!mapContext.map) return; // toggle layer visibility by changing the layout object's visibility property
-
-    if (showLayer) {
-      mapContext.map.setLayoutProperty("hillshading", "visibility", "visible");
-    } else {
-      mapContext.map.setLayoutProperty("hillshading", "visibility", "none");
-    } //
-
-  }, [showLayer, mapContext]);
-  return /*#__PURE__*/React.createElement(Button, {
-    color: "primary",
-    variant: showLayer ? "contained" : "outlined",
-    onClick: function onClick() {
-      return setShowLayer(!showLayer);
-    }
-  }, "Hillshade");
-};
-
 var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+  var mapRef = useRef(null);
   var mapContext = useContext(MapContext);
   var layerInitializedRef = useRef(false);
   var idPostfixRef = useRef(props.idSuffix || new Date().getTime());
@@ -865,20 +792,22 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   var layerId = (props.layerId || "MlImageMarkerLayer-") + idPostfixRef.current;
   useEffect(function () {
     return function () {
-      if (mapContext.getMap(props.mapId)) {
+      if (mapRef.current) {
         // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getLayer(layerId)) {
-          mapContext.getMap(props.mapId).removeLayer(layerId);
+        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
+          mapRef.current.removeLayer(layerId);
         }
 
-        if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && mapContext.getMap(props.mapId).getSource(layerId)) {
-          mapContext.getMap(props.mapId).removeSource(layerId);
+        if (mapRef.current.style && mapRef.current.getSource(layerId)) {
+          mapRef.current.removeSource(layerId);
         }
+
+        mapRef.current = null;
       }
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     if (props.options.layout) {
@@ -895,38 +824,37 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   }, [props.options, layerId, mapContext, props.mapId]);
   var addLayer = useCallback(function () {
     var tmpOptions = _objectSpread2({
-      id: layerId
+      id: layerId,
+      layout: {}
     }, props.options);
 
     tmpOptions.layout["icon-image"] = imageIdRef.current;
-    mapContext.getMap(props.mapId).addLayer(tmpOptions);
+    mapRef.current.addLayer(tmpOptions);
   }, [mapContext, props.options, props, imageIdRef, layerId]);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).getSource(layerId)) {
+    if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) {
       return;
     } // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
 
-    mapContext.getMap(props.mapId).getSource(layerId).setData(props.geojson);
+    mapRef.current.getSource(layerId).setData(props.geojson);
   }, [props.geojson, layerId, mapContext, props]);
   useEffect(function () {
     if (!props.options || !mapContext.mapExists(props.mapId) || layerInitializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    if (!mapContext.getMap(props.mapId).getLayer(layerId)) {
-      layerInitializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
+    layerInitializedRef.current = true;
 
-      if (!mapContext.getMap(props.mapId).hasImage(imageIdRef.current)) {
-        mapContext.getMap(props.mapId).loadImage(props.imgSrc, function (error, image) {
-          if (error) throw error;
-          mapContext.getMap(props.mapId).addImage(imageIdRef.current, image);
-          addLayer();
-        });
-      } else {
-        addLayer();
-      }
+    if (props.imgSrc) {
+      mapRef.current.loadImage(props.imgSrc, function (error, image) {
+        if (error) throw error;
+        mapRef.current.addImage(imageIdRef.current, image);
+      });
     }
+
+    addLayer();
   }, [mapContext.mapIds, mapContext, props, layerId, addLayer]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
@@ -1295,6 +1223,175 @@ var MlWmsLayerMulti = function MlWmsLayerMulti(props) {
   }, "WMS");
 };
 
+var classes = {
+  CONTROL_BASE: 'mapboxgl-ctrl',
+  CONTROL_PREFIX: 'mapboxgl-ctrl-',
+  CONTROL_BUTTON: 'mapbox-gl-draw_ctrl-draw-btn',
+  CONTROL_BUTTON_LINE: 'mapbox-gl-draw_line',
+  CONTROL_BUTTON_POLYGON: 'mapbox-gl-draw_polygon',
+  CONTROL_BUTTON_POINT: 'mapbox-gl-draw_point',
+  CONTROL_BUTTON_TRASH: 'mapbox-gl-draw_trash',
+  CONTROL_BUTTON_COMBINE_FEATURES: 'mapbox-gl-draw_combine',
+  CONTROL_BUTTON_UNCOMBINE_FEATURES: 'mapbox-gl-draw_uncombine',
+  CONTROL_GROUP: 'mapboxgl-ctrl-group',
+  ATTRIBUTION: 'mapboxgl-ctrl-attrib',
+  ACTIVE_BUTTON: 'active',
+  BOX_SELECT: 'mapbox-gl-draw_boxselect'
+};
+var cursors = {
+  ADD: 'add',
+  MOVE: 'move',
+  DRAG: 'drag',
+  POINTER: 'pointer',
+  NONE: 'none'
+};
+var types = {
+  POLYGON: 'polygon',
+  LINE: 'line_string',
+  POINT: 'point'
+};
+var geojsonTypes = {
+  FEATURE: 'Feature',
+  POLYGON: 'Polygon',
+  LINE_STRING: 'LineString',
+  POINT: 'Point',
+  FEATURE_COLLECTION: 'FeatureCollection',
+  MULTI_PREFIX: 'Multi',
+  MULTI_POINT: 'MultiPoint',
+  MULTI_LINE_STRING: 'MultiLineString',
+  MULTI_POLYGON: 'MultiPolygon'
+};
+var events = {
+  CREATE: 'draw.create',
+  DELETE: 'draw.delete',
+  UPDATE: 'draw.update',
+  SELECTION_CHANGE: 'draw.selectionchange',
+  MODE_CHANGE: 'draw.modechange',
+  ACTIONABLE: 'draw.actionable',
+  RENDER: 'draw.render',
+  COMBINE_FEATURES: 'draw.combine',
+  UNCOMBINE_FEATURES: 'draw.uncombine'
+};
+var updateActions = {
+  MOVE: 'move',
+  CHANGE_COORDINATES: 'change_coordinates'
+};
+var meta = {
+  FEATURE: 'feature',
+  MIDPOINT: 'midpoint',
+  VERTEX: 'vertex'
+};
+var activeStates = {
+  ACTIVE: 'true',
+  INACTIVE: 'false'
+};
+var LAT_MIN = -90;
+var LAT_RENDERED_MIN = -85;
+var LAT_MAX = 90;
+var LAT_RENDERED_MAX = 85;
+var LNG_MIN = -270;
+var LNG_MAX = 270;
+
+function isOfMetaType(type) {
+  return function (e) {
+    var featureTarget = e.featureTarget;
+    if (!featureTarget) return false;
+    if (!featureTarget.properties) return false;
+    return featureTarget.properties.meta === type;
+  };
+}
+function isShiftMousedown(e) {
+  if (!e.originalEvent) return false;
+  if (!e.originalEvent.shiftKey) return false;
+  return e.originalEvent.button === 0;
+}
+function isActiveFeature(e) {
+  if (!e.featureTarget) return false;
+  if (!e.featureTarget.properties) return false;
+  return e.featureTarget.properties.active === activeStates.ACTIVE && e.featureTarget.properties.meta === meta.FEATURE;
+}
+function isInactiveFeature(e) {
+  if (!e.featureTarget) return false;
+  if (!e.featureTarget.properties) return false;
+  return e.featureTarget.properties.active === activeStates.INACTIVE && e.featureTarget.properties.meta === meta.FEATURE;
+}
+function noTarget(e) {
+  return e.featureTarget === undefined;
+}
+function isFeature(e) {
+  if (!e.featureTarget) return false;
+  if (!e.featureTarget.properties) return false;
+  return e.featureTarget.properties.meta === meta.FEATURE;
+}
+function isVertex(e) {
+  var featureTarget = e.featureTarget;
+  if (!featureTarget) return false;
+  if (!featureTarget.properties) return false;
+  return featureTarget.properties.meta === meta.VERTEX;
+}
+function isShiftDown(e) {
+  if (!e.originalEvent) return false;
+  return e.originalEvent.shiftKey === true;
+}
+function isEscapeKey(e) {
+  return e.keyCode === 27;
+}
+function isEnterKey(e) {
+  return e.keyCode === 13;
+}
+
+var doubleClickZoom = {
+  enable: function enable(ctx) {
+    setTimeout(function () {
+      // First check we've got a map and some context.
+      if (!ctx.map || !ctx.map.doubleClickZoom || !ctx._ctx || !ctx._ctx.store || !ctx._ctx.store.getInitialConfigValue) return; // Now check initial state wasn't false (we leave it disabled if so)
+
+      if (!ctx._ctx.store.getInitialConfigValue('doubleClickZoom')) return;
+      ctx.map.doubleClickZoom.enable();
+    }, 0);
+  },
+  disable: function disable(ctx) {
+    setTimeout(function () {
+      if (!ctx.map || !ctx.map.doubleClickZoom) return; // Always disable here, as it's necessary in some cases.
+
+      ctx.map.doubleClickZoom.disable();
+    }, 0);
+  }
+};
+
+function isEventAtCoordinates(event, coordinates) {
+  if (!event.lngLat) return false;
+  return event.lngLat.lng === coordinates[0] && event.lngLat.lat === coordinates[1];
+}
+
+/**
+ * Returns GeoJSON for a Point representing the
+ * vertex of another feature.
+ *
+ * @param {string} parentId
+ * @param {Array<number>} coordinates
+ * @param {string} path - Dot-separated numbers indicating exactly
+ *   where the point exists within its parent feature's coordinates.
+ * @param {boolean} selected
+ * @return {GeoJSON} Point
+ */
+
+function createVertex (parentId, coordinates, path, selected) {
+  return {
+    type: geojsonTypes.FEATURE,
+    properties: {
+      meta: meta.VERTEX,
+      parent: parentId,
+      coord_path: path,
+      active: selected ? activeStates.ACTIVE : activeStates.INACTIVE
+    },
+    geometry: {
+      type: geojsonTypes.POINT,
+      coordinates: coordinates
+    }
+  };
+}
+
 var CustomPolygonMode = {};
 
 CustomPolygonMode.onSetup = function () {
@@ -1350,7 +1447,7 @@ CustomPolygonMode.clickOnVertex = function (state) {
 CustomPolygonMode.onMouseMove = function (state, e) {
   state.polygon.updateCoordinate("0.".concat(state.currentVertexPosition), e.lngLat.lng, e.lngLat.lat);
 
-  if (isVertex$1(e)) {
+  if (isVertex(e)) {
     this.updateUIClasses({
       mouse: cursors.POINTER
     });
@@ -1358,7 +1455,7 @@ CustomPolygonMode.onMouseMove = function (state, e) {
 };
 
 CustomPolygonMode.onTap = CustomPolygonMode.onClick = function (state, e) {
-  if (isVertex$1(e)) return this.clickOnVertex(state, e);
+  if (isVertex(e)) return this.clickOnVertex(state, e);
   return this.clickAnywhere(state, e);
 };
 
@@ -1454,7 +1551,260 @@ CustomPolygonMode.onTrash = function (state) {
   this.changeMode("custom_select");
 };
 
-var move_features = function move_features(features, delta, allFeatures) {
+/**
+ * Returns a Point representing a mouse event's position
+ * relative to a containing element.
+ *
+ * @param {MouseEvent} mouseEvent
+ * @param {Node} container
+ * @returns {Point}
+ */
+
+function mouseEventPoint(mouseEvent, container) {
+  var rect = container.getBoundingClientRect();
+  return new Point(mouseEvent.clientX - rect.left - (container.clientLeft || 0), mouseEvent.clientY - rect.top - (container.clientTop || 0));
+}
+
+function createMidpoint (parent, startVertex, endVertex) {
+  var startCoord = startVertex.geometry.coordinates;
+  var endCoord = endVertex.geometry.coordinates; // If a coordinate exceeds the projection, we can't calculate a midpoint,
+  // so run away
+
+  if (startCoord[1] > LAT_RENDERED_MAX || startCoord[1] < LAT_RENDERED_MIN || endCoord[1] > LAT_RENDERED_MAX || endCoord[1] < LAT_RENDERED_MIN) {
+    return null;
+  }
+
+  var mid = {
+    lng: (startCoord[0] + endCoord[0]) / 2,
+    lat: (startCoord[1] + endCoord[1]) / 2
+  };
+  return {
+    type: geojsonTypes.FEATURE,
+    properties: {
+      meta: meta.MIDPOINT,
+      parent: parent,
+      lng: mid.lng,
+      lat: mid.lat,
+      coord_path: endVertex.properties.coord_path
+    },
+    geometry: {
+      type: geojsonTypes.POINT,
+      coordinates: [mid.lng, mid.lat]
+    }
+  };
+}
+
+function createSupplementaryPoints(geojson) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var basePath = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var _geojson$geometry = geojson.geometry,
+      type = _geojson$geometry.type,
+      coordinates = _geojson$geometry.coordinates;
+  var featureId = geojson.properties && geojson.properties.id;
+  var supplementaryPoints = [];
+
+  if (type === geojsonTypes.POINT) {
+    // For points, just create a vertex
+    supplementaryPoints.push(createVertex(featureId, coordinates, basePath, isSelectedPath(basePath)));
+  } else if (type === geojsonTypes.POLYGON) {
+    // Cycle through a Polygon's rings and
+    // process each line
+    coordinates.forEach(function (line, lineIndex) {
+      processLine(line, basePath !== null ? "".concat(basePath, ".").concat(lineIndex) : String(lineIndex));
+    });
+  } else if (type === geojsonTypes.LINE_STRING) {
+    processLine(coordinates, basePath);
+  } else if (type.indexOf(geojsonTypes.MULTI_PREFIX) === 0) {
+    processMultiGeometry();
+  }
+
+  function processLine(line, lineBasePath) {
+    var firstPointString = "";
+    var lastVertex = null;
+    line.forEach(function (point, pointIndex) {
+      var pointPath = lineBasePath !== undefined && lineBasePath !== null ? "".concat(lineBasePath, ".").concat(pointIndex) : String(pointIndex);
+      var vertex = createVertex(featureId, point, pointPath, isSelectedPath(pointPath)); // If we're creating midpoints, check if there was a
+      // vertex before this one. If so, add a midpoint
+      // between that vertex and this one.
+
+      if (options.midpoints && lastVertex) {
+        var midpoint = createMidpoint(featureId, lastVertex, vertex);
+
+        if (midpoint) {
+          supplementaryPoints.push(midpoint);
+        }
+      }
+
+      lastVertex = vertex; // A Polygon line's last point is the same as the first point. If we're on the last
+      // point, we want to draw a midpoint before it but not another vertex on it
+      // (since we already a vertex there, from the first point).
+
+      var stringifiedPoint = JSON.stringify(point);
+
+      if (firstPointString !== stringifiedPoint) {
+        supplementaryPoints.push(vertex);
+      }
+
+      if (pointIndex === 0) {
+        firstPointString = stringifiedPoint;
+      }
+    });
+  }
+
+  function isSelectedPath(path) {
+    if (!options.selectedPaths) return false;
+    return options.selectedPaths.indexOf(path) !== -1;
+  } // Split a multi-geometry into constituent
+  // geometries, and accumulate the supplementary points
+  // for each of those constituents
+
+
+  function processMultiGeometry() {
+    var subType = type.replace(geojsonTypes.MULTI_PREFIX, "");
+    coordinates.forEach(function (subCoordinates, index) {
+      var subFeature = {
+        type: geojsonTypes.FEATURE,
+        properties: geojson.properties,
+        geometry: {
+          type: subType,
+          coordinates: subCoordinates
+        }
+      };
+      supplementaryPoints = supplementaryPoints.concat(createSupplementaryPoints(subFeature, options, index));
+    });
+  }
+
+  return supplementaryPoints;
+}
+
+function StringSet(items) {
+  this._items = {};
+  this._nums = {};
+  this._length = items ? items.length : 0;
+  if (!items) return;
+
+  for (var i = 0, l = items.length; i < l; i++) {
+    this.add(items[i]);
+    if (items[i] === undefined) continue;
+    if (typeof items[i] === 'string') this._items[items[i]] = i;else this._nums[items[i]] = i;
+  }
+}
+
+StringSet.prototype.add = function (x) {
+  if (this.has(x)) return this;
+  this._length++;
+  if (typeof x === 'string') this._items[x] = this._length;else this._nums[x] = this._length;
+  return this;
+};
+
+StringSet.prototype.delete = function (x) {
+  if (this.has(x) === false) return this;
+  this._length--;
+  delete this._items[x];
+  delete this._nums[x];
+  return this;
+};
+
+StringSet.prototype.has = function (x) {
+  if (typeof x !== 'string' && typeof x !== 'number') return false;
+  return this._items[x] !== undefined || this._nums[x] !== undefined;
+};
+
+StringSet.prototype.values = function () {
+  var _this = this;
+
+  var values = [];
+  Object.keys(this._items).forEach(function (k) {
+    values.push({
+      k: k,
+      v: _this._items[k]
+    });
+  });
+  Object.keys(this._nums).forEach(function (k) {
+    values.push({
+      k: JSON.parse(k),
+      v: _this._nums[k]
+    });
+  });
+  return values.sort(function (a, b) {
+    return a.v - b.v;
+  }).map(function (a) {
+    return a.k;
+  });
+};
+
+StringSet.prototype.clear = function () {
+  this._length = 0;
+  this._items = {};
+  this._nums = {};
+  return this;
+};
+
+var LAT_MIN$1 = LAT_MIN,
+    LAT_MAX$1 = LAT_MAX,
+    LAT_RENDERED_MIN$1 = LAT_RENDERED_MIN,
+    LAT_RENDERED_MAX$1 = LAT_RENDERED_MAX,
+    LNG_MIN$1 = LNG_MIN,
+    LNG_MAX$1 = LNG_MAX; // Ensure that we do not drag north-south far enough for
+// - any part of any feature to exceed the poles
+// - any feature to be completely lost in the space between the projection's
+//   edge and the poles, such that it couldn't be re-selected and moved back
+
+function constrainFeatureMovement (geojsonFeatures, delta) {
+  // "inner edge" = a feature's latitude closest to the equator
+  var northInnerEdge = LAT_MIN$1;
+  var southInnerEdge = LAT_MAX$1; // "outer edge" = a feature's latitude furthest from the equator
+
+  var northOuterEdge = LAT_MIN$1;
+  var southOuterEdge = LAT_MAX$1;
+  var westEdge = LNG_MAX$1;
+  var eastEdge = LNG_MIN$1;
+  geojsonFeatures.forEach(function (feature) {
+    var bounds = extent(feature);
+    var featureSouthEdge = bounds[1];
+    var featureNorthEdge = bounds[3];
+    var featureWestEdge = bounds[0];
+    var featureEastEdge = bounds[2];
+    if (featureSouthEdge > northInnerEdge) northInnerEdge = featureSouthEdge;
+    if (featureNorthEdge < southInnerEdge) southInnerEdge = featureNorthEdge;
+    if (featureNorthEdge > northOuterEdge) northOuterEdge = featureNorthEdge;
+    if (featureSouthEdge < southOuterEdge) southOuterEdge = featureSouthEdge;
+    if (featureWestEdge < westEdge) westEdge = featureWestEdge;
+    if (featureEastEdge > eastEdge) eastEdge = featureEastEdge;
+  }); // These changes are not mutually exclusive: we might hit the inner
+  // edge but also have hit the outer edge and therefore need
+  // another readjustment
+
+  var constrainedDelta = delta;
+
+  if (northInnerEdge + constrainedDelta.lat > LAT_RENDERED_MAX$1) {
+    constrainedDelta.lat = LAT_RENDERED_MAX$1 - northInnerEdge;
+  }
+
+  if (northOuterEdge + constrainedDelta.lat > LAT_MAX$1) {
+    constrainedDelta.lat = LAT_MAX$1 - northOuterEdge;
+  }
+
+  if (southInnerEdge + constrainedDelta.lat < LAT_RENDERED_MIN$1) {
+    constrainedDelta.lat = LAT_RENDERED_MIN$1 - southInnerEdge;
+  }
+
+  if (southOuterEdge + constrainedDelta.lat < LAT_MIN$1) {
+    constrainedDelta.lat = LAT_MIN$1 - southOuterEdge;
+  }
+
+  if (westEdge + constrainedDelta.lng <= LNG_MIN$1) {
+    constrainedDelta.lng += Math.ceil(Math.abs(constrainedDelta.lng) / 360) * 360;
+  }
+
+  if (eastEdge + constrainedDelta.lng >= LNG_MAX$1) {
+    constrainedDelta.lng -= Math.ceil(Math.abs(constrainedDelta.lng) / 360) * 360;
+  }
+
+  return constrainedDelta;
+}
+
+function moveFeatures (features, delta) {
   var constrainedDelta = constrainFeatureMovement(features.map(function (feature) {
     return feature.toGeoJSON();
   }), delta);
@@ -1495,7 +1845,7 @@ var move_features = function move_features(features, delta, allFeatures) {
 
     feature.incomingCoords(nextCoordinates);
   });
-};
+}
 
 var drawUtils = {
   getMatchingVertices: function getMatchingVertices(vertex, featureId, allFeatures, map) {
@@ -1803,7 +2153,7 @@ CustomSelectMode.dragMove = function (state, e) {
     lng: e.lngLat.lng - state.dragMoveLocation.lng,
     lat: e.lngLat.lat - state.dragMoveLocation.lat
   };
-  move_features(this.getSelected(), delta);
+  moveFeatures(this.getSelected(), delta);
   state.dragMoveLocation = e.lngLat;
 };
 
@@ -1938,7 +2288,7 @@ CustomSelectMode.onUncombineFeatures = function () {
   this.fireActionable();
 };
 
-var isVertex = isOfMetaType(meta.VERTEX);
+var isVertex$1 = isOfMetaType(meta.VERTEX);
 var isMidpoint = isOfMetaType(meta.MIDPOINT);
 var DirectSelect = {}; // INTERNAL FUCNTIONS
 
@@ -2144,7 +2494,7 @@ DirectSelect.onTrash = function (state) {
 DirectSelect.onMouseMove = function (state, e) {
   // On mousemove that is not a drag, stop vertex movement.
   var isFeature = isActiveFeature(e);
-  var onVertex = isVertex(e);
+  var onVertex = isVertex$1(e);
   var noCoords = state.selectedCoordPaths.length === 0;
   if (isFeature && noCoords) this.updateUIClasses({
     mouse: cursors.MOVE
@@ -2162,7 +2512,7 @@ DirectSelect.onMouseOut = function (state) {
 };
 
 DirectSelect.onTouchStart = DirectSelect.onMouseDown = function (state, e) {
-  if (isVertex(e)) return this.onVertex(state, e);
+  if (isVertex$1(e)) return this.onVertex(state, e);
   if (isActiveFeature(e)) return this.onFeature(state, e);
   if (isMidpoint(e)) return this.onMidpoint(state, e);
 };
@@ -2201,6 +2551,7 @@ DirectSelect.onTouchEnd = DirectSelect.onMouseUp = function (state) {
 };
 
 function MlFeatureEditor(props) {
+  var mapRef = useRef(null);
   var draw = useRef(null);
   var mapContext = useContext(MapContext);
 
@@ -2235,18 +2586,23 @@ function MlFeatureEditor(props) {
 
   useEffect(function () {
     return function () {
-      if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style) {
-        mapContext.map.off("draw.modechange", modeChangeHandler);
-        mapContext.map.off("mouseup", mouseUpHandler);
+      if (mapRef.current) {
+        if (mapRef.current.style) {
+          mapRef.current.off("draw.modechange", modeChangeHandler);
+          mapRef.current.off("mouseup", mouseUpHandler);
+        }
+
+        mapRef.current.removeControl(draw.current, "top-left");
+        mapRef.current = null;
       }
     };
   }, []);
   useEffect(function () {
-    if (mapContext.getMap(props.mapId) && mapContext.getMap(props.mapId).style && !drawToolsInitialized) {
-      var mapObj = mapContext.getMap(props.mapId);
+    if (mapContext.mapExists(props.mapId) && mapContext.getMap(props.mapId).style && !drawToolsInitialized) {
+      mapRef.current = mapContext.getMap(props.mapId);
       setDrawToolsInitialized(true);
 
-      if (mapObj && mapObj.style && mapObj.getSource("mapbox-gl-draw-cold") && draw.current && typeof draw.current.remove !== "undefined") {
+      if (mapRef.current && mapRef.current.style && mapRef.current.getSource("mapbox-gl-draw-cold") && draw.current && typeof draw.current.remove !== "undefined") {
         // remove old Mapbox-gl-Draw from Mapbox instance when hot-reloading this component during development
         draw.current.remove();
       }
@@ -2260,9 +2616,9 @@ function MlFeatureEditor(props) {
           custom_direct_select: DirectSelect
         }, MapboxDraw.modes)
       });
-      mapObj.on("draw.modechange", modeChangeHandler);
-      mapObj.addControl(draw.current, "top-left");
-      mapObj.on("mouseup", mouseUpHandler);
+      mapRef.current.on("draw.modechange", modeChangeHandler);
+      mapRef.current.addControl(draw.current, "top-left");
+      mapRef.current.on("mouseup", mouseUpHandler);
       setDrawToolsReady(true);
     }
   }, [mapContext.map, mapContext, props, drawnFeatures, drawToolsInitialized]);
@@ -2376,5 +2732,5 @@ var MlCameraFollowPath = function MlCameraFollowPath(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
-export { MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlHillshadeLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer, MlWmsLayerMulti };
+export { MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer, MlWmsLayerMulti };
 //# sourceMappingURL=index.esm.js.map

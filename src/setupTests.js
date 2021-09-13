@@ -4,12 +4,17 @@ import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 
 import { mount, configure } from "enzyme";
 
+// MapLibre-gl mockup
 var mockMapLibreMethods = {
   on: jest.fn(),
   off: jest.fn(),
   addControl: jest.fn(),
   removeControl: jest.fn(),
   hasControl: jest.fn(() => true),
+  getCanvas: () => document.createElement("canvas"),
+  getContainer: () => ({
+    style: {},
+  }),
 };
 export { mockMapLibreMethods };
 
@@ -81,11 +86,6 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
         setZoom: jest.fn(),
         setPitch: jest.fn(),
         setCenter: jest.fn(),
-        getCanvas: () => ({
-          style: {
-            cursor: "",
-          },
-        }),
         style: {},
         layers: this.layers,
         sources: this.sources,

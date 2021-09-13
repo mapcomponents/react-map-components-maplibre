@@ -4,7 +4,6 @@ export { default as MlComponentTemplate } from "./components/MlComponentTemplate
 export { default as MlCompositeLayer } from "./components/MlCompositeLayer/MlCompositeLayer";
 export { default as MlCreatePdfButton } from "./components/MlCreatePdfButton/MlCreatePdfButton";
 export { default as MlGeoJsonLayer } from "./components/MlGeoJsonLayer/MlGeoJsonLayer";
-export { default as MlHillshadeLayer } from "./components/MlHillshadeLayer/MlHillshadeLayer";
 export { default as MlImageMarkerLayer } from "./components/MlImageMarkerLayer/MlImageMarkerLayer";
 export { default as MlLayer } from "./components/MlLayer/MlLayer";
 export { default as MlOsmLayer } from "./components/MlOsmLayer/MlOsmLayer";
