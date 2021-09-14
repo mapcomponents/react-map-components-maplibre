@@ -159,7 +159,7 @@ const MlGPXViewer = (props) => {
   };
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapContext.mapExists(mapId)) return;
 
     mapRef.current = mapContext.getMap(mapId);
     const visibility = showLayer ? "visible" : "none";
