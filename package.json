@@ -7,6 +7,7 @@
   "dependencies": {
         "@deck.gl/aggregation-layers": "^8.4.13",
     "@deck.gl/core": "^8.4.13",
+    "@deck.gl/extensions": "^8.4.13",
     "@deck.gl/geo-layers": "^8.4.13",
     "@deck.gl/layers": "^8.4.13",
     "@deck.gl/mapbox": "^8.4.10",
