@@ -1,0 +1,10 @@
+{
+  "name": "MlMobilerImker",
+  "title": "Bienen Flugradiusrechner",
+  "description": "meep",
+  "tags": [ "Map add-on" ],
+  "category": "add-ons",
+  "type": "application",
+  "components": [ "MlVectorTileLayer", "MlMapDrawTools", "MlCreatePdfButton"],
+  "price": 12000
+}

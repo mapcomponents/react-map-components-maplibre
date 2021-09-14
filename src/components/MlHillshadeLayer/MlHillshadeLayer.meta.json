@@ -1,0 +1,9 @@
+{
+  "name": "MlHillshadeLayer",
+  "title": "Relief",
+  "description": "Halbtransparente Ebene mit Gebirgsschattierungen, der einen Reliefartigen-Effekt erzeugt.",
+  "tags": ["Map add-on"],
+  "category": "add-ons",
+  "type": "component",
+  "price": 5000
+}

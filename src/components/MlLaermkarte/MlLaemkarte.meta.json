@@ -1,0 +1,10 @@
+{
+  "name": "MlLaermkarte",
+  "title": "Lärmkarte von Bonn",
+  "description": "",
+  "tags": [],
+  "category": "",
+  "type": "application",
+  "components": [ "MlDeckGlLayer", "MlCompositeLayer", "MlCameraFollowPath"] ,
+  "price": 12000
+}

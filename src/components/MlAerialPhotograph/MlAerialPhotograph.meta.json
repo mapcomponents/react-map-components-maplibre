@@ -1,0 +1,10 @@
+{
+  "name": "MlAerialPhotograph",
+  "title": "Luftbild Daten Darsteller",
+  "description": "meep",
+  "tags": [],
+  "category": "",
+  "type": "application",
+  "components": [ "MlVectorTileLayer", "MlWMSLayer"],
+  "price": 12000
+}
