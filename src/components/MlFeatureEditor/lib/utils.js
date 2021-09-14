@@ -10,16 +10,10 @@ const drawUtils = {
     for (var i = 0; i < allFeatures.length; i++) {
       if (allFeatures[i].id !== featureId) {
         for (var k = 0; k < allFeatures[i].geometry.coordinates.length; k++) {
-          for (
-            var m = 0;
-            m < allFeatures[i].geometry.coordinates[k].length;
-            m++
-          ) {
+          for (var m = 0; m < allFeatures[i].geometry.coordinates[k].length; m++) {
             if (
               v_lng ===
-                allFeatures[i].geometry.coordinates[k][m][0].toFixed(
-                  decimals
-                ) &&
+                allFeatures[i].geometry.coordinates[k][m][0].toFixed(decimals) &&
               v_lat ===
                 allFeatures[i].geometry.coordinates[k][m][1].toFixed(decimals)
             ) {
@@ -41,8 +35,8 @@ const drawUtils = {
   getDrawInstance: (map) => {
     for (var i = map._controls.length - 1; i >= 0; i--) {
       if (
-        map._controls[i].constructor.name === "MapboxDraw" ||
-        map._controls[i].constructor.name === "ye"
+        map._controls[i].options &&
+        map._controls[i].options.defaultMode === "custom_select"
       ) {
         return map._controls[i];
       }

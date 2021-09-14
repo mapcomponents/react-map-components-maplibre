@@ -20,6 +20,7 @@ const MlGPXViewer = (props) => {
   const dataSource = useContext(GeoJsonContext);
   const mapContext = useContext(MapContext);
   const mapId = props.mapId;
+  const initializedRef = useRef(false);
   const mapRef = useRef(null);
   const sourceName = "import-source";
   const layerNameLines = "importer-layer-lines";
@@ -61,7 +62,9 @@ const MlGPXViewer = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!mapContext.mapExists(mapId)) return;
+    if (!mapContext.mapExists(mapId) || initializedRef.current) return;
+
+    initializedRef.current = true;
     mapRef.current = mapContext.getMap(mapId);
 
     mapRef.current.addSource(sourceName, {
@@ -93,7 +96,7 @@ const MlGPXViewer = (props) => {
     });
     mapRef.current.on("mouseenter", layerNamePoints, (e) => {
       // Change the cursor style as a UI indicator.
-      mapRef.current.getCanvas().style.cursor = "pointer";
+      mapContext.getMap(props.mapId).getCanvas().style.cursor = "pointer";
 
       const coordinates = e.features[0].geometry.coordinates.slice();
       const description = e.features[0].properties.desc;
@@ -191,6 +194,7 @@ const MlGPXViewer = (props) => {
     if (!mapRef.current) return;
     try {
       setMetaData([]);
+      console.log(gpxAsString);
       const domParser = new DOMParser();
       const gpxDoc = domParser.parseFromString(gpxAsString, "application/xml");
       const metadata = gpxDoc.querySelector("metadata");

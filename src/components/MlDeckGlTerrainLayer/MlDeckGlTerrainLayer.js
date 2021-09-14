@@ -64,8 +64,7 @@ const MlDeckGlTerrainLayer = () => {
         texture: SURFACE_IMAGE,
         wireframe: false,
         color: [255, 255, 255],
-      }),
-      "water-name-lakeline"
+      })
     );
     //    setTimeout(() => {
     //      map.setZoom(13);

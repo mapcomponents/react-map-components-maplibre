@@ -24,12 +24,11 @@ const MlWanderApp = (props) => {
           mapId="map_2"
         />
       </TopToolbar>
-      <MlGPXViewer mapId="map_1" />
 
       <GeoJsonProvider>
         <MlGPXViewer mapId="map_1" />
       </GeoJsonProvider>
-      <MlLayerMagnify map1Id="map_1" map2Id="map_2" magnifierRadius={20} />
+      <MlLayerMagnify map1Id="map_1" map2Id="map_2" magnifierRadius={60} />
       <MlHillshadeLayer />
     </>
   );

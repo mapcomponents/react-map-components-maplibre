@@ -5,7 +5,7 @@
   "module": "dist/index.esm.js",
   "source": "src/index.js",
   "dependencies": {
-        "@deck.gl/aggregation-layers": "^8.4.13",
+    "@deck.gl/aggregation-layers": "^8.4.13",
     "@deck.gl/core": "^8.4.13",
     "@deck.gl/extensions": "^8.4.13",
     "@deck.gl/geo-layers": "^8.4.13",
@@ -45,7 +45,6 @@
     "typeface-muli": "^1.1.13",
     "web-vitals": "^0.2.4",
     "xmldom": "^0.5.0"
-
   },
   "browser": {
     "fs": false,
