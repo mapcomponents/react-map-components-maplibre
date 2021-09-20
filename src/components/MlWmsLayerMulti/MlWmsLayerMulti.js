@@ -11,62 +11,33 @@ const MlWmsLayerMulti = (props) => {
 
   const [showLayer, setShowLayer] = useState(true);
   const idPostfixRef = useRef(new Date().getTime());
-
-  const mapExists = () => {
-    if (!props.mapId) {
-      return false;
-    }
-    if (mapContext.mapIds.indexOf(props.mapId) === -1) {
-      return false;
-    }
-
-    return true;
-  };
-
-  const cleanup = () => {
-    if (mapExists()) {
-      if (
-        mapContext.maps[props.mapId] &&
-        mapContext.maps[props.mapId].style &&
-        mapContext.maps[props.mapId].getLayer(
-          "raster-tile-layer-" + idPostfixRef.current
-        )
-      ) {
-        mapContext.maps[props.mapId].removeLayer(
-          "raster-tile-layer-" + idPostfixRef.current
-        );
-      }
-      if (
-        mapContext.maps[props.mapId] &&
-        mapContext.maps[props.mapId].style &&
-        mapContext.maps[props.mapId].getSource(
-          "raster-tile-source-" + idPostfixRef.current
-        )
-      ) {
-        mapContext.maps[props.mapId].removeSource(
-          "raster-tile-source-" + idPostfixRef.current
-        );
-      }
-    }
-  };
+  const mapRef = useRef(null);
+  const initializedRef = useRef(false);
 
   useEffect(() => {
-    if (!mapExists()) return;
 
     return () => {
-      cleanup();
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (mapRef.current) {
+        if (mapRef.current.style && mapRef.current.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
+          mapRef.current.removeLayer("raster-tile-layer-" + idPostfixRef.current);
+        }
+        if (mapRef.current.style && mapRef.current.getSource("raster-tile-source-" + idPostfixRef.current)) {
+          mapRef.current.removeSource("raster-tile-source-" + idPostfixRef.current);
+        }
+
+        mapRef.current = null;
+      }
     };
   }, []);
 
   useEffect(() => {
-    console.log(mapContext);
-    if (!mapExists()) return;
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
 
-    cleanup();
-
-    console.log("HALLO");
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
     // Add the new layer to the openlayers instance once it is available
-    mapContext.maps[props.mapId].addSource(
+    mapRef.current.addSource(
       "raster-tile-source-" + idPostfixRef.current,
       {
         type: "raster",
@@ -81,7 +52,7 @@ const MlWmsLayerMulti = (props) => {
       }
     );
 
-    mapContext.maps[props.mapId].addLayer({
+    mapRef.current.addLayer({
       id: "raster-tile-layer-" + idPostfixRef.current,
       type: "raster",
       source: "raster-tile-source-" + idPostfixRef.current,
@@ -89,21 +60,20 @@ const MlWmsLayerMulti = (props) => {
       maxzoom: 10,
       ...props.sourceOptions,
     });
-    console.log("WMS Layer added to " + props.mapId);
   }, [mapContext.mapIds]);
 
   useEffect(() => {
-    if (!mapExists()) return;
+    if (!mapRef.current) return;
 
     // toggle layer visibility by changing the layout object's visibility property
     if (showLayer) {
-      mapContext.maps[props.mapId].setLayoutProperty(
+      mapRef.current.setLayoutProperty(
         "raster-tile-layer-" + idPostfixRef.current,
         "visibility",
         "visible"
       );
     } else {
-      mapContext.maps[props.mapId].setLayoutProperty(
+      mapRef.current.setLayoutProperty(
         "raster-tile-layer-" + idPostfixRef.current,
         "visibility",
         "none"
