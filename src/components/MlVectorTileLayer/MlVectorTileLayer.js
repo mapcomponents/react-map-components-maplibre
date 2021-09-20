@@ -12,40 +12,38 @@ const MlVectorTileLayer = (props) => {
   const sourceName = "vector-tile-source-";
   const idPostfixRef = useRef(new Date().getTime());
   const layerIdsRef = useRef({});
+  const initializedRef = useRef(false);
+  const mapRef = useRef(null);
 
   const cleanup = () => {
-    for (let key in layerIdsRef.current) {
+    if(mapRef.current && mapRef.current.style) {
+      for (let key in layerIdsRef.current) {
+        if (
+            mapRef.current.getLayer(layerIdsRef.current[key])
+        ) {
+          mapRef.current.removeLayer(layerIdsRef.current[key]);
+        }
+      }
       if (
-        mapContext.map &&
-        mapContext.map.style &&
-        mapContext.map.getLayer(layerIdsRef.current[key])
+          mapRef.current.getSource(sourceName + idPostfixRef.current)
       ) {
-        mapContext.map.removeLayer(layerIdsRef.current[key]);
+        mapRef.current.removeSource(sourceName + idPostfixRef.current);
       }
     }
-    if (
-      mapContext.map &&
-      mapContext.map.getSource(sourceName + idPostfixRef.current)
-    ) {
-      mapContext.map.removeSource(sourceName + idPostfixRef.current);
-    }
-  };
+  }
 
   useEffect(() => {
-    if (!mapContext.map) return;
-
-    return () => {
-      cleanup();
-    };
+    return cleanup;
   }, []);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
 
-    cleanup();
+    initializedRef.current = true
+    mapRef.current = mapContext.getMap(props.mapId)
 
     // Add the new layer to the openlayers instance once it is available
-    mapContext.map.addSource(sourceName + idPostfixRef.current, {
+    mapRef.current.addSource(sourceName + idPostfixRef.current, {
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
@@ -57,7 +55,7 @@ const MlVectorTileLayer = (props) => {
       let layerId = layerName + "_" + key + "_" + idPostfixRef.current;
       layerIdsRef.current[key] = layerId;
 
-      mapContext.map.addLayer({
+      mapRef.current.addLayer({
         id: layerId,
         source: sourceName + idPostfixRef.current,
         type: "line",
@@ -72,7 +70,7 @@ const MlVectorTileLayer = (props) => {
         ...props.layers[key],
       });
     }
-  }, [mapContext.map]);
+  }, [mapContext.mapIds]);
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId)) return;
@@ -80,9 +78,8 @@ const MlVectorTileLayer = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.layers) {
-      if (mapContext.map.getLayer(layerIdsRef.current[key])) {
+      if (mapRef.current.getLayer(layerIdsRef.current[key])) {
         for (let paintKey in props.layers[key].paint) {
-          console.log(props.layers[key].paint[paintKey]);
           mapContext
             .getMap(props.mapId)
             .setPaintProperty(
@@ -96,17 +93,17 @@ const MlVectorTileLayer = (props) => {
   }, [props.layers]);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapRef.current) return;
 
     // toggle layer visibility by changing the layout object's visibility property
     if (showLayer) {
-      mapContext.map.setLayoutProperty(
+      mapRef.current.setLayoutProperty(
         layerName + idPostfixRef.current,
         "visibility",
         "visible"
       );
     } else {
-      mapContext.map.setLayoutProperty(
+      mapRef.current.setLayoutProperty(
         layerName + idPostfixRef.current,
         "visibility",
         "none"
