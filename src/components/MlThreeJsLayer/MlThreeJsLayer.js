@@ -4,44 +4,36 @@ import { MapContext } from "react-map-components-core";
 import Button from "@material-ui/core/Button";
 import maplibregl from "maplibre-gl";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import GLTFLoader from "./lib/GLTFLoader";
 
 /**
  * MlThreeJsLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  */
-const MlThreeJsLayer = ({ init, onDone }) => {
+const MlThreeJsLayer = (props) => {
   const mapContext = useContext(MapContext);
 
-  const layerRef = useRef(null);
   const layerName = "3d-model";
   const [showLayer, setShowLayer] = useState(true);
   const [play, setPlay] = useState(false);
   const showLayerRef = useRef(true);
-  const idPostfixRef = useRef(new Date().getTime());
+  const initializedRef = useRef(false);
+  const mapRef = useRef(null);
 
-  const componentCleanup = () => {
-    if (
-      mapContext.map &&
-      mapContext.map.style &&
-      mapContext.map.getLayer(layerName)
-    ) {
-      mapContext.map.removeLayer(layerName);
-    }
-    if (
-      mapContext.map &&
-      mapContext.map.style &&
-      mapContext.map.getSource(layerName + "-source")
-    ) {
-      mapContext.map.removeSource(layerName + "-source");
+  const cleanup = () => {
+    if(mapRef.current && mapRef.current.style) {
+      if (mapRef.current.getLayer(layerName)) {
+        mapRef.current.removeLayer(layerName);
+      }
+      mapRef.current = null;
     }
   };
 
   let rotateCamera = useCallback(
     (timestamp) => {
-      if (!play || !mapContext.map) return;
+      if (!play || !mapRef.current) return;
       // clamp the rotation between 0 -360 degrees
       // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-      mapContext.map.rotateTo((timestamp / 100) % 360, { duration: 0 });
+      mapRef.current.rotateTo((timestamp / 100) % 360, { duration: 0 });
       // Request the next frame of the animation.
       if (showLayerRef.current && play) {
         requestAnimationFrame(rotateCamera);
@@ -56,22 +48,18 @@ const MlThreeJsLayer = ({ init, onDone }) => {
   }, [play]);
 
   useEffect(() => {
-    if (typeof init === "function") {
-      init();
+    if (typeof props.init === "function") {
+      props.init();
     }
 
-    if (!mapContext.map) return;
-
-    return () => {
-      componentCleanup();
-    };
+    return cleanup;
   }, []);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
 
-    // cleanup fragments left in MapLibre-gl from previous component uses
-    componentCleanup();
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
 
     // parameters to ensure the model is georeferenced correctly on the map
     var modelOrigin = [7.1300753566457304, 50.71596191210998];
@@ -125,12 +113,11 @@ const MlThreeJsLayer = ({ init, onDone }) => {
           //"https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf",
           function (gltf) {
             this.scene.add(gltf.scene);
-            if (typeof onDone === "function") {
-              onDone();
+            if (typeof props.onDone === "function") {
+              props.onDone();
             }
           }.bind(this)
         );
-        var loader = new GLTFLoader();
         loader.load(
           "/assets/3D/posttower.gltf",
           //"/assets/3D/posttower_wh.gltf.glb",
@@ -189,25 +176,25 @@ const MlThreeJsLayer = ({ init, onDone }) => {
       },
     };
 
-    mapContext.map.addLayer(customLayer);
+    mapRef.current.addLayer(customLayer);
 
-    if (mapContext.map.getLayer(layerName)) {
-      mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
+    if (mapRef.current.getLayer(layerName)) {
+      mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
     }
-    mapContext.map.setCenter([7.130255969902919, 50.7143656091998]);
-    mapContext.map.setZoom(15);
-    mapContext.map.setPitch(45);
-  }, [mapContext.map]);
+    mapRef.current.setCenter([7.130255969902919, 50.7143656091998]);
+    mapRef.current.setZoom(15);
+    mapRef.current.setPitch(45);
+  }, [mapContext.mapIds]);
 
   useEffect(() => {
-    if (!mapContext.map) return;
+    if (!mapRef.current) return;
 
-    if (mapContext.map.getLayer(layerName)) {
+    if (mapRef.current.getLayer(layerName)) {
       // toggle layer visibility by changing the layout object's visibility property
       if (showLayer) {
-        mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
+        mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
       } else {
-        mapContext.map.setLayoutProperty(layerName, "visibility", "none");
+        mapRef.current.setLayoutProperty(layerName, "visibility", "none");
       }
     }
     //
