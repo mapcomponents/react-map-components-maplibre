@@ -63,18 +63,39 @@
     "build-catalogue-markdown-docs": "node scripts/build-catalogue-markdown-docs.js",
     "create-component": "./scripts/create-map-component.sh"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/src/decorators/",
+      "/src/lab/",
+      "/src/stories/",
+      "/src/ui_components/",
+      "/src/deckgl_components/",
+      "/src/components/MlBasicComponent",
+      "/src/components/MlMapDrawTools",
+      "/src/components/MlComponentTemplate/",
+      "/src/components/MlAerialPhotograph/",
+      "/src/components/MapLibreMapDebug/",
+      "/src/components/MlDemoDashboard/",
+      "/src/components/MlLaufwettbewerbApp/",
+      "/src/components/MlLaermkarte/",
+      "/src/components/MlMobilerImker/",
+      "/src/components/MlWanderApp/",
+      "(.test)\\.(ts|tsx|js)$",
+      "index\\.js$",
+      ".*/lib/.*",
+      ".*/utils/.*",
+      ".*/util/.*",
+      ".*/assets/.*",
+      "(.stories)\\.(ts|tsx|js)$",
+      "/distribution/.*\\.(ts|js)$"
     ]
   },
+  "eslintConfig": {
+    "extends": ["react-app", "react-app/jest"]
+  },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
