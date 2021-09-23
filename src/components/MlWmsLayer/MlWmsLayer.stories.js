@@ -2,18 +2,20 @@ import React from "react";
 
 import MlWmsLayer from "./MlWmsLayer";
 import TopToolbar from "../../ui_components/TopToolbar";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-const storyoptions = {
+import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
+
+import "../../App.css";
+
+export default {
   title: "MapComponents/MlWmsLayer",
   component: MlWmsLayer,
   argTypes: {
     url: {},
     layer: {},
   },
-  decorators: mapContextDecorator,
+  decorators: multiMapContextDecorator,
 };
-export default storyoptions;
 
 const Template = (args) => (
   <TopToolbar>
@@ -21,6 +23,7 @@ const Template = (args) => (
       url={args.url}
       layer={args.layer}
       sourceOptions={args.sourceOptions}
+      mapId="map_2"
     />
   </TopToolbar>
 );
@@ -34,5 +37,7 @@ ExampleConfig.args = {
     minzoom: 13,
     maxzoom: 20,
   },
+  url_2: "https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme",
+  layer_2: "nw_uraufnahme_rw",
 };
 //
