@@ -1010,30 +1010,32 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
   var sourceName = "vector-tile-source-";
   var idPostfixRef = useRef(new Date().getTime());
   var layerIdsRef = useRef({});
+  var initializedRef = useRef(false);
+  var mapRef = useRef(null);
 
   var cleanup = function cleanup() {
-    for (var key in layerIdsRef.current) {
-      if (mapContext.map && mapContext.map.style && mapContext.map.getLayer(layerIdsRef.current[key])) {
-        mapContext.map.removeLayer(layerIdsRef.current[key]);
+    if (mapRef.current && mapRef.current.style) {
+      for (var key in layerIdsRef.current) {
+        if (mapRef.current.getLayer(layerIdsRef.current[key])) {
+          mapRef.current.removeLayer(layerIdsRef.current[key]);
+        }
       }
-    }
 
-    if (mapContext.map && mapContext.map.getSource(sourceName + idPostfixRef.current)) {
-      mapContext.map.removeSource(sourceName + idPostfixRef.current);
+      if (mapRef.current.getSource(sourceName + idPostfixRef.current)) {
+        mapRef.current.removeSource(sourceName + idPostfixRef.current);
+      }
     }
   };
 
   useEffect(function () {
-    if (!mapContext.map) return;
-    return function () {
-      cleanup();
-    };
+    return cleanup;
   }, []);
   useEffect(function () {
-    if (!mapContext.map) return;
-    cleanup(); // Add the new layer to the openlayers instance once it is available
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId); // Add the new layer to the openlayers instance once it is available
 
-    mapContext.map.addSource(sourceName + idPostfixRef.current, {
+    mapRef.current.addSource(sourceName + idPostfixRef.current, {
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
@@ -1044,7 +1046,7 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
     for (var key in props.layers) {
       var layerId = layerName + "_" + key + "_" + idPostfixRef.current;
       layerIdsRef.current[key] = layerId;
-      mapContext.map.addLayer(_objectSpread2({
+      mapRef.current.addLayer(_objectSpread2({
         id: layerId,
         source: sourceName + idPostfixRef.current,
         type: "line",
@@ -1058,27 +1060,26 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
         }
       }, props.layers[key]));
     }
-  }, [mapContext.map]);
+  }, [mapContext.mapIds]);
   useEffect(function () {
     if (!mapContext.mapExists(props.mapId)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.layers) {
-      if (mapContext.map.getLayer(layerIdsRef.current[key])) {
+      if (mapRef.current.getLayer(layerIdsRef.current[key])) {
         for (var paintKey in props.layers[key].paint) {
-          console.log(props.layers[key].paint[paintKey]);
           mapContext.getMap(props.mapId).setPaintProperty(layerIdsRef.current[key], paintKey, props.layers[key].paint[paintKey]);
         }
       }
     }
   }, [props.layers]);
   useEffect(function () {
-    if (!mapContext.map) return; // toggle layer visibility by changing the layout object's visibility property
+    if (!mapRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
     if (showLayer) {
-      mapContext.map.setLayoutProperty(layerName + idPostfixRef.current, "visibility", "visible");
+      mapRef.current.setLayoutProperty(layerName + idPostfixRef.current, "visibility", "visible");
     } else {
-      mapContext.map.setLayoutProperty(layerName + idPostfixRef.current, "visibility", "none");
+      mapRef.current.setLayoutProperty(layerName + idPostfixRef.current, "visibility", "none");
     }
   }, [showLayer]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
@@ -1097,135 +1098,51 @@ var MlWmsLayer = function MlWmsLayer(props) {
       setShowLayer = _useState2[1];
 
   var idPostfixRef = useRef(new Date().getTime());
-
-  var cleanup = function cleanup() {
-    if (mapContext.mapExists(props.mapId)) {
-      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getLayer("raster-tile-layer-" + idPostfixRef.current)) {
-        mapContext.maps[props.mapId].removeLayer("raster-tile-layer-" + idPostfixRef.current);
-      }
-
-      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getSource("raster-tile-source-" + idPostfixRef.current)) {
-        mapContext.maps[props.mapId].removeSource("raster-tile-source-" + idPostfixRef.current);
-      }
-    }
-  };
-
+  var mapRef = useRef(null);
+  var initializedRef = useRef(false);
   useEffect(function () {
-    if (!mapContext.map) return;
     return function () {
-      cleanup();
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (mapRef.current) {
+        if (mapRef.current.style && mapRef.current.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
+          mapRef.current.removeLayer("raster-tile-layer-" + idPostfixRef.current);
+        }
+
+        if (mapRef.current.style && mapRef.current.getSource("raster-tile-source-" + idPostfixRef.current)) {
+          mapRef.current.removeSource("raster-tile-source-" + idPostfixRef.current);
+        }
+
+        mapRef.current = null;
+      }
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.map) return;
-    cleanup(); // Add the new layer to the openlayers instance once it is available
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId); // Add the new layer to the openlayers instance once it is available
 
-    mapContext.map.addSource("raster-tile-source-" + idPostfixRef.current, {
+    mapRef.current.addSource("raster-tile-source-" + idPostfixRef.current, {
       type: "raster",
       tiles: [props.url + "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" + props.layer],
       tileSize: 256,
       attribution: "" //...props.sourceOptions,
 
     });
-    mapContext.map.addLayer(_objectSpread2({
-      id: "raster-tile-layer-" + idPostfixRef.current,
-      type: "raster",
-      source: "raster-tile-source-" + idPostfixRef.current,
-      minzoom: 0,
-      maxzoom: 10
-    }, props.sourceOptions), props.belowLayerId);
-  }, [mapContext.map]);
-  useEffect(function () {
-    if (!mapContext.map) return; // toggle layer visibility by changing the layout object's visibility property
-
-    if (showLayer) {
-      mapContext.map.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "visible");
-    } else {
-      mapContext.map.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "none");
-    }
-  }, [showLayer]);
-  return /*#__PURE__*/React.createElement(Button, {
-    color: "primary",
-    variant: showLayer ? "contained" : "outlined",
-    onClick: function onClick() {
-      return setShowLayer(!showLayer);
-    }
-  }, "WMS");
-};
-
-/**
- * MlWmsLayerMulti returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
- */
-
-var MlWmsLayerMulti = function MlWmsLayerMulti(props) {
-  var mapContext = useContext(MapContext);
-
-  var _useState = useState(true),
-      _useState2 = _slicedToArray(_useState, 2),
-      showLayer = _useState2[0],
-      setShowLayer = _useState2[1];
-
-  var idPostfixRef = useRef(new Date().getTime());
-
-  var mapExists = function mapExists() {
-    if (!props.mapId) {
-      return false;
-    }
-
-    if (mapContext.mapIds.indexOf(props.mapId) === -1) {
-      return false;
-    }
-
-    return true;
-  };
-
-  var cleanup = function cleanup() {
-    if (mapExists()) {
-      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getLayer("raster-tile-layer-" + idPostfixRef.current)) {
-        mapContext.maps[props.mapId].removeLayer("raster-tile-layer-" + idPostfixRef.current);
-      }
-
-      if (mapContext.maps[props.mapId] && mapContext.maps[props.mapId].style && mapContext.maps[props.mapId].getSource("raster-tile-source-" + idPostfixRef.current)) {
-        mapContext.maps[props.mapId].removeSource("raster-tile-source-" + idPostfixRef.current);
-      }
-    }
-  };
-
-  useEffect(function () {
-    if (!mapExists()) return;
-    return function () {
-      cleanup();
-    };
-  }, []);
-  useEffect(function () {
-    console.log(mapContext);
-    if (!mapExists()) return;
-    cleanup();
-    console.log("HALLO"); // Add the new layer to the openlayers instance once it is available
-
-    mapContext.maps[props.mapId].addSource("raster-tile-source-" + idPostfixRef.current, {
-      type: "raster",
-      tiles: [props.url + "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" + props.layer],
-      tileSize: 256,
-      attribution: "" //...props.sourceOptions,
-
-    });
-    mapContext.maps[props.mapId].addLayer(_objectSpread2({
+    mapRef.current.addLayer(_objectSpread2({
       id: "raster-tile-layer-" + idPostfixRef.current,
       type: "raster",
       source: "raster-tile-source-" + idPostfixRef.current,
       minzoom: 0,
       maxzoom: 10
     }, props.sourceOptions));
-    console.log("WMS Layer added to " + props.mapId);
   }, [mapContext.mapIds]);
   useEffect(function () {
-    if (!mapExists()) return; // toggle layer visibility by changing the layout object's visibility property
+    if (!mapRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
     if (showLayer) {
-      mapContext.maps[props.mapId].setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "visible");
+      mapRef.current.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "visible");
     } else {
-      mapContext.maps[props.mapId].setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "none");
+      mapRef.current.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "none");
     }
   }, [showLayer]);
   return /*#__PURE__*/React.createElement(Button, {
@@ -2746,5 +2663,5 @@ var MlCameraFollowPath = function MlCameraFollowPath(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
-export { MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer, MlWmsLayerMulti };
+export { MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
 //# sourceMappingURL=index.esm.js.map
