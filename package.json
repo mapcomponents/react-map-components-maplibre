@@ -87,6 +87,7 @@
       ".*/utils/.*",
       ".*/util/.*",
       ".*/assets/.*",
+      "custom\\-.*\\-mode\\.js$",
       "(.stories)\\.(ts|tsx|js)$",
       "/distribution/.*\\.(ts|js)$"
     ]

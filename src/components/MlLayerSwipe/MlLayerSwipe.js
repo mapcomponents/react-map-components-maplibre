@@ -12,7 +12,7 @@ const MlLayerSwipe = (props) => {
   const [swipeX, setSwipeX] = useState(50);
   const swipeXRef = useRef(50);
 
-  const compareRef = useRef(null);
+  const syncCleanupFunctionRef = useRef(null);
 
   const mapExists = () => {
     if (!props.map1Id || !props.map2Id) {
@@ -29,22 +29,22 @@ const MlLayerSwipe = (props) => {
   };
 
   const cleanup = () => {
-    if (compareRef.current) {
-      compareRef.current.remove();
-      compareRef.current = null;
+    if (syncCleanupFunctionRef.current) {
+      syncCleanupFunctionRef.current();
     }
   };
 
   useEffect(() => {
-    if (!mapExists()) return;
-
     return cleanup;
   }, []);
 
   useEffect(() => {
     if (!mapExists()) return;
 
-    syncMove(mapContext.maps[props.map1Id], mapContext.maps[props.map2Id]);
+    syncCleanupFunctionRef.current = syncMove(
+      mapContext.maps[props.map1Id],
+      mapContext.maps[props.map2Id]
+    );
     onMove({ clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2 });
   }, [mapContext.mapIds]);
 
@@ -64,7 +64,6 @@ const MlLayerSwipe = (props) => {
     if (swipeXRef.current !== swipeX_tmp) {
       setSwipeX(swipeX_tmp);
       swipeXRef.current = swipeX_tmp;
-      console.log(swipeXRef.current);
 
       var clipA =
         "rect(0, " + (swipeXRef.current * bounds.width) / 100 + "px, 999em, 0)";
