@@ -21,6 +21,7 @@ const decorators = [
               style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
               center: [7.0851268, 50.73884],
             }}
+            mapId="map_1"
           />
         </LoadingOverlayProvider>
       </MapComponentsProvider>

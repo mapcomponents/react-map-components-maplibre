@@ -70,6 +70,7 @@ const MlCameraFollowPath = (props) => {
     }
 
     var timer = window.setInterval(function () {
+      console.log(mapContext.map);
       if (clearIntervalRef.current) {
         window.clearInterval(timer);
         enableInteractivity();

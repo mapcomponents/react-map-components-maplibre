@@ -1,21 +1,16 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
-import { MapContext } from "react-map-components-core";
-import maplibregl from "maplibre-gl";
+import React from "react";
 import TopToolbar from "../../ui_components/TopToolbar";
-import MlHillshadeLayer from "../MlHillshadeLayer/MlHillshadeLayer";
+import MlHillshadeLayer from "../../lab/MlHillshadeLayer/MlHillshadeLayer";
 import MlLayerMagnify from "../MlLayerMagnify/MlLayerMagnify";
-import MlWmsLayerMulti from "../MlWmsLayerMulti/MlWmsLayerMulti";
+import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
 import MlGPXViewer from "../MlGPXViewer/MlGPXViewer";
 import GeoJsonProvider from "../MlGPXViewer/util/GeoJsonProvider";
-import MlSpatialElevationProfile from "../MlSpatialElevationProfile/MlSpatialElevationProfile";
 
 const MlWanderApp = (props) => {
-  const wmsLayerMapId = props.wmsLayerMapId;
-
   return (
     <>
       <TopToolbar>
-        <MlWmsLayerMulti
+        <MlWmsLayer
           url="https://www.wms.nrw.de/geobasis/wms_nw_dop?language=ger&bbox={bbox-epsg-3857}"
           layer="nw_dop_rgb"
           sourceOptions={{

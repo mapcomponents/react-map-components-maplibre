@@ -3,10 +3,7 @@ import { MapContext } from "react-map-components-core";
 
 import MlBasicComponent from "../../components/MlBasicComponent";
 import Button from "@material-ui/core/Button";
-import maplibregl from "maplibre-gl";
-import * as d3 from "d3";
 
-import { AmbientLight, PointLight, LightingEffect } from "@deck.gl/core";
 import { MapboxLayer } from "@deck.gl/mapbox";
 import { TerrainLayer } from "@deck.gl/geo-layers";
 
@@ -29,22 +26,6 @@ const MlDeckGlTerrainLayer = () => {
   const TERRAIN_IMAGE = `https://api.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA`;
   const SURFACE_IMAGE = `https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.png?access_token=pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA`;
 
-  let rotateCamera = useCallback(
-    (timestamp) => {
-      if (mapContext.map) {
-        // clamp the rotation between 0 -360 degrees
-        // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-        mapContext.map.rotateTo((timestamp / 100) % 360, { duration: 0 });
-        // Request the next frame of the animation.
-        console.log(showLayer);
-        if (showLayerRef.current) {
-          requestAnimationFrame(rotateCamera);
-        }
-      }
-    },
-    [showLayerRef, mapContext.map]
-  );
-
   const cleanup = (map) => {
     if (map && map.style && map.getLayer(layerName)) {
       map.removeLayer(layerName);
@@ -52,6 +33,7 @@ const MlDeckGlTerrainLayer = () => {
   };
 
   const mapIsReady = (map) => {
+    console.log("Hallo ");
     map.addLayer(
       new MapboxLayer({
         id: layerName,
@@ -82,7 +64,6 @@ const MlDeckGlTerrainLayer = () => {
     if (showLayer) {
       showLayerRef.current = true;
       mapContext.map.setLayoutProperty(layerName, "visibility", "visible");
-      rotateCamera(0);
     } else {
       showLayerRef.current = false;
       mapContext.map.setLayoutProperty(layerName, "visibility", "none");

@@ -22,8 +22,6 @@ const MlBasicComponent = (props) => {
   });
 
   useEffect(() => {
-    console.log("Terrain Layer");
-    console.log(mapContext.mapExists(props.mapId));
     if (!mapContext.mapExists(props.mapId)) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance

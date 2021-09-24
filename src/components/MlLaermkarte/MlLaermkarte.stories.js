@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from "react";
 
 import MlLaermkarte from "./MlLaermkarte";
 import MlCompositeLayer from "../MlCompositeLayer/MlCompositeLayer";
-import MlCameraFollowPath from "../MlCameraFollowPath/MlCameraFollowPath";
+import MlCameraFollowPath from "../../lab/MlCameraFollowPath/MlCameraFollowPath";
 import { MapContext, SimpleDataProvider } from "react-map-components-core";
 import DeckGlProvider from "../../deckgl_components/DeckGlProvider";
 import { LoadingOverlayContext } from "../../ui_components/LoadingOverlayContext";

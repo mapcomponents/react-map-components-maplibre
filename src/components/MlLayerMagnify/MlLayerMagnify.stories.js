@@ -1,7 +1,7 @@
 import React from "react";
 
 import MlLayerMagnify from "./MlLayerMagnify";
-import MlWmsLayerMulti from "../MlWmsLayerMulti/MlWmsLayerMulti";
+import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
 import TopToolbar from "../../ui_components/TopToolbar";
 
 import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
@@ -20,7 +20,7 @@ export default storyoptions;
 const Template = (args) => (
   <>
     <TopToolbar>
-      <MlWmsLayerMulti
+      <MlWmsLayer
         url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
         layer="nw_uraufnahme_rw"
         sourceOptions={{

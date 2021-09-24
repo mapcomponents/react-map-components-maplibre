@@ -1,9 +1,8 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import Divider from "@material-ui/core/Divider";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   drawer: {
     boxShadow: "0px 2px 3px 2px rgb(0,0,0, .4)",
     flexGrow: 1,
@@ -23,12 +22,11 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 10px 10px 10px",
     boxSizing: "border-box",
     minWidth: "170px",
-  }
+  },
 }));
 
 export default function Legend(props) {
   const classes = useStyles();
-  const theme = useTheme();
 
   return (
     <Drawer
@@ -37,7 +35,7 @@ export default function Legend(props) {
       anchor={"left"}
       open={true}
       classes={{
-        paper: classes.drawerPaper
+        paper: classes.drawerPaper,
       }}
     >
       {props.children}

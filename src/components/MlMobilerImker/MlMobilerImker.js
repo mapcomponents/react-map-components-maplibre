@@ -8,18 +8,27 @@ import Avatar from "@material-ui/core/Avatar";
 import * as turf from "@turf/turf";
 import { FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import MlDraggableFeatureLayer from "../MlDraggableFeatureLayer";
+import MlDraggableFeatureLayer from "../MlDraggableFeatureLayer/MlDraggableFeatureLayer";
 
 const MlMobilerImker = () => {
-
   const [lngLat, setLngLat] = useState([7.082493545532227, 50.739057911219774]);
-  const layer_ids = ["DraggableZone", "bees", "search-radius", "streetData", "waterData", "buildingData", "greenData", "joinedDataLayer", "points"];
+  const layer_ids = [
+    "DraggableZone",
+    "bees",
+    "search-radius",
+    "streetData",
+    "waterData",
+    "buildingData",
+    "greenData",
+    "joinedDataLayer",
+    "points",
+  ];
   let [coveredFieldData, setCoveredFieldData] = useState({
     circleArea: 0,
     greenArea: 0,
     waterArea: 0,
     buildingArea: 0,
-    restArea: 0
+    restArea: 0,
   });
 
   let [fieldDataList, setFieldDataList] = useState([]);
@@ -27,11 +36,11 @@ const MlMobilerImker = () => {
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120
+      minWidth: 120,
     },
     selectEmpty: {
-      marginTop: theme.spacing(2)
-    }
+      marginTop: theme.spacing(2),
+    },
   }));
 
   const classes = useStyles();
@@ -52,17 +61,17 @@ const MlMobilerImker = () => {
     mapContext.map.addLayer({
       id: "joinedDataLayer",
       source: {
-        "type": "geojson",
-        "data": {
-          "type": "FeatureCollection",
-          "features": []
-        }
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [],
+        },
       },
       type: "fill",
       paint: {
         "fill-color": "rgb(0,0,0)",
-        "fill-opacity": .2
-      }
+        "fill-opacity": 0.2,
+      },
     });
   }
 
@@ -76,90 +85,104 @@ const MlMobilerImker = () => {
     let startLngLat = [center.lng, center.lat];
     searchRadius = makeCircle(startLngLat, selectedMainFlightRadius * 1000);
 
-    mapContext.map.addLayer({
-      id: "waterData",
-      source: "openmaptiles",
-      type: "fill",
-      "source-layer": "water",
-      paint: {
-        "fill-color": "rgb(0,170,255)",
-        "fill-opacity": 0.5
-      }
-    }, "waterway-name");
+    mapContext.map.addLayer(
+      {
+        id: "waterData",
+        source: "openmaptiles",
+        type: "fill",
+        "source-layer": "water",
+        paint: {
+          "fill-color": "rgb(0,170,255)",
+          "fill-opacity": 0.5,
+        },
+      },
+      "waterway-name"
+    );
 
+    mapContext.map.addLayer(
+      {
+        id: "greenData",
+        source: "openmaptiles",
+        type: "fill",
+        "source-layer": "landcover",
+        paint: {
+          "fill-color": "rgb(0,197,0)",
+          "fill-opacity": 0.5,
+        },
+      },
+      "waterway-name"
+    );
 
-    mapContext.map.addLayer({
-      id: "greenData",
-      source: "openmaptiles",
-      type: "fill",
-      "source-layer": "landcover",
-      paint: {
-        "fill-color": "rgb(0,197,0)",
-        "fill-opacity": 0.5
-      }
-    }, "waterway-name");
+    mapContext.map.addLayer(
+      {
+        id: "buildingData",
+        source: "openmaptiles",
+        type: "fill",
+        "source-layer": "building",
+        paint: {
+          "fill-color": "rgb(128,42,0)",
+          "fill-opacity": 0.5,
+        },
+      },
+      "waterway-name"
+    );
 
-    mapContext.map.addLayer({
-      id: "buildingData",
-      source: "openmaptiles",
-      type: "fill",
-      "source-layer": "building",
-      paint: {
-        "fill-color": "rgb(128,42,0)",
-        "fill-opacity": 0.5
-      }
-    }, "waterway-name");
-
-    mapContext.map.addLayer({
-      id: "streetData",
-      source: "openmaptiles",
-      type: "line",
-      "source-layer": "transportation",
-      paint: {
-        "line-color": "rgb(204,170,0)",
-        "line-opacity": 0.3,
-        "line-width": 4
-      }
-    }, "waterway-name");
-
+    mapContext.map.addLayer(
+      {
+        id: "streetData",
+        source: "openmaptiles",
+        type: "line",
+        "source-layer": "transportation",
+        paint: {
+          "line-color": "rgb(204,170,0)",
+          "line-opacity": 0.3,
+          "line-width": 4,
+        },
+      },
+      "waterway-name"
+    );
 
     mapContext.map.addLayer({
       id: "search-radius",
       source: {
         type: "geojson",
         data: {
-          "type": "FeatureCollection",
-          "features": []
-        }
+          type: "FeatureCollection",
+          features: [],
+        },
       },
       type: "fill",
       paint: {
         "fill-color": "rgb(241,207,101)",
-        "fill-opacity": 0.1
-      }
+        "fill-opacity": 0.1,
+      },
     });
     mapContext.map.addSource("bees", {
       type: "geojson",
-      "data": {
-        "type": "FeatureCollection",
-        "features": []
-      }
-
+      data: {
+        type: "FeatureCollection",
+        features: [],
+      },
     });
 
     buildFeatures();
 
     createJoinedLayer();
-
   }, [mapContext.map]);
 
   // event that happens after mouseclick on the DraggableZone
   function onUpEvent() {
     if (!mapContext.map) return;
-    searchRadius = makeCircle(mapContext.map.getSource("point")._data.features[0].geometry.coordinates, selectedMainFlightRadiusRef.current * 1000);
+    searchRadius = makeCircle(
+      mapContext.map.getSource("point")._data.features[0].geometry.coordinates,
+      selectedMainFlightRadiusRef.current * 1000
+    );
     mapContext.map.getSource("search-radius").setData(searchRadius);
     buildFeatures();
-    let featuresInBuffer = spatialJoin(mapContext.map.getSource("bees"), searchRadius);
+    let featuresInBuffer = spatialJoin(
+      mapContext.map.getSource("bees"),
+      searchRadius
+    );
 
     calcAreas(featuresInBuffer.features);
   }
@@ -170,11 +193,10 @@ const MlMobilerImker = () => {
     return turf.buffer(point, radiusInMeter, { units: "meters" });
   }
 
-
   // Loop through all the features in the source geojson and return the ones that
   // are inside the filter feature (buffered radius) and are confirmed landing sites
   function spatialJoin(sourceGeoJSON, filterFeature) {
-    let joined = sourceGeoJSON._data.features.filter(function(feature) {
+    let joined = sourceGeoJSON._data.features.filter(function (feature) {
       let points = [];
 
       if (feature._geometry.type === "MultiPolygon") {
@@ -200,10 +222,10 @@ const MlMobilerImker = () => {
       return false;
     });
 
-    joined = unionOfPolygonArray(joined)
+    joined = unionOfPolygonArray(joined);
 
     let coveredFeatures = [];
-    let partialFeatures = joined.filter(function(feature) {
+    let partialFeatures = joined.filter(function (feature) {
       if (!feature._geometry) {
         console.log(feature);
       }
@@ -211,16 +233,25 @@ const MlMobilerImker = () => {
         for (let i = 0; i < feature._geometry.coordinates.length; i++) {
           for (let z = 0; z < feature._geometry.coordinates[i].length; z++) {
             for (let k = 0; k < feature._geometry.coordinates[i][z].length; k++) {
-              if (!turf.booleanPointInPolygon(feature._geometry.coordinates[i][z][k], filterFeature.geometry)) {
+              if (
+                !turf.booleanPointInPolygon(
+                  feature._geometry.coordinates[i][z][k],
+                  filterFeature.geometry
+                )
+              ) {
                 return true;
               }
             }
           }
         }
-
       } else {
         for (let i = 0; i < feature._geometry.coordinates[0].length; i++) {
-          if (!turf.booleanPointInPolygon(feature._geometry.coordinates[0][i], filterFeature.geometry)) {
+          if (
+            !turf.booleanPointInPolygon(
+              feature._geometry.coordinates[0][i],
+              filterFeature.geometry
+            )
+          ) {
             return true;
           }
         }
@@ -243,19 +274,17 @@ const MlMobilerImker = () => {
 
     mapContext.map.getSource("joinedDataLayer").setData({
       type: "FeatureCollection",
-      features: [...coveredFeatures, ...intersectFeatures]
+      features: [...coveredFeatures, ...intersectFeatures],
     });
 
     return mapContext.map.getSource("joinedDataLayer")._data;
   }
-
 
   //calculates the area of all polygons from a specific class
   function areaOfGeoData(geoData, identifier) {
     let area = 0;
 
     geoData.map((row) => {
-
       if (row.properties.class === identifier) {
         area += turf.area(row);
       }
@@ -265,34 +294,56 @@ const MlMobilerImker = () => {
 
   // calculates the area of the polygons inside the FlightRadius Circle and create an Array of Objects with the percent value of distribution
   function calcAreas(joinedData) {
-    let tempCircleData = selectedMainFlightRadiusRef.current * 1000 * selectedMainFlightRadiusRef.current * 1000 * Math.PI;
+    let tempCircleData =
+      selectedMainFlightRadiusRef.current *
+      1000 *
+      selectedMainFlightRadiusRef.current *
+      1000 *
+      Math.PI;
     let tempCoveredData = {
-      greenArea: ((areaOfGeoData(joinedData, "grass") + areaOfGeoData(joinedData, "wood") + areaOfGeoData(joinedData,
-        "farmland")) / tempCircleData * 100).toFixed(2),
-      waterArea: ((areaOfGeoData(joinedData, "lake") + areaOfGeoData(joinedData, "river")) / tempCircleData * 100).toFixed(2),
-      buildingArea: (areaOfGeoData(joinedData, "building") / tempCircleData * 100).toFixed(2),
-      restArea: 0
+      greenArea: (
+        ((areaOfGeoData(joinedData, "grass") +
+          areaOfGeoData(joinedData, "wood") +
+          areaOfGeoData(joinedData, "farmland")) /
+          tempCircleData) *
+        100
+      ).toFixed(2),
+      waterArea: (
+        ((areaOfGeoData(joinedData, "lake") + areaOfGeoData(joinedData, "river")) /
+          tempCircleData) *
+        100
+      ).toFixed(2),
+      buildingArea: (
+        (areaOfGeoData(joinedData, "building") / tempCircleData) *
+        100
+      ).toFixed(2),
+      restArea: 0,
     };
 
-    tempCoveredData.restArea = (100 - tempCoveredData.greenArea - tempCoveredData.waterArea - tempCoveredData.buildingArea).toFixed(2);
+    tempCoveredData.restArea = (
+      100 -
+      tempCoveredData.greenArea -
+      tempCoveredData.waterArea -
+      tempCoveredData.buildingArea
+    ).toFixed(2);
     setCoveredFieldData(tempCoveredData);
     setFieldDataList([
       {
         id: "Grünfläche",
-        data: tempCoveredData.greenArea
+        data: tempCoveredData.greenArea,
       },
       {
         id: "Wasserfläche",
-        data: tempCoveredData.waterArea
+        data: tempCoveredData.waterArea,
       },
       {
         id: "Gebäude",
-        data: tempCoveredData.buildingArea
+        data: tempCoveredData.buildingArea,
       },
       {
         id: "Rest",
-        data: tempCoveredData.restArea
-      }
+        data: tempCoveredData.restArea,
+      },
     ]);
   }
 
@@ -300,9 +351,15 @@ const MlMobilerImker = () => {
   function buildFeatures() {
     if (!mapContext.map) return;
 
-    let waterData = mapContext.map.querySourceFeatures("openmaptiles", { sourceLayer: "water" });
-    let greenData = mapContext.map.querySourceFeatures("openmaptiles", { sourceLayer: "landcover" });
-    let buildingDataTemp = mapContext.map.querySourceFeatures("openmaptiles", { sourceLayer: "building" });
+    let waterData = mapContext.map.querySourceFeatures("openmaptiles", {
+      sourceLayer: "water",
+    });
+    let greenData = mapContext.map.querySourceFeatures("openmaptiles", {
+      sourceLayer: "landcover",
+    });
+    let buildingDataTemp = mapContext.map.querySourceFeatures("openmaptiles", {
+      sourceLayer: "building",
+    });
 
     let buildingData = buildingDataTemp.map((row) => {
       row.properties.class = "building";
@@ -311,9 +368,8 @@ const MlMobilerImker = () => {
 
     mapContext.map.getSource("bees").setData({
       type: "FeatureCollection",
-      features: [...greenData, ...waterData, ...buildingData]
+      features: [...greenData, ...waterData, ...buildingData],
     });
-
   }
 
   function unionOfPolygonArray(polyArray) {
@@ -324,13 +380,14 @@ const MlMobilerImker = () => {
     let makeUnionArray = [];
 
     while (filterBoolean) {
-
       for (let i = 0; i < tempPolArray.length; i++) {
         makeUnionArray = [tempPolArray[i]];
         for (let k = i; k < tempPolArray.length; k++) {
           if (tempPolArray[i] !== tempPolArray[k]) {
             if (turf.booleanOverlap(tempPolArray[i], tempPolArray[k])) {
-              if (tempPolArray[i].properties.class === tempPolArray[k].properties.class) {
+              if (
+                tempPolArray[i].properties.class === tempPolArray[k].properties.class
+              ) {
                 //delete tempUnion.geometry
                 makeUnionArray = [...makeUnionArray, tempPolArray[k]];
                 foundOverlapBoolean = true;
@@ -340,7 +397,9 @@ const MlMobilerImker = () => {
           }
         }
 
-        if (foundOverlapBoolean){break;}else {
+        if (foundOverlapBoolean) {
+          break;
+        } else {
           //filteredJoined.push(tempPolArray[i])
         }
         if (i === tempPolArray.length - 1) {
@@ -354,31 +413,29 @@ const MlMobilerImker = () => {
 
         for (let i in makeUnionArray) {
           tempUnion = turf.union(tempUnion, makeUnionArray[i]);
-          tempUnion.properties.class = makeUnionArray[i].properties.class
-          tempUnion._geometry = makeUnionArray[i].geometry
+          tempUnion.properties.class = makeUnionArray[i].properties.class;
+          tempUnion._geometry = makeUnionArray[i].geometry;
         }
 
         for (let i in makeUnionArray) {
           tempPolArray.splice(tempPolArray.indexOf(makeUnionArray[i]), 1);
         }
 
-        console.log(polyArray)
-        console.log(makeUnionArray)
-        console.log(tempPolArray)
+        console.log(polyArray);
+        console.log(makeUnionArray);
+        console.log(tempPolArray);
 
-        filteredJoined.push(tempUnion)
+        filteredJoined.push(tempUnion);
         foundOverlapBoolean = false;
       }
-
     }
 
-    console.log(tempPolArray)
-    if(tempPolArray.includes(makeUnionArray[0])) console.log("NOOOOO");
-    filteredJoined = [...filteredJoined, ...tempPolArray]
+    console.log(tempPolArray);
+    if (tempPolArray.includes(makeUnionArray[0])) console.log("NOOOOO");
+    filteredJoined = [...filteredJoined, ...tempPolArray];
 
     return filteredJoined;
   }
-
 
   return (
     <>
@@ -390,11 +447,19 @@ const MlMobilerImker = () => {
         lnglat={lngLat}
         paint={{
           "circle-radius": {
-            stops: [[0, 0], [20, selectedMainFlightRadiusRef.current * 1000 / 0.075 / Math.cos(lngLat[1] * Math.PI / 180)]],
-            base: 2
+            stops: [
+              [0, 0],
+              [
+                20,
+                (selectedMainFlightRadiusRef.current * 1000) /
+                  0.075 /
+                  Math.cos((lngLat[1] * Math.PI) / 180),
+              ],
+            ],
+            base: 2,
           },
           "circle-color": "rgb(56,135,190)",
-          "circle-opacity": 0.3
+          "circle-opacity": 0.3,
         }}
       />
       <Avatar style={{ marginLeft: "auto", marginRight: "auto" }} src="./bee.png" />
@@ -408,7 +473,7 @@ const MlMobilerImker = () => {
               selectedMainFlightRadiusRef.current = ev.target.value;
             }}
             inputProps={{
-              id: "flightradiusSelect"
+              id: "flightradiusSelect",
             }}
           >
             {flightRadiusList.map((el) => (
@@ -416,24 +481,23 @@ const MlMobilerImker = () => {
                 {el} Km
               </MenuItem>
             ))}
-
           </Select>
         </FormControl>
       </div>
-      <hr style={{ width: "100%", color: "black", padding: "none", height: "3px" }} />
+      <hr
+        style={{ width: "100%", color: "black", padding: "none", height: "3px" }}
+      />
       <div id="Data">
-        <ul style={{ "paddingLeft": 0 }}>
+        <ul style={{ paddingLeft: 0 }}>
           {fieldDataList.map((item) => (
             <li key={item.id} style={{ listStyle: "none" }}>
               {item.id + ": " + item.data + "%"}
             </li>
           ))}
         </ul>
-
       </div>
     </>
   );
-
 };
 
 export default MlMobilerImker;

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import { MapContext } from "react-map-components-core";
 
@@ -15,10 +15,10 @@ const LoadingOverlayProvider = ({ children }) => {
   const mapJobsRef = useRef({});
   const [checkIdleTrigger, setCheckIdleTrigger] = useState(0);
 
-  const createOnMapIdleFunction = useCallback((mapId) => () => {
+  const createOnMapIdleFunction = (mapId) => () => {
     mapJobsRef.current[mapId] = true;
     setCheckIdleTrigger(Math.random());
-  });
+  };
 
   const fadeOut = () => {
     // add another setTimeout as MapLibre appear to fire idle before all tiles have rendered
@@ -50,7 +50,7 @@ const LoadingOverlayProvider = ({ children }) => {
         mapContext.getMap(mapId).on("idle", createOnMapIdleFunction(mapId));
       }
     }
-  }, [mapContext, mapContext.mapIds, mapJobsRef, createOnMapIdleFunction]);
+  }, [mapContext, mapContext.mapIds, mapJobsRef]);
 
   useEffect(() => {
     if (loadingDone) {
