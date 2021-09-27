@@ -8,10 +8,10 @@ const MapLibreGlWrapper = function (props) {
   this.initRegisteredElements = (componentId) => {
     if (typeof self.registeredElements[componentId] === "undefined") {
       self.registeredElements[componentId] = {
-        layer: [],
-        source: [],
-        image: [],
-        event: [],
+        layers: [],
+        sources: [],
+        images: [],
+        events: [],
       };
     }
   };
@@ -31,29 +31,29 @@ const MapLibreGlWrapper = function (props) {
   this.cleanup = (componentId) => {
     if (typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
-      self.registeredElements[componentId].layer.forEach((item) => {
-        if (self.map.getLayer(item)) {
-          self.map.removeLayer(item);
+      self.registeredElements[componentId].layers.forEach((item) => {
+        if (self.getLayer(item)) {
+          self.removeLayer(item);
         }
       });
 
       // cleanup sources
-      self.registeredElements[componentId].source.forEach((item) => {
-        if (self.map.getSource(item)) {
-          self.map.removeSource(item);
+      self.registeredElements[componentId].sources.forEach((item) => {
+        if (self.getSource(item)) {
+          self.removeSource(item);
         }
       });
 
       // cleanup images
-      self.registeredElements[componentId].image.forEach((item) => {
-        if (self.map.hasImage(item)) {
-          self.map.removeImage(item);
+      self.registeredElements[componentId].images.forEach((item) => {
+        if (self.hasImage(item)) {
+          self.removeImage(item);
         }
       });
 
       // cleanup events
-      self.registeredElements[componentId].event.forEach((item) => {
-        self.map.off(...item);
+      self.registeredElements[componentId].events.forEach((item) => {
+        self.off(...item);
       });
     }
   };
