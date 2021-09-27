@@ -39,29 +39,24 @@ const MapLibreMap = (props) => {
           "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA",
       };
 
-      let initializeMap = async () => {
-        map.current = new MapLibreGlWrapper({
-          mapOptions: {
-            ...defaultOptions,
-            ...mapOptions,
-          },
-          onReady: (map, wrapper) => {
-            map.once("load", () => {
-              console.log("Hallo from onReady");
-              if (props.mapId) {
-                mapContext.registerMap(props.mapId, wrapper);
-              } else {
-                mapContext.setMap(wrapper);
-              }
-            });
+      map.current = new MapLibreGlWrapper({
+        mapOptions: {
+          ...defaultOptions,
+          ...mapOptions,
+        },
+        onReady: (map, wrapper) => {
+          map.once("load", () => {
+            if (props.mapId) {
+              mapContext.registerMap(props.mapId, wrapper);
+            } else {
+              mapContext.setMap(wrapper);
+            }
+          });
 
-            // TODO: remove this line
-            window.map = wrapper;
-          },
-        });
-      };
-
-      initializeMap();
+          // TODO: remove this line
+          window.map = wrapper;
+        },
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapContainer]);

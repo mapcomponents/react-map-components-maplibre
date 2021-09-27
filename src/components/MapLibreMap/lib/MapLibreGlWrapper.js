@@ -3,30 +3,10 @@ import maplibregl from "maplibre-gl/dist/maplibre-gl";
 const MapLibreGlWrapper = function (props) {
   let self = this;
 
-  let initializeMapLibre = async () => {
-    // if mapOptions style URL is given and if it is not a mapbox URL fetch the json and initialize the mapbox object
-    if (
-      props.mapOptions.style === "string" &&
-      props.mapOptions.style.indexOf("mapbox://") === -1
-    ) {
-      await fetch(props.mapOptions.style)
-        .then((response) => response.json())
-        .then((styleJson) => {
-          self.styleJson = styleJson;
-          self.mapOptions.style = styleJson;
-        });
-    }
-
-    this.map = new maplibregl.Map(props.mapOptions);
-
-    if (typeof props.onReady === "function") {
-      props.onReady(self.map, self);
-    }
-  };
-  initializeMapLibre();
-
   // element registration and cleanup on a component level is experimental
   this.registeredElements = {};
+  this.baseLayers = [];
+  this.firstSymbolLayer = undefined;
 
   this.initRegisteredElements = (componentId) => {
     if (typeof self.registeredElements[componentId] === "undefined") {
@@ -118,19 +98,51 @@ const MapLibreGlWrapper = function (props) {
     };
   });
 
-  //  add MapLibre-gl functions
-  Object.keys(this.map.__proto__).forEach((item) => {
-    if (typeof this[item] === "undefined") {
-      this[item] = (...props) => self.map[item](...props);
-    }
-  });
+  this.addNativeMaplibreFunctionsAndProps = () => {
+    //  add MapLibre-gl functions
+    Object.keys(this.map.__proto__).forEach((item) => {
+      if (typeof this[item] === "undefined") {
+        this[item] = (...props) => self.map[item](...props);
+      }
+    });
 
-  //  add MapLibre-gl properties
-  Object.keys(this.map).forEach((item) => {
-    if (typeof this[item] === "undefined") {
-      this[item] = self.map[item];
+    //  add MapLibre-gl properties
+    Object.keys(this.map).forEach((item) => {
+      if (typeof this[item] === "undefined") {
+        this[item] = self.map[item];
+      }
+    });
+  };
+
+  // initialize the MapLibre-gl instance
+  let initializeMapLibre = async () => {
+    // if mapOptions style URL is given and if it is not a mapbox URL fetch the json and initialize the mapbox object
+    if (
+      typeof props.mapOptions.style === "string" &&
+      props.mapOptions.style.indexOf("mapbox://") === -1
+    ) {
+      await fetch(props.mapOptions.style)
+        .then((response) => response.json())
+        .then((styleJson) => {
+          styleJson.layers.forEach((item) => {
+            self.baseLayers.push(item.id);
+            if (!self.firstSymbolLayer && item.type === "symbol") {
+              self.firstSymbolLayer = item.id;
+            }
+          });
+          self.styleJson = styleJson;
+          props.mapOptions.style = styleJson;
+        });
     }
-  });
+
+    self.map = new maplibregl.Map(props.mapOptions);
+    self.addNativeMaplibreFunctionsAndProps();
+
+    if (typeof props.onReady === "function") {
+      props.onReady(self.map, self);
+    }
+  };
+  initializeMapLibre();
 };
 
 export default MapLibreGlWrapper;
