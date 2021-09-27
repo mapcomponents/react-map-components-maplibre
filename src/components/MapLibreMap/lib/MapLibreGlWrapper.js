@@ -1,6 +1,29 @@
+import maplibregl from "maplibre-gl/dist/maplibre-gl";
+
 const MapLibreGlWrapper = function (props) {
   let self = this;
-  this.map = props.map;
+
+  let initializeMapLibre = async () => {
+    // if mapOptions style URL is given and if it is not a mapbox URL fetch the json and initialize the mapbox object
+    if (
+      props.mapOptions.style === "string" &&
+      props.mapOptions.style.indexOf("mapbox://") === -1
+    ) {
+      await fetch(props.mapOptions.style)
+        .then((response) => response.json())
+        .then((styleJson) => {
+          self.styleJson = styleJson;
+          self.mapOptions.style = styleJson;
+        });
+    }
+
+    this.map = new maplibregl.Map(props.mapOptions);
+
+    if (typeof props.onReady === "function") {
+      props.onReady(self.map, self);
+    }
+  };
+  initializeMapLibre();
 
   // element registration and cleanup on a component level is experimental
   this.registeredElements = {};
@@ -28,6 +51,7 @@ const MapLibreGlWrapper = function (props) {
     self.map.on(type, layerId, listener);
   };
 
+  // cleanup function that remove anything that has been added to the maplibre instance referenced with componentId
   this.cleanup = (componentId) => {
     if (typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers

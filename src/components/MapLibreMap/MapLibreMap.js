@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { MapContext } from "react-map-components-core";
 import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import maplibregl from "maplibre-gl/dist/maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
@@ -41,19 +39,29 @@ const MapLibreMap = (props) => {
           "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA",
       };
 
-      map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
+      let initializeMap = async () => {
+        map.current = new MapLibreGlWrapper({
+          mapOptions: {
+            ...defaultOptions,
+            ...mapOptions,
+          },
+          onReady: (map, wrapper) => {
+            map.once("load", () => {
+              console.log("Hallo from onReady");
+              if (props.mapId) {
+                mapContext.registerMap(props.mapId, wrapper);
+              } else {
+                mapContext.setMap(wrapper);
+              }
+            });
 
-      map.current.once("load", () => {
-        let mlWrapper = new MapLibreGlWrapper({ map: map.current });
-        if (props.mapId) {
-          mapContext.registerMap(props.mapId, mlWrapper);
-        } else {
-          mapContext.setMap(mlWrapper);
-        }
-      });
+            // TODO: remove this line
+            window.map = wrapper;
+          },
+        });
+      };
 
-      // TODO: remove this line
-      window.map = map.current;
+      initializeMap();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapContainer]);
