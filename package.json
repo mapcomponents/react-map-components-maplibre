@@ -52,7 +52,7 @@
     "os": false
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "start-storybook -p 6006 -s public",
     "build": "rollup -c",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
