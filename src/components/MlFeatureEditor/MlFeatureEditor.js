@@ -6,6 +6,7 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import CustomPolygonMode from "./custom-polygon-mode";
 import CustomSelectMode from "./custom-select-mode";
 import CustomDirectSelectMode from "./custom-direct-select-mode";
+import { v4 as uuidv4 } from "uuid";
 
 import { MapContext } from "react-map-components-core";
 
@@ -13,6 +14,9 @@ function MlFeatureEditor(props) {
   const mapRef = useRef(null);
   const draw = useRef(null);
   const mapContext = useContext(MapContext);
+  const componentId = useRef(
+    (props.idPrefix ? props.idPrefix : "MlFeatureEditor") + uuidv4()
+  );
 
   const [drawToolsInitialized, setDrawToolsInitialized] = useState(false);
   const [drawToolsReady, setDrawToolsReady] = useState(false);
@@ -34,11 +38,8 @@ function MlFeatureEditor(props) {
   useEffect(() => {
     return () => {
       if (mapRef.current) {
-        if (mapRef.current.style) {
-          mapRef.current.off("draw.modechange", modeChangeHandler);
-          mapRef.current.off("mouseup", mouseUpHandler);
-        }
-        mapRef.current.removeControl(draw.current, "top-left");
+        mapRef.current.cleanup(componentId.current);
+        //mapRef.current.removeControl(draw.current, "top-left");
         mapRef.current = null;
       }
     };
@@ -76,11 +77,11 @@ function MlFeatureEditor(props) {
         ),
       });
 
-      mapRef.current.on("draw.modechange", modeChangeHandler);
+      mapRef.current.on("draw.modechange", modeChangeHandler, componentId.current);
 
-      mapRef.current.addControl(draw.current, "top-left");
+      mapRef.current.addControl(draw.current, "top-left", componentId.current);
 
-      mapRef.current.on("mouseup", mouseUpHandler);
+      mapRef.current.on("mouseup", mouseUpHandler, componentId.current);
 
       setDrawToolsReady(true);
     }

@@ -8,15 +8,64 @@ const MapLibreGlWrapper = function (props) {
   this.baseLayers = [];
   this.firstSymbolLayer = undefined;
 
-  this.initRegisteredElements = (componentId) => {
-    if (typeof self.registeredElements[componentId] === "undefined") {
+  this.initRegisteredElements = (componentId, force) => {
+    if (
+      typeof self.registeredElements[componentId] === "undefined" ||
+      (force !== "undefined" && force)
+    ) {
       self.registeredElements[componentId] = {
         layers: [],
         sources: [],
         images: [],
         events: [],
+        controls: [],
       };
     }
+  };
+
+  this.addLayer = (layer, beforeId, componentId) => {
+    if (
+      componentId &&
+      typeof componentId === "string" &&
+      typeof layer.id !== "undefined"
+    ) {
+      self.initRegisteredElements(componentId);
+      self.registeredElements[componentId].layers.push(layer.id);
+    }
+
+    self.map.addLayer(layer, beforeId);
+  };
+
+  this.addSource = (sourceId, source, options, componentId) => {
+    if (typeof options === "string" && typeof componentId === "undefined") {
+      return self.addSource.call(self, sourceId, source, undefined, componentId);
+    }
+    if (
+      componentId &&
+      typeof componentId === "string" &&
+      typeof sourceId !== "undefined"
+    ) {
+      self.initRegisteredElements(componentId);
+      self.registeredElements[componentId].sources.push(sourceId);
+    }
+
+    self.map.addSource(sourceId, source, options);
+  };
+
+  this.addImage = (id, image, ref, componentId) => {
+    if (typeof ref === "string" && typeof componentId === "undefined") {
+      return self.addImage.call(self, id, image, undefined, componentId);
+    }
+    if (
+      componentId &&
+      typeof componentId === "string" &&
+      typeof id !== "undefined"
+    ) {
+      self.initRegisteredElements(componentId);
+      self.registeredElements[componentId].images.push(id);
+    }
+
+    self.map.addImage(id, image, ref);
   };
 
   this.on = (type, layerId, listener, componentId) => {
@@ -31,7 +80,17 @@ const MapLibreGlWrapper = function (props) {
     self.map.on(type, layerId, listener);
   };
 
+  this.addControl = (control, position, componentId) => {
+    if (componentId && typeof componentId === "string") {
+      self.initRegisteredElements(componentId);
+      self.registeredElements[componentId].controls.push([control, position]);
+    }
+
+    self.map.addControl(control, position);
+  };
+
   // cleanup function that remove anything that has been added to the maplibre instance referenced with componentId
+  // be aware that this function only works with explicitly added elements e.g. sources implizitly added by addLayer calls still require manual removal
   this.cleanup = (componentId) => {
     if (typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
@@ -59,15 +118,22 @@ const MapLibreGlWrapper = function (props) {
       self.registeredElements[componentId].events.forEach((item) => {
         self.off(...item);
       });
+
+      // cleanup controls
+      self.registeredElements[componentId].controls.forEach((item) => {
+        self.removeControl(...item);
+      });
+
+      self.initRegisteredElements(componentId, true);
     }
   };
 
   // add style prop functions that require map._update to be called afterwards
   let updatingStyleFunctions = [
-    "addLayer",
+    //"addLayer",
     "moveLayer",
     "removeLayer",
-    "addSource",
+    //"addSource",
     "removeSource",
     "setPaintProperty",
     "setLayoutProperty",

@@ -43,6 +43,7 @@
     "styled-components": "^5.2.1",
     "three": "^0.126.1",
     "typeface-muli": "^1.1.13",
+    "uuid": "^8.3.2",
     "web-vitals": "^0.2.4",
     "xmldom": "^0.5.0"
   },
@@ -93,10 +94,17 @@
     ]
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
