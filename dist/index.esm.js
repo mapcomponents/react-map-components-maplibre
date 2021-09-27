@@ -146,7 +146,61 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   var _this = this;
 
   var self = this;
-  this.map = props.map; // add style prop functions that require map._update to be called afterwards
+  this.map = props.map; // element registration and cleanup on a component level is experimental
+
+  this.registeredElements = {};
+
+  this.initRegisteredElements = function (componentId) {
+    if (typeof self.registeredElements[componentId] === "undefined") {
+      self.registeredElements[componentId] = {
+        layers: [],
+        sources: [],
+        images: [],
+        events: []
+      };
+    }
+  };
+
+  this.on = function (type, layerId, listener, componentId) {
+    if (typeof listener === "string" && typeof layerId === "function") {
+      return self.on.call(self, type, undefined, layerId, listener);
+    }
+
+    if (componentId && typeof componentId === "string") {
+      self.initRegisteredElements(componentId);
+      self.registeredElements[componentId].events.push([type, layerId, listener]);
+    }
+
+    self.map.on(type, layerId, listener);
+  };
+
+  this.cleanup = function (componentId) {
+    if (typeof self.registeredElements[componentId] !== "undefined") {
+      // cleanup layers
+      self.registeredElements[componentId].layers.forEach(function (item) {
+        if (self.getLayer(item)) {
+          self.removeLayer(item);
+        }
+      }); // cleanup sources
+
+      self.registeredElements[componentId].sources.forEach(function (item) {
+        if (self.getSource(item)) {
+          self.removeSource(item);
+        }
+      }); // cleanup images
+
+      self.registeredElements[componentId].images.forEach(function (item) {
+        if (self.hasImage(item)) {
+          self.removeImage(item);
+        }
+      }); // cleanup events
+
+      self.registeredElements[componentId].events.forEach(function (item) {
+        self.off.apply(self, _toConsumableArray(item));
+      });
+    }
+  }; // add style prop functions that require map._update to be called afterwards
+
 
   var updatingStyleFunctions = ["addLayer", "moveLayer", "removeLayer", "addSource", "removeSource", "setPaintProperty", "setLayoutProperty"];
   updatingStyleFunctions.map(function (item) {
