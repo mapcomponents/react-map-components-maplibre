@@ -40,7 +40,9 @@ const layerRemovalTest = (
           refresh
         </button>
         <div className="layers_json">
-          {mapContext.map && refreshTrigger && JSON.stringify(mapContext.map.layers)}
+          {mapContext.map &&
+            refreshTrigger &&
+            JSON.stringify(mapContext.map.map.layers)}
         </div>
       </>
     );

@@ -29,11 +29,7 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
       this.layers = [];
       this.sources = [];
 
-      return {
-        once: (eventName, callback) => {
-          callback();
-        },
-        remove: jest.fn(),
+      let styleFunctions = {
         addSource: (id, source) => {
           if (typeof id.id !== "undefined") {
             self.sources.push(id);
@@ -76,6 +72,14 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
             self.layers.splice(layerPosition, 1);
           }
         },
+      };
+
+      return {
+        ...styleFunctions,
+        once: (eventName, callback) => {
+          callback();
+        },
+        remove: jest.fn(),
         setLayerZoomRange: jest.fn(),
         setLayoutProperty: jest.fn(),
         addImage: jest.fn(),
@@ -86,9 +90,10 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
         setZoom: jest.fn(),
         setPitch: jest.fn(),
         setCenter: jest.fn(),
-        style: {},
+        style: { ...styleFunctions },
         layers: this.layers,
         sources: this.sources,
+        _update: jest.fn(),
         ...mockMapLibreMethods,
       };
     },

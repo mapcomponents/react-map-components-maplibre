@@ -38,19 +38,21 @@ const LoadingOverlayProvider = ({ children }) => {
     }
 
     fadeOut();
-  }, [checkIdleTrigger, mapJobsRef, controlled, mapContext]);
+  }, [checkIdleTrigger, controlled, mapContext]);
 
   useEffect(() => {
     for (var i = 0, len = mapContext.mapIds.length; i < len; i++) {
       if (Object.keys(mapJobsRef.current).indexOf(mapContext.mapIds[i]) === -1) {
         let mapId = mapContext.mapIds[i] + "";
 
-        mapJobsRef.current[mapId] = false;
+        if (mapContext.getMap(mapId)) {
+          mapJobsRef.current[mapId] = false;
 
-        mapContext.getMap(mapId).on("idle", createOnMapIdleFunction(mapId));
+          mapContext.getMap(mapId).on("idle", createOnMapIdleFunction(mapId));
+        }
       }
     }
-  }, [mapContext, mapContext.mapIds, mapJobsRef]);
+  }, [mapContext, mapContext.mapIds]);
 
   useEffect(() => {
     if (loadingDone) {

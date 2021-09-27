@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { MapContext } from "react-map-components-core";
+import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import maplibregl from "!maplibre-gl";
+import maplibregl from "maplibre-gl/dist/maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
@@ -43,10 +44,11 @@ const MapLibreMap = (props) => {
       map.current = new maplibregl.Map({ ...defaultOptions, ...mapOptions });
 
       map.current.once("load", () => {
+        let mlWrapper = new MapLibreGlWrapper({ map: map.current });
         if (props.mapId) {
-          mapContext.registerMap(props.mapId, map.current);
+          mapContext.registerMap(props.mapId, mlWrapper);
         } else {
-          mapContext.setMap(map.current);
+          mapContext.setMap(mlWrapper);
         }
       });
 

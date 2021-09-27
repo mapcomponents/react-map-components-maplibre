@@ -41,7 +41,7 @@ const sourceRemovalTest = (
         <div className="sources_json">
           {mapContext.map &&
             refreshTrigger &&
-            JSON.stringify(mapContext.map.sources)}
+            JSON.stringify(mapContext.map.map.sources)}
         </div>
       </>
     );
