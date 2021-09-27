@@ -52,6 +52,42 @@ function _objectSpread2(target) {
   return target;
 }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -145,10 +181,11 @@ function _nonIterableRest() {
 var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   var _this = this;
 
-  var self = this;
-  this.map = props.map; // element registration and cleanup on a component level is experimental
+  var self = this; // element registration and cleanup on a component level is experimental
 
   this.registeredElements = {};
+  this.baseLayers = [];
+  this.firstSymbolLayer = undefined;
 
   this.initRegisteredElements = function (componentId) {
     if (typeof self.registeredElements[componentId] === "undefined") {
@@ -172,7 +209,8 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     }
 
     self.map.on(type, layerId, listener);
-  };
+  }; // cleanup function that remove anything that has been added to the maplibre instance referenced with componentId
+
 
   this.cleanup = function (componentId) {
     if (typeof self.registeredElements[componentId] !== "undefined") {
@@ -226,23 +264,76 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
       return false;
     };
-  }); //  add MapLibre-gl functions
-
-  Object.keys(this.map.__proto__).forEach(function (item) {
-    if (typeof _this[item] === "undefined") {
-      _this[item] = function () {
-        var _self$map;
-
-        return (_self$map = self.map)[item].apply(_self$map, arguments);
-      };
-    }
-  }); //  add MapLibre-gl properties
-
-  Object.keys(this.map).forEach(function (item) {
-    if (typeof _this[item] === "undefined") {
-      _this[item] = self.map[item];
-    }
   });
+
+  this.addNativeMaplibreFunctionsAndProps = function () {
+    //  add MapLibre-gl functions
+    Object.keys(_this.map.__proto__).forEach(function (item) {
+      if (typeof _this[item] === "undefined") {
+        _this[item] = function () {
+          var _self$map;
+
+          return (_self$map = self.map)[item].apply(_self$map, arguments);
+        };
+      }
+    }); //  add MapLibre-gl properties
+
+    Object.keys(_this.map).forEach(function (item) {
+      if (typeof _this[item] === "undefined") {
+        _this[item] = self.map[item];
+      }
+    });
+  }; // initialize the MapLibre-gl instance
+
+
+  var initializeMapLibre = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!(typeof props.mapOptions.style === "string" && props.mapOptions.style.indexOf("mapbox://") === -1)) {
+                _context.next = 3;
+                break;
+              }
+
+              _context.next = 3;
+              return fetch(props.mapOptions.style).then(function (response) {
+                return response.json();
+              }).then(function (styleJson) {
+                styleJson.layers.forEach(function (item) {
+                  self.baseLayers.push(item.id);
+
+                  if (!self.firstSymbolLayer && item.type === "symbol") {
+                    self.firstSymbolLayer = item.id;
+                  }
+                });
+                self.styleJson = styleJson;
+                props.mapOptions.style = styleJson;
+              });
+
+            case 3:
+              self.map = new maplibregl.Map(props.mapOptions);
+              self.addNativeMaplibreFunctionsAndProps();
+
+              if (typeof props.onReady === "function") {
+                props.onReady(self.map, self);
+              }
+
+            case 6:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function initializeMapLibre() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  initializeMapLibre();
 };
 
 /**
@@ -274,20 +365,20 @@ var MapLibreMap = function MapLibreMap(props) {
         container: mapContainer.current,
         accessToken: "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA"
       };
-      map.current = new maplibregl.Map(_objectSpread2(_objectSpread2({}, defaultOptions), mapOptions));
-      map.current.once("load", function () {
-        var mlWrapper = new MapLibreGlWrapper({
-          map: map.current
-        });
+      map.current = new MapLibreGlWrapper({
+        mapOptions: _objectSpread2(_objectSpread2({}, defaultOptions), mapOptions),
+        onReady: function onReady(map, wrapper) {
+          map.once("load", function () {
+            if (props.mapId) {
+              mapContext.registerMap(props.mapId, wrapper);
+            } else {
+              mapContext.setMap(wrapper);
+            }
+          }); // TODO: remove this line
 
-        if (props.mapId) {
-          mapContext.registerMap(props.mapId, mlWrapper);
-        } else {
-          mapContext.setMap(mlWrapper);
+          window.map = wrapper;
         }
-      }); // TODO: remove this line
-
-      window.map = map.current;
+      });
     } // eslint-disable-next-line react-hooks/exhaustive-deps
 
   }, [mapContainer]);
