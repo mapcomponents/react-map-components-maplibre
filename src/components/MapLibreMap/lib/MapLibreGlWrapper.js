@@ -22,7 +22,13 @@ const MapLibreGlWrapper = function (props) {
   });
 
   // add style prop functions
-  let styleFunctions = ["listImages", "getPaintProperty", "getLayoutProperty"];
+  let styleFunctions = [
+    "getLayer",
+    "getSource",
+    "listImages",
+    "getPaintProperty",
+    "getLayoutProperty",
+  ];
   styleFunctions.map((item) => {
     this[item] = (...props) => {
       if (self.map && self.map.style) {

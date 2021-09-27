@@ -161,7 +161,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     };
   }); // add style prop functions
 
-  var styleFunctions = ["listImages", "getPaintProperty", "getLayoutProperty"];
+  var styleFunctions = ["getLayer", "getSource", "listImages", "getPaintProperty", "getLayoutProperty"];
   styleFunctions.map(function (item) {
     _this[item] = function () {
       if (self.map && self.map.style) {
