@@ -2,6 +2,7 @@ const MapLibreGlWrapper = function (props) {
   let self = this;
   this.map = props.map;
 
+  // element registration and cleanup on a component level is experimental
   this.registeredElements = {};
 
   this.initRegisteredElements = (componentId) => {
