@@ -142,6 +142,55 @@ function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
+var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
+  var _this = this;
+
+  var self = this;
+  this.map = props.map; // add style prop functions that require map._update to be called afterwards
+
+  var updatingStyleFunctions = ["addLayer", "moveLayer", "removeLayer", "addSource", "removeSource", "setPaintProperty", "setLayoutProperty"];
+  updatingStyleFunctions.map(function (item) {
+    _this[item] = function () {
+      if (self.map && _this.map.style && typeof self.map.style[item] === "function") {
+        var _self$map$style;
+
+        (_self$map$style = self.map.style)[item].apply(_self$map$style, arguments);
+      }
+
+      return self.map._update ? self.map._update(true) : undefined;
+    };
+  }); // add style prop functions
+
+  var styleFunctions = ["listImages", "getPaintProperty", "getLayoutProperty"];
+  styleFunctions.map(function (item) {
+    _this[item] = function () {
+      if (self.map && self.map.style) {
+        var _self$map$style2;
+
+        return (_self$map$style2 = self.map.style)[item].apply(_self$map$style2, arguments);
+      }
+
+      return false;
+    };
+  }); //  add MapLibre-gl functions
+
+  Object.keys(this.map.__proto__).forEach(function (item) {
+    if (typeof _this[item] === "undefined") {
+      _this[item] = function () {
+        var _self$map;
+
+        return (_self$map = self.map)[item].apply(_self$map, arguments);
+      };
+    }
+  }); //  add MapLibre-gl properties
+
+  Object.keys(this.map).forEach(function (item) {
+    if (typeof _this[item] === "undefined") {
+      _this[item] = self.map[item];
+    }
+  });
+};
+
 /**
  * The MapLibreMap component will create the MapLibre-gl instance and set the reference at MapContext.map after the MapLibre-gl load event has fired. That way (since the map refence is created using the useState hook) you can use the react useEffect hook in depending components to access the MapLibre-gl instance like ```useEffect(() => { \/** code *\/ }, [mapContext.map])``` and be sure the code is executed once the MapLibre-gl instance has fired the load event.
  *
@@ -173,10 +222,14 @@ var MapLibreMap = function MapLibreMap(props) {
       };
       map.current = new maplibregl.Map(_objectSpread2(_objectSpread2({}, defaultOptions), mapOptions));
       map.current.once("load", function () {
+        var mlWrapper = new MapLibreGlWrapper({
+          map: map.current
+        });
+
         if (props.mapId) {
-          mapContext.registerMap(props.mapId, map.current);
+          mapContext.registerMap(props.mapId, mlWrapper);
         } else {
-          mapContext.setMap(map.current);
+          mapContext.setMap(mlWrapper);
         }
       }); // TODO: remove this line
 
@@ -2634,6 +2687,8 @@ var MlCameraFollowPath = function MlCameraFollowPath(props) {
     }
 
     var timer = window.setInterval(function () {
+      console.log(mapContext.map);
+
       if (clearIntervalRef.current) {
         window.clearInterval(timer);
         enableInteractivity();
