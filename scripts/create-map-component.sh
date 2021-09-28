@@ -2,6 +2,11 @@
 
 set -x
 
+if [ $# -eq 0 ]; then
+    echo "Please provide a component name as first argument."
+    exit 1
+fi
+
 component_name="$1"
 target_path="src/components/"
 template_name="MlComponentTemplate"
