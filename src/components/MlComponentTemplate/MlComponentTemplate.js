@@ -23,8 +23,10 @@ const MlComponentTemplate = (props) => {
       // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
       // check for the existence of map.style before calling getLayer or getSource
 
-      mapRef.current.cleanup(_componentId);
-      mapRef.current = undefined;
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+        mapRef.current = undefined;
+      }
     };
   }, []);
 
