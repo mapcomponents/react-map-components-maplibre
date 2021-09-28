@@ -15,15 +15,13 @@ function MlFeatureEditor(props) {
   const draw = useRef(null);
   const mapContext = useContext(MapContext);
   const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlFeatureEditor") + uuidv4()
+    (props.idPrefix ? props.idPrefix : "_MlFeatureEditor") + uuidv4()
   );
 
   const [drawToolsInitialized, setDrawToolsInitialized] = useState(false);
   const [drawToolsReady, setDrawToolsReady] = useState(false);
 
   const [mouseUpTrigger, setMouseUpTrigger] = useState(false);
-
-  const [drawnFeatures, setDrawnFeatures] = useState([]);
 
   const modeChangeHandler = (e) => {
     console.log("MlFeatureEditor mode change to " + e.mode);
@@ -85,7 +83,7 @@ function MlFeatureEditor(props) {
 
       setDrawToolsReady(true);
     }
-  }, [mapContext.map, mapContext, props, drawnFeatures, drawToolsInitialized]);
+  }, [mapContext.map, mapContext, props, drawToolsInitialized]);
 
   useEffect(() => {
     if (
