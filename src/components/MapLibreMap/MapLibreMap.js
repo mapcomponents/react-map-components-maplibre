@@ -17,11 +17,12 @@ const MapLibreMap = (props) => {
 
   const mapContext = useContext(MapContext);
 
+  const mapIdRef = useRef(props.mapId);
   const mapOptions = props.options;
 
   useEffect(() => {
     return () => {
-      mapContext.removeMap(props.mapId);
+      mapContext.removeMap(mapIdRef.current);
       map.current.remove();
       map.current = null;
     };
