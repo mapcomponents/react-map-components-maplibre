@@ -1,0 +1,14 @@
+{
+    "tags": {
+        "allowUnknownTags": [
+            "pailhead"
+        ] 
+    },
+    "recurseDepth": 10,
+    "plugins": [
+        "node_modules/better-docs/typescript"
+    ],
+    "source": {
+        "include": ["./src/"]
+    }
+}
