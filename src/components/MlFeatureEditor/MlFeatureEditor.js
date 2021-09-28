@@ -15,7 +15,7 @@ function MlFeatureEditor(props) {
   const draw = useRef(null);
   const mapContext = useContext(MapContext);
   const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "_MlFeatureEditor") + uuidv4()
+    (props.idPrefix ? props.idPrefix : "MlFeatureEditor-") + uuidv4()
   );
 
   const [drawToolsInitialized, setDrawToolsInitialized] = useState(false);
