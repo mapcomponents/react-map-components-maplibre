@@ -72,12 +72,18 @@ const MapLibreGlWrapper = function (props) {
     if (typeof listener === "string" && typeof layerId === "function") {
       return self.on.call(self, type, undefined, layerId, listener);
     }
-    if (componentId && typeof componentId === "string") {
-      self.initRegisteredElements(componentId);
-      self.registeredElements[componentId].events.push([type, layerId, listener]);
+
+    let _arguments = [type, layerId, listener];
+    if (!layerId) {
+      _arguments = [type, listener];
     }
 
-    self.map.on(type, layerId, listener);
+    if (componentId && typeof componentId === "string") {
+      self.initRegisteredElements(componentId);
+      self.registeredElements[componentId].events.push(_arguments);
+    }
+
+    self.map.on(..._arguments);
   };
 
   this.addControl = (control, position, componentId) => {
