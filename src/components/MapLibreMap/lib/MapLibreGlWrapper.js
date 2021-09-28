@@ -24,6 +24,9 @@ const MapLibreGlWrapper = function (props) {
   };
 
   this.addLayer = (layer, beforeId, componentId) => {
+    if (!self.map.style) {
+      return;
+    }
     if (
       componentId &&
       typeof componentId === "string" &&
@@ -37,6 +40,9 @@ const MapLibreGlWrapper = function (props) {
   };
 
   this.addSource = (sourceId, source, options, componentId) => {
+    if (!self.map.style) {
+      return;
+    }
     if (typeof options === "string" && typeof componentId === "undefined") {
       return self.addSource.call(self, sourceId, source, undefined, componentId);
     }
@@ -53,8 +59,11 @@ const MapLibreGlWrapper = function (props) {
   };
 
   this.addImage = (id, image, ref, componentId) => {
+    if (!self.map.style) {
+      return;
+    }
     if (typeof ref === "string" && typeof componentId === "undefined") {
-      return self.addImage.call(self, id, image, undefined, componentId);
+      return self.addImage.call(self, id, image, undefined, ref);
     }
     if (
       componentId &&
@@ -89,7 +98,7 @@ const MapLibreGlWrapper = function (props) {
   this.addControl = (control, position, componentId) => {
     if (componentId && typeof componentId === "string") {
       self.initRegisteredElements(componentId);
-      self.registeredElements[componentId].controls.push([control, position]);
+      self.registeredElements[componentId].controls.push(control);
     }
 
     self.map.addControl(control, position);
@@ -98,36 +107,39 @@ const MapLibreGlWrapper = function (props) {
   // cleanup function that remove anything that has been added to the maplibre instance referenced with componentId
   // be aware that this function only works with explicitly added elements e.g. sources implizitly added by addLayer calls still require manual removal
   this.cleanup = (componentId) => {
-    if (typeof self.registeredElements[componentId] !== "undefined") {
+    if (
+      self.map.style &&
+      typeof self.registeredElements[componentId] !== "undefined"
+    ) {
       // cleanup layers
       self.registeredElements[componentId].layers.forEach((item) => {
-        if (self.getLayer(item)) {
-          self.removeLayer(item);
+        if (self.map.style.getLayer(item)) {
+          self.map.style.removeLayer(item);
         }
       });
 
       // cleanup sources
       self.registeredElements[componentId].sources.forEach((item) => {
-        if (self.getSource(item)) {
-          self.removeSource(item);
+        if (self.map.style.getSource(item)) {
+          self.map.style.removeSource(item);
         }
       });
 
       // cleanup images
       self.registeredElements[componentId].images.forEach((item) => {
-        if (self.hasImage(item)) {
-          self.removeImage(item);
+        if (self.map.hasImage(item)) {
+          self.map.style.removeImage(item);
         }
       });
 
       // cleanup events
       self.registeredElements[componentId].events.forEach((item) => {
-        self.off(...item);
+        self.map.off(...item);
       });
 
       // cleanup controls
       self.registeredElements[componentId].controls.forEach((item) => {
-        self.removeControl(...item);
+        self.map.removeControl(item);
       });
 
       self.initRegisteredElements(componentId, true);
@@ -160,6 +172,7 @@ const MapLibreGlWrapper = function (props) {
     "listImages",
     "getPaintProperty",
     "getLayoutProperty",
+    "removeImage",
   ];
   styleFunctions.map((item) => {
     this[item] = (...props) => {
