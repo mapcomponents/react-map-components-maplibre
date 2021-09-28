@@ -1,3 +1,3 @@
-# Component Beschreibung
+# Zeichnen Werkzeug
 
-Beschreibungstext
+Applikation kann Polygone über die Karte zeichnen

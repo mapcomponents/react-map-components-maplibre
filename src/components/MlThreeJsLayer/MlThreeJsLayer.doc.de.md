@@ -1,3 +1,3 @@
-# Component Beschreibung
+# 3D Model Layer
 
-Beschreibungstext
+Lädt 3D-Model auf eine Karte.
