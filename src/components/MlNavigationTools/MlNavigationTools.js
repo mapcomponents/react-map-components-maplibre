@@ -3,12 +3,21 @@ import {useContext, useState} from "react";
 import Button from "@mui/material/Button"
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import RoomIcon from '@mui/icons-material/Room';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
 const MlNavigationTools = () => {
 
   const mapContext = useContext(MapContext);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false)
+  const buttonStyle = {
+    minWidth: 30,
+    minHeight: 30,
+    width: 30,
+    height: 30,
+    "background-color": "#eeeeee",
+    border: 1,
+    margin: 0.15,
+  }
 
   const zoomIn = () => {
     if(!mapContext.map) return;
@@ -43,9 +52,9 @@ const MlNavigationTools = () => {
 
   return (
       <div style={{zIndex : 501, position: "absolute", right: "20px", bottom: "20px", display: "flex", "flex-direction": "column"}}>
-        <Button style={{"background-color": "#eeeeee"}} onClick={moveToCurrentLocation} disabled={locationAccessDenied}> <RoomIcon /> </Button>
-        <Button onClick={zoomIn}> <ZoomInIcon /> </Button>
-        <Button onClick={zoomOut}> <ZoomOutIcon /> </Button>
+        <Button sx={buttonStyle} onClick={moveToCurrentLocation} disabled={locationAccessDenied}> <GpsFixedIcon /> </Button>
+        <Button sx={buttonStyle} onClick={zoomIn}> <ZoomInIcon /> </Button>
+        <Button sx={buttonStyle} onClick={zoomOut}> <ZoomOutIcon /> </Button>
       </div>
   )
 }
