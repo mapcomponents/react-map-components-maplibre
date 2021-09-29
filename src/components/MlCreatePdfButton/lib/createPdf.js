@@ -51,7 +51,6 @@ const createPdf = (map, locationValue, setLoading) => {
       }
     });
   }
-  console.log(style);
   renderMap.setStyle(style);
 
   renderMap.once("idle", function () {
