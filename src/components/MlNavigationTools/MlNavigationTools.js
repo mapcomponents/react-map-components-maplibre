@@ -1,6 +1,9 @@
 import {MapContext} from "react-map-components-core";
 import {useContext, useState} from "react";
 import Button from "@mui/material/Button"
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import RoomIcon from '@mui/icons-material/Room';
 
 const MlNavigationTools = () => {
 
@@ -39,10 +42,10 @@ const MlNavigationTools = () => {
   }
 
   return (
-      <div className={"container"}>
-        <Button className={"container-button"} onClick={moveToCurrentLocation} disabled={locationAccessDenied}> O </Button>
-        <Button className={"container-button"} onClick={zoomIn}> + </Button>
-        <Button className={"container-button"} onClick={zoomOut}> - </Button>
+      <div style={{zIndex : 501, position: "absolute", right: "20px", bottom: "20px", display: "flex", "flex-direction": "column"}}>
+        <Button style={{"background-color": "#eeeeee"}} onClick={moveToCurrentLocation} disabled={locationAccessDenied}> <RoomIcon /> </Button>
+        <Button onClick={zoomIn}> <ZoomInIcon /> </Button>
+        <Button onClick={zoomOut}> <ZoomOutIcon /> </Button>
       </div>
   )
 }
