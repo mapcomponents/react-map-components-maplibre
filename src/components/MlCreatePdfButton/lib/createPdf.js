@@ -11,9 +11,6 @@ const toPixels = (length) => {
 };
 
 const createPdf = (map, locationValue, setLoading) => {
-  console.log("start create PDF");
-  console.log(map);
-  console.log(map.getCenter());
   setLoading(true);
 
   const width = 210;
