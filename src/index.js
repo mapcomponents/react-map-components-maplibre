@@ -10,5 +10,7 @@ export { default as MlOsmLayer } from "./components/MlOsmLayer/MlOsmLayer";
 export { default as MlVectorTileLayer } from "./components/MlVectorTileLayer/MlVectorTileLayer";
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
 export { default as MlFeatureEditor } from "./components/MlFeatureEditor/MlFeatureEditor";
+export { default as GeoJsonProvider } from "./components/MlGPXViewer/util/GeoJsonProvider";
+export { default as GeoJsonContext } from "./components/MlGPXViewer/util/GeoJsonContext";
 
 export { default as MlCameraFollowPath } from "./lab/MlCameraFollowPath/MlCameraFollowPath";

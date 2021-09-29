@@ -2873,6 +2873,41 @@ function MlFeatureEditor(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 }
 
+var GeoJsonContext = /*#__PURE__*/React.createContext({});
+var GeoJsonContextProvider = GeoJsonContext.Provider;
+
+var GeoJsonProvider = function GeoJsonProvider(_ref) {
+  var children = _ref.children;
+
+  var _useState = useState({
+    type: "FeatureCollection",
+    features: []
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      data = _useState2[0],
+      setData = _useState2[1];
+
+  var getEmptyFeatureCollection = function getEmptyFeatureCollection() {
+    return {
+      type: "FeatureCollection",
+      features: []
+    };
+  };
+
+  var value = {
+    data: data,
+    setData: setData,
+    getEmptyFeatureCollection: getEmptyFeatureCollection
+  };
+  return /*#__PURE__*/React.createElement(GeoJsonContextProvider, {
+    value: value
+  }, children);
+};
+
+GeoJsonProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
 var MlCameraFollowPath = function MlCameraFollowPath(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
@@ -2959,5 +2994,5 @@ var MlCameraFollowPath = function MlCameraFollowPath(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
-export { MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
 //# sourceMappingURL=index.esm.js.map
