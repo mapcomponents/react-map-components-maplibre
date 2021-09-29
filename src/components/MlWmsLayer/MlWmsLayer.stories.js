@@ -7,7 +7,7 @@ import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator"
 
 import "../../App.css";
 
-export default {
+const storyoptions = {
   title: "MapComponents/MlWmsLayer",
   component: MlWmsLayer,
   argTypes: {
@@ -16,6 +16,7 @@ export default {
   },
   decorators: multiMapContextDecorator,
 };
+export default storyoptions;
 
 const Template = (args) => (
   <TopToolbar>
