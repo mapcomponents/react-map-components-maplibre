@@ -362,7 +362,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   }; // add functions that are missing on the MapLibre instances prototype
 
 
-  var missingFunctions = ["getZoom", "setZoom", "getCenter", "setCenter", "getBearing", "setBearing", "getPitch", "setPitch", "jumpTo", "flyTo"];
+  var missingFunctions = ["getZoom", "setZoom", "getCenter", "setCenter", "getBearing", "setBearing", "getPitch", "setPitch", "jumpTo", "flyTo", "panTo", "panBy", "panBy", "zoomTo", "zoomIn", "zoomOut", "getPadding", "setPadding", "rotateTo", "resetNorth", "resetNorthPitch", "snapToNorth", "cameraForBounds", "fitBounds", "fitScreenCoordinates", "getFreeCameraOptions", "setFreeCameraOptions", "easeTo", "stop"];
   missingFunctions.forEach(function (item) {
     _this[item] = function () {
       if (typeof self.map[item] === "function") {
