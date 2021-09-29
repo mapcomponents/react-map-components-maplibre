@@ -12,6 +12,8 @@ const toPixels = (length) => {
 
 const createPdf = (map, locationValue, setLoading) => {
   console.log("start create PDF");
+  console.log(map);
+  console.log(map.getCenter());
   setLoading(true);
 
   const width = 210;
@@ -143,11 +145,7 @@ const createPdf = (map, locationValue, setLoading) => {
       logo,
       "png",
       5,
-      offsetY +
-        marginTop +
-        lineHeight * 2 +
-        textChunks.length * 3 +
-        innerMargin * 2,
+      offsetY + marginTop + lineHeight * 2 + textChunks.length * 3 + innerMargin * 2,
       3,
       3,
       null,

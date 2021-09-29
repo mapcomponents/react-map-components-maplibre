@@ -214,10 +214,10 @@ const MapLibreGlWrapper = function (props) {
   ];
   missingFunctions.forEach((item) => {
     this[item] = (...props) => {
-      console.log(...props);
       if (typeof self.map[item] === "function") {
-        self.map[item](...props);
+        return self.map[item].call(self.map, ...props);
       }
+      return undefined;
     };
   });
 
