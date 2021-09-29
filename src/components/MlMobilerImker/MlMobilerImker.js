@@ -79,9 +79,9 @@ const MlMobilerImker = () => {
   useEffect(() => {
     if (!mapContext.map) return;
 
-    mapContext.map.setZoom(13.05);
+    mapContext.map.map.setZoom(13.05);
 
-    let center = mapContext.map.getCenter();
+    let center = mapContext.map.map.getCenter();
     let startLngLat = [center.lng, center.lat];
     searchRadius = makeCircle(startLngLat, selectedMainFlightRadius * 1000);
 

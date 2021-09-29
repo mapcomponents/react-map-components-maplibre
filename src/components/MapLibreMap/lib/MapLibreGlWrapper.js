@@ -199,6 +199,28 @@ const MapLibreGlWrapper = function (props) {
     });
   };
 
+  // add functions that are missing on the MapLibre instances prototype
+  let missingFunctions = [
+    "getZoom",
+    "setZoom",
+    "getCenter",
+    "setCenter",
+    "getBearing",
+    "setBearing",
+    "getPitch",
+    "setPitch",
+    "jumpTo",
+    "flyTo",
+  ];
+  missingFunctions.forEach((item) => {
+    this[item] = (...props) => {
+      console.log(...props);
+      if (typeof self.map[item] === "function") {
+        self.map[item](...props);
+      }
+    };
+  });
+
   // initialize the MapLibre-gl instance
   let initializeMapLibre = async () => {
     // if mapOptions style URL is given and if it is not a mapbox URL fetch the json and initialize the mapbox object
@@ -221,6 +243,7 @@ const MapLibreGlWrapper = function (props) {
     }
 
     self.map = new maplibregl.Map(props.mapOptions);
+
     self.addNativeMaplibreFunctionsAndProps();
 
     if (typeof props.onReady === "function") {

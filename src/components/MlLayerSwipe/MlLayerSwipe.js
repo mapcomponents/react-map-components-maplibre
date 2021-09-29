@@ -18,10 +18,7 @@ const MlLayerSwipe = (props) => {
     if (!props.map1Id || !props.map2Id) {
       return false;
     }
-    if (
-      mapContext.mapIds.indexOf(props.map1Id) === -1 ||
-      mapContext.mapIds.indexOf(props.map2Id) === -1
-    ) {
+    if (!mapContext.mapExists(props.map1Id) || !mapContext.mapExists(props.map2Id)) {
       return false;
     }
 
@@ -42,8 +39,8 @@ const MlLayerSwipe = (props) => {
     if (!mapExists()) return;
 
     syncCleanupFunctionRef.current = syncMove(
-      mapContext.maps[props.map1Id],
-      mapContext.maps[props.map2Id]
+      mapContext.getMap(props.map1Id).map,
+      mapContext.getMap(props.map2Id).map
     );
     onMove({ clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2 });
   }, [mapContext.mapIds]);
