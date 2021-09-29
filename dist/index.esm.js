@@ -4,6 +4,7 @@ import { MapContext } from 'react-map-components-core';
 import maplibregl from 'maplibre-gl/dist/maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl$1 from 'maplibre-gl/dist/maplibre-gl-unminified';
+import { v4 } from 'uuid';
 import Button from '@material-ui/core/Button';
 import maplibregl$2 from 'maplibre-gl';
 import jsPDF from 'jspdf';
@@ -13,7 +14,6 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import Point from '@mapbox/point-geometry';
 import extent from '@mapbox/geojson-extent';
-import { v4 } from 'uuid';
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -201,6 +201,10 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   };
 
   this.addLayer = function (layer, beforeId, componentId) {
+    if (!self.map.style) {
+      return;
+    }
+
     if (componentId && typeof componentId === "string" && typeof layer.id !== "undefined") {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].layers.push(layer.id);
@@ -210,6 +214,10 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   };
 
   this.addSource = function (sourceId, source, options, componentId) {
+    if (!self.map.style) {
+      return;
+    }
+
     if (typeof options === "string" && typeof componentId === "undefined") {
       return self.addSource.call(self, sourceId, source, undefined, componentId);
     }
@@ -223,8 +231,12 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   };
 
   this.addImage = function (id, image, ref, componentId) {
+    if (!self.map.style) {
+      return;
+    }
+
     if (typeof ref === "string" && typeof componentId === "undefined") {
-      return self.addImage.call(self, id, image, undefined, componentId);
+      return self.addImage.call(self, id, image, undefined, ref);
     }
 
     if (componentId && typeof componentId === "string" && typeof id !== "undefined") {
@@ -236,22 +248,30 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   };
 
   this.on = function (type, layerId, listener, componentId) {
+    var _self$map;
+
     if (typeof listener === "string" && typeof layerId === "function") {
       return self.on.call(self, type, undefined, layerId, listener);
     }
 
-    if (componentId && typeof componentId === "string") {
-      self.initRegisteredElements(componentId);
-      self.registeredElements[componentId].events.push([type, layerId, listener]);
+    var _arguments = [type, layerId, listener];
+
+    if (!layerId) {
+      _arguments = [type, listener];
     }
 
-    self.map.on(type, layerId, listener);
+    if (componentId && typeof componentId === "string") {
+      self.initRegisteredElements(componentId);
+      self.registeredElements[componentId].events.push(_arguments);
+    }
+
+    (_self$map = self.map).on.apply(_self$map, _toConsumableArray(_arguments));
   };
 
   this.addControl = function (control, position, componentId) {
     if (componentId && typeof componentId === "string") {
       self.initRegisteredElements(componentId);
-      self.registeredElements[componentId].controls.push([control, position]);
+      self.registeredElements[componentId].controls.push(control);
     }
 
     self.map.addControl(control, position);
@@ -260,32 +280,34 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
 
   this.cleanup = function (componentId) {
-    if (typeof self.registeredElements[componentId] !== "undefined") {
+    if (self.map.style && typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
       self.registeredElements[componentId].layers.forEach(function (item) {
-        if (self.getLayer(item)) {
-          self.removeLayer(item);
+        if (self.map.style.getLayer(item)) {
+          self.map.style.removeLayer(item);
         }
       }); // cleanup sources
 
       self.registeredElements[componentId].sources.forEach(function (item) {
-        if (self.getSource(item)) {
-          self.removeSource(item);
+        if (self.map.style.getSource(item)) {
+          self.map.style.removeSource(item);
         }
       }); // cleanup images
 
       self.registeredElements[componentId].images.forEach(function (item) {
-        if (self.hasImage(item)) {
-          self.removeImage(item);
+        if (self.map.hasImage(item)) {
+          self.map.style.removeImage(item);
         }
       }); // cleanup events
 
       self.registeredElements[componentId].events.forEach(function (item) {
-        self.off.apply(self, _toConsumableArray(item));
+        var _self$map2;
+
+        (_self$map2 = self.map).off.apply(_self$map2, _toConsumableArray(item));
       }); // cleanup controls
 
       self.registeredElements[componentId].controls.forEach(function (item) {
-        self.removeControl.apply(self, _toConsumableArray(item));
+        self.map.removeControl(item);
       });
       self.initRegisteredElements(componentId, true);
     }
@@ -307,7 +329,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     };
   }); // add style prop functions
 
-  var styleFunctions = ["getLayer", "getSource", "listImages", "getPaintProperty", "getLayoutProperty"];
+  var styleFunctions = ["getLayer", "getSource", "listImages", "getPaintProperty", "getLayoutProperty", "removeImage"];
   styleFunctions.map(function (item) {
     _this[item] = function () {
       if (self.map && self.map.style) {
@@ -325,9 +347,9 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     Object.keys(_this.map.__proto__).forEach(function (item) {
       if (typeof _this[item] === "undefined") {
         _this[item] = function () {
-          var _self$map;
+          var _self$map3;
 
-          return (_self$map = self.map)[item].apply(_self$map, arguments);
+          return (_self$map3 = self.map)[item].apply(_self$map3, arguments);
         };
       }
     }); //  add MapLibre-gl properties
@@ -337,8 +359,25 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
         _this[item] = self.map[item];
       }
     });
-  }; // initialize the MapLibre-gl instance
+  }; // add functions that are missing on the MapLibre instances prototype
 
+
+  var missingFunctions = ["getZoom", "setZoom", "getCenter", "setCenter", "getBearing", "setBearing", "getPitch", "setPitch", "jumpTo", "flyTo"];
+  missingFunctions.forEach(function (item) {
+    _this[item] = function () {
+      if (typeof self.map[item] === "function") {
+        var _self$map$item;
+
+        for (var _len = arguments.length, props = new Array(_len), _key = 0; _key < _len; _key++) {
+          props[_key] = arguments[_key];
+        }
+
+        return (_self$map$item = self.map[item]).call.apply(_self$map$item, [self.map].concat(props));
+      }
+
+      return undefined;
+    };
+  }); // initialize the MapLibre-gl instance
 
   var initializeMapLibre = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -401,10 +440,11 @@ var MapLibreMap = function MapLibreMap(props) {
   var map = useRef(null);
   var mapContainer = useRef(null);
   var mapContext = useContext(MapContext);
+  var mapIdRef = useRef(props.mapId);
   var mapOptions = props.options;
   useEffect(function () {
     return function () {
-      mapContext.removeMap(props.mapId);
+      mapContext.removeMap(mapIdRef.current);
       map.current.remove();
       map.current = null;
     };
@@ -501,19 +541,31 @@ MapLibreMap$1.propTypes = {
 var MlComponentTemplate = function MlComponentTemplate(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   var mapContext = useContext(MapContext);
+  var initializedRef = useRef(false);
+  var mapRef = useRef(undefined);
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + v4());
   useEffect(function () {
-    return function () {// This is the cleanup function, it is called when this react component is removed from react-dom
+    var _componentId = componentId.current;
+    return function () {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
       // try to remove anything this component has added to the MapLibre-gl instance
       // e.g.: remove the layer
       // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
       // check for the existence of map.style before calling getLayer or getSource
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+        mapRef.current = undefined;
+      }
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    mapContext.getMap(props.mapId).setCenter([7.132122000552613, 50.716405378037706]);
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
+    mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
+    console.log(componentId.current);
   }, [mapContext.mapIds, mapContext, props.mapId]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
@@ -653,7 +705,6 @@ var toPixels = function toPixels(length) {
 };
 
 var createPdf = function createPdf(map, locationValue, setLoading) {
-  console.log("start create PDF");
   setLoading(true);
   var width = 210;
   var height = 297; // Calculate pixel ratio
@@ -696,7 +747,6 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
     _loop(name);
   }
 
-  console.log(style);
   renderMap.setStyle(style);
   renderMap.once("idle", function () {
     var _hidden$parentNode;
@@ -2737,7 +2787,7 @@ function MlFeatureEditor(props) {
   var mapRef = useRef(null);
   var draw = useRef(null);
   var mapContext = useContext(MapContext);
-  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlFeatureEditor") + v4());
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlFeatureEditor-") + v4());
 
   var _useState = useState(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -2753,11 +2803,6 @@ function MlFeatureEditor(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       mouseUpTrigger = _useState6[0],
       setMouseUpTrigger = _useState6[1];
-
-  var _useState7 = useState([]),
-      _useState8 = _slicedToArray(_useState7, 2),
-      drawnFeatures = _useState8[0],
-      setDrawnFeatures = _useState8[1];
 
   var modeChangeHandler = function modeChangeHandler(e) {
     console.log("MlFeatureEditor mode change to " + e.mode); //setDrawMode(e.mode);
@@ -2801,7 +2846,7 @@ function MlFeatureEditor(props) {
       mapRef.current.on("mouseup", mouseUpHandler, componentId.current);
       setDrawToolsReady(true);
     }
-  }, [mapContext.map, mapContext, props, drawnFeatures, drawToolsInitialized]);
+  }, [mapContext.map, mapContext, props, drawToolsInitialized]);
   useEffect(function () {
     if (draw.current && props.geojson && props.geojson.geometry && props.geojson.geometry.coordinates) {
       draw.current.set({
