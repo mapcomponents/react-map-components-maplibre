@@ -16,21 +16,17 @@ const MlVectorTileLayer = (props) => {
   const mapRef = useRef(null);
 
   const cleanup = () => {
-    if(mapRef.current && mapRef.current.style) {
+    if (mapRef.current && mapRef.current.style) {
       for (let key in layerIdsRef.current) {
-        if (
-            mapRef.current.getLayer(layerIdsRef.current[key])
-        ) {
+        if (mapRef.current.getLayer(layerIdsRef.current[key])) {
           mapRef.current.removeLayer(layerIdsRef.current[key]);
         }
       }
-      if (
-          mapRef.current.getSource(sourceName + idPostfixRef.current)
-      ) {
+      if (mapRef.current.getSource(sourceName + idPostfixRef.current)) {
         mapRef.current.removeSource(sourceName + idPostfixRef.current);
       }
     }
-  }
+  };
 
   useEffect(() => {
     return cleanup;
@@ -39,8 +35,8 @@ const MlVectorTileLayer = (props) => {
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
 
-    initializedRef.current = true
-    mapRef.current = mapContext.getMap(props.mapId)
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
 
     // Add the new layer to the openlayers instance once it is available
     mapRef.current.addSource(sourceName + idPostfixRef.current, {
@@ -73,7 +69,7 @@ const MlVectorTileLayer = (props) => {
   }, [mapContext.mapIds]);
 
   useEffect(() => {
-    if (!mapContext.mapExists(props.mapId)) return;
+    if (!mapContext.mapExists(props.mapId) || !initializedRef.current) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
