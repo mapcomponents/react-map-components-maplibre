@@ -64,7 +64,7 @@
     "build-catalogue-markdown-docs": "node scripts/build-catalogue-markdown-docs.js",
     "create-component": "./scripts/create-map-component.sh",
     "docs-create": "jsdoc -r -c ./jsdoc.json -d docs",
-    "docs-serve": "http-server ./docs -p 3001"
+    "docs-serve": "http-server ./docs/react-map-components-maplibre/$npm_package_version -p 3001"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
