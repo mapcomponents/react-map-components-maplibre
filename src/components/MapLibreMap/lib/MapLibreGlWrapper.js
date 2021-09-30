@@ -34,6 +34,10 @@ const MapLibreGlWrapper = function (props) {
     ) {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].layers.push(layer.id);
+
+      if (typeof layer.source === "object") {
+        self.registeredElements[componentId].sources.push(layer.id);
+      }
     }
 
     self.map.addLayer(layer, beforeId);
@@ -150,15 +154,13 @@ const MapLibreGlWrapper = function (props) {
 
   // add style prop functions that require map._update to be called afterwards
   let updatingStyleFunctions = [
-    //"addLayer",
     "moveLayer",
     "removeLayer",
-    //"addSource",
     "removeSource",
     "setPaintProperty",
     "setLayoutProperty",
   ];
-  updatingStyleFunctions.map((item) => {
+  updatingStyleFunctions.forEach((item) => {
     this[item] = (...props) => {
       if (self.map && this.map.style && typeof self.map.style[item] === "function") {
         self.map.style[item](...props);
@@ -176,7 +178,7 @@ const MapLibreGlWrapper = function (props) {
     "getLayoutProperty",
     "removeImage",
   ];
-  styleFunctions.map((item) => {
+  styleFunctions.forEach((item) => {
     this[item] = (...props) => {
       if (self.map && self.map.style) {
         return self.map.style[item](...props);
