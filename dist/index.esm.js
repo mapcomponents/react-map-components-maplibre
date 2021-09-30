@@ -6,15 +6,24 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl$1 from 'maplibre-gl/dist/maplibre-gl-unminified';
 import { v4 } from 'uuid';
 import Button from '@material-ui/core/Button';
-import maplibregl$2 from 'maplibre-gl';
+import maplibregl$2, { Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@material-ui/icons/Print';
-import { lineString, length, lineChunk } from '@turf/turf';
+import { lineString, length, lineChunk, bbox } from '@turf/turf';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import Point from '@mapbox/point-geometry';
 import extent from '@mapbox/geojson-extent';
 import syncMove from '@mapbox/mapbox-gl-sync-move';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
+import FileCopy from '@material-ui/icons/FileCopy';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -3168,6 +3177,312 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
 var GeoJsonContext = /*#__PURE__*/React.createContext({});
 var GeoJsonContextProvider = GeoJsonContext.Provider;
 
+var toGeoJSON = require("./gpxConverter");
+/**
+ * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
+ */
+
+
+var MlGPXViewer = function MlGPXViewer(props) {
+  var dataSource = useContext(GeoJsonContext);
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlGpxViewer-") + v4());
+  var mapContext = useContext(MapContext);
+  var mapId = props.mapId;
+  var initializedRef = useRef(false);
+  var mapRef = useRef(null);
+  var sourceName = "import-source";
+  var layerNameLines = "importer-layer-lines";
+  var layerNamePoints = "importer-layer-points";
+
+  var _useState = useState(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      open = _useState2[0],
+      setIsOpen = _useState2[1];
+
+  var dropZone = useRef(null);
+
+  var _useState3 = useState(0),
+      _useState4 = _slicedToArray(_useState3, 2),
+      zIndex = _useState4[0],
+      setZIndex = _useState4[1];
+
+  var _useState5 = useState([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      metaData = _useState6[0],
+      setMetaData = _useState6[1];
+
+  var fileupload = useRef(null);
+  var popup = useRef(new Popup({
+    closeButton: false,
+    closeOnClick: true
+  }));
+  useEffect(function () {
+    var _componentId = componentId.current;
+    var _popup = popup.current;
+    return function () {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+        mapRef.current.getCanvas().style.cursor = "";
+        mapRef.current = null;
+      }
+
+      _popup.remove();
+    };
+  }, []);
+  useEffect(function () {
+    if (!mapContext.mapExists(mapId) || initializedRef.current) return;
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(mapId);
+    mapRef.current.addSource(sourceName, {
+      type: "geojson",
+      data: dataSource.data
+    }, componentId.current);
+    mapRef.current.addLayer({
+      id: layerNameLines,
+      source: sourceName,
+      type: "line",
+      paint: {
+        "line-width": 4,
+        "line-color": "rgba(212, 55, 23,0.5)"
+      }
+    }, props.insertBeforeLayer, componentId.current);
+    mapRef.current.addLayer({
+      id: layerNamePoints,
+      source: sourceName,
+      type: "circle",
+      paint: {
+        "circle-color": "rgba(72, 77, 99,0.5)",
+        "circle-radius": 7
+      },
+      filter: ["==", "$type", "Point"]
+    }, props.insertBeforeLayer, componentId.current);
+    [layerNameLines, layerNamePoints].forEach(function (layerName) {
+      mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
+    });
+    mapRef.current.on("mouseenter", layerNamePoints, function (e) {
+      // Change the cursor style as a UI indicator.
+      mapContext.getMap(props.mapId).getCanvas().style.cursor = "pointer";
+      var coordinates = e.features[0].geometry.coordinates.slice(); //const description = e.features[0].properties.desc;
+
+      var name = e.features[0].properties.name; // Ensure that if the map is zoomed out such that multiple
+      // copies of the feature are visible, the popup appears
+      // over the copy being pointed to.
+
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      } // Populate the popup and set its coordinates
+      // based on the feature found.
+
+
+      popup.current.setLngLat(coordinates).setHTML(name).addTo(mapRef.current);
+    });
+    mapRef.current.on("mouseleave", "places", function () {
+      mapRef.current.getCanvas().style.cursor = "";
+      popup.current.remove();
+    });
+    mapRef.current.setZoom(10);
+  }, [mapContext.mapIds, mapContext, dataSource.data, mapId, props]);
+  useEffect(function () {
+    var dropZoneCurrent = dropZone.current;
+
+    var raiseDropZoneAndStopDefault = function raiseDropZoneAndStopDefault(event) {
+      setZIndex(1000);
+      stopDefault(event);
+    };
+
+    var lowerDropZone = function lowerDropZone() {
+      setZIndex(0);
+    };
+
+    var lowerDropZoneAndStopDefault = function lowerDropZoneAndStopDefault(event) {
+      setZIndex(0);
+      stopDefault(event);
+    };
+
+    window.addEventListener("dragenter", raiseDropZoneAndStopDefault);
+    window.addEventListener("dragover", stopDefault);
+    dropZoneCurrent.addEventListener("dragleave", lowerDropZone);
+    window.addEventListener("drop", lowerDropZoneAndStopDefault);
+    return function () {
+      window.removeEventListener("dragenter", raiseDropZoneAndStopDefault);
+      window.removeEventListener("dragover", stopDefault);
+      window.removeEventListener("drop", stopDefault);
+      dropZoneCurrent.removeEventListener("dragleave", lowerDropZone);
+      window.removeEventListener("drop", function (event) {
+        return lowerDropZoneAndStopDefault;
+      });
+    };
+  });
+
+  var stopDefault = function stopDefault(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  useEffect(function () {
+    if (!mapRef.current) return;
+    var visibility = props.visible ? "visible" : "none";
+    [layerNameLines, layerNamePoints].forEach(function (layerName) {
+      mapRef.current.setLayoutProperty(layerName, "visibility", visibility);
+    });
+  }, [props.visible]);
+
+  var dropHandler = function dropHandler(event) {
+    event.preventDefault();
+
+    if (event.dataTransfer.items) {
+      if (event.dataTransfer.items.length > 1) {
+        return false;
+      } // If dropped items aren't files, reject them
+
+
+      if (event.dataTransfer.items[0].kind === "file") {
+        var reader = new FileReader();
+
+        reader.onload = function (payload) {
+          addGPXToMap(payload.currentTarget.result);
+        };
+
+        var file = event.dataTransfer.items[0].getAsFile();
+        reader.readAsText(file);
+      }
+    }
+  };
+
+  var addGPXToMap = function addGPXToMap(gpxAsString) {
+    if (!mapRef.current) return;
+
+    try {
+      setMetaData([]);
+      console.log(gpxAsString);
+      var domParser = new DOMParser();
+      var gpxDoc = domParser.parseFromString(gpxAsString, "application/xml");
+      var metadata = gpxDoc.querySelector("metadata");
+      metadata.childNodes.forEach(function (node) {
+        var value = node.textContent;
+        var title = node.nodeName;
+
+        if (node.nodeName === "link") {
+          value = node.getAttribute("href");
+        }
+
+        if (!!value.trim().length) {
+          var metaDatEntry = {
+            title: title,
+            value: value,
+            id: new Date().getTime()
+          };
+          setMetaData(function (prevState) {
+            return [].concat(_toConsumableArray(prevState), [metaDatEntry]);
+          });
+        }
+      });
+      var data = toGeoJSON.gpx(gpxDoc);
+      dataSource.setData(data);
+      mapRef.current.getSource(sourceName).setData(data);
+      var bounds = bbox(data);
+      mapRef.current.fitBounds(bounds);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  var toogleDrawer = function toogleDrawer() {
+    setIsOpen(function (prevState) {
+      return !prevState;
+    });
+  };
+
+  var fileUploadOnChange = function fileUploadOnChange() {
+    var file = fileupload.current.files[0];
+    if (!file) return false;
+    var reader = new FileReader();
+
+    reader.onload = function (payload) {
+      addGPXToMap(payload.currentTarget.result);
+    };
+
+    reader.readAsText(file);
+  };
+
+  var manualUpload = function manualUpload() {
+    fileupload.current.click();
+  };
+
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(IconButton, {
+    onClick: manualUpload,
+    style: {
+      position: "absolute",
+      right: "5px",
+      bottom: "75px",
+      backgroundColor: "rgba(255,255,255,1)",
+      zIndex: 1000
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    ref: fileupload,
+    onChange: fileUploadOnChange,
+    type: "file",
+    id: "input",
+    multiple: true,
+    style: {
+      display: "none"
+    }
+  }), /*#__PURE__*/React.createElement(FileCopy, null)), /*#__PURE__*/React.createElement(IconButton, {
+    onClick: toogleDrawer,
+    style: {
+      position: "absolute",
+      right: "5px",
+      bottom: "25px",
+      backgroundColor: "rgba(255,255,255,1)",
+      zIndex: 1000
+    }
+  }, /*#__PURE__*/React.createElement(InfoIcon, null)), /*#__PURE__*/React.createElement(Drawer, {
+    variant: "persistent",
+    anchor: "left",
+    open: open
+  }, /*#__PURE__*/React.createElement(Typography, {
+    variant: "h6",
+    style: {
+      textAlign: "center",
+      padding: "1em"
+    },
+    noWrap: true
+  }, "Informationen zur Route"), /*#__PURE__*/React.createElement(Divider, null), /*#__PURE__*/React.createElement(List, null, metaData.map(function (item) {
+    return /*#__PURE__*/React.createElement(ListItem, {
+      key: "item--".concat(item.id)
+    }, /*#__PURE__*/React.createElement(ListItemText, {
+      primary: item.value
+    }));
+  }))), /*#__PURE__*/React.createElement("div", {
+    onDrop: dropHandler,
+    ref: dropZone,
+    style: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      backgroundColor: "rgba(255,255,255,0.5)",
+      width: "100%",
+      height: "100%",
+      zIndex: zIndex
+    }
+  }, /*#__PURE__*/React.createElement(Typography, {
+    variant: "h6",
+    style: {
+      top: "50%",
+      position: "absolute",
+      left: "50%",
+      msTransform: "translate(-50%, -50%)",
+      transform: " translate(-50%, -50%)"
+    },
+    noWrap: true
+  }, "Gpx-Datei ablegen")));
+};
+
+MlGPXViewer.defaultProps = {
+  visible: true
+};
+
 var GeoJsonProvider = function GeoJsonProvider(_ref) {
   var children = _ref.children;
 
@@ -3200,5 +3515,5 @@ GeoJsonProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlBasicComponent, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlBasicComponent, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
 //# sourceMappingURL=index.esm.js.map
