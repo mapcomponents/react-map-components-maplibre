@@ -5,7 +5,6 @@ import mouseEventPoint from "./lib/mouse_event_point";
 import createSupplementaryPoints from "./lib/create_supplementary_points";
 import StringSet from "./lib/string_set";
 import moveFeatures from "./lib/move_features";
-import drawUtils from "./lib/utils";
 
 const CustomSelectMode = {};
 CustomSelectMode.onSetup = function (opts) {

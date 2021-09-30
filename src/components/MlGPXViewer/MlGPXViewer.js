@@ -12,12 +12,18 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import GeoJsonContext from "./util/GeoJsonContext";
+
+import { v4 as uuidv4 } from "uuid";
+
 const toGeoJSON = require("./gpxConverter");
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
 const MlGPXViewer = (props) => {
   const dataSource = useContext(GeoJsonContext);
+  const componentId = useRef(
+    (props.idPrefix ? props.idPrefix : "MlGpxViewer-") + uuidv4()
+  );
   const mapContext = useContext(MapContext);
   const mapId = props.mapId;
   const initializedRef = useRef(false);
@@ -26,39 +32,33 @@ const MlGPXViewer = (props) => {
   const layerNameLines = "importer-layer-lines";
   const layerNamePoints = "importer-layer-points";
 
-  const [showLayer, setShowLayer] = useState(true);
   const [open, setIsOpen] = useState(false);
   const dropZone = useRef(null);
   const [zIndex, setZIndex] = useState(0);
   const [metaData, setMetaData] = useState([]);
   const fileupload = useRef(null);
 
-  const popup = new Popup({
-    closeButton: false,
-    closeOnClick: true,
-  });
-
-  const componentCleanup = () => {
-    if (mapRef.current) {
-      if (mapRef.current.style) {
-        [layerNameLines, layerNamePoints].forEach((layerName) => {
-          if (mapRef.current.getLayer(layerName)) {
-            mapRef.current.removeLayer(layerName);
-          }
-        });
-
-        if (mapRef.current.getSource(sourceName)) {
-          mapRef.current.removeSource(sourceName);
-        }
-        mapRef.current.getCanvas().style.cursor = "";
-      }
-      mapRef.current = null;
-    }
-    popup.remove();
-  };
+  const popup = useRef(
+    new Popup({
+      closeButton: false,
+      closeOnClick: true,
+    })
+  );
 
   useEffect(() => {
-    return componentCleanup;
+    let _componentId = componentId.current;
+    let _popup = popup.current;
+    return () => {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+
+        mapRef.current.getCanvas().style.cursor = "";
+
+        mapRef.current = null;
+      }
+      _popup.remove();
+    };
   }, []);
 
   useEffect(() => {
@@ -67,29 +67,41 @@ const MlGPXViewer = (props) => {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(mapId);
 
-    mapRef.current.addSource(sourceName, {
-      type: "geojson",
-      data: dataSource.data,
-    });
-    mapRef.current.addLayer({
-      id: layerNameLines,
-      source: sourceName,
-      type: "line",
-      paint: {
-        "line-width": 4,
-        "line-color": "rgba(212, 55, 23,0.5)",
+    mapRef.current.addSource(
+      sourceName,
+      {
+        type: "geojson",
+        data: dataSource.data,
       },
-    });
-    mapRef.current.addLayer({
-      id: layerNamePoints,
-      source: sourceName,
-      type: "circle",
-      paint: {
-        "circle-color": "rgba(72, 77, 99,0.5)",
-        "circle-radius": 7,
+      componentId.current
+    );
+    mapRef.current.addLayer(
+      {
+        id: layerNameLines,
+        source: sourceName,
+        type: "line",
+        paint: {
+          "line-width": 4,
+          "line-color": "rgba(212, 55, 23,0.5)",
+        },
       },
-      filter: ["==", "$type", "Point"],
-    });
+      props.insertBeforeLayer,
+      componentId.current
+    );
+    mapRef.current.addLayer(
+      {
+        id: layerNamePoints,
+        source: sourceName,
+        type: "circle",
+        paint: {
+          "circle-color": "rgba(72, 77, 99,0.5)",
+          "circle-radius": 7,
+        },
+        filter: ["==", "$type", "Point"],
+      },
+      props.insertBeforeLayer,
+      componentId.current
+    );
 
     [layerNameLines, layerNamePoints].forEach((layerName) => {
       mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
@@ -99,7 +111,7 @@ const MlGPXViewer = (props) => {
       mapContext.getMap(props.mapId).getCanvas().style.cursor = "pointer";
 
       const coordinates = e.features[0].geometry.coordinates.slice();
-      const description = e.features[0].properties.desc;
+      //const description = e.features[0].properties.desc;
       const name = e.features[0].properties.name;
 
       // Ensure that if the map is zoomed out such that multiple
@@ -112,16 +124,16 @@ const MlGPXViewer = (props) => {
       // Populate the popup and set its coordinates
 
       // based on the feature found.
-      popup.setLngLat(coordinates).setHTML(name).addTo(mapRef.current);
+      popup.current.setLngLat(coordinates).setHTML(name).addTo(mapRef.current);
     });
 
     mapRef.current.on("mouseleave", "places", function () {
       mapRef.current.getCanvas().style.cursor = "";
-      popup.remove();
+      popup.current.remove();
     });
 
     mapRef.current.setZoom(10);
-  }, [mapContext.mapIds]);
+  }, [mapContext.mapIds, mapContext, dataSource.data, mapId, props]);
 
   useEffect(() => {
     const dropZoneCurrent = dropZone.current;
@@ -159,15 +171,14 @@ const MlGPXViewer = (props) => {
   };
 
   useEffect(() => {
-    if (!mapContext.mapExists(mapId)) return;
+    if (!mapRef.current) return;
 
-    mapRef.current = mapContext.getMap(mapId);
-    const visibility = showLayer ? "visible" : "none";
+    const visibility = props.visible ? "visible" : "none";
 
     [layerNameLines, layerNamePoints].forEach((layerName) => {
       mapRef.current.setLayoutProperty(layerName, "visibility", visibility);
     });
-  }, [showLayer, mapContext]);
+  }, [props.visible]);
 
   const dropHandler = (event) => {
     event.preventDefault();
@@ -329,4 +340,7 @@ const MlGPXViewer = (props) => {
   );
 };
 
+MlGPXViewer.defaultProps = {
+  visible: true,
+};
 export default MlGPXViewer;

@@ -11,7 +11,7 @@ import * as Constants from "./constants";
  * @param {boolean} selected
  * @return {GeoJSON} Point
  */
-export default function (parentId, coordinates, path, selected) {
+const create_vertex = function (parentId, coordinates, path, selected) {
   return {
     type: Constants.geojsonTypes.FEATURE,
     properties: {
@@ -27,4 +27,5 @@ export default function (parentId, coordinates, path, selected) {
       coordinates,
     },
   };
-}
+};
+export default create_vertex;

@@ -17,6 +17,7 @@ function MlFeatureEditor(props) {
   const componentId = useRef(
     (props.idPrefix ? props.idPrefix : "MlFeatureEditor-") + uuidv4()
   );
+  const onChangeRef = useRef(props.onChange);
 
   const [drawToolsInitialized, setDrawToolsInitialized] = useState(false);
   const [drawToolsReady, setDrawToolsReady] = useState(false);
@@ -34,9 +35,10 @@ function MlFeatureEditor(props) {
   };
 
   useEffect(() => {
+    let _componentId = componentId.current;
     return () => {
       if (mapRef.current) {
-        mapRef.current.cleanup(componentId.current);
+        mapRef.current.cleanup(_componentId);
         //mapRef.current.removeControl(draw.current, "top-left");
         mapRef.current = null;
       }
@@ -100,8 +102,8 @@ function MlFeatureEditor(props) {
     if (draw.current && mouseUpTrigger) {
       // update drawnFeatures state object
       let currentFeatureCollection = draw.current.getAll();
-      if (typeof props.onChange === "function") {
-        props.onChange(currentFeatureCollection.features);
+      if (typeof onChangeRef.current === "function") {
+        onChangeRef.current(currentFeatureCollection.features);
       }
     }
   }, [mouseUpTrigger]);

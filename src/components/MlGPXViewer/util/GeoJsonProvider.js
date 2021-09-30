@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { GeoJsonContextProvider } from "./GeoJsonContext";
 
@@ -16,7 +16,7 @@ const GeoJsonProvider = ({ children }) => {
   const value = {
     data,
     setData,
-    getEmptyFeatureCollection
+    getEmptyFeatureCollection,
   };
 
   return <GeoJsonContextProvider value={value}>{children}</GeoJsonContextProvider>;

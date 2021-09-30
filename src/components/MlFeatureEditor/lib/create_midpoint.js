@@ -1,6 +1,6 @@
 import * as Constants from "./constants";
 
-export default function (parent, startVertex, endVertex) {
+const create_midpoint = function (parent, startVertex, endVertex) {
   const startCoord = startVertex.geometry.coordinates;
   const endCoord = endVertex.geometry.coordinates;
 
@@ -34,4 +34,5 @@ export default function (parent, startVertex, endVertex) {
       coordinates: [mid.lng, mid.lat],
     },
   };
-}
+};
+export default create_midpoint;

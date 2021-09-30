@@ -1,7 +1,7 @@
 import constrainFeatureMovement from "./constrain_feature_movement";
 import * as Constants from "./constants";
 
-export default function (features, delta) {
+var move_features = function (features, delta) {
   const constrainedDelta = constrainFeatureMovement(
     features.map((feature) => feature.toGeoJSON()),
     delta
@@ -39,4 +39,5 @@ export default function (features, delta) {
 
     feature.incomingCoords(nextCoordinates);
   });
-}
+};
+export default move_features;
