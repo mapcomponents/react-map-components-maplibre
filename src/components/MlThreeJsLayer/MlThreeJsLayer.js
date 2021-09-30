@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useRef, useEffect, useState } from "react";
+import React, { useContext, useRef, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 
 import Button from "@material-ui/core/Button";
@@ -14,13 +14,13 @@ const MlThreeJsLayer = (props) => {
 
   const layerName = "3d-model";
   const [showLayer, setShowLayer] = useState(true);
-  const [play, setPlay] = useState(false);
   const showLayerRef = useRef(true);
   const initializedRef = useRef(false);
   const mapRef = useRef(null);
+  const initFuncRef = useRef(props.init);
 
   const cleanup = () => {
-    if(mapRef.current && mapRef.current.style) {
+    if (mapRef.current && mapRef.current.style) {
       if (mapRef.current.getLayer(layerName)) {
         mapRef.current.removeLayer(layerName);
       }
@@ -28,28 +28,9 @@ const MlThreeJsLayer = (props) => {
     }
   };
 
-  let rotateCamera = useCallback(
-    (timestamp) => {
-      if (!play || !mapRef.current) return;
-      // clamp the rotation between 0 -360 degrees
-      // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-      mapRef.current.rotateTo((timestamp / 100) % 360, { duration: 0 });
-      // Request the next frame of the animation.
-      if (showLayerRef.current && play) {
-        requestAnimationFrame(rotateCamera);
-      }
-    },
-    [play]
-  );
   useEffect(() => {
-    if (play) {
-      //rotateCamera(0);
-    }
-  }, [play]);
-
-  useEffect(() => {
-    if (typeof props.init === "function") {
-      props.init();
+    if (typeof initFuncRef.current === "function") {
+      initFuncRef.current();
     }
 
     return cleanup;
@@ -184,7 +165,7 @@ const MlThreeJsLayer = (props) => {
     mapRef.current.setCenter([7.130255969902919, 50.7143656091998]);
     mapRef.current.setZoom(15);
     mapRef.current.setPitch(45);
-  }, [mapContext.mapIds]);
+  }, [mapContext.mapIds, mapContext, props]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -212,17 +193,6 @@ const MlThreeJsLayer = (props) => {
       >
         3D
       </Button>
-      {/**
-      <Button
-        color="primary"
-        variant={play ? "contained" : "outlined"}
-        onClick={() => {
-          setPlay(!play);
-        }}
-      >
-        Play
-      </Button>
-      **/}
     </>
   );
 };
