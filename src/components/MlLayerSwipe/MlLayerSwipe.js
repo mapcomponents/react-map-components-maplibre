@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext, useCallback, useRef, useEffect, useState } from "react";
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
 import { MapContext } from "react-map-components-core";
@@ -8,13 +8,14 @@ import { MapContext } from "react-map-components-core";
  */
 const MlLayerSwipe = (props) => {
   const mapContext = useContext(MapContext);
+  const initializedRef = useRef(false);
 
   const [swipeX, setSwipeX] = useState(50);
   const swipeXRef = useRef(50);
 
   const syncCleanupFunctionRef = useRef(null);
 
-  const mapExists = () => {
+  const mapExists = useCallback(() => {
     if (!props.map1Id || !props.map2Id) {
       return false;
     }
@@ -23,7 +24,7 @@ const MlLayerSwipe = (props) => {
     }
 
     return true;
-  };
+  }, [mapContext, props.map1Id, props.map2Id]);
 
   const cleanup = () => {
     if (syncCleanupFunctionRef.current) {
@@ -31,43 +32,47 @@ const MlLayerSwipe = (props) => {
     }
   };
 
+  const onMove = useCallback(
+    (e) => {
+      if (!mapExists()) return;
+
+      let bounds = mapContext.map.getCanvas().getBoundingClientRect();
+      let clientX =
+        e.clientX ||
+        (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+          ? e.touches[0].clientX
+          : 0);
+
+      clientX -= bounds.x;
+      let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
+
+      if (swipeXRef.current !== swipeX_tmp) {
+        setSwipeX(swipeX_tmp);
+        swipeXRef.current = swipeX_tmp;
+
+        var clipA =
+          "rect(0, " + (swipeXRef.current * bounds.width) / 100 + "px, 999em, 0)";
+
+        mapContext.getMap(props.map2Id).getContainer().style.clip = clipA;
+      }
+    },
+    [mapContext, mapExists, props.map2Id]
+  );
+
   useEffect(() => {
     return cleanup;
   }, []);
 
   useEffect(() => {
-    if (!mapExists()) return;
+    if (!mapExists() || initializedRef.current) return;
 
+    initializedRef.current = true;
     syncCleanupFunctionRef.current = syncMove(
       mapContext.getMap(props.map1Id).map,
       mapContext.getMap(props.map2Id).map
     );
     onMove({ clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2 });
-  }, [mapContext.mapIds]);
-
-  const onMove = (e) => {
-    if (!mapExists()) return;
-
-    let bounds = mapContext.map.getCanvas().getBoundingClientRect();
-    let clientX =
-      e.clientX ||
-      (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
-        ? e.touches[0].clientX
-        : 0);
-
-    clientX -= bounds.x;
-    let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
-
-    if (swipeXRef.current !== swipeX_tmp) {
-      setSwipeX(swipeX_tmp);
-      swipeXRef.current = swipeX_tmp;
-
-      var clipA =
-        "rect(0, " + (swipeXRef.current * bounds.width) / 100 + "px, 999em, 0)";
-
-      mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
-    }
-  };
+  }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
   const onDown = (e) => {
     if (e.touches) {
