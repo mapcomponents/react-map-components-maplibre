@@ -11,5 +11,7 @@ export { default as MlVectorTileLayer } from "./components/MlVectorTileLayer/MlV
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
 export { default as MlFeatureEditor } from "./components/MlFeatureEditor/MlFeatureEditor";
 export { default as MlBasicComponent } from "./components/MlBasicComponent";
+export { default as MlLayerMagnify } from "./components/MlLayerMagnify/MlLayerMagnify";
+export { default as MlLayerSwipe } from "./components/MlLayerSwipe/MlLayerSwipe";
 export { default as GeoJsonProvider } from "./components/MlGPXViewer/util/GeoJsonProvider";
 export { default as GeoJsonContext } from "./components/MlGPXViewer/util/GeoJsonContext";

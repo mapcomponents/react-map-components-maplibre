@@ -14,6 +14,7 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import Point from '@mapbox/point-geometry';
 import extent from '@mapbox/geojson-extent';
+import syncMove from '@mapbox/mapbox-gl-sync-move';
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -2910,6 +2911,260 @@ var MlBasicComponent = function MlBasicComponent(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
+/**
+ *
+ * MlLayerMagnify returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ */
+
+var MlLayerMagnify = function MlLayerMagnify(props) {
+  var mapContext = useContext(MapContext);
+  var syncMoveInitializedRef = useRef(false);
+  var syncCleanupFunctionRef = useRef(null);
+
+  var _useState = useState(50),
+      _useState2 = _slicedToArray(_useState, 2),
+      swipeX = _useState2[0],
+      setSwipeX = _useState2[1];
+
+  var swipeXRef = useRef(50);
+
+  var _useState3 = useState(50),
+      _useState4 = _slicedToArray(_useState3, 2),
+      swipeY = _useState4[0],
+      setSwipeY = _useState4[1];
+
+  var swipeYRef = useRef(50);
+  var magnifierRadiusRef = useRef(props.magnifierRadius || 200);
+
+  var _useState5 = useState(magnifierRadiusRef.current),
+      _useState6 = _slicedToArray(_useState5, 2),
+      magnifierRadius = _useState6[0],
+      setMagnifierRadius = _useState6[1];
+
+  var mapExists = useCallback(function () {
+    if (!props.map1Id || !props.map2Id) {
+      return false;
+    }
+
+    if (!mapContext.mapExists(props.map1Id) || !mapContext.mapExists(props.map2Id)) {
+      return false;
+    }
+
+    return true;
+  }, [props, mapContext]);
+  var onResize = useRef(function () {
+    if (!mapExists()) return;
+    onMove({
+      clientX: swipeXRef.current,
+      clientY: swipeYRef.current
+    });
+  });
+  useEffect(function () {
+    window.addEventListener("resize", onResize.current);
+    var _onResize = onResize.current;
+    return function () {
+      window.removeEventListener("resize", _onResize);
+
+      if (syncCleanupFunctionRef.current) {
+        syncCleanupFunctionRef.current();
+      }
+    };
+  }, []);
+  var onMove = useCallback(function (e) {
+    if (!mapExists()) return;
+    var bounds = mapContext.map.getCanvas().getBoundingClientRect();
+    var clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
+    var clientY = e.clientY || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientY : 0);
+    clientX -= bounds.x;
+    clientY -= bounds.y;
+    var swipeX_tmp = (clientX / bounds.width * 100).toFixed(2);
+    var swipeY_tmp = (clientY / bounds.height * 100).toFixed(2);
+
+    if (swipeXRef.current !== swipeX_tmp || swipeYRef.current !== swipeY_tmp) {
+      setSwipeX(swipeX_tmp);
+      swipeXRef.current = swipeX_tmp;
+      setSwipeY(swipeY_tmp);
+      swipeYRef.current = swipeY_tmp;
+      mapContext.maps[props.map2Id].getContainer().style.clipPath = "circle(".concat(magnifierRadiusRef.current, "px at ") + swipeXRef.current * bounds.width / 100 + "px " + swipeYRef.current * bounds.height / 100 + "px)";
+    }
+  }, [mapContext, mapExists, props]);
+  useEffect(function () {
+    if (!mapExists() || syncMoveInitializedRef.current) return;
+    syncMoveInitializedRef.current = true;
+    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
+
+    if (mapContext.maps[props.map1Id].getCanvas().clientWidth > mapContext.maps[props.map1Id].getCanvas().clientHeight && magnifierRadiusRef.current * 2 > mapContext.maps[props.map1Id].getCanvas().clientHeight) {
+      magnifierRadiusRef.current = Math.floor(mapContext.maps[props.map1Id].getCanvas().clientHeight / 2);
+      setMagnifierRadius(magnifierRadiusRef.current);
+    }
+
+    if (mapContext.maps[props.map1Id].getCanvas().clientHeight > mapContext.maps[props.map1Id].getCanvas().clientWidth && magnifierRadiusRef.current * 2 > mapContext.maps[props.map1Id].getCanvas().clientWidth) {
+      magnifierRadiusRef.current = Math.floor(mapContext.maps[props.map1Id].getCanvas().clientWidth / 2);
+      setMagnifierRadius(magnifierRadiusRef.current);
+    }
+
+    onMove({
+      clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
+      clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2
+    });
+  }, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
+
+  var onDown = function onDown(e) {
+    if (e.touches) {
+      document.addEventListener("touchmove", onMove);
+      document.addEventListener("touchend", onTouchEnd);
+    } else {
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onMouseUp);
+    }
+  };
+
+  var onTouchEnd = function onTouchEnd() {
+    document.removeEventListener("touchmove", onMove);
+    document.removeEventListener("touchend", onTouchEnd);
+  };
+
+  var onMouseUp = function onMouseUp() {
+    document.removeEventListener("mousemove", onMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  };
+
+  var onWheel = function onWheel(e) {
+    var evCopy = new WheelEvent(e.type, e);
+    mapContext.map.getCanvas().dispatchEvent(evCopy);
+  };
+
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      left: swipeX + "%",
+      top: swipeY + "%",
+      borderRadius: "50%",
+      width: magnifierRadius * 2 + 1 + "px",
+      height: magnifierRadius * 2 + 1 + "px",
+      background: "rgba(0,0,0,0)",
+      border: "2px solid #fafafa",
+      boxShadow: "1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)",
+      cursor: "pointer",
+      zIndex: "110",
+      marginLeft: magnifierRadius * -1 - 1 + "px",
+      marginTop: magnifierRadius * -1 - 1 + "px",
+      textAlign: "center",
+      lineHeight: "91px",
+      fontSize: "2em",
+      color: "#fafafa",
+      userSelect: "none"
+    },
+    onTouchStart: onDown,
+    onMouseDown: onDown,
+    onWheel: onWheel
+  });
+};
+
+/**
+ * MlLayerSwipe returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ */
+
+var MlLayerSwipe = function MlLayerSwipe(props) {
+  var mapContext = useContext(MapContext);
+  var initializedRef = useRef(false);
+
+  var _useState = useState(50),
+      _useState2 = _slicedToArray(_useState, 2),
+      swipeX = _useState2[0],
+      setSwipeX = _useState2[1];
+
+  var swipeXRef = useRef(50);
+  var syncCleanupFunctionRef = useRef(null);
+  var mapExists = useCallback(function () {
+    if (!props.map1Id || !props.map2Id) {
+      return false;
+    }
+
+    if (!mapContext.mapExists(props.map1Id) || !mapContext.mapExists(props.map2Id)) {
+      return false;
+    }
+
+    return true;
+  }, [mapContext, props.map1Id, props.map2Id]);
+
+  var cleanup = function cleanup() {
+    if (syncCleanupFunctionRef.current) {
+      syncCleanupFunctionRef.current();
+    }
+  };
+
+  var onMove = useCallback(function (e) {
+    if (!mapExists()) return;
+    var bounds = mapContext.map.getCanvas().getBoundingClientRect();
+    var clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
+    clientX -= bounds.x;
+    var swipeX_tmp = (clientX / bounds.width * 100).toFixed(2);
+
+    if (swipeXRef.current !== swipeX_tmp) {
+      setSwipeX(swipeX_tmp);
+      swipeXRef.current = swipeX_tmp;
+      var clipA = "rect(0, " + swipeXRef.current * bounds.width / 100 + "px, 999em, 0)";
+      mapContext.getMap(props.map2Id).getContainer().style.clip = clipA;
+    }
+  }, [mapContext, mapExists, props.map2Id]);
+  useEffect(function () {
+    return cleanup;
+  }, []);
+  useEffect(function () {
+    if (!mapExists() || initializedRef.current) return;
+    initializedRef.current = true;
+    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
+    onMove({
+      clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
+    });
+  }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
+
+  var onDown = function onDown(e) {
+    if (e.touches) {
+      document.addEventListener("touchmove", onMove);
+      document.addEventListener("touchend", onTouchEnd);
+    } else {
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onMouseUp);
+    }
+  };
+
+  var onTouchEnd = function onTouchEnd() {
+    document.removeEventListener("touchmove", onMove);
+    document.removeEventListener("touchend", onTouchEnd);
+  };
+
+  var onMouseUp = function onMouseUp() {
+    document.removeEventListener("mousemove", onMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  };
+
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      left: swipeX + "%",
+      top: "50%",
+      borderRadius: "50%",
+      width: "100px",
+      height: "100px",
+      background: "#0066ff",
+      border: "3px solid #eaebf1",
+      cursor: "pointer",
+      zIndex: "110",
+      marginLeft: "-50px",
+      marginTop: "-50px",
+      textAlign: "center",
+      lineHeight: "91px",
+      fontSize: "2em",
+      color: "#fafafa",
+      userSelect: "none"
+    },
+    onTouchStart: onDown,
+    onMouseDown: onDown
+  });
+};
+
 var GeoJsonContext = /*#__PURE__*/React.createContext({});
 var GeoJsonContextProvider = GeoJsonContext.Provider;
 
@@ -2945,5 +3200,5 @@ GeoJsonProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlBasicComponent, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlBasicComponent, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
 //# sourceMappingURL=index.esm.js.map
