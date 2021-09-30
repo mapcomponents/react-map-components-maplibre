@@ -44,7 +44,7 @@ const MapLibreGlWrapper = function (props) {
       return;
     }
     if (typeof options === "string" && typeof componentId === "undefined") {
-      return self.addSource.call(self, sourceId, source, undefined, componentId);
+      return self.addSource.call(self, sourceId, source, undefined, options);
     }
     if (
       componentId &&
@@ -107,6 +107,8 @@ const MapLibreGlWrapper = function (props) {
   // cleanup function that remove anything that has been added to the maplibre instance referenced with componentId
   // be aware that this function only works with explicitly added elements e.g. sources implizitly added by addLayer calls still require manual removal
   this.cleanup = (componentId) => {
+    //console.log("cleanup " + componentId);
+    //console.log(self.registeredElements[componentId]);
     if (
       self.map.style &&
       typeof self.registeredElements[componentId] !== "undefined"

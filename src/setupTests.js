@@ -4,6 +4,9 @@ import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 
 import { mount, configure } from "enzyme";
 
+var uuid_regex = "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}";
+export { uuid_regex };
+
 // MapLibre-gl mockup
 var mockMapLibreMethods = {
   on: jest.fn(),

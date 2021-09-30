@@ -7,11 +7,11 @@ import { MapContext } from "react-map-components-core";
 const MlVectorTileLayer = (props) => {
   const mapContext = useContext(MapContext);
 
-  const [showLayer, setShowLayer] = useState(true);
   const layerName = "vector-tile-layer-";
   const sourceName = "vector-tile-source-";
-  const idPostfixRef = useRef(new Date().getTime());
+  const idSuffixRef = useRef(new Date().getTime());
   const layerIdsRef = useRef({});
+  const layerPaintConfsRef = useRef({});
   const initializedRef = useRef(false);
   const mapRef = useRef(null);
 
@@ -22,8 +22,8 @@ const MlVectorTileLayer = (props) => {
           mapRef.current.removeLayer(layerIdsRef.current[key]);
         }
       }
-      if (mapRef.current.getSource(sourceName + idPostfixRef.current)) {
-        mapRef.current.removeSource(sourceName + idPostfixRef.current);
+      if (mapRef.current.getSource(sourceName + idSuffixRef.current)) {
+        mapRef.current.removeSource(sourceName + idSuffixRef.current);
       }
     }
   };
@@ -39,7 +39,7 @@ const MlVectorTileLayer = (props) => {
     mapRef.current = mapContext.getMap(props.mapId);
 
     // Add the new layer to the openlayers instance once it is available
-    mapRef.current.addSource(sourceName + idPostfixRef.current, {
+    mapRef.current.addSource(sourceName + idSuffixRef.current, {
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
@@ -48,12 +48,12 @@ const MlVectorTileLayer = (props) => {
     });
 
     for (let key in props.layers) {
-      let layerId = layerName + "_" + key + "_" + idPostfixRef.current;
+      let layerId = layerName + "_" + key + "_" + idSuffixRef.current;
       layerIdsRef.current[key] = layerId;
 
       mapRef.current.addLayer({
         id: layerId,
-        source: sourceName + idPostfixRef.current,
+        source: sourceName + idSuffixRef.current,
         type: "line",
         minzoom: 0,
         maxzoom: 22,
@@ -65,47 +65,52 @@ const MlVectorTileLayer = (props) => {
         },
         ...props.layers[key],
       });
+      layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
     }
-  }, [mapContext.mapIds]);
+  }, [mapContext.mapIds, props, mapContext]);
 
   useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || !initializedRef.current) return;
+    if (!mapRef.current) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-
     for (var key in props.layers) {
       if (mapRef.current.getLayer(layerIdsRef.current[key])) {
-        for (let paintKey in props.layers[key].paint) {
-          mapContext
-            .getMap(props.mapId)
-            .setPaintProperty(
-              layerIdsRef.current[key],
-              paintKey,
-              props.layers[key].paint[paintKey]
-            );
+        let layerConfString = JSON.stringify(props.layers[key].paint);
+
+        if (layerConfString !== layerPaintConfsRef.current[key]) {
+          for (let paintKey in props.layers[key].paint) {
+            mapContext
+              .getMap(props.mapId)
+              .setPaintProperty(
+                layerIdsRef.current[key],
+                paintKey,
+                props.layers[key].paint[paintKey]
+              );
+          }
         }
+        layerPaintConfsRef.current[key] = layerConfString;
       }
     }
-  }, [props.layers]);
+  }, [props.layers, props, mapContext]);
 
   useEffect(() => {
     if (!mapRef.current) return;
 
     // toggle layer visibility by changing the layout object's visibility property
-    if (showLayer) {
+    if (props.visible) {
       mapRef.current.setLayoutProperty(
-        layerName + idPostfixRef.current,
+        layerName + idSuffixRef.current,
         "visibility",
         "visible"
       );
     } else {
       mapRef.current.setLayoutProperty(
-        layerName + idPostfixRef.current,
+        layerName + idSuffixRef.current,
         "visibility",
         "none"
       );
     }
-  }, [showLayer]);
+  }, [props.visible]);
 
   return <></>;
 };
