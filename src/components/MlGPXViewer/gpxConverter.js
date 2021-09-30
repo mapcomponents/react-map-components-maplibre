@@ -524,4 +524,4 @@ var toGeoJSON = (function () {
   return t;
 })();
 
-if (typeof module !== "undefined") module.exports = toGeoJSON;
+export default toGeoJSON;
