@@ -12,14 +12,14 @@ const MlSpatialElevationProfile = (props) => {
   const mapContext = useContext(MapContext);
 
   const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlWmsLayer-") + uuidv4()
+    (props.idPrefix ? props.idPrefix : "MlSpatialElevationProfile-") + uuidv4()
   );
   const mapRef = useRef(null);
   const initializedRef = useRef(false);
 
   const dataSource = useContext(GeoJsonContext);
-  const sourceName = "elevationprofile";
-  const layerName = "elevationprofile-layer";
+  const sourceName = useRef("elevationprofile-" + uuidv4());
+  const layerName = useRef("elevationprofile-layer-" + uuidv4());
 
   const createStep = useCallback(
     (x, y, z, x2, y2) => {
@@ -69,36 +69,43 @@ const MlSpatialElevationProfile = (props) => {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
 
-    mapRef.current.addSource(sourceName, {
-      type: "geojson",
-      data: dataSource.data,
-    });
-    mapRef.current.addLayer({
-      id: layerName,
-      source: sourceName,
-      type: "fill-extrusion",
-      paint: {
-        "fill-extrusion-height": ["get", "height"],
-        "fill-extrusion-opacity": 0.9,
-        "fill-extrusion-color": [
-          "interpolate",
-          ["linear"],
-          ["get", "height"],
-          0,
-          "rgba(0, 0, 255, 0)",
-          0.1,
-          "royalblue",
-          0.3,
-          "cyan",
-          0.5,
-          "lime",
-          0.7,
-          "yellow",
-          1,
-          "yellow",
-        ],
+    mapRef.current.addSource(
+      sourceName,
+      {
+        type: "geojson",
+        data: dataSource.data,
       },
-    });
+      componentId.current
+    );
+    mapRef.current.addLayer(
+      {
+        id: layerName,
+        source: sourceName,
+        type: "fill-extrusion",
+        paint: {
+          "fill-extrusion-height": ["get", "height"],
+          "fill-extrusion-opacity": 0.9,
+          "fill-extrusion-color": [
+            "interpolate",
+            ["linear"],
+            ["get", "height"],
+            0,
+            "rgba(0, 0, 255, 0)",
+            0.1,
+            "royalblue",
+            0.3,
+            "cyan",
+            0.5,
+            "lime",
+            0.7,
+            "yellow",
+            1,
+            "yellow",
+          ],
+        },
+      },
+      componentId.current
+    );
   }, [mapContext.map, props.mapId, dataSource, mapContext]);
 
   useEffect(() => {
