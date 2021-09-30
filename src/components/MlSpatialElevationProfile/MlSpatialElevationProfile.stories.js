@@ -1,6 +1,5 @@
 import React from "react";
 
-import TopToolbar from "../../ui_components/TopToolbar";
 import MlSpatialElevationProfile from "./MlSpatialElevationProfile";
 import MlGPXViewer from "../MlGPXViewer/MlGPXViewer";
 

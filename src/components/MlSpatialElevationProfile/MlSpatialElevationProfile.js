@@ -1,65 +1,79 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useCallback, useRef, useContext, useEffect } from "react";
 import { MapContext } from "react-map-components-core";
 import GeoJsonContext from "../MlGPXViewer/util/GeoJsonContext";
 import { polygon, lineString } from "@turf/helpers";
 import { distance, lineOffset } from "@turf/turf";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  */
-const MlSpatialElevationProfile = ({ elevationFactor = 1, mapId = null }) => {
+const MlSpatialElevationProfile = (props) => {
   const mapContext = useContext(MapContext);
+
+  const componentId = useRef(
+    (props.idPrefix ? props.idPrefix : "MlWmsLayer-") + uuidv4()
+  );
+  const mapRef = useRef(null);
+  const initializedRef = useRef(false);
+
   const dataSource = useContext(GeoJsonContext);
   const sourceName = "elevationprofile";
   const layerName = "elevationprofile-layer";
 
-  const createStep = (x, y, z, x2, y2) => {
-    const summand = 0.0002;
-    const line = lineString([
-      [x, y],
-      [x2, y2],
-    ]);
-    const offsetLine = lineOffset(line, 5, { units: "meters" });
-    const x3 = offsetLine.geometry.coordinates[0][0];
-    const y3 = offsetLine.geometry.coordinates[0][1];
-    const x4 = offsetLine.geometry.coordinates[1][0];
-    const y4 = offsetLine.geometry.coordinates[1][1];
+  const createStep = useCallback(
+    (x, y, z, x2, y2) => {
+      //const summand = 0.0002;
+      const line = lineString([
+        [x, y],
+        [x2, y2],
+      ]);
+      const offsetLine = lineOffset(line, 5, { units: "meters" });
+      const x3 = offsetLine.geometry.coordinates[0][0];
+      const y3 = offsetLine.geometry.coordinates[0][1];
+      const x4 = offsetLine.geometry.coordinates[1][0];
+      const y4 = offsetLine.geometry.coordinates[1][1];
 
-    return polygon(
-      [
+      return polygon(
         [
-          [x, y],
-          [x2, y2],
+          [
+            [x, y],
+            [x2, y2],
 
-          [x4, y4],
-          [x3, y3],
-          [x, y],
+            [x4, y4],
+            [x3, y3],
+            [x, y],
+          ],
         ],
-      ],
-      { height: z * elevationFactor }
-    );
-  };
+        { height: z * props.elevationFactor }
+      );
+    },
+    [props.elevationFactor]
+  );
 
-  const cleanUp = () => {
-    const map = mapContext.maps[mapId] || mapContext.map;
-    [layerName].forEach((layerName) => {
-      if (map.style && map.getLayer(layerName)) {
-        map.removeLayer(layerName);
-      }
-    });
-
-    if (map.style && map.getSource(sourceName)) {
-      map.removeSource(sourceName);
-    }
-  };
   useEffect(() => {
-    const map = mapContext.maps[mapId] || mapContext.map;
-    if (!map) return;
-    map.addSource(sourceName, {
+    let _componentId = componentId.current;
+    return () => {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+
+        mapRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
+
+    mapRef.current.addSource(sourceName, {
       type: "geojson",
       data: dataSource.data,
     });
-    map.addLayer({
+    mapRef.current.addLayer({
       id: layerName,
       source: sourceName,
       type: "fill-extrusion",
@@ -85,18 +99,16 @@ const MlSpatialElevationProfile = ({ elevationFactor = 1, mapId = null }) => {
         ],
       },
     });
-
-    return cleanUp;
-  }, [mapContext.map]);
+  }, [mapContext.map, props.mapId, dataSource, mapContext]);
 
   useEffect(() => {
-    const map = mapContext.maps[mapId] || mapContext.map;
-    if (!map) return;
+    if (!mapRef.current || !mapRef.current.getLayer(layerName)) return;
     const { data } = dataSource;
 
     const line = data.features.find((element) => {
       return element.geometry.type === "LineString";
     });
+    if (!line || !line.geometry) return;
     const heights = line.geometry.coordinates.map((coordinate, index) => {
       return coordinate[2];
     });
@@ -107,13 +119,13 @@ const MlSpatialElevationProfile = ({ elevationFactor = 1, mapId = null }) => {
 
     max = max === 0 ? 1 : max;
 
-    map.setPaintProperty(layerName, "fill-extrusion-color", [
+    mapRef.current.setPaintProperty(layerName, "fill-extrusion-color", [
       "interpolate",
       ["linear"],
       ["get", "height"],
       0,
       "rgb(0,255,55)",
-      max * elevationFactor,
+      max * props.elevationFactor,
       "rgb(255,0,0)",
     ]);
     const lerp = (x, y, a) => x * (1 - a) + y * a;
@@ -170,10 +182,13 @@ const MlSpatialElevationProfile = ({ elevationFactor = 1, mapId = null }) => {
     const newData = dataSource.getEmptyFeatureCollection();
     newData.features = points;
 
-    map.getSource(sourceName)?.setData(newData);
-  }, [dataSource.data]);
+    mapRef.current.getSource(sourceName)?.setData(newData);
+  }, [dataSource.data, createStep, dataSource, props.elevationFactor, mapContext]);
 
   return <></>;
 };
 
+MlSpatialElevationProfile.defaultProps = {
+  elevationFactor: 1,
+};
 export default MlSpatialElevationProfile;
