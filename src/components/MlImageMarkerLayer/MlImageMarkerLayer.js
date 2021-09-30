@@ -1,10 +1,14 @@
 import React, { useRef, useCallback, useEffect, useContext } from "react";
 
+import { v4 as uuidv4 } from "uuid";
 import { MapContext } from "react-map-components-core";
 
 const MlImageMarkerLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapRef = useRef(null);
+  const componentId = useRef(
+    (props.idPrefix ? props.idPrefix : "MlOsmLayer-") + uuidv4()
+  );
   const mapContext = useContext(MapContext);
   const layerInitializedRef = useRef(false);
   const idPostfixRef = useRef(props.idSuffix || new Date().getTime());
@@ -12,15 +16,12 @@ const MlImageMarkerLayer = (props) => {
   const layerId = (props.layerId || "MlImageMarkerLayer-") + idPostfixRef.current;
 
   useEffect(() => {
+    let _componentId = componentId.current;
     return () => {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
       if (mapRef.current) {
-        // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
-          mapRef.current.removeLayer(layerId);
-        }
-        if (mapRef.current.style && mapRef.current.getSource(layerId)) {
-          mapRef.current.removeSource(layerId);
-        }
+        mapRef.current.cleanup(_componentId);
+
         mapRef.current = null;
       }
     };
@@ -35,16 +36,17 @@ const MlImageMarkerLayer = (props) => {
       return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+    var key;
 
     if (props.options.layout) {
-      for (var key in props.options.layout) {
+      for (key in props.options.layout) {
         mapContext
           .getMap(props.mapId)
           .setLayoutProperty(layerId, key, props.options.layout[key]);
       }
     }
     if (props.options.paint) {
-      for (var key in props.options.paint) {
+      for (key in props.options.paint) {
         mapContext
           .getMap(props.mapId)
           .setPaintProperty(layerId, key, props.options.paint[key]);
@@ -59,8 +61,12 @@ const MlImageMarkerLayer = (props) => {
       ...props.options,
     };
     tmpOptions.layout["icon-image"] = imageIdRef.current;
-    mapRef.current.addLayer(tmpOptions);
-  }, [mapContext, props.options, props, imageIdRef, layerId]);
+    mapRef.current.addLayer(
+      tmpOptions,
+      props.insertBeforeLayer,
+      componentId.current
+    );
+  }, [props, imageIdRef, layerId]);
 
   useEffect(() => {
     if (
@@ -93,7 +99,7 @@ const MlImageMarkerLayer = (props) => {
     if (props.imgSrc) {
       mapRef.current.loadImage(props.imgSrc, function (error, image) {
         if (error) throw error;
-        mapRef.current.addImage(imageIdRef.current, image);
+        mapRef.current.addImage(imageIdRef.current, image, componentId.current);
       });
     }
     addLayer();
