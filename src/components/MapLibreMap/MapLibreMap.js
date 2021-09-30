@@ -16,13 +16,17 @@ const MapLibreMap = (props) => {
   const mapContainer = useRef(null);
 
   const mapContext = useContext(MapContext);
+  const mapContextRef = useRef(mapContext);
 
   const mapIdRef = useRef(props.mapId);
   const mapOptions = props.options;
 
   useEffect(() => {
+    let mapId = mapIdRef.current;
+    let _mapContext = mapContextRef.current;
+
     return () => {
-      mapContext.removeMap(mapIdRef.current);
+      _mapContext.removeMap(mapId);
       map.current.remove();
       map.current = null;
     };
