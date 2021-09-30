@@ -107,7 +107,13 @@ const MlSpatialElevationProfile = (props) => {
       props.insertBeforeLayer,
       componentId.current
     );
-  }, [mapContext.map, props.mapId, dataSource, mapContext]);
+  }, [
+    mapContext.mapIds,
+    props.insertBeforeLayer,
+    props.mapId,
+    dataSource,
+    mapContext,
+  ]);
 
   useEffect(() => {
     if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
