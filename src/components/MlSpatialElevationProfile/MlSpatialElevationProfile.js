@@ -70,7 +70,7 @@ const MlSpatialElevationProfile = (props) => {
     mapRef.current = mapContext.getMap(props.mapId);
 
     mapRef.current.addSource(
-      sourceName,
+      sourceName.current,
       {
         type: "geojson",
         data: dataSource.data,
@@ -79,8 +79,8 @@ const MlSpatialElevationProfile = (props) => {
     );
     mapRef.current.addLayer(
       {
-        id: layerName,
-        source: sourceName,
+        id: layerName.current,
+        source: sourceName.current,
         type: "fill-extrusion",
         paint: {
           "fill-extrusion-height": ["get", "height"],
@@ -104,13 +104,15 @@ const MlSpatialElevationProfile = (props) => {
           ],
         },
       },
+      props.insertBeforeLayer,
       componentId.current
     );
   }, [mapContext.map, props.mapId, dataSource, mapContext]);
 
   useEffect(() => {
-    if (!mapRef.current || !mapRef.current.getLayer(layerName)) return;
+    if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
     const { data } = dataSource;
+    if (!data || !data.features) return;
 
     const line = data.features.find((element) => {
       return element.geometry.type === "LineString";
@@ -126,7 +128,7 @@ const MlSpatialElevationProfile = (props) => {
 
     max = max === 0 ? 1 : max;
 
-    mapRef.current.setPaintProperty(layerName, "fill-extrusion-color", [
+    mapRef.current.setPaintProperty(layerName.current, "fill-extrusion-color", [
       "interpolate",
       ["linear"],
       ["get", "height"],
@@ -189,7 +191,7 @@ const MlSpatialElevationProfile = (props) => {
     const newData = dataSource.getEmptyFeatureCollection();
     newData.features = points;
 
-    mapRef.current.getSource(sourceName)?.setData(newData);
+    mapRef.current.getSource(sourceName.current)?.setData(newData);
   }, [dataSource.data, createStep, dataSource, props.elevationFactor, mapContext]);
 
   return <></>;
