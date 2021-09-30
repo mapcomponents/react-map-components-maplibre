@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useContext, useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { MapContext } from 'react-map-components-core';
 import maplibregl from 'maplibre-gl/dist/maplibre-gl';
@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import maplibregl$2 from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@material-ui/icons/Print';
-import { lineString, length, lineChunk, lineDistance, along, bearing, point } from '@turf/turf';
+import { lineString, length, lineChunk } from '@turf/turf';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import Point from '@mapbox/point-geometry';
@@ -51,6 +51,22 @@ function _objectSpread2(target) {
   }
 
   return target;
+}
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
 }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -208,6 +224,10 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     if (componentId && typeof componentId === "string" && typeof layer.id !== "undefined") {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].layers.push(layer.id);
+
+      if (_typeof(layer.source) === "object") {
+        self.registeredElements[componentId].sources.push(layer.id);
+      }
     }
 
     self.map.addLayer(layer, beforeId);
@@ -219,7 +239,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     }
 
     if (typeof options === "string" && typeof componentId === "undefined") {
-      return self.addSource.call(self, sourceId, source, undefined, componentId);
+      return self.addSource.call(self, sourceId, source, undefined, options);
     }
 
     if (componentId && typeof componentId === "string" && typeof sourceId !== "undefined") {
@@ -280,6 +300,8 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
 
   this.cleanup = function (componentId) {
+    //console.log("cleanup " + componentId);
+    //console.log(self.registeredElements[componentId]);
     if (self.map.style && typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
       self.registeredElements[componentId].layers.forEach(function (item) {
@@ -314,10 +336,8 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   }; // add style prop functions that require map._update to be called afterwards
 
 
-  var updatingStyleFunctions = [//"addLayer",
-  "moveLayer", "removeLayer", //"addSource",
-  "removeSource", "setPaintProperty", "setLayoutProperty"];
-  updatingStyleFunctions.map(function (item) {
+  var updatingStyleFunctions = ["moveLayer", "removeLayer", "removeSource", "setPaintProperty", "setLayoutProperty"];
+  updatingStyleFunctions.forEach(function (item) {
     _this[item] = function () {
       if (self.map && _this.map.style && typeof self.map.style[item] === "function") {
         var _self$map$style;
@@ -330,7 +350,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   }); // add style prop functions
 
   var styleFunctions = ["getLayer", "getSource", "listImages", "getPaintProperty", "getLayoutProperty", "removeImage"];
-  styleFunctions.map(function (item) {
+  styleFunctions.forEach(function (item) {
     _this[item] = function () {
       if (self.map && self.map.style) {
         var _self$map$style2;
@@ -440,11 +460,15 @@ var MapLibreMap = function MapLibreMap(props) {
   var map = useRef(null);
   var mapContainer = useRef(null);
   var mapContext = useContext(MapContext);
+  var mapContextRef = useRef(mapContext);
   var mapIdRef = useRef(props.mapId);
   var mapOptions = props.options;
   useEffect(function () {
+    var mapId = mapIdRef.current;
+    var _mapContext = mapContextRef.current;
     return function () {
-      mapContext.removeMap(mapIdRef.current);
+      _mapContext.removeMap(mapId);
+
       map.current.remove();
       map.current = null;
     };
@@ -682,16 +706,14 @@ var nmMap = {
 var nmConverter = function nmConverter(nmAddress) {
   var addressArr = [];
 
-  for (var _i = 0, _Object$entries = Object.entries(nmMap); _i < _Object$entries.length; _i++) {
-    var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-        key = _Object$entries$_i[0],
-        value = _Object$entries$_i[1];
-
-    value.some(function (element) {
+  for (var key in nmMap) {
+    nmMap[key].some(function (element) {
       if (nmAddress.hasOwnProperty(element)) {
         addressArr.push(nmAddress[element]);
         return true;
       }
+
+      return false;
     });
   }
 
@@ -843,11 +865,11 @@ var MlCreatePdfButton = function MlCreatePdfButton() {
   }, /*#__PURE__*/React.createElement(PrinterIcon, null)));
 };
 
-var _showNextTransitionSegment = function _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, idSuffixRef, currentTransitionStepRef, msPerStep) {
+var _showNextTransitionSegment = function _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep) {
   var _arguments = arguments;
   console.log("SHOW NEXT TRANSITION SEGMENT CALLED");
 
-  if (typeof map.getSource(layerId + idSuffixRef.current) === "undefined" || !transitionInProgressRef.current) {
+  if (typeof map.getSource(layerId) === "undefined" || !transitionInProgressRef.current) {
     setTimeout(function () {
       return _showNextTransitionSegment.apply(void 0, _toConsumableArray(_arguments));
     }, msPerStep);
@@ -856,7 +878,7 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, laye
 
   if (typeof transitionGeojsonDataRef.current[currentTransitionStepRef.current] !== "undefined") {
     var newData = currentTransitionStepRef.current + 1 === transitionGeojsonDataRef.current.length ? props.geojson : lineString([].concat(_toConsumableArray(transitionGeojsonCommonDataRef.current), _toConsumableArray(transitionGeojsonDataRef.current[currentTransitionStepRef.current].geometry.coordinates)));
-    map.getSource(layerId + idSuffixRef.current).setData(newData);
+    map.getSource(layerId).setData(newData);
 
     if (typeof props.onTransitionFrame === "function") {
       props.onTransitionFrame(newData);
@@ -878,7 +900,7 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, laye
   }
 };
 
-var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, layerId, idSuffixRef) {
+var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, layerId) {
   // create the transition geojson between oldGeojsonRef.current and props.geojson
   //console.log("start transition");
   // create a geojson that contains no common point between the two line features
@@ -999,7 +1021,7 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
   currentTransitionStepRef.current = 1;
   transitionInProgressRef.current = true;
   setTimeout(function () {
-    return _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, idSuffixRef, currentTransitionStepRef, msPerStep);
+    return _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep);
   }, msPerStep);
 };
 
@@ -1008,46 +1030,39 @@ var msPerStep = 50;
 var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   var mapContext = useContext(MapContext);
-  var idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   var oldGeojsonRef = useRef(null);
   var mapRef = useRef(null);
+  var initializedRef = useRef(false);
   var transitionInProgressRef = useRef(false);
   var currentTransitionStepRef = useRef(false);
   var transitionGeojsonDataRef = useRef([]);
   var transitionGeojsonCommonDataRef = useRef([]);
-  var layerId = props.layerId || "MlGeoJsonLayer-";
+  var componentId = useRef((props.layerId ? props.layerId : "MlGeoJsonLayer-") + (props.idSuffix || v4()));
   useEffect(function () {
-    var layerSourceId = layerId + idSuffixRef.current;
+    var _componentId = componentId.current;
     return function () {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       if (mapRef.current) {
-        if (mapRef.current.style && mapRef.current.getLayer(layerSourceId)) {
-          mapRef.current.removeLayer(layerSourceId);
-        }
-
-        if (mapRef.current.style && mapRef.current.getSource(layerSourceId)) {
-          mapRef.current.removeSource(layerSourceId);
-        }
-
+        mapRef.current.cleanup(_componentId);
         mapRef.current = null;
       }
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).style || !mapContext.getMap(props.mapId).getLayer(layerId + idSuffixRef.current)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).style || !mapContext.getMap(props.mapId).getLayer(componentId.current)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.paint) {
-      mapContext.getMap(props.mapId).setPaintProperty(layerId + idSuffixRef.current, key, props.paint[key]);
+      mapContext.getMap(props.mapId).setPaintProperty(componentId.current, key, props.paint[key]);
     }
-  }, [props.paint, layerId, mapContext, props.mapId]);
+  }, [props.paint, mapContext, props.mapId]);
   var transitionToGeojson = useCallback(function (newGeojson) {
     console.log("TRANSITION CALLED");
 
-    _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, layerId, idSuffixRef);
+    _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, componentId.current);
   }, [props]);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).getSource(layerId + idSuffixRef.current)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).getSource(componentId.current)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     if (typeof props.transitionTime !== "undefined" && props.type === "line" && oldGeojsonRef.current) {
@@ -1057,16 +1072,17 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       transitionGeojsonCommonDataRef.current = [];
       transitionToGeojson(props.geojson);
     } else {
-      mapContext.getMap(props.mapId).getSource(layerId + idSuffixRef.current).setData(props.geojson);
+      mapContext.getMap(props.mapId).getSource(componentId.current).setData(props.geojson);
     }
 
     oldGeojsonRef.current = props.geojson;
-  }, [props.geojson, layerId, props.mapId, mapContext, props.type, transitionToGeojson, props.transitionTime]);
+  }, [props.geojson, props.mapId, mapContext, props.type, transitionToGeojson, props.transitionTime]);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    if (!mapContext.getMap(props.mapId).getSource(layerId + idSuffixRef.current) && props.geojson) {
+    if (props.geojson) {
+      initializedRef.current = true;
       var geojson = props.geojson;
 
       if (props.type === "line" && typeof props.transitionTime !== "undefined" && props.transitionTime && typeof props.geojson.geometry !== "undefined") {
@@ -1075,8 +1091,8 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       }
 
       mapRef.current = mapContext.getMap(props.mapId);
-      mapContext.getMap(props.mapId).addLayer({
-        id: layerId + idSuffixRef.current,
+      mapRef.current.addLayer({
+        id: componentId.current,
         source: {
           type: "geojson",
           data: geojson
@@ -1086,7 +1102,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
           "line-color": "rgb(100,200,100)",
           "line-width": 10
         }
-      }, props.insertBeforeLayer);
+      }, props.insertBeforeLayer, componentId.current);
 
       if (props.type === "line" && typeof props.transitionTime !== "undefined" && typeof props.geojson.geometry !== "undefined") {
         transitionToGeojson(props.geojson);
@@ -1095,30 +1111,25 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
         }, props.transitionTime / 2);
       }
     }
-  }, [mapContext.mapIds, mapContext, layerId, props.geojson, props.insertBeforeLayer, props.mapId, props.type, props.transitionTime, props.paint, transitionToGeojson]);
+  }, [mapContext.mapIds, mapContext, props.geojson, props.insertBeforeLayer, props.mapId, props.type, props.transitionTime, props.paint, transitionToGeojson]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
 var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   var mapRef = useRef(null);
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-") + v4());
   var mapContext = useContext(MapContext);
   var layerInitializedRef = useRef(false);
   var idPostfixRef = useRef(props.idSuffix || new Date().getTime());
   var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
   var layerId = (props.layerId || "MlImageMarkerLayer-") + idPostfixRef.current;
   useEffect(function () {
+    var _componentId = componentId.current;
     return function () {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
       if (mapRef.current) {
-        // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
-          mapRef.current.removeLayer(layerId);
-        }
-
-        if (mapRef.current.style && mapRef.current.getSource(layerId)) {
-          mapRef.current.removeSource(layerId);
-        }
-
+        mapRef.current.cleanup(_componentId);
         mapRef.current = null;
       }
     };
@@ -1127,14 +1138,16 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
     if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
+    var key;
+
     if (props.options.layout) {
-      for (var key in props.options.layout) {
+      for (key in props.options.layout) {
         mapContext.getMap(props.mapId).setLayoutProperty(layerId, key, props.options.layout[key]);
       }
     }
 
     if (props.options.paint) {
-      for (var key in props.options.paint) {
+      for (key in props.options.paint) {
         mapContext.getMap(props.mapId).setPaintProperty(layerId, key, props.options.paint[key]);
       }
     }
@@ -1146,8 +1159,8 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
     }, props.options);
 
     tmpOptions.layout["icon-image"] = imageIdRef.current;
-    mapRef.current.addLayer(tmpOptions);
-  }, [mapContext, props.options, props, imageIdRef, layerId]);
+    mapRef.current.addLayer(tmpOptions, props.insertBeforeLayer, componentId.current);
+  }, [props, imageIdRef, layerId]);
   useEffect(function () {
     if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) {
       return;
@@ -1167,7 +1180,7 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
     if (props.imgSrc) {
       mapRef.current.loadImage(props.imgSrc, function (error, image) {
         if (error) throw error;
-        mapRef.current.addImage(imageIdRef.current, image);
+        mapRef.current.addImage(imageIdRef.current, image, componentId.current);
       });
     }
 
@@ -1181,20 +1194,16 @@ var MlLayer = function MlLayer(props) {
   var mapContext = useContext(MapContext);
   var layerInitializedRef = useRef(false);
   var mapRef = useRef(null);
+  var componentId = useRef((props.layerId ? props.layerId : "MlLayer-") + v4());
   var idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   var layerId = (props.layerId || "MlLayer-") + idSuffixRef.current;
+  var layerPaintConfRef = useRef(undefined);
+  var layerLayoutConfRef = useRef(undefined);
   useEffect(function () {
+    var _componentId = componentId.current;
     return function () {
       if (mapRef.current) {
-        // This is the cleanup function, it is called when this react component is removed from react-dom
-        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
-          mapRef.current.removeLayer(layerId);
-        }
-
-        if (mapRef.current.style && mapRef.current.getSource(layerId)) {
-          mapRef.current.removeSource(layerId);
-        }
-
+        mapRef.current.cleanup(_componentId);
         mapRef.current = null;
       }
     };
@@ -1203,30 +1212,36 @@ var MlLayer = function MlLayer(props) {
     if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    if (props.options.layout) {
-      for (var key in props.options.layout) {
-        mapContext.getMap(props.mapId).setLayoutProperty(layerId, key, props.options.layout[key]);
+    var key;
+    var layoutString = JSON.stringify(props.options.layout);
+
+    if (props.options.layout && layoutString !== layerLayoutConfRef.current) {
+      for (key in props.options.layout) {
+        mapRef.current.setLayoutProperty(layerId, key, props.options.layout[key]);
       }
+
+      layerLayoutConfRef.current = layoutString;
     }
 
-    if (props.options.paint) {
-      for (var key in props.options.paint) {
-        mapContext.getMap(props.mapId).setPaintProperty(layerId, key, props.options.paint[key]);
+    var paintString = JSON.stringify(props.options.paint);
+
+    if (props.options.paint && paintString === layerPaintConfRef.current) {
+      for (key in props.options.paint) {
+        mapRef.current.setPaintProperty(layerId, key, props.options.paint[key]);
       }
     }
-  }, [props.options]);
+  }, [props.options, layerId, mapContext, props]);
   useEffect(function () {
     if (!props.options || !mapContext.mapExists(props.mapId) || layerInitializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     mapRef.current = mapContext.getMap(props.mapId);
-
-    if (!mapRef.current.getLayer(layerId)) {
-      layerInitializedRef.current = true;
-      mapContext.getMap(props.mapId).addLayer(_objectSpread2({
-        id: layerId
-      }, props.options));
-    }
+    layerInitializedRef.current = true;
+    mapRef.current.addLayer(_objectSpread2({
+      id: layerId
+    }, props.options), props.insertBeforeLayer, componentId.current);
+    layerPaintConfRef.current = JSON.stringify(props.options.paint);
+    layerLayoutConfRef.current = JSON.stringify(props.options.layout);
   }, [mapContext.mapIds, mapContext, props, layerId]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
@@ -1237,54 +1252,50 @@ var MlLayer = function MlLayer(props) {
 
 var MlOsmLayer = function MlOsmLayer(props) {
   var mapContext = useContext(MapContext);
-  var mapRef = useRef(null);
-  var layerInitializedRef = useRef(false);
+  var mapRef = useRef(undefined);
 
   var _useState = useState(true),
       _useState2 = _slicedToArray(_useState, 2),
       showLayer = _useState2[0],
       setShowLayer = _useState2[1];
 
-  var idPostfixRef = useRef(new Date().getTime());
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-") + v4());
+  var initializedRef = useRef(false);
+  var sourceIdRef = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-source-") + v4());
+  var layerIdRef = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-layer-") + v4());
   useEffect(function () {
+    var _componentId = componentId.current;
     return function () {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       if (mapRef.current) {
-        if (mapRef.current.style && mapRef.current.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
-          mapRef.current.removeLayer("raster-tile-layer-" + idPostfixRef.current);
-        }
-
-        if (mapRef.current.style && mapRef.current.getSource("raster-tile-source-" + idPostfixRef.current)) {
-          mapRef.current.removeSource("raster-tile-source-" + idPostfixRef.current);
-        }
-
+        mapRef.current.cleanup(_componentId);
         mapRef.current = null;
       }
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || layerInitializedRef.current) return;
-    layerInitializedRef.current = true;
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+    initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
-    mapRef.current.addSource("raster-tile-source-" + idPostfixRef.current, _objectSpread2({
+    mapRef.current.addSource(sourceIdRef.current, _objectSpread2({
       type: "raster",
       tileSize: 256
-    }, props.sourceOptions));
+    }, props.sourceOptions), componentId.current);
     mapRef.current.addLayer(_objectSpread2({
-      id: "raster-tile-layer-" + idPostfixRef.current,
+      id: layerIdRef.current,
       type: "raster",
-      source: "raster-tile-source-" + idPostfixRef.current,
+      source: sourceIdRef.current,
       minzoom: 0,
       maxzoom: 22
-    }, props.layerOptions));
-  }, [mapContext.mapIds]);
+    }, props.layerOptions), props.insertBeforeLayer, componentId.current);
+  }, [mapContext.mapIds, props, mapContext]);
   useEffect(function () {
     if (!mapRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
     if (showLayer) {
-      mapRef.current.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "visible");
+      mapRef.current.setLayoutProperty(layerIdRef.current, "visibility", "visible");
     } else {
-      mapRef.current.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "none");
+      mapRef.current.setLayoutProperty(layerIdRef.current, "visibility", "none");
     }
   }, [showLayer]);
   return /*#__PURE__*/React.createElement(Button, {
@@ -1302,16 +1313,11 @@ var MlOsmLayer = function MlOsmLayer(props) {
 
 var MlVectorTileLayer = function MlVectorTileLayer(props) {
   var mapContext = useContext(MapContext);
-
-  var _useState = useState(true),
-      _useState2 = _slicedToArray(_useState, 2),
-      showLayer = _useState2[0],
-      setShowLayer = _useState2[1];
-
   var layerName = "vector-tile-layer-";
   var sourceName = "vector-tile-source-";
-  var idPostfixRef = useRef(new Date().getTime());
+  var idSuffixRef = useRef(new Date().getTime());
   var layerIdsRef = useRef({});
+  var layerPaintConfsRef = useRef({});
   var initializedRef = useRef(false);
   var mapRef = useRef(null);
 
@@ -1323,8 +1329,8 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
         }
       }
 
-      if (mapRef.current.getSource(sourceName + idPostfixRef.current)) {
-        mapRef.current.removeSource(sourceName + idPostfixRef.current);
+      if (mapRef.current.getSource(sourceName + idSuffixRef.current)) {
+        mapRef.current.removeSource(sourceName + idSuffixRef.current);
       }
     }
   };
@@ -1337,7 +1343,7 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId); // Add the new layer to the openlayers instance once it is available
 
-    mapRef.current.addSource(sourceName + idPostfixRef.current, {
+    mapRef.current.addSource(sourceName + idSuffixRef.current, {
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
@@ -1346,11 +1352,11 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
     });
 
     for (var key in props.layers) {
-      var layerId = layerName + "_" + key + "_" + idPostfixRef.current;
+      var layerId = layerName + "_" + key + "_" + idSuffixRef.current;
       layerIdsRef.current[key] = layerId;
       mapRef.current.addLayer(_objectSpread2({
         id: layerId,
-        source: sourceName + idPostfixRef.current,
+        source: sourceName + idSuffixRef.current,
         type: "line",
         minzoom: 0,
         maxzoom: 22,
@@ -1361,29 +1367,36 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
           "line-width": 2
         }
       }, props.layers[key]));
+      layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
     }
-  }, [mapContext.mapIds]);
+  }, [mapContext.mapIds, props, mapContext]);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.layers) {
       if (mapRef.current.getLayer(layerIdsRef.current[key])) {
-        for (var paintKey in props.layers[key].paint) {
-          mapContext.getMap(props.mapId).setPaintProperty(layerIdsRef.current[key], paintKey, props.layers[key].paint[paintKey]);
+        var layerConfString = JSON.stringify(props.layers[key].paint);
+
+        if (layerConfString !== layerPaintConfsRef.current[key]) {
+          for (var paintKey in props.layers[key].paint) {
+            mapContext.getMap(props.mapId).setPaintProperty(layerIdsRef.current[key], paintKey, props.layers[key].paint[paintKey]);
+          }
         }
+
+        layerPaintConfsRef.current[key] = layerConfString;
       }
     }
-  }, [props.layers]);
+  }, [props.layers, props, mapContext]);
   useEffect(function () {
     if (!mapRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
-    if (showLayer) {
-      mapRef.current.setLayoutProperty(layerName + idPostfixRef.current, "visibility", "visible");
+    if (props.visible) {
+      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "visible");
     } else {
-      mapRef.current.setLayoutProperty(layerName + idPostfixRef.current, "visibility", "none");
+      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "none");
     }
-  }, [showLayer]);
+  }, [props.visible]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
@@ -1399,21 +1412,15 @@ var MlWmsLayer = function MlWmsLayer(props) {
       showLayer = _useState2[0],
       setShowLayer = _useState2[1];
 
-  var idPostfixRef = useRef(new Date().getTime());
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLayer-") + v4());
   var mapRef = useRef(null);
   var initializedRef = useRef(false);
   useEffect(function () {
+    var _componentId = componentId.current;
     return function () {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       if (mapRef.current) {
-        if (mapRef.current.style && mapRef.current.getLayer("raster-tile-layer-" + idPostfixRef.current)) {
-          mapRef.current.removeLayer("raster-tile-layer-" + idPostfixRef.current);
-        }
-
-        if (mapRef.current.style && mapRef.current.getSource("raster-tile-source-" + idPostfixRef.current)) {
-          mapRef.current.removeSource("raster-tile-source-" + idPostfixRef.current);
-        }
-
+        mapRef.current.cleanup(_componentId);
         mapRef.current = null;
       }
     };
@@ -1423,28 +1430,28 @@ var MlWmsLayer = function MlWmsLayer(props) {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId); // Add the new layer to the openlayers instance once it is available
 
-    mapRef.current.addSource("raster-tile-source-" + idPostfixRef.current, {
+    mapRef.current.addSource(componentId.current, {
       type: "raster",
       tiles: [props.url + "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" + props.layer],
       tileSize: 256,
       attribution: "" //...props.sourceOptions,
 
-    });
+    }, componentId.current);
     mapRef.current.addLayer(_objectSpread2({
-      id: "raster-tile-layer-" + idPostfixRef.current,
+      id: componentId.current,
       type: "raster",
-      source: "raster-tile-source-" + idPostfixRef.current,
+      source: componentId.current,
       minzoom: 0,
       maxzoom: 10
-    }, props.sourceOptions));
-  }, [mapContext.mapIds]);
+    }, props.sourceOptions), props.insertBeforeLayer, componentId.current);
+  }, [mapContext.mapIds, mapContext, props]);
   useEffect(function () {
     if (!mapRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
     if (showLayer) {
-      mapRef.current.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "visible");
+      mapRef.current.setLayoutProperty(componentId.current, "visibility", "visible");
     } else {
-      mapRef.current.setLayoutProperty("raster-tile-layer-" + idPostfixRef.current, "visibility", "none");
+      mapRef.current.setLayoutProperty(componentId.current, "visibility", "none");
     }
   }, [showLayer]);
   return /*#__PURE__*/React.createElement(Button, {
@@ -1579,7 +1586,7 @@ var doubleClickZoom = {
       // First check we've got a map and some context.
       if (!ctx.map || !ctx.map.doubleClickZoom || !ctx._ctx || !ctx._ctx.store || !ctx._ctx.store.getInitialConfigValue) return; // Now check initial state wasn't false (we leave it disabled if so)
 
-      if (!ctx._ctx.store.getInitialConfigValue('doubleClickZoom')) return;
+      if (!ctx._ctx.store.getInitialConfigValue("doubleClickZoom")) return;
       ctx.map.doubleClickZoom.enable();
     }, 0);
   },
@@ -1609,7 +1616,7 @@ function isEventAtCoordinates(event, coordinates) {
  * @return {GeoJSON} Point
  */
 
-function createVertex (parentId, coordinates, path, selected) {
+var create_vertex = function create_vertex(parentId, coordinates, path, selected) {
   return {
     type: geojsonTypes.FEATURE,
     properties: {
@@ -1623,7 +1630,7 @@ function createVertex (parentId, coordinates, path, selected) {
       coordinates: coordinates
     }
   };
-}
+};
 
 var CustomPolygonMode = {};
 
@@ -1745,13 +1752,13 @@ CustomPolygonMode.toDisplayFeatures = function (state, geojson, display) {
   }
 
   geojson.properties.meta = meta.FEATURE;
-  display(createVertex(state.polygon.id, geojson.geometry.coordinates[0][0], "0.0", false));
+  display(create_vertex(state.polygon.id, geojson.geometry.coordinates[0][0], "0.0", false));
 
   if (coordinateCount > 3) {
     // Add a start position marker to the map, clicking on this will finish the feature
     // This should only be shown when we're in a valid spot
     var endPos = geojson.geometry.coordinates[0].length - 3;
-    display(createVertex(state.polygon.id, geojson.geometry.coordinates[0][endPos], "0.".concat(endPos), false));
+    display(create_vertex(state.polygon.id, geojson.geometry.coordinates[0][endPos], "0.".concat(endPos), false));
   }
 
   if (coordinateCount <= 4) {
@@ -1798,7 +1805,7 @@ function mouseEventPoint(mouseEvent, container) {
   return new Point(mouseEvent.clientX - rect.left - (container.clientLeft || 0), mouseEvent.clientY - rect.top - (container.clientTop || 0));
 }
 
-function createMidpoint (parent, startVertex, endVertex) {
+var create_midpoint = function create_midpoint(parent, startVertex, endVertex) {
   var startCoord = startVertex.geometry.coordinates;
   var endCoord = endVertex.geometry.coordinates; // If a coordinate exceeds the projection, we can't calculate a midpoint,
   // so run away
@@ -1825,7 +1832,7 @@ function createMidpoint (parent, startVertex, endVertex) {
       coordinates: [mid.lng, mid.lat]
     }
   };
-}
+};
 
 function createSupplementaryPoints(geojson) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -1838,7 +1845,7 @@ function createSupplementaryPoints(geojson) {
 
   if (type === geojsonTypes.POINT) {
     // For points, just create a vertex
-    supplementaryPoints.push(createVertex(featureId, coordinates, basePath, isSelectedPath(basePath)));
+    supplementaryPoints.push(create_vertex(featureId, coordinates, basePath, isSelectedPath(basePath)));
   } else if (type === geojsonTypes.POLYGON) {
     // Cycle through a Polygon's rings and
     // process each line
@@ -1856,12 +1863,12 @@ function createSupplementaryPoints(geojson) {
     var lastVertex = null;
     line.forEach(function (point, pointIndex) {
       var pointPath = lineBasePath !== undefined && lineBasePath !== null ? "".concat(lineBasePath, ".").concat(pointIndex) : String(pointIndex);
-      var vertex = createVertex(featureId, point, pointPath, isSelectedPath(pointPath)); // If we're creating midpoints, check if there was a
+      var vertex = create_vertex(featureId, point, pointPath, isSelectedPath(pointPath)); // If we're creating midpoints, check if there was a
       // vertex before this one. If so, add a midpoint
       // between that vertex and this one.
 
       if (options.midpoints && lastVertex) {
-        var midpoint = createMidpoint(featureId, lastVertex, vertex);
+        var midpoint = create_midpoint(featureId, lastVertex, vertex);
 
         if (midpoint) {
           supplementaryPoints.push(midpoint);
@@ -1983,7 +1990,7 @@ var LAT_MIN$1 = LAT_MIN,
 // - any feature to be completely lost in the space between the projection's
 //   edge and the poles, such that it couldn't be re-selected and moved back
 
-function constrainFeatureMovement (geojsonFeatures, delta) {
+var constrain_feature_movement = function constrain_feature_movement(geojsonFeatures, delta) {
   // "inner edge" = a feature's latitude closest to the equator
   var northInnerEdge = LAT_MIN$1;
   var southInnerEdge = LAT_MAX$1; // "outer edge" = a feature's latitude furthest from the equator
@@ -2035,10 +2042,10 @@ function constrainFeatureMovement (geojsonFeatures, delta) {
   }
 
   return constrainedDelta;
-}
+};
 
-function moveFeatures (features, delta) {
-  var constrainedDelta = constrainFeatureMovement(features.map(function (feature) {
+var move_features = function move_features(features, delta) {
+  var constrainedDelta = constrain_feature_movement(features.map(function (feature) {
     return feature.toGeoJSON();
   }), delta);
   features.forEach(function (feature) {
@@ -2078,45 +2085,6 @@ function moveFeatures (features, delta) {
 
     feature.incomingCoords(nextCoordinates);
   });
-}
-
-var drawUtils = {
-  getMatchingVertices: function getMatchingVertices(vertex, featureId, allFeatures, map) {
-    // number of decimals should probably be dynamic depending on zoom level
-    var decimals = 5;
-    var matchingVertices = [];
-    var v_lng = vertex[0].toFixed(decimals);
-    var v_lat = vertex[1].toFixed(decimals);
-
-    for (var i = 0; i < allFeatures.length; i++) {
-      if (allFeatures[i].id !== featureId) {
-        for (var k = 0; k < allFeatures[i].geometry.coordinates.length; k++) {
-          for (var m = 0; m < allFeatures[i].geometry.coordinates[k].length; m++) {
-            if (v_lng === allFeatures[i].geometry.coordinates[k][m][0].toFixed(decimals) && v_lat === allFeatures[i].geometry.coordinates[k][m][1].toFixed(decimals)) {
-              matchingVertices.push({
-                featureId: allFeatures[i].id,
-                coord_path: k + "." + m,
-                //feature: map.getFeature(allFeatures[i].id),
-                lng: allFeatures[i].geometry.coordinates[k][m][0],
-                lat: allFeatures[i].geometry.coordinates[k][m][1]
-              });
-            }
-          }
-        }
-      }
-    }
-
-    return matchingVertices;
-  },
-  getDrawInstance: function getDrawInstance(map) {
-    for (var i = map._controls.length - 1; i >= 0; i--) {
-      if (map._controls[i].options && map._controls[i].options.defaultMode === "custom_select") {
-        return map._controls[i];
-      }
-    }
-
-    return null;
-  }
 };
 
 var CustomSelectMode = {};
@@ -2386,7 +2354,7 @@ CustomSelectMode.dragMove = function (state, e) {
     lng: e.lngLat.lng - state.dragMoveLocation.lng,
     lat: e.lngLat.lat - state.dragMoveLocation.lat
   };
-  moveFeatures(this.getSelected(), delta);
+  move_features(this.getSelected(), delta);
   state.dragMoveLocation = e.lngLat;
 };
 
@@ -2521,6 +2489,45 @@ CustomSelectMode.onUncombineFeatures = function () {
   this.fireActionable();
 };
 
+var drawUtils = {
+  getMatchingVertices: function getMatchingVertices(vertex, featureId, allFeatures, map) {
+    // number of decimals should probably be dynamic depending on zoom level
+    var decimals = 5;
+    var matchingVertices = [];
+    var v_lng = vertex[0].toFixed(decimals);
+    var v_lat = vertex[1].toFixed(decimals);
+
+    for (var i = 0; i < allFeatures.length; i++) {
+      if (allFeatures[i].id !== featureId) {
+        for (var k = 0; k < allFeatures[i].geometry.coordinates.length; k++) {
+          for (var m = 0; m < allFeatures[i].geometry.coordinates[k].length; m++) {
+            if (v_lng === allFeatures[i].geometry.coordinates[k][m][0].toFixed(decimals) && v_lat === allFeatures[i].geometry.coordinates[k][m][1].toFixed(decimals)) {
+              matchingVertices.push({
+                featureId: allFeatures[i].id,
+                coord_path: k + "." + m,
+                //feature: map.getFeature(allFeatures[i].id),
+                lng: allFeatures[i].geometry.coordinates[k][m][0],
+                lat: allFeatures[i].geometry.coordinates[k][m][1]
+              });
+            }
+          }
+        }
+      }
+    }
+
+    return matchingVertices;
+  },
+  getDrawInstance: function getDrawInstance(map) {
+    for (var i = map._controls.length - 1; i >= 0; i--) {
+      if (map._controls[i].options && map._controls[i].options.defaultMode === "custom_select") {
+        return map._controls[i];
+      }
+    }
+
+    return null;
+  }
+};
+
 var isVertex$1 = isOfMetaType(meta.VERTEX);
 var isMidpoint = isOfMetaType(meta.MIDPOINT);
 var DirectSelect = {}; // INTERNAL FUCNTIONS
@@ -2601,7 +2608,7 @@ DirectSelect.onFeature = function (state, e) {
 };
 
 DirectSelect.dragFeature = function (state, e, delta) {
-  moveFeatures(this.getSelected(), delta);
+  move_features(this.getSelected(), delta);
   state.dragMoveLocation = e.lngLat;
 };
 
@@ -2619,7 +2626,7 @@ DirectSelect.dragVertex = function (state, e, delta) {
       }
     };
   });
-  var constrainedDelta = constrainFeatureMovement(selectedCoordPoints, delta);
+  var constrainedDelta = constrain_feature_movement(selectedCoordPoints, delta);
 
   for (var i = 0; i < selectedCoords.length; i++) {
     var coord = selectedCoords[i];
@@ -2788,6 +2795,7 @@ function MlFeatureEditor(props) {
   var draw = useRef(null);
   var mapContext = useContext(MapContext);
   var componentId = useRef((props.idPrefix ? props.idPrefix : "MlFeatureEditor-") + v4());
+  var onChangeRef = useRef(props.onChange);
 
   var _useState = useState(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -2814,9 +2822,10 @@ function MlFeatureEditor(props) {
   };
 
   useEffect(function () {
+    var _componentId = componentId.current;
     return function () {
       if (mapRef.current) {
-        mapRef.current.cleanup(componentId.current); //mapRef.current.removeControl(draw.current, "top-left");
+        mapRef.current.cleanup(_componentId); //mapRef.current.removeControl(draw.current, "top-left");
 
         mapRef.current = null;
       }
@@ -2860,8 +2869,8 @@ function MlFeatureEditor(props) {
       // update drawnFeatures state object
       var currentFeatureCollection = draw.current.getAll();
 
-      if (typeof props.onChange === "function") {
-        props.onChange(currentFeatureCollection.features);
+      if (typeof onChangeRef.current === "function") {
+        onChangeRef.current(currentFeatureCollection.features);
       }
     }
   }, [mouseUpTrigger]);
@@ -2936,91 +2945,5 @@ GeoJsonProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-var MlCameraFollowPath = function MlCameraFollowPath(props) {
-  // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
-  var mapContext = useContext(MapContext);
-  var initializedRef = useRef(false);
-  var clearIntervalRef = useRef(false); // default path, for testing default behaviour
-
-  var route = useMemo(function () {
-    return props.path || [[7.09222, 50.725055], [7.0577, 50.7621]];
-  }, [props.path]);
-  useEffect(function () {
-    return function () {
-      clearIntervalRef.current = true; // This is the cleanup function, it is called when this react component is removed from react-dom
-      // try to remove anything this component has added to the MapLibre-gl instance
-      // e.g.: remove the layer
-      // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
-    };
-  }, []);
-  var disableInteractivity = useCallback(function () {
-    mapContext.map["scrollZoom"].disable();
-    mapContext.map["boxZoom"].disable();
-    mapContext.map["dragRotate"].disable();
-    mapContext.map["dragPan"].disable();
-    mapContext.map["keyboard"].disable();
-    mapContext.map["doubleClickZoom"].disable();
-    mapContext.map["touchZoomRotate"].disable();
-  }, [mapContext.map]);
-  var enableInteractivity = useCallback(function () {
-    mapContext.map["scrollZoom"].enable();
-    mapContext.map["boxZoom"].enable();
-    mapContext.map["dragRotate"].enable();
-    mapContext.map["dragPan"].enable();
-    mapContext.map["keyboard"].enable();
-    mapContext.map["doubleClickZoom"].enable();
-    mapContext.map["touchZoomRotate"].enable();
-  }, [mapContext.map]);
-  useEffect(function () {
-    if (!mapContext.mapExists() || initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-
-    initializedRef.current = true;
-    var kmPerStep = props.kmPerStep || 0.01;
-    var routeDistance = lineDistance(lineString(route));
-    var zoomOutTo = props.zoomOutTo || 14;
-    var stepDuration = props.stepDuration || 70;
-    var step = 1;
-    var zoom = props.initialZoom || 18;
-    var zoomSteps = 0.04;
-    disableInteractivity();
-
-    if (mapContext.map.getZoom() !== zoom) {
-      mapContext.map.setZoom(zoom);
-    }
-
-    var timer = window.setInterval(function () {
-      console.log(mapContext.map);
-
-      if (clearIntervalRef.current) {
-        window.clearInterval(timer);
-        enableInteractivity();
-      }
-
-      var alongRoute = along(lineString(route), step * kmPerStep).geometry.coordinates;
-
-      if (step * kmPerStep < routeDistance) {
-        mapContext.map.panTo(alongRoute, {
-          bearing: bearing(point([mapContext.map.getCenter().lng, mapContext.map.getCenter().lat]), point(alongRoute)),
-          duration: stepDuration,
-          essential: true
-        });
-        step++;
-        console.log("PAN MOVE");
-      } else if (zoom > zoomOutTo) {
-        zoom = zoom - zoomSteps;
-        mapContext.map.setZoom(zoom);
-        console.log("ZOOM OUT");
-      } else {
-        window.clearInterval(timer);
-        console.log("ENABLE CONTROLS");
-        enableInteractivity();
-      }
-    }, stepDuration);
-  }, [mapContext.mapIds, mapContext, props, disableInteractivity, enableInteractivity, route]);
-  return /*#__PURE__*/React.createElement(React.Fragment, null);
-};
-
-export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlBasicComponent, MlCameraFollowPath, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlBasicComponent, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
 //# sourceMappingURL=index.esm.js.map

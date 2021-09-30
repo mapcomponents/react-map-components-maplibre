@@ -13,5 +13,3 @@ export { default as MlFeatureEditor } from "./components/MlFeatureEditor/MlFeatu
 export { default as MlBasicComponent } from "./components/MlBasicComponent";
 export { default as GeoJsonProvider } from "./components/MlGPXViewer/util/GeoJsonProvider";
 export { default as GeoJsonContext } from "./components/MlGPXViewer/util/GeoJsonContext";
-
-export { default as MlCameraFollowPath } from "./lab/MlCameraFollowPath/MlCameraFollowPath";
