@@ -1,14 +1,19 @@
 {
     "tags": {
         "allowUnknownTags": [
-            "pailhead"
+            "pailhead",
+            "component"
         ] 
     },
     "recurseDepth": 10,
-    "plugins": [
-        "node_modules/better-docs/typescript"
-    ],
+    "opts": {
+        "template": "node_modules/better-docs",
+        "destination": "docs/"
+      },
     "source": {
         "include": ["./src/"]
-    }
+    },
+    "plugins": [
+        "node_modules/better-docs/component"
+    ]
 }
