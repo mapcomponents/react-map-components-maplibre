@@ -32,25 +32,25 @@ const MlLayerMagnify = (props) => {
     return true;
   }, [props, mapContext]);
 
-  const onResize = () => {
+  const onResize = useRef(() => {
     if (!mapExists()) return;
 
     onMove({
       clientX: swipeXRef.current,
       clientY: swipeYRef.current,
     });
-  };
-
-  const cleanup = () => {
-    window.removeEventListener("resize", onResize);
-    if (syncCleanupFunctionRef.current) {
-      syncCleanupFunctionRef.current();
-    }
-  };
+  });
 
   useEffect(() => {
-    window.addEventListener("resize", onResize);
-    return cleanup;
+    window.addEventListener("resize", onResize.current);
+    let _onResize = onResize.current;
+
+    return () => {
+      window.removeEventListener("resize", _onResize);
+      if (syncCleanupFunctionRef.current) {
+        syncCleanupFunctionRef.current();
+      }
+    };
   }, []);
 
   const onMove = useCallback(
@@ -128,7 +128,7 @@ const MlLayerMagnify = (props) => {
       clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
       clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2,
     });
-  }, [mapContext.mapIds, mapContext.maps, mapExists, props, onMove]);
+  }, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
 
   const onDown = (e) => {
     if (e.touches) {
