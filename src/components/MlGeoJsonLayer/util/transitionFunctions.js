@@ -7,13 +7,12 @@ const _showNextTransitionSegment = function (
   transitionInProgressRef,
   transitionGeojsonDataRef,
   transitionGeojsonCommonDataRef,
-  idSuffixRef,
   currentTransitionStepRef,
   msPerStep
 ) {
   console.log("SHOW NEXT TRANSITION SEGMENT CALLED");
   if (
-    typeof map.getSource(layerId + idSuffixRef.current) === "undefined" ||
+    typeof map.getSource(layerId) === "undefined" ||
     !transitionInProgressRef.current
   ) {
     setTimeout(() => _showNextTransitionSegment(...arguments), msPerStep);
@@ -33,7 +32,7 @@ const _showNextTransitionSegment = function (
               .geometry.coordinates,
           ]);
 
-    map.getSource(layerId + idSuffixRef.current).setData(newData);
+    map.getSource(layerId).setData(newData);
 
     if (typeof props.onTransitionFrame === "function") {
       props.onTransitionFrame(newData);
@@ -64,8 +63,7 @@ const _transitionToGeojson = (
   msPerStep,
   currentTransitionStepRef,
   map,
-  layerId,
-  idSuffixRef
+  layerId
 ) => {
   // create the transition geojson between oldGeojsonRef.current and props.geojson
   //console.log("start transition");
@@ -244,7 +242,6 @@ const _transitionToGeojson = (
         transitionInProgressRef,
         transitionGeojsonDataRef,
         transitionGeojsonCommonDataRef,
-        idSuffixRef,
         currentTransitionStepRef,
         msPerStep
       ),

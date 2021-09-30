@@ -2,18 +2,19 @@ import { layerRemovalTest, sourceRemovalTest } from "../../util";
 
 import MlGeoJsonLayer from "./MlGeoJsonLayer";
 import geojson from "./assets/sample_1.json";
+import { uuid_regex } from "../../setupTests";
 
 const testComponent = <MlGeoJsonLayer type="line" geojson={geojson} />;
 
 layerRemovalTest(
   "<MlGeoJsonLayer />",
   testComponent,
-  /^.*\"MlGeoJsonLayer\-[0-9]*\".*$/,
-  "MlGeoJsonLayer-{unix-timestamp}"
+  new RegExp('^.*"MlGeoJsonLayer-' + uuid_regex + '".*$'),
+  "MlGeoJsonLayer-{uuid}"
 );
 sourceRemovalTest(
   "<MlGeoJsonLayer />",
   testComponent,
-  /^.*\"MlGeoJsonLayer\-[0-9]*\".*$/,
-  "MlGeoJsonLayer-{unix-timestamp}"
+  new RegExp('^.*"MlGeoJsonLayer-' + uuid_regex + '".*$'),
+  "MlGeoJsonLayer-{uuid}"
 );
