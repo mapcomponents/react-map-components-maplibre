@@ -12,10 +12,10 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import GeoJsonContext from "./util/GeoJsonContext";
+import toGeoJSON from "./gpxConverter";
 
 import { v4 as uuidv4 } from "uuid";
 
-const toGeoJSON = require("./gpxConverter");
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
