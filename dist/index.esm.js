@@ -477,9 +477,11 @@ var MapLibreMap = function MapLibreMap(props) {
     var mapId = mapIdRef.current;
     var _mapContext = mapContextRef.current;
     return function () {
+      var _map$current$remove, _map$current;
+
       _mapContext.removeMap(mapId);
 
-      map.current.remove();
+      (_map$current$remove = (_map$current = map.current).remove) === null || _map$current$remove === void 0 ? void 0 : _map$current$remove.call(_map$current);
       map.current = null;
     };
   }, []);
