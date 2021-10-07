@@ -36,7 +36,7 @@ const MlGeoJsonLayer = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || !initializedRef.current) return;
+    if (!mapRef.current || !initializedRef.current) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
@@ -66,11 +66,7 @@ const MlGeoJsonLayer = (props) => {
   );
 
   useEffect(() => {
-    if (
-      !mapContext.mapExists(props.mapId) ||
-      !mapContext.getMap(props.mapId).getSource?.(componentId.current) ||
-      !initializedRef.current
-    )
+    if (!mapRef.current?.getSource?.(componentId.current) || !initializedRef.current)
       return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
@@ -86,10 +82,7 @@ const MlGeoJsonLayer = (props) => {
       transitionGeojsonCommonDataRef.current = [];
       transitionToGeojson(props.geojson);
     } else {
-      mapContext
-        .getMap(props.mapId)
-        .getSource(componentId.current)
-        .setData(props.geojson);
+      mapRef.current.getSource(componentId.current).setData(props.geojson);
     }
     oldGeojsonRef.current = props.geojson;
   }, [

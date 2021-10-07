@@ -1061,7 +1061,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapRef.current || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.paint) {
@@ -1072,9 +1072,9 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, componentId.current);
   }, [props]);
   useEffect(function () {
-    var _mapContext$getMap$ge, _mapContext$getMap;
+    var _mapRef$current, _mapRef$current$getSo;
 
-    if (!mapContext.mapExists(props.mapId) || !((_mapContext$getMap$ge = (_mapContext$getMap = mapContext.getMap(props.mapId)).getSource) !== null && _mapContext$getMap$ge !== void 0 && _mapContext$getMap$ge.call(_mapContext$getMap, componentId.current)) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!((_mapRef$current = mapRef.current) !== null && _mapRef$current !== void 0 && (_mapRef$current$getSo = _mapRef$current.getSource) !== null && _mapRef$current$getSo !== void 0 && _mapRef$current$getSo.call(_mapRef$current, componentId.current)) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     if (typeof props.transitionTime !== "undefined" && props.type === "line" && oldGeojsonRef.current) {
@@ -1084,7 +1084,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       transitionGeojsonCommonDataRef.current = [];
       transitionToGeojson(props.geojson);
     } else {
-      mapContext.getMap(props.mapId).getSource(componentId.current).setData(props.geojson);
+      mapRef.current.getSource(componentId.current).setData(props.geojson);
     }
 
     oldGeojsonRef.current = props.geojson;
