@@ -1219,7 +1219,7 @@ var MlLayer = function MlLayer(props) {
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     var key;
