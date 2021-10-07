@@ -66,14 +66,16 @@ const MlLayer = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     mapRef.current = mapContext.getMap(props.mapId);
-    layerInitializedRef.current = true;
-    mapRef.current.addLayer(
-      { id: layerId, ...props.options },
-      props.insertBeforeLayer,
-      componentId.current
-    );
-    layerPaintConfRef.current = JSON.stringify(props.options.paint);
-    layerLayoutConfRef.current = JSON.stringify(props.options.layout);
+    if (mapRef.current) {
+      layerInitializedRef.current = true;
+      mapRef.current.addLayer(
+        { id: layerId, ...props.options },
+        props.insertBeforeLayer,
+        componentId.current
+      );
+      layerPaintConfRef.current = JSON.stringify(props.options.paint);
+      layerLayoutConfRef.current = JSON.stringify(props.options.layout);
+    }
   }, [mapContext.mapIds, mapContext, props, layerId]);
 
   return <></>;

@@ -477,11 +477,11 @@ var MapLibreMap = function MapLibreMap(props) {
     var mapId = mapIdRef.current;
     var _mapContext = mapContextRef.current;
     return function () {
-      var _map$current$remove, _map$current;
+      var _map$current, _map$current$remove;
 
       _mapContext.removeMap(mapId);
 
-      (_map$current$remove = (_map$current = map.current).remove) === null || _map$current$remove === void 0 ? void 0 : _map$current$remove.call(_map$current);
+      (_map$current = map.current) === null || _map$current === void 0 ? void 0 : (_map$current$remove = _map$current.remove) === null || _map$current$remove === void 0 ? void 0 : _map$current$remove.call(_map$current);
       map.current = null;
     };
   }, []);
@@ -1250,12 +1250,15 @@ var MlLayer = function MlLayer(props) {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     mapRef.current = mapContext.getMap(props.mapId);
-    layerInitializedRef.current = true;
-    mapRef.current.addLayer(_objectSpread2({
-      id: layerId
-    }, props.options), props.insertBeforeLayer, componentId.current);
-    layerPaintConfRef.current = JSON.stringify(props.options.paint);
-    layerLayoutConfRef.current = JSON.stringify(props.options.layout);
+
+    if (mapRef.current) {
+      layerInitializedRef.current = true;
+      mapRef.current.addLayer(_objectSpread2({
+        id: layerId
+      }, props.options), props.insertBeforeLayer, componentId.current);
+      layerPaintConfRef.current = JSON.stringify(props.options.paint);
+      layerLayoutConfRef.current = JSON.stringify(props.options.layout);
+    }
   }, [mapContext.mapIds, mapContext, props, layerId]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
