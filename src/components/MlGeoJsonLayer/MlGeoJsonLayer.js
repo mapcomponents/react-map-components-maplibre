@@ -138,6 +138,34 @@ const MlGeoJsonLayer = (props) => {
         props.insertBeforeLayer,
         componentId.current
       );
+
+      if (typeof props.onHover !== "undefined") {
+        mapRef.current.on(
+          "mousemove",
+          componentId.current,
+          props.onHover,
+          componentId.current
+        );
+      }
+
+      if (typeof props.onClick !== "undefined") {
+        mapRef.current.on(
+          "mouseup",
+          componentId.current,
+          props.onClick,
+          componentId.current
+        );
+      }
+
+      if (typeof props.onLeave !== "undefined") {
+        mapRef.current.on(
+          "mouseleave",
+          componentId.current,
+          props.onLeave,
+          componentId.current
+        );
+      }
+
       if (
         props.type === "line" &&
         typeof props.transitionTime !== "undefined" &&
