@@ -17,11 +17,33 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (props) => (
-  <TopToolbar>
-    <MlScaleReference {...props} />
-  </TopToolbar>
+  <>
+    {props.show === "toolbar" && (
+      <TopToolbar>
+        <MlScaleReference {...props} />
+      </TopToolbar>
+    )}
+    {props.show === "overlay" && (
+      <div
+        style={{
+          position: "absolute",
+          zIndex: 100000,
+          bottom: "20px",
+          right: "20px",
+        }}
+      >
+        <MlScaleReference {...props} />
+      </div>
+    )}
+  </>
 );
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+export const Toolbar = Template.bind({});
+Toolbar.args = {
+  show: "toolbar",
+};
+
+export const Overlay = Template.bind({});
+Overlay.args = {
+  show: "overlay",
+};
