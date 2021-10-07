@@ -1221,9 +1221,9 @@ var MlLayer = function MlLayer(props) {
     };
   }, []);
   useEffect(function () {
-    var _mapContext$getMap$ge, _mapContext$getMap;
+    var _mapContext$getMap, _mapContext$getMap$ge;
 
-    if (!mapContext.mapExists(props.mapId) || !((_mapContext$getMap$ge = (_mapContext$getMap = mapContext.getMap(props.mapId)).getLayer) !== null && _mapContext$getMap$ge !== void 0 && _mapContext$getMap$ge.call(_mapContext$getMap, layerId)) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || !((_mapContext$getMap = mapContext.getMap(props.mapId)) !== null && _mapContext$getMap !== void 0 && (_mapContext$getMap$ge = _mapContext$getMap.getLayer) !== null && _mapContext$getMap$ge !== void 0 && _mapContext$getMap$ge.call(_mapContext$getMap, layerId)) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     var key;
