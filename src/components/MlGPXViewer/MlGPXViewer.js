@@ -1,16 +1,16 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 import { bbox } from "@turf/turf";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
-import FileCopy from "@material-ui/icons/FileCopy";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
+import FileCopy from "@mui/icons-material/FileCopy";
 import { Popup } from "maplibre-gl";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import GeoJsonContext from "./util/GeoJsonContext";
 import toGeoJSON from "./gpxConverter";
 
@@ -253,91 +253,89 @@ const MlGPXViewer = (props) => {
   const manualUpload = () => {
     fileupload.current.click();
   };
-  return (
-    <>
-      <IconButton
-        onClick={manualUpload}
-        style={{
-          position: "absolute",
-          right: "5px",
-          bottom: "75px",
-          backgroundColor: "rgba(255,255,255,1)",
+  return <>
+    <IconButton
+      onClick={manualUpload}
+      style={{
+        position: "absolute",
+        right: "5px",
+        bottom: "75px",
+        backgroundColor: "rgba(255,255,255,1)",
 
-          zIndex: 1000,
-        }}
-      >
-        <input
-          ref={fileupload}
-          onChange={fileUploadOnChange}
-          type="file"
-          id="input"
-          multiple
-          style={{ display: "none" }}
-        ></input>
-        <FileCopy />
-      </IconButton>
-      <IconButton
-        onClick={toogleDrawer}
-        style={{
-          position: "absolute",
-          right: "5px",
-          bottom: "25px",
-          backgroundColor: "rgba(255,255,255,1)",
+        zIndex: 1000,
+      }}
+      size="large">
+      <input
+        ref={fileupload}
+        onChange={fileUploadOnChange}
+        type="file"
+        id="input"
+        multiple
+        style={{ display: "none" }}
+      ></input>
+      <FileCopy />
+    </IconButton>
+    <IconButton
+      onClick={toogleDrawer}
+      style={{
+        position: "absolute",
+        right: "5px",
+        bottom: "25px",
+        backgroundColor: "rgba(255,255,255,1)",
 
-          zIndex: 1000,
-        }}
-      >
-        <InfoIcon />
-      </IconButton>
-      <Drawer variant="persistent" anchor="left" open={open}>
-        <Typography
-          variant="h6"
-          style={{
-            textAlign: "center",
-            padding: "1em",
-          }}
-          noWrap
-        >
-          Informationen zur Route
-        </Typography>
-        <Divider />
-        <List>
-          {metaData.map((item) => (
-            <ListItem key={`item--${item.id}`}>
-              <ListItemText primary={item.value} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <div
-        onDrop={dropHandler}
-        ref={dropZone}
+        zIndex: 1000,
+      }}
+      size="large">
+      <InfoIcon />
+    </IconButton>
+    <Drawer variant="persistent" anchor="left" open={open}>
+      <Typography
+        variant="h6"
         style={{
-          position: "absolute",
-          left: "0",
-          top: "0",
-          backgroundColor: "rgba(255,255,255,0.5)",
-          width: "100%",
-          height: "100%",
-          zIndex: zIndex,
+          textAlign: "center",
+          padding: "1em",
         }}
+        noWrap
       >
-        <Typography
-          variant="h6"
-          style={{
-            top: "50%",
-            position: "absolute",
-            left: "50%",
-            msTransform: "translate(-50%, -50%)",
-            transform: " translate(-50%, -50%)",
-          }}
-          noWrap
-        >
-          Gpx-Datei ablegen
-        </Typography>
-      </div>
-    </>
-  );
+        Informationen zur Route
+      </Typography>
+      <Divider />
+      <List>
+        {metaData.map((item) => (
+          <ListItem key={`item--${item.id}`}>
+            <ListItemText primary={item.value} />
+          </ListItem>
+        ))}
+      </List>
+    </Drawer>
+    <div
+      onDrop={dropHandler}
+      ref={dropZone}
+      style={{
+        position: "absolute",
+        left: "0",
+        top: "0",
+        backgroundColor: "rgba(255,255,255,0.5)",
+        width: "100%",
+        height: "100%",
+        zIndex: zIndex,
+      }}
+    >
+      <Typography
+        variant="h6"
+        style={{
+          top: "50%",
+          position: "absolute",
+          left: "50%",
+          msTransform: "translate(-50%, -50%)",
+          transform: " translate(-50%, -50%)",
+        }}
+        noWrap
+      >
+        Gpx-Datei ablegen
+      </Typography>
+    </div>
+  </>;
 };
 
 MlGPXViewer.defaultProps = {

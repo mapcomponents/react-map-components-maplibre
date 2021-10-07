@@ -5,25 +5,25 @@ import maplibregl from 'maplibre-gl/dist/maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl$1 from 'maplibre-gl/dist/maplibre-gl-unminified';
 import { v4 } from 'uuid';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import maplibregl$2, { Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
-import PrinterIcon from '@material-ui/icons/Print';
+import PrinterIcon from '@mui/icons-material/Print';
 import { lineString, length, lineChunk, bbox } from '@turf/turf';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import Point from '@mapbox/point-geometry';
 import extent from '@mapbox/geojson-extent';
 import syncMove from '@mapbox/mapbox-gl-sync-move';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
-import FileCopy from '@material-ui/icons/FileCopy';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import FileCopy from '@mui/icons-material/FileCopy';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -4021,7 +4021,8 @@ var MlGPXViewer = function MlGPXViewer(props) {
       bottom: "75px",
       backgroundColor: "rgba(255,255,255,1)",
       zIndex: 1000
-    }
+    },
+    size: "large"
   }, /*#__PURE__*/React.createElement("input", {
     ref: fileupload,
     onChange: fileUploadOnChange,
@@ -4039,7 +4040,8 @@ var MlGPXViewer = function MlGPXViewer(props) {
       bottom: "25px",
       backgroundColor: "rgba(255,255,255,1)",
       zIndex: 1000
-    }
+    },
+    size: "large"
   }, /*#__PURE__*/React.createElement(InfoIcon, null)), /*#__PURE__*/React.createElement(Drawer, {
     variant: "persistent",
     anchor: "left",

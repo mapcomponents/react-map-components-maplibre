@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 const paintDefaults = {
   "fill-extrusion-color": "hsl(196, 61%, 83%)",

@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import Divider from "@material-ui/core/Divider";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import Drawer from "@mui/material/Drawer";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {

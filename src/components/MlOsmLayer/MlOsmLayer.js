@@ -2,7 +2,7 @@ import React, { useContext, useRef, useEffect, useState } from "react";
 import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 /**
  * MlOsmLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.

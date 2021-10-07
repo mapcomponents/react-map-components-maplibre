@@ -11,12 +11,12 @@ import { MapboxLayer } from "@deck.gl/mapbox";
 import * as d3 from "d3";
 import * as turf from "@turf/turf";
 
-import Typography from "@material-ui/core/Typography";
-import Slider from "@material-ui/core/Slider";
+import Typography from "@mui/material/Typography";
+import Slider from "@mui/material/Slider";
 
 import TopToolbar from "../../ui_components/TopToolbar";
 
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
 
 function ValueLabelComponent(props) {
   const { children, open, value } = props;
