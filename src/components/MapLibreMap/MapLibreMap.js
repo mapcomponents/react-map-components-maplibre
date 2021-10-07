@@ -27,7 +27,7 @@ const MapLibreMap = (props) => {
 
     return () => {
       _mapContext.removeMap(mapId);
-      map.current.remove();
+      map.current.remove?.();
       map.current = null;
     };
   }, []);
