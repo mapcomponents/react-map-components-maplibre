@@ -66,7 +66,13 @@ const MlGeoJsonLayer = (props) => {
   );
 
   useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || !initializedRef.current) return;
+    if (
+      !mapContext.mapExists(props.mapId) ||
+      (mapContext.mapExists(props.mapId) &&
+        !mapContext.getMap(props.mapId).getSource(componentId.current)) ||
+      !initializedRef.current
+    )
+      return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 

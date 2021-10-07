@@ -1070,7 +1070,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, componentId.current);
   }, [props]);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || mapContext.mapExists(props.mapId) && !mapContext.getMap(props.mapId).getSource(componentId.current) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     if (typeof props.transitionTime !== "undefined" && props.type === "line" && oldGeojsonRef.current) {
@@ -1217,7 +1217,7 @@ var MlLayer = function MlLayer(props) {
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || mapContext.mapExists(props.mapId) && !mapContext.getMap(props.mapId).getLayer(layerId) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     var key;
