@@ -30,7 +30,7 @@ const MlLayer = (props) => {
   useEffect(() => {
     if (
       !mapContext.mapExists(props.mapId) ||
-      !mapContext.getMap(props.mapId).getLayer(layerId) ||
+      !layerInitializedRef.current ||
       !props.options
     )
       return;
