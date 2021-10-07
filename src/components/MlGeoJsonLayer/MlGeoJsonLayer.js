@@ -68,8 +68,7 @@ const MlGeoJsonLayer = (props) => {
   useEffect(() => {
     if (
       !mapContext.mapExists(props.mapId) ||
-      (mapContext.mapExists(props.mapId) &&
-        !mapContext.getMap(props.mapId).getSource(componentId.current)) ||
+      !mapContext.getMap(props.mapId).getSource?.(componentId.current) ||
       !initializedRef.current
     )
       return;

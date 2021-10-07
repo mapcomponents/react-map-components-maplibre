@@ -1072,7 +1072,9 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, componentId.current);
   }, [props]);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || mapContext.mapExists(props.mapId) && !mapContext.getMap(props.mapId).getSource(componentId.current) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    var _mapContext$getMap$ge, _mapContext$getMap;
+
+    if (!mapContext.mapExists(props.mapId) || !((_mapContext$getMap$ge = (_mapContext$getMap = mapContext.getMap(props.mapId)).getSource) !== null && _mapContext$getMap$ge !== void 0 && _mapContext$getMap$ge.call(_mapContext$getMap, componentId.current)) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     if (typeof props.transitionTime !== "undefined" && props.type === "line" && oldGeojsonRef.current) {
@@ -1219,7 +1221,9 @@ var MlLayer = function MlLayer(props) {
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || mapContext.mapExists(props.mapId) && !mapContext.getMap(props.mapId).getLayer(layerId) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    var _mapContext$getMap$ge, _mapContext$getMap;
+
+    if (!mapContext.mapExists(props.mapId) || !((_mapContext$getMap$ge = (_mapContext$getMap = mapContext.getMap(props.mapId)).getLayer) !== null && _mapContext$getMap$ge !== void 0 && _mapContext$getMap$ge.call(_mapContext$getMap, layerId)) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     var key;
