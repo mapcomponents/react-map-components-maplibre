@@ -1,0 +1,59 @@
+@mixin center($position: absolute) {
+  position: $position;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+
+.MlNavigationCompass__container {
+  @include center;
+  z-index: 100000;
+}
+
+.MlNavigationCompass__border {
+  border-radius: 50%;
+  margin: 0 auto;
+  padding: 50px;
+  position: relative;
+}
+
+.MlNavigationCompass__compass {
+  height: 100%;
+  position: relative;
+  width: 100%;
+  transform: rotate(0deg);
+}
+
+.MlNavigationCompass__compass-center {
+  @include center;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  z-index: 1;
+
+  &:before {
+    @include center;
+    border-radius: 50%;
+    content: "";
+    height: 10px;
+    position: absolute;
+    width: 10px;
+  }
+}
+
+.MlNavigationCompass__compass:before,
+.MlNavigationCompass__compass:after {
+  content: "";
+  position: absolute;
+}
+
+.MlNavigationCompass__compass:before {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.MlNavigationCompass__compass:after {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
