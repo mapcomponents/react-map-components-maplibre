@@ -17,7 +17,7 @@ const MlNavigationTools = () => {
     height: 30,
     color: "#bbb",
     background: "radial-gradient(#717171, #414141)",
-    border: 1,
+    border: "1px solid #bbb",
     boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
     margin: 0.15,
     ":hover": {
@@ -76,7 +76,7 @@ const MlNavigationTools = () => {
           marginLeft: "-5px",
         }}
         backgroundStyle={{
-          boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
+          boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
         }}
       />
       <Button
