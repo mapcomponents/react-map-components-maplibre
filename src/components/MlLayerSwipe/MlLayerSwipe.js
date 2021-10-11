@@ -36,7 +36,7 @@ const MlLayerSwipe = (props) => {
     (e) => {
       if (!mapExists()) return;
 
-      let bounds = mapContext.map.getCanvas().getBoundingClientRect();
+      let bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
       let clientX =
         e.clientX ||
         (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
@@ -53,7 +53,7 @@ const MlLayerSwipe = (props) => {
         var clipA =
           "rect(0, " + (swipeXRef.current * bounds.width) / 100 + "px, 999em, 0)";
 
-        mapContext.getMap(props.map2Id).getContainer().style.clip = clipA;
+        mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
       }
     },
     [mapContext, mapExists, props.map2Id]

@@ -57,7 +57,7 @@ const MlLayerMagnify = (props) => {
     (e) => {
       if (!mapExists()) return;
 
-      let bounds = mapContext.map.getCanvas().getBoundingClientRect();
+      let bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
       let clientX =
         e.clientX ||
         (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
