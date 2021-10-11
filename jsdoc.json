@@ -11,7 +11,8 @@
         "destination": "docs/"
       },
     "source": {
-        "include": ["./src/"]
+        "include": ["./src/"],
+        "excludePattern": ".*/(lib|utils)/.*"
     },
     "plugins": [
         "node_modules/better-docs/component"
