@@ -68,8 +68,8 @@ const MlLayerSwipe = (props) => {
 
     initializedRef.current = true;
     syncCleanupFunctionRef.current = syncMove(
-      mapContext.getMap(props.map1Id).map,
-      mapContext.getMap(props.map2Id).map
+      mapContext.getMap(props.map1Id),
+      mapContext.getMap(props.map2Id)
     );
     onMove({ clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2 });
   }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);

@@ -25,16 +25,16 @@ const NeedleButton = styled.div`
   &:hover path {
     filter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1));
   }
-  path:nth-child(2) {
+  path:nth-of-type(2) {
     fill: #343434;
   }
-  &:hover path:nth-child(2) {
+  &:hover path:nth-of-type(2) {
     fill: #434343;
   }
-  path:nth-child(1) {
+  path:nth-of-type(1) {
     fill: #e90318;
   }
-  &:hover path:nth-child(1) {
+  &:hover path:nth-of-type(1) {
     fill: #fb4052;
   }
 `;
@@ -46,7 +46,7 @@ const NeedleContainer = styled.div`
   align-items: center;
 
   margin-left: -30%;
-  path:nth-child(2) {
+  path:nth-of-type(2) {
   }
   svg g {
     transform: translate(-76.7053, -29.7727) scale(2, 1);

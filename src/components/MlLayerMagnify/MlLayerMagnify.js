@@ -96,8 +96,8 @@ const MlLayerMagnify = (props) => {
 
     syncMoveInitializedRef.current = true;
     syncCleanupFunctionRef.current = syncMove(
-      mapContext.getMap(props.map1Id).map,
-      mapContext.getMap(props.map2Id).map
+      mapContext.getMap(props.map1Id),
+      mapContext.getMap(props.map2Id)
     );
 
     if (

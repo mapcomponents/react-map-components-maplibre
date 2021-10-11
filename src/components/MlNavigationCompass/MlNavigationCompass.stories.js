@@ -37,16 +37,16 @@ StyleExample.args = {
     background: "radial-gradient(#417741, #111)",
   },
   needleStyle: {
-    ":hover svg path:nth-child(1)": {
+    ":hover svg path:nth-of-type(1)": {
       fill: "#eded66",
     },
-    ":hover svg path:nth-child(2)": {
+    ":hover svg path:nth-of-type(2)": {
       fill: "#252f1b",
     },
-    "svg path:nth-child(1)": {
+    "svg path:nth-of-type(1)": {
       fill: "#adad44",
     },
-    "svg path:nth-child(2)": {
+    "svg path:nth-of-type(2)": {
       fill: "#1a1d15",
     },
   },
