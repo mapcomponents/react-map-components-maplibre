@@ -5,44 +5,76 @@ import { v4 as uuidv4 } from "uuid";
 
 import { ReactComponent as RotateRightIcon } from "./assets/rotate_right.svg";
 import { ReactComponent as RotateLeftIcon } from "./assets/rotate_left.svg";
-
-import "./assets/style.scss";
+import { ReactComponent as NeedleIcon } from "./assets/needle.svg";
 
 import styled from "@emotion/styled";
-import { css } from "@emotion/css";
 
-const Compassborder = styled.div`
-  display: block;
-`;
-
-const Compass = styled.div`
-  display: block;
-  &:hover ${Compassborder}: {
-    background-color: white;
-    background: radial-gradient(#fff, #fff);
-  }
-`;
-
-const RotateButtonContainer = styled.div`
-  position: absolute;
-  top: 0;
-  margin-top: -9px;
+const NeedleButton = styled.div`
   width: 40%;
-  z-index: 10001;
+  display: flex;
+  align-items: center;
 
   &:hover {
     cursor: pointer;
   }
-  &:hover path {
-    fill: #fff !important;
-  }
   path {
-    fill: #7a7a7a !important;
+    filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2)) !important;
+  }
+  &:hover path {
+    filter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1)) !important;
+  }
+  path:nth-child(2) {
+    fill: #343434 !important;
+  }
+  &:hover path:nth-child(2) {
+    fill: #434343 !important;
+  }
+  path:nth-child(1) {
+    fill: #e90318 !important;
+  }
+  &:hover path:nth-child(1) {
+    fill: #fb4052 !important;
+  }
+`;
+const NeedleContainer = styled.div`
+  pointer-events: none;
+  display: flex;
+  z-index: 1002;
+  position: absolute;
+  align-items: center;
+
+  margin-left: -30%;
+  path:nth-child(2) {
+  }
+  svg g {
+    transform: translate(-76.7053, -29.7727) scale(2, 1);
   }
   svg {
-    transform: scale(0.45);
     z-index: 9990;
-    position: absolute;
+    height: 150px;
+    width: 200px;
+  }
+`;
+const RotateButton = styled.div`
+  width: 30%;
+  margin-top: 14px;
+  z-index: 999;
+  display: flex;
+
+  svg:hover {
+    cursor: pointer;
+  }
+  svg:hover path {
+    fill: #ececec !important;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1)) !important;
+  }
+  path {
+    fill: #bbb !important;
+  }
+  svg {
+    transform: scale(0.6);
+    z-index: 9990;
+    height: 172px;
   }
 `;
 
@@ -56,17 +88,13 @@ const MlNavigationCompass = (props) => {
     (props.idPrefix ? props.idPrefix : "MlNavigationCompass-") + uuidv4()
   );
 
-  const [rotation, setRotation] = useState(0);
+  const [bearing, setBearing] = useState(0);
 
   useEffect(() => {
     let _componentId = componentId.current;
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
-      // try to remove anything this component has added to the MapLibre-gl instance
-      // e.g.: remove the layer
-      // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
-      // check for the existence of map.style before calling getLayer or getSource
 
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
@@ -77,54 +105,47 @@ const MlNavigationCompass = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log("INITIALISIEREN");
-    console.log(mapContext.mapExists(props.mapId));
-    console.log(initializedRef.current);
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
 
     mapRef.current.on(
       "rotate",
       function () {
-        console.log("A rotate event occurred.");
-        console.log(mapRef.current.getBearing());
-        setRotation(Math.round(mapRef.current.getBearing()));
+        setBearing(Math.round(mapRef.current.getBearing()));
       },
       componentId.current
     );
-    mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
-    console.log(componentId.current);
+    setBearing(Math.round(mapRef.current.getBearing()));
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
   return (
     <>
-      <div className="MlNavigationCompass__container">
-        <Compassborder
-          className={
-            "MlNavigationCompass__border " +
-            css({
-              border: "15px solid #a1a1a1",
-              backgroundColor: "#717171",
-              background: "radial-gradient(#353535, #717171)",
-              height: "254px",
-              width: "254px",
-              "&:before": {
-                backgroundColor: "#1a1a1a",
-              },
-              "&:hover": {
-                background: "radial-gradient(#585858, #717171)",
-              },
-            })
-          }
+      <div
+        style={{
+          zIndex: 1000,
+          top: 0,
+          position: "absolute",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            border: "12px solid #bcbcbc",
+            backgroundColor: "#717171",
+            background: "radial-gradient(#717171, #414141)",
+            height: "200px",
+            width: "200px",
+            borderRadius: "50%",
+            display: "flex",
+            justifyContent: "center",
+            transform: "scale(0.2) translateX(-448px) translateY(-448px)",
+          }}
         >
-          <RotateButtonContainer
+          <RotateButton
             onClick={() => {
               let bearing = Math.round(mapRef.current?.getBearing());
               let rest = Math.round(bearing % 90);
-              console.log(bearing + " " + rest);
               if (bearing > 0) {
                 rest = 90 - rest;
               }
@@ -133,63 +154,38 @@ const MlNavigationCompass = (props) => {
               }
               mapRef.current?.setBearing(Math.round(bearing + Math.abs(rest)));
             }}
-            style={{ cursor: "pointer", marginLeft: "-10px", left: 0 }}
           >
             <RotateRightIcon></RotateRightIcon>
-          </RotateButtonContainer>
-          <RotateButtonContainer
-            onClick={() => {
-              let bearing = Math.round(mapRef.current?.getBearing());
-              let rest = Math.round(bearing % 90);
-              console.log(bearing + " " + rest);
-              if (bearing < 0) {
-                rest = 90 + rest;
-              }
-              if (rest === 0) {
-                rest = 90;
-              }
-              mapRef.current?.setBearing(Math.round(bearing - Math.abs(rest)));
-            }}
-            style={{ cursor: "pointer", marginRight: "-10px", right: 0 }}
-          >
-            <RotateLeftIcon></RotateLeftIcon>
-          </RotateButtonContainer>
-          <Compass
+          </RotateButton>
+          <NeedleButton
             onClick={() => {
               mapRef.current?.setBearing(0);
             }}
-            className={
-              "MlNavigationCompass__compass " +
-              css({
-                transform: "rotate(" + rotation + "deg)",
-                zIndex: 10000,
-                "&:hover": {
-                  cursor: "pointer",
-                },
-                "&:hover:after": {
-                  opacity: 1,
-                },
-                "&:hover:before": {
-                  opacity: 1,
-                },
-                "&:after": {
-                  borderLeft: "40px solid transparent",
-                  borderTop: "127px solid #131313",
-                  borderRight: "40px solid transparent",
-                  opacity: 0.9,
-                },
-                "&:before": {
-                  borderLeft: "40px solid transparent",
-                  borderBottom: "127px solid #ff0000",
-                  borderRight: "40px solid transparent",
-                  opacity: 0.9,
-                },
-              })
-            }
           >
-            <div className="MlNavigationCompass__compass-center"></div>
-          </Compass>
-        </Compassborder>
+            <NeedleContainer
+              style={{
+                transform: "rotate(" + bearing + "deg)",
+              }}
+            >
+              <NeedleIcon />
+            </NeedleContainer>
+          </NeedleButton>
+          <RotateButton>
+            <RotateLeftIcon
+              onClick={() => {
+                let bearing = Math.round(mapRef.current?.getBearing());
+                let rest = Math.round(bearing % 90);
+                if (bearing < 0) {
+                  rest = 90 + rest;
+                }
+                if (rest === 0) {
+                  rest = 90;
+                }
+                mapRef.current?.setBearing(Math.round(bearing - Math.abs(rest)));
+              }}
+            ></RotateLeftIcon>
+          </RotateButton>
+        </div>
       </div>
     </>
   );
