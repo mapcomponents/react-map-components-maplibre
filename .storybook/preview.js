@@ -1,8 +1,16 @@
 import React from "react";
 
+import { withTests } from "@storybook/addon-jest";
+import results from "../src/.jest-test-results.json";
+
 import { MapComponentsProvider } from "react-map-components-core";
 import MapLibreMap from "../src/components/MapLibreMap/MapLibreMap";
 
+export const decorators = [
+  withTests({
+    results,
+  }),
+];
 //export const decorators = [
 //  (Story) => (
 //    <MapComponentsProvider>

@@ -8,6 +8,7 @@
 .pnp.js
 /.cache
 .jest-test-results.json
+/test-coverage
 
 # testing
 /coverage

@@ -56,7 +56,7 @@ const MlLayerSwipe = (props) => {
         mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
       }
     },
-    [mapContext, mapExists, props.map2Id]
+    [mapContext, mapExists, props.map1Id, props.map2Id]
   );
 
   useEffect(() => {
