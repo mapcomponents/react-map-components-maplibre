@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 
 import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +9,7 @@ import { ReactComponent as RotateLeftIcon } from "./assets/rotate_left.svg";
 import { ReactComponent as NeedleIcon } from "./assets/needle.svg";
 
 import styled from "@emotion/styled";
+import { css } from "@emotion/css";
 
 const NeedleButton = styled.div`
   width: 40%;
@@ -18,22 +20,22 @@ const NeedleButton = styled.div`
     cursor: pointer;
   }
   path {
-    filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2)) !important;
+    filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2));
   }
   &:hover path {
-    filter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1)) !important;
+    filter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1));
   }
   path:nth-child(2) {
-    fill: #343434 !important;
+    fill: #343434;
   }
   &:hover path:nth-child(2) {
-    fill: #434343 !important;
+    fill: #434343;
   }
   path:nth-child(1) {
-    fill: #e90318 !important;
+    fill: #e90318;
   }
   &:hover path:nth-child(1) {
-    fill: #fb4052 !important;
+    fill: #fb4052;
   }
 `;
 const NeedleContainer = styled.div`
@@ -65,11 +67,11 @@ const RotateButton = styled.div`
     cursor: pointer;
   }
   svg:hover path {
-    fill: #ececec !important;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1)) !important;
+    fill: #ececec;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));
   }
   path {
-    fill: #bbb !important;
+    fill: #bbb;
   }
   svg {
     transform: scale(0.6);
@@ -78,6 +80,13 @@ const RotateButton = styled.div`
   }
 `;
 
+/**
+ * Navigation component that displays a compass component which indicates the current oriantation of the map it is registered for and offers controls to turn the bearing 90° left/right or reset north to point up.
+ *
+ * All style props are applied using @emotion/css to allow more complex css selectors.
+ *
+ * @component
+ */
 const MlNavigationCompass = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
@@ -122,14 +131,15 @@ const MlNavigationCompass = (props) => {
   return (
     <>
       <div
-        style={{
+        className={css({
           zIndex: 1000,
           top: 0,
           position: "absolute",
-        }}
+          ...props.style,
+        })}
       >
         <div
-          style={{
+          className={css({
             position: "absolute",
             border: "12px solid #bcbcbc",
             backgroundColor: "#717171",
@@ -140,24 +150,26 @@ const MlNavigationCompass = (props) => {
             display: "flex",
             justifyContent: "center",
             transform: "scale(0.2) translateX(-448px) translateY(-448px)",
-          }}
+            ...props.backgroundStyle,
+          })}
         >
-          <RotateButton
-            onClick={() => {
-              let bearing = Math.round(mapRef.current?.getBearing());
-              let rest = Math.round(bearing % 90);
-              if (bearing > 0) {
-                rest = 90 - rest;
-              }
-              if (rest === 0) {
-                rest = 90;
-              }
-              mapRef.current?.setBearing(Math.round(bearing + Math.abs(rest)));
-            }}
-          >
-            <RotateRightIcon></RotateRightIcon>
+          <RotateButton className={css({ ...props.rotateRightStyle })}>
+            <RotateRightIcon
+              onClick={() => {
+                let bearing = Math.round(mapRef.current?.getBearing());
+                let rest = Math.round(bearing % 90);
+                if (bearing > 0) {
+                  rest = 90 - rest;
+                }
+                if (rest === 0) {
+                  rest = 90;
+                }
+                mapRef.current?.setBearing(Math.round(bearing + Math.abs(rest)));
+              }}
+            ></RotateRightIcon>
           </RotateButton>
           <NeedleButton
+            className={css({ ...props.needleStyle })}
             onClick={() => {
               mapRef.current?.setBearing(0);
             }}
@@ -170,7 +182,7 @@ const MlNavigationCompass = (props) => {
               <NeedleIcon />
             </NeedleContainer>
           </NeedleButton>
-          <RotateButton>
+          <RotateButton className={css({ ...props.rotateLeftStyle })}>
             <RotateLeftIcon
               onClick={() => {
                 let bearing = Math.round(mapRef.current?.getBearing());
@@ -189,6 +201,29 @@ const MlNavigationCompass = (props) => {
       </div>
     </>
   );
+};
+
+MlNavigationCompass.propTypes = {
+  /**
+   * Style object to adjust css definitions of the component.
+   */
+  style: PropTypes.object,
+  /**
+   * Style object to adjust css definitions of the background.
+   */
+  backgroundStyle: PropTypes.object,
+  /**
+   * Style object to adjust css definitions of the compass needle.
+   */
+  needleStyle: PropTypes.object,
+  /**
+   * Style object to adjust css definitions of the rotate right button.
+   */
+  rotateRightStyle: PropTypes.object,
+  /**
+   * Style object to adjust css definitions of the rotate left button.
+   */
+  rotateLeftStyle: PropTypes.object,
 };
 
 export default MlNavigationCompass;

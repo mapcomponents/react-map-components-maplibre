@@ -7,16 +7,57 @@ import mapContextDecorator from "../../decorators/MapContextDecorator";
 const storyoptions = {
   title: "MapComponents/MlNavigationCompass",
   component: MlNavigationCompass,
-  argTypes: {
-    url: {},
-    layer: {},
-  },
   decorators: mapContextDecorator,
 };
 export default storyoptions;
 
-const Template = (args) => <MlNavigationCompass />;
+const Template = (props) => <MlNavigationCompass {...props} />;
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+export const Standard = Template.bind({});
+Standard.args = {
+  style: {
+    transform: "scale(4)",
+    left: "50%",
+    marginLeft: "-100px",
+    top: "50%",
+    marginTop: "-100px",
+  },
+};
+export const StyleExample = Template.bind({});
+StyleExample.args = {
+  style: {
+    transform: "scale(4)",
+    left: "50%",
+    marginLeft: "-100px",
+    top: "50%",
+    marginTop: "-100px",
+  },
+  backgroundStyle: {
+    border: "12px solid #adad44",
+    background: "radial-gradient(#417741, #111)",
+  },
+  needleStyle: {
+    ":hover svg path:nth-child(1)": {
+      fill: "#eded66",
+    },
+    ":hover svg path:nth-child(2)": {
+      fill: "#252f1b",
+    },
+    "svg path:nth-child(1)": {
+      fill: "#adad44",
+    },
+    "svg path:nth-child(2)": {
+      fill: "#1a1d15",
+    },
+  },
+  rotateRightStyle: {
+    "svg:hover path": {
+      fill: "#ededb1",
+    },
+  },
+  rotateLeftStyle: {
+    "svg:hover path": {
+      fill: "#ededb1",
+    },
+  },
+};
