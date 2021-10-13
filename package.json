@@ -133,8 +133,6 @@
     "http-server": "^13.0.2",
     "jest-enzyme": "^7.1.2",
     "jest-webgl-canvas-mock": "^0.2.3",
-    "jsdoc": "^3.6.7",
-    "parcel": "^2.0.0-rc.0",
     "puppeteer": "^8.0.0",
     "react-test-renderer": "^17.0.2",
     "rollup-plugin-delete": "^2.0.0",
