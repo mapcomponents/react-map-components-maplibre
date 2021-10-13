@@ -58,15 +58,12 @@ After everything has been undone it is important to set the map reference (mapRe
 
 ```
   useEffect(() => {
+    let _componentId = componentId.current;
+
     return () => {
-      // This is the cleanup function, it is called when this react component is removed from reactDOM
+      // This is the cleanup function, it is called when this react component is removed from react-dom
       if (mapRef.current) {
-        if (mapRef.current.style && mapRef.current.getLayer(layerId)) {
-          mapRef.current.removeLayer(layerId);
-        }
-        if (mapRef.current.style && mapRef.current.getSource(layerSourceId)) {
-          mapRef.current.removeSource(layerSourceId);
-        }
+        mapRef.current.cleanup(_componentId);
 
         mapRef.current = null;
       }
@@ -79,8 +76,28 @@ After everything has been undone it is important to set the map reference (mapRe
 This happens within the effect where the targeted (through props.mapId) map instance is discovered for the first time.
 
 ```
-  mapRef.current = mapContext.getMap(props.mapId);
+  useEffect(() => {
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+    // the MapLibre-gl instance (mapContext.map) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+    // set initializedRef.current to true to make sure this function gets only called once
+    initializedRef.current = true;
+
+    // populate the mapRef.current variable
+    mapRef.current = mapContext.getMap(props.mapId);
+
+    // optionally add layers, sources, event listeners, controls, images to the MapLibre instance that are required by this component
+    // see the next section about adding content to the MapLibre instance
+
+  }, [mapContext.mapIds, mapContext, props, transitionToGeojson]);
 ```
+
+**- addLayer, addSource, addImage, addControls, on**
+
+The function mentioned above have been overriden in the MapLibreWrapper instance that is return by the mapContext.getMap(props.mapId) function. 
+All five functions expect an additional optional parameter "component_id" (string) as last or optional parameter (except for the beforeLayerId parameter of the addLayer function, which should be defined as props.beforeLayerId to make sure the parent component is able to control the layer order).
+MapLibreGlWrapper uses the component_id to keep track of everything that has been added by a specific component (including inmplicitly added sources), enabling a safe and simple cleanup by calling ```mapRef.current.cleanup(component_id)``` as shown in the cleanup function example above.
 
 ### {component_name}.meta.json
 
