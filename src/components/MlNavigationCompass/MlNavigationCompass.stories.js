@@ -2,12 +2,14 @@ import React from "react";
 
 import MlNavigationCompass from "./MlNavigationCompass";
 
+import results from "../../.jest-test-results.json";
+import { withTests } from "@storybook/addon-jest";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
   title: "MapComponents/MlNavigationCompass",
   component: MlNavigationCompass,
-  decorators: mapContextDecorator,
+  decorators: [mapContextDecorator, withTests({ results })],
 };
 export default storyoptions;
 
@@ -22,6 +24,9 @@ Standard.args = {
     top: "50%",
     marginTop: "-100px",
   },
+};
+Standard.parameters = {
+  jest: ["MlNavigationCompass.test.js"],
 };
 export const StyleExample = Template.bind({});
 StyleExample.args = {

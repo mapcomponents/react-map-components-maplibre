@@ -39,7 +39,7 @@
     "start": "start-storybook -p 6006 -s public",
     "build": "rollup -c",
     "test": "react-scripts test --env=jsdom",
-    "test:generate-output": "react-scripts test --watchAll=false --json --outputFile=./src/.jest-test-results.json",
+    "test:generate-output": "react-scripts test --watchAll=false --json --outputFile=./src/.jest-test-results.json || true",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
