@@ -69,7 +69,6 @@ const MlNavigationTools = () => {
       <MlNavigationCompass
         style={{
           width: "31px",
-          height: "44px",
           position: "relative",
           height: "42px",
           transform: "scale(.8)",

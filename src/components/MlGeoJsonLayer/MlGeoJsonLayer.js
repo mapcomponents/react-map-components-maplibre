@@ -170,17 +170,7 @@ const MlGeoJsonLayer = (props) => {
         }, props.transitionTime / 2);
       }
     }
-  }, [
-    mapContext.mapIds,
-    mapContext,
-    props.geojson,
-    props.insertBeforeLayer,
-    props.mapId,
-    props.type,
-    props.transitionTime,
-    props.paint,
-    transitionToGeojson,
-  ]);
+  }, [mapContext.mapIds, mapContext, props, transitionToGeojson]);
 
   return <></>;
 };
