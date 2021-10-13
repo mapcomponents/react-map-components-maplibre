@@ -14,7 +14,6 @@
     "@mui/material": "5.0.0",
     "@mui/styles": "^5.0.1",
     "@turf/turf": "^6.3.0",
-    "d3": "^6.6.0",
     "jspdf": "^2.3.0",
     "maplibre-gl": "^1.13.0-rc.5",
     "react": "^17.0.1",
