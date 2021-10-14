@@ -27,6 +27,7 @@ const MlComponentTemplate = (props) => {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
       }
+      initializedRef.current = false;
     };
   }, []);
 

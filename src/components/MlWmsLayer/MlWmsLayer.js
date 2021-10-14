@@ -1,16 +1,38 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import { MapContext } from "react-map-components-core";
+
+import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 
-import Button from "@mui/material/Button";
-
+const defaultProps = {
+  urlParameters: {
+    bbox: "{bbox-epsg-3857}",
+    format: "image/png",
+    service: "WMS",
+    version: "1.1.1",
+    request: "GetMap",
+    srs: "EPSG:3857",
+    width: 256,
+    height: 256,
+  },
+  attribution: "",
+  sourceOptions: {
+    minZoom: 0,
+    maxZoom: 20,
+  },
+  layerOptions: {
+    minZoom: 0,
+    maxZoom: 20,
+  },
+};
 /**
- * MlWmsLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * MlWmsLayer WMS raster layer to the maplibre-gl instance.
+ *
+ * @component
  */
 const MlWmsLayer = (props) => {
   const mapContext = useContext(MapContext);
 
-  const [showLayer, setShowLayer] = useState(true);
   const componentId = useRef(
     (props.idPrefix ? props.idPrefix : "MlWmsLayer-") + uuidv4()
   );
@@ -26,27 +48,35 @@ const MlWmsLayer = (props) => {
 
         mapRef.current = null;
       }
+      initializedRef.current = false;
     };
   }, []);
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
 
-    initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
-    // Add the new layer to the openlayers instance once it is available
+    if (!mapRef.current) return;
+
+    initializedRef.current = true;
+
+    let urlParamsObj = {
+      ...defaultProps.urlParameters,
+      ...props.urlParameters,
+    };
+    let urlParams = new URLSearchParams(urlParamsObj);
+    let urlParamsStr =
+      decodeURIComponent(urlParams.toString()) +
+      "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+
     mapRef.current.addSource(
       componentId.current,
       {
         type: "raster",
-        tiles: [
-          props.url +
-            "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" +
-            props.layer,
-        ],
-        tileSize: 256,
-        attribution: "",
-        //...props.sourceOptions,
+        tiles: [props.url + "?" + urlParamsStr],
+        tileSize: urlParamsObj.width,
+        attribution: props.attribution,
+        ...props.sourceOptions,
       },
       componentId.current
     );
@@ -56,9 +86,7 @@ const MlWmsLayer = (props) => {
         id: componentId.current,
         type: "raster",
         source: componentId.current,
-        minzoom: 0,
-        maxzoom: 10,
-        ...props.sourceOptions,
+        ...props.layerOptions,
       },
       props.insertBeforeLayer,
       componentId.current
@@ -66,25 +94,61 @@ const MlWmsLayer = (props) => {
   }, [mapContext.mapIds, mapContext, props]);
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || !initializedRef.current) return;
 
     // toggle layer visibility by changing the layout object's visibility property
-    if (showLayer) {
+    if (props.visible) {
       mapRef.current.setLayoutProperty(componentId.current, "visibility", "visible");
     } else {
       mapRef.current.setLayoutProperty(componentId.current, "visibility", "none");
     }
-  }, [showLayer]);
+  }, [props.visible]);
 
-  return (
-    <Button
-      color="primary"
-      variant={showLayer ? "contained" : "outlined"}
-      onClick={() => setShowLayer(!showLayer)}
-    >
-      WMS
-    </Button>
-  );
+  return <></>;
 };
 
+MlWmsLayer.defaultProps = {
+  ...defaultProps,
+};
+
+MlWmsLayer.propTypes = {
+  /**
+   * WMS URL.
+   */
+  url: PropTypes.string.isRequired,
+  /**
+   * URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object.
+   */
+  urlParameters: PropTypes.shape({
+    layers: PropTypes.string.isRequired,
+    bbox: PropTypes.string,
+    format: PropTypes.string,
+    service: PropTypes.string,
+    version: PropTypes.string,
+    request: PropTypes.string,
+    srs: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
+  /**
+   * Id of the target MapLibre instance in mapContext.
+   */
+  mapId: PropTypes.string,
+  /**
+   * MapLibre attribution shown in the bottom right of the map, if this layer is visible.
+   */
+  attribution: PropTypes.string,
+  /**
+   * Object that is passed to the MapLibre.addLayer call as config option parameter.
+   */
+  layerOptions: PropTypes.object,
+  /**
+   * Object that is passed to the MapLibre.addSource call as config option parameter.
+   */
+  sourceOptions: PropTypes.object,
+  /**
+   * Id of an existing layer in the mapLibre instance to help specify the layer order. This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+   */
+  insertBeforLayer: PropTypes.string,
+};
 export default MlWmsLayer;

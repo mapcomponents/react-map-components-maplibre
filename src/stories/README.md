@@ -21,8 +21,8 @@
 ## Anatomy of a MapComponent
 
 A MapComponent is a react component that accepts at least 1 attribute "mapId" and is expected to retrieve and directly manipulate a maplibre-gl instance from mapContext. 
-An example implementation of basic required functions for the maplibre instance retrieval process using the functions getMap, mapExists provided by mapContext, both accepting "mapId" (string) as parameter, can be seen in ./components/MlBasicCompontent.js. For components with a basic functionality it may be sufficient to make use of the MlBasicComponent and just provide the attributes "mapId" (string), "mapIsReady" (function), "cleanup" (function) as can be seen in ./components/MlDeckGlLayer/MlDeckGlLayer.
-If no attribute mapId is provided the map component is expected to work with the map instance provided by mapContext at ```mapContext.map```.
+An example implementation of basic required functions for the maplibre instance retrieval process using the functions getMap, mapExists provided by mapContext, both accepting "mapId" (string) as parameter, can be seen in ./components/MlComponentTemplate/MlComponentTemplate.js. 
+If no attribute mapId is provided the map component is expected to work with the map instance provided by mapContext at ```mapContext.map``` (always retrieve it using ```mapContext.getMap(props.mapId)```).
 
 
 ### File structure
