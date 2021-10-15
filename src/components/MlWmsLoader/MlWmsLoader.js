@@ -86,8 +86,8 @@ const MlWmsLoader = (props) => {
       );
 
       setLayers(
-        capabilities?.Capability?.Layer?.Layer.map((layer) => {
-          layer.visible = true;
+        capabilities?.Capability?.Layer?.Layer.map((layer, idx) => {
+          layer.visible = idx > 1;
           return layer;
         })
       );
