@@ -26,9 +26,9 @@ const Template = (args) => {
   return (
     <TopToolbar>
       <MlThreeJsLayer
-        init={() => loadingOverlayContext.setControlled(true)}
+        init={() => loadingOverlayContext?.setControlled?.(true)}
         onDone={() =>
-          setTimeout(() => loadingOverlayContext.setLoadingDone(true), 1200)
+          setTimeout(() => loadingOverlayContext?.setLoadingDone?.(true), 1200)
         }
       />
     </TopToolbar>
