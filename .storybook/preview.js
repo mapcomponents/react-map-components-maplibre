@@ -5,6 +5,7 @@ import results from "../src/.jest-test-results.json";
 
 import { MapComponentsProvider } from "react-map-components-core";
 import MapLibreMap from "../src/components/MapLibreMap/MapLibreMap";
+import "./style.css";
 
 export const decorators = [
   withTests({

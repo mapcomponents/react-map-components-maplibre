@@ -10,7 +10,7 @@ const decorators = [
     <MapComponentsProvider>
       <LoadingOverlayProvider>
         <LoadingOverlay></LoadingOverlay>
-        <Story />
+        {Story()}
       </LoadingOverlayProvider>
     </MapComponentsProvider>
   ),

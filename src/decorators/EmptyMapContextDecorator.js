@@ -11,7 +11,7 @@ const decorators = [
       <LoadingOverlayProvider>
         <LoadingOverlay></LoadingOverlay>
 
-        <Story />
+        {Story()}
       </LoadingOverlayProvider>
     </MapComponentsProvider>
   ),

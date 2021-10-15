@@ -19,19 +19,17 @@ export default storyoptions;
 
 const Template = (args) => (
   <>
-    <TopToolbar>
-      <MlWmsLayer
-        url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
-        urlParameters={{
-          layers: "nw_uraufnahme_rw",
-        }}
-        sourceOptions={{
-          minzoom: 13,
-          maxzoom: 20,
-        }}
-        mapId={args.wmsLayerMapId}
-      />
-    </TopToolbar>
+    <MlWmsLayer
+      url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
+      urlParameters={{
+        layers: "nw_uraufnahme_rw",
+      }}
+      sourceOptions={{
+        minzoom: 13,
+        maxzoom: 20,
+      }}
+      mapId={args.wmsLayerMapId}
+    />
     <MlLayerMagnify
       map1Id="map_1"
       map2Id="map_2"
