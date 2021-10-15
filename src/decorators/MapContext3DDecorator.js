@@ -8,7 +8,7 @@ const decorators = [
   (Story) => (
     <div className="fullscreen_map">
       <MapComponentsProvider>
-        {Story()}
+        <Story />
         <MapLibreMap
           options={{
             //style: "mapbox://styles/mapbox/light-v10",

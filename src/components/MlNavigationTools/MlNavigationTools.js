@@ -128,7 +128,7 @@ const MlNavigationTools = (props) => {
           width: "31px",
           position: "relative",
           height: "50px",
-          marginLeft: "-6px",
+          marginLeft: "-5px",
         }}
         backgroundStyle={{
           boxShadow: "0px 0px 18px rgba(0,0,0,.5)",

@@ -141,7 +141,7 @@ const MlNavigationCompass = (props) => {
         <div
           className={css({
             position: "absolute",
-            border: "12px solid #bcbcbc",
+            border: "10px solid #bcbcbc",
             backgroundColor: "#717171",
             background: "radial-gradient(#717171, #414141)",
             height: "200px",

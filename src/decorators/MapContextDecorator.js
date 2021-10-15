@@ -13,7 +13,7 @@ const decorators = [
         <LoadingOverlayProvider>
           <LoadingOverlay></LoadingOverlay>
 
-          {Story()}
+          <Story />
 
           <MapLibreMap
             options={{

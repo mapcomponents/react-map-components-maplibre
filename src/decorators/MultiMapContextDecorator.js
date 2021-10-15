@@ -29,7 +29,7 @@ const decorators = [
                 right: "0",
               }}
             >
-              {Story()}
+              <Story />
               <div className="maps">
                 <MapLibreMap
                   mapId="map_1"

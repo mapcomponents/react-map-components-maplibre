@@ -12,7 +12,7 @@ const decorators = [
       <MapComponentsProvider>
         <LoadingOverlayProvider>
           <LoadingOverlay></LoadingOverlay>
-          {Story()}
+          <Story />
           <MapLibreMap
             options={{
               //style: "mapbox://styles/mapbox/light-v10",
