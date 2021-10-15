@@ -101,12 +101,6 @@ const MlWmsLayer = (props) => {
       componentId.current
     );
 
-    console.log(
-      "insert layer " +
-        componentId.current +
-        " before layer " +
-        props.insertBeforeLayer
-    );
     mapRef.current.addLayer(
       {
         id: componentId.current,
@@ -117,6 +111,10 @@ const MlWmsLayer = (props) => {
       props.insertBeforeLayer,
       componentId.current
     );
+
+    if (!props.visible) {
+      mapRef.current.setLayoutProperty(componentId.current, "visibility", "none");
+    }
   }, [mapContext.mapIds, mapContext, props]);
 
   useEffect(() => {
