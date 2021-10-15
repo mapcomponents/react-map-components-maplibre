@@ -2,6 +2,7 @@ import React from "react";
 
 import { withTests } from "@storybook/addon-jest";
 import results from "../src/.jest-test-results.json";
+import { themes } from "@storybook/theming";
 
 import { MapComponentsProvider } from "react-map-components-core";
 import MapLibreMap from "../src/components/MapLibreMap/MapLibreMap";
@@ -38,5 +39,8 @@ export const decorators = [
 //];
 
 export const parameters = {
+  docs: {
+    inlineStories: false,
+  },
   actions: { argTypesRegex: "^on[A-Z].*" },
 };
