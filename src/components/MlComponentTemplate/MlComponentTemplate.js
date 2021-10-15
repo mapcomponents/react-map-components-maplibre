@@ -33,7 +33,7 @@ const MlComponentTemplate = (props) => {
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    // the MapLibre-gl instance (mapContext.map) is accessible here
+    // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
