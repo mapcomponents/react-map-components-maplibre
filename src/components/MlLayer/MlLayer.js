@@ -56,12 +56,7 @@ const MlLayer = (props) => {
   }, [props.options, layerId, mapContext, props]);
 
   useEffect(() => {
-    if (
-      !props.options ||
-      !mapContext.mapExists(props.mapId) ||
-      layerInitializedRef.current
-    )
-      return;
+    if (!mapContext.mapExists(props.mapId) || layerInitializedRef.current) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
@@ -69,12 +64,19 @@ const MlLayer = (props) => {
     if (mapRef.current) {
       layerInitializedRef.current = true;
       mapRef.current.addLayer(
-        { id: layerId, ...props.options },
+        {
+          id: layerId,
+          type: "background",
+          paint: {
+            "background-color": "rgba(0,0,0,0)",
+          },
+          ...props.options,
+        },
         props.insertBeforeLayer,
         componentId.current
       );
-      layerPaintConfRef.current = JSON.stringify(props.options.paint);
-      layerLayoutConfRef.current = JSON.stringify(props.options.layout);
+      layerPaintConfRef.current = JSON.stringify(props.options?.paint);
+      layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
     }
   }, [mapContext.mapIds, mapContext, props, layerId]);
 

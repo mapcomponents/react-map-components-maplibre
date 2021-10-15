@@ -5,17 +5,14 @@ import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
+import MlLayer from "../MlLayer/MlLayer";
 import WMSCapabilities from "wms-capabilities";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import LayersIcon from "@mui/icons-material/Layers";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 
 const MlWmsLoader = (props) => {
@@ -32,7 +29,6 @@ const MlWmsLoader = (props) => {
 
   useEffect(() => {
     let _componentId = componentId.current;
-    console.log(props);
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
@@ -76,7 +72,6 @@ const MlWmsLoader = (props) => {
   useEffect(() => {
     if (!capabilities) return;
 
-    console.log(capabilities);
     if (capabilities?.Capability?.Layer?.SRS?.indexOf?.("EPSG:3857") === -1) {
       console.log(
         "MlWmsLoader (" +
@@ -110,41 +105,48 @@ const MlWmsLoader = (props) => {
   return (
     <>
       <h3>{capabilities?.Service?.Title}</h3>
+      {capabilities?.Capability?.Layer?.Layer.map((layer, idx) => (
+        <MlLayer
+          layerId="Order-"
+          key={componentId.current + "-" + idx}
+          idSuffix={componentId.current + "-" + idx}
+          {...(idx > 0
+            ? {
+                insertBeforeLayer: "Order-" + componentId.current + "-" + (idx - 1),
+              }
+            : undefined)}
+        />
+      ))}
       <List dense>
-        {layers
-          .map?.((layer, idx) => {
-            return (
-              <ListItem
+        {layers?.map?.((layer, idx) => {
+          return (
+            <ListItem
+              key={layer.Name + idx}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="toggle visibility"
+                  onClick={() => {
+                    let _layers = [...layers];
+                    _layers[idx].visible = !_layers[idx].visible;
+                    setLayers([..._layers]);
+                  }}
+                >
+                  {layers[idx].visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>
+              }
+            >
+              <ListItemText primary={layer.Title} secondary={layer.Abstract} />
+              <MlWmsLayer
                 key={layer.Name + idx}
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="toggle visibility"
-                    onClick={() => {
-                      let _layers = [...layers];
-                      _layers[idx].visible = !_layers[idx].visible;
-                      setLayers([..._layers]);
-                    }}
-                  >
-                    {layers[idx].visible ? (
-                      <VisibilityIcon />
-                    ) : (
-                      <VisibilityOffIcon />
-                    )}
-                  </IconButton>
-                }
-              >
-                <ListItemText primary={layer.Title} secondary={layer.Abstract} />
-                <MlWmsLayer
-                  key={layer.Name + idx}
-                  url={props.url}
-                  urlParameters={{ layers: layer.Name }}
-                  visible={layers[idx].visible}
-                />
-              </ListItem>
-            );
-          })
-          .reverse()}
+                url={props.url}
+                urlParameters={{ layers: layer.Name }}
+                visible={layers[idx].visible}
+                insertBeforeLayer={"Order-" + componentId.current + "-" + idx}
+              />
+            </ListItem>
+          );
+        })}
       </List>
       <p style={{ fontSize: ".7em" }}>{capabilities?.Capability?.Layer?.Abstract}</p>
     </>

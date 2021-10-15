@@ -101,6 +101,12 @@ const MlWmsLayer = (props) => {
       componentId.current
     );
 
+    console.log(
+      "insert layer " +
+        componentId.current +
+        " before layer " +
+        props.insertBeforeLayer
+    );
     mapRef.current.addLayer(
       {
         id: componentId.current,

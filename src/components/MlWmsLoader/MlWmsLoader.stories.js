@@ -33,5 +33,5 @@ ExampleConfig.args = {
    * try https://maps.heigit.org/histosm/wms or https://magosm.magellium.com/geoserver/wms
    *
    */
-  url: "https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme",
+  url: "https://www.wms.nrw.de/geobasis/wms_nw_vdop",
 };
