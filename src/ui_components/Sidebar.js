@@ -6,7 +6,7 @@ import Drawer from "@mui/material/Drawer";
 const useStyles = makeStyles((theme) => ({
   drawer: {
     flexGrow: 1,
-    zIndex: 90,
+    zIndex: 101,
     position: "absolute",
     top: 0,
     left: 0,
@@ -37,6 +37,9 @@ export default function Sidebar(props) {
       open={true}
       classes={{
         paper: classes.drawerPaper,
+      }}
+      sx={{
+        ...props.sx,
       }}
     >
       {props.children}

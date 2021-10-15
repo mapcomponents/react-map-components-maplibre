@@ -15,6 +15,7 @@ const defaultProps = {
     srs: "EPSG:3857",
     width: 256,
     height: 256,
+    styles: "",
   },
   attribution: "",
   sourceOptions: {
@@ -54,8 +55,13 @@ const MlWmsLayer = (props) => {
 
   useEffect(() => {
     let _componentId = componentId.current;
+    console.log("init wms layer");
+    console.log(_componentId);
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
+      console.log("cleanup wms layer");
+      console.log(mapRef.current);
+      console.log(_componentId);
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
 

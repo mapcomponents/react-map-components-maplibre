@@ -7,6 +7,17 @@ import { v4 as uuidv4 } from "uuid";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
 import WMSCapabilities from "wms-capabilities";
 
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import LayersIcon from "@mui/icons-material/Layers";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+
 const MlWmsLoader = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
@@ -66,7 +77,7 @@ const MlWmsLoader = (props) => {
     if (!capabilities) return;
 
     console.log(capabilities);
-    if (capabilities?.Capability?.Layer?.SRS.indexOf("EPSG:3857") === -1) {
+    if (capabilities?.Capability?.Layer?.SRS?.indexOf?.("EPSG:3857") === -1) {
       console.log(
         "MlWmsLoader (" +
           capabilities.Service.Title +
@@ -78,7 +89,13 @@ const MlWmsLoader = (props) => {
           capabilities.Service.Title +
           "): WGS 84/Pseudo-Mercator supported"
       );
-      setLayers(capabilities?.Capability?.Layer?.Layer);
+
+      setLayers(
+        capabilities?.Capability?.Layer?.Layer.map((layer) => {
+          layer.visible = true;
+          return layer;
+        })
+      );
     }
   }, [capabilities]);
 
@@ -92,9 +109,44 @@ const MlWmsLoader = (props) => {
 
   return (
     <>
-      {layers.map?.((layer) => {
-        return <MlWmsLayer url={props.url} urlParameters={{ layers: layer.Name }} />;
-      })}
+      <h3>{capabilities?.Service?.Title}</h3>
+      <List dense>
+        {layers
+          .map?.((layer, idx) => {
+            return (
+              <ListItem
+                key={layer.Name + idx}
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="toggle visibility"
+                    onClick={() => {
+                      let _layers = [...layers];
+                      _layers[idx].visible = !_layers[idx].visible;
+                      setLayers([..._layers]);
+                    }}
+                  >
+                    {layers[idx].visible ? (
+                      <VisibilityIcon />
+                    ) : (
+                      <VisibilityOffIcon />
+                    )}
+                  </IconButton>
+                }
+              >
+                <ListItemText primary={layer.Title} secondary={layer.Abstract} />
+                <MlWmsLayer
+                  key={layer.Name + idx}
+                  url={props.url}
+                  urlParameters={{ layers: layer.Name }}
+                  visible={layers[idx].visible}
+                />
+              </ListItem>
+            );
+          })
+          .reverse()}
+      </List>
+      <p style={{ fontSize: ".7em" }}>{capabilities?.Capability?.Layer?.Abstract}</p>
     </>
   );
 };
