@@ -18497,6 +18497,13 @@ with@^5.0.0:
     acorn "^3.1.0"
     acorn-globals "^3.0.0"
 
+wms-capabilities@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/wms-capabilities/-/wms-capabilities-0.5.1.tgz#0da57797e2678189af233c409a72c7b7c14ba7b2"
+  integrity sha512-f68uyUjzLdpE/wkBNmRdSwn1BcMIM0yMUDYY0/SQF+tSPr1FIa2/EizVENC2um4boNS4QmvjvMKcA7wZRwz7Lw==
+  dependencies:
+    minimist "^1.2.5"
+
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"

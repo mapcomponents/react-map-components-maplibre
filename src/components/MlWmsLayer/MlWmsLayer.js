@@ -73,6 +73,7 @@ const MlWmsLayer = (props) => {
 
     initializedRef.current = true;
 
+    // first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
     let urlParamsObj = {
       ...defaultProps.urlParameters,
       ...props.urlParameters,

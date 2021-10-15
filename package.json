@@ -24,6 +24,7 @@
     "three": "^0.126.1",
     "uuid": "^8.3.2",
     "web-vitals": "^0.2.4",
+    "wms-capabilities": "^0.5.1",
     "xmldom": "^0.5.0"
   },
   "dependenciesComment": {
