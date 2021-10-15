@@ -34,7 +34,7 @@ const Template = (props) => {
           WMS
         </Button>
       </TopToolbar>
-      <MlWmsLayer mapId="map_2" visible={showLayer} {...props} />
+      <MlWmsLayer visible={showLayer} {...props} />
     </>
   );
 };
@@ -42,6 +42,7 @@ const Template = (props) => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
+  mapId: "map_2",
   url: "https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme",
   urlParameters: {
     layers: "nw_uraufnahme_rw",

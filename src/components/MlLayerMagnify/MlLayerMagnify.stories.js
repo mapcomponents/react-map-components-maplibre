@@ -22,7 +22,9 @@ const Template = (args) => (
     <TopToolbar>
       <MlWmsLayer
         url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
-        layer="nw_uraufnahme_rw"
+        urlParameters={{
+          layers: "nw_uraufnahme_rw",
+        }}
         sourceOptions={{
           minzoom: 13,
           maxzoom: 20,
