@@ -3,7 +3,7 @@ import { layerRemovalTest, sourceRemovalTest } from "../../util";
 import MlWmsLayer from "./MlWmsLayer";
 import { uuid_regex } from "../../setupTests";
 
-const testComponent = <MlWmsLayer />;
+const testComponent = <MlWmsLayer url="mock" urlParameters={{ layers: "mock" }} />;
 
 layerRemovalTest(
   "<MlWmsLayer />",
