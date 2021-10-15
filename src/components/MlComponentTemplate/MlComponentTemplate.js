@@ -1,8 +1,17 @@
 import React, { useRef, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 
 import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 
+/**
+ * Sets the center of the MapLibre map (props.mapId) to [7.132122000552613, 50.716405378037706]
+ *
+ * @param {object} props
+ * @param {string} props.mapId Id of the target MapLibre instance in mapContext
+ *
+ * @component
+ */
 const MlComponentTemplate = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
@@ -45,4 +54,14 @@ const MlComponentTemplate = (props) => {
   return <></>;
 };
 
+MlComponentTemplate.defaultProps = {
+  mapId: undefined,
+};
+
+MlComponentTemplate.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+};
 export default MlComponentTemplate;
