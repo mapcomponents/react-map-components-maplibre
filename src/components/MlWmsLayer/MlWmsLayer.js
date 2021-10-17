@@ -30,7 +30,7 @@ const defaultProps = {
 
 /**
  * Adds a WMS raster layer to the maplibre-gl instance
- * 
+ *
  * @param {object} props
  * @param {object} props.urlParameters URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object
  * @param {string} props.url WMS URL
@@ -41,27 +41,20 @@ const defaultProps = {
  * @param {object} props.layerOptions Object that is passed to the MapLibre.addLayer call as config option parameter
  * @param {string} props.insertBeforeLayer Id of an existing layer in the mapLibre instance to help specify the layer order
                                            This layer will be visually beneath the layer with the "insertBeforeLayer" id
- * 
+ *
  * @component
  */
 const MlWmsLayer = (props) => {
   const mapContext = useContext(MapContext);
 
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlWmsLayer-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLayer-") + uuidv4());
   const mapRef = useRef(null);
   const initializedRef = useRef(false);
 
   useEffect(() => {
     let _componentId = componentId.current;
-    console.log("init wms layer");
-    console.log(_componentId);
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
-      console.log("cleanup wms layer");
-      console.log(mapRef.current);
-      console.log(_componentId);
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
 
@@ -86,8 +79,7 @@ const MlWmsLayer = (props) => {
     };
     let urlParams = new URLSearchParams(urlParamsObj);
     let urlParamsStr =
-      decodeURIComponent(urlParams.toString()) +
-      "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+      decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
 
     mapRef.current.addSource(
       componentId.current,
