@@ -1,7 +1,0 @@
-{
-  "name": "MlDraggableFeatureLayer",
-  "title": "Drag and Drop Ebene",
-  "description": "Ebene mit per drag and drop verschiebbaren Elementen.",
-  "tags": [ "Map add-on" ],
-  "category": "add-ons"
-}
