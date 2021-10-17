@@ -1,13 +1,13 @@
 import React from "react";
 
-import MlWmsLoader from "./MlWmsLoader";
+import MlUseMapDebugger from "./MlUseMapDebugger";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 import Sidebar from "../../ui_components/Sidebar";
 
 const storyoptions = {
-  title: "MapComponents/MlWmsLoader",
-  component: MlWmsLoader,
+  title: "MapComponents/MlUseMapDebugger",
+  component: MlUseMapDebugger,
   argTypes: {
     url: {},
     layer: {},
@@ -19,9 +19,7 @@ export default storyoptions;
 const Template = (props) => {
   return (
     <>
-      <Sidebar sx={{ width: "500px" }} classes={{ paper: { paddingTop: "20px", opacity: "0.3" } }}>
-        <MlWmsLoader {...props} />
-      </Sidebar>
+      <MlUseMapDebugger {...props} />
     </>
   );
 };
@@ -29,9 +27,5 @@ const Template = (props) => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
-  /**
-   * try https://maps.heigit.org/histosm/wms or https://magosm.magellium.com/geoserver/wms
-   *
-   */
-  url: "https://www.wms.nrw.de/geobasis/wms_nw_vdop",
+  mapId: "map_1",
 };

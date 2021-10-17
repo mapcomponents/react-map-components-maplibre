@@ -18,17 +18,14 @@ export default storyoptions;
 
 const Template = (args) => (
   <TopToolbar>
-    <MlVectorTileLayer
-      url={args.url}
-      sourceLayer={args.sourceLayer}
-      sourceOptions={args.sourceOptions}
-    />
+    <MlVectorTileLayer {...args} />
   </TopToolbar>
 );
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
+  mapId: "map_1",
   url:
     "https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf",
   layers: {
@@ -38,7 +35,7 @@ ExampleConfig.args = {
         "line-cap": "round",
         "line-join": "round",
       },
-      paint: { "line-width": 1, "line-color": "#ff0000" },
+      paint: { "line-width": 2, "line-color": "#ff0000" },
     },
   },
   sourceOptions: {

@@ -2,6 +2,7 @@ import React from "react";
 
 import { MapComponentsProvider } from "react-map-components-core";
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
+import MlUseMapDebugger from "../components/MlUseMapDebugger/MlUseMapDebugger";
 import { LoadingOverlayProvider } from "../ui_components/LoadingOverlayContext";
 import LoadingOverlay from "../ui_components/LoadingOverlay";
 import "./style.css";
@@ -15,6 +16,7 @@ const decorators = [
 
           <Story />
 
+          <MlUseMapDebugger mapId="map_1" />
           <MapLibreMap
             options={{
               zoom: 14.5,
