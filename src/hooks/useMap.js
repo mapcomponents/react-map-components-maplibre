@@ -22,12 +22,6 @@ function useMap(props) {
     let _componentId = componentId.current;
 
     return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      // try to remove anything this component has added to the MapLibre-gl instance
-      // e.g.: remove the layer
-      // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
-      // check for the existence of map.style before calling getLayer or getSource
-
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
@@ -75,11 +69,9 @@ function useMap(props) {
           setLayerIds(layerIds);
         }
 
-        console.log("idle");
         let layerStates = buildLayerObjects(mapRef.current.style._layers);
         let layerStatesString = JSON.stringify(layerStates);
         if (layerStatesString !== layersRef.current) {
-          console.log("setLayers called");
           layersRef.current = layerStatesString;
           setLayers(layerStates);
         }

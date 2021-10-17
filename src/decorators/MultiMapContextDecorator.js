@@ -6,7 +6,7 @@ import LoadingOverlay from "../ui_components/LoadingOverlay";
 
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import "./style.css";
 
@@ -39,8 +39,7 @@ const decorators = [
                     zoom: 14.5,
                     //pitch: 45,
                     //style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
-                    style:
-                      "https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
+                    style: "https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
                     //center: [8.607, 53.1409349],
                     //zoom: 13,
                     center: [7.0851268, 50.73884],
@@ -57,8 +56,7 @@ const decorators = [
                     //center: [-87.62712, 41.89033],
                     zoom: 14.5,
                     //pitch: 45,
-                    style:
-                      "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
+                    style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
                     //style: "https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
                     //center: [8.607, 53.1409349],
                     //zoom: 13,

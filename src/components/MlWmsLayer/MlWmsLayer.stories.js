@@ -1,6 +1,5 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useState } from "react";
 
-import { MapContext } from "react-map-components-core";
 import MlWmsLayer from "./MlWmsLayer";
 import TopToolbar from "../../ui_components/TopToolbar";
 import Button from "@mui/material/Button";

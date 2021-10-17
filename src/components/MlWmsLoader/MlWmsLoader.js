@@ -21,9 +21,7 @@ const MlWmsLoader = (props) => {
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4());
   const [capabilities, setCapabilities] = useState(undefined);
   const [layers, setLayers] = useState([]);
 
@@ -50,8 +48,7 @@ const MlWmsLoader = (props) => {
     };
     let urlParams = new URLSearchParams(urlParamsObj);
     let urlParamsStr =
-      decodeURIComponent(urlParams.toString()) +
-      "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+      decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
 
     fetch(props.url + "?" + urlParamsStr)
       .then((res) => {
@@ -67,22 +64,18 @@ const MlWmsLoader = (props) => {
         console.log("error");
         console.log(msg);
       });
-  }, [props.url]);
+  }, [props.url, props.urlParameters]);
 
   useEffect(() => {
     if (!capabilities) return;
 
     if (capabilities?.Capability?.Layer?.SRS?.indexOf?.("EPSG:3857") === -1) {
       console.log(
-        "MlWmsLoader (" +
-          capabilities.Service.Title +
-          "): No WGS 84/Pseudo-Mercator support"
+        "MlWmsLoader (" + capabilities.Service.Title + "): No WGS 84/Pseudo-Mercator support"
       );
     } else {
       console.log(
-        "MlWmsLoader (" +
-          capabilities.Service.Title +
-          "): WGS 84/Pseudo-Mercator supported"
+        "MlWmsLoader (" + capabilities.Service.Title + "): WGS 84/Pseudo-Mercator supported"
       );
 
       setLayers(

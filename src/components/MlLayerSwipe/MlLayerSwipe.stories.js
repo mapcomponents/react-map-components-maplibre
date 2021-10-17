@@ -2,7 +2,6 @@ import React from "react";
 
 import MlLayerSwipe from "./MlLayerSwipe";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
-import TopToolbar from "../../ui_components/TopToolbar";
 
 import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
 

@@ -18,7 +18,7 @@ import useMap from "../../hooks/useMap";
 const MlUseMapDebugger = (props) => {
   const map = useMap(props.mapId);
   const [debuggerOpen, setDebuggerOpen] = useState(false);
-  const [maxHeight, setMaxHeight] = useState("50%");
+  //const [maxHeight /*setMaxHeight*/] = useState("50%");
 
   return (
     <>
@@ -37,7 +37,7 @@ const MlUseMapDebugger = (props) => {
         PaperProps={{
           sx: {
             opacity: 0.85,
-            maxHeight: maxHeight,
+            maxHeight: "50%",
           },
         }}
         hideBackdrop={true}

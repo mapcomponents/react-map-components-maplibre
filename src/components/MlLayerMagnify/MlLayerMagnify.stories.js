@@ -2,7 +2,6 @@ import React from "react";
 
 import MlLayerMagnify from "./MlLayerMagnify";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
-import TopToolbar from "../../ui_components/TopToolbar";
 
 import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
 
@@ -30,11 +29,7 @@ const Template = (args) => (
       }}
       mapId={args.wmsLayerMapId}
     />
-    <MlLayerMagnify
-      map1Id="map_1"
-      map2Id="map_2"
-      magnifierRadius={args.magnifierRadius}
-    />
+    <MlLayerMagnify map1Id="map_1" map2Id="map_2" magnifierRadius={args.magnifierRadius} />
   </>
 );
 
