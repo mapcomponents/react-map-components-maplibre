@@ -11,9 +11,9 @@ const MlImageMarkerLayer = (props) => {
   );
   const mapContext = useContext(MapContext);
   const layerInitializedRef = useRef(false);
-  const idPostfixRef = useRef(props.idSuffix || new Date().getTime());
+  const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  const layerId = (props.layerId || "MlImageMarkerLayer-") + idPostfixRef.current;
+  const layerId = (props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current;
 
   useEffect(() => {
     let _componentId = componentId.current;
