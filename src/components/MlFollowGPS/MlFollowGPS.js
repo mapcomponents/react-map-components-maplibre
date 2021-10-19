@@ -1,8 +1,10 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, {useRef, useEffect, useContext, useState} from "react";
 import PropTypes from "prop-types";
 
-import { MapContext } from "react-map-components-core";
-import { v4 as uuidv4 } from "uuid";
+import {MapContext} from "react-map-components-core";
+import {v4 as uuidv4} from "uuid";
+import Button from "@mui/material/Button";
+import RoomIcon from '@mui/icons-material/Room';
 
 /**
  * Sets the center of the MapLibre map (props.mapId) to [7.132122000552613, 50.716405378037706]
@@ -15,6 +17,9 @@ import { v4 as uuidv4 } from "uuid";
 const MlFollowGPS = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [watchId, setWatchId] = useState(undefined);
+  const [locationAccessDenied, setLocationAccessDenied] = useState(false);
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
@@ -24,8 +29,6 @@ const MlFollowGPS = (props) => {
 
   useEffect(() => {
     let _componentId = componentId.current;
-
-    navigator.geolocation.watchPosition(getLocationSuccess, getLocationError)
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
@@ -54,15 +57,29 @@ const MlFollowGPS = (props) => {
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
   const getLocationSuccess = (pos) => {
-    if(!mapRef.current) return;
+    if (!mapRef.current) return;
     mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude])
   }
 
   const getLocationError = (err) => {
     console.log("Access of user location denied");
+    setLocationAccessDenied(true);
   }
 
-  return <></>;
+  return (
+
+    <Button
+      sx={{zIndex: 1002 ,...props.style}}
+      disabled={locationAccessDenied}
+      onClick={() => {
+      if (isFollowed) {
+        navigator.geolocation.clearWatch(watchId);
+      } else {
+        setWatchId(navigator.geolocation.watchPosition(getLocationSuccess, getLocationError))
+      }
+      setIsFollowed(!isFollowed)
+    }}> <RoomIcon sx={{color:(isFollowed ? "#6666ff": "#aaaaaa")}}/> </Button>
+  );
 };
 
 MlFollowGPS.defaultProps = {
