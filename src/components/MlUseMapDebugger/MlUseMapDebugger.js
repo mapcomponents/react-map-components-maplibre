@@ -5,7 +5,7 @@ import ReactJson from "react-json-view";
 import { Drawer, IconButton } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 
-import useMap from "../../hooks/useMap";
+import useMapState from "../../hooks/useMapState";
 
 /**
  * Sets the center of the MapLibre map (props.mapId) to [7.132122000552613, 50.716405378037706]
@@ -16,7 +16,7 @@ import useMap from "../../hooks/useMap";
  * @component
  */
 const MlUseMapDebugger = (props) => {
-  const map = useMap(props.mapId);
+  const map = useMapState(props.mapId);
   const [debuggerOpen, setDebuggerOpen] = useState(false);
   //const [maxHeight /*setMaxHeight*/] = useState("50%");
 
@@ -43,13 +43,17 @@ const MlUseMapDebugger = (props) => {
         hideBackdrop={true}
         variant="persistent"
       >
+        {/*
         <ReactJson
+
           groupArraysAfterLength={50}
           src={map}
           style={{ padding: "20px" }}
           theme="monokai"
           collapsed={2}
         />
+        */}
+        <pre>{JSON.stringify(map, null, " ")}</pre>
       </Drawer>
     </>
   );
