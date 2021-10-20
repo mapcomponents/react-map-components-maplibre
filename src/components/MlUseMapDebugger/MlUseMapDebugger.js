@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import ReactJson from "react-json-view";
 import { Drawer, IconButton } from "@mui/material";
 import CodeIcon from "@mui/icons-material/Code";
 
@@ -43,16 +42,6 @@ const MlUseMapDebugger = (props) => {
         hideBackdrop={true}
         variant="persistent"
       >
-        {/*
-        <ReactJson
-
-          groupArraysAfterLength={50}
-          src={map}
-          style={{ padding: "20px" }}
-          theme="monokai"
-          collapsed={2}
-        />
-        */}
         <pre>{JSON.stringify(map, null, " ")}</pre>
       </Drawer>
     </>
