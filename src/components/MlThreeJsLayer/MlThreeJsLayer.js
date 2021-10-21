@@ -5,9 +5,12 @@ import Button from "@mui/material/Button";
 import maplibregl from "maplibre-gl";
 import * as THREE from "three";
 import GLTFLoader from "./lib/GLTFLoader";
+import PropTypes from "prop-types";
 
 /**
  * MlThreeJsLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *
+ * @component
  */
 const MlThreeJsLayer = (props) => {
   const mapContext = useContext(MapContext);
@@ -196,5 +199,20 @@ const MlThreeJsLayer = (props) => {
     </>
   );
 };
+
+MlThreeJsLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+  /**
+   * TODO: Description of init
+   */
+  init: PropTypes.object,
+  /**
+   * TODO: Description of onDone
+   */
+  onDone: PropTypes.func,
+}
 
 export default MlThreeJsLayer;

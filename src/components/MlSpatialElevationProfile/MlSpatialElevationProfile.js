@@ -4,9 +4,12 @@ import GeoJsonContext from "../MlGPXViewer/util/GeoJsonContext";
 import { polygon, lineString } from "@turf/helpers";
 import { distance, lineOffset } from "@turf/turf";
 import { v4 as uuidv4 } from "uuid";
+import PropTypes from "prop-types";
 
 /**
  * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *
+ * @component
  */
 const MlSpatialElevationProfile = (props) => {
   const mapContext = useContext(MapContext);
@@ -206,4 +209,25 @@ const MlSpatialElevationProfile = (props) => {
 MlSpatialElevationProfile.defaultProps = {
   elevationFactor: 1,
 };
+
+MlSpatialElevationProfile.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+  /**
+   * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+   */
+  idPrefix: PropTypes.string,
+  /**
+   * TODO: Description of elevationFactor
+   */
+  elevationFactor: PropTypes.object,
+  /**
+   * The layerId of an existing layer this layer should be rendered visually beneath
+   * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+   */
+  insertBeforeLayer: PropTypes.string,
+}
+
 export default MlSpatialElevationProfile;

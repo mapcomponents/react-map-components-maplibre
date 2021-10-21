@@ -1,8 +1,11 @@
 import React, { useContext, useRef, useEffect } from "react";
 import { MapContext } from "react-map-components-core";
+import PropTypes from "prop-types";
 
 /**
  * MlVectorTileLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *
+ * @component
  */
 const MlVectorTileLayer = (props) => {
   const mapContext = useContext(MapContext);
@@ -71,6 +74,7 @@ const MlVectorTileLayer = (props) => {
 
   useEffect(() => {
     if (!mapRef.current) return;
+    console.log(props)
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     for (var key in props.layers) {
@@ -114,5 +118,24 @@ const MlVectorTileLayer = (props) => {
 
   return <></>;
 };
+
+MlVectorTileLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+  /**
+   * TODO: Description of sourceOptions
+   */
+  sourceOptions: PropTypes.object,
+  /**
+   * TODO: Description of layers
+   */
+  layers: PropTypes.object,
+  /**
+   * TODO: Description of url
+   */
+  url: PropTypes.string,
+}
 
 export default MlVectorTileLayer;

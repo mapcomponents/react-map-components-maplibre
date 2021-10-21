@@ -2,11 +2,15 @@ import React, { useContext, useCallback, useRef, useEffect, useState } from "rea
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
 import { MapContext } from "react-map-components-core";
+import PropTypes from "prop-types";
 
 /**
  * MlLayerSwipe returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *
+ * @component
  */
 const MlLayerSwipe = (props) => {
+  console.log(props)
   const mapContext = useContext(MapContext);
   const initializedRef = useRef(false);
 
@@ -120,5 +124,16 @@ const MlLayerSwipe = (props) => {
     ></div>
   );
 };
+
+MlLayerSwipe.propTypes = {
+  /**
+   * Id of the first MapLibre instance.
+   */
+  map1Id: PropTypes.string,
+  /**
+   * Id of the second MapLibre instance.
+   */
+  map2Id: PropTypes.string,
+}
 
 export default MlLayerSwipe;
