@@ -3,9 +3,12 @@ import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 
 import Button from "@mui/material/Button";
+import PropTypes from "prop-types";
 
 /**
  * MlOsmLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *
+ * @component
  */
 const MlOsmLayer = (props) => {
   const mapContext = useContext(MapContext);
@@ -85,5 +88,29 @@ const MlOsmLayer = (props) => {
     </Button>
   );
 };
+
+MlOsmLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+  /**
+   * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+   */
+  idPrefix: PropTypes.string,
+  /**
+   * TODO: Description of sourceOptions
+   */
+  sourceOptions: PropTypes.object,
+  /**
+   * TODO: Description of layerOptions
+   */
+  layerOptions: PropTypes.object,
+  /**
+   * The layerId of an existing layer this layer should be rendered visually beneath
+   * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+   */
+  insertBeforeLayer: PropTypes.string,
+}
 
 export default MlOsmLayer;
