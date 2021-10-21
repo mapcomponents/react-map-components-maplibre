@@ -18,7 +18,7 @@
       "fileName": 1492,
       "framework": "react"
     },
-    "MapComponents/MlCompositeLayer": {
+    "MapComponents/MlFillExtrusionLayer": {
       "fileName": 1453,
       "framework": "react"
     },
@@ -140,7 +140,7 @@
     "mapcomponents-mlcompositelayer--example-config": {
       "id": "mapcomponents-mlcompositelayer--example-config",
       "name": "Example Config",
-      "kind": "MapComponents/MlCompositeLayer",
+      "kind": "MapComponents/MlFillExtrusionLayer",
       "story": "Example Config",
       "parameters": {
         "__id": "mapcomponents-mlcompositelayer--example-config",
