@@ -19,6 +19,8 @@ import { v4 as uuidv4 } from "uuid";
 
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
+ *
+ * @component
  */
 const MlGPXViewer = (props) => {
   const dataSource = useContext(GeoJsonContext);

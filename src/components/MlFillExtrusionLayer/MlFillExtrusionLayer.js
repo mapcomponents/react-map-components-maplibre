@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import Button from "@mui/material/Button";
 
 /**
- * MlFillExtrusionLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Adds a fill extrusion layer to the MapLibre instance reference by props.mapId
  *
  * @Component
  */

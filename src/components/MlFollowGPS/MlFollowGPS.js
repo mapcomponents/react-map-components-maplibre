@@ -1,13 +1,14 @@
-import React, {useRef, useEffect, useContext, useState} from "react";
+import React, { useRef, useEffect, useContext, useState } from "react";
 import PropTypes from "prop-types";
 
-import {MapContext} from "react-map-components-core";
-import {v4 as uuidv4} from "uuid";
+import { MapContext } from "react-map-components-core";
+import { v4 as uuidv4 } from "uuid";
 import Button from "@mui/material/Button";
-import RoomIcon from '@mui/icons-material/Room';
+import RoomIcon from "@mui/icons-material/Room";
 
 /**
- * Sets the center of the MapLibre map (props.mapId) to [7.132122000552613, 50.716405378037706]
+ * Adds a button that makes the map follow the users GPS position using
+ * navigator.geolocation.watchPosition if activated
  *
  * @param {object} props
  * @param {string} props.mapId Id of the target MapLibre instance in mapContext
@@ -23,9 +24,7 @@ const MlFollowGPS = (props) => {
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlFollowGPS-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlFollowGPS-") + uuidv4());
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -58,27 +57,30 @@ const MlFollowGPS = (props) => {
 
   const getLocationSuccess = (pos) => {
     if (!mapRef.current) return;
-    mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude])
-  }
+    mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude]);
+  };
 
   const getLocationError = (err) => {
     console.log("Access of user location denied");
     setLocationAccessDenied(true);
-  }
+  };
 
   return (
-
     <Button
-      sx={{zIndex: 1002 ,...props.style}}
+      sx={{ zIndex: 1002, ...props.style }}
       disabled={locationAccessDenied}
       onClick={() => {
-      if (isFollowed) {
-        navigator.geolocation.clearWatch(watchId);
-      } else {
-        setWatchId(navigator.geolocation.watchPosition(getLocationSuccess, getLocationError))
-      }
-      setIsFollowed(!isFollowed)
-    }}> <RoomIcon sx={{color:(isFollowed ? "#6666ff": "#aaaaaa")}}/> </Button>
+        if (isFollowed) {
+          navigator.geolocation.clearWatch(watchId);
+        } else {
+          setWatchId(navigator.geolocation.watchPosition(getLocationSuccess, getLocationError));
+        }
+        setIsFollowed(!isFollowed);
+      }}
+    >
+      {" "}
+      <RoomIcon sx={{ color: isFollowed ? "#6666ff" : "#aaaaaa" }} />{" "}
+    </Button>
   );
 };
 
