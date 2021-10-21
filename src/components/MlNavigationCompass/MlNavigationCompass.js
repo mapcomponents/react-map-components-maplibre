@@ -93,9 +93,7 @@ const MlNavigationCompass = (props) => {
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlNavigationCompass-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlNavigationCompass-") + uuidv4());
 
   const [bearing, setBearing] = useState(0);
 
@@ -204,6 +202,10 @@ const MlNavigationCompass = (props) => {
 };
 
 MlNavigationCompass.propTypes = {
+  /**
+   * Component id prefix
+   */
+  idPrefix: PropTypes.string,
   /**
    * Style object to adjust css definitions of the component.
    */
