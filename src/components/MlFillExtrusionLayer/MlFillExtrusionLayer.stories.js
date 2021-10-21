@@ -1,13 +1,13 @@
 import React from "react";
 
 import TopToolbar from "../../ui_components/TopToolbar";
-import MlCompositeLayer from "./MlCompositeLayer";
+import MlFillExtrusionLayer from "./MlFillExtrusionLayer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlCompositeLayer",
-  component: MlCompositeLayer,
+  title: "MapComponents/MlFillExtrusionLayer",
+  component: MlFillExtrusionLayer,
   argTypes: {
     options: {
       control: {
@@ -21,7 +21,7 @@ export default storyoptions;
 
 const Template = (args) => (
   <TopToolbar>
-    <MlCompositeLayer />
+    <MlFillExtrusionLayer />
   </TopToolbar>
 );
 
