@@ -13,7 +13,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
  * This Component must be kept unaware of any related components that interact with the MapLibre-gl
  * instance.
  *
- * @Component
+ * @component
  */
 const MapLibreMap = (props) => {
   const map = useRef(null);
