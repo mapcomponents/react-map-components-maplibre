@@ -8,8 +8,7 @@ import PrinterIcon from "@mui/icons-material/Print";
 import Button from "@mui/material/Button";
 
 /**
- * MlCreatePdfButton returns a Button that will create a PDF version of the current map view (dimensions adjusted to fit Din A4 Paper).
- * It expects a MapLibre-gl instance accessible in mapContext.map.
+ * Renders a button that will create a PDF version of the current map view (dimensions adjusted to fit Din A4 Paper).
  *
  * @component
  */

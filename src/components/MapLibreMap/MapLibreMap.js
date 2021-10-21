@@ -6,7 +6,7 @@ import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
- * The MapLibreMap component will create the MapLibreGlWrapper instance and register it in MapContext
+ * Creates a MapLibreGlWrapper instance and registers it in MapContext
  * after the MapLibre-gl load event has fired.
  *
  * MapLibreMap returns the html node that will be used by MapLibre-gl to render the map.

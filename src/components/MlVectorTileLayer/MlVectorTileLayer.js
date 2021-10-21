@@ -3,7 +3,8 @@ import { MapContext } from "react-map-components-core";
 import PropTypes from "prop-types";
 
 /**
- * MlVectorTileLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Adds a vector-tile source and 0...n vector-tile-layers to the MapLibre instance referenced by
+ * props.mapId
  *
  * @component
  */
@@ -74,7 +75,7 @@ const MlVectorTileLayer = (props) => {
 
   useEffect(() => {
     if (!mapRef.current) return;
-    console.log(props)
+    console.log(props);
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     for (var key in props.layers) {
@@ -102,17 +103,9 @@ const MlVectorTileLayer = (props) => {
 
     // toggle layer visibility by changing the layout object's visibility property
     if (props.visible) {
-      mapRef.current.setLayoutProperty(
-        layerName + idSuffixRef.current,
-        "visibility",
-        "visible"
-      );
+      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "visible");
     } else {
-      mapRef.current.setLayoutProperty(
-        layerName + idSuffixRef.current,
-        "visibility",
-        "none"
-      );
+      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "none");
     }
   }, [props.visible]);
 
@@ -136,6 +129,6 @@ MlVectorTileLayer.propTypes = {
    * TODO: Description of url
    */
   url: PropTypes.string,
-}
+};
 
 export default MlVectorTileLayer;

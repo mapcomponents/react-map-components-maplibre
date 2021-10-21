@@ -6,7 +6,8 @@ import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 
 /**
- * MlOsmLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Adds a standard OSM tile layer to the maplibre-gl instancereference by
+ * props.mapId
  *
  * @component
  */
@@ -15,16 +16,10 @@ const MlOsmLayer = (props) => {
   const mapRef = useRef(undefined);
 
   const [showLayer, setShowLayer] = useState(true);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlOsmLayer-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-") + uuidv4());
   const initializedRef = useRef(false);
-  const sourceIdRef = useRef(
-    (props.idPrefix ? props.idPrefix : "MlOsmLayer-source-") + uuidv4()
-  );
-  const layerIdRef = useRef(
-    (props.idPrefix ? props.idPrefix : "MlOsmLayer-layer-") + uuidv4()
-  );
+  const sourceIdRef = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-source-") + uuidv4());
+  const layerIdRef = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-layer-") + uuidv4());
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -111,6 +106,6 @@ MlOsmLayer.propTypes = {
    * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
    */
   insertBeforeLayer: PropTypes.string,
-}
+};
 
 export default MlOsmLayer;

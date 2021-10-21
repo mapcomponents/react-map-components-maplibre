@@ -8,7 +8,7 @@ import GLTFLoader from "./lib/GLTFLoader";
 import PropTypes from "prop-types";
 
 /**
- * MlThreeJsLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Renders obj or gltf 3D Models on the MapLibreMap referenced by props.mapId
  *
  * @component
  */
@@ -143,11 +143,7 @@ const MlThreeJsLayer = (props) => {
             modelTransform.translateZ
           )
           .scale(
-            new THREE.Vector3(
-              modelTransform.scale,
-              -modelTransform.scale,
-              modelTransform.scale
-            )
+            new THREE.Vector3(modelTransform.scale, -modelTransform.scale, modelTransform.scale)
           )
           .multiply(rotationX)
           .multiply(rotationY)
@@ -213,6 +209,6 @@ MlThreeJsLayer.propTypes = {
    * TODO: Description of onDone
    */
   onDone: PropTypes.func,
-}
+};
 
 export default MlThreeJsLayer;
