@@ -18,9 +18,7 @@ const MlComponentTemplate = (props) => {
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + uuidv4());
 
   useEffect(() => {
     let _componentId = componentId.current;
