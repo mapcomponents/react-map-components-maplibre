@@ -133,3 +133,23 @@ Without any further configuration it will listen for new MapLibre instances regi
 
 For decorator integration examples check the storybook decorators located in ./decorators/.
 For controlled LoadingOverlay examples please see MlLaermkarte (story & component).
+
+# Building the documentation
+
+Install the dependencies globally:
+
+```
+yarn global add jsdoc parcel-bundler
+```
+
+Build the documentation:
+
+```
+yarn docs-create
+```
+
+Serve the documentation:
+
+```
+yarn docs-serve
+```
