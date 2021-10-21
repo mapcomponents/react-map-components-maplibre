@@ -76,7 +76,7 @@ const MlNavigationTools = (props) => {
     if (!mapRef.current) return;
 
     if (mapRef.current.transform._zoom + 0.5 <= mapRef.current.transform._maxZoom) {
-      mapRef.current.setZoom(mapRef.current.transform._zoom + 0.5);
+      mapRef.current.easeTo({zoom: (mapRef.current.transform._zoom + 0.5)});
     }
   };
 
@@ -84,7 +84,7 @@ const MlNavigationTools = (props) => {
     if (!mapRef.current) return;
 
     if (mapRef.current.transform._zoom - 0.5 >= mapRef.current.transform._minZoom) {
-      mapRef.current.setZoom(mapRef.current.transform._zoom - 0.5);
+      mapRef.current.easeTo({zoom: (mapRef.current.transform._zoom - 0.5)});
     }
   };
 
