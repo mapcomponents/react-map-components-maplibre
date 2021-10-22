@@ -5,7 +5,7 @@ import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 
 /**
- * Sets the center of the MapLibre map (props.mapId) to [7.132122000552613, 50.716405378037706]
+ * TODO: Add short & useful description
  *
  * @param {object} props
  * @param {string} props.mapId Id of the target MapLibre instance in mapContext
@@ -18,9 +18,7 @@ const MlComponentTemplate = (props) => {
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + uuidv4());
 
   useEffect(() => {
     let _componentId = componentId.current;

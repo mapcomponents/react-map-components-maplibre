@@ -29,7 +29,7 @@ const defaultProps = {
 };
 
 /**
- * Adds a WMS raster layer to the maplibre-gl instance
+ * Adds a WMS raster source & layer to the maplibre-gl instance
  *
  * @param {object} props
  * @param {object} props.urlParameters URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object

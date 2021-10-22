@@ -1,11 +1,11 @@
 import { layerRemovalTest, sourceRemovalTest } from "../../util";
 
-import MlCompositeLayer from "./MlCompositeLayer";
+import MlFillExtrusionLayer from "./MlFillExtrusionLayer";
 
-const testComponent = <MlCompositeLayer />;
+const testComponent = <MlFillExtrusionLayer />;
 
 let testParams = [
-  "<MlCompositeLayer />",
+  "<MlFillExtrusionLayer />",
   testComponent,
   /^.*\"building\-3d\".*$/,
   "building-3d",

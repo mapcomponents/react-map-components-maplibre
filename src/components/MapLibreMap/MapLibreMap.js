@@ -6,12 +6,14 @@ import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 /**
- * The MapLibreMap component will create the MapLibre-gl instance and register it in MapContext
+ * Creates a MapLibreGlWrapper instance and registers it in MapContext
  * after the MapLibre-gl load event has fired.
  *
  * MapLibreMap returns the html node that will be used by MapLibre-gl to render the map.
  * This Component must be kept unaware of any related components that interact with the MapLibre-gl
  * instance.
+ *
+ * @component
  */
 const MapLibreMap = (props) => {
   const map = useRef(null);
@@ -73,7 +75,15 @@ MapLibreMap.defaultProps = {
 };
 
 MapLibreMap.propTypes = {
+  /**
+   * Id of the MapLibreGl(Wrapper) instance in mapContext
+   */
   mapId: PropTypes.string,
+  /**
+   * Config object that is passed to the MapLibreGl constructor as first parameter.
+   * See https://maplibre.org/maplibre-gl-js-docs/api/map/ for a formal documentation of al
+   * available properties.
+   */
   options: PropTypes.object,
 };
 

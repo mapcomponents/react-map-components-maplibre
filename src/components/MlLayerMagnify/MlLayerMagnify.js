@@ -1,11 +1,15 @@
 import React, { useContext, useCallback, useRef, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
 import { MapContext } from "react-map-components-core";
 
 /**
  *
- * MlLayerMagnify returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Hides the MapLibreMap referenced by props.map2Id except for the "magnifier"-circle that reveals
+ * the map and can be dragged around on top of the MapLibreMap referenced by props.map1Id
+ *
+ * @component
  */
 const MlLayerMagnify = (props) => {
   const mapContext = useContext(MapContext);
@@ -17,7 +21,7 @@ const MlLayerMagnify = (props) => {
   const [swipeY, setSwipeY] = useState(50);
   const swipeYRef = useRef(50);
 
-  const magnifierRadiusRef = useRef(props.magnifierRadius || 200);
+  const magnifierRadiusRef = useRef(props.magnifierRadius);
 
   const [magnifierRadius, setMagnifierRadius] = useState(magnifierRadiusRef.current);
 
@@ -103,8 +107,7 @@ const MlLayerMagnify = (props) => {
     if (
       mapContext.maps[props.map1Id].getCanvas().clientWidth >
         mapContext.maps[props.map1Id].getCanvas().clientHeight &&
-      magnifierRadiusRef.current * 2 >
-        mapContext.maps[props.map1Id].getCanvas().clientHeight
+      magnifierRadiusRef.current * 2 > mapContext.maps[props.map1Id].getCanvas().clientHeight
     ) {
       magnifierRadiusRef.current = Math.floor(
         mapContext.maps[props.map1Id].getCanvas().clientHeight / 2
@@ -115,8 +118,7 @@ const MlLayerMagnify = (props) => {
     if (
       mapContext.maps[props.map1Id].getCanvas().clientHeight >
         mapContext.maps[props.map1Id].getCanvas().clientWidth &&
-      magnifierRadiusRef.current * 2 >
-        mapContext.maps[props.map1Id].getCanvas().clientWidth
+      magnifierRadiusRef.current * 2 > mapContext.maps[props.map1Id].getCanvas().clientWidth
     ) {
       magnifierRadiusRef.current = Math.floor(
         mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
@@ -166,8 +168,7 @@ const MlLayerMagnify = (props) => {
         height: magnifierRadius * 2 + 1 + "px",
         background: "rgba(0,0,0,0)",
         border: "2px solid #fafafa",
-        boxShadow:
-          "1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)",
+        boxShadow: "1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)",
         cursor: "pointer",
         zIndex: "110",
         marginLeft: magnifierRadius * -1 - 1 + "px",
@@ -185,4 +186,22 @@ const MlLayerMagnify = (props) => {
   );
 };
 
+MlLayerMagnify.defaultProps = {
+  magnifierRadius: 200,
+};
+
+MlLayerMagnify.propTypes = {
+  /**
+   * Id of the first MapLibre instance
+   */
+  map1Id: PropTypes.string,
+  /**
+   * Id of the second MapLibre instance
+   */
+  map2Id: PropTypes.string,
+  /**
+   * Size of the "magnifier"-circle
+   */
+  magnifierRadius: PropTypes.number,
+};
 export default MlLayerMagnify;

@@ -1,5 +1,5 @@
 {
-  "name": "MlCompositeLayer",
+  "name": "MlFillExtrusionLayer",
   "title": "Einfache 3D Gebäude",
   "description": "Zeichnet eine Ebene mit einfach, aus den Gebäudeumrissen und anhand der Höhen, extrudierten 3D Objekten als Gebäude.",
   "tags": ["Map add-on"],

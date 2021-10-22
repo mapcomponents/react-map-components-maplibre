@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { MapContext } from "react-map-components-core";
 import { bbox } from "@turf/turf";
 import Divider from "@mui/material/Divider";
@@ -18,12 +19,12 @@ import { v4 as uuidv4 } from "uuid";
 
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
+ *
+ * @component
  */
 const MlGPXViewer = (props) => {
   const dataSource = useContext(GeoJsonContext);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlGpxViewer-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlGpxViewer-") + uuidv4());
   const mapContext = useContext(MapContext);
   const mapId = props.mapId;
   const initializedRef = useRef(false);
@@ -253,92 +254,117 @@ const MlGPXViewer = (props) => {
   const manualUpload = () => {
     fileupload.current.click();
   };
-  return <>
-    <IconButton
-      onClick={manualUpload}
-      style={{
-        position: "absolute",
-        right: "5px",
-        bottom: "75px",
-        backgroundColor: "rgba(255,255,255,1)",
-
-        zIndex: 1000,
-      }}
-      size="large">
-      <input
-        ref={fileupload}
-        onChange={fileUploadOnChange}
-        type="file"
-        id="input"
-        multiple
-        style={{ display: "none" }}
-      ></input>
-      <FileCopy />
-    </IconButton>
-    <IconButton
-      onClick={toogleDrawer}
-      style={{
-        position: "absolute",
-        right: "5px",
-        bottom: "25px",
-        backgroundColor: "rgba(255,255,255,1)",
-
-        zIndex: 1000,
-      }}
-      size="large">
-      <InfoIcon />
-    </IconButton>
-    <Drawer variant="persistent" anchor="left" open={open}>
-      <Typography
-        variant="h6"
+  return (
+    <>
+      <IconButton
+        onClick={manualUpload}
         style={{
-          textAlign: "center",
-          padding: "1em",
-        }}
-        noWrap
-      >
-        Informationen zur Route
-      </Typography>
-      <Divider />
-      <List>
-        {metaData.map((item) => (
-          <ListItem key={`item--${item.id}`}>
-            <ListItemText primary={item.value} />
-          </ListItem>
-        ))}
-      </List>
-    </Drawer>
-    <div
-      onDrop={dropHandler}
-      ref={dropZone}
-      style={{
-        position: "absolute",
-        left: "0",
-        top: "0",
-        backgroundColor: "rgba(255,255,255,0.5)",
-        width: "100%",
-        height: "100%",
-        zIndex: zIndex,
-      }}
-    >
-      <Typography
-        variant="h6"
-        style={{
-          top: "50%",
           position: "absolute",
-          left: "50%",
-          msTransform: "translate(-50%, -50%)",
-          transform: " translate(-50%, -50%)",
+          right: "5px",
+          bottom: "75px",
+          backgroundColor: "rgba(255,255,255,1)",
+
+          zIndex: 1000,
         }}
-        noWrap
+        size="large"
       >
-        Gpx-Datei ablegen
-      </Typography>
-    </div>
-  </>;
+        <input
+          ref={fileupload}
+          onChange={fileUploadOnChange}
+          type="file"
+          id="input"
+          multiple
+          style={{ display: "none" }}
+        ></input>
+        <FileCopy />
+      </IconButton>
+      <IconButton
+        onClick={toogleDrawer}
+        style={{
+          position: "absolute",
+          right: "5px",
+          bottom: "25px",
+          backgroundColor: "rgba(255,255,255,1)",
+
+          zIndex: 1000,
+        }}
+        size="large"
+      >
+        <InfoIcon />
+      </IconButton>
+      <Drawer variant="persistent" anchor="left" open={open}>
+        <Typography
+          variant="h6"
+          style={{
+            textAlign: "center",
+            padding: "1em",
+          }}
+          noWrap
+        >
+          Informationen zur Route
+        </Typography>
+        <Divider />
+        <List>
+          {metaData.map((item) => (
+            <ListItem key={`item--${item.id}`}>
+              <ListItemText primary={item.value} />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+      <div
+        onDrop={dropHandler}
+        ref={dropZone}
+        style={{
+          position: "absolute",
+          left: "0",
+          top: "0",
+          backgroundColor: "rgba(255,255,255,0.5)",
+          width: "100%",
+          height: "100%",
+          zIndex: zIndex,
+        }}
+      >
+        <Typography
+          variant="h6"
+          style={{
+            top: "50%",
+            position: "absolute",
+            left: "50%",
+            msTransform: "translate(-50%, -50%)",
+            transform: " translate(-50%, -50%)",
+          }}
+          noWrap
+        >
+          Gpx-Datei ablegen
+        </Typography>
+      </div>
+    </>
+  );
 };
 
 MlGPXViewer.defaultProps = {
   visible: true,
 };
+
+MlGPXViewer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+  /**
+   * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+   */
+  idPrefix: PropTypes.string,
+  /**
+   * Sets the layers layout-property "visibility" to "none" if false or "visible" if true
+   */
+  visible: PropTypes.bool,
+  /**
+   * The layerId of an existing layer this layer should be rendered visually beneath
+   * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+   */
+  insertBeforeLayer: PropTypes.string,
+};
+
 export default MlGPXViewer;

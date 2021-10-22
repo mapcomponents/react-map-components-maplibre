@@ -103,7 +103,6 @@ const MlNavigationTools = (props) => {
   };
 
   const getLocationSuccess = (location) => {
-    console.log(location);
     mapRef.current.setCenter([location.coords.longitude, location.coords.latitude]);
   };
 

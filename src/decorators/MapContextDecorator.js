@@ -16,6 +16,9 @@ const decorators = [
 
           <Story />
 
+          {/*[...Array(70).keys()].map((id) => (
+            <MlUseMapDebugger mapId="map_1" key={"mapDebugger_" + id} />
+          ))*/}
           <MlUseMapDebugger mapId="map_1" />
           <MapLibreMap
             options={{
