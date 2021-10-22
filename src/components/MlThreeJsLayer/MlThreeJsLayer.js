@@ -206,11 +206,11 @@ MlThreeJsLayer.propTypes = {
    */
   mapId: PropTypes.string,
   /**
-   * TODO: Description of init
+   * function that gets called when initialized
    */
-  init: PropTypes.object,
+  init: PropTypes.func,
   /**
-   * TODO: Description of onDone
+   * function that gets called when models are loaded
    */
   onDone: PropTypes.func,
 }

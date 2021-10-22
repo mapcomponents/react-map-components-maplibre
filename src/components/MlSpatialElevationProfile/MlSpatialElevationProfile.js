@@ -220,9 +220,9 @@ MlSpatialElevationProfile.propTypes = {
    */
   idPrefix: PropTypes.string,
   /**
-   * TODO: Description of elevationFactor
+   * Number describes the factor of the height of the elevation
    */
-  elevationFactor: PropTypes.object,
+  elevationFactor: PropTypes.number,
   /**
    * The layerId of an existing layer this layer should be rendered visually beneath
    * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property

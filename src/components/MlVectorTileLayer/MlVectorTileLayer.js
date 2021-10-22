@@ -74,7 +74,6 @@ const MlVectorTileLayer = (props) => {
 
   useEffect(() => {
     if (!mapRef.current) return;
-    console.log(props)
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     for (var key in props.layers) {
@@ -125,15 +124,15 @@ MlVectorTileLayer.propTypes = {
    */
   mapId: PropTypes.string,
   /**
-   * TODO: Description of sourceOptions
+   * Options object that will be used as first parameter on the MapLibreGl.addSource call see MapLibre source options documentation.
    */
   sourceOptions: PropTypes.object,
   /**
-   * TODO: Description of layers
+   * Object that hold layers
    */
   layers: PropTypes.object,
   /**
-   * TODO: Description of url
+   * String of the URL of a wms layer
    */
   url: PropTypes.string,
 }

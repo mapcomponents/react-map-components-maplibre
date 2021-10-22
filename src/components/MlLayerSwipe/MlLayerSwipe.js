@@ -5,12 +5,11 @@ import { MapContext } from "react-map-components-core";
 import PropTypes from "prop-types";
 
 /**
- * MlLayerSwipe returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *  MlLayerSwipe returns a Button that will add a standard OSM tile layer to the maplibre-gl instance, that you can move like a curtain.
  *
  * @component
  */
 const MlLayerSwipe = (props) => {
-  console.log(props)
   const mapContext = useContext(MapContext);
   const initializedRef = useRef(false);
 

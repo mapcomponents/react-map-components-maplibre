@@ -99,11 +99,12 @@ MlOsmLayer.propTypes = {
    */
   idPrefix: PropTypes.string,
   /**
-   * TODO: Description of sourceOptions
+   * Options object that will be used as first parameter on the MapLibreGl.addSource call see MapLibre source options documentation.
    */
   sourceOptions: PropTypes.object,
   /**
-   * TODO: Description of layerOptions
+   * Options object that will be used as first parameter on the MapLibreGl.addLayer call see MapLibre layer options documentation.
+   *
    */
   layerOptions: PropTypes.object,
   /**
