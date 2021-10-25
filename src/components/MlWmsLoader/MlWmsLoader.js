@@ -15,6 +15,19 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 
+var originShift = (2 * Math.PI * 6378137) / 2.0;
+const lngLatToMeters = function (lnglat, validate, accuracy = { enable: true, decimal: 1 }) {
+  var lng = lnglat.lng;
+  var lat = lnglat.lat;
+  var x = (lng * originShift) / 180.0;
+  var y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360.0)) / (Math.PI / 180.0);
+  y = (y * originShift) / 180.0;
+  if (accuracy.enable) {
+    x = Number(x.toFixed(accuracy.decimal));
+    y = Number(y.toFixed(accuracy.decimal));
+  }
+  return [x, y];
+};
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
@@ -100,8 +113,11 @@ const MlWmsLoader = (props) => {
 
   const getFeatureInfo = useCallback(
     (ev) => {
+      console.log("get feature info");
       let _bounds = mapRef.current.getBounds();
-      let bbox = [_bounds._sw.lng, _bounds._sw.lat, _bounds._ne.lng, _bounds._ne.lat];
+      let _sw = lngLatToMeters(_bounds._sw);
+      let _ne = lngLatToMeters(_bounds._ne);
+      let bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
       let _getFeatureInfoUrlParams = {
         REQUEST: "GetFeatureInfo",
 
@@ -112,16 +128,21 @@ const MlWmsLoader = (props) => {
             ? "text/html"
             : "text/plain",
         FEATURE_COUNT: "10",
-        QUERY_LAYERS: layers
-          .map((layer, idx) => (layer.visible ? idx + 1 : undefined))
+        LAYERS: layers
+          .map((layer, idx) => (layer.visible && layer.queryable ? layer.Name : undefined))
           .filter((n) => n),
-        LAYERS: layers.map((layer, idx) => (layer.visible ? idx + 1 : undefined)).filter((n) => n),
+        QUERY_LAYERS: layers
+          .map((layer, idx) => (layer.visible && layer.queryable ? layer.Name : undefined))
+          .filter((n) => n),
         WIDTH: mapRef.current._container.clientWidth,
         HEIGHT: mapRef.current._container.clientHeight,
         srs: "EPSG:3857",
-        version: "1.1.1",
-        x: ev.point.x,
-        y: ev.point.y,
+        CRS: "EPSG:3857",
+        version: "1.3.0",
+        X: ev.point.x,
+        Y: ev.point.y,
+        I: ev.point.x,
+        J: ev.point.y,
         buffer: "50",
       };
 
@@ -156,7 +177,12 @@ const MlWmsLoader = (props) => {
   useEffect(() => {
     if (!mapRef.current) return;
 
-    mapRef.current.on("click", getFeatureInfo, componentId.current);
+    const _getFeatureInfo = getFeatureInfo;
+
+    mapRef.current.on("click", _getFeatureInfo, componentId.current);
+    return () => {
+      mapRef.current.off("click", _getFeatureInfo);
+    };
   }, [getFeatureInfoUrl]);
 
   const clearState = () => {
