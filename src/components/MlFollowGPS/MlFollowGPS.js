@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useContext, useState } from "react";
+import React, {useRef, useEffect, useContext, useState} from "react";
 import PropTypes from "prop-types";
 
-import { MapContext } from "react-map-components-core";
-import { v4 as uuidv4 } from "uuid";
+import {MapContext} from "react-map-components-core";
+import {v4 as uuidv4} from "uuid";
 import Button from "@mui/material/Button";
 import RoomIcon from "@mui/icons-material/Room";
 
@@ -19,7 +19,7 @@ const MlFollowGPS = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const [isFollowed, setIsFollowed] = useState(false);
-  const [watchId, setWatchId] = useState(undefined);
+  const watchIdRef = useRef(undefined);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
 
   const initializedRef = useRef(false);
@@ -40,7 +40,11 @@ const MlFollowGPS = (props) => {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
       }
-      initializedRef.current = false;
+      if (watchIdRef.current) {
+        initializedRef.current = false;
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = undefined
+      }
     };
   }, []);
 
@@ -67,19 +71,32 @@ const MlFollowGPS = (props) => {
 
   return (
     <Button
-      sx={{ zIndex: 1002, ...props.style }}
+      sx={{zIndex: 1002, ...props.style}}
       disabled={locationAccessDenied}
       onClick={() => {
         if (isFollowed) {
-          navigator.geolocation.clearWatch(watchId);
+          navigator.geolocation.clearWatch(watchIdRef.current);
         } else {
-          setWatchId(navigator.geolocation.watchPosition(getLocationSuccess, getLocationError));
+          watchIdRef.current = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
         }
         setIsFollowed(!isFollowed);
       }}
     >
       {" "}
-      <RoomIcon sx={{ color: isFollowed ? "#6666ff" : "#aaaaaa" }} />{" "}
+      <RoomIcon sx={{
+        color: isFollowed ? "#bbb" : "#666",
+        minWidth: "30px",
+        minHeight: "30px",
+        width: "30px",
+        height: "30px",
+        backgroundColor: "#414141",
+        borderRadius: "23%",
+        margin: 0.15,
+        ":hover": {
+          backgroundColor: "#515151",
+          color: "#ececec",
+        },
+      }}/>{" "}
     </Button>
   );
 };
