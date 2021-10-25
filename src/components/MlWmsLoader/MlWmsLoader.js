@@ -5,6 +5,7 @@ import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
+import MlMarker from "../MlMarker/MlMarker";
 import MlLayer from "../MlLayer/MlLayer";
 import WMSCapabilities from "wms-capabilities";
 
@@ -48,6 +49,8 @@ const MlWmsLoader = (props) => {
   const [wmsUrl, setWmsUrl] = useState("");
   const [getFeatureInfoUrl, setGetFeatureInfoUrl] = useState(undefined);
   const [error, setError] = useState(undefined);
+
+  const [featureInfoLngLat, setFeatureInfoLngLat] = useState(undefined);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -168,7 +171,11 @@ const MlWmsLoader = (props) => {
           }
           return res.text();
         })
-        .then((text) => console.log(text))
+        .then((text) => {
+          console.log(ev);
+          console.log(ev.lngLat);
+          setFeatureInfoLngLat(ev.lngLat);
+        })
         .catch((error) => console.log(error));
     },
     [capabilities, getFeatureInfoUrl]
@@ -181,7 +188,7 @@ const MlWmsLoader = (props) => {
 
     mapRef.current.on("click", _getFeatureInfo, componentId.current);
     return () => {
-      mapRef.current.off("click", _getFeatureInfo);
+      mapRef.current?.off?.("click", _getFeatureInfo);
     };
   }, [getFeatureInfoUrl]);
 
@@ -296,6 +303,8 @@ const MlWmsLoader = (props) => {
       <p key="description" style={{ fontSize: ".7em" }}>
         {capabilities?.Capability?.Layer?.Abstract}
       </p>
+
+      {featureInfoLngLat && <MlMarker {...featureInfoLngLat} />}
     </>
   );
 };
@@ -304,7 +313,7 @@ MlWmsLoader.defaultProps = {
   url: "",
   urlParameters: {
     service: "WMS",
-    version: "1.1.3",
+    version: "1.3.0",
     request: "getCapabilities",
   },
   wmsUrlParameters: {
