@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import Paper from "@mui/material/Paper";
+import useMapState from "../../hooks/useMapState";
 
 import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
@@ -20,10 +21,15 @@ import { v4 as uuidv4 } from "uuid";
 const MlMarker = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
+  const mapState = useMapState({ mapId: props.mapId });
 
+  const iframe = useRef(undefined);
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlMarker-") + uuidv4());
+  const [iframeDimensions, setIframeDimensions] = useState({ width: "400px", height: "500px" });
+
+  const [markerPixelPos, setMarkerPixelPos] = useState(undefined);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -51,6 +57,34 @@ const MlMarker = (props) => {
     mapRef.current = mapContext.getMap(props.mapId);
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
+  useEffect(() => {
+    if (!mapRef.current?.project) return;
+
+    const _pixelPos = mapRef.current.project([props.lng, props.lat]);
+
+    setMarkerPixelPos(_pixelPos);
+  }, [props.lng, props.lat, mapState.center]);
+
+  useEffect(() => {
+    if (mapRef.current && iframe.current?.contentWindow?.document?.body?.scrollHeight) {
+      setTimeout(() => {
+        let mapWidth = mapRef.current._container.clientWidth;
+        let mapHeight = mapRef.current._container.clientHeight;
+
+        const _pixelPos = mapRef.current.project([props.lng, props.lat]);
+        let pixelToBottom = mapHeight - _pixelPos.y;
+        let iframeHeight = iframe.current?.contentWindow?.document?.body?.scrollHeight;
+        let iframeWidth = iframe.current?.contentWindow?.document?.body?.scrollWidth;
+        console.log(pixelToBottom);
+
+        setIframeDimensions({
+          width: iframeWidth,
+          height: pixelToBottom < iframeHeight ? pixelToBottom : iframeHeight,
+        });
+      }, 100);
+    }
+  }, [props.lng, props.lat, props.content]);
+
   return (
     <>
       <MlGeoJsonLayer
@@ -67,16 +101,32 @@ const MlMarker = (props) => {
           "circle-color": "rgba(40,200,20,0.5)",
         }}
         type="circle"
+        mapId={props.mapId}
       ></MlGeoJsonLayer>
-      <Paper
-        sx={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-        }}
-      >
-        blub
-      </Paper>
+      {markerPixelPos && (
+        <Paper
+          sx={{
+            opacity: 0.7,
+            position: "fixed",
+            display: "flex",
+            left: markerPixelPos.x,
+            top: markerPixelPos.y,
+            width: iframeDimensions.width,
+            height: iframeDimensions.height,
+            "&:hover": {
+              opacity: 1,
+            },
+          }}
+        >
+          <iframe
+            style={{ width: "100%" }}
+            srcDoc={props.content}
+            ref={iframe}
+            sandbox="allow-same-origin"
+            frameborder="0"
+          ></iframe>
+        </Paper>
+      )}
     </>
   );
 };

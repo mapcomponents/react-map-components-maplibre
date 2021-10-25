@@ -51,6 +51,7 @@ const MlWmsLoader = (props) => {
   const [error, setError] = useState(undefined);
 
   const [featureInfoLngLat, setFeatureInfoLngLat] = useState(undefined);
+  const [featureInfoContent, setFeatureInfoContent] = useState(undefined);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -116,6 +117,8 @@ const MlWmsLoader = (props) => {
 
   const getFeatureInfo = useCallback(
     (ev) => {
+      setFeatureInfoLngLat(undefined);
+      setFeatureInfoContent(undefined);
       console.log("get feature info");
       let _bounds = mapRef.current.getBounds();
       let _sw = lngLatToMeters(_bounds._sw);
@@ -175,6 +178,7 @@ const MlWmsLoader = (props) => {
           console.log(ev);
           console.log(ev.lngLat);
           setFeatureInfoLngLat(ev.lngLat);
+          setFeatureInfoContent(text);
         })
         .catch((error) => console.log(error));
     },
@@ -304,7 +308,7 @@ const MlWmsLoader = (props) => {
         {capabilities?.Capability?.Layer?.Abstract}
       </p>
 
-      {featureInfoLngLat && <MlMarker {...featureInfoLngLat} />}
+      {featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
     </>
   );
 };
