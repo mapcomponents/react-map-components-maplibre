@@ -15,6 +15,14 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 
+/**
+ * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
+ * offered by the WMS.
+ *
+ * TODO: EaseTo the extend offered by the WMS in a zoom level that is supported
+ *
+ * @component
+ */
 const MlWmsLoader = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
@@ -24,6 +32,7 @@ const MlWmsLoader = (props) => {
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4());
   const [capabilities, setCapabilities] = useState(undefined);
   const [layers, setLayers] = useState([]);
+  const [wmsUrl, setWmsUrl] = useState("");
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -43,10 +52,23 @@ const MlWmsLoader = (props) => {
   }, []);
 
   useEffect(() => {
+    // extract URL parameters from the given URL
+    let _propsUrlParams;
+    let _wmsUrl = props.url;
+    if (props.url.indexOf("?")) {
+      _propsUrlParams = props.url.split("?");
+      _wmsUrl = _propsUrlParams[0];
+    }
+    setWmsUrl(_wmsUrl);
+    let _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
+
     let urlParamsObj = {
+      ...Object.fromEntries(_urlParamsFromUrl),
       ...props.urlParameters,
     };
+    // create URLSearchParams object to assemble the URL Parameters
     let urlParams = new URLSearchParams(urlParamsObj);
+
     let urlParamsStr =
       decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
 
@@ -61,6 +83,9 @@ const MlWmsLoader = (props) => {
         setCapabilities(new WMSCapabilities(data).toJSON());
       })
       .catch((msg) => {
+        setCapabilities(undefined);
+        setLayers([]);
+        setWmsUrl("");
         console.log("error");
         console.log(msg);
       });
@@ -111,35 +136,36 @@ const MlWmsLoader = (props) => {
         />
       ))}
       <List dense>
-        {layers?.map?.((layer, idx) => {
-          return (
-            <ListItem
-              key={layer.Name + idx}
-              secondaryAction={
-                <IconButton
-                  edge="end"
-                  aria-label="toggle visibility"
-                  onClick={() => {
-                    let _layers = [...layers];
-                    _layers[idx].visible = !_layers[idx].visible;
-                    setLayers([..._layers]);
-                  }}
-                >
-                  {layers[idx].visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                </IconButton>
-              }
-            >
-              <ListItemText primary={layer.Title} secondary={layer.Abstract} />
-              <MlWmsLayer
+        {wmsUrl &&
+          layers?.map?.((layer, idx) => {
+            return (
+              <ListItem
                 key={layer.Name + idx}
-                url={props.url}
-                urlParameters={{ layers: layer.Name }}
-                visible={layers[idx].visible}
-                insertBeforeLayer={"Order-" + componentId.current + "-" + idx}
-              />
-            </ListItem>
-          );
-        })}
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="toggle visibility"
+                    onClick={() => {
+                      let _layers = [...layers];
+                      _layers[idx].visible = !_layers[idx].visible;
+                      setLayers([..._layers]);
+                    }}
+                  >
+                    {layers[idx].visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                }
+              >
+                <ListItemText primary={layer?.Title} secondary={layer?.Abstract} />
+                <MlWmsLayer
+                  key={layer?.Name + idx}
+                  url={wmsUrl}
+                  urlParameters={{ ...props.wmsUrlParameters, layers: layer?.Name }}
+                  visible={layers[idx].visible}
+                  insertBeforeLayer={"Order-" + componentId.current + "-" + idx}
+                />
+              </ListItem>
+            );
+          })}
       </List>
       <p style={{ fontSize: ".7em" }}>{capabilities?.Capability?.Layer?.Abstract}</p>
     </>
@@ -152,6 +178,9 @@ MlWmsLoader.defaultProps = {
     version: "1.1.3",
     request: "getCapabilities",
   },
+  wmsUrlParameters: {
+    TRANSPARENT: "TRUE",
+  },
 };
 
 MlWmsLoader.propTypes = {
@@ -163,7 +192,14 @@ MlWmsLoader.propTypes = {
    * Id of the target MapLibre instance in mapContext
    */
   mapId: PropTypes.string,
+  /**
+   * URL parameters that will be used in the getCapabilities request
+   */
   urlParameters: PropTypes.object,
+  /**
+   * URL parameters that will be added when requesting tiles
+   */
+  layerUrlParameters: PropTypes.object,
 };
 
 export default MlWmsLoader;
