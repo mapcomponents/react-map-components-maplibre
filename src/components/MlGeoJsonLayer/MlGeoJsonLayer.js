@@ -8,6 +8,10 @@ import { _transitionToGeojson } from "./util/transitionFunctions";
 
 const msPerStep = 50;
 
+/**
+ *
+ * @componnent
+ */
 const MlGeoJsonLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);

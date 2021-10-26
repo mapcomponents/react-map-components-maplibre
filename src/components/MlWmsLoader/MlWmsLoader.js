@@ -1,10 +1,11 @@
-import React, { useRef, useEffect, useContext, useState } from "react";
+import React, { useRef, useEffect, useContext, useCallback, useState } from "react";
 import PropTypes from "prop-types";
 
 import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
+import MlMarker from "../MlMarker/MlMarker";
 import MlLayer from "../MlLayer/MlLayer";
 import WMSCapabilities from "wms-capabilities";
 
@@ -15,6 +16,19 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 
+var originShift = (2 * Math.PI * 6378137) / 2.0;
+const lngLatToMeters = function (lnglat, validate, accuracy = { enable: true, decimal: 1 }) {
+  var lng = lnglat.lng;
+  var lat = lnglat.lat;
+  var x = (lng * originShift) / 180.0;
+  var y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360.0)) / (Math.PI / 180.0);
+  y = (y * originShift) / 180.0;
+  if (accuracy.enable) {
+    x = Number(x.toFixed(accuracy.decimal));
+    y = Number(y.toFixed(accuracy.decimal));
+  }
+  return [x, y];
+};
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
@@ -33,6 +47,11 @@ const MlWmsLoader = (props) => {
   const [capabilities, setCapabilities] = useState(undefined);
   const [layers, setLayers] = useState([]);
   const [wmsUrl, setWmsUrl] = useState("");
+  const [getFeatureInfoUrl, setGetFeatureInfoUrl] = useState(undefined);
+  const [error, setError] = useState(undefined);
+
+  const [featureInfoLngLat, setFeatureInfoLngLat] = useState(undefined);
+  const [featureInfoContent, setFeatureInfoContent] = useState(undefined);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -48,14 +67,19 @@ const MlWmsLoader = (props) => {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
       }
+      initializedRef.current = false;
     };
   }, []);
 
   useEffect(() => {
     // extract URL parameters from the given URL
+    clearState();
+    setError(undefined);
+    if (!props.url) return;
+
     let _propsUrlParams;
     let _wmsUrl = props.url;
-    if (props.url.indexOf("?")) {
+    if (props.url.indexOf("?") !== -1) {
       _propsUrlParams = props.url.split("?");
       _wmsUrl = _propsUrlParams[0];
     }
@@ -75,24 +99,112 @@ const MlWmsLoader = (props) => {
     fetch(props.url + "?" + urlParamsStr)
       .then((res) => {
         if (!res.ok) {
-          throw Error(res.statusText);
+          throw Error(res.statusText + " (" + res.status + " - " + res.type + ")");
+        } else {
+          return res.text();
         }
-        return res.text();
       })
       .then((data) => {
         setCapabilities(new WMSCapabilities(data).toJSON());
       })
-      .catch((msg) => {
-        setCapabilities(undefined);
-        setLayers([]);
-        setWmsUrl("");
-        console.log("error");
-        console.log(msg);
+      .catch((error) => {
+        //reset local state
+        clearState();
+        console.log(error);
+        setError(error.message);
       });
   }, [props.url, props.urlParameters]);
 
+  const getFeatureInfo = useCallback(
+    (ev) => {
+      setFeatureInfoLngLat(undefined);
+      setFeatureInfoContent(undefined);
+      console.log("get feature info");
+      let _bounds = mapRef.current.getBounds();
+      let _sw = lngLatToMeters(_bounds._sw);
+      let _ne = lngLatToMeters(_bounds._ne);
+      let bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
+      let _getFeatureInfoUrlParams = {
+        REQUEST: "GetFeatureInfo",
+
+        BBOX: bbox.join(","),
+        SERVICE: "WMS",
+        INFO_FORMAT:
+          capabilities?.Capability?.Request?.GetFeatureInfo.Format.indexOf("text/html") !== -1
+            ? "text/html"
+            : "text/plain",
+        FEATURE_COUNT: "10",
+        LAYERS: layers
+          .map((layer, idx) => (layer.visible && layer.queryable ? layer.Name : undefined))
+          .filter((n) => n),
+        QUERY_LAYERS: layers
+          .map((layer, idx) => (layer.visible && layer.queryable ? layer.Name : undefined))
+          .filter((n) => n),
+        WIDTH: mapRef.current._container.clientWidth,
+        HEIGHT: mapRef.current._container.clientHeight,
+        srs: "EPSG:3857",
+        CRS: "EPSG:3857",
+        version: "1.3.0",
+        X: ev.point.x,
+        Y: ev.point.y,
+        I: ev.point.x,
+        J: ev.point.y,
+        buffer: "50",
+      };
+
+      let _gfiUrl = getFeatureInfoUrl;
+      let _gfiUrlParts;
+      if (_gfiUrl?.indexOf?.("?") !== -1) {
+        _gfiUrlParts = props.url.split("?");
+        _gfiUrl = _gfiUrlParts[0];
+      }
+      let _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
+
+      let urlParamsObj = {
+        ...Object.fromEntries(_urlParamsFromUrl),
+        ..._getFeatureInfoUrlParams,
+      };
+      // create URLSearchParams object to assemble the URL Parameters
+      let urlParams = new URLSearchParams(urlParamsObj);
+
+      fetch(props.url + "?" + urlParams.toString())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("FeatureInfo could not be fetched");
+          }
+          return res.text();
+        })
+        .then((text) => {
+          console.log(ev);
+          console.log(ev.lngLat);
+          setFeatureInfoLngLat(ev.lngLat);
+          setFeatureInfoContent(text);
+        })
+        .catch((error) => console.log(error));
+    },
+    [capabilities, getFeatureInfoUrl]
+  );
+
   useEffect(() => {
-    if (!capabilities) return;
+    if (!mapRef.current) return;
+
+    const _getFeatureInfo = getFeatureInfo;
+
+    mapRef.current.on("click", _getFeatureInfo, componentId.current);
+    return () => {
+      mapRef.current?.off?.("click", _getFeatureInfo);
+    };
+  }, [getFeatureInfoUrl]);
+
+  const clearState = () => {
+    setGetFeatureInfoUrl(undefined);
+    setCapabilities(undefined);
+    setLayers([]);
+    setWmsUrl("");
+  };
+
+  useEffect(() => {
+    if (!capabilities?.Service) return;
 
     if (capabilities?.Capability?.Layer?.SRS?.indexOf?.("EPSG:3857") === -1) {
       console.log(
@@ -103,11 +215,33 @@ const MlWmsLoader = (props) => {
         "MlWmsLoader (" + capabilities.Service.Title + "): WGS 84/Pseudo-Mercator supported"
       );
 
+      let _LatLonBoundingBox;
       setLayers(
         capabilities?.Capability?.Layer?.Layer.map((layer, idx) => {
-          layer.visible = idx > 1;
+          if (idx === 0) {
+            _LatLonBoundingBox = layer.LatLonBoundingBox;
+            if (!_LatLonBoundingBox) {
+              _LatLonBoundingBox = layer.EX_GeographicBoundingBox;
+            }
+          }
+          layer.visible = capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true;
           return layer;
         })
+      );
+
+      // zoom to extent of first layer
+      console.log(_LatLonBoundingBox);
+      if (mapRef.current && _LatLonBoundingBox?.length > 3) {
+        console.log("fitBound called");
+        mapRef.current.fitBounds([
+          [_LatLonBoundingBox[0], _LatLonBoundingBox[1]],
+          [_LatLonBoundingBox[2], _LatLonBoundingBox[3]],
+        ]);
+      }
+
+      // set getFeatureInfo url
+      setGetFeatureInfoUrl(
+        capabilities.Capability?.Request?.GetFeatureInfo?.DCPType?.[0]?.HTTP?.Get?.OnlineResource
       );
     }
   }, [capabilities]);
@@ -122,7 +256,8 @@ const MlWmsLoader = (props) => {
 
   return (
     <>
-      <h3>{capabilities?.Service?.Title}</h3>
+      {error && <p>{error}</p>}
+      <h3 key="title">{capabilities?.Service?.Title}</h3>
       {capabilities?.Capability?.Layer?.Layer.map((layer, idx) => (
         <MlLayer
           layerId="Order-"
@@ -135,10 +270,10 @@ const MlWmsLoader = (props) => {
             : undefined)}
         />
       ))}
-      <List dense>
+      <List dense key="layers">
         {wmsUrl &&
           layers?.map?.((layer, idx) => {
-            return (
+            return layer?.Name ? (
               <ListItem
                 key={layer.Name + idx}
                 secondaryAction={
@@ -164,18 +299,25 @@ const MlWmsLoader = (props) => {
                   insertBeforeLayer={"Order-" + componentId.current + "-" + idx}
                 />
               </ListItem>
+            ) : (
+              <></>
             );
           })}
       </List>
-      <p style={{ fontSize: ".7em" }}>{capabilities?.Capability?.Layer?.Abstract}</p>
+      <p key="description" style={{ fontSize: ".7em" }}>
+        {capabilities?.Capability?.Layer?.Abstract}
+      </p>
+
+      {featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
     </>
   );
 };
 
 MlWmsLoader.defaultProps = {
+  url: "",
   urlParameters: {
     service: "WMS",
-    version: "1.1.3",
+    version: "1.3.0",
     request: "getCapabilities",
   },
   wmsUrlParameters: {

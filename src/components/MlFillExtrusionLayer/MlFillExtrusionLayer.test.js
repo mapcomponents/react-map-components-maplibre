@@ -1,5 +1,6 @@
 import { layerRemovalTest, sourceRemovalTest } from "../../util";
 
+import { uuid_regex } from "../../setupTests";
 import MlFillExtrusionLayer from "./MlFillExtrusionLayer";
 
 const testComponent = <MlFillExtrusionLayer />;
@@ -7,8 +8,8 @@ const testComponent = <MlFillExtrusionLayer />;
 let testParams = [
   "<MlFillExtrusionLayer />",
   testComponent,
-  /^.*\"building\-3d\".*$/,
-  "building-3d",
+  new RegExp('^.*"MlFillExtrusionLayer-' + uuid_regex + '".*$'),
+  "MlFillExtrusionLayer-{uuid}",
 ];
 
 layerRemovalTest(...testParams);

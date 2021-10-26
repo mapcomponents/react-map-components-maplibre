@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 import MlWmsLoader from "./MlWmsLoader";
 
+import TextField from "@mui/material/TextField";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 import Sidebar from "../../ui_components/Sidebar";
 
@@ -17,10 +18,18 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (props) => {
+  const [url, setUrl] = useState("");
+
   return (
     <>
-      <Sidebar sx={{ width: "500px" }} classes={{ paper: { paddingTop: "20px", opacity: "0.3" } }}>
-        <MlWmsLoader {...props} />
+      <Sidebar sx={{ width: "500px", wordBreak: "break-word" }}>
+        <TextField
+          label="WMS Url"
+          variant="standard"
+          value={url}
+          onChange={(ev) => setUrl(ev.target.value)}
+        />
+        <MlWmsLoader {...props} url={url} />
       </Sidebar>
     </>
   );

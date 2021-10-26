@@ -75,7 +75,6 @@ const MlVectorTileLayer = (props) => {
 
   useEffect(() => {
     if (!mapRef.current) return;
-    console.log(props);
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     for (var key in props.layers) {
