@@ -10,14 +10,13 @@ import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import { v4 as uuidv4 } from "uuid";
 
 import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
+import MlFollowGPS from "../MlFollowGPS/MlFollowGPS";
 
 const MlNavigationTools = (props) => {
   const mapContext = useContext(MapContext);
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + uuidv4());
 
   const [pitch, setPitch] = useState(0);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
@@ -76,7 +75,7 @@ const MlNavigationTools = (props) => {
     if (!mapRef.current) return;
 
     if (mapRef.current.transform._zoom + 0.5 <= mapRef.current.transform._maxZoom) {
-      mapRef.current.easeTo({zoom: (mapRef.current.transform._zoom + 0.5)});
+      mapRef.current.easeTo({ zoom: mapRef.current.transform._zoom + 0.5 });
     }
   };
 
@@ -84,7 +83,7 @@ const MlNavigationTools = (props) => {
     if (!mapRef.current) return;
 
     if (mapRef.current.transform._zoom - 0.5 >= mapRef.current.transform._minZoom) {
-      mapRef.current.easeTo({zoom: (mapRef.current.transform._zoom - 0.5)});
+      mapRef.current.easeTo({ zoom: mapRef.current.transform._zoom - 0.5 });
     }
   };
 
@@ -133,19 +132,13 @@ const MlNavigationTools = (props) => {
           boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
         }}
       />
-      <Button
-        sx={{ ...buttonStyle, fontSize: ".9em", fontWeight: 600 }}
-        onClick={adjustPitch}
-      >
+      <Button sx={{ ...buttonStyle, fontSize: ".9em", fontWeight: 600 }} onClick={adjustPitch}>
         {pitch ? "2D" : "3D"}
       </Button>
-      <Button
-        sx={buttonStyle}
-        onClick={moveToCurrentLocation}
-        disabled={locationAccessDenied}
-      >
+      <Button sx={buttonStyle} onClick={moveToCurrentLocation} disabled={locationAccessDenied}>
         <GpsFixedIcon sx={{ width: ".9em" }} />
       </Button>
+      <MlFollowGPS />
       <ButtonGroup
         orientation="vertical"
         sx={{
