@@ -50,6 +50,7 @@ const MlWmsLayer = (props) => {
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLayer-") + uuidv4());
   const mapRef = useRef(null);
   const initializedRef = useRef(false);
+  const layerId = useRef(props.layerId || componentId.current);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -90,7 +91,7 @@ const MlWmsLayer = (props) => {
       decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
 
     mapRef.current.addSource(
-      componentId.current,
+      layerId.current,
       {
         type: "raster",
         tiles: [_wmsUrl + "?" + urlParamsStr],
@@ -103,7 +104,7 @@ const MlWmsLayer = (props) => {
 
     mapRef.current.addLayer(
       {
-        id: componentId.current,
+        id: layerId.current,
         type: "raster",
         source: componentId.current,
         ...props.layerOptions,

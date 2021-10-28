@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useContext, useCallback } from "react";
+import PropTypes from "prop-types";
 
 import { v4 as uuidv4 } from "uuid";
 import * as turf from "@turf/turf";
@@ -9,6 +10,7 @@ import { _transitionToGeojson } from "./util/transitionFunctions";
 const msPerStep = 50;
 
 /**
+ * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
  *
  * @component
  */
@@ -25,6 +27,7 @@ const MlGeoJsonLayer = (props) => {
   const componentId = useRef(
     (props.layerId ? props.layerId : "MlGeoJsonLayer-") + (props.idSuffix || uuidv4())
   );
+  const layerId = useRef(props.layerId || componentId.current);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -117,7 +120,7 @@ const MlGeoJsonLayer = (props) => {
 
       mapRef.current.addLayer(
         {
-          id: componentId.current,
+          id: layerId.current,
           source: {
             type: "geojson",
             data: geojson,
@@ -137,7 +140,7 @@ const MlGeoJsonLayer = (props) => {
       }
 
       if (typeof props.onClick !== "undefined") {
-        mapRef.current.on("mouseup", componentId.current, props.onClick, componentId.current);
+        mapRef.current.on("click", componentId.current, props.onClick, componentId.current);
       }
 
       if (typeof props.onLeave !== "undefined") {
@@ -158,6 +161,62 @@ const MlGeoJsonLayer = (props) => {
   }, [mapContext.mapIds, mapContext, props, transitionToGeojson]);
 
   return <></>;
+};
+
+MlGeoJsonLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+  /**
+   * Type of the layer that will be added to the MapLibre instance.
+   * Possible values: "line", "circle", "fill"
+   */
+  type: PropTypes.string,
+  /**
+   * Paint object, that is passed to the addLayer call.
+   * Possible propsdepend on the layer type.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+   */
+  paint: PropTypes.object,
+  /**
+   * GeoJSON data that is supposed to be rendered by this component.
+   */
+  geojson: PropTypes.object,
+  /**
+   * Id of an existing layer in the mapLibre instance to help specify the layer order
+   * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+   */
+  insertBeforeLayer: PropTypes.string,
+  /**
+   * Id of the new layer and source that are added to the MapLibre instance
+   */
+  layerId: PropTypes.string,
+  /**
+   * Click event handler that is executed whenever a geometry rendered by this component is clicked.
+   */
+  onClick: PropTypes.func,
+  /**
+   * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
+   */
+  onHover: PropTypes.func,
+  /**
+   * Leave event handler that is executed whenever a geometry rendered by this component is
+   * left/unhovered.
+   */
+  onLeave: PropTypes.func,
+  /**
+   * Creates transition animation whenever the geojson prop changes.
+   * Only works with layer type "line" and LineString GeoJSON data.
+   */
+  transitionTime: PropTypes.func,
+  /**
+   * Id suffix string that is appended to the componentId.
+   * Probably removed soon.
+   */
+  idSuffix: PropTypes.string,
 };
 
 export default MlGeoJsonLayer;
