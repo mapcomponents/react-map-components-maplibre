@@ -72,9 +72,17 @@ const MlWmsLayer = (props) => {
 
     initializedRef.current = true;
 
+    let _propsUrlParams;
+    let _wmsUrl = props.url;
+    if (props.url.indexOf("?") !== -1) {
+      _propsUrlParams = props.url.split("?");
+      _wmsUrl = _propsUrlParams[0];
+    }
+    let _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
     // first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
     let urlParamsObj = {
       ...defaultProps.urlParameters,
+      ...Object.fromEntries(_urlParamsFromUrl),
       ...props.urlParameters,
     };
     let urlParams = new URLSearchParams(urlParamsObj);
@@ -85,7 +93,7 @@ const MlWmsLayer = (props) => {
       componentId.current,
       {
         type: "raster",
-        tiles: [props.url + "?" + urlParamsStr],
+        tiles: [_wmsUrl + "?" + urlParamsStr],
         tileSize: urlParamsObj.width,
         attribution: props.attribution,
         ...props.sourceOptions,

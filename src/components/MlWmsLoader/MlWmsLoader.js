@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
 import MlMarker from "../MlMarker/MlMarker";
 import MlLayer from "../MlLayer/MlLayer";
-import WMSCapabilities from "wms-capabilities";
+import useWms from "../../hooks/useWms";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -40,15 +40,15 @@ const lngLatToMeters = function (lnglat, validate, accuracy = { enable: true, de
 const MlWmsLoader = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
+  const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl } = useWms({
+    url: props.url,
+    urlParameters: props.urlParameters,
+  });
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4());
-  const [capabilities, setCapabilities] = useState(undefined);
   const [layers, setLayers] = useState([]);
-  const [wmsUrl, setWmsUrl] = useState("");
-  const [getFeatureInfoUrl, setGetFeatureInfoUrl] = useState(undefined);
-  const [error, setError] = useState(undefined);
 
   const [featureInfoLngLat, setFeatureInfoLngLat] = useState(undefined);
   const [featureInfoContent, setFeatureInfoContent] = useState(undefined);
@@ -72,48 +72,8 @@ const MlWmsLoader = (props) => {
   }, []);
 
   useEffect(() => {
-    // extract URL parameters from the given URL
-    clearState();
-    setError(undefined);
-    if (!props.url) return;
-
-    let _propsUrlParams;
-    let _wmsUrl = props.url;
-    if (props.url.indexOf("?") !== -1) {
-      _propsUrlParams = props.url.split("?");
-      _wmsUrl = _propsUrlParams[0];
-    }
-    setWmsUrl(_wmsUrl);
-    let _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
-
-    let urlParamsObj = {
-      ...Object.fromEntries(_urlParamsFromUrl),
-      ...props.urlParameters,
-    };
-    // create URLSearchParams object to assemble the URL Parameters
-    let urlParams = new URLSearchParams(urlParamsObj);
-
-    let urlParamsStr =
-      decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
-
-    fetch(props.url + "?" + urlParamsStr)
-      .then((res) => {
-        if (!res.ok) {
-          throw Error(res.statusText + " (" + res.status + " - " + res.type + ")");
-        } else {
-          return res.text();
-        }
-      })
-      .then((data) => {
-        setCapabilities(new WMSCapabilities(data).toJSON());
-      })
-      .catch((error) => {
-        //reset local state
-        clearState();
-        console.log(error);
-        setError(error.message);
-      });
-  }, [props.url, props.urlParameters]);
+    setUrl(props.url);
+  }, [props.url]);
 
   const getFeatureInfo = useCallback(
     (ev) => {
@@ -197,10 +157,7 @@ const MlWmsLoader = (props) => {
   }, [getFeatureInfoUrl]);
 
   const clearState = () => {
-    setGetFeatureInfoUrl(undefined);
-    setCapabilities(undefined);
     setLayers([]);
-    setWmsUrl("");
   };
 
   useEffect(() => {
@@ -238,11 +195,6 @@ const MlWmsLoader = (props) => {
           [_LatLonBoundingBox[2], _LatLonBoundingBox[3]],
         ]);
       }
-
-      // set getFeatureInfo url
-      setGetFeatureInfoUrl(
-        capabilities.Capability?.Request?.GetFeatureInfo?.DCPType?.[0]?.HTTP?.Get?.OnlineResource
-      );
     }
   }, [capabilities]);
 
@@ -316,9 +268,9 @@ const MlWmsLoader = (props) => {
 MlWmsLoader.defaultProps = {
   url: "",
   urlParameters: {
-    service: "WMS",
-    version: "1.3.0",
-    request: "getCapabilities",
+    SERVICE: "WMS",
+    VERSION: "1.3.0",
+    REQUEST: "getCapabilities",
   },
   wmsUrlParameters: {
     TRANSPARENT: "TRUE",
@@ -338,6 +290,10 @@ MlWmsLoader.propTypes = {
    * URL parameters that will be used in the getCapabilities request
    */
   urlParameters: PropTypes.object,
+  /**
+   * URL parameters that will be added when requesting WMS capabilities
+   */
+  wmsUrlParameters: PropTypes.object,
   /**
    * URL parameters that will be added when requesting tiles
    */
