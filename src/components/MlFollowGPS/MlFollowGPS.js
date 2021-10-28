@@ -113,5 +113,9 @@ MlFollowGPS.propTypes = {
    * Id of the target MapLibre instance in mapContext
    */
   mapId: PropTypes.string,
+  /**
+   * CSS style object that is applied to the button component
+   */
+  style: PropTypes.object,
 };
 export default MlFollowGPS;

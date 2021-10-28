@@ -10,7 +10,7 @@ const msPerStep = 50;
 
 /**
  *
- * @componnent
+ * @component
  */
 const MlGeoJsonLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -23,8 +23,7 @@ const MlGeoJsonLayer = (props) => {
   const transitionGeojsonDataRef = useRef([]);
   const transitionGeojsonCommonDataRef = useRef([]);
   const componentId = useRef(
-    (props.layerId ? props.layerId : "MlGeoJsonLayer-") +
-      (props.idSuffix || uuidv4())
+    (props.layerId ? props.layerId : "MlGeoJsonLayer-") + (props.idSuffix || uuidv4())
   );
 
   useEffect(() => {
@@ -45,9 +44,7 @@ const MlGeoJsonLayer = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.paint) {
-      mapContext
-        .getMap(props.mapId)
-        .setPaintProperty(componentId.current, key, props.paint[key]);
+      mapContext.getMap(props.mapId).setPaintProperty(componentId.current, key, props.paint[key]);
     }
   }, [props.paint, mapContext, props.mapId]);
 
@@ -70,8 +67,7 @@ const MlGeoJsonLayer = (props) => {
   );
 
   useEffect(() => {
-    if (!mapRef.current?.getSource?.(componentId.current) || !initializedRef.current)
-      return;
+    if (!mapRef.current?.getSource?.(componentId.current) || !initializedRef.current) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
@@ -137,30 +133,15 @@ const MlGeoJsonLayer = (props) => {
       );
 
       if (typeof props.onHover !== "undefined") {
-        mapRef.current.on(
-          "mousemove",
-          componentId.current,
-          props.onHover,
-          componentId.current
-        );
+        mapRef.current.on("mousemove", componentId.current, props.onHover, componentId.current);
       }
 
       if (typeof props.onClick !== "undefined") {
-        mapRef.current.on(
-          "mouseup",
-          componentId.current,
-          props.onClick,
-          componentId.current
-        );
+        mapRef.current.on("mouseup", componentId.current, props.onClick, componentId.current);
       }
 
       if (typeof props.onLeave !== "undefined") {
-        mapRef.current.on(
-          "mouseleave",
-          componentId.current,
-          props.onLeave,
-          componentId.current
-        );
+        mapRef.current.on("mouseleave", componentId.current, props.onLeave, componentId.current);
       }
 
       if (
