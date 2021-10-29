@@ -15,7 +15,17 @@ import useMapState from "../../hooks/useMapState";
  * @component
  */
 const MlUseMapDebugger = (props) => {
-  const map = useMapState(props.mapId);
+  const map = useMapState({
+    mapId: props.mapId,
+    watch: {
+      layers: true,
+      sources: false, // not yet provided
+      viewport: false,
+    },
+    filter:{
+
+    }
+  });
   const [debuggerOpen, setDebuggerOpen] = useState(false);
   //const [maxHeight /*setMaxHeight*/] = useState("50%");
 
@@ -29,6 +39,7 @@ const MlUseMapDebugger = (props) => {
       >
         <CodeIcon fontSize="inherit" />
       </IconButton>
+      {debuggerOpen &&
       <Drawer
         anchor="top"
         open={debuggerOpen}
@@ -44,6 +55,7 @@ const MlUseMapDebugger = (props) => {
       >
         <pre>{JSON.stringify(map, null, " ")}</pre>
       </Drawer>
+      }
     </>
   );
 };
