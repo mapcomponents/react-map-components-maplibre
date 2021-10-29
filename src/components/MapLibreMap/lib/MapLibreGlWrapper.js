@@ -1,13 +1,195 @@
 import maplibregl from "maplibre-gl/dist/maplibre-gl";
 
+/**
+ * Creates a MapLibre-gl-js instance and offers all of the native MapLibre functions and properties as well as additional functionality such as element registration & cleanup and more events.
+ *
+ * @param {object} props
+ */
 const MapLibreGlWrapper = function (props) {
+  // closure variable to safely point to the object context of the current MapLibreGlWrapper instance
   let self = this;
 
   // element registration and cleanup on a component level is experimental
   this.registeredElements = {};
+
+  // array of base layer ids, all layers that have been added by the style passed to the MapLibreGl coonstructor
   this.baseLayers = [];
+
+  // layer id of the first symbol layer
   this.firstSymbolLayer = undefined;
 
+  // event handlers registered in MapLibreGlWrapper
+  this.eventHandlers = {
+    layerchange: [],
+    viewportchange: [],
+  };
+
+  // functions and properties provided by the wrapper
+  // Add new functions and properties introduced by the wrapper to this object to prevent collisions due to future MapLibre API changes
+  this.wrapper = {
+    /**
+     * Subscribe the given event handler to an event
+     *
+     * @param {string} eventName
+     * @param {function} handler
+     * @returns
+     */
+    on: (eventName, handler, componentId) => {
+      if (!self.eventHandlers[eventName]) return;
+
+      self.eventHandlers[eventName].push(handler);
+
+      let _arguments = [eventName, handler];
+      if (componentId && typeof componentId === "string") {
+        self.initRegisteredElements(componentId);
+        self.registeredElements[componentId].wrapperEvents.push(_arguments);
+      }
+    },
+    /**
+     * Unsubscribes the given event handler from an event
+     *
+     * @param {string} eventName
+     * @param {function} handler
+     * @returns
+     */
+    off: (eventName, handler) => {
+      if (!self.eventHandlers[eventName]) return;
+
+      self.eventHandlers[eventName] = self.eventHandlers[eventName].filter((item) => {
+        if (!Object.is(item, handler)) {
+          return item;
+        }
+      });
+    },
+    /**
+     * Calls all event handlers that have been subscribed to the given eventName
+     *
+     * @param {string} eventName
+     * @param {object} context
+     * @returns
+     */
+    fire: (eventName, context) => {
+      if (!self.eventHandlers[eventName]) return;
+
+      var scope = context || window;
+      let event = new Event(eventName);
+      event.data = self;
+
+      self.eventHandlers[eventName].forEach(function (item) {
+        item.call(scope, event);
+      });
+    },
+    /**
+     * Array containing an object for each layer in the MapLibre instance providing information on visibility, loading state, order, paint & layout properties
+     */
+    layerState: [],
+    /**
+     * The same data as layerState in JSON string form for quick deep comparisons
+     */
+    layerStateString: "[]",
+    /**
+     * Previous Version of layerStateString
+     */
+    oldLayerStateString: "[]",
+    /**
+     * Builds the layer info object for a given layer id
+     *
+     * @param {string} layer
+     * @returns object
+     */
+    buildLayerObject: (layer) => {
+      if (self.baseLayers.indexOf(layer.id) === -1) {
+        let paint = {};
+        let values = layer.paint?._values;
+        Object.keys(values || {}).map((propName) => {
+          paint[propName] =
+            typeof values[propName].value !== "undefined"
+              ? values[propName].value.value
+              : values[propName];
+        });
+        let layout = {};
+        values = layer.layout?._values;
+        Object.keys(values || {}).map((propName) => {
+          layout[propName] =
+            typeof values[propName].value !== "undefined"
+              ? values[propName].value.value
+              : values[propName];
+        });
+        return {
+          id: layer.id,
+          type: layer.type,
+          visible: layer.visibility === "none" ? false : true,
+          baseLayer: self.baseLayers.indexOf(layer.id) !== -1,
+          paint,
+          layout,
+          //filter: layers[layerId].filter,
+          //layout: layers[layerId].layout,
+          //maxzoom: layers[layerId].maxzoom,
+          //metadata: layers[layerId].metadata,
+          //minzoom: layers[layerId].minzoom,
+          //paint: layers[layerId].paint.get(),
+          //source: layers[layerId].source,
+          //sourceLayer: layers[layerId].sourceLayer,
+        };
+      }
+    },
+    /**
+     * Returns an array of layer state info objects for all layers in the MapLibre instance
+     *
+     * @returns array
+     */
+    buildLayerObjects: () => {
+      return self.style._order
+        .map((layerId) => {
+          return self.wrapper.buildLayerObject(self.map.style._layers[layerId]);
+        })
+        .filter((n) => n);
+    },
+    /**
+     * Updates layer state info objects
+     */
+    refreshLayerState: () => {
+      self.wrapper.layerState = self.wrapper.buildLayerObjects();
+      self.wrapper.layerStateString = JSON.stringify(self.wrapper.layerState);
+    },
+    /**
+     * Object containing information on the current viewport state
+     */
+    viewportState: {},
+    /**
+     * The same data as viewportState in JSON string form for quick deep comparisons
+     */
+    viewportStateString: "{}",
+    /**
+     * Previous version of viewportStateString
+     */
+    oldViewportStateString: "{}",
+    getViewport: () => ({
+      center: (({ lng, lat, ...rest }) => ({ lng, lat }))(self.map.getCenter()),
+      zoom: self.map.getZoom(),
+      bearing: self.map.getBearing(),
+      pitch: self.map.getPitch(),
+    }),
+    viewportRefreshEnabled: true,
+    refreshViewport: () => {
+      console.log(self.wrapper.getViewport());
+      if (self.wrapper.viewportRefreshEnabled) {
+        self.wrapper.viewportRefreshEnabled = false;
+        self.wrapper.viewportState = self.wrapper.getViewport();
+        self.wrapper.viewportStateString = JSON.stringify(self.wrapper.viewportState);
+        setTimeout(() => {
+          self.wrapper.viewportRefreshEnabled = true;
+        }, 800);
+      }
+    },
+  };
+
+  /**
+   * Initializes an empty registered elements object for the given componentId
+   *
+   * @param {string} componentId
+   * @param {boolean} force
+   */
   this.initRegisteredElements = (componentId, force) => {
     if (
       typeof self.registeredElements[componentId] === "undefined" ||
@@ -19,19 +201,24 @@ const MapLibreGlWrapper = function (props) {
         images: [],
         events: [],
         controls: [],
+        wrapperEvents: [],
       };
     }
   };
 
+  /**
+   * Overrides MapLibre-gl-js addLayer function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {object} layer
+   * @param {string} beforeId
+   * @param {string} componentId
+   * @returns
+   */
   this.addLayer = (layer, beforeId, componentId) => {
     if (!self.map.style) {
       return;
     }
-    if (
-      componentId &&
-      typeof componentId === "string" &&
-      typeof layer.id !== "undefined"
-    ) {
+    if (componentId && typeof componentId === "string" && typeof layer.id !== "undefined") {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].layers.push(layer.id);
 
@@ -43,6 +230,15 @@ const MapLibreGlWrapper = function (props) {
     self.map.addLayer(layer, beforeId);
   };
 
+  /**
+   * Overrides MapLibre-gl-js addSource function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {string} sourceId
+   * @param {object} source
+   * @param {object} options
+   * @param {string} componentId
+   * @returns
+   */
   this.addSource = (sourceId, source, options, componentId) => {
     if (!self.map.style) {
       return;
@@ -50,11 +246,7 @@ const MapLibreGlWrapper = function (props) {
     if (typeof options === "string" && typeof componentId === "undefined") {
       return self.addSource.call(self, sourceId, source, undefined, options);
     }
-    if (
-      componentId &&
-      typeof componentId === "string" &&
-      typeof sourceId !== "undefined"
-    ) {
+    if (componentId && typeof componentId === "string" && typeof sourceId !== "undefined") {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].sources.push(sourceId);
     }
@@ -62,6 +254,15 @@ const MapLibreGlWrapper = function (props) {
     self.map.addSource(sourceId, source, options);
   };
 
+  /**
+   * Overrides MapLibre-gl-js addImage function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {string} id
+   * @param {*} image
+   * @param {*} ref
+   * @param {string} componentId
+   * @returns
+   */
   this.addImage = (id, image, ref, componentId) => {
     if (!self.map.style) {
       return;
@@ -69,11 +270,7 @@ const MapLibreGlWrapper = function (props) {
     if (typeof ref === "string" && typeof componentId === "undefined") {
       return self.addImage.call(self, id, image, undefined, ref);
     }
-    if (
-      componentId &&
-      typeof componentId === "string" &&
-      typeof id !== "undefined"
-    ) {
+    if (componentId && typeof componentId === "string" && typeof id !== "undefined") {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].images.push(id);
     }
@@ -81,6 +278,15 @@ const MapLibreGlWrapper = function (props) {
     self.map.addImage(id, image, ref);
   };
 
+  /**
+   * Overrides MapLibre-gl-js on function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {string} type
+   * @param {string} layerId
+   * @param {function} listener
+   * @param {string} componentId
+   * @returns
+   */
   this.on = (type, layerId, listener, componentId) => {
     if (typeof listener === "string" && typeof layerId === "function") {
       return self.on.call(self, type, undefined, layerId, listener);
@@ -99,6 +305,13 @@ const MapLibreGlWrapper = function (props) {
     self.map.on(..._arguments);
   };
 
+  /**
+   * Overrides MapLibre-gl-js addControl function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {object} control
+   * @param {string} position
+   * @param {string} componentId
+   */
   this.addControl = (control, position, componentId) => {
     if (componentId && typeof componentId === "string") {
       self.initRegisteredElements(componentId);
@@ -108,15 +321,15 @@ const MapLibreGlWrapper = function (props) {
     self.map.addControl(control, position);
   };
 
-  // cleanup function that remove anything that has been added to the maplibre instance referenced with componentId
-  // be aware that this function only works with explicitly added elements e.g. sources implizitly added by addLayer calls still require manual removal
+  /**
+   * Removes anything that has been added to the maplibre instance referenced with componentId
+   *
+   * @param {string} componentId
+   */
   this.cleanup = (componentId) => {
     //console.log("cleanup " + componentId);
     //console.log(self.registeredElements[componentId]);
-    if (
-      self.map.style &&
-      typeof self.registeredElements[componentId] !== "undefined"
-    ) {
+    if (self.map.style && typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
       self.registeredElements[componentId].layers.forEach((item) => {
         if (self.map.style.getLayer(item)) {
@@ -146,6 +359,11 @@ const MapLibreGlWrapper = function (props) {
       // cleanup controls
       self.registeredElements[componentId].controls.forEach((item) => {
         self.map.removeControl(item);
+      });
+
+      // cleanup wrapper events
+      self.registeredElements[componentId].wrapperEvents.forEach((item) => {
+        self.wrapper.off(...item);
       });
 
       self.initRegisteredElements(componentId, true);
@@ -269,6 +487,21 @@ const MapLibreGlWrapper = function (props) {
 
     self.addNativeMaplibreFunctionsAndProps();
 
+    self.map.on("move", () => {
+      console.log("move");
+      self.wrapper.refreshViewport();
+      if (self.wrapper.viewportStateString !== self.wrapper.oldViewportStateString) {
+        self.wrapper.oldViewportStateString = self.wrapper.viewportStateString;
+        self.wrapper.fire("viewportchange");
+      }
+    });
+    self.map.on("data", () => {
+      self.wrapper.refreshLayerState();
+      if (self.wrapper.layerStateString !== self.wrapper.oldLayerStateString) {
+        self.wrapper.oldLayerStateString = self.wrapper.layerStateString;
+        self.wrapper.fire("layerchange");
+      }
+    });
     if (typeof props.onReady === "function") {
       props.onReady(self.map, self);
     }
