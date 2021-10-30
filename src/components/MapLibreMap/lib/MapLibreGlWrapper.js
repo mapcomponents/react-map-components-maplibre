@@ -4,6 +4,8 @@ import maplibregl from "maplibre-gl/dist/maplibre-gl";
  * Creates a MapLibre-gl-js instance and offers all of the native MapLibre functions and properties as well as additional functionality such as element registration & cleanup and more events.
  *
  * @param {object} props
+ *
+ * @class
  */
 const MapLibreGlWrapper = function (props) {
   // closure variable to safely point to the object context of the current MapLibreGlWrapper instance
@@ -32,12 +34,19 @@ const MapLibreGlWrapper = function (props) {
      *
      * @param {string} eventName
      * @param {function} handler
+     * @param {object} options
+     * @param {string} componentId
      * @returns
      */
-    on: (eventName, handler, componentId) => {
+    on: (eventName, handler, options, componentId) => {
       if (!self.eventHandlers[eventName]) return;
 
-      self.eventHandlers[eventName].push(handler);
+      if(typeof options === 'string'){
+        componentId = options;
+        options = {};
+      }
+
+      self.eventHandlers[eventName].push({ handler, options });
 
       let _arguments = [eventName, handler];
       if (componentId && typeof componentId === "string") {
@@ -56,7 +65,7 @@ const MapLibreGlWrapper = function (props) {
       if (!self.eventHandlers[eventName]) return;
 
       self.eventHandlers[eventName] = self.eventHandlers[eventName].filter((item) => {
-        if (!Object.is(item, handler)) {
+        if (!Object.is(item.handler, handler)) {
           return item;
         }
       });
@@ -76,21 +85,21 @@ const MapLibreGlWrapper = function (props) {
       event.data = self;
 
       self.eventHandlers[eventName].forEach(function (item) {
-        item.call(scope, event);
+        item.handler.call(scope, event);
       });
     },
     /**
      * Array containing an object for each layer in the MapLibre instance providing information on visibility, loading state, order, paint & layout properties
      */
-    layerState: [],
+    layerState: {},
     /**
-     * The same data as layerState in JSON string form for quick deep comparisons
+     * Maps layerIds to layerState in JSON string form for quick deep comparisons
      */
-    layerStateString: "[]",
+    layerStateStrings: {},
     /**
      * Previous Version of layerStateString
      */
-    oldLayerStateString: "[]",
+    oldLayerStateStrings: {},
     /**
      * Builds the layer info object for a given layer id
      *
@@ -98,7 +107,7 @@ const MapLibreGlWrapper = function (props) {
      * @returns object
      */
     buildLayerObject: (layer) => {
-      if (self.baseLayers.indexOf(layer.id) === -1) {
+      //if (self.baseLayers.indexOf(layer.id) === -1) {
         let paint = {};
         let values = layer.paint?._values;
         Object.keys(values || {}).map((propName) => {
@@ -131,7 +140,7 @@ const MapLibreGlWrapper = function (props) {
           //source: layers[layerId].source,
           //sourceLayer: layers[layerId].sourceLayer,
         };
-      }
+      //}
     },
     /**
      * Returns an array of layer state info objects for all layers in the MapLibre instance
@@ -150,7 +159,7 @@ const MapLibreGlWrapper = function (props) {
      */
     refreshLayerState: () => {
       self.wrapper.layerState = self.wrapper.buildLayerObjects();
-      self.wrapper.layerStateString = JSON.stringify(self.wrapper.layerState);
+      self.wrapper.layerStateStrings = self.wrapper.layerState.map(el => JSON.stringify(el));
     },
     /**
      * Object containing information on the current viewport state
@@ -171,15 +180,21 @@ const MapLibreGlWrapper = function (props) {
       pitch: self.map.getPitch(),
     }),
     viewportRefreshEnabled: true,
-    refreshViewport: () => {
-      console.log(self.wrapper.getViewport());
-      if (self.wrapper.viewportRefreshEnabled) {
+    viewportRefreshWaiting: false,
+    refreshViewport: (force) => {
+      if (self.wrapper.viewportRefreshEnabled || force) {
         self.wrapper.viewportRefreshEnabled = false;
         self.wrapper.viewportState = self.wrapper.getViewport();
         self.wrapper.viewportStateString = JSON.stringify(self.wrapper.viewportState);
         setTimeout(() => {
           self.wrapper.viewportRefreshEnabled = true;
-        }, 800);
+          if (self.wrapper.viewportRefreshWaiting) {
+            self.wrapper.viewportRefreshWaiting = false;
+            self.wrapper.refreshViewport();
+          }
+        }, 700);
+      }else{
+          self.wrapper.viewportRefreshWaiting = true;
       }
     },
   };
@@ -486,9 +501,10 @@ const MapLibreGlWrapper = function (props) {
     self.map = new maplibregl.Map(props.mapOptions);
 
     self.addNativeMaplibreFunctionsAndProps();
+    self.wrapper.refreshViewport(true);
+    self.wrapper.fire("viewportchange");
 
     self.map.on("move", () => {
-      console.log("move");
       self.wrapper.refreshViewport();
       if (self.wrapper.viewportStateString !== self.wrapper.oldViewportStateString) {
         self.wrapper.oldViewportStateString = self.wrapper.viewportStateString;
@@ -497,10 +513,7 @@ const MapLibreGlWrapper = function (props) {
     });
     self.map.on("data", () => {
       self.wrapper.refreshLayerState();
-      if (self.wrapper.layerStateString !== self.wrapper.oldLayerStateString) {
-        self.wrapper.oldLayerStateString = self.wrapper.layerStateString;
-        self.wrapper.fire("layerchange");
-      }
+      self.wrapper.fire("layerchange");
     });
     if (typeof props.onReady === "function") {
       props.onReady(self.map, self);

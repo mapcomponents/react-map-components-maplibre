@@ -2,7 +2,13 @@ import { useContext, useCallback, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 import { MapContext } from "react-map-components-core";
+import { OptionsControl } from "@storybook/components";
 
+/**
+ * React hook that allows subscribing to map state changes
+ *
+ * @component
+ */
 function useMapState(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
@@ -20,6 +26,41 @@ function useMapState(props) {
   //const mapRef = useRef(props.map);
   const componentId = useRef(uuidv4());
 
+
+  /**
+   * returns the element if it matches the defined filter criteria
+   * to be used as filter function on the layers array
+   *
+   * @param {object} layer
+   */
+  const layerIdFilter = useCallback(
+    (layer) => {
+      if (!props.filter.includeBaseLayers && layer.baseLayer) {
+        return false;
+      }
+
+      if (typeof props.filter.matchLayerIds !== "undefined") {
+        if (props.filter.matchLayerIds instanceof RegExp) {
+          return props.filter.matchLayerIds.test(layer.id);
+        } else {
+          return layer.id.includes(props.filter.matchLayerIds);
+        }
+      }
+
+      return true;
+    },
+    [props.filter]
+  );
+
+  const refreshLayerState = useCallback(() => {
+    let _layerState = mapRef.current.wrapper.layerState.filter(layerIdFilter);
+    let _layerStateString = JSON.stringify(_layerState);
+    if (layersRef.current !== _layerStateString) {
+      layersRef.current = _layerStateString;
+      setLayers(_layerState);
+    }
+  },[layerIdFilter]);
+
   useEffect(() => {
     let _componentId = componentId.current;
 
@@ -31,7 +72,6 @@ function useMapState(props) {
       initializedRef.current = false;
     };
   }, []);
-
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
@@ -50,10 +90,8 @@ function useMapState(props) {
     );
     */
 
-
     if (props?.watch?.viewport) {
       setViewport(mapRef.current.wrapper.viewportState);
-      setCenter(mapRef.current.wrapper.viewportState?.center);
 
       mapRef.current.wrapper.on(
         "viewportchange",
@@ -69,23 +107,19 @@ function useMapState(props) {
     }
 
     if (props?.watch?.layers) {
-      layersRef.current = mapRef.current.wrapper.layerStateString;
-      setLayers(mapRef.current.wrapper.layerState);
-      console.log("watch layer change");
+      refreshLayerState();
 
       mapRef.current.wrapper.on(
         "layerchange",
-        () => {
-          //console.log("Layers changed");
-          //console.log(mapRef.current?.wrapper.layerState);
-          if (layersRef.current !== mapRef.current?.wrapper.layerStateString) {
-            setLayers(mapRef.current?.wrapper.layerState);
-          }
+        refreshLayerState,
+        {
+          includeBaseLayers: props?.filter?.includeBaseLayers,
+          matchLayerIds: props?.filter?.matchLayerIds,
         },
         componentId.current
       );
     }
-  }, [mapContext.mapIds, mapContext, props.mapId]);
+  }, [mapContext.mapIds, mapContext, props.mapId, refreshLayerState]);
 
   return {
     layers,
@@ -99,7 +133,10 @@ useMapState.defaultProps = {
     layers: true,
     sources: false,
     viewport: false,
-  }
+  },
+  filter: {
+    includeBaseLayers: false,
+  },
 };
 
 useMapState.propTypes = {
@@ -110,23 +147,20 @@ useMapState.propTypes = {
   /**
    * Defines map Resources to watch
    */
-  watch:  PropTypes.shape({
+  watch: PropTypes.shape({
     layers: PropTypes.bool,
     sources: PropTypes.bool,
     viewport: PropTypes.bool,
   }),
   /**
-   * Filter function to reduce the number of
+   * Filter string or RegExp to more explicitly define the elements watched and increase performance
+   * strings will be matched using layerId.includes(matchString)
+   * RegExps will be matched using matchRegExp.test(layerId)
    */
-  filter:  PropTypes.shape({
-    matchLayerIds: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RegExp)
-    ]),
-    matchSourceIds: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RegExp)
-    ]),
+  filter: PropTypes.shape({
+    includeBaseLayers: PropTypes.bool,
+    matchLayerIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
+    matchSourceIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
   }),
 };
 
