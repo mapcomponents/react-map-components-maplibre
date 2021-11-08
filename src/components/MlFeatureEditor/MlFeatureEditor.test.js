@@ -81,7 +81,8 @@ describe("<MlFeatureEditor>", () => {
       </MapComponentsProvider>
     );
 
-    await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(2));
+    // MapLibreGlWrapper now subscribes to "data", "move" events on its own
+    await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(4));
   });
 
   it("should deregister 2 event listeners to the maplibre instance", async () => {
@@ -91,7 +92,8 @@ describe("<MlFeatureEditor>", () => {
       </MapComponentsProvider>
     );
 
-    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(2);
+    // MapLibreGlWrapper now subscribes to "data", "move" events on its own
+    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(4);
 
     wrapper.find(".toggle_layer_visible").simulate("click");
 

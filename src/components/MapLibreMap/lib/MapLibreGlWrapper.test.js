@@ -296,7 +296,8 @@ describe("MapLibreGlWrapper - event tests", () => {
       </MapComponentsProvider>
     );
 
-    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(1);
+    // MapLibreGlWrapper now subscribes to "data", "move" events on its own
+    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(3);
   });
 
   it("should remove an event using off from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
@@ -308,7 +309,8 @@ describe("MapLibreGlWrapper - event tests", () => {
       </MapComponentsProvider>
     );
 
-    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(1);
+    // MapLibreGlWrapper now subscribes to "data", "move" events on its own
+    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(3);
 
     wrapper.find(".toggle_children_are_visible").simulate("click");
 
@@ -324,7 +326,8 @@ describe("MapLibreGlWrapper - event tests", () => {
       </MapComponentsProvider>
     );
 
-    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(3);
+    // MapLibreGlWrapper now subscribes to "data", "move" events on its own
+    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5);
 
     wrapper.find(".toggle_children_are_visible").simulate("click");
 

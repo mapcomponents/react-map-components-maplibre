@@ -173,12 +173,12 @@ const MapLibreGlWrapper = function (props) {
      * Previous version of viewportStateString
      */
     oldViewportStateString: "{}",
-    getViewport: () => ({
+    getViewport: () => (typeof self.map.getCenter === 'function'?{
       center: (({ lng, lat, ...rest }) => ({ lng, lat }))(self.map.getCenter()),
       zoom: self.map.getZoom(),
       bearing: self.map.getBearing(),
       pitch: self.map.getPitch(),
-    }),
+    }:{}),
     viewportRefreshEnabled: true,
     viewportRefreshWaiting: false,
     refreshViewport: (force) => {
