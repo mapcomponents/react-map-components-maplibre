@@ -1,8 +1,8 @@
-import React, {useRef, useEffect, useContext, useState} from "react";
+import React, { useRef, useEffect, useContext, useState } from "react";
 import PropTypes from "prop-types";
 
-import {MapContext} from "react-map-components-core";
-import {v4 as uuidv4} from "uuid";
+import { MapContext } from "react-map-components-core";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * TODO: Add short & useful description
@@ -18,11 +18,10 @@ const MlShareMapState = (props) => {
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
+  const [map, setMap] = useState(undefined);
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlShareMapState-") + uuidv4());
 
-  const mapStateRef = useRef({lng: 7.132122000552613, lat: 50.716405378037706, zoom: 14.5})
-  const initialUrl = new URLSearchParams(window.location.search)
-  const initialUrlFragment = Object.fromEntries(initialUrl)
+  const mapStateRef = useRef({});
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -48,35 +47,62 @@ const MlShareMapState = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
+    setMap(mapRef.current);
 
-    mapRef.current.on("moveend", () => {
-      getMapState();
-      let urlParams = new URLSearchParams( {...initialUrlFragment, ...mapStateRef.current})
-      let currentParams = new URLSearchParams(window.location.search)
-      if(urlParams.toString() !== currentParams.toString()) {
-        window.history.pushState({...mapStateRef.current}, document.title, "?" + urlParams.toString())
-      }
-    }, componentId.current)
-
-    if (initialUrlFragment.lat && initialUrlFragment.lng) {
-      mapStateRef.current.lat = initialUrlFragment.lat
-      mapStateRef.current.lng = initialUrlFragment.lng
-      mapStateRef.current.zoom = initialUrlFragment.zoom
+    let currentUrlParams = getCurrentUrlParameters();
+    if (currentUrlParams.lat && currentUrlParams.lng) {
+      mapStateRef.current.lat = currentUrlParams.lat;
+      mapStateRef.current.lng = currentUrlParams.lng;
+      mapStateRef.current.zoom = currentUrlParams.zoom;
+      mapRef.current.setCenter([mapStateRef.current.lng, mapStateRef.current.lat]);
+      mapRef.current.setZoom(mapStateRef.current.zoom);
     }
-    mapRef.current.setCenter([mapStateRef.current.lng, mapStateRef.current.lat]);
-    mapRef.current.setZoom(mapStateRef.current.zoom);
     console.log(componentId.current);
-  }, [mapContext.mapIds, mapContext, props.mapId]);
+  }, [mapContext.mapIds, mapContext, props.mapId, props.active]);
 
-  const getMapState = () => {
-    mapStateRef.current.lat = mapRef.current.getCenter().lat
-    mapStateRef.current.lng = mapRef.current.getCenter().lng
-    mapStateRef.current.zoom = mapRef.current.getZoom()
-  }
+  useEffect(() => {
+    if (!map) return;
+
+    if (props.active) {
+      map.on(
+        "moveend",
+        () => {
+          refreshMapState();
+          let urlParams = new URLSearchParams({
+            ...getCurrentUrlParameters(),
+            ...mapStateRef.current,
+          });
+          let currentParams = new URLSearchParams(window.location.search);
+          if (urlParams.toString() !== currentParams.toString()) {
+            window.history.pushState(
+              { ...mapStateRef.current },
+              document.title,
+              "?" + urlParams.toString()
+            );
+          }
+        },
+        componentId.current
+      );
+    } else {
+      map.cleanup(componentId.current);
+    }
+  }, [props.active, map]);
+
+  const getCurrentUrlParameters = () => {
+    return Object.fromEntries(new URLSearchParams(window.location.search));
+  };
+
+  const refreshMapState = () => {
+    mapStateRef.current.lat = mapRef.current.getCenter().lat;
+    mapStateRef.current.lng = mapRef.current.getCenter().lng;
+    mapStateRef.current.zoom = mapRef.current.getZoom();
+  };
 
   window.onpopstate = (event) => {
-    mapRef.current.easeTo({zoom: event.state.zoom, center: [event.state.lng, event.state.lat] })
-  }
+    if (event.state && event.state.lng && event.state.lat && event.state.zoom) {
+      mapRef.current.easeTo({ zoom: event.state.zoom, center: [event.state.lng, event.state.lat] });
+    }
+  };
 
   return <></>;
 };
