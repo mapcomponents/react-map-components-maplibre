@@ -51,7 +51,11 @@ const MlShareMapState = (props) => {
 
     mapRef.current.on("moveend", () => {
       getMapState();
-      window.history.pushState({}, document.title, "?id=mapcomponents-mlsharemapstate--example-config&args=&viewMode=story&" + (new URLSearchParams(mapStateRef.current)).toString())
+      let urlParams = new URLSearchParams( {...initialUrlFragment, ...mapStateRef.current})
+      let currentParams = new URLSearchParams(window.location.search)
+      if(urlParams.toString() !== currentParams.toString()) {
+        window.history.pushState({...mapStateRef.current}, document.title, "?" + urlParams.toString())
+      }
     }, componentId.current)
 
     if (initialUrlFragment.lat && initialUrlFragment.lng) {
@@ -71,7 +75,7 @@ const MlShareMapState = (props) => {
   }
 
   window.onpopstate = (event) => {
-    console.log(JSON.stringify(event))
+    mapRef.current.easeTo({zoom: event.state.zoom, center: [event.state.lng, event.state.lat] })
   }
 
   return <></>;
