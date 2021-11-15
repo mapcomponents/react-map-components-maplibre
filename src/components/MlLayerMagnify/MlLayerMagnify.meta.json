@@ -2,6 +2,12 @@
   "name": "MlLayerMagnify",
   "title": "Kartenlupe",
   "description": "Kertenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus.",
+  "il8n": {
+    "de": {
+      "title": "Kartenlupe",
+      "description": "Kertenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus."
+    }
+  },
   "tags": ["Map add-on"],
   "category": "add-ons",
   "type": "component",

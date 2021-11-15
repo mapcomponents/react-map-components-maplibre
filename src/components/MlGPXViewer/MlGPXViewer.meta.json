@@ -2,6 +2,12 @@
   "name": "MlGPXViewer",
   "title": "GPX Betrachter",
   "description": "",
+  "il8n": {
+    "de": {
+      "title": "GPX Betrachter",
+      "description": ""
+    }
+  },
   "tags": ["Map add-on"],
   "category": "add-ons",
   "type": "component",

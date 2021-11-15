@@ -2,6 +2,12 @@
   "name": "MlGeoJsonLayer",
   "title": "GeoJSON Ebene",
   "description": "",
+  "il8n": {
+    "de": {
+      "title": "GeoJSON Ebene",
+      "description": ""
+    }
+  },
   "tags": [],
   "category": "",
   "type": "component",

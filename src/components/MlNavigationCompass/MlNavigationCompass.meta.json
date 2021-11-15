@@ -2,6 +2,12 @@
   "name": "MlNavigationCompass",
   "title": "Kompass",
   "description": "",
+  "il8n": {
+    "de": {
+      "title": "Kompass",
+      "description": ""
+    }
+  },
   "tags": [],
   "category": "",
   "type": "component",
