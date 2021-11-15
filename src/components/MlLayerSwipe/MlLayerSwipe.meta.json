@@ -1,8 +1,14 @@
 {
   "name": "MlLayerSwipe",
-  "title": "Kartenvorhang",
-  "description": "Kertenvorhangs blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus.",
-  "tags": [ "Map add-on" ],
+  "title": "Map curtain",
+  "description": "Map curtain hides an area of the top one of two overlaying MapLibre maps.",
+  "i18n": {
+    "de": {
+      "title": "Kartenvorhang",
+      "description": "Kartenvorhangs blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus."
+    }
+  },
+  "tags": ["Map add-on"],
   "category": "add-ons",
   "type": "component",
   "price": 5000
