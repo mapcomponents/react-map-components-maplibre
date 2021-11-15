@@ -15,7 +15,7 @@ import RoomIcon from "@mui/icons-material/Room";
  *
  * @component
  */
-const MlFollowGPS = (props) => {
+const MlFollowGps = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const [isFollowed, setIsFollowed] = useState(false);
@@ -24,7 +24,7 @@ const MlFollowGPS = (props) => {
 
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
-  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlFollowGPS-") + uuidv4());
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlFollowGps-") + uuidv4());
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -91,7 +91,7 @@ const MlFollowGPS = (props) => {
   );
 };
 
-MlFollowGPS.defaultProps = {
+MlFollowGps.defaultProps = {
   mapId: undefined,
   style: {
     minWidth: "30px",
@@ -108,7 +108,7 @@ MlFollowGPS.defaultProps = {
   },
 };
 
-MlFollowGPS.propTypes = {
+MlFollowGps.propTypes = {
   /**
    * Id of the target MapLibre instance in mapContext
    */
@@ -118,4 +118,4 @@ MlFollowGPS.propTypes = {
    */
   style: PropTypes.object,
 };
-export default MlFollowGPS;
+export default MlFollowGps;

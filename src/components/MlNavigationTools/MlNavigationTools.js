@@ -10,7 +10,7 @@ import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import { v4 as uuidv4 } from "uuid";
 
 import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
-import MlFollowGPS from "../MlFollowGPS/MlFollowGPS";
+import MlFollowGps from "../MlFollowGps/MlFollowGps";
 
 const MlNavigationTools = (props) => {
   const mapContext = useContext(MapContext);
@@ -138,7 +138,7 @@ const MlNavigationTools = (props) => {
       <Button sx={buttonStyle} onClick={moveToCurrentLocation} disabled={locationAccessDenied}>
         <GpsFixedIcon sx={{ width: ".9em" }} />
       </Button>
-      <MlFollowGPS />
+      <MlFollowGps />
       <ButtonGroup
         orientation="vertical"
         sx={{

@@ -1,12 +1,12 @@
 import React from "react";
 
-import MlFollowGPS from "./MlFollowGPS";
+import MlFollowGps from "./MlFollowGps";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlFollowGPS",
-  component: MlFollowGPS,
+  title: "MapComponents/MlFollowGps",
+  component: MlFollowGps,
   argTypes: {
     url: {},
     layer: {},
@@ -15,7 +15,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <MlFollowGPS />;
+const Template = (args) => <MlFollowGps />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};

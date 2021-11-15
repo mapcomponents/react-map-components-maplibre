@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { mount, configure } from "enzyme";
 import { waitFor } from "@testing-library/react";
 import { MapContext, MapComponentsProvider } from "react-map-components-core";
-import MlFollowGPS from "./MlFollowGPS";
+import MlFollowGps from "./MlFollowGps";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 
 const mockGeolocation = {
@@ -21,7 +21,7 @@ const MlFollowGPSTestComponent = (props) => {
     <>
       <MapLibreMap />
 
-      {componentVisible && <MlFollowGPS {...props} />}
+      {componentVisible && <MlFollowGps {...props} />}
 
       <button
         className="toggle_layer_visible"
@@ -37,7 +37,7 @@ const MlFollowGPSTestComponent = (props) => {
 
 let testAttributes = {};
 
-describe("<MlFollowGPS>", () => {
+describe("<MlFollowGps>", () => {
   it("should call navigator.geolocation.watchPosition once", async () => {
     const wrapper = mount(
       <MapComponentsProvider>
@@ -45,7 +45,7 @@ describe("<MlFollowGPS>", () => {
       </MapComponentsProvider>
     );
 
-    wrapper.find("MlFollowGPS button").simulate("click");
+    wrapper.find("MlFollowGps button").simulate("click");
     await waitFor(() => expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1));
   });
 
@@ -56,8 +56,8 @@ describe("<MlFollowGPS>", () => {
       </MapComponentsProvider>
     );
 
-    wrapper.find("MlFollowGPS button").simulate("click");
-    wrapper.find("MlFollowGPS button").simulate("click");
+    wrapper.find("MlFollowGps button").simulate("click");
+    wrapper.find("MlFollowGps button").simulate("click");
     //wrapper.find(".toggle_layer_visible").simulate("click");
 
     await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(1));
