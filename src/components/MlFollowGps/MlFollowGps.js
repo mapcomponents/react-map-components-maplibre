@@ -5,6 +5,7 @@ import { MapContext } from "react-map-components-core";
 import { v4 as uuidv4 } from "uuid";
 import Button from "@mui/material/Button";
 import RoomIcon from "@mui/icons-material/Room";
+import {point} from "@turf/turf"
 
 /**
  * Adds a button that makes the map follow the users GPS position using
@@ -28,6 +29,8 @@ const MlFollowGps = (props) => {
 
   useEffect(() => {
     let _componentId = componentId.current;
+
+
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
@@ -54,14 +57,33 @@ const MlFollowGps = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
-
+    console.log(mapRef.current.getCenter())
     mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
+
+    mapRef.current.map.addLayer({
+      id: "locationCircle",
+      type: "circle",
+      source: {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: []
+        }
+      },
+      paint: {
+        "circle-radius": 30,
+        "circle-color": "#ee7700",
+        "circle-opacity": 0.5,
+      },
+    });
+//[7.132122000552613, 50.716405378037706]
     console.log(componentId.current);
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
   const getLocationSuccess = (pos) => {
     if (!mapRef.current) return;
     mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude]);
+    mapRef.current.getSource("locationCircle").setData(point([pos.coords.longitude, pos.coords.latitude]));
   };
 
   const getLocationError = (err) => {
@@ -76,6 +98,7 @@ const MlFollowGps = (props) => {
       onClick={() => {
         if (isFollowed) {
           navigator.geolocation.clearWatch(watchIdRef.current);
+          mapRef.current.getSource("locationCircle").setData();
         } else {
           watchIdRef.current = navigator.geolocation.watchPosition(
             getLocationSuccess,
