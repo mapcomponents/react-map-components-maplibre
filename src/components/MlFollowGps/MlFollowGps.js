@@ -1,11 +1,12 @@
-import React, { useRef, useEffect, useContext, useState } from "react";
+import React, {useRef, useEffect, useContext, useState} from "react";
 import PropTypes from "prop-types";
 
-import { MapContext } from "react-map-components-core";
-import { v4 as uuidv4 } from "uuid";
+import {MapContext} from "react-map-components-core";
+import {v4 as uuidv4} from "uuid";
 import Button from "@mui/material/Button";
 import RoomIcon from "@mui/icons-material/Room";
 import {point} from "@turf/turf"
+import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 
 /**
  * Adds a button that makes the map follow the users GPS position using
@@ -20,6 +21,7 @@ const MlFollowGps = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const [isFollowed, setIsFollowed] = useState(false);
+  const [geoJson, setGeoJson] = useState(undefined);
   const watchIdRef = useRef(undefined);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
 
@@ -29,7 +31,6 @@ const MlFollowGps = (props) => {
 
   useEffect(() => {
     let _componentId = componentId.current;
-
 
 
     return () => {
@@ -60,30 +61,13 @@ const MlFollowGps = (props) => {
     console.log(mapRef.current.getCenter())
     mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
 
-    mapRef.current.map.addLayer({
-      id: "locationCircle",
-      type: "circle",
-      source: {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: []
-        }
-      },
-      paint: {
-        "circle-radius": 30,
-        "circle-color": "#ee7700",
-        "circle-opacity": 0.5,
-      },
-    });
-//[7.132122000552613, 50.716405378037706]
     console.log(componentId.current);
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
   const getLocationSuccess = (pos) => {
     if (!mapRef.current) return;
     mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude]);
-    mapRef.current.getSource("locationCircle").setData(point([pos.coords.longitude, pos.coords.latitude]));
+    setGeoJson(point([pos.coords.longitude, pos.coords.latitude]));
   };
 
   const getLocationError = (err) => {
@@ -92,25 +76,35 @@ const MlFollowGps = (props) => {
   };
 
   return (
-    <Button
-      sx={{ zIndex: 1002, color: isFollowed ? "#bbb" : "#666", ...props.style }}
-      disabled={locationAccessDenied}
-      onClick={() => {
-        if (isFollowed) {
-          navigator.geolocation.clearWatch(watchIdRef.current);
-          mapRef.current.getSource("locationCircle").setData();
-        } else {
-          watchIdRef.current = navigator.geolocation.watchPosition(
-            getLocationSuccess,
-            getLocationError
-          );
-        }
-        setIsFollowed(!isFollowed);
-      }}
-    >
-      {" "}
-      <RoomIcon sx={{}} />{" "}
-    </Button>
+    <>
+      {isFollowed && geoJson &&
+      <MlGeoJsonLayer geojson={geoJson} type={"circle"}
+                      paint={{
+                        "circle-radius": 30,
+                        "circle-color": "#ee7700",
+                        "circle-opacity": 0.5,
+                      }}
+      />
+      }
+      <Button
+        sx={{zIndex: 1002, color: isFollowed ? "#bbb" : "#666", ...props.style}}
+        disabled={locationAccessDenied}
+        onClick={() => {
+          if (isFollowed) {
+            navigator.geolocation.clearWatch(watchIdRef.current);
+          } else {
+            watchIdRef.current = navigator.geolocation.watchPosition(
+              getLocationSuccess,
+              getLocationError
+            );
+          }
+          setIsFollowed(!isFollowed);
+        }}
+      >
+        {" "}
+        <RoomIcon sx={{}}/>{" "}
+      </Button>
+    </>
   );
 };
 
