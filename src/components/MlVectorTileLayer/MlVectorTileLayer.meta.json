@@ -1,7 +1,7 @@
 {
   "name": "MlVectorTileLayer",
-  "title": "Vektorenkacheln",
-  "description": "Baustein: Vektorenkacheln/Vector Tiles (der Anwendung/Karte hinzufügen)",
+  "title": "Vektor tiles",
+  "description": "Component: Vector Tiles (add to the Application/map)",
   "il8n": {
     "de": {
       "title": "Vektorenkacheln",

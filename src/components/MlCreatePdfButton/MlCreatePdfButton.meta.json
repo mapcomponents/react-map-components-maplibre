@@ -1,11 +1,11 @@
 {
   "name": "MlCreatePdfButton",
-  "title": "Einfacher Kartendruck",
-  "description": "Erzeugt eine PDF Datei aus der aktuellen Kartenansicht.",
+  "title": "Sinmple Map print",
+  "description": "Creates a PDF file with the current map view.",
   "il8n": {
     "de": {
       "title": "Einfacher Kartendruck",
-      "description": ""
+      "description": "Erzeugt eine PDF Datei aus der aktuellen Kartenansicht."
     }
   },
   "tags": ["Map add-on"],
