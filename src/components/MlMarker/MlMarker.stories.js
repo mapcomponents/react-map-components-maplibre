@@ -7,16 +7,16 @@ import mapContextDecorator from "../../decorators/MapContextDecorator";
 const storyoptions = {
   title: "MapComponents/MlMarker",
   component: MlMarker,
-  argTypes: {
-    url: {},
-    layer: {},
-  },
   decorators: mapContextDecorator,
 };
 export default storyoptions;
 
-const Template = (args) => <MlMarker />;
+const Template = (args) => <MlMarker {...args}/>;
 
 export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+ExampleConfig.args = {
+  content: 'WhereGroup',
+  lng: 7.0851268,
+  lat: 50.73884,
+  mapId: 'map_1',
+};

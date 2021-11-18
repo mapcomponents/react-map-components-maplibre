@@ -19,9 +19,8 @@ import { v4 as uuidv4 } from "uuid";
  * @component
  */
 const MlMarker = (props) => {
-  // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
-  const mapState = useMapState({ mapId: props.mapId });
+  const mapState = useMapState({ mapId: props.mapId, watch:{viewport: true}});
 
   const iframe = useRef(undefined);
   const initializedRef = useRef(false);
@@ -63,7 +62,7 @@ const MlMarker = (props) => {
     const _pixelPos = mapRef.current.project([props.lng, props.lat]);
 
     setMarkerPixelPos(_pixelPos);
-  }, [props.lng, props.lat, mapState.center]);
+  }, [props.lng, props.lat, mapState.viewport]);
 
   useEffect(() => {
     if (mapRef.current && iframe.current?.contentWindow?.document?.body?.scrollHeight) {
@@ -116,6 +115,7 @@ const MlMarker = (props) => {
             "&:hover": {
               opacity: 1,
             },
+            zIndex: 1000,
           }}
         >
           <iframe
@@ -123,7 +123,7 @@ const MlMarker = (props) => {
             srcDoc={props.content}
             ref={iframe}
             sandbox="allow-same-origin allow-popups-to-escape-sandbox"
-            frameborder="0"
+            frameBorder="0"
           ></iframe>
         </Paper>
       )}
