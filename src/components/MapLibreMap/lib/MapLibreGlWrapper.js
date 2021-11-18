@@ -192,7 +192,7 @@ const MapLibreGlWrapper = function (props) {
             self.wrapper.viewportRefreshWaiting = false;
             self.wrapper.refreshViewport();
           }
-        }, 700);
+        }, 50);
       }else{
           self.wrapper.viewportRefreshWaiting = true;
       }
@@ -485,7 +485,13 @@ const MapLibreGlWrapper = function (props) {
       props.mapOptions.style.indexOf("mapbox://") === -1
     ) {
       await fetch(props.mapOptions.style)
-        .then((response) => response.json())
+        .then((response) => {
+          if(response.ok){
+            return response.json()
+          }else{
+            throw new Error('error loading map style.json')
+          }
+        })
         .then((styleJson) => {
           styleJson.layers.forEach((item) => {
             self.baseLayers.push(item.id);
@@ -495,6 +501,9 @@ const MapLibreGlWrapper = function (props) {
           });
           self.styleJson = styleJson;
           props.mapOptions.style = styleJson;
+        })
+        .catch((error) => {
+          console.log(error);
         });
     }
 
