@@ -2,6 +2,12 @@
   "name": "MlComponentTemplate",
   "title": "",
   "description": "",
+  "il8n": {
+    "de": {
+      "title": "",
+      "description": ""
+    }
+  },
   "tags": [],
   "category": "",
   "type": "component",

@@ -2,6 +2,12 @@
   "name": "MlWmsLoader",
   "title": "WMS Info",
   "description": "",
+  "il8n": {
+    "de": {
+      "title": "WMS Info",
+      "description": ""
+    }
+  },
   "tags": [],
   "category": "",
   "type": "component",

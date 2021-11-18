@@ -1,7 +1,13 @@
 {
   "name": "MlScaleReference",
-  "title": "Maßstabsreferenz",
+  "title": "Referencescale",
   "description": "",
+  "il8n": {
+    "de": {
+      "title": "Maßstabsreferenz",
+      "description": ""
+    }
+  },
   "tags": [],
   "category": "",
   "type": "component",

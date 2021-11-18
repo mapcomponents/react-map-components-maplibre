@@ -2,6 +2,12 @@
   "name": "MlFollowGPS",
   "title": "GPS-Tracker",
   "description": "",
+  "il8n": {
+    "de": {
+      "title": "GPS-Tracker",
+      "description": ""
+    }
+  },
   "tags": [],
   "category": "",
   "type": "component",

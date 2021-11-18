@@ -1,7 +1,13 @@
 {
   "name": "MlSpatialElevationProfile",
-  "title": "3D Höhenprofil",
-  "description": "Zeichnet eine Ebene mit einfach, aus den Gebäudeumrissen und anhand der Höhen, extrudierten 3D Objekten als Gebäude.",
+  "title": "3D height profile",
+  "description": "Draws a level, out of the building outline and the height, extrudes 3D Objects as buildings.",
+  "il8n": {
+    "de": {
+      "title": "3D Höhenprofil",
+      "description": "Zeichnet eine Ebene mit einfach, aus den Gebäudeumrissen und anhand der Höhen, extrudierten 3D Objekten als Gebäude."
+    }
+  },
   "tags": ["Map add-on"],
   "category": "add-ons",
   "type": "component",
