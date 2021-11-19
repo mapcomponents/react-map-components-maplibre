@@ -1,4 +1,5 @@
-# MapComponents MapLibre
+![MapComponents](https://avatars.githubusercontent.com/u/64851912)
+# [MapComponents MapLibre](https://mapcomponents.org/) &middot;
 
 ## Getting started
 
