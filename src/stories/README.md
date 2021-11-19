@@ -48,12 +48,12 @@ To make sure a component cleans up the MapLibre instance after it has been remov
 **- Reference declaration**
 
 ```
-  const mapRef = useRef(null);
+  const mapRef = useRef(undefined);
 ```
 
 **- Component cleanup function**
 
-After everything has been undone it is important to set the map reference (mapRef.current) to null.
+After everything has been undone it is important to set the map reference (mapRef.current) to undefined.
 
 ```
   useEffect(() => {
@@ -64,7 +64,7 @@ After everything has been undone it is important to set the map reference (mapRe
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
 
-        mapRef.current = null;
+        mapRef.current = undefined;
       }
     };
   }, []);
