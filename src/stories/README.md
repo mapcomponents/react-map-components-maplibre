@@ -47,7 +47,7 @@ To make sure a component cleans up the MapLibre instance after it has been remov
 
 **- Reference declaration**
 
-```
+```js
   const mapRef = useRef(undefined);
 ```
 
@@ -55,7 +55,7 @@ To make sure a component cleans up the MapLibre instance after it has been remov
 
 After everything has been undone it is important to set the map reference (mapRef.current) to undefined.
 
-```
+```js
   useEffect(() => {
     let _componentId = componentId.current;
 
@@ -74,7 +74,7 @@ After everything has been undone it is important to set the map reference (mapRe
 
 This happens within the effect where the targeted (through props.mapId) map instance is discovered for the first time.
 
-```
+```js
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
     // the MapLibre-gl instance (mapContext.map) is accessible here
@@ -102,7 +102,7 @@ MapLibreGlWrapper uses the component_id to keep track of everything that has bee
 
 Additional meta data regarding the component, this file is required for the component to become listed in the catalogue
 
-```
+```json
 {
   "name":        "{component_name}", // must be identical to the react component name (string)
   "title":       "",                 // german component title (string)
