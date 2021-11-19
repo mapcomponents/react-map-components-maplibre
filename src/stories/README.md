@@ -2,14 +2,13 @@
 
 ## Getting started
 
-1. Clone the repository 
-2. ```cd``` into the folder and 
-3. Run ```yarn``` to install all dependencies.
-4. Run ```yarn storybook``` to start the storybook server. It will watch files for changes and hot-reload affected components. If cleanup functions are incomplete it can be required to reload the browser.
+1. Clone the repository and ```cd``` into the folder 
+2. Run ```yarn``` to install all dependencies.
+3. Run ```yarn start``` to start the storybook server. It will watch files for changes and reload affected components. If cleanup functions are incomplete it can be required to reload the browser tab.
 
 ### Create a new component
 
-2. Run ```yarn create-component {component-name}``` to create a new Map-component based on ./src/components/MlComponentTemplate/. It must start with a capital letter because it is a react component and preferably start with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
+1. Run ```yarn create-component {component-name}``` to create a new Map-component based on ./src/components/MlComponentTemplate/. It must start with a capital letter because it is a react component and preferably start with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
 2. The new component should become available within your storybook webinterface. Start the component development inside the component file (former MlComponentTemplate.js) and see the changes reflected in your browser.
 3. Once the component is ready to be published to the MapComponents catalogue, remove the ```_``` from the meta.json file ({component_name}.meta_.json) and it will be included in the next release.
 
