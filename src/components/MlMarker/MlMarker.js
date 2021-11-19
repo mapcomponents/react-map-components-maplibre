@@ -74,7 +74,6 @@ const MlMarker = (props) => {
         let pixelToBottom = mapHeight - _pixelPos.y;
         let iframeHeight = iframe.current?.contentWindow?.document?.body?.scrollHeight;
         let iframeWidth = iframe.current?.contentWindow?.document?.body?.scrollWidth;
-        console.log(pixelToBottom);
 
         setIframeDimensions({
           width: iframeWidth,
@@ -108,6 +107,7 @@ const MlMarker = (props) => {
             opacity: 0.7,
             position: "fixed",
             display: "flex",
+            /** TODO: fix positioning delay when moving the map */
             left: markerPixelPos.x,
             top: markerPixelPos.y,
             width: iframeDimensions.width,

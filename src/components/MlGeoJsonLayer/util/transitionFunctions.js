@@ -10,7 +10,6 @@ const _showNextTransitionSegment = function (
   currentTransitionStepRef,
   msPerStep
 ) {
-  console.log("SHOW NEXT TRANSITION SEGMENT CALLED");
   if (
     typeof map.getSource(layerId) === "undefined" ||
     !transitionInProgressRef.current
@@ -66,7 +65,6 @@ const _transitionToGeojson = (
   layerId
 ) => {
   // create the transition geojson between oldGeojsonRef.current and props.geojson
-  //console.log("start transition");
 
   // create a geojson that contains no common point between the two line features
   let transitionCoordinatesShort = [];
@@ -117,8 +115,6 @@ const _transitionToGeojson = (
     reverseOrder = true;
   }
 
-  //console.log(shorterGeojson);
-  //console.log(longerGeojson);
   if (longerGeojson && shorterGeojson) {
     for (var i = 0, len = longerGeojson.geometry.coordinates.length; i < len; i++) {
       if (

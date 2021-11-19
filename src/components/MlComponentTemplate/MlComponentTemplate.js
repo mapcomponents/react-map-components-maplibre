@@ -46,7 +46,6 @@ const MlComponentTemplate = (props) => {
     mapRef.current = mapContext.getMap(props.mapId);
 
     mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
-    console.log(componentId.current);
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
   return <></>;

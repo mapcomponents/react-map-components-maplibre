@@ -96,7 +96,6 @@ function useMapState(props) {
       mapRef.current.wrapper.on(
         "viewportchange",
         () => {
-          //console.log(mapRef.current?.wrapper.layerState);
           if (viewportRef.current !== mapRef.current?.wrapper.viewportStateString) {
             setViewport(mapRef.current?.wrapper.viewportState);
             setCenter(mapRef.current?.wrapper.viewportState?.center);

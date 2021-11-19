@@ -180,7 +180,6 @@ const createPdf = (map, locationValue, setLoading) => {
     });
 
     setLoading(false);
-    console.log("end create PDF");
   });
 };
 

@@ -34,7 +34,6 @@ const Template = (props) => {
     mapContext.getMap().setZoom(9.5);
 
     setTimeout(() => {
-      console.log("switch geojson");
       setGeojson(sample_geojson_2);
     }, 4000);
   }, [geojson, mapContext]);

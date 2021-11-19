@@ -206,7 +206,6 @@ const MlGPXViewer = (props) => {
     if (!mapRef.current) return;
     try {
       setMetaData([]);
-      console.log(gpxAsString);
       const domParser = new DOMParser();
       const gpxDoc = domParser.parseFromString(gpxAsString, "application/xml");
       const metadata = gpxDoc.querySelector("metadata");

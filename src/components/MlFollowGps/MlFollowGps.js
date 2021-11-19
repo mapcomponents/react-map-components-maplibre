@@ -58,10 +58,8 @@ const MlFollowGps = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
-    console.log(mapRef.current.getCenter())
     mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
 
-    console.log(componentId.current);
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
   const getLocationSuccess = (pos) => {

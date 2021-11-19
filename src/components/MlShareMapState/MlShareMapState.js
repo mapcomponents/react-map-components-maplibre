@@ -57,7 +57,6 @@ const MlShareMapState = (props) => {
       mapRef.current.setCenter([mapStateRef.current.lng, mapStateRef.current.lat]);
       mapRef.current.setZoom(mapStateRef.current.zoom);
     }
-    console.log(componentId.current);
   }, [mapContext.mapIds, mapContext, props.mapId, props.active]);
 
   useEffect(() => {

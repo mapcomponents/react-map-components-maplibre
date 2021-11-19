@@ -342,8 +342,6 @@ const MapLibreGlWrapper = function (props) {
    * @param {string} componentId
    */
   this.cleanup = (componentId) => {
-    //console.log("cleanup " + componentId);
-    //console.log(self.registeredElements[componentId]);
     if (self.map.style && typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
       self.registeredElements[componentId].layers.forEach((item) => {

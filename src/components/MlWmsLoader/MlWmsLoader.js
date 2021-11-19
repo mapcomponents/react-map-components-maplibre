@@ -79,7 +79,6 @@ const MlWmsLoader = (props) => {
     (ev) => {
       setFeatureInfoLngLat(undefined);
       setFeatureInfoContent(undefined);
-      console.log("get feature info");
       let _bounds = mapRef.current.getBounds();
       let _sw = lngLatToMeters(_bounds._sw);
       let _ne = lngLatToMeters(_bounds._ne);
@@ -135,8 +134,6 @@ const MlWmsLoader = (props) => {
           return res.text();
         })
         .then((text) => {
-          console.log(ev);
-          console.log(ev.lngLat);
           setFeatureInfoLngLat(ev.lngLat);
           setFeatureInfoContent(text);
         })
@@ -187,9 +184,7 @@ const MlWmsLoader = (props) => {
       );
 
       // zoom to extent of first layer
-      console.log(_LatLonBoundingBox);
       if (mapRef.current && _LatLonBoundingBox?.length > 3) {
-        console.log("fitBound called");
         mapRef.current.fitBounds([
           [_LatLonBoundingBox[0], _LatLonBoundingBox[1]],
           [_LatLonBoundingBox[2], _LatLonBoundingBox[3]],

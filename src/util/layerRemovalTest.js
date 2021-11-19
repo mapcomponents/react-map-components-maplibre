@@ -75,7 +75,6 @@ const layerRemovalTest = (
 
         wrapper.find(".trigger_refresh").simulate("click");
 
-        //console.log(wrapper.find(".layers_json").text());
         expect(regexLayerNameTest.test(wrapper.find(".layers_json").text())).toEqual(
           true
         );

@@ -30,7 +30,6 @@ function MlFeatureEditor(props) {
   };
 
   const mouseUpHandler = () => {
-    console.log("mouseup");
     setMouseUpTrigger(Math.random());
   };
 
