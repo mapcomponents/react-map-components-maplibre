@@ -106,8 +106,14 @@ Additional meta data regarding the component, this file is required for the comp
 ```json
 {
   "name":        "{component_name}", // must be identical to the react component name (string)
-  "title":       "",                 // german component title (string)
-  "description": "",                 // german short description (string)
+  "title":       "",                 // english component title (string)
+  "description": "",                 // english short description (string)
+  "i18n":{
+    "de":{
+      "title":       "",                 // german component title (string)
+      "description": "",                 // german short description (string)
+    }
+  },
   "tags":        [ "Map add-on" ],   // list of tags (Array<string>)
   "category":    "add-ons",          // category (string)
   "type":        "component",        // type "component" or "application" (string)
