@@ -5,13 +5,13 @@
 
 1. Clone the repository and ```cd``` into the folder 
 2. Run ```yarn``` to install all dependencies.
-3. Run ```yarn start``` to start the storybook server. It will watch files for changes and reload affected components. If cleanup functions are incomplete it can be required to reload the browser tab.
+3. Run ```yarn start``` to start the storybook server. It will watch files for changes and reload affected components. If cleanup functions are incomplete it might be required to reload the browser tab.
 
 ### Create a new component
 
-1. Run ```yarn create-component {component-name}``` to create a new Map-component based on ./src/components/MlComponentTemplate/. It must start with a capital letter because it is a react component and preferably start with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
+1. Run ```yarn create-component {component-name}``` to create a new map component based on ./src/components/MlComponentTemplate/. It has to start with a capital letter and preferably with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
 2. The new component should become available within your storybook webinterface. Start the component development inside the component file (former MlComponentTemplate.js) and see the changes reflected in your browser.
-3. Once the component is ready to be published to the MapComponents catalogue, remove the ```_``` from the meta.json file ({component_name}.meta_.json) and it will be included in the next release.
+3. Once the component is ready to be published to the MapComponents catalogue, remove the ```_``` from the meta.json file ({component_name}.meta_.json) and to have it included in the next release.
 
 ### Create a new example application
 
@@ -20,15 +20,16 @@
 
 ## Anatomy of a MapComponent
 
-A MapComponent is a react component that accepts at least 1 attribute "mapId" and is expected to retrieve and directly manipulate a maplibre-gl instance from mapContext. 
+A MapComponent is a react component that accepts at least 1 attribute "mapId" (there are some exceptions) and is expected to retrieve a maplibre-gl instance from mapContext and directly manipulate it or watch its state. 
 An example implementation of basic required functions for the maplibre instance retrieval process using the functions getMap, mapExists provided by mapContext, both accepting "mapId" (string) as parameter, can be seen in ./components/MlComponentTemplate/MlComponentTemplate.js. 
-If no attribute mapId is provided the map component is expected to work with the map instance provided by mapContext at ```mapContext.map``` (always retrieve it using ```mapContext.getMap(props.mapId)```).
+If no attribute mapId is provided the map component is expected to work with the map instance provided by mapContext at ```mapContext.map``` (it is recommended to retrieve it using ```mapContext.getMap(props.mapId)```).
 
 
 ### File structure
 
 ```
 ./src/components/{component_name}/
+├── {component_name}.doc.en.md
 ├── {component_name}.doc.de.md
 ├── {component_name}.meta.json 
 ├── {component_name}.js 
@@ -44,7 +45,7 @@ React component implementation
 
 ##### Cleanup functions
 
-To make sure a component cleans up the MapLibre instance after it has been removed from reactDOM declare a reference to the map instance using the useRef hook. 
+To make sure a component cleans up anything it has added to the MapLibre instance when it is removed from reactDOM declare a reference to the map instance using the useRef hook. 
 
 **- Reference declaration**
 
@@ -54,7 +55,7 @@ To make sure a component cleans up the MapLibre instance after it has been remov
 
 **- Component cleanup function**
 
-After everything has been undone it is important to set the map reference (mapRef.current) to undefined.
+After everything has been undone set the map reference (mapRef.current) to undefined.
 
 ```js
   useEffect(() => {
@@ -73,7 +74,7 @@ After everything has been undone it is important to set the map reference (mapRe
 
 **- Reference population**
 
-This happens within the effect where the targeted (through props.mapId) map instance is discovered for the first time.
+This happens within the effect that discovers the map instance for the first time (watch the mapContext.mapIds state variable for added or removed map engine instances).
 
 ```js
   useEffect(() => {
@@ -84,7 +85,7 @@ This happens within the effect where the targeted (through props.mapId) map inst
     // set initializedRef.current to true to make sure this function gets only called once
     initializedRef.current = true;
 
-    // populate the mapRef.current variable
+    // populate the map reference
     mapRef.current = mapContext.getMap(props.mapId);
 
     // optionally add layers, sources, event listeners, controls, images to the MapLibre instance that are required by this component
@@ -95,11 +96,11 @@ This happens within the effect where the targeted (through props.mapId) map inst
 
 **- addLayer, addSource, addImage, addControls, on**
 
-The function mentioned above have been overriden in the MapLibreWrapper instance that is return by the mapContext.getMap(props.mapId) function. 
+The function mentioned above have been overriden in the MapLibreGlWrapper instance that is returned by the mapContext.getMap(props.mapId) function. 
 All five functions expect an additional optional parameter "component_id" (string) as last or optional parameter (except for the beforeLayerId parameter of the addLayer function, which should be defined as props.beforeLayerId to make sure the parent component is able to control the layer order).
-MapLibreGlWrapper uses the component_id to keep track of everything that has been added by a specific component (including inmplicitly added sources), enabling a safe and simple cleanup by calling ```mapRef.current.cleanup(component_id)``` as shown in the cleanup function example above.
+MapLibreGlWrapper uses the component_id to keep track of everything that has been added by a specific component (including implicitly added sources), enabling a safe and simple cleanup by calling ```mapRef.current.cleanup(component_id)``` as shown in the cleanup function example above.
 
-### {component_name}.meta.json
+### {component_name}.meta.json *//catalogue only*
 
 Additional meta data regarding the component, this file is required for the component to become listed in the catalogue
 
@@ -120,25 +121,32 @@ Additional meta data regarding the component, this file is required for the comp
 }
 ```
 
-### {component_name}.doc.de.md
+### {component_name}.doc.en.md *//catalogue only*
+### {component_name}.doc.de.md *//catalogue only*
 
 Description text, that is shown on the catalogue component detail page below the main image
 
-### {component_name}.stories.js
+### {component_name}.stories.js *//storybook only*
 
-Example implementation of a component in context with all required dependent components to showcase the basic functionality of a single component. Decorators to choose from are located in ./src/decorators/. During development the command ```yarn storybook``` will start a server (localhost:6006) with live reload functionality. In case of example applications the stories are used as a wrapper to make the application available in the storybook build that is later used to access working demos from within the catalogue.
-
-Storybook stories are also used to generate screenshots of each component. The command ```yarn test``` will run automated jest tests. To make a component screenshot appear in the catalogue manually create a png like ./public/thumbnails/{component_name}.png and push it to the repository, it will be included in the catalogue in the next catalogue deployment.
+Example implementation of a component in context with all required dependent components to showcase the basic functionality of a single component. Decorators to choose from are located in ./src/decorators/. During development the command ```yarn start``` will start a server (localhost:6006) with live reload functionality. In case of example applications the stories are used as a wrapper to make the application available in the storybook build that is later used to access working demos from within the catalogue.
 
 More information on writing storybook stories for react components: https://storybook.js.org/docs/react/get-started/browse-stories
 
 ## LoadingOverlay and LoadingOverlayProvider (currently located in ./ui_components/)
 
 The loading overlay component is added in the storybook decorator.
-Without any further configuration it will listen for new MapLibre instances registered in MapContext and fade out once all of them have fired an "IDLE" event. For more precise control the LoadingOverlayContext provides a ```loadingOverlayContext.setControlled(true)``` function that will, if called with true as first parameter, switch the LoadingOverlay to manual control. Once the application has loaded completely call the ```loadingOverlayContext.setLoadingDone(true)``` function to trigger the LoadingOverlay Component to fade out.
+Without any further configuration it will listen for new MapLibre instances registered in MapContext and fade out once all of them have fired an "idle" event. For more precise control the LoadingOverlayContext provides a ```loadingOverlayContext.setControlled(true)``` function that will, if called with true as first parameter, switch the LoadingOverlay to manual control. Once the application has loaded completely call the ```loadingOverlayContext.setLoadingDone(true)``` function to trigger the LoadingOverlay Component to fade out.
 
 For decorator integration examples check the storybook decorators located in ./decorators/.
-For controlled LoadingOverlay examples please see MlLaermkarte (story & component).
+
+# Tests
+
+```
+yarn test
+```
+
+will watch the filesystem for changes and run all jest tests for affected components.
+
 
 # Building the documentation
 
@@ -159,3 +167,9 @@ Serve the documentation:
 ```
 yarn docs-serve
 ```
+
+# Catalogue
+
+## Screenshots
+
+To make a component screenshot appear in the catalogue manually create a png like ./public/thumbnails/{component_name}.png and push it to the repository, it will be included in the catalogue in the next catalogue deployment.
