@@ -15258,9 +15258,10 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-"react-map-components-core@https://map_components:k3zW6xJmx-nqVCv_H1eq@repo.wheregroup.com/tweber/react-map-components-core.git#main":
-  version "0.1.0"
-  resolved "https://map_components:k3zW6xJmx-nqVCv_H1eq@repo.wheregroup.com/tweber/react-map-components-core.git#77dffa7f8949c136a3844abe04c749f149b23800"
+react-map-components-core@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-map-components-core/-/react-map-components-core-0.1.1.tgz#5226c539be25e36fbf1f617c8625bdf3c7d44dcc"
+  integrity sha512-Kc7JvE5oI47EWnKAKSZmK3furkic1Sjme4U3KhLlx7ualxJq4VjrOxHtYjKgQgrMsgeMpLWMb06civ5KVQ0O8w==
   dependencies:
     d3 "^6.7.0"
 

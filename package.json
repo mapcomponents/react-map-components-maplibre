@@ -18,7 +18,7 @@
     "maplibre-gl": "^1.13.0-rc.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-map-components-core": "https://map_components:k3zW6xJmx-nqVCv_H1eq@repo.wheregroup.com/tweber/react-map-components-core.git#main",
+    "react-map-components-core": "^0.1.1",
     "react-scripts": "4.0.3",
     "react-spinners": "^0.10.6",
     "three": "^0.126.1",
