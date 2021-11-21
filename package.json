@@ -38,7 +38,8 @@
   "scripts": {
     "start": "start-storybook -p 6006 -s public",
     "build": "rollup -c",
-    "test": "react-scripts test --env=jsdom --verbose --watchAll=false --coverage",
+    "test": "react-scripts test --env=jsdom --verbose --watchAll=true --coverage",
+    "test:noninteractive": "react-scripts test --verbose --watchAll=false --coverage",
     "test:generate-output": "react-scripts test --watchAll=false --json --outputFile=./src/.jest-test-results.json || true",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
