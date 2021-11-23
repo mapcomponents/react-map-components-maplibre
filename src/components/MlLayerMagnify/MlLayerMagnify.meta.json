@@ -2,7 +2,7 @@
   "name": "MlLayerMagnify",
   "title": "Map magnifier",
   "description": "Hides a part of a map that is superimposed on another MapLibre map.",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "Kartenlupe",
       "description": "Kartenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus."
