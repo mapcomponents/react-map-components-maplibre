@@ -1,5 +1,4 @@
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
-export { default as MapLibreMapDebug } from "./components/MapLibreMapDebug/MapLibreMap";
 export { default as MlComponentTemplate } from "./components/MlComponentTemplate/MlComponentTemplate";
 export { default as MlFillExtrusionLayer } from "./components/MlFillExtrusionLayer/MlFillExtrusionLayer";
 export { default as MlCreatePdfButton } from "./components/MlCreatePdfButton/MlCreatePdfButton";

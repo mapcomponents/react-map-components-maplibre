@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { MapContext } from 'react-map-components-core';
 import maplibregl from 'maplibre-gl/dist/maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import maplibregl$1 from 'maplibre-gl/dist/maplibre-gl-unminified';
 import { v4 } from 'uuid';
 import Button from '@mui/material/Button';
-import maplibregl$2, { Popup } from 'maplibre-gl';
+import maplibregl$1, { Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@mui/icons-material/Print';
 import { lineString, length, lineChunk, bbox } from '@turf/turf';
@@ -130,6 +129,42 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
@@ -205,14 +240,229 @@ function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
+var _excluded = ["lng", "lat"];
+/**
+ * Creates a MapLibre-gl-js instance and offers all of the native MapLibre functions and properties as well as additional functionality such as element registration & cleanup and more events.
+ *
+ * @param {object} props
+ *
+ * @class
+ */
+
 var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   var _this = this;
 
+  // closure variable to safely point to the object context of the current MapLibreGlWrapper instance
   var self = this; // element registration and cleanup on a component level is experimental
 
-  this.registeredElements = {};
-  this.baseLayers = [];
-  this.firstSymbolLayer = undefined;
+  this.registeredElements = {}; // array of base layer ids, all layers that have been added by the style passed to the MapLibreGl coonstructor
+
+  this.baseLayers = []; // layer id of the first symbol layer
+
+  this.firstSymbolLayer = undefined; // event handlers registered in MapLibreGlWrapper
+
+  this.eventHandlers = {
+    layerchange: [],
+    viewportchange: []
+  }; // functions and properties provided by the wrapper
+  // Add new functions and properties introduced by the wrapper to this object to prevent collisions due to future MapLibre API changes
+
+  this.wrapper = {
+    /**
+     * Subscribe the given event handler to an event
+     *
+     * @param {string} eventName
+     * @param {function} handler
+     * @param {object} options
+     * @param {string} componentId
+     * @returns
+     */
+    on: function on(eventName, handler, options, componentId) {
+      if (!self.eventHandlers[eventName]) return;
+
+      if (typeof options === 'string') {
+        componentId = options;
+        options = {};
+      }
+
+      self.eventHandlers[eventName].push({
+        handler: handler,
+        options: options
+      });
+      var _arguments = [eventName, handler];
+
+      if (componentId && typeof componentId === "string") {
+        self.initRegisteredElements(componentId);
+        self.registeredElements[componentId].wrapperEvents.push(_arguments);
+      }
+    },
+
+    /**
+     * Unsubscribes the given event handler from an event
+     *
+     * @param {string} eventName
+     * @param {function} handler
+     * @returns
+     */
+    off: function off(eventName, handler) {
+      if (!self.eventHandlers[eventName]) return;
+      self.eventHandlers[eventName] = self.eventHandlers[eventName].filter(function (item) {
+        if (!Object.is(item.handler, handler)) {
+          return item;
+        }
+      });
+    },
+
+    /**
+     * Calls all event handlers that have been subscribed to the given eventName
+     *
+     * @param {string} eventName
+     * @param {object} context
+     * @returns
+     */
+    fire: function fire(eventName, context) {
+      if (!self.eventHandlers[eventName]) return;
+      var scope = context || window;
+      var event = new Event(eventName);
+      event.data = self;
+      self.eventHandlers[eventName].forEach(function (item) {
+        item.handler.call(scope, event);
+      });
+    },
+
+    /**
+     * Array containing an object for each layer in the MapLibre instance providing information on visibility, loading state, order, paint & layout properties
+     */
+    layerState: {},
+
+    /**
+     * Maps layerIds to layerState in JSON string form for quick deep comparisons
+     */
+    layerStateStrings: {},
+
+    /**
+     * Previous Version of layerStateString
+     */
+    oldLayerStateStrings: {},
+
+    /**
+     * Builds the layer info object for a given layer id
+     *
+     * @param {string} layer
+     * @returns object
+     */
+    buildLayerObject: function buildLayerObject(layer) {
+      var _layer$paint, _layer$layout;
+
+      //if (self.baseLayers.indexOf(layer.id) === -1) {
+      var paint = {};
+      var values = (_layer$paint = layer.paint) === null || _layer$paint === void 0 ? void 0 : _layer$paint._values;
+      Object.keys(values || {}).map(function (propName) {
+        paint[propName] = typeof values[propName].value !== "undefined" ? values[propName].value.value : values[propName];
+      });
+      var layout = {};
+      values = (_layer$layout = layer.layout) === null || _layer$layout === void 0 ? void 0 : _layer$layout._values;
+      Object.keys(values || {}).map(function (propName) {
+        layout[propName] = typeof values[propName].value !== "undefined" ? values[propName].value.value : values[propName];
+      });
+      return {
+        id: layer.id,
+        type: layer.type,
+        visible: layer.visibility === "none" ? false : true,
+        baseLayer: self.baseLayers.indexOf(layer.id) !== -1,
+        paint: paint,
+        layout: layout //filter: layers[layerId].filter,
+        //layout: layers[layerId].layout,
+        //maxzoom: layers[layerId].maxzoom,
+        //metadata: layers[layerId].metadata,
+        //minzoom: layers[layerId].minzoom,
+        //paint: layers[layerId].paint.get(),
+        //source: layers[layerId].source,
+        //sourceLayer: layers[layerId].sourceLayer,
+
+      }; //}
+    },
+
+    /**
+     * Returns an array of layer state info objects for all layers in the MapLibre instance
+     *
+     * @returns array
+     */
+    buildLayerObjects: function buildLayerObjects() {
+      return self.style._order.map(function (layerId) {
+        return self.wrapper.buildLayerObject(self.map.style._layers[layerId]);
+      }).filter(function (n) {
+        return n;
+      });
+    },
+
+    /**
+     * Updates layer state info objects
+     */
+    refreshLayerState: function refreshLayerState() {
+      self.wrapper.layerState = self.wrapper.buildLayerObjects();
+      self.wrapper.layerStateStrings = self.wrapper.layerState.map(function (el) {
+        return JSON.stringify(el);
+      });
+    },
+
+    /**
+     * Object containing information on the current viewport state
+     */
+    viewportState: {},
+
+    /**
+     * The same data as viewportState in JSON string form for quick deep comparisons
+     */
+    viewportStateString: "{}",
+
+    /**
+     * Previous version of viewportStateString
+     */
+    oldViewportStateString: "{}",
+    getViewport: function getViewport() {
+      return typeof self.map.getCenter === 'function' ? {
+        center: function (_ref) {
+          var lng = _ref.lng,
+              lat = _ref.lat,
+              rest = _objectWithoutProperties(_ref, _excluded);
+
+          return {
+            lng: lng,
+            lat: lat
+          };
+        }(self.map.getCenter()),
+        zoom: self.map.getZoom(),
+        bearing: self.map.getBearing(),
+        pitch: self.map.getPitch()
+      } : {};
+    },
+    viewportRefreshEnabled: true,
+    viewportRefreshWaiting: false,
+    refreshViewport: function refreshViewport(force) {
+      if (self.wrapper.viewportRefreshEnabled || force) {
+        self.wrapper.viewportRefreshEnabled = false;
+        self.wrapper.viewportState = self.wrapper.getViewport();
+        self.wrapper.viewportStateString = JSON.stringify(self.wrapper.viewportState);
+        setTimeout(function () {
+          self.wrapper.viewportRefreshEnabled = true;
+
+          if (self.wrapper.viewportRefreshWaiting) {
+            self.wrapper.viewportRefreshWaiting = false;
+            self.wrapper.refreshViewport();
+          }
+        }, 50);
+      } else {
+        self.wrapper.viewportRefreshWaiting = true;
+      }
+    }
+  };
+  /**
+   * Initializes an empty registered elements object for the given componentId
+   *
+   * @param {string} componentId
+   * @param {boolean} force
+   */
 
   this.initRegisteredElements = function (componentId, force) {
     if (typeof self.registeredElements[componentId] === "undefined" || force !== "undefined" && force) {
@@ -221,10 +471,20 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
         sources: [],
         images: [],
         events: [],
-        controls: []
+        controls: [],
+        wrapperEvents: []
       };
     }
   };
+  /**
+   * Overrides MapLibre-gl-js addLayer function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {object} layer
+   * @param {string} beforeId
+   * @param {string} componentId
+   * @returns
+   */
+
 
   this.addLayer = function (layer, beforeId, componentId) {
     if (!self.map.style) {
@@ -242,6 +502,16 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
     self.map.addLayer(layer, beforeId);
   };
+  /**
+   * Overrides MapLibre-gl-js addSource function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {string} sourceId
+   * @param {object} source
+   * @param {object} options
+   * @param {string} componentId
+   * @returns
+   */
+
 
   this.addSource = function (sourceId, source, options, componentId) {
     if (!self.map.style) {
@@ -259,6 +529,16 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
     self.map.addSource(sourceId, source, options);
   };
+  /**
+   * Overrides MapLibre-gl-js addImage function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {string} id
+   * @param {*} image
+   * @param {*} ref
+   * @param {string} componentId
+   * @returns
+   */
+
 
   this.addImage = function (id, image, ref, componentId) {
     if (!self.map.style) {
@@ -276,6 +556,16 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
     self.map.addImage(id, image, ref);
   };
+  /**
+   * Overrides MapLibre-gl-js on function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {string} type
+   * @param {string} layerId
+   * @param {function} listener
+   * @param {string} componentId
+   * @returns
+   */
+
 
   this.on = function (type, layerId, listener, componentId) {
     var _self$map;
@@ -297,6 +587,14 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
     (_self$map = self.map).on.apply(_self$map, _toConsumableArray(_arguments));
   };
+  /**
+   * Overrides MapLibre-gl-js addControl function providing an additional componentId parameter for the wrapper element registration.
+   *
+   * @param {object} control
+   * @param {string} position
+   * @param {string} componentId
+   */
+
 
   this.addControl = function (control, position, componentId) {
     if (componentId && typeof componentId === "string") {
@@ -305,13 +603,15 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     }
 
     self.map.addControl(control, position);
-  }; // cleanup function that remove anything that has been added to the maplibre instance referenced with componentId
-  // be aware that this function only works with explicitly added elements e.g. sources implizitly added by addLayer calls still require manual removal
+  };
+  /**
+   * Removes anything that has been added to the maplibre instance referenced with componentId
+   *
+   * @param {string} componentId
+   */
 
 
   this.cleanup = function (componentId) {
-    //console.log("cleanup " + componentId);
-    //console.log(self.registeredElements[componentId]);
     if (self.map.style && typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
       self.registeredElements[componentId].layers.forEach(function (item) {
@@ -340,6 +640,12 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
       self.registeredElements[componentId].controls.forEach(function (item) {
         self.map.removeControl(item);
+      }); // cleanup wrapper events
+
+      self.registeredElements[componentId].wrapperEvents.forEach(function (item) {
+        var _self$wrapper;
+
+        (_self$wrapper = self.wrapper).off.apply(_self$wrapper, _toConsumableArray(item));
       });
       self.initRegisteredElements(componentId, true);
     }
@@ -410,7 +716,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
   }); // initialize the MapLibre-gl instance
 
   var initializeMapLibre = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -422,7 +728,11 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 
               _context.next = 3;
               return fetch(props.mapOptions.style).then(function (response) {
-                return response.json();
+                if (response.ok) {
+                  return response.json();
+                } else {
+                  throw new Error('error loading map style.json');
+                }
               }).then(function (styleJson) {
                 styleJson.layers.forEach(function (item) {
                   self.baseLayers.push(item.id);
@@ -433,17 +743,33 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
                 });
                 self.styleJson = styleJson;
                 props.mapOptions.style = styleJson;
+              }).catch(function (error) {
+                console.log(error);
               });
 
             case 3:
               self.map = new maplibregl.Map(props.mapOptions);
               self.addNativeMaplibreFunctionsAndProps();
+              self.wrapper.refreshViewport(true);
+              self.wrapper.fire("viewportchange");
+              self.map.on("move", function () {
+                self.wrapper.refreshViewport();
+
+                if (self.wrapper.viewportStateString !== self.wrapper.oldViewportStateString) {
+                  self.wrapper.oldViewportStateString = self.wrapper.viewportStateString;
+                  self.wrapper.fire("viewportchange");
+                }
+              });
+              self.map.on("data", function () {
+                self.wrapper.refreshLayerState();
+                self.wrapper.fire("layerchange");
+              });
 
               if (typeof props.onReady === "function") {
                 props.onReady(self.map, self);
               }
 
-            case 6:
+            case 10:
             case "end":
               return _context.stop();
           }
@@ -452,7 +778,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     }));
 
     return function initializeMapLibre() {
-      return _ref.apply(this, arguments);
+      return _ref2.apply(this, arguments);
     };
   }();
 
@@ -460,10 +786,14 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
 };
 
 /**
- * The MapLibreMap component will create the MapLibre-gl instance and set the reference at MapContext.map after the MapLibre-gl load event has fired. That way (since the map refence is created using the useState hook) you can use the react useEffect hook in depending components to access the MapLibre-gl instance like ```useEffect(() => { \/** code *\/ }, [mapContext.map])``` and be sure the code is executed once the MapLibre-gl instance has fired the load event.
+ * Creates a MapLibreGlWrapper instance and registers it in MapContext
+ * after the MapLibre-gl load event has fired.
  *
  * MapLibreMap returns the html node that will be used by MapLibre-gl to render the map.
- * This Component must be kept unaware of any related components that interact with the MapLibre-gl instance.
+ * This Component must be kept unaware of any related components that interact with the MapLibre-gl
+ * instance.
+ *
+ * @component
  */
 
 var MapLibreMap = function MapLibreMap(props) {
@@ -487,16 +817,10 @@ var MapLibreMap = function MapLibreMap(props) {
   }, []);
   useEffect(function () {
     if (mapContainer.current) {
-      // TODO: adjust defaults
-      var defaultOptions = {
-        lng: 8.607,
-        lat: 53.1409349,
-        zoom: 10,
-        container: mapContainer.current,
-        accessToken: "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA"
-      };
       map.current = new MapLibreGlWrapper({
-        mapOptions: _objectSpread2(_objectSpread2({}, defaultOptions), mapOptions),
+        mapOptions: _objectSpread2({
+          container: mapContainer.current
+        }, mapOptions),
         onReady: function onReady(map, wrapper) {
           map.once("load", function () {
             if (props.mapId) {
@@ -518,61 +842,37 @@ var MapLibreMap = function MapLibreMap(props) {
   });
 };
 
+MapLibreMap.defaultProps = {
+  mapId: undefined,
+  options: {
+    lng: 8.607,
+    lat: 53.1409349,
+    zoom: 10,
+    accessToken: "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA"
+  }
+};
 MapLibreMap.propTypes = {
+  /**
+   * Id of the MapLibreGl(Wrapper) instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Config object that is passed to the MapLibreGl constructor as first parameter.
+   * See https://maplibre.org/maplibre-gl-js-docs/api/map/ for a formal documentation of al
+   * available properties.
+   */
   options: PropTypes.object
 };
 
 /**
- * The MapLibreMap component will create the MapLibre-gl instance and set the reference at MapContext.map after the MapLibre-gl load event has fired. That way (since the map refence is created using the useState hook) you can use the react useEffect hook in depending components to access the MapLibre-gl instance like ```useEffect(() => { \/** code *\/ }, [mapContext.map])``` and be sure the code is executed once the MapLibre-gl instance has fired the load event.
+ * TODO: Add short & useful description
  *
- * MapLibreMap returns the html node that will be used by MapLibre-gl to render the map.
- * This Component must be kept unaware of any related components that interact with the MapLibre-gl instance.
+ * @param {object} props
+ * @param {string} props.mapId Id of the target MapLibre instance in mapContext
+ *
+ * @component
  */
-
-var MapLibreMap$1 = function MapLibreMap(props) {
-  var map = useRef(null);
-  var mapContainer = useRef(null);
-  var mapContext = useContext(MapContext);
-  var mapOptions = props.options;
-  useEffect(function () {
-    return function () {
-      mapContext.removeMap(props.mapId);
-      map.current.remove();
-      map.current = null;
-    };
-  }, []);
-  useEffect(function () {
-    if (mapContainer.current) {
-      // TODO: adjust defaults
-      var defaultOptions = {
-        lng: 8.607,
-        lat: 53.1409349,
-        zoom: 10,
-        container: mapContainer.current,
-        accessToken: "pk.eyJ1IjoibWF4dG9iaSIsImEiOiJjaW1rcWQ5bWMwMDJvd2hrbWZ2ZTBhcnM5In0.NcGt5NmLP5Q1WC7P5u6qUA"
-      };
-      map.current = new maplibregl$1.Map(_objectSpread2(_objectSpread2({}, defaultOptions), mapOptions));
-      map.current.on("load", function () {
-        if (props.mapId) {
-          mapContext.registerMap(props.mapId, map.current);
-        } else {
-          mapContext.setMap(map.current);
-        }
-      }); // TODO: remove this line
-
-      window.map = map.current;
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-
-  }, [mapContainer]);
-  return /*#__PURE__*/React.createElement("div", {
-    ref: mapContainer,
-    className: "mapContainer"
-  });
-};
-
-MapLibreMap$1.propTypes = {
-  options: PropTypes.object
-};
 
 var MlComponentTemplate = function MlComponentTemplate(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -592,41 +892,38 @@ var MlComponentTemplate = function MlComponentTemplate(props) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
       }
+
+      initializedRef.current = false;
     };
   }, []);
   useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
     mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
-    console.log(componentId.current);
   }, [mapContext.mapIds, mapContext, props.mapId]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
-var paintDefaults = {
-  "fill-extrusion-color": "hsl(196, 61%, 83%)",
-  "fill-extrusion-height": {
-    property: "render_height",
-    type: "identity"
-  },
-  "fill-extrusion-base": {
-    property: "render_min_height",
-    type: "identity"
-  },
-  "fill-extrusion-opacity": 1
+MlComponentTemplate.defaultProps = {
+  mapId: undefined
 };
+MlComponentTemplate.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string
+};
+
 /**
- * MlCompositeLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Adds a fill extrusion layer to the MapLibre instance reference by props.mapId
+ *
+ * @Component
  */
 
-var MlCompositeLayer = function MlCompositeLayer(_ref) {
-  var paint = _ref.paint,
-      sourceId = _ref.sourceId,
-      sourceLayer = _ref.sourceLayer,
-      minZoom = _ref.minZoom;
+var MlFillExtrusionLayer = function MlFillExtrusionLayer(props) {
   var mapContext = useContext(MapContext);
   var mapRef = useRef(null);
 
@@ -635,68 +932,49 @@ var MlCompositeLayer = function MlCompositeLayer(_ref) {
       showLayer = _useState2[0],
       setShowLayer = _useState2[1];
 
-  var layerName = "building-3d";
-
-  var componentCleanup = function componentCleanup() {
-    if (mapRef.current) {
-      if (mapRef.current.style && mapRef.current.getLayer(layerName)) {
-        mapRef.current.removeLayer(layerName);
-      }
-
-      if (mapRef.current.style && mapRef.current.getSource(layerName)) {
-        mapRef.current.removeSource(layerName);
-      }
-
-      mapRef.current = null;
-    }
-  };
-
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlFillExtrusionLayer-") + v4());
+  var initializedRef = useRef(false);
+  var layerId = useRef(props.layerId || "MlFillExtrusionLayer-" + v4());
   useEffect(function () {
-    return componentCleanup;
+    var _componentId = componentId.current;
+    return function () {
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+        mapRef.current = undefined;
+      }
+
+      initializedRef.current = false;
+    };
   }, []);
   useEffect(function () {
-    if (!mapContext.map) return; // cleanup fragments left in MapLibre-gl from previous component uses
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    componentCleanup();
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
+    var lastLabelLayerId = undefined;
 
-    var addCompositeLayer = function addCompositeLayer() {
-      if (!mapContext.map.getLayer(layerName)) {
-        var lastLabelLayerId = false;
+    if (mapContext.map.getLayer("waterway-name")) {
+      lastLabelLayerId = "waterway-name";
+    }
 
-        if (mapContext.map.getLayer("waterway-name")) {
-          lastLabelLayerId = "waterway-name";
-        }
+    if (mapContext.map.getLayer("poi_label")) {
+      lastLabelLayerId = "poi_label";
+    }
 
-        if (mapContext.map.getLayer("poi_label")) {
-          lastLabelLayerId = "poi_label";
-        }
-
-        mapContext.map.addLayer({
-          id: layerName,
-          type: "fill-extrusion",
-          source: sourceId || "openmaptiles",
-          "source-layer": sourceLayer || "building",
-          minzoom: minZoom || 14,
-          paint: _objectSpread2(_objectSpread2({}, paintDefaults), paint)
-        }, lastLabelLayerId);
-      }
-    };
-
-    addCompositeLayer();
-  }, [mapContext.map, minZoom, paint, sourceId, sourceLayer]);
+    mapContext.map.addLayer({
+      id: layerId.current,
+      type: "fill-extrusion",
+      source: props.sourceId || "openmaptiles",
+      "source-layer": props.sourceLayer || "building",
+      minzoom: props.minZoom || 14,
+      paint: _objectSpread2({}, props.paint)
+    }, props.insertBeforeLayer || lastLabelLayerId, componentId.current);
+  }, [mapContext, props.insertBeforeLayer, props.mapId, props.minZoom, props.paint, props.sourceId, props.sourceLayer]);
   useEffect(function () {
-    if (!mapContext.map) return;
-    mapRef.current = mapContext.map;
+    if (!initializedRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
-    if (mapRef.current.getLayer(layerName)) {
-      // toggle layer visibility by changing the layout object's visibility property
-      if (showLayer) {
-        mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
-      } else {
-        mapRef.current.setLayoutProperty(layerName, "visibility", "none");
-      }
-    } //
-
+    mapRef.current.setLayoutProperty(layerId.current, "visibility", showLayer ? "visible" : "none");
   }, [showLayer, mapContext]);
   return /*#__PURE__*/React.createElement(Button, {
     color: "primary",
@@ -705,6 +983,71 @@ var MlCompositeLayer = function MlCompositeLayer(_ref) {
       return setShowLayer(!showLayer);
     }
   }, "Composite");
+};
+
+MlFillExtrusionLayer.defaultProps = {
+  mapId: undefined,
+  paint: {
+    "fill-extrusion-color": "hsl(196, 61%, 83%)",
+    "fill-extrusion-height": {
+      property: "render_height",
+      type: "identity"
+    },
+    "fill-extrusion-base": {
+      property: "render_min_height",
+      type: "identity"
+    },
+    "fill-extrusion-opacity": 1
+  }
+};
+MlFillExtrusionLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Id of the layer that will be added by this component
+   */
+  layerId: PropTypes.string,
+
+  /**
+   * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+   */
+  idPrefix: PropTypes.string,
+
+  /**
+   * Paint properties of the config object that is passed to the MapLibreGl.addLayer call. All
+   * available properties are documented in the MapLibreGl documentation
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill-extrusion
+   */
+  paint: PropTypes.object,
+
+  /**
+   * Source id of a vector tile source containing the geometries to use for this fill-extrusion
+   * layer.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#source-layer
+   */
+  sourceId: PropTypes.string,
+
+  /**
+   * Layer id from a vector tile source containing the geometries to use for this fill-extrusion
+   * layer.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#source-layer
+   */
+  sourceLayer: PropTypes.string,
+
+  /**
+   * This layer will be hidde for zoom levels lower than defined on this property
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#minzoom
+   */
+  minZoom: PropTypes.number,
+
+  /**
+   * The layerId of an existing layer this layer should be rendered visually beneath
+   * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+   */
+  insertBeforeLayer: PropTypes.string
 };
 
 var nmMap = {
@@ -753,7 +1096,7 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
   container.style.height = toPixels(height);
   hidden.appendChild(container); //Render map
 
-  var renderMap = new maplibregl$2.Map({
+  var renderMap = new maplibregl$1.Map({
     container: container,
     center: map.getCenter(),
     zoom: map.getZoom(),
@@ -857,29 +1200,45 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
       }
     });
     setLoading(false);
-    console.log("end create PDF");
   });
 };
 
 /**
- * MlCreatePdfButton returns a Button that will create a PDF version of the current map view (dimensions adjusted to fit Din A4 Paper).
- * It expects a MapLibre-gl instance accessible in mapContext.map.
+ * Renders a button that will create a PDF version of the current map view (dimensions adjusted to fit Din A4 Paper).
+ *
+ * @component
  */
 
-var MlCreatePdfButton = function MlCreatePdfButton() {
+var MlCreatePdfButton = function MlCreatePdfButton(props) {
   var mapContext = useContext(MapContext);
+  var initializedRef = useRef(false);
+  var mapRef = useRef(undefined);
+  useEffect(function () {
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
+  }, [mapContext.mapIds, mapContext, props.mapId]);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Button, {
     color: "primary",
     variant: "contained",
     onClick: function onClick() {
-      createPdf(mapContext.map, null, function () {});
+      createPdf(mapRef.current, null, function () {});
     }
   }, /*#__PURE__*/React.createElement(PrinterIcon, null)));
 };
 
+MlCreatePdfButton.defaultProps = {
+  mapId: undefined
+};
+MlCreatePdfButton.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string
+};
+
 var _showNextTransitionSegment = function _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep) {
   var _arguments = arguments;
-  console.log("SHOW NEXT TRANSITION SEGMENT CALLED");
 
   if (typeof map.getSource(layerId) === "undefined" || !transitionInProgressRef.current) {
     setTimeout(function () {
@@ -914,7 +1273,6 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, laye
 
 var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, layerId) {
   // create the transition geojson between oldGeojsonRef.current and props.geojson
-  //console.log("start transition");
   // create a geojson that contains no common point between the two line features
   var transitionCoordinatesShort = [];
   var transitionCoordinatesLong = [];
@@ -946,9 +1304,7 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
     longerGeojson = sourceGeojson;
     shorterGeojson = targetGeojson;
     reverseOrder = true;
-  } //console.log(shorterGeojson);
-  //console.log(longerGeojson);
-
+  }
 
   if (longerGeojson && shorterGeojson) {
     for (var i = 0, len = longerGeojson.geometry.coordinates.length; i < len; i++) {
@@ -1038,6 +1394,11 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
 };
 
 var msPerStep = 50;
+/**
+ * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
+ *
+ * @component
+ */
 
 var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -1050,6 +1411,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
   var transitionGeojsonDataRef = useRef([]);
   var transitionGeojsonCommonDataRef = useRef([]);
   var componentId = useRef((props.layerId ? props.layerId : "MlGeoJsonLayer-") + (props.idSuffix || v4()));
+  var layerId = useRef(props.layerId || componentId.current);
   useEffect(function () {
     var _componentId = componentId.current;
     return function () {
@@ -1104,7 +1466,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
 
       mapRef.current = mapContext.getMap(props.mapId);
       mapRef.current.addLayer({
-        id: componentId.current,
+        id: layerId.current,
         source: {
           type: "geojson",
           data: geojson
@@ -1121,7 +1483,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       }
 
       if (typeof props.onClick !== "undefined") {
-        mapRef.current.on("mouseup", componentId.current, props.onClick, componentId.current);
+        mapRef.current.on("click", componentId.current, props.onClick, componentId.current);
       }
 
       if (typeof props.onLeave !== "undefined") {
@@ -1135,8 +1497,74 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
         }, props.transitionTime / 2);
       }
     }
-  }, [mapContext.mapIds, mapContext, props.geojson, props.insertBeforeLayer, props.mapId, props.type, props.transitionTime, props.paint, transitionToGeojson]);
+  }, [mapContext.mapIds, mapContext, props, transitionToGeojson]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
+};
+
+MlGeoJsonLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Type of the layer that will be added to the MapLibre instance.
+   * Possible values: "line", "circle", "fill"
+   */
+  type: PropTypes.string,
+
+  /**
+   * Paint object, that is passed to the addLayer call.
+   * Possible propsdepend on the layer type.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+   */
+  paint: PropTypes.object,
+
+  /**
+   * GeoJSON data that is supposed to be rendered by this component.
+   */
+  geojson: PropTypes.object,
+
+  /**
+   * Id of an existing layer in the mapLibre instance to help specify the layer order
+   * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+   */
+  insertBeforeLayer: PropTypes.string,
+
+  /**
+   * Id of the new layer and source that are added to the MapLibre instance
+   */
+  layerId: PropTypes.string,
+
+  /**
+   * Click event handler that is executed whenever a geometry rendered by this component is clicked.
+   */
+  onClick: PropTypes.func,
+
+  /**
+   * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
+   */
+  onHover: PropTypes.func,
+
+  /**
+   * Leave event handler that is executed whenever a geometry rendered by this component is
+   * left/unhovered.
+   */
+  onLeave: PropTypes.func,
+
+  /**
+   * Creates transition animation whenever the geojson prop changes.
+   * Only works with layer type "line" and LineString GeoJSON data.
+   */
+  transitionTime: PropTypes.func,
+
+  /**
+   * Id suffix string that is appended to the componentId.
+   * Probably removed soon.
+   */
+  idSuffix: PropTypes.string
 };
 
 var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
@@ -1145,9 +1573,9 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   var componentId = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-") + v4());
   var mapContext = useContext(MapContext);
   var layerInitializedRef = useRef(false);
-  var idPostfixRef = useRef(props.idSuffix || new Date().getTime());
+  var idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  var layerId = (props.layerId || "MlImageMarkerLayer-") + idPostfixRef.current;
+  var layerId = (props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current;
   useEffect(function () {
     var _componentId = componentId.current;
     return function () {
@@ -1258,25 +1686,34 @@ var MlLayer = function MlLayer(props) {
     }
   }, [props.options, layerId, mapContext, props]);
   useEffect(function () {
-    if (!props.options || !mapContext.mapExists(props.mapId) || layerInitializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapContext.mapExists(props.mapId) || layerInitializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     mapRef.current = mapContext.getMap(props.mapId);
 
     if (mapRef.current) {
+      var _props$options, _props$options2;
+
       layerInitializedRef.current = true;
       mapRef.current.addLayer(_objectSpread2({
-        id: layerId
+        id: layerId,
+        type: "background",
+        paint: {
+          "background-color": "rgba(0,0,0,0)"
+        }
       }, props.options), props.insertBeforeLayer, componentId.current);
-      layerPaintConfRef.current = JSON.stringify(props.options.paint);
-      layerLayoutConfRef.current = JSON.stringify(props.options.layout);
+      layerPaintConfRef.current = JSON.stringify((_props$options = props.options) === null || _props$options === void 0 ? void 0 : _props$options.paint);
+      layerLayoutConfRef.current = JSON.stringify((_props$options2 = props.options) === null || _props$options2 === void 0 ? void 0 : _props$options2.layout);
     }
   }, [mapContext.mapIds, mapContext, props, layerId]);
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
 /**
- * MlOsmLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Adds a standard OSM tile layer to the maplibre-gl instancereference by
+ * props.mapId
+ *
+ * @component
  */
 
 var MlOsmLayer = function MlOsmLayer(props) {
@@ -1336,8 +1773,40 @@ var MlOsmLayer = function MlOsmLayer(props) {
   }, "OSM");
 };
 
+MlOsmLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+   */
+  idPrefix: PropTypes.string,
+
+  /**
+   * Options object that will be used as first parameter on the MapLibreGl.addSource call see MapLibre source options documentation.
+   */
+  sourceOptions: PropTypes.object,
+
+  /**
+   * Options object that will be used as first parameter on the MapLibreGl.addLayer call see MapLibre layer options documentation.
+   *
+   */
+  layerOptions: PropTypes.object,
+
+  /**
+   * The layerId of an existing layer this layer should be rendered visually beneath
+   * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+   */
+  insertBeforeLayer: PropTypes.string
+};
+
 /**
- * MlVectorTileLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Adds a vector-tile source and 0...n vector-tile-layers to the MapLibre instance referenced by
+ * props.mapId
+ *
+ * @component
  */
 
 var MlVectorTileLayer = function MlVectorTileLayer(props) {
@@ -1429,21 +1898,74 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
   return /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 
+MlVectorTileLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Options object that will be used as first parameter on the MapLibreGl.addSource call see MapLibre source options documentation.
+   */
+  sourceOptions: PropTypes.object,
+
+  /**
+   * Object that hold layers
+   */
+  layers: PropTypes.object,
+
+  /**
+   * String of the URL of a wms layer
+   */
+  url: PropTypes.string
+};
+
+var defaultProps = {
+  visible: true,
+  urlParameters: {
+    bbox: "{bbox-epsg-3857}",
+    format: "image/png",
+    service: "WMS",
+    version: "1.1.1",
+    request: "GetMap",
+    srs: "EPSG:3857",
+    width: 256,
+    height: 256,
+    styles: ""
+  },
+  attribution: "",
+  sourceOptions: {
+    minZoom: 0,
+    maxZoom: 20
+  },
+  layerOptions: {
+    minZoom: 0,
+    maxZoom: 20
+  }
+};
 /**
- * MlWmsLayer returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Adds a WMS raster source & layer to the maplibre-gl instance
+ *
+ * @param {object} props
+ * @param {object} props.urlParameters URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object
+ * @param {string} props.url WMS URL
+ * @param {bool} props.visible Sets layer "visibility" property to "visible" if true or "none" if false
+ * @param {string} props.attribution MapLibre attribution shown in the bottom right of the map, if this layer is visible
+ * @param {string} props.mapId Id of the target MapLibre instance in mapContext
+ * @param {object} props.sourceOptions Object that is passed to the MapLibre.addSource call as config option parameter
+ * @param {object} props.layerOptions Object that is passed to the MapLibre.addLayer call as config option parameter
+ * @param {string} props.insertBeforeLayer Id of an existing layer in the mapLibre instance to help specify the layer order
+                                           This layer will be visually beneath the layer with the "insertBeforeLayer" id
+ *
+ * @component
  */
 
 var MlWmsLayer = function MlWmsLayer(props) {
   var mapContext = useContext(MapContext);
-
-  var _useState = useState(true),
-      _useState2 = _slicedToArray(_useState, 2),
-      showLayer = _useState2[0],
-      setShowLayer = _useState2[1];
-
   var componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLayer-") + v4());
   var mapRef = useRef(null);
   var initializedRef = useRef(false);
+  var layerId = useRef(props.layerId || componentId.current);
   useEffect(function () {
     var _componentId = componentId.current;
     return function () {
@@ -1452,44 +1974,114 @@ var MlWmsLayer = function MlWmsLayer(props) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = null;
       }
+
+      initializedRef.current = false;
     };
   }, []);
   useEffect(function () {
+    var _propsUrlParams2;
+
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+    mapRef.current = mapContext.getMap(props.mapId);
+    if (!mapRef.current) return;
     initializedRef.current = true;
-    mapRef.current = mapContext.getMap(props.mapId); // Add the new layer to the openlayers instance once it is available
 
-    mapRef.current.addSource(componentId.current, {
+    var _propsUrlParams;
+
+    var _wmsUrl = props.url;
+
+    if (props.url.indexOf("?") !== -1) {
+      _propsUrlParams = props.url.split("?");
+      _wmsUrl = _propsUrlParams[0];
+    }
+
+    var _urlParamsFromUrl = new URLSearchParams((_propsUrlParams2 = _propsUrlParams) === null || _propsUrlParams2 === void 0 ? void 0 : _propsUrlParams2[1]); // first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
+
+
+    var urlParamsObj = _objectSpread2(_objectSpread2(_objectSpread2({}, defaultProps.urlParameters), Object.fromEntries(_urlParamsFromUrl)), props.urlParameters);
+
+    var urlParams = new URLSearchParams(urlParamsObj);
+    var urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+    mapRef.current.addSource(layerId.current, _objectSpread2({
       type: "raster",
-      tiles: [props.url + "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&width=256&height=256&layers=" + props.layer],
-      tileSize: 256,
-      attribution: "" //...props.sourceOptions,
-
-    }, componentId.current);
+      tiles: [_wmsUrl + "?" + urlParamsStr],
+      tileSize: urlParamsObj.width,
+      attribution: props.attribution
+    }, props.sourceOptions), componentId.current);
     mapRef.current.addLayer(_objectSpread2({
-      id: componentId.current,
+      id: layerId.current,
       type: "raster",
-      source: componentId.current,
-      minzoom: 0,
-      maxzoom: 10
-    }, props.sourceOptions), props.insertBeforeLayer, componentId.current);
+      source: componentId.current
+    }, props.layerOptions), props.insertBeforeLayer, componentId.current);
+
+    if (!props.visible) {
+      mapRef.current.setLayoutProperty(componentId.current, "visibility", "none");
+    }
   }, [mapContext.mapIds, mapContext, props]);
   useEffect(function () {
-    if (!mapRef.current) return; // toggle layer visibility by changing the layout object's visibility property
+    if (!mapRef.current || !initializedRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
-    if (showLayer) {
+    if (props.visible) {
       mapRef.current.setLayoutProperty(componentId.current, "visibility", "visible");
     } else {
       mapRef.current.setLayoutProperty(componentId.current, "visibility", "none");
     }
-  }, [showLayer]);
-  return /*#__PURE__*/React.createElement(Button, {
-    color: "primary",
-    variant: showLayer ? "contained" : "outlined",
-    onClick: function onClick() {
-      return setShowLayer(!showLayer);
-    }
-  }, "WMS");
+  }, [props.visible]);
+  return /*#__PURE__*/React.createElement(React.Fragment, null);
+};
+
+MlWmsLayer.defaultProps = _objectSpread2({}, defaultProps);
+MlWmsLayer.propTypes = {
+  /**
+   * WMS URL
+   */
+  url: PropTypes.string.isRequired,
+
+  /**
+   * URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object.
+   */
+  urlParameters: PropTypes.shape({
+    layers: PropTypes.string.isRequired,
+    bbox: PropTypes.string,
+    format: PropTypes.string,
+    service: PropTypes.string,
+    version: PropTypes.string,
+    request: PropTypes.string,
+    srs: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number
+  }),
+
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * MapLibre attribution shown in the bottom right of the map, if this layer is visible
+   */
+  attribution: PropTypes.string,
+
+  /**
+   * Object that is passed to the MapLibre.addLayer call as config option parameter
+   */
+  layerOptions: PropTypes.object,
+
+  /**
+   * Object that is passed to the MapLibre.addSource call as config option parameter
+   */
+  sourceOptions: PropTypes.object,
+
+  /**
+   * Id of an existing layer in the mapLibre instance to help specify the layer order
+   * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+   */
+  insertBeforeLayer: PropTypes.string,
+
+  /**
+   * Sets layer "visibility" property to "visible" if true or "none" if false
+   */
+  visible: PropTypes.bool
 };
 
 var classes = {
@@ -2846,7 +3438,6 @@ function MlFeatureEditor(props) {
   };
 
   var mouseUpHandler = function mouseUpHandler() {
-    console.log("mouseup");
     setMouseUpTrigger(Math.random());
   };
 
@@ -2941,7 +3532,10 @@ var MlBasicComponent = function MlBasicComponent(props) {
 
 /**
  *
- * MlLayerMagnify returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ * Hides the MapLibreMap referenced by props.map2Id except for the "magnifier"-circle that reveals
+ * the map and can be dragged around on top of the MapLibreMap referenced by props.map1Id
+ *
+ * @component
  */
 
 var MlLayerMagnify = function MlLayerMagnify(props) {
@@ -2962,7 +3556,7 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
       setSwipeY = _useState4[1];
 
   var swipeYRef = useRef(50);
-  var magnifierRadiusRef = useRef(props.magnifierRadius || 200);
+  var magnifierRadiusRef = useRef(props.magnifierRadius);
 
   var _useState5 = useState(magnifierRadiusRef.current),
       _useState6 = _slicedToArray(_useState5, 2),
@@ -3000,7 +3594,7 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
   }, []);
   var onMove = useCallback(function (e) {
     if (!mapExists()) return;
-    var bounds = mapContext.map.getCanvas().getBoundingClientRect();
+    var bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
     var clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
     var clientY = e.clientY || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientY : 0);
     clientX -= bounds.x;
@@ -3019,7 +3613,7 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
   useEffect(function () {
     if (!mapExists() || syncMoveInitializedRef.current) return;
     syncMoveInitializedRef.current = true;
-    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
+    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id), mapContext.getMap(props.map2Id));
 
     if (mapContext.maps[props.map1Id].getCanvas().clientWidth > mapContext.maps[props.map1Id].getCanvas().clientHeight && magnifierRadiusRef.current * 2 > mapContext.maps[props.map1Id].getCanvas().clientHeight) {
       magnifierRadiusRef.current = Math.floor(mapContext.maps[props.map1Id].getCanvas().clientHeight / 2);
@@ -3089,8 +3683,30 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
   });
 };
 
+MlLayerMagnify.defaultProps = {
+  magnifierRadius: 200
+};
+MlLayerMagnify.propTypes = {
+  /**
+   * Id of the first MapLibre instance
+   */
+  map1Id: PropTypes.string,
+
+  /**
+   * Id of the second MapLibre instance
+   */
+  map2Id: PropTypes.string,
+
+  /**
+   * Size of the "magnifier"-circle
+   */
+  magnifierRadius: PropTypes.number
+};
+
 /**
- * MlLayerSwipe returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *  MlLayerSwipe returns a Button that will add a standard OSM tile layer to the maplibre-gl instance, that you can move like a curtain.
+ *
+ * @component
  */
 
 var MlLayerSwipe = function MlLayerSwipe(props) {
@@ -3124,7 +3740,7 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
 
   var onMove = useCallback(function (e) {
     if (!mapExists()) return;
-    var bounds = mapContext.map.getCanvas().getBoundingClientRect();
+    var bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
     var clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
     clientX -= bounds.x;
     var swipeX_tmp = (clientX / bounds.width * 100).toFixed(2);
@@ -3133,16 +3749,16 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
       setSwipeX(swipeX_tmp);
       swipeXRef.current = swipeX_tmp;
       var clipA = "rect(0, " + swipeXRef.current * bounds.width / 100 + "px, 999em, 0)";
-      mapContext.getMap(props.map2Id).getContainer().style.clip = clipA;
+      mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
     }
-  }, [mapContext, mapExists, props.map2Id]);
+  }, [mapContext, mapExists, props.map1Id, props.map2Id]);
   useEffect(function () {
     return cleanup;
   }, []);
   useEffect(function () {
     if (!mapExists() || initializedRef.current) return;
     initializedRef.current = true;
-    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
+    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id), mapContext.getMap(props.map2Id));
     onMove({
       clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
     });
@@ -3191,6 +3807,18 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
     onTouchStart: onDown,
     onMouseDown: onDown
   });
+};
+
+MlLayerSwipe.propTypes = {
+  /**
+   * Id of the first MapLibre instance.
+   */
+  map1Id: PropTypes.string,
+
+  /**
+   * Id of the second MapLibre instance.
+   */
+  map2Id: PropTypes.string
 };
 
 var GeoJsonContext = /*#__PURE__*/React.createContext({});
@@ -3803,6 +4431,8 @@ var toGeoJSON = function () {
 
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
+ *
+ * @component
  */
 
 var MlGPXViewer = function MlGPXViewer(props) {
@@ -3977,7 +4607,6 @@ var MlGPXViewer = function MlGPXViewer(props) {
 
     try {
       setMetaData([]);
-      console.log(gpxAsString);
       var domParser = new DOMParser();
       var gpxDoc = domParser.parseFromString(gpxAsString, "application/xml");
       var metadata = gpxDoc.querySelector("metadata");
@@ -4106,6 +4735,28 @@ var MlGPXViewer = function MlGPXViewer(props) {
 MlGPXViewer.defaultProps = {
   visible: true
 };
+MlGPXViewer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+   */
+  idPrefix: PropTypes.string,
+
+  /**
+   * Sets the layers layout-property "visibility" to "none" if false or "visible" if true
+   */
+  visible: PropTypes.bool,
+
+  /**
+   * The layerId of an existing layer this layer should be rendered visually beneath
+   * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+   */
+  insertBeforeLayer: PropTypes.string
+};
 
 var GeoJsonProvider = function GeoJsonProvider(_ref) {
   var children = _ref.children;
@@ -4139,5 +4790,5 @@ GeoJsonProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MapLibreMap$1 as MapLibreMapDebug, MlBasicComponent, MlComponentTemplate, MlCompositeLayer, MlCreatePdfButton, MlFeatureEditor, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlOsmLayer, MlVectorTileLayer, MlWmsLayer };
 //# sourceMappingURL=index.esm.js.map
