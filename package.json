@@ -114,7 +114,6 @@
     "@storybook/addon-actions": "^6.3.12",
     "@storybook/addon-docs": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",
-    "@storybook/addon-jest": "^6.3.12",
     "@storybook/addon-links": "^6.3.12",
     "@storybook/addons": "^6.3.12",
     "@storybook/node-logger": "^6.3.12",

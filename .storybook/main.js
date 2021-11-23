@@ -4,7 +4,6 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/preset-create-react-app",
-    "@storybook/addon-jest",
   ],
   webpackFinal: async (config, { configType }) => {
     // split into more chunks
