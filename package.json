@@ -18,7 +18,6 @@
     "jspdf": "^2.3.0",
     "maplibre-gl": "^1.13.0-rc.5",
     "react-map-components-core": "^0.1.1",
-    "react-spinners": "^0.10.6",
     "three": "^0.126.1",
     "uuid": "^8.3.2",
     "wms-capabilities": "^0.5.1",
@@ -101,6 +100,7 @@
   "peerDependencies": {
   },
   "devDependencies": {
+    "react-spinners": "^0.10.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "@babel/cli": "^7.15.4",
