@@ -2117,7 +2117,7 @@ var MlNavigationTools = function MlNavigationTools(props) {
     setLocationAccessDenied(true);
   };
 
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React__default.createElement("div", {
     style: {
       zIndex: 501,
       position: "absolute",
@@ -2126,7 +2126,7 @@ var MlNavigationTools = function MlNavigationTools(props) {
       display: "flex",
       "flex-direction": "column"
     }
-  }, /*#__PURE__*/React.createElement(MlNavigationCompass, {
+  }, /*#__PURE__*/React__default.createElement(MlNavigationCompass, {
     style: {
       width: "31px",
       position: "relative",
@@ -2136,21 +2136,21 @@ var MlNavigationTools = function MlNavigationTools(props) {
     backgroundStyle: {
       boxShadow: "0px 0px 18px rgba(0,0,0,.5)"
     }
-  }), /*#__PURE__*/React.createElement(Button, {
+  }), /*#__PURE__*/React__default.createElement(Button, {
     sx: _objectSpread2(_objectSpread2({}, buttonStyle), {}, {
       fontSize: ".9em",
       fontWeight: 600
     }),
     onClick: adjustPitch
-  }, pitch ? "2D" : "3D"), /*#__PURE__*/React.createElement(Button, {
+  }, pitch ? "2D" : "3D"), /*#__PURE__*/React__default.createElement(Button, {
     sx: buttonStyle,
     onClick: moveToCurrentLocation,
     disabled: locationAccessDenied
-  }, /*#__PURE__*/React.createElement(GpsFixedIcon, {
+  }, /*#__PURE__*/React__default.createElement(GpsFixedIcon, {
     sx: {
       width: ".9em"
     }
-  })), /*#__PURE__*/React.createElement(MlFollowGps, null), /*#__PURE__*/React.createElement(ButtonGroup, {
+  })), /*#__PURE__*/React__default.createElement(MlFollowGps, null), /*#__PURE__*/React__default.createElement(ButtonGroup, {
     orientation: "vertical",
     sx: {
       width: "30px",
@@ -2164,13 +2164,13 @@ var MlNavigationTools = function MlNavigationTools(props) {
         border: "none"
       }
     }
-  }, /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/React__default.createElement(Button, {
     sx: buttonStyle,
     onClick: zoomIn
-  }, /*#__PURE__*/React.createElement(ControlPointIcon, null)), /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/React__default.createElement(ControlPointIcon, null)), /*#__PURE__*/React__default.createElement(Button, {
     sx: buttonStyle,
     onClick: zoomOut
-  }, /*#__PURE__*/React.createElement(RemoveCircleOutlineIcon, null))));
+  }, /*#__PURE__*/React__default.createElement(RemoveCircleOutlineIcon, null))));
 };
 
 var MlLayer = function MlLayer(props) {
