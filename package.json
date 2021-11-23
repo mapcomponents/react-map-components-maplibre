@@ -49,8 +49,8 @@
     "build-catalogue-meta": "node scripts/build-catalogue-meta.js",
     "build-catalogue-markdown-docs": "node scripts/build-catalogue-markdown-docs.js",
     "create-component": "./scripts/create-map-component.sh",
-    "docs-create": "jsdoc -r -c ./jsdoc.json -d docs/react-map-components-maplibre/$npm_package_version",
-    "docs-serve": "http-server ./docs/react-map-components-maplibre/$npm_package_version -p 3001"
+    "docs-create": "jsdoc -r -c ./jsdoc.json -d js-docs/react-map-components-maplibre/$npm_package_version",
+    "docs-serve": "http-server ./js-docs/react-map-components-maplibre/$npm_package_version -p 3001"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
