@@ -99,10 +99,10 @@
     "arrowParens": "always"
   },
   "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
   },
   "devDependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "@babel/cli": "^7.15.4",
     "@babel/core": "^7.15.5",
     "@babel/plugin-external-helpers": "^7.14.5",
