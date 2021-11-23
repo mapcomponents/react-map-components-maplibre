@@ -2,7 +2,7 @@
   "name": "MlCreatePdfButton",
   "title": "Sinmple Map print",
   "description": "Creates a PDF file with the current map view.",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "Einfacher Kartendruck",
       "description": "Erzeugt eine PDF Datei aus der aktuellen Kartenansicht."

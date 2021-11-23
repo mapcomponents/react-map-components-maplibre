@@ -2,7 +2,7 @@
   "name": "MlNavigationCompass",
   "title": "Compass",
   "description": "",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "Kompass",
       "description": ""

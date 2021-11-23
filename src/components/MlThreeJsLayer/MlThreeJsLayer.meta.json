@@ -2,7 +2,7 @@
   "name": "MlThreeJsLayer",
   "title": "3D Model",
   "description": "Layer Component, that makes it possible to show 3D Models on the map.",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "3D Modelle",
       "description": "Layer Component, das es ermöglicht 3D Modelle auf der Karte darzustellen."

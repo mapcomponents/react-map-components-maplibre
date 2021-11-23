@@ -2,7 +2,7 @@
   "name": "MlNavigationTools",
   "title": "Navigation tools",
   "description": "",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "Navigationswerkzeuge",
       "description": ""

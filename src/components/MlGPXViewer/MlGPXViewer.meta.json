@@ -2,7 +2,7 @@
   "name": "MlGPXViewer",
   "title": "GPX viewer",
   "description": "",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "GPX Betrachter",
       "description": ""
