@@ -11,7 +11,7 @@ const config = {
   input: pkg.source,
   output: [{ file: pkg.module, format: "esm", sourcemap: true }],
   plugins: [
-    svgr({ native: true }),
+    svgr(),
     url(),
     external(),
     babel({

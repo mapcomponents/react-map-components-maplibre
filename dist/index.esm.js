@@ -14,7 +14,6 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import _styled from '@emotion/styled/base';
-import Svg, { Path } from 'react-native-svg';
 import { css } from '@emotion/css';
 import RoomIcon from '@mui/icons-material/Room';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -1649,44 +1648,44 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
-var _Path;
+var _path;
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function SvgRotateRight(props) {
-  return /*#__PURE__*/createElement(Svg, _extends({
+  return /*#__PURE__*/createElement("svg", _extends({
     width: 149.953,
     height: 394.094,
     viewBox: "0 0 39.675 104.271"
-  }, props), _Path || (_Path = /*#__PURE__*/createElement(Path, {
+  }, props), _path || (_path = /*#__PURE__*/createElement("path", {
     d: "M31.122 0L0 8.552l14.476 8.235c-5.82 11.005-8.692 22.459-10.142 33.84C2.52 64.103 2.758 78.141 9.69 91.76c1.58 3.103 3.614 6.243 6.453 9.278a28.1 28.1 0 002.415 2.297 18.762 18.762 0 001.051.823l.154.113 9.149-4.002-.09-.058-.048-.035a10.24 10.24 0 01-.413-.33 20.703 20.703 0 01-1.757-1.678c-2.328-2.453-4.049-5.159-5.514-7.974-6.462-12.41-6.555-25.674-4.916-38.81 1.308-9.888 3.613-19.707 7.992-29.085l15.51 8.823z"
   })));
 }
 
-var _Path$1;
+var _path$1;
 
 function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
 
 function SvgRotateLeft(props) {
-  return /*#__PURE__*/createElement(Svg, _extends$1({
+  return /*#__PURE__*/createElement("svg", _extends$1({
     width: 149.953,
     height: 394.094,
     viewBox: "0 0 39.675 104.271"
-  }, props), _Path$1 || (_Path$1 = /*#__PURE__*/createElement(Path, {
+  }, props), _path$1 || (_path$1 = /*#__PURE__*/createElement("path", {
     d: "M8.553 0l31.122 8.552L25.2 16.787c5.82 11.005 8.692 22.459 10.142 33.84 1.816 13.477 1.576 27.515-5.355 41.133-1.58 3.103-3.613 6.243-6.453 9.278a28.1 28.1 0 01-2.415 2.297 18.768 18.768 0 01-1.051.823l-.154.113-9.149-4.002.09-.058.048-.035c.124-.092.26-.203.413-.33a20.702 20.702 0 001.757-1.678c2.329-2.453 4.05-5.159 5.514-7.974 6.462-12.41 6.555-25.674 4.916-38.81-1.308-9.888-3.612-19.707-7.992-29.085L0 31.122z"
   })));
 }
 
-var _Path$2;
+var _path$2;
 
 function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
 
 function SvgNeedle(props) {
-  return /*#__PURE__*/createElement(Svg, _extends$2({
+  return /*#__PURE__*/createElement("svg", _extends$2({
     width: 287.121,
     height: 887.106,
     viewBox: "0 0 75.967 234.713"
-  }, props), _Path$2 || (_Path$2 = /*#__PURE__*/createElement(Path, {
+  }, props), _path$2 || (_path$2 = /*#__PURE__*/createElement("path", {
     d: "M37.984 0l37.983 117.357H0zM37.984 234.713l37.983-117.356H0z"
   })));
 }
