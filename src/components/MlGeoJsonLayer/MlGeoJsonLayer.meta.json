@@ -2,7 +2,7 @@
   "name": "MlGeoJsonLayer",
   "title": "GeoJSON level",
   "description": "",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "GeoJSON Ebene",
       "description": ""

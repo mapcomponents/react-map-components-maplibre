@@ -2,7 +2,7 @@
   "name": "MlFollowGPS",
   "title": "GPS-Tracker",
   "description": "",
-  "il8n": {
+  "i18n": {
     "de": {
       "title": "GPS-Tracker",
       "description": ""
