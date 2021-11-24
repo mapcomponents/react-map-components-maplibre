@@ -120,7 +120,7 @@ const MlNavigationTools = (props) => {
         right: "20px",
         bottom: "20px",
         display: "flex",
-        "flex-direction": "column",
+        flexDirection: "column",
       }}
     >
       <MlNavigationCompass
