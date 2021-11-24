@@ -211,7 +211,7 @@ MlGeoJsonLayer.propTypes = {
    * Creates transition animation whenever the geojson prop changes.
    * Only works with layer type "line" and LineString GeoJSON data.
    */
-  transitionTime: PropTypes.func,
+  transitionTime: PropTypes.number,
   /**
    * Id suffix string that is appended to the componentId.
    * Probably removed soon.
