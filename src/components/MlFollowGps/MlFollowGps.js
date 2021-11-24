@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import RoomIcon from "@mui/icons-material/Room";
 import {point} from "@turf/turf"
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
+import MlImageMarkerLayer from "../MlImageMarkerLayer/MlImageMarkerLayer";
 
 /**
  * Adds a button that makes the map follow the users GPS position using
@@ -84,6 +85,25 @@ const MlFollowGps = (props) => {
                       }}
       />
       }
+
+      {isFollowed && geoJson &&
+      <MlImageMarkerLayer
+        options={{
+          type: "symbol",
+          source: {
+            type: "geojson",
+            data: geoJson
+          },
+          layout: {
+            "icon-size": 0.1,
+            "icon-offset": [0, -340]
+          },
+        }
+        }
+        imgSrc={"/assets/marker.png"}
+      />
+      }
+
       <Button
         sx={{zIndex: 1002, color: isFollowed ? "#bbb" : "#666", ...props.style}}
         disabled={locationAccessDenied}
