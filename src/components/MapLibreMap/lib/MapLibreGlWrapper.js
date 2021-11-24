@@ -36,7 +36,7 @@ const MapLibreGlWrapper = function (props) {
      * @param {function} handler
      * @param {object} options
      * @param {string} componentId
-     * @returns
+     * @returns {undefined}
      */
     on: (eventName, handler, options, componentId) => {
       if (!self.eventHandlers[eventName]) return;
@@ -59,7 +59,7 @@ const MapLibreGlWrapper = function (props) {
      *
      * @param {string} eventName
      * @param {function} handler
-     * @returns
+     * @returns {undefined}
      */
     off: (eventName, handler) => {
       if (!self.eventHandlers[eventName]) return;
@@ -75,7 +75,7 @@ const MapLibreGlWrapper = function (props) {
      *
      * @param {string} eventName
      * @param {object} context
-     * @returns
+     * @returns {undefined}
      */
     fire: (eventName, context) => {
       if (!self.eventHandlers[eventName]) return;
@@ -227,7 +227,7 @@ const MapLibreGlWrapper = function (props) {
    * @param {object} layer
    * @param {string} beforeId
    * @param {string} componentId
-   * @returns
+   * @returns {undefined}
    */
   this.addLayer = (layer, beforeId, componentId) => {
     if (!self.map.style) {
@@ -252,7 +252,7 @@ const MapLibreGlWrapper = function (props) {
    * @param {object} source
    * @param {object} options
    * @param {string} componentId
-   * @returns
+   * @returns {undefined}
    */
   this.addSource = (sourceId, source, options, componentId) => {
     if (!self.map.style) {
@@ -276,7 +276,7 @@ const MapLibreGlWrapper = function (props) {
    * @param {*} image
    * @param {*} ref
    * @param {string} componentId
-   * @returns
+   * @returns {undefined}
    */
   this.addImage = (id, image, ref, componentId) => {
     if (!self.map.style) {
@@ -300,7 +300,7 @@ const MapLibreGlWrapper = function (props) {
    * @param {string} layerId
    * @param {function} listener
    * @param {string} componentId
-   * @returns
+   * @returns {undefined}
    */
   this.on = (type, layerId, listener, componentId) => {
     if (typeof listener === "string" && typeof layerId === "function") {

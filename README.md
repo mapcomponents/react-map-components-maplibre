@@ -1,7 +1,7 @@
 ![MapComponents](https://avatars.githubusercontent.com/u/64851912)
 # [MapComponents MapLibre](https://mapcomponents.org/) &middot;
 
-[![npm version](https://badge.fury.io/js/react-map-components-maplibre.svg)](https://badge.fury.io/js/react-map-components-maplibre) ![downloads](https://img.shields.io/npm/dt/react-map-components-maplibre.svg) ![downloads](https://img.shields.io/npm/dm/react-map-components-maplibre.svg)
+[![npm version](https://badge.fury.io/js/react-map-components-maplibre.svg)](https://badge.fury.io/js/react-map-components-maplibre) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![downloads](https://img.shields.io/npm/dt/react-map-components-maplibre.svg) ![downloads](https://img.shields.io/npm/dm/react-map-components-maplibre.svg)
 
 ## Getting started
 
