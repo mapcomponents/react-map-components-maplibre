@@ -1565,7 +1565,7 @@ MlGeoJsonLayer.propTypes = {
    * Creates transition animation whenever the geojson prop changes.
    * Only works with layer type "line" and LineString GeoJSON data.
    */
-  transitionTime: PropTypes.func,
+  transitionTime: PropTypes.number,
 
   /**
    * Id suffix string that is appended to the componentId.
@@ -1582,7 +1582,7 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   var layerInitializedRef = useRef(false);
   var idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  var layerId = (props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current;
+  var layerId = useRef((props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current);
   useEffect(function () {
     var _componentId = componentId.current;
     return function () {
@@ -1594,41 +1594,32 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
     };
   }, []);
   useEffect(function () {
-    if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId.current) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     var key;
 
     if (props.options.layout) {
       for (key in props.options.layout) {
-        mapContext.getMap(props.mapId).setLayoutProperty(layerId, key, props.options.layout[key]);
+        mapContext.getMap(props.mapId).setLayoutProperty(layerId.current, key, props.options.layout[key]);
       }
     }
 
     if (props.options.paint) {
       for (key in props.options.paint) {
-        mapContext.getMap(props.mapId).setPaintProperty(layerId, key, props.options.paint[key]);
+        mapContext.getMap(props.mapId).setPaintProperty(layerId.current, key, props.options.paint[key]);
       }
     }
-  }, [props.options, layerId, mapContext, props.mapId]);
+  }, [props.options, layerId.current, mapContext, props.mapId]);
   var addLayer = useCallback(function () {
     var tmpOptions = _objectSpread2({
-      id: layerId,
+      id: layerId.current,
       layout: {}
     }, props.options);
 
     tmpOptions.layout["icon-image"] = imageIdRef.current;
     mapRef.current.addLayer(tmpOptions, props.insertBeforeLayer, componentId.current);
-  }, [props, imageIdRef, layerId]);
-  useEffect(function () {
-    if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId) || !props.options) {
-      return;
-    } // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-
-
-    mapRef.current.getSource(layerId).setData(props.geojson);
-  }, [props.geojson, layerId, mapContext, props]);
+  }, [props]);
   useEffect(function () {
     if (!props.options || !mapContext.mapExists(props.mapId) || layerInitializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
@@ -1644,7 +1635,16 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
     }
 
     addLayer();
-  }, [mapContext.mapIds, mapContext, props, layerId, addLayer]);
+  }, [mapContext.mapIds, mapContext, props, addLayer]);
+  useEffect(function () {
+    if (!mapRef.current || mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId.current) || !props.options) {
+      return;
+    } // the MapLibre-gl instance (mapContext.map) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+
+    mapRef.current.getSource(layerId.current).setData(props.options.source.data);
+  }, [props.options.source.data, mapContext, props]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
@@ -1693,9 +1693,9 @@ function SvgNeedle(props) {
 function _EMOTION_STRINGIFIED_CSS_ERROR__() { return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop)."; }
 
 var NeedleButton = _styled("div", process.env.NODE_ENV === "production" ? {
-  target: "e1t3hlc52"
+  target: "e12lzm5x2"
 } : {
-  target: "e1t3hlc52",
+  target: "e12lzm5x2",
   label: "NeedleButton"
 })(process.env.NODE_ENV === "production" ? {
   name: "1204o9",
@@ -1708,9 +1708,9 @@ var NeedleButton = _styled("div", process.env.NODE_ENV === "production" ? {
 });
 
 var NeedleContainer = _styled("div", process.env.NODE_ENV === "production" ? {
-  target: "e1t3hlc51"
+  target: "e12lzm5x1"
 } : {
-  target: "e1t3hlc51",
+  target: "e12lzm5x1",
   label: "NeedleContainer"
 })(process.env.NODE_ENV === "production" ? {
   name: "1m8y6tb",
@@ -1723,9 +1723,9 @@ var NeedleContainer = _styled("div", process.env.NODE_ENV === "production" ? {
 });
 
 var RotateButton = _styled("div", process.env.NODE_ENV === "production" ? {
-  target: "e1t3hlc50"
+  target: "e12lzm5x0"
 } : {
-  target: "e1t3hlc50",
+  target: "e12lzm5x0",
   label: "RotateButton"
 })(process.env.NODE_ENV === "production" ? {
   name: "1j4uu1m",
@@ -1963,6 +1963,19 @@ var MlFollowGps = function MlFollowGps(props) {
       "circle-color": "#ee7700",
       "circle-opacity": 0.5
     }
+  }), isFollowed && geoJson && /*#__PURE__*/React__default.createElement(MlImageMarkerLayer, {
+    options: {
+      type: "symbol",
+      source: {
+        type: "geojson",
+        data: geoJson
+      },
+      layout: {
+        "icon-size": 0.1,
+        "icon-offset": [0, -340]
+      }
+    },
+    imgSrc: "/assets/marker.png"
   }), /*#__PURE__*/React__default.createElement(Button, {
     sx: _objectSpread2({
       zIndex: 1002,
@@ -2124,7 +2137,7 @@ var MlNavigationTools = function MlNavigationTools(props) {
       right: "20px",
       bottom: "20px",
       display: "flex",
-      "flex-direction": "column"
+      flexDirection: "column"
     }
   }, /*#__PURE__*/React__default.createElement(MlNavigationCompass, {
     style: {
