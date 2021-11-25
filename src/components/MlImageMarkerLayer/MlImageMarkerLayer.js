@@ -13,7 +13,7 @@ const MlImageMarkerLayer = (props) => {
   const layerInitializedRef = useRef(false);
   const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  const layerId = (props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current;
+  const layerId = useRef((props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -30,7 +30,7 @@ const MlImageMarkerLayer = (props) => {
   useEffect(() => {
     if (
       !mapRef.current ||
-      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId)) ||
+      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId.current)) ||
       !props.options
     )
       return;
@@ -42,21 +42,21 @@ const MlImageMarkerLayer = (props) => {
       for (key in props.options.layout) {
         mapContext
           .getMap(props.mapId)
-          .setLayoutProperty(layerId, key, props.options.layout[key]);
+          .setLayoutProperty(layerId.current, key, props.options.layout[key]);
       }
     }
     if (props.options.paint) {
       for (key in props.options.paint) {
         mapContext
           .getMap(props.mapId)
-          .setPaintProperty(layerId, key, props.options.paint[key]);
+          .setPaintProperty(layerId.current, key, props.options.paint[key]);
       }
     }
-  }, [props.options, layerId, mapContext, props.mapId]);
+  }, [props.options, layerId.current, mapContext, props.mapId]);
 
   const addLayer = useCallback(() => {
     let tmpOptions = {
-      id: layerId,
+      id: layerId.current,
       layout: {},
       ...props.options,
     };
@@ -66,21 +66,7 @@ const MlImageMarkerLayer = (props) => {
       props.insertBeforeLayer,
       componentId.current
     );
-  }, [props, imageIdRef, layerId]);
-
-  useEffect(() => {
-    if (
-      !mapRef.current ||
-      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId)) ||
-      !props.options
-    ) {
-      return;
-    }
-    // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-
-    mapRef.current.getSource(layerId).setData(props.geojson);
-  }, [props.geojson, layerId, mapContext, props]);
+  }, [props]);
 
   useEffect(() => {
     if (
@@ -103,7 +89,21 @@ const MlImageMarkerLayer = (props) => {
       });
     }
     addLayer();
-  }, [mapContext.mapIds, mapContext, props, layerId, addLayer]);
+  }, [mapContext.mapIds, mapContext, props, addLayer]);
+
+  useEffect(() => {
+    if (
+      !mapRef.current ||
+      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId.current)) ||
+      !props.options
+    ) {
+      return;
+    }
+    // the MapLibre-gl instance (mapContext.map) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+    mapRef.current.getSource(layerId.current).setData(props.options.source.data);
+  }, [props.options.source.data, mapContext, props]);
 
   return <></>;
 };
