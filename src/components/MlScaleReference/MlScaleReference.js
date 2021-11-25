@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 import { v4 as uuidv4 } from "uuid";
 
 const MlScaleReference = (props) => {

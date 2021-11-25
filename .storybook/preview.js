@@ -2,7 +2,7 @@ import React from "react";
 
 import { themes } from "@storybook/theming";
 
-import { MapComponentsProvider } from "react-map-components-core";
+import { MapComponentsProvider } from "@mapcomponents/react-core";
 import MapLibreMap from "../src/components/MapLibreMap/MapLibreMap";
 import "./style.css";
 

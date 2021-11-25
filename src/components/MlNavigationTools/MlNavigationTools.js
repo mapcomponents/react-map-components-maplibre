@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 import { useEffect, useRef, useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";

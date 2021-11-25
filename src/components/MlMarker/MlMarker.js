@@ -4,7 +4,7 @@ import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import Paper from "@mui/material/Paper";
 import useMapState from "../../hooks/useMapState";
 
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 import { v4 as uuidv4 } from "uuid";
 
 /**

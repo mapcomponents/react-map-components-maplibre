@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 
 const LoadingOverlayContext = React.createContext({});
 const LoadingOverlayContextProvider = LoadingOverlayContext.Provider;

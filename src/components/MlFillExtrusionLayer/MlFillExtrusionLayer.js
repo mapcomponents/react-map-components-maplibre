@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 
 import { v4 as uuidv4 } from "uuid";
 import Button from "@mui/material/Button";

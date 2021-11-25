@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { v4 as uuidv4 } from "uuid";
 import * as turf from "@turf/turf";
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 
 import { _transitionToGeojson } from "./util/transitionFunctions";
 

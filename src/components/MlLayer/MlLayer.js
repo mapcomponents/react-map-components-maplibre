@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext } from "react";
 
 import { v4 as uuidv4 } from "uuid";
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 
 const MlLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks

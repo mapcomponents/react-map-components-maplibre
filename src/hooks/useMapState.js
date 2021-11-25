@@ -1,7 +1,7 @@
 import { useContext, useCallback, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 
 /**
  * React hook that allows subscribing to map state changes

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext, useCallback, useState } from "react";
 import PropTypes from "prop-types";
 
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 import { v4 as uuidv4 } from "uuid";
 
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";

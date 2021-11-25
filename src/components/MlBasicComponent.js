@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 
 const MlBasicComponent = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks

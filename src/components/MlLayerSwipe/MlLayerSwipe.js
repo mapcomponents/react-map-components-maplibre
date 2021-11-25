@@ -1,7 +1,7 @@
 import React, { useContext, useCallback, useRef, useEffect, useState } from "react";
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
-import { MapContext } from "react-map-components-core";
+import { MapContext } from "@mapcomponents/react-core";
 import PropTypes from "prop-types";
 
 /**
