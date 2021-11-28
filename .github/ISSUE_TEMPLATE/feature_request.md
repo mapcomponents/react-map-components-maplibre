@@ -1,5 +1,5 @@
 ---
-name: "🫀 Feature request"
+name: "💕 Feature request"
 about: Suggest a new idea for react-map-components-maplibre.
 title: 'Feature: '
 labels: 'Status: needs print'
