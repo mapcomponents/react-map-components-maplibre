@@ -4,7 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/@mapcomponents%2Freact-maplibre.svg)](https://badge.fury.io/js/@mapcomponents%2Freact-maplibre) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![downloads](https://img.shields.io/npm/dt/@mapcomponents%2Freact-maplibre.svg) ![downloads](https://img.shields.io/npm/dm/@mapcomponents%2Freact-maplibre.svg)
 
-## Getting started
+## Getting started (Using the storybook dev server)
 
 1. Clone the repository and ```cd``` into the folder 
 2. Run ```yarn``` to install all dependencies.
@@ -21,6 +21,17 @@
 1. Follow all steps of "Create a new component"
 2. Change the value of the property "type" in {component_name}.meta.json to "application"
 
+## Project setup
+
+### Starting a new project
+
+Fork our codesandbox project setup template to get started instantly. https://codesandbox.io/s/base-template-n0vp9
+
+### Integrate MapComponents into an existing react project
+
+1. Add the dependency ```yarn add @mapcomponents/react-maplibre```
+2. Add a MapcomponentsProvider to your react-dom (e.g.  https://codesandbox.io/s/base-template-n0vp9?file=/src/index.js)
+3. Add a MapLibreMap and any MapComponent you like to use in your app below MapcomponentsProvider.
 ## Anatomy of a MapComponent
 
 A MapComponent is a react component that accepts at least 1 attribute "mapId" (there are some exceptions) and is expected to retrieve a maplibre-gl instance from mapContext and directly manipulate it or watch its state. 
