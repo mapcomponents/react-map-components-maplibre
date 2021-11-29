@@ -2044,6 +2044,13 @@
   resolved "https://registry.yarnpkg.com/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz#497c67a1cef50d1a2459ba60f315e448d2ad87fe"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
+"@mapcomponents/react-core@^0.1.1":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@mapcomponents/react-core/-/react-core-0.1.7.tgz#2c90590a07d4117b5ee03c6b406b5504bc835e78"
+  integrity sha512-ANt4OMDGjzhqY3ltoZgSvNP5Sxw63a/7cML7XfHH7x7EI+X7OjzKNHAgPBG8LdG4dJkr5qqlhOEWuELnCqMS/g==
+  dependencies:
+    d3 "^6.7.0"
+
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/@mdx-js/loader/-/loader-1.6.22.tgz#d9e8fe7f8185ff13c9c8639c048b123e30d322c4"
@@ -15264,13 +15271,6 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
-
-react-map-components-core@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-map-components-core/-/react-map-components-core-0.1.1.tgz#5226c539be25e36fbf1f617c8625bdf3c7d44dcc"
-  integrity sha512-Kc7JvE5oI47EWnKAKSZmK3furkic1Sjme4U3KhLlx7ualxJq4VjrOxHtYjKgQgrMsgeMpLWMb06civ5KVQ0O8w==
-  dependencies:
-    d3 "^6.7.0"
 
 react-popper-tooltip@^3.1.1:
   version "3.1.1"
