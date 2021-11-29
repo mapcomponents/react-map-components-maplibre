@@ -1,6 +1,6 @@
 ---
 name: "💕 Feature request"
-about: Suggest a new idea for react-map-components-maplibre.
+about: Suggest a new idea for @mapcomponents/react-maplibre.
 title: 'Feature: '
 labels: 'Status: needs print'
 Assignees: ''
@@ -11,7 +11,7 @@ Assignees: ''
 -->
 
 
-react-map-components-maplibre version:
+@mapcomponents/react-maplibre version:
 
 ## Feature description
 
