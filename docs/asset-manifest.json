@@ -3,9 +3,9 @@
     "0.d42e7615.iframe.bundle.js": "./0.d42e7615.iframe.bundle.js",
     "0.d42e7615.iframe.bundle.js.map": "./0.d42e7615.iframe.bundle.js.map",
     "main~24120820.css": "./static/css/main~24120820.130e29cb.css",
-    "main~24120820.js": "./main~24120820.dd11f8e3.iframe.bundle.js",
+    "main~24120820.js": "./main~24120820.40207e24.iframe.bundle.js",
     "main~24120820.css.map": "./static/css/main~24120820.130e29cb.css.map",
-    "main~24120820.js.map": "./main~24120820.dd11f8e3.iframe.bundle.js.map",
+    "main~24120820.js.map": "./main~24120820.40207e24.iframe.bundle.js.map",
     "vendors~main~0ad7406a.js": "./vendors~main~0ad7406a.cac3225f.iframe.bundle.js",
     "vendors~main~0ad7406a.js.map": "./vendors~main~0ad7406a.cac3225f.iframe.bundle.js.map",
     "vendors~main~0f485567.js": "./vendors~main~0f485567.0efe33b6.iframe.bundle.js",
@@ -76,6 +76,6 @@
     "vendors~main~b9cf3951.d4bc03d0.iframe.bundle.js",
     "vendors~main~52589227.0e1339e5.iframe.bundle.js",
     "static/css/main~24120820.130e29cb.css",
-    "main~24120820.dd11f8e3.iframe.bundle.js"
+    "main~24120820.40207e24.iframe.bundle.js"
   ]
 }
