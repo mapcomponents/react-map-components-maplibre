@@ -1,4 +1,4 @@
-name: Node.js Test Matrix
+name: tests
 on:
   push:
     branches:
