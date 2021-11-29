@@ -2,16 +2,12 @@ import React from "react";
 
 import { MapComponentsProvider } from "@mapcomponents/react-core";
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
-import { LoadingOverlayProvider } from "../ui_components/LoadingOverlayContext";
-import LoadingOverlay from "../ui_components/LoadingOverlay";
 import "./style.css";
 
 const decorators = [
   (Story) => (
     <div className="fullscreen_map">
       <MapComponentsProvider>
-        <LoadingOverlayProvider>
-          <LoadingOverlay></LoadingOverlay>
 
           <Story />
           <MapLibreMap
@@ -22,7 +18,6 @@ const decorators = [
             }}
             mapId="map_1"
           />
-        </LoadingOverlayProvider>
       </MapComponentsProvider>
     </div>
   ),

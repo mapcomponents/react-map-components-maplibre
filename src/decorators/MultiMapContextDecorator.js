@@ -1,8 +1,6 @@
 import React from "react";
 
 import { MapComponentsProvider } from "@mapcomponents/react-core";
-import { LoadingOverlayProvider } from "../ui_components/LoadingOverlayContext";
-import LoadingOverlay from "../ui_components/LoadingOverlay";
 
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 
@@ -17,8 +15,6 @@ const decorators = [
     <div className="fullscreen_map">
       <ThemeProvider theme={theme}>
         <MapComponentsProvider>
-          <LoadingOverlayProvider>
-            <LoadingOverlay></LoadingOverlay>
             <div
               style={{
                 overflow: "hidden",
@@ -69,7 +65,6 @@ const decorators = [
                 />
               </div>
             </div>
-          </LoadingOverlayProvider>
         </MapComponentsProvider>
       </ThemeProvider>
     </div>
