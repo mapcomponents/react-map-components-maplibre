@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useMapState from "./useMapState";
 
@@ -14,6 +14,11 @@ export default storyoptions;
 
 const Template = (props) => {
   const mapState = useMapState({ ...props });
+
+  useEffect(() => {
+
+  
+  }, [mapState.layers])
 
   return (
     <>
@@ -110,6 +115,6 @@ NonBaseLayersOnly.args = {
     sources: false,
   },
   filter: {
-    includeBaseLayers: true,
+    includeBaseLayers: false,
   },
 };
