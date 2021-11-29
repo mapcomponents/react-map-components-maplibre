@@ -21,6 +21,7 @@ const MlGeoJsonLayer = (props) => {
   const mapRef = useRef(null);
   const initializedRef = useRef(false);
   const transitionInProgressRef = useRef(false);
+  const transitionTimeoutRef = useRef(undefined);
   const currentTransitionStepRef = useRef(false);
   const transitionGeojsonDataRef = useRef([]);
   const transitionGeojsonCommonDataRef = useRef([]);
@@ -33,7 +34,11 @@ const MlGeoJsonLayer = (props) => {
     let _componentId = componentId.current;
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
+      if(transitionTimeoutRef.current){
+        clearTimeout(transitionTimeoutRef.current)
+      }
       if (mapRef.current) {
+
         mapRef.current.cleanup(_componentId);
 
         mapRef.current = null;
@@ -63,7 +68,8 @@ const MlGeoJsonLayer = (props) => {
         msPerStep,
         currentTransitionStepRef,
         mapRef.current,
-        componentId.current
+        componentId.current,
+        transitionTimeoutRef
       );
     },
     [props]
@@ -153,9 +159,7 @@ const MlGeoJsonLayer = (props) => {
         typeof props.geojson.geometry !== "undefined"
       ) {
         transitionToGeojson(props.geojson);
-        setTimeout(() => {
-          oldGeojsonRef.current = props.geojson;
-        }, props.transitionTime / 2);
+        oldGeojsonRef.current = props.geojson;
       }
     }
   }, [mapContext.mapIds, mapContext, props, transitionToGeojson]);
