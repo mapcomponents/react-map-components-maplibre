@@ -1244,18 +1244,25 @@ MlCreatePdfButton.propTypes = {
   mapId: PropTypes.string
 };
 
-var _showNextTransitionSegment = function _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep) {
+var _showNextTransitionSegment = function _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef) {
   var _arguments = arguments;
 
   if (typeof map.getSource(layerId) === "undefined" || !transitionInProgressRef.current) {
-    setTimeout(function () {
+    transitionTimeoutRef.current = setTimeout(function () {
       return _showNextTransitionSegment.apply(void 0, _toConsumableArray(_arguments));
     }, msPerStep);
     return;
   }
 
   if (typeof transitionGeojsonDataRef.current[currentTransitionStepRef.current] !== "undefined") {
+    var _map$getSource;
+
     var newData = currentTransitionStepRef.current + 1 === transitionGeojsonDataRef.current.length ? props.geojson : lineString([].concat(_toConsumableArray(transitionGeojsonCommonDataRef.current), _toConsumableArray(transitionGeojsonDataRef.current[currentTransitionStepRef.current].geometry.coordinates)));
+
+    if (!(map !== null && map !== void 0 && (_map$getSource = map.getSource) !== null && _map$getSource !== void 0 && _map$getSource.call(map, layerId))) {
+      return;
+    }
+
     map.getSource(layerId).setData(newData);
 
     if (typeof props.onTransitionFrame === "function") {
@@ -1265,7 +1272,7 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, laye
     currentTransitionStepRef.current++;
 
     if (transitionInProgressRef.current && currentTransitionStepRef.current < transitionGeojsonDataRef.current.length) {
-      setTimeout(function () {
+      transitionTimeoutRef.current = setTimeout(function () {
         return _showNextTransitionSegment.apply(void 0, _toConsumableArray(_arguments));
       }, msPerStep);
     } else {
@@ -1278,7 +1285,7 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, laye
   }
 };
 
-var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, layerId) {
+var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, layerId, transitionTimeoutRef) {
   // create the transition geojson between oldGeojsonRef.current and props.geojson
   // create a geojson that contains no common point between the two line features
   var transitionCoordinatesShort = [];
@@ -1361,11 +1368,11 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
 
     tmpLinestring = tmpChunks.features[1];
 
-    for (i = 1; i < srcTransitionSteps; i++) {
+    for (i = 0; i < srcTransitionSteps; i++) {
       transitionGeojsonDataRef.current.push(tmpLinestring);
 
-      if (typeof tmpChunks.features[i + 1] !== "undefined") {
-        tmpLinestring = lineString([].concat(_toConsumableArray(tmpLinestring.geometry.coordinates), _toConsumableArray(tmpChunks.features[i + 1].geometry.coordinates)));
+      if (typeof tmpChunks.features[i] !== "undefined") {
+        tmpLinestring = lineString([].concat(_toConsumableArray(tmpLinestring.geometry.coordinates), _toConsumableArray(tmpChunks.features[i].geometry.coordinates)));
       } else {
         transitionGeojsonDataRef.current.push(tmpLinestring);
         break;
@@ -1380,11 +1387,11 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
 
     tmpLinestring = tmpChunks.features[1];
 
-    for (i = 1; i < targetTransitionSteps; i++) {
+    for (i = 0; i < targetTransitionSteps; i++) {
       transitionGeojsonDataRef.current.push(tmpLinestring);
 
-      if (typeof tmpChunks.features[i + 1] !== "undefined") {
-        tmpLinestring = lineString([].concat(_toConsumableArray(tmpLinestring.geometry.coordinates), _toConsumableArray(tmpChunks.features[i + 1].geometry.coordinates)));
+      if (typeof tmpChunks.features[i] !== "undefined") {
+        tmpLinestring = lineString([].concat(_toConsumableArray(tmpLinestring.geometry.coordinates), _toConsumableArray(tmpChunks.features[i].geometry.coordinates)));
       } else {
         transitionGeojsonDataRef.current.push(tmpLinestring);
         break;
@@ -1395,8 +1402,8 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
   transitionGeojsonDataRef.current.push(props.geojson);
   currentTransitionStepRef.current = 1;
   transitionInProgressRef.current = true;
-  setTimeout(function () {
-    return _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep);
+  transitionTimeoutRef.current = setTimeout(function () {
+    return _showNextTransitionSegment(props, layerId, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef);
   }, msPerStep);
 };
 
@@ -1414,6 +1421,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
   var mapRef = useRef(null);
   var initializedRef = useRef(false);
   var transitionInProgressRef = useRef(false);
+  var transitionTimeoutRef = useRef(undefined);
   var currentTransitionStepRef = useRef(false);
   var transitionGeojsonDataRef = useRef([]);
   var transitionGeojsonCommonDataRef = useRef([]);
@@ -1423,6 +1431,10 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     var _componentId = componentId.current;
     return function () {
       // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = null;
@@ -1438,7 +1450,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     }
   }, [props.paint, mapContext, props.mapId]);
   var transitionToGeojson = useCallback(function (newGeojson) {
-    _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, componentId.current);
+    _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, componentId.current, transitionTimeoutRef);
   }, [props]);
   useEffect(function () {
     var _mapRef$current, _mapRef$current$getSo;
@@ -1499,9 +1511,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
 
       if (props.type === "line" && typeof props.transitionTime !== "undefined" && typeof props.geojson.geometry !== "undefined") {
         transitionToGeojson(props.geojson);
-        setTimeout(function () {
-          oldGeojsonRef.current = props.geojson;
-        }, props.transitionTime / 2);
+        oldGeojsonRef.current = props.geojson;
       }
     }
   }, [mapContext.mapIds, mapContext, props, transitionToGeojson]);
@@ -1925,6 +1935,12 @@ var MlFollowGps = function MlFollowGps(props) {
   var initializedRef = useRef(false);
   var mapRef = useRef(undefined);
   var componentId = useRef((props.idPrefix ? props.idPrefix : "MlFollowGps-") + v4());
+
+  var _useState7 = useState(30),
+      _useState8 = _slicedToArray(_useState7, 2),
+      accuracyRadius = _useState8[0],
+      setAccuracyRadius = _useState8[1];
+
   useEffect(function () {
     var _componentId = componentId.current;
     return function () {
@@ -1957,6 +1973,7 @@ var MlFollowGps = function MlFollowGps(props) {
   var getLocationSuccess = function getLocationSuccess(pos) {
     if (!mapRef.current) return;
     mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude]);
+    setAccuracyRadius(pos.coords.accuracy);
     setGeoJson(point([pos.coords.longitude, pos.coords.latitude]));
   };
 
@@ -1969,7 +1986,10 @@ var MlFollowGps = function MlFollowGps(props) {
     geojson: geoJson,
     type: "circle",
     paint: {
-      "circle-radius": 30,
+      "circle-radius": {
+        stops: [[0, 0], [20, accuracyRadius / 0.075 / Math.cos(geoJson.geometry.coordinates[1] * Math.PI / 180)]],
+        base: 2
+      },
       "circle-color": "#ee7700",
       "circle-opacity": 0.5
     }
