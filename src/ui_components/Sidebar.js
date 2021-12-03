@@ -1,6 +1,7 @@
 import React from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import Drawer from "@mui/material/Drawer";
+import { InsertInvitationOutlined } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -11,16 +12,14 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     bottom: 0,
     backgroundColor: "#fafafa",
+    display: "flex",
+    flexDirection: "column",
+    alignContent: "stretch",
+    alignItems: "stretch",
   },
   drawerPaper: {
-    position: "static",
-    display: "flex",
-    alignItems: "stretch",
-    alignContent: "stretch",
-    flexDirection: "column",
-    padding: "90px 10px 10px 23px",
-    boxSizing: "border-box",
-    minWidth: "150px",
+    position: "initial",
+    padding: "20px",
   },
 }));
 
