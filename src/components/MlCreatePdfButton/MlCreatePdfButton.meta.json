@@ -1,6 +1,6 @@
 {
   "name": "MlCreatePdfButton",
-  "title": "Sinmple Map print",
+  "title": "Export PDF",
   "description": "Creates a PDF file with the current map view.",
   "i18n": {
     "de": {
