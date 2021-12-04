@@ -1,14 +1,14 @@
 {
   "name": "MlVectorTileLayer",
-  "title": "Vektor tiles",
-  "description": "Component: Vector Tiles (add to the Application/map)",
+  "title": "Vector tile layer",
+  "description": "Adds a vector tile layer to the map",
   "i18n": {
     "de": {
       "title": "Vektorenkacheln",
       "description": "Baustein: Vektorenkacheln/Vector Tiles (der Anwendung/Karte hinzufügen)"
     }
   },
-  "tags": [ "Map layer" ],
+  "tags": ["Map layer"],
   "category": "layer",
   "type": "component",
   "price": 5000

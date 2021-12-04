@@ -23,6 +23,12 @@ const config = {
     css(),
     del({ targets: ["dist/*"] }),
   ],
-  external: ["prop-types",  "d3", ...Object.keys(pkg.peerDependencies || {})],
+  external: [
+    "prop-types",
+    "d3",
+    "@emotion/react",
+    "@emotion/styled",
+    ...Object.keys(pkg.peerDependencies || {}),
+  ],
 };
 export default config;
