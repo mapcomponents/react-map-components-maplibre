@@ -65,7 +65,7 @@ const MlLayer = (props) => {
       layerInitializedRef.current = true;
       mapRef.current.addLayer(
         {
-          id: layerId,
+          id: layerId.current,
           type: "background",
           paint: {
             "background-color": "rgba(0,0,0,0)",

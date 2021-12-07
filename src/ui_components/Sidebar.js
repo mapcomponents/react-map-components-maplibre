@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "stretch",
   },
   drawerPaper: {
-    position: "initial",
+    position: "initial !important",
     padding: "20px",
   },
 }));

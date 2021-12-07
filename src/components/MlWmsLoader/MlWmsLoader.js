@@ -205,6 +205,7 @@ const MlWmsLoader = (props) => {
     <>
       {error && <p>{error}</p>}
       <h3 key="title">{capabilities?.Service?.Title}</h3>
+      {console.log(componentId.current)}
       {capabilities?.Capability?.Layer?.Layer.map((layer, idx) => (
         <MlLayer
           layerId={"Order-" + componentId.current + "-" + idx}
