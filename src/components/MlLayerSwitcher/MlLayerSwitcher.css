@@ -1,0 +1,17 @@
+.mllayerswitcher-layer-box.activeHighlight > .mllayerswitcher-layer-image {
+    border-color:  rgb(181, 215, 238);
+    border-radius: 8px;
+}
+.mllayerswitcher-layer-box.activeHighlight > .mllayerswitcher-layer-text {
+    color:  rgb(181, 215, 238) !important;
+  
+}
+
+.mllayerswitcher-layer-box.active > .mllayerswitcher-layer-image {
+    border-color:  rgb(196, 240, 0);
+    border-radius: 8px;
+}
+.mllayerswitcher-layer-box.active > .mllayerswitcher-layer-text {
+    color:  rgb(252, 0, 0) !important;
+  
+}

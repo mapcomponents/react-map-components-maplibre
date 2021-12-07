@@ -47,7 +47,7 @@ const defaultProps = {
 const MlWmsLayer = (props) => {
   const mapContext = useContext(MapContext);
 
-  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLayer-") + uuidv4());
+  const componentId = useRef(props.layerId || ("MlWmsLayer-" + uuidv4()));
   const mapRef = useRef(null);
   const initializedRef = useRef(false);
   const layerId = useRef(props.layerId || componentId.current);
