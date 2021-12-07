@@ -13,7 +13,7 @@ const MlImageMarkerLayer = (props) => {
   const layerInitializedRef = useRef(false);
   const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  const layerId = useRef((props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current);
+  const layerId = useRef(props.layerId || componentId.current);
 
   useEffect(() => {
     let _componentId = componentId.current;

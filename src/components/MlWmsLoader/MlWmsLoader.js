@@ -207,9 +207,8 @@ const MlWmsLoader = (props) => {
       <h3 key="title">{capabilities?.Service?.Title}</h3>
       {capabilities?.Capability?.Layer?.Layer.map((layer, idx) => (
         <MlLayer
-          layerId="Order-"
+          layerId={"Order-" + componentId.current + "-" + idx}
           key={componentId.current + "-" + idx}
-          idSuffix={componentId.current + "-" + idx}
           {...(idx > 0
             ? {
                 insertBeforeLayer: "Order-" + componentId.current + "-" + (idx - 1),
