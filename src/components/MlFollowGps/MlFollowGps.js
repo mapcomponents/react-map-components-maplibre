@@ -9,6 +9,8 @@ import {point} from "@turf/turf"
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import MlImageMarkerLayer from "../MlImageMarkerLayer/MlImageMarkerLayer";
 
+import marker from "./assets/marker.png";
+
 /**
  * Adds a button that makes the map follow the users GPS position using
  * navigator.geolocation.watchPosition if activated
@@ -33,7 +35,6 @@ const MlFollowGps = (props) => {
 
   useEffect(() => {
     let _componentId = componentId.current;
-
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
@@ -61,13 +62,12 @@ const MlFollowGps = (props) => {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
     mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
-
   }, [mapContext.mapIds, mapContext, props.mapId]);
 
   const getLocationSuccess = (pos) => {
     if (!mapRef.current) return;
     mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude]);
-    setAccuracyRadius(pos.coords.accuracy)
+    setAccuracyRadius(pos.coords.accuracy);
     setGeoJson(point([pos.coords.longitude, pos.coords.latitude]));
   };
 
@@ -78,47 +78,48 @@ const MlFollowGps = (props) => {
 
   return (
     <>
-      {isFollowed && geoJson &&
-      <MlGeoJsonLayer geojson={geoJson} type={"circle"}
-                      paint={{
-                        "circle-radius": {
-                          stops: [
-                            [0, 0],
-                            [
-                              20,
-                              (accuracyRadius) /
-                              0.075 /
-                              Math.cos((geoJson.geometry.coordinates[1] * Math.PI) / 180),
-                            ],
-                          ],
-                          base: 2,
-                        },
-                        "circle-color": "#ee7700",
-                        "circle-opacity": 0.5,
-                      }}
-      />
-      }
+      {isFollowed && geoJson && (
+        <MlGeoJsonLayer
+          geojson={geoJson}
+          type={"circle"}
+          paint={{
+            "circle-radius": {
+              stops: [
+                [0, 0],
+                [
+                  20,
+                  accuracyRadius /
+                    0.075 /
+                    Math.cos((geoJson.geometry.coordinates[1] * Math.PI) / 180),
+                ],
+              ],
+              base: 2,
+            },
+            "circle-color": "#ee7700",
+            "circle-opacity": 0.5,
+          }}
+        />
+      )}
 
-      {isFollowed && geoJson &&
-      <MlImageMarkerLayer
-        options={{
-          type: "symbol",
-          source: {
-            type: "geojson",
-            data: geoJson
-          },
-          layout: {
-            "icon-size": 0.1,
-            "icon-offset": [0, -340]
-          },
-        }
-        }
-        imgSrc={"/assets/marker.png"}
-      />
-      }
+      {isFollowed && geoJson && (
+        <MlImageMarkerLayer
+          options={{
+            type: "symbol",
+            source: {
+              type: "geojson",
+              data: geoJson,
+            },
+            layout: {
+              "icon-size": 0.1,
+              "icon-offset": [0, -340],
+            },
+          }}
+          imgSrc={marker}
+        />
+      )}
 
       <Button
-        sx={{zIndex: 1002, color: isFollowed ? "#bbb" : "#666", ...props.style}}
+        sx={{ zIndex: 1002, color: isFollowed ? "#bbb" : "#666", ...props.style }}
         disabled={locationAccessDenied}
         onClick={() => {
           if (isFollowed) {
@@ -133,7 +134,7 @@ const MlFollowGps = (props) => {
         }}
       >
         {" "}
-        <RoomIcon sx={{}}/>{" "}
+        <RoomIcon sx={{}} />{" "}
       </Button>
     </>
   );

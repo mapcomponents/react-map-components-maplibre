@@ -45,7 +45,7 @@ const Template = (args) => {
             {
               label: "GeoJson 1",
               layerId: "geojson1",
-              src: "/assets/historic.png",
+              src: "assets/historic.png",
               active: true,
             },
           ],
@@ -72,17 +72,17 @@ ExampleConfig.args = {
     {
       label: "Historic",
       layerId: "historic",
-      src: "/assets/historic.png",
+      src: "assets/historic.png",
     },
     {
       label: "Straßenkarte",
       layerId: "styleBase",
-      src: "/assets/osm.png",
+      src: "assets/osm.png",
     },
     {
       label: "DOP",
       layerId: "WMS_NW_DOP",
-      src: "/assets/dop.png",
+      src: "assets/dop.png",
     },
   ],
 };

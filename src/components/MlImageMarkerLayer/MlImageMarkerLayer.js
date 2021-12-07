@@ -82,6 +82,7 @@ const MlImageMarkerLayer = (props) => {
 
     layerInitializedRef.current = true;
 
+    console.log(props.imgSrc);
     if (props.imgSrc) {
       mapRef.current.loadImage(props.imgSrc, function (error, image) {
         if (error) throw error;
