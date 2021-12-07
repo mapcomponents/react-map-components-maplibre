@@ -34,11 +34,10 @@ const MlGeoJsonLayer = (props) => {
     let _componentId = componentId.current;
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
-      if(transitionTimeoutRef.current){
-        clearTimeout(transitionTimeoutRef.current)
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
       }
       if (mapRef.current) {
-
         mapRef.current.cleanup(_componentId);
 
         mapRef.current = null;
@@ -48,11 +47,17 @@ const MlGeoJsonLayer = (props) => {
 
   useEffect(() => {
     if (!mapRef.current || !initializedRef.current) return;
-    // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+    for (var key in props.layout) {
+      mapContext.getMap(props.mapId).setLayoutProperty(layerId.current, key, props.layout[key]);
+    }
+  }, [props.layout, mapContext, props.mapId]);
+
+  useEffect(() => {
+    if (!mapRef.current || !initializedRef.current) return;
 
     for (var key in props.paint) {
-      mapContext.getMap(props.mapId).setPaintProperty(componentId.current, key, props.paint[key]);
+      mapContext.getMap(props.mapId).setPaintProperty(layerId.current, key, props.paint[key]);
     }
   }, [props.paint, mapContext, props.mapId]);
 
@@ -136,6 +141,7 @@ const MlGeoJsonLayer = (props) => {
             "line-color": "rgb(100,200,100)",
             "line-width": 10,
           },
+          layout: props.layout || {},
         },
         props.insertBeforeLayer,
         componentId.current
@@ -178,8 +184,16 @@ MlGeoJsonLayer.propTypes = {
    */
   type: PropTypes.string,
   /**
-   * Paint object, that is passed to the addLayer call.
-   * Possible propsdepend on the layer type.
+   * Layout property object, that is passed to the addLayer call.
+   * Possible props depend on the layer type.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+   */
+  layout: PropTypes.object,
+  /**
+   * Paint property object, that is passed to the addLayer call.
+   * Possible props depend on the layer type.
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
