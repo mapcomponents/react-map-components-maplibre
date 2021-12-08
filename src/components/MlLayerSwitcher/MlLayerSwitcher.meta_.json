@@ -1,10 +1,10 @@
 {
   "name": "MlLayerSwitcher",
-  "title": "",
+  "title": "Layer switcher",
   "description": "",
   "i18n": {
     "de": {
-      "title": "Ebenenwechsler",
+      "title": "Ebenen wechsler",
       "description": ""
     }
   },
