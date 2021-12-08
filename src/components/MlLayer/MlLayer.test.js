@@ -5,6 +5,8 @@ import { MapContext, MapComponentsProvider } from "@mapcomponents/react-core";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 import MlLayer from "./MlLayer";
 
+import { uuid_regex } from "../../setupTests";
+
 const MlLayerTestComponent = (props) => {
   const [layerVisible, setLayerVisible] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -59,57 +61,57 @@ const createWrapper = () =>
   );
 
 describe("<MlLayer>", () => {
-  it("should add a Layer with the id 'MlLayer-{unix-timestamp}' to the MapLibre instance", async () => {
+  it("should add a Layer with the id 'MlLayer-{uuid}' to the MapLibre instance", async () => {
     const wrapper = createWrapper();
 
     wrapper.find(".trigger_refresh").simulate("click");
 
     expect(
-      /^.*\"MlLayer\-[0-9]*\".*$/.test(wrapper.find(".layers_json").text())
+      new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".layers_json").text())
     ).toEqual(true);
   });
 
-  it("should remove a Layer with the id 'MlLayer-{unix-timestamp}' from the MapLibre instance", async () => {
+  it("should remove a Layer with the id 'MlLayer-{uuid}' from the MapLibre instance", async () => {
     const wrapper = createWrapper();
 
     wrapper.find(".trigger_refresh").simulate("click");
 
     expect(
-      /^.*\"MlLayer\-[0-9]*\".*$/.test(wrapper.find(".layers_json").text())
+      new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".layers_json").text())
     ).toEqual(true);
 
     wrapper.find(".toggle_layer_visible").simulate("click");
     wrapper.find(".trigger_refresh").simulate("click");
 
     expect(
-      /^.*\"MlLayer\-[0-9]*\".*$/.test(wrapper.find(".layers_json").text())
+      new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".layers_json").text())
     ).toEqual(false);
   });
 
-  it("should add a Source with the id 'MlLayer-{unix-timestamp}' to the MapLibre instance", async () => {
+  it("should add a Source with the id 'MlLayer-{uuid}' to the MapLibre instance", async () => {
     const wrapper = createWrapper();
 
     wrapper.find(".trigger_refresh").simulate("click");
 
     expect(
-      /^.*\"MlLayer\-[0-9]*\".*$/.test(wrapper.find(".sources_json").text())
+      new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".sources_json").text())
     ).toEqual(true);
   });
 
-  it("should remove a Source with the id 'MlLayer-{unix-timestamp}' from the MapLibre instance", async () => {
+  it("should remove a Source with the id 'MlLayer-{uuid}' from the MapLibre instance", async () => {
     const wrapper = createWrapper();
 
     wrapper.find(".trigger_refresh").simulate("click");
 
     expect(
-      /^.*\"MlLayer\-[0-9]*\".*$/.test(wrapper.find(".sources_json").text())
+      new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".sources_json").text())
     ).toEqual(true);
 
     wrapper.find(".toggle_layer_visible").simulate("click");
     wrapper.find(".trigger_refresh").simulate("click");
 
     expect(
-      /^.*\"MlLayer\-[0-9]*\".*$/.test(wrapper.find(".sources_json").text())
+      new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".sources_json").text())
     ).toEqual(false);
   });
 });

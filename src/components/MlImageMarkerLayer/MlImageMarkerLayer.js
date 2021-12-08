@@ -6,9 +6,7 @@ import { MapContext } from "@mapcomponents/react-core";
 const MlImageMarkerLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapRef = useRef(null);
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlOsmLayer-") + uuidv4()
-  );
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlImageMarkerLayer-") + uuidv4());
   const mapContext = useContext(MapContext);
   const layerInitializedRef = useRef(false);
   const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
