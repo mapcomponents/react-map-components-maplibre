@@ -4,16 +4,21 @@ import { MapComponentsProvider } from "@mapcomponents/react-core";
 import { LoadingOverlayProvider } from "../ui_components/LoadingOverlayContext";
 import LoadingOverlay from "../ui_components/LoadingOverlay";
 import "./style.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({});
 
 const decorators = [
   (Story) => (
-    <MapComponentsProvider>
-      <LoadingOverlayProvider>
-        <LoadingOverlay></LoadingOverlay>
+    <ThemeProvider theme={theme}>
+      <MapComponentsProvider>
+        <LoadingOverlayProvider>
+          <LoadingOverlay></LoadingOverlay>
 
-        <Story />
-      </LoadingOverlayProvider>
-    </MapComponentsProvider>
+          <Story />
+        </LoadingOverlayProvider>
+      </MapComponentsProvider>
+    </ThemeProvider>
   ),
 ];
 

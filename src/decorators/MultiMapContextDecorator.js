@@ -4,11 +4,12 @@ import { MapComponentsProvider } from "@mapcomponents/react-core";
 
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import "./style.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({});
+
 
 const decorators = [
   (Story) => (

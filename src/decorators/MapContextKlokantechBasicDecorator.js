@@ -3,11 +3,15 @@ import React from "react";
 import { MapComponentsProvider } from "@mapcomponents/react-core";
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 import "./style.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({});
 
 const decorators = [
   (Story) => (
     <div className="fullscreen_map">
-      <MapComponentsProvider>
+      <ThemeProvider theme={theme}>
+        <MapComponentsProvider>
           <Story />
           <MapLibreMap
             options={{
@@ -15,8 +19,7 @@ const decorators = [
               //center: [-87.62712, 41.89033],
               zoom: 14.5,
               //pitch: 45,
-              style:
-                "https://wms.wheregroup.com/tileserver/style/klokantech-basic.json",
+              style: "https://wms.wheregroup.com/tileserver/style/klokantech-basic.json",
               //style:"https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
               //center: [8.607, 53.1409349],
               //          zoom: 13,
@@ -27,7 +30,8 @@ const decorators = [
               //          ],
             }}
           />
-      </MapComponentsProvider>
+        </MapComponentsProvider>
+      </ThemeProvider>
     </div>
   ),
 ];
