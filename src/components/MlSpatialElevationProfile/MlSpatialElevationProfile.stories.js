@@ -37,14 +37,14 @@ const Template = (args) => (
       }}
       title="Download sample-data"
       size="large"
-      href="/assets/sample.gpx"
+      href="assets/sample.gpx"
       target="blank"
     >
-      <FileDownloadIcon/>
+      <FileDownloadIcon />
     </IconButton>
     <GeoJsonProvider>
-      <MlGPXViewer/>
-      <MlSpatialElevationProfile/>
+      <MlGPXViewer />
+      <MlSpatialElevationProfile />
     </GeoJsonProvider>
   </>
 );
