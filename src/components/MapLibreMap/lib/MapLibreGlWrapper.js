@@ -41,7 +41,7 @@ const MapLibreGlWrapper = function (props) {
     on: (eventName, handler, options, componentId) => {
       if (!self.eventHandlers[eventName]) return;
 
-      if(typeof options === 'string'){
+      if (typeof options === "string") {
         componentId = options;
         options = {};
       }
@@ -108,38 +108,38 @@ const MapLibreGlWrapper = function (props) {
      */
     buildLayerObject: (layer) => {
       //if (self.baseLayers.indexOf(layer.id) === -1) {
-        let paint = {};
-        let values = layer.paint?._values;
-        Object.keys(values || {}).map((propName) => {
-          paint[propName] =
-            typeof values[propName].value !== "undefined"
-              ? values[propName].value.value
-              : values[propName];
-        });
-        let layout = {};
-        values = layer.layout?._values;
-        Object.keys(values || {}).map((propName) => {
-          layout[propName] =
-            typeof values[propName].value !== "undefined"
-              ? values[propName].value.value
-              : values[propName];
-        });
-        return {
-          id: layer.id,
-          type: layer.type,
-          visible: layer.visibility === "none" ? false : true,
-          baseLayer: self.baseLayers.indexOf(layer.id) !== -1,
-          paint,
-          layout,
-          //filter: layers[layerId].filter,
-          //layout: layers[layerId].layout,
-          //maxzoom: layers[layerId].maxzoom,
-          //metadata: layers[layerId].metadata,
-          //minzoom: layers[layerId].minzoom,
-          //paint: layers[layerId].paint.get(),
-          //source: layers[layerId].source,
-          //sourceLayer: layers[layerId].sourceLayer,
-        };
+      let paint = {};
+      let values = layer.paint?._values;
+      Object.keys(values || {}).map((propName) => {
+        paint[propName] =
+          typeof values[propName].value !== "undefined"
+            ? values[propName].value.value
+            : values[propName];
+      });
+      let layout = {};
+      values = layer.layout?._values;
+      Object.keys(values || {}).map((propName) => {
+        layout[propName] =
+          typeof values[propName].value !== "undefined"
+            ? values[propName].value.value
+            : values[propName];
+      });
+      return {
+        id: layer.id,
+        type: layer.type,
+        visible: layer.visibility === "none" ? false : true,
+        baseLayer: self.baseLayers.indexOf(layer.id) !== -1,
+        paint,
+        layout,
+        //filter: layers[layerId].filter,
+        //layout: layers[layerId].layout,
+        //maxzoom: layers[layerId].maxzoom,
+        //metadata: layers[layerId].metadata,
+        //minzoom: layers[layerId].minzoom,
+        //paint: layers[layerId].paint.get(),
+        //source: layers[layerId].source,
+        //sourceLayer: layers[layerId].sourceLayer,
+      };
       //}
     },
     /**
@@ -159,7 +159,7 @@ const MapLibreGlWrapper = function (props) {
      */
     refreshLayerState: () => {
       self.wrapper.layerState = self.wrapper.buildLayerObjects();
-      self.wrapper.layerStateStrings = self.wrapper.layerState.map(el => JSON.stringify(el));
+      self.wrapper.layerStateStrings = self.wrapper.layerState.map((el) => JSON.stringify(el));
     },
     /**
      * Object containing information on the current viewport state
@@ -173,29 +173,17 @@ const MapLibreGlWrapper = function (props) {
      * Previous version of viewportStateString
      */
     oldViewportStateString: "{}",
-    getViewport: () => (typeof self.map.getCenter === 'function'?{
-      center: (({ lng, lat, ...rest }) => ({ lng, lat }))(self.map.getCenter()),
-      zoom: self.map.getZoom(),
-      bearing: self.map.getBearing(),
-      pitch: self.map.getPitch(),
-    }:{}),
-    viewportRefreshEnabled: true,
-    viewportRefreshWaiting: false,
-    refreshViewport: (force) => {
-      if (self.wrapper.viewportRefreshEnabled || force) {
-        self.wrapper.viewportRefreshEnabled = false;
-        self.wrapper.viewportState = self.wrapper.getViewport();
-        self.wrapper.viewportStateString = JSON.stringify(self.wrapper.viewportState);
-        setTimeout(() => {
-          self.wrapper.viewportRefreshEnabled = true;
-          if (self.wrapper.viewportRefreshWaiting) {
-            self.wrapper.viewportRefreshWaiting = false;
-            self.wrapper.refreshViewport();
+    getViewport: () =>
+      typeof self.map.getCenter === "function"
+        ? {
+            center: (({ lng, lat, ...rest }) => ({ lng, lat }))(self.map.getCenter()),
+            zoom: self.map.getZoom(),
+            bearing: self.map.getBearing(),
+            pitch: self.map.getPitch(),
           }
-        }, 50);
-      }else{
-          self.wrapper.viewportRefreshWaiting = true;
-      }
+        : {},
+    refreshViewport: () => {
+      self.wrapper.viewportState = self.wrapper.getViewport();
     },
   };
 
@@ -484,10 +472,10 @@ const MapLibreGlWrapper = function (props) {
     ) {
       await fetch(props.mapOptions.style)
         .then((response) => {
-          if(response.ok){
-            return response.json()
-          }else{
-            throw new Error('error loading map style.json')
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("error loading map style.json");
           }
         })
         .then((styleJson) => {
@@ -508,23 +496,22 @@ const MapLibreGlWrapper = function (props) {
     self.map = new maplibregl.Map(props.mapOptions);
 
     self.addNativeMaplibreFunctionsAndProps();
-    self.wrapper.refreshViewport(true);
+    self.wrapper.refreshViewport();
     self.wrapper.fire("viewportchange");
 
-    self.map.on("move", () => {
-      self.wrapper.refreshViewport();
-      if (self.wrapper.viewportStateString !== self.wrapper.oldViewportStateString) {
-        self.wrapper.oldViewportStateString = self.wrapper.viewportStateString;
+    setTimeout(() => {
+      self.map.on("move", () => {
+        self.wrapper.viewportState = self.wrapper.getViewport();
         self.wrapper.fire("viewportchange");
+      });
+      self.map.on("data", () => {
+        self.wrapper.refreshLayerState();
+        self.wrapper.fire("layerchange");
+      });
+      if (typeof props.onReady === "function") {
+        props.onReady(self.map, self);
       }
     });
-    self.map.on("data", () => {
-      self.wrapper.refreshLayerState();
-      self.wrapper.fire("layerchange");
-    });
-    if (typeof props.onReady === "function") {
-      props.onReady(self.map, self);
-    }
   };
   initializeMapLibre();
 };
