@@ -14,6 +14,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import GeoJsonContext from "./util/GeoJsonContext";
 import toGeoJSON from "./gpxConverter";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -38,6 +39,7 @@ const MlGPXViewer = (props) => {
   const [zIndex, setZIndex] = useState(0);
   const [metaData, setMetaData] = useState([]);
   const fileupload = useRef(null);
+  const mediaIsMobile = useMediaQuery("(max-width:900px)");
 
   const popup = useRef(
     new Popup({
@@ -258,9 +260,9 @@ const MlGPXViewer = (props) => {
       <IconButton
         onClick={manualUpload}
         style={{
-          position: "absolute",
+          position: "fixed",
           right: "5px",
-          bottom: "75px",
+          bottom: mediaIsMobile ? "90px" : "75px",
           backgroundColor: "rgba(255,255,255,1)",
 
           zIndex: 1000,
@@ -280,9 +282,9 @@ const MlGPXViewer = (props) => {
       <IconButton
         onClick={toogleDrawer}
         style={{
-          position: "absolute",
+          position: "fixed",
           right: "5px",
-          bottom: "25px",
+          bottom: mediaIsMobile ? "40px" : "25px",
           backgroundColor: "rgba(255,255,255,1)",
 
           zIndex: 1000,
