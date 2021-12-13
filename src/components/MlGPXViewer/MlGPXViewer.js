@@ -1,14 +1,14 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, {useContext, useRef, useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import { MapContext } from "@mapcomponents/react-core";
-import { bbox } from "@turf/turf";
+import {MapContext} from "@mapcomponents/react-core";
+import {bbox} from "@turf/turf";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 import FileCopy from "@mui/icons-material/FileCopy";
-import { Popup } from "maplibre-gl";
+import {Popup} from "maplibre-gl";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -16,7 +16,7 @@ import GeoJsonContext from "./util/GeoJsonContext";
 import toGeoJSON from "./gpxConverter";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
@@ -257,42 +257,42 @@ const MlGPXViewer = (props) => {
   };
   return (
     <>
-      <IconButton
-        onClick={manualUpload}
-        style={{
-          position: "fixed",
-          right: "5px",
-          bottom: mediaIsMobile ? "90px" : "75px",
-          backgroundColor: "rgba(255,255,255,1)",
-
-          zIndex: 1000,
-        }}
-        size="large"
-      >
-        <input
-          ref={fileupload}
-          onChange={fileUploadOnChange}
-          type="file"
-          id="input"
-          multiple
-          style={{ display: "none" }}
-        ></input>
-        <FileCopy />
-      </IconButton>
-      <IconButton
-        onClick={toogleDrawer}
-        style={{
-          position: "fixed",
-          right: "5px",
-          bottom: mediaIsMobile ? "40px" : "25px",
-          backgroundColor: "rgba(255,255,255,1)",
-
-          zIndex: 1000,
-        }}
-        size="large"
-      >
-        <InfoIcon />
-      </IconButton>
+      <div style={{
+        position: "fixed",
+        right: "5px",
+        bottom: mediaIsMobile ? "40px" : "25px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "5px",
+        zIndex: 1000,
+      }}>
+        <IconButton
+          onClick={manualUpload}
+          style={{
+            backgroundColor: "rgba(255,255,255,1)",
+          }}
+          size="large"
+        >
+          <input
+            ref={fileupload}
+            onChange={fileUploadOnChange}
+            type="file"
+            id="input"
+            multiple
+            style={{display: "none"}}
+          ></input>
+          <FileCopy/>
+        </IconButton>
+        <IconButton
+          onClick={toogleDrawer}
+          style={{
+            backgroundColor: "rgba(255,255,255,1)",
+          }}
+          size="large"
+        >
+          <InfoIcon/>
+        </IconButton>
+      </div>
       <Drawer variant="persistent" anchor="left" open={open}>
         <Typography
           variant="h6"
@@ -304,11 +304,11 @@ const MlGPXViewer = (props) => {
         >
           Informationen zur Route
         </Typography>
-        <Divider />
+        <Divider/>
         <List>
           {metaData.map((item) => (
             <ListItem key={`item--${item.id}`}>
-              <ListItemText primary={item.value} />
+              <ListItemText primary={item.value}/>
             </ListItem>
           ))}
         </List>
