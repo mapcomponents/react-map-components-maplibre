@@ -499,7 +499,6 @@ const MapLibreGlWrapper = function (props) {
     self.wrapper.refreshViewport();
     self.wrapper.fire("viewportchange");
 
-    setTimeout(() => {
       self.map.on("move", () => {
         self.wrapper.viewportState = self.wrapper.getViewport();
         self.wrapper.fire("viewportchange");
@@ -511,7 +510,6 @@ const MapLibreGlWrapper = function (props) {
       if (typeof props.onReady === "function") {
         props.onReady(self.map, self);
       }
-    });
   };
   initializeMapLibre();
 };
