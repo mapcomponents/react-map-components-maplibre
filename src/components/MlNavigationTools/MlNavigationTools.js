@@ -1,7 +1,7 @@
 import React from "react";
 
-import { MapContext } from "@mapcomponents/react-core";
-import { useEffect, useRef, useContext, useState } from "react";
+import {MapContext} from "@mapcomponents/react-core";
+import {useEffect, useRef, useContext, useState} from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
@@ -9,10 +9,11 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 //import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 //import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 
 import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
 import MlFollowGps from "../MlFollowGps/MlFollowGps";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const MlNavigationTools = (props) => {
   const mapContext = useContext(MapContext);
@@ -22,17 +23,19 @@ const MlNavigationTools = (props) => {
 
   const [pitch, setPitch] = useState(0);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
+  const mediaIsMobile = useMediaQuery("(max-width:900px)");
   const buttonStyle = {
-    minWidth: "30px",
-    minHeight: "30px",
-    width: "30px",
-    height: "30px",
+    minWidth: "20px",
+    minHeight: "20px",
+    width: mediaIsMobile ? "50px" : "30px",
+    height: mediaIsMobile ? "50px" : "30px",
     color: "#bbb",
     backgroundColor: "#414141",
     borderRadius: "23%",
     //border: "1px solid #bbb",
     //boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
     margin: 0.15,
+    fontSize: mediaIsMobile ? "1.5em" : "1.2em",
     ":hover": {
       backgroundColor: "#515151",
       color: "#ececec",
@@ -77,7 +80,7 @@ const MlNavigationTools = (props) => {
     if (!mapRef.current) return;
 
     if (mapRef.current.transform._zoom + 0.5 <= mapRef.current.transform._maxZoom) {
-      mapRef.current.easeTo({ zoom: mapRef.current.transform._zoom + 0.5 });
+      mapRef.current.easeTo({zoom: mapRef.current.transform._zoom + 0.5});
     }
   };
 
@@ -85,7 +88,7 @@ const MlNavigationTools = (props) => {
     if (!mapRef.current) return;
 
     if (mapRef.current.transform._zoom - 0.5 >= mapRef.current.transform._minZoom) {
-      mapRef.current.easeTo({ zoom: mapRef.current.transform._zoom - 0.5 });
+      mapRef.current.easeTo({zoom: mapRef.current.transform._zoom - 0.5});
     }
   };
 
@@ -96,7 +99,7 @@ const MlNavigationTools = (props) => {
     if (mapRef.current.getPitch() !== 0) {
       targetPitch = 0;
     }
-    mapRef.current.easeTo({ pitch: targetPitch });
+    mapRef.current.easeTo({pitch: targetPitch});
   };
 
   const moveToCurrentLocation = () => {
@@ -117,8 +120,8 @@ const MlNavigationTools = (props) => {
       style={{
         zIndex: 501,
         position: "absolute",
-        right: "20px",
-        bottom: "20px",
+        right: mediaIsMobile ? "15px" : "5px",
+        bottom: mediaIsMobile ? "40px" : "20px",
         display: "flex",
         flexDirection: "column",
       }}
@@ -127,34 +130,35 @@ const MlNavigationTools = (props) => {
         style={{
           width: "31px",
           position: "relative",
-          height: "50px",
-          marginLeft: "-5px",
+          height: mediaIsMobile ? "55px" : "45px",
+          marginLeft: mediaIsMobile ? "3px" : "-5px",
+          transform: mediaIsMobile ? "scale(1.6)" : "scale(1)"
         }}
         backgroundStyle={{
           boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
         }}
       />
-      <Button sx={{ ...buttonStyle, fontSize: ".9em", fontWeight: 600 }} onClick={adjustPitch}>
+      <Button sx={{...buttonStyle, fontWeight: 600}} onClick={adjustPitch}>
         {pitch ? "2D" : "3D"}
       </Button>
       <Button sx={buttonStyle} onClick={moveToCurrentLocation} disabled={locationAccessDenied}>
-        <GpsFixedIcon sx={{ width: ".9em" }} />
+        <GpsFixedIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
       </Button>
-      <MlFollowGps />
+      <MlFollowGps style={buttonStyle}/>
       <ButtonGroup
         orientation="vertical"
         sx={{
-          width: "30px",
+          width: "50px",
           border: "none",
-          Button: { minWidth: "30px !important", border: "none", padding: 0 },
-          "Button:hover": { border: "none" },
+          Button: {minWidth: "20px !important", border: "none", padding: 0},
+          "Button:hover": {border: "none"},
         }}
       >
         <Button sx={buttonStyle} onClick={zoomIn}>
-          <ControlPointIcon />
+          <ControlPointIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
         </Button>
         <Button sx={buttonStyle} onClick={zoomOut}>
-          <RemoveCircleOutlineIcon />
+          <RemoveCircleOutlineIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
         </Button>
       </ButtonGroup>
     </div>

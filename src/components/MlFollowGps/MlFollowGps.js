@@ -134,7 +134,7 @@ const MlFollowGps = (props) => {
         }}
       >
         {" "}
-        <RoomIcon sx={{}} />{" "}
+        <RoomIcon sx={{fontSize: props.style.fontSize}}/>{" "}
       </Button>
     </>
   );
@@ -150,6 +150,7 @@ MlFollowGps.defaultProps = {
     backgroundColor: "#414141",
     borderRadius: "23%",
     margin: 0.15,
+    fontSize: "1.3em",
     ":hover": {
       backgroundColor: "#515151",
       color: "#ececec",
