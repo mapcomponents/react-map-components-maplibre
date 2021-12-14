@@ -1,6 +1,6 @@
 {
   "name": "MlFeatureEditor",
-  "title": "Sketch Tool",
+  "title": "Sketch tools",
   "description": "Enables the editing of Point, Linestring and Polygon GeoJSON Files.",
   "i18n": {
     "de": {
@@ -8,7 +8,7 @@
       "description": "Ermöglicht das Bearbeiten von Punkt, Linestring und Polygon GeoJSON Daten."
     }
   },
-  "tags": [ "Map add-on" ],
+  "tags": ["Map add-on"],
   "category": "add-ons",
   "type": "component",
   "price": 0
