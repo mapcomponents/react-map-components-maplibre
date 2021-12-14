@@ -22,7 +22,7 @@ const MlLayerSwipe = (props) => {
     if (!props.map1Id || !props.map2Id) {
       return false;
     }
-    if (!mapContext.mapExists(props.map1Id) || !mapContext.mapExists(props.map2Id)) {
+    if (!mapContext.getMap(props.map1Id) || !mapContext.getMap(props.map2Id)) {
       return false;
     }
 
@@ -53,8 +53,7 @@ const MlLayerSwipe = (props) => {
         setSwipeX(swipeX_tmp);
         swipeXRef.current = swipeX_tmp;
 
-        var clipA =
-          "rect(0, " + (swipeXRef.current * bounds.width) / 100 + "px, 999em, 0)";
+        var clipA = "rect(0, " + (swipeXRef.current * bounds.width) / 100 + "px, 999em, 0)";
 
         mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
       }
@@ -71,8 +70,8 @@ const MlLayerSwipe = (props) => {
 
     initializedRef.current = true;
     syncCleanupFunctionRef.current = syncMove(
-      mapContext.getMap(props.map1Id),
-      mapContext.getMap(props.map2Id)
+      mapContext.getMap(props.map1Id).map,
+      mapContext.getMap(props.map2Id).map
     );
     onMove({ clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2 });
   }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
