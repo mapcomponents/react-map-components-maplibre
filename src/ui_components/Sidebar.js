@@ -19,13 +19,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "stretch",
     alignContent: "stretch", 
   },
+  drawerPaper: {
+    position: "initial !important",
+    padding: "40px",
+  },
 }));        
 
 const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-}));
-const DrawerMain = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
 }));
@@ -36,7 +36,7 @@ export default function Sidebar(props) {
 
   const [drawerState, setDrawerWidth] = useState(true);
 
-  let changeDrawerWidth = drawerState ? "500" : "0"; 
+  let changeDrawerWidth = drawerState ? "300" : "0"; 
   let displayCloseButton = drawerState ? "" : "none";
   let displayOpenButton = drawerState ? "none" : "";
 
@@ -62,24 +62,21 @@ export default function Sidebar(props) {
         variant="persistent"
         anchor="left"
         open={drawerState}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
         sx={{
           ...props.sx,
         }}
       > 
         <DrawerHeader>
-          <DrawerMain style = {{ 
-            display: displayCloseButton,
-            position: "relative",
-            padding: "40px",}}
-          >          
-          {props.children}
-          </DrawerMain>
-
           <ChevronLeftIcon onClick={ handleDrawerClose } style = {{ 
             display: displayCloseButton,
-            padding: "20px",
+            paddingBottom: "40px",
           }}/>
         </DrawerHeader>
+
+        {props.children}
 
       </Drawer>
   </>
