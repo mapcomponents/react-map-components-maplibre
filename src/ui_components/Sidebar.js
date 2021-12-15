@@ -37,16 +37,14 @@ export default function Sidebar(props) {
   const [drawerState, setDrawerWidth] = useState(true);
 
   let changeDrawerWidth = drawerState ? "500" : "0"; 
-  let displayCloseButton = drawerState ? "" : "";
+  let displayCloseButton = drawerState ? "" : "none";
   let displayOpenButton = drawerState ? "none" : "";
 
   const handleDrawerOpen =() => {
     setDrawerWidth(true);
-    console.log('Drawer öffnen')
   };
   const handleDrawerClose =() => {
     setDrawerWidth(false);
-    console.log('Drawer schließen')
   }; 
 
   return (
@@ -79,7 +77,7 @@ export default function Sidebar(props) {
 
           <ChevronLeftIcon onClick={ handleDrawerClose } style = {{ 
             display: displayCloseButton,
-            paddingRight: "10px",
+            padding: "20px",
           }}/>
         </DrawerHeader>
 
