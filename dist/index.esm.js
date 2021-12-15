@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import maplibregl$1, { Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@mui/icons-material/Print';
-import { lineString, length, lineChunk, point, bbox } from '@turf/turf';
+import { lineString, length, lineChunk, point, bbox, lineOffset, distance } from '@turf/turf';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -31,6 +31,7 @@ import FileCopy from '@mui/icons-material/FileCopy';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import { lineString as lineString$1, polygon } from '@turf/helpers';
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -5397,6 +5398,140 @@ GeoJsonProvider.propTypes = {
 };
 
 /**
+ * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
+ *
+ * @component
+ */
+
+var MlSpatialElevationProfile = function MlSpatialElevationProfile(props) {
+  var mapContext = useContext(MapContext);
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlSpatialElevationProfile-") + v4());
+  var mapRef = useRef(null);
+  var initializedRef = useRef(false);
+  var dataSource = useContext(GeoJsonContext);
+  var sourceName = useRef("elevationprofile-" + v4());
+  var layerName = useRef("elevationprofile-layer-" + v4());
+  var createStep = useCallback(function (x, y, z, x2, y2) {
+    //const summand = 0.0002;
+    var line = lineString$1([[x, y], [x2, y2]]);
+    var offsetLine = lineOffset(line, 5, {
+      units: "meters"
+    });
+    var x3 = offsetLine.geometry.coordinates[0][0];
+    var y3 = offsetLine.geometry.coordinates[0][1];
+    var x4 = offsetLine.geometry.coordinates[1][0];
+    var y4 = offsetLine.geometry.coordinates[1][1];
+    return polygon([[[x, y], [x2, y2], [x4, y4], [x3, y3], [x, y]]], {
+      height: z * props.elevationFactor
+    });
+  }, [props.elevationFactor]);
+  useEffect(function () {
+    var _componentId = componentId.current;
+    return function () {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+        mapRef.current = null;
+      }
+    };
+  }, []);
+  useEffect(function () {
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
+    mapRef.current.addSource(sourceName.current, {
+      type: "geojson",
+      data: dataSource.data
+    }, componentId.current);
+    mapRef.current.addLayer({
+      id: layerName.current,
+      source: sourceName.current,
+      type: "fill-extrusion",
+      paint: {
+        "fill-extrusion-height": ["get", "height"],
+        "fill-extrusion-opacity": 0.9,
+        "fill-extrusion-color": ["interpolate", ["linear"], ["get", "height"], 0, "rgba(0, 0, 255, 0)", 0.1, "royalblue", 0.3, "cyan", 0.5, "lime", 0.7, "yellow", 1, "yellow"]
+      }
+    }, props.insertBeforeLayer, componentId.current);
+  }, [mapContext.mapIds, props.insertBeforeLayer, props.mapId, dataSource, mapContext]);
+  useEffect(function () {
+    var _mapRef$current$getSo;
+
+    if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
+    var data = dataSource.data;
+    if (!data || !data.features) return;
+    var line = data.features.find(function (element) {
+      return element.geometry.type === "LineString";
+    });
+    if (!line || !line.geometry) return;
+    var heights = line.geometry.coordinates.map(function (coordinate, index) {
+      return coordinate[2];
+    });
+    var min = Math.min.apply(Math, _toConsumableArray(heights));
+    var max = Math.max.apply(Math, _toConsumableArray(heights)) - min;
+    max = max === 0 ? 1 : max;
+    mapRef.current.setPaintProperty(layerName.current, "fill-extrusion-color", ["interpolate", ["linear"], ["get", "height"], 0, "rgb(0,255,55)", max * props.elevationFactor, "rgb(255,0,0)"]);
+
+    var lerp = function lerp(x, y, a) {
+      return x * (1 - a) + y * a;
+    };
+
+    var points = [];
+    line.geometry.coordinates.forEach(function (coordinate, index) {
+      //const point = createPoint(coordinate[0],coordinate[1],coordinate[2]-min);
+      //points.push(point);
+      if (line.geometry.coordinates[index + 1]) {
+        var wayLength = distance([coordinate[0], coordinate[1]], [line.geometry.coordinates[index + 1][0], line.geometry.coordinates[index + 1][1]], {
+          units: "kilometers"
+        });
+        var listLength = ~~(wayLength * 1000 / 10);
+        listLength = listLength < 1 ? 1 : listLength;
+
+        for (var i = 0; i < listLength; i++) {
+          var x = lerp(line.geometry.coordinates[index][0], line.geometry.coordinates[index + 1][0], i / listLength);
+          var y = lerp(line.geometry.coordinates[index][1], line.geometry.coordinates[index + 1][1], i / listLength);
+          var z = lerp(line.geometry.coordinates[index][2] - min, line.geometry.coordinates[index + 1][2] - min, i / listLength);
+          var x2 = lerp(line.geometry.coordinates[index][0], line.geometry.coordinates[index + 1][0], (i + 1) / listLength);
+          var y2 = lerp(line.geometry.coordinates[index][1], line.geometry.coordinates[index + 1][1], (i + 1) / listLength);
+          var point = createStep(x, y, z, x2, y2);
+          points.push(point);
+        }
+      }
+    });
+    var newData = dataSource.getEmptyFeatureCollection();
+    newData.features = points;
+    (_mapRef$current$getSo = mapRef.current.getSource(sourceName.current)) === null || _mapRef$current$getSo === void 0 ? void 0 : _mapRef$current$getSo.setData(newData);
+  }, [dataSource.data, createStep, dataSource, props.elevationFactor, mapContext]);
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
+};
+
+MlSpatialElevationProfile.defaultProps = {
+  elevationFactor: 1
+};
+MlSpatialElevationProfile.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+   */
+  idPrefix: PropTypes.string,
+
+  /**
+   * Number describes the factor of the height of the elevation
+   */
+  elevationFactor: PropTypes.number,
+
+  /**
+   * The layerId of an existing layer this layer should be rendered visually beneath
+   * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+   */
+  insertBeforeLayer: PropTypes.string
+};
+
+/**
  * React hook that allows subscribing to map state changes
  *
  * @component
@@ -5557,5 +5692,5 @@ useMapState.propTypes = {
   })
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlVectorTileLayer, MlWmsLayer, useMapState };
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlVectorTileLayer, MlWmsLayer, useMapState };
 //# sourceMappingURL=index.esm.js.map

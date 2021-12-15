@@ -17,5 +17,6 @@ export { default as MlLayerSwipe } from "./components/MlLayerSwipe/MlLayerSwipe"
 export { default as MlGPXViewer } from "./components/MlGPXViewer/MlGPXViewer";
 export { default as GeoJsonProvider } from "./components/MlGPXViewer/util/GeoJsonProvider";
 export { default as GeoJsonContext } from "./components/MlGPXViewer/util/GeoJsonContext";
+export { default as MlSpatialElevationProfile } from "./components/MlSpatialElevationProfile/MlSpatialElevationProfile";
 
 export { default as useMapState } from "./hooks/useMapState";
