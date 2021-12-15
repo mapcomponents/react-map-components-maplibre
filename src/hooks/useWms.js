@@ -25,12 +25,13 @@ function useWms(props) {
     // extract URL parameters from the given URL
     clearState();
     setError(undefined);
-    if (!props.url) return;
+
+    if (!url) return;
 
     let _propsUrlParams;
-    let _wmsUrl = props.url;
-    if (props.url.indexOf("?") !== -1) {
-      _propsUrlParams = props.url.split("?");
+    let _wmsUrl = url;
+    if (url.indexOf("?") !== -1) {
+      _propsUrlParams = url.split("?");
       _wmsUrl = _propsUrlParams[0];
     }
     let _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
@@ -62,7 +63,7 @@ function useWms(props) {
         console.log(error);
         setError(error.message);
       });
-  }, [props.url, props.urlParameters]);
+  }, [url, props.urlParameters]);
 
   useEffect(() => {
     if (!capabilities?.Service) return;

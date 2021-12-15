@@ -25,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
     position: "initial !important",
     boxSizing: "border-box",
     padding: "40px",
+    visibility: "visible !important",
+    zIndex: "initial",
   },
   drawerHeader: {
     alignContent: "flex-start",
@@ -80,9 +82,8 @@ export default function Sidebar(props) {
         }}
       >
         <DrawerHeader className={classes.drawerHeader}>
-          <IconButton>
+          <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon
-              onClick={handleDrawerClose}
               style={
                 {
                   //paddingBottom: "40px",

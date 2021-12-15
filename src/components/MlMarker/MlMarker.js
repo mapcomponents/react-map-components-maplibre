@@ -119,7 +119,7 @@ const MlMarker = (props) => {
           }}
         >
           <iframe
-            style={{ width: "100%" }}
+            style={{ width: "100%", zIndex: -1 }}
             srcDoc={props.content}
             ref={iframe}
             sandbox="allow-same-origin allow-popups-to-escape-sandbox"

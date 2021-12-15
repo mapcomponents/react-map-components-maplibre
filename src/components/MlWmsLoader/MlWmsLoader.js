@@ -41,7 +41,7 @@ const MlWmsLoader = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
   const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl } = useWms({
-    url: props.url,
+    url: undefined,
     urlParameters: props.urlParameters,
   });
 
@@ -72,6 +72,8 @@ const MlWmsLoader = (props) => {
   }, []);
 
   useEffect(() => {
+    if (!initializedRef.current) return;
+
     setUrl(props.url);
   }, [props.url]);
 
@@ -199,7 +201,9 @@ const MlWmsLoader = (props) => {
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
-  }, [mapContext.mapIds, mapContext, props.mapId]);
+    console.log("set url " + props.url);
+    setUrl(props.url);
+  }, [mapContext.mapIds, mapContext, props.mapId, props.url]);
 
   return (
     <>
