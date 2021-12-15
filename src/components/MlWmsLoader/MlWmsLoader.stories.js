@@ -18,7 +18,7 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (props) => {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(props.url);
 
   return (
     <>
@@ -40,7 +40,8 @@ ExampleConfig.parameters = {};
 ExampleConfig.args = {
   /**
    * try https://maps.heigit.org/histosm/wms or https://magosm.magellium.com/geoserver/wms
-   *
+   * https://www.wms.nrw.de/wms/kitas
+   * https://www.wms.nrw.de/geobasis/wms_nw_vdop
    */
-  url: "https://www.wms.nrw.de/geobasis/wms_nw_vdop",
+  url: "https://www.wms.nrw.de/wms/kitas",
 };
