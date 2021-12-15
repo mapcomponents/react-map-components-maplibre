@@ -1,3 +1,16 @@
+/**
+ * https://github.com/mapbox/togeojson
+ *
+ * Copyright (c) 2016 Mapbox All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 var toGeoJSON = (function () {
   var removeSpace = /\s*/g,
     trimSpace = /^\s*|\s*$/g,
@@ -145,15 +158,11 @@ var toGeoJSON = (function () {
         styleByHash[hash] = styles[k];
       }
       for (var l = 0; l < styleMaps.length; l++) {
-        styleIndex["#" + attr(styleMaps[l], "id")] = okhash(
-          xml2str(styleMaps[l])
-        ).toString(16);
+        styleIndex["#" + attr(styleMaps[l], "id")] = okhash(xml2str(styleMaps[l])).toString(16);
         var pairs = get(styleMaps[l], "Pair");
         var pairsMap = {};
         for (var m = 0; m < pairs.length; m++) {
-          pairsMap[nodeVal(get1(pairs[m], "key"))] = nodeVal(
-            get1(pairs[m], "styleUrl")
-          );
+          pairsMap[nodeVal(get1(pairs[m], "key"))] = nodeVal(get1(pairs[m], "styleUrl"));
         }
         styleMapIndex["#" + attr(styleMaps[l], "id")] = pairsMap;
       }
@@ -183,8 +192,7 @@ var toGeoJSON = (function () {
           coords = [],
           times = [];
         if (elems.length === 0) elems = get(root, "gx:coord");
-        for (var i = 0; i < elems.length; i++)
-          coords.push(gxCoord(nodeVal(elems[i])));
+        for (var i = 0; i < elems.length; i++) coords.push(gxCoord(nodeVal(elems[i])));
         var timeElems = get(root, "when");
         for (var j = 0; j < timeElems.length; j++) times.push(nodeVal(timeElems[j]));
         return {
@@ -322,26 +330,19 @@ var toGeoJSON = (function () {
             outline = nodeVal(get1(polyStyle, "outline"));
           if (pcolor) properties.fill = pcolor;
           if (!isNaN(popacity)) properties["fill-opacity"] = popacity;
-          if (fill)
-            properties["fill-opacity"] =
-              fill === "1" ? properties["fill-opacity"] || 1 : 0;
+          if (fill) properties["fill-opacity"] = fill === "1" ? properties["fill-opacity"] || 1 : 0;
           if (outline)
-            properties["stroke-opacity"] =
-              outline === "1" ? properties["stroke-opacity"] || 1 : 0;
+            properties["stroke-opacity"] = outline === "1" ? properties["stroke-opacity"] || 1 : 0;
         }
         if (extendedData) {
           var datas = get(extendedData, "Data"),
             simpleDatas = get(extendedData, "SimpleData");
 
           for (i = 0; i < datas.length; i++) {
-            properties[datas[i].getAttribute("name")] = nodeVal(
-              get1(datas[i], "value")
-            );
+            properties[datas[i].getAttribute("name")] = nodeVal(get1(datas[i], "value"));
           }
           for (i = 0; i < simpleDatas.length; i++) {
-            properties[simpleDatas[i].getAttribute("name")] = nodeVal(
-              simpleDatas[i]
-            );
+            properties[simpleDatas[i].getAttribute("name")] = nodeVal(simpleDatas[i]);
           }
         }
         if (visibility) {
@@ -444,8 +445,7 @@ var toGeoJSON = (function () {
         if (track.length === 0) return;
         var properties = getProperties(node);
         extend(properties, getLineStyle(get1(node, "extensions")));
-        if (times.length)
-          properties.coordTimes = track.length === 1 ? times[0] : times;
+        if (times.length) properties.coordTimes = track.length === 1 ? times[0] : times;
         if (heartRates.length)
           properties.heartRates = track.length === 1 ? heartRates[0] : heartRates;
         return {
@@ -501,14 +501,7 @@ var toGeoJSON = (function () {
         return style;
       }
       function getProperties(node) {
-        var prop = getMulti(node, [
-            "name",
-            "cmt",
-            "desc",
-            "type",
-            "time",
-            "keywords",
-          ]),
+        var prop = getMulti(node, ["name", "cmt", "desc", "type", "time", "keywords"]),
           links = get(node, "link");
         if (links.length) prop.links = [];
         for (var i = 0, link; i < links.length; i++) {
