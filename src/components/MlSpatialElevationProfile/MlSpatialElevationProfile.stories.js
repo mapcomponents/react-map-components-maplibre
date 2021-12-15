@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import InfoIcon from "@mui/icons-material/Info";
 import IconButton from "@mui/material/IconButton";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const storyoptions = {
   title: "MapComponents/MlSpatialElevationProfile",
@@ -24,13 +25,17 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => (
+const Template = (args) => {
+
+  const mediaIsMobile = useMediaQuery("(max-width:900px)");
+
+  return(
   <>
     <IconButton
       style={{
         position: "absolute",
         right: "5px",
-        bottom: "125px",
+        bottom: mediaIsMobile ? "145px" : "125px",
         backgroundColor: "rgba(255,255,255,1)",
 
         zIndex: 1000,
@@ -48,6 +53,7 @@ const Template = (args) => (
     </GeoJsonProvider>
   </>
 );
+}
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
