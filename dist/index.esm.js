@@ -16,6 +16,7 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import _styled from '@emotion/styled/base';
 import { css } from '@emotion/css';
 import RoomIcon from '@mui/icons-material/Room';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import Point from '@mapbox/point-geometry';
@@ -287,7 +288,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     on: function on(eventName, handler, options, componentId) {
       if (!self.eventHandlers[eventName]) return;
 
-      if (typeof options === 'string') {
+      if (typeof options === "string") {
         componentId = options;
         options = {};
       }
@@ -428,7 +429,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      */
     oldViewportStateString: "{}",
     getViewport: function getViewport() {
-      return typeof self.map.getCenter === 'function' ? {
+      return typeof self.map.getCenter === "function" ? {
         center: function (_ref) {
           var lng = _ref.lng,
               lat = _ref.lat,
@@ -444,24 +445,8 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
         pitch: self.map.getPitch()
       } : {};
     },
-    viewportRefreshEnabled: true,
-    viewportRefreshWaiting: false,
-    refreshViewport: function refreshViewport(force) {
-      if (self.wrapper.viewportRefreshEnabled || force) {
-        self.wrapper.viewportRefreshEnabled = false;
-        self.wrapper.viewportState = self.wrapper.getViewport();
-        self.wrapper.viewportStateString = JSON.stringify(self.wrapper.viewportState);
-        setTimeout(function () {
-          self.wrapper.viewportRefreshEnabled = true;
-
-          if (self.wrapper.viewportRefreshWaiting) {
-            self.wrapper.viewportRefreshWaiting = false;
-            self.wrapper.refreshViewport();
-          }
-        }, 50);
-      } else {
-        self.wrapper.viewportRefreshWaiting = true;
-      }
+    refreshViewport: function refreshViewport() {
+      self.wrapper.viewportState = self.wrapper.getViewport();
     }
   };
   /**
@@ -738,7 +723,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
                 if (response.ok) {
                   return response.json();
                 } else {
-                  throw new Error('error loading map style.json');
+                  throw new Error("error loading map style.json");
                 }
               }).then(function (styleJson) {
                 styleJson.layers.forEach(function (item) {
@@ -757,15 +742,11 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
             case 3:
               self.map = new maplibregl.Map(props.mapOptions);
               self.addNativeMaplibreFunctionsAndProps();
-              self.wrapper.refreshViewport(true);
+              self.wrapper.refreshViewport();
               self.wrapper.fire("viewportchange");
               self.map.on("move", function () {
-                self.wrapper.refreshViewport();
-
-                if (self.wrapper.viewportStateString !== self.wrapper.oldViewportStateString) {
-                  self.wrapper.oldViewportStateString = self.wrapper.viewportStateString;
-                  self.wrapper.fire("viewportchange");
-                }
+                self.wrapper.viewportState = self.wrapper.getViewport();
+                self.wrapper.fire("viewportchange");
               });
               self.map.on("data", function () {
                 self.wrapper.refreshLayerState();
@@ -1442,11 +1423,17 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     };
   }, []);
   useEffect(function () {
-    if (!mapRef.current || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+    if (!mapRef.current || !initializedRef.current) return;
+
+    for (var key in props.layout) {
+      mapContext.getMap(props.mapId).setLayoutProperty(layerId.current, key, props.layout[key]);
+    }
+  }, [props.layout, mapContext, props.mapId]);
+  useEffect(function () {
+    if (!mapRef.current || !initializedRef.current) return;
 
     for (var key in props.paint) {
-      mapContext.getMap(props.mapId).setPaintProperty(componentId.current, key, props.paint[key]);
+      mapContext.getMap(props.mapId).setPaintProperty(layerId.current, key, props.paint[key]);
     }
   }, [props.paint, mapContext, props.mapId]);
   var transitionToGeojson = useCallback(function (newGeojson) {
@@ -1494,7 +1481,8 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
         paint: props.paint || {
           "line-color": "rgb(100,200,100)",
           "line-width": 10
-        }
+        },
+        layout: props.layout || {}
       }, props.insertBeforeLayer, componentId.current);
 
       if (typeof props.onHover !== "undefined") {
@@ -1531,8 +1519,17 @@ MlGeoJsonLayer.propTypes = {
   type: PropTypes.string,
 
   /**
-   * Paint object, that is passed to the addLayer call.
-   * Possible propsdepend on the layer type.
+   * Layout property object, that is passed to the addLayer call.
+   * Possible props depend on the layer type.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+   */
+  layout: PropTypes.object,
+
+  /**
+   * Paint property object, that is passed to the addLayer call.
+   * Possible props depend on the layer type.
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
@@ -1587,12 +1584,12 @@ MlGeoJsonLayer.propTypes = {
 var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   var mapRef = useRef(null);
-  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-") + v4());
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlImageMarkerLayer-") + v4());
   var mapContext = useContext(MapContext);
   var layerInitializedRef = useRef(false);
   var idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  var layerId = useRef((props.layerId || "MlImageMarkerLayer-") + idSuffixRef.current);
+  var layerId = useRef(props.layerId || componentId.current);
   useEffect(function () {
     var _componentId = componentId.current;
     return function () {
@@ -1636,6 +1633,7 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
 
     mapRef.current = mapContext.getMap(props.mapId);
     layerInitializedRef.current = true;
+    console.log(props.imgSrc);
 
     if (props.imgSrc) {
       mapRef.current.loadImage(props.imgSrc, function (error, image) {
@@ -1901,6 +1899,8 @@ MlNavigationCompass.propTypes = {
   rotateLeftStyle: PropTypes.object
 };
 
+var marker = "b556faa3bc6829d2.png";
+
 /**
  * Adds a button that makes the map follow the users GPS position using
  * navigator.geolocation.watchPosition if activated
@@ -2005,7 +2005,7 @@ var MlFollowGps = function MlFollowGps(props) {
         "icon-offset": [0, -340]
       }
     },
-    imgSrc: "/assets/marker.png"
+    imgSrc: marker
   }), /*#__PURE__*/React__default.createElement(Button, {
     sx: _objectSpread2({
       zIndex: 1002,
@@ -2022,7 +2022,9 @@ var MlFollowGps = function MlFollowGps(props) {
       setIsFollowed(!isFollowed);
     }
   }, " ", /*#__PURE__*/React__default.createElement(RoomIcon, {
-    sx: {}
+    sx: {
+      fontSize: props.style.fontSize
+    }
   }), " "));
 };
 
@@ -2036,6 +2038,7 @@ MlFollowGps.defaultProps = {
     backgroundColor: "#414141",
     borderRadius: "23%",
     margin: 0.15,
+    fontSize: "1.3em",
     ":hover": {
       backgroundColor: "#515151",
       color: "#ececec"
@@ -2070,17 +2073,19 @@ var MlNavigationTools = function MlNavigationTools(props) {
       locationAccessDenied = _useState4[0],
       setLocationAccessDenied = _useState4[1];
 
+  var mediaIsMobile = useMediaQuery("(max-width:900px)");
   var buttonStyle = {
-    minWidth: "30px",
-    minHeight: "30px",
-    width: "30px",
-    height: "30px",
+    minWidth: "20px",
+    minHeight: "20px",
+    width: mediaIsMobile ? "50px" : "30px",
+    height: mediaIsMobile ? "50px" : "30px",
     color: "#bbb",
     backgroundColor: "#414141",
     borderRadius: "23%",
     //border: "1px solid #bbb",
     //boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
     margin: 0.15,
+    fontSize: mediaIsMobile ? "1.5em" : "1.2em",
     ":hover": {
       backgroundColor: "#515151",
       color: "#ececec"
@@ -2164,8 +2169,8 @@ var MlNavigationTools = function MlNavigationTools(props) {
     style: {
       zIndex: 501,
       position: "absolute",
-      right: "20px",
-      bottom: "20px",
+      right: mediaIsMobile ? "15px" : "5px",
+      bottom: mediaIsMobile ? "40px" : "20px",
       display: "flex",
       flexDirection: "column"
     }
@@ -2173,15 +2178,15 @@ var MlNavigationTools = function MlNavigationTools(props) {
     style: {
       width: "31px",
       position: "relative",
-      height: "50px",
-      marginLeft: "-5px"
+      height: mediaIsMobile ? "55px" : "45px",
+      marginLeft: mediaIsMobile ? "3px" : "-5px",
+      transform: mediaIsMobile ? "scale(1.6)" : "scale(1)"
     },
     backgroundStyle: {
       boxShadow: "0px 0px 18px rgba(0,0,0,.5)"
     }
   }), /*#__PURE__*/React__default.createElement(Button, {
     sx: _objectSpread2(_objectSpread2({}, buttonStyle), {}, {
-      fontSize: ".9em",
       fontWeight: 600
     }),
     onClick: adjustPitch
@@ -2191,15 +2196,17 @@ var MlNavigationTools = function MlNavigationTools(props) {
     disabled: locationAccessDenied
   }, /*#__PURE__*/React__default.createElement(GpsFixedIcon, {
     sx: {
-      width: ".9em"
+      fontSize: mediaIsMobile ? "1.5em" : "1.2em"
     }
-  })), /*#__PURE__*/React__default.createElement(MlFollowGps, null), /*#__PURE__*/React__default.createElement(ButtonGroup, {
+  })), /*#__PURE__*/React__default.createElement(MlFollowGps, {
+    style: buttonStyle
+  }), /*#__PURE__*/React__default.createElement(ButtonGroup, {
     orientation: "vertical",
     sx: {
-      width: "30px",
+      width: "50px",
       border: "none",
       Button: {
-        minWidth: "30px !important",
+        minWidth: "20px !important",
         border: "none",
         padding: 0
       },
@@ -2210,10 +2217,18 @@ var MlNavigationTools = function MlNavigationTools(props) {
   }, /*#__PURE__*/React__default.createElement(Button, {
     sx: buttonStyle,
     onClick: zoomIn
-  }, /*#__PURE__*/React__default.createElement(ControlPointIcon, null)), /*#__PURE__*/React__default.createElement(Button, {
+  }, /*#__PURE__*/React__default.createElement(ControlPointIcon, {
+    sx: {
+      fontSize: mediaIsMobile ? "1.5em" : "1.2em"
+    }
+  })), /*#__PURE__*/React__default.createElement(Button, {
     sx: buttonStyle,
     onClick: zoomOut
-  }, /*#__PURE__*/React__default.createElement(RemoveCircleOutlineIcon, null))));
+  }, /*#__PURE__*/React__default.createElement(RemoveCircleOutlineIcon, {
+    sx: {
+      fontSize: mediaIsMobile ? "1.5em" : "1.2em"
+    }
+  }))));
 };
 
 var MlLayer = function MlLayer(props) {
@@ -2223,7 +2238,7 @@ var MlLayer = function MlLayer(props) {
   var mapRef = useRef(null);
   var componentId = useRef((props.layerId ? props.layerId : "MlLayer-") + v4());
   var idSuffixRef = useRef(props.idSuffix || new Date().getTime());
-  var layerId = (props.layerId || "MlLayer-") + idSuffixRef.current;
+  var layerId = useRef(props.layerId || componentId.current);
   var layerPaintConfRef = useRef(undefined);
   var layerLayoutConfRef = useRef(undefined);
   useEffect(function () {
@@ -2271,7 +2286,7 @@ var MlLayer = function MlLayer(props) {
 
       layerInitializedRef.current = true;
       mapRef.current.addLayer(_objectSpread2({
-        id: layerId,
+        id: layerId.current,
         type: "background",
         paint: {
           "background-color": "rgba(0,0,0,0)"
@@ -2537,7 +2552,7 @@ var defaultProps = {
 
 var MlWmsLayer = function MlWmsLayer(props) {
   var mapContext = useContext(MapContext);
-  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLayer-") + v4());
+  var componentId = useRef(props.layerId || "MlWmsLayer-" + v4());
   var mapRef = useRef(null);
   var initializedRef = useRef(false);
   var layerId = useRef(props.layerId || componentId.current);
@@ -4143,7 +4158,7 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
       return false;
     }
 
-    if (!mapContext.mapExists(props.map1Id) || !mapContext.mapExists(props.map2Id)) {
+    if (!mapContext.getMap(props.map1Id) || !mapContext.getMap(props.map2Id)) {
       return false;
     }
 
@@ -4188,7 +4203,7 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
   useEffect(function () {
     if (!mapExists() || syncMoveInitializedRef.current) return;
     syncMoveInitializedRef.current = true;
-    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id), mapContext.getMap(props.map2Id));
+    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
 
     if (mapContext.maps[props.map1Id].getCanvas().clientWidth > mapContext.maps[props.map1Id].getCanvas().clientHeight && magnifierRadiusRef.current * 2 > mapContext.maps[props.map1Id].getCanvas().clientHeight) {
       magnifierRadiusRef.current = Math.floor(mapContext.maps[props.map1Id].getCanvas().clientHeight / 2);
@@ -4300,7 +4315,7 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
       return false;
     }
 
-    if (!mapContext.mapExists(props.map1Id) || !mapContext.mapExists(props.map2Id)) {
+    if (!mapContext.getMap(props.map1Id) || !mapContext.getMap(props.map2Id)) {
       return false;
     }
 
@@ -4333,7 +4348,7 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
   useEffect(function () {
     if (!mapExists() || initializedRef.current) return;
     initializedRef.current = true;
-    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id), mapContext.getMap(props.map2Id));
+    syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
     onMove({
       clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
     });
@@ -4399,6 +4414,19 @@ MlLayerSwipe.propTypes = {
 var GeoJsonContext = /*#__PURE__*/React__default.createContext({});
 var GeoJsonContextProvider = GeoJsonContext.Provider;
 
+/**
+ * https://github.com/mapbox/togeojson
+ *
+ * Copyright (c) 2016 Mapbox All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 var toGeoJSON = function () {
   var removeSpace = /\s*/g,
       trimSpace = /^\s*|\s*$/g,
@@ -5039,6 +5067,7 @@ var MlGPXViewer = function MlGPXViewer(props) {
       setMetaData = _useState6[1];
 
   var fileupload = useRef(null);
+  var mediaIsMobile = useMediaQuery("(max-width:900px)");
   var popup = useRef(new Popup({
     closeButton: false,
     closeOnClick: true
@@ -5236,14 +5265,20 @@ var MlGPXViewer = function MlGPXViewer(props) {
     fileupload.current.click();
   };
 
-  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(IconButton, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement("div", {
+    style: {
+      position: "fixed",
+      right: "5px",
+      bottom: mediaIsMobile ? "40px" : "25px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "5px",
+      zIndex: 1000
+    }
+  }, /*#__PURE__*/React__default.createElement(IconButton, {
     onClick: manualUpload,
     style: {
-      position: "absolute",
-      right: "5px",
-      bottom: "75px",
-      backgroundColor: "rgba(255,255,255,1)",
-      zIndex: 1000
+      backgroundColor: "rgba(255,255,255,1)"
     },
     size: "large"
   }, /*#__PURE__*/React__default.createElement("input", {
@@ -5258,14 +5293,10 @@ var MlGPXViewer = function MlGPXViewer(props) {
   }), /*#__PURE__*/React__default.createElement(FileCopy, null)), /*#__PURE__*/React__default.createElement(IconButton, {
     onClick: toogleDrawer,
     style: {
-      position: "absolute",
-      right: "5px",
-      bottom: "25px",
-      backgroundColor: "rgba(255,255,255,1)",
-      zIndex: 1000
+      backgroundColor: "rgba(255,255,255,1)"
     },
     size: "large"
-  }, /*#__PURE__*/React__default.createElement(InfoIcon, null)), /*#__PURE__*/React__default.createElement(Drawer, {
+  }, /*#__PURE__*/React__default.createElement(InfoIcon, null))), /*#__PURE__*/React__default.createElement(Drawer, {
     variant: "persistent",
     anchor: "left",
     open: open
