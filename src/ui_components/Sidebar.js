@@ -4,24 +4,31 @@ import makeStyles from "@mui/styles/makeStyles";
 import Drawer from "@mui/material/Drawer";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from '@mui/icons-material/Menu';
+import { IconButton } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
     flexGrow: 1,
-    zIndex: 101,
+    zIndex: 105,
     position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
     backgroundColor: "#fafafa",
     display: "flex", 
-    SflexDirection: "column", 
+    flexDirection: "column", 
     alignItems: "stretch",
     alignContent: "stretch", 
   },
   drawerPaper: {
     position: "initial !important",
     padding: "40px",
+  },
+  drawerHeader: {
+    alignContent: "flex-start",
+    display: "flex",
+  },
+  drawerContent: {
   },
 }));        
 
@@ -37,8 +44,6 @@ export default function Sidebar(props) {
   const [drawerState, setDrawerWidth] = useState(true);
 
   let changeDrawerWidth = drawerState ? "300" : "0"; 
-  let displayCloseButton = drawerState ? "" : "none";
-  let displayOpenButton = drawerState ? "none" : "";
 
   const handleDrawerOpen =() => {
     setDrawerWidth(true);
@@ -50,12 +55,12 @@ export default function Sidebar(props) {
   return (
     <>
 
-      <MenuIcon onClick={ handleDrawerOpen } style = {{  
-        display: displayOpenButton,
-        zIndex: 50000,
-        position: "relative",
-        padding: "20px",}}/>
-    
+      <IconButton onClick={ handleDrawerOpen } style = {{  
+          zIndex: 101,
+          position: "relative",
+          padding: "20px",}}>
+        <MenuIcon/>
+      </IconButton>
       <Drawer
         style = {{ width: changeDrawerWidth }}
         className={classes.drawer}
@@ -69,12 +74,16 @@ export default function Sidebar(props) {
           ...props.sx,
         }}
       > 
-        <DrawerHeader>
-          <ChevronLeftIcon onClick={ handleDrawerClose } style = {{ 
-            display: displayCloseButton,
-            paddingBottom: "40px",
-          }}/>
+        <DrawerHeader className={classes.drawerHeader}>
+          <IconButton>
+            <ChevronLeftIcon onClick={ handleDrawerClose } style = {{ 
+              paddingBottom: "40px",
+            }}/>
+          </IconButton>
         </DrawerHeader>
+        <div>
+
+        </div>
 
         {props.children}
 
