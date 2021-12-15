@@ -5,6 +5,7 @@ import Drawer from "@mui/material/Drawer";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -15,79 +16,83 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     bottom: 0,
     backgroundColor: "#fafafa",
-    display: "flex", 
-    flexDirection: "column", 
+    display: "flex",
+    flexDirection: "column",
     alignItems: "stretch",
-    alignContent: "stretch", 
+    alignContent: "stretch",
   },
   drawerPaper: {
     position: "initial !important",
+    boxSizing: "border-box",
     padding: "40px",
   },
   drawerHeader: {
     alignContent: "flex-start",
     display: "flex",
   },
-  drawerContent: {
-  },
-}));        
+  drawerContent: {},
+}));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
 }));
 
 export default function Sidebar(props) {
   const classes = useStyles();
-  const theme = useTheme();
+  const mediaIsMobile = useMediaQuery("(max-width:900px)");
 
-  const [drawerState, setDrawerWidth] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(true);
 
-  let changeDrawerWidth = drawerState ? "300" : "0"; 
-
-  const handleDrawerOpen =() => {
-    setDrawerWidth(true);
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
   };
-  const handleDrawerClose =() => {
-    setDrawerWidth(false);
-  }; 
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
 
   return (
     <>
-
-      <IconButton onClick={ handleDrawerOpen } style = {{  
+      <IconButton
+        onClick={handleDrawerOpen}
+        style={{
           zIndex: 101,
           position: "relative",
-          padding: "20px",}}>
-        <MenuIcon/>
+          padding: "20px",
+        }}
+      >
+        <MenuIcon />
       </IconButton>
       <Drawer
-        style = {{ width: changeDrawerWidth }}
         className={classes.drawer}
         variant="persistent"
         anchor="left"
-        open={drawerState}
+        open={drawerOpen}
         classes={{
           paper: classes.drawerPaper,
         }}
         sx={{
           ...props.sx,
+          ...{
+            maxWidth: mediaIsMobile ? "90vw" : "20vw",
+          },
+          ...(drawerOpen ? {} : { left: mediaIsMobile ? "-90vw" : "-20vw" }),
         }}
-      > 
+      >
         <DrawerHeader className={classes.drawerHeader}>
           <IconButton>
-            <ChevronLeftIcon onClick={ handleDrawerClose } style = {{ 
-              paddingBottom: "40px",
-            }}/>
+            <ChevronLeftIcon
+              onClick={handleDrawerClose}
+              style={
+                {
+                  //paddingBottom: "40px",
+                }
+              }
+            />
           </IconButton>
         </DrawerHeader>
-        <div>
-
-        </div>
-
-        {props.children}
-
+        <div style={{ maxWidth: "100%" }}>{props.children}</div>
       </Drawer>
-  </>
+    </>
   );
 }
