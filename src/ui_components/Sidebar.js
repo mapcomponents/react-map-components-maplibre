@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     boxSizing: "border-box",
     padding: "40px",
     visibility: "visible !important",
-    zIndex: "initial",
+    zIndex: "initial !important",
   },
   drawerHeader: {
     alignContent: "flex-start",
@@ -66,6 +66,7 @@ export default function Sidebar(props) {
         <MenuIcon />
       </IconButton>
       <Drawer
+        transitionDuration={0}
         className={classes.drawer}
         variant="persistent"
         anchor="left"
