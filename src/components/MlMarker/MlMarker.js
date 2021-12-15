@@ -115,11 +115,11 @@ const MlMarker = (props) => {
             "&:hover": {
               opacity: 1,
             },
-            zIndex: 1000,
+            zIndex: -1,
           }}
         >
           <iframe
-            style={{ width: "100%", zIndex: -1 }}
+            style={{ width: "100%" }}
             srcDoc={props.content}
             ref={iframe}
             sandbox="allow-same-origin allow-popups-to-escape-sandbox"
