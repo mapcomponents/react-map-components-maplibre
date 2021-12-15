@@ -45,8 +45,13 @@ const MlThreeJsLayer = (props) => {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
 
+    mapRef.current.setCenter([7.099771581806502, 50.73395746209983]);
+    mapRef.current.setZoom(15);
+    mapRef.current.setPitch(45);
+
     // parameters to ensure the model is georeferenced correctly on the map
-    var modelOrigin = [7.1300753566457304, 50.71596191210998];
+    var modelOrigin = [7.099771581806502, 50.73395746209983];
+    // 50.73395746209983, 7.099771581806502
     var modelAltitude = 0;
     var modelRotate = [Math.PI / 2, 90, 0];
 
@@ -92,11 +97,13 @@ const MlThreeJsLayer = (props) => {
         // use the three.js GLTF loader to add the 3D model to the three.js scene
         var loader = new GLTFLoader();
         loader.load(
-          "assets/3D/posttower.gltf",
-          //"/assets/3D/posttower_wh.gltf.glb",
+          "assets/3D/godzilla_simple.glb",
           //"https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf",
           function (gltf) {
             this.scene.add(gltf.scene);
+            if (typeof props.onDone === "function") {
+              props.onDone();
+            }
           }.bind(this)
         );
         this.map = map;
@@ -150,9 +157,6 @@ const MlThreeJsLayer = (props) => {
     if (mapRef.current.getLayer(layerName)) {
       mapRef.current.setLayoutProperty(layerName, "visibility", "visible");
     }
-    mapRef.current.setCenter([7.130255969902919, 50.7143656091998]);
-    mapRef.current.setZoom(15);
-    mapRef.current.setPitch(45);
   }, [mapContext.mapIds, mapContext, props]);
 
   useEffect(() => {
