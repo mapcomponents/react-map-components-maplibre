@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
+import { useTheme, styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import Drawer from "@mui/material/Drawer";
-import { InsertInvitationOutlined } from "@mui/icons-material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import MenuIcon from '@mui/icons-material/Menu';
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -12,34 +14,76 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     bottom: 0,
     backgroundColor: "#fafafa",
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "stretch",
+    display: "flex", 
+    SflexDirection: "column", 
     alignItems: "stretch",
+    alignContent: "stretch", 
   },
-  drawerPaper: {
-    position: "initial !important",
-    padding: "20px",
-  },
+}));        
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+}));
+const DrawerMain = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
 }));
 
 export default function Sidebar(props) {
   const classes = useStyles();
+  const theme = useTheme();
+
+  const [drawerState, setDrawerWidth] = useState(true);
+
+  let changeDrawerWidth = drawerState ? "500" : "0"; 
+  let displayCloseButton = drawerState ? "" : "";
+  let displayOpenButton = drawerState ? "none" : "";
+
+  const handleDrawerOpen =() => {
+    setDrawerWidth(true);
+    console.log('Drawer öffnen')
+  };
+  const handleDrawerClose =() => {
+    setDrawerWidth(false);
+    console.log('Drawer schließen')
+  }; 
 
   return (
-    <Drawer
-      className={classes.drawer}
-      variant="persistent"
-      anchor="left"
-      open={true}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-      sx={{
-        ...props.sx,
-      }}
-    >
-      {props.children}
-    </Drawer>
+    <>
+
+      <MenuIcon onClick={ handleDrawerOpen } style = {{  
+        display: displayOpenButton,
+        zIndex: 50000,
+        position: "relative",
+        padding: "20px",}}/>
+    
+      <Drawer
+        style = {{ width: changeDrawerWidth }}
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={drawerState}
+        sx={{
+          ...props.sx,
+        }}
+      > 
+        <DrawerHeader>
+          <DrawerMain style = {{ 
+            display: displayCloseButton,
+            position: "relative",
+            padding: "40px",}}
+          >          
+          {props.children}
+          </DrawerMain>
+
+          <ChevronLeftIcon onClick={ handleDrawerClose } style = {{ 
+            display: displayCloseButton,
+            paddingRight: "10px",
+          }}/>
+        </DrawerHeader>
+
+      </Drawer>
+  </>
   );
 }

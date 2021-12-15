@@ -22,7 +22,7 @@ const Template = (props) => {
 
   return (
     <>
-      <Sidebar sx={{ width: "500px", wordBreak: "break-word" }}>
+      <Sidebar sx={{ wordBreak: "break-word" }}>
         <TextField
           label="WMS Url"
           variant="standard"
