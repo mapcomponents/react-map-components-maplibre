@@ -1,11 +1,20 @@
 import React, { useRef, useCallback, useEffect, useContext } from "react";
 
+import useMapState from "../../hooks/useMapState";
 import { v4 as uuidv4 } from "uuid";
 import { MapContext } from "@mapcomponents/react-core";
 
 const MlImageMarkerLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapRef = useRef(null);
+  const mapState = useMapState({
+    mapId: props.mapId,
+    watch: {
+      viewport: false,
+      layers: true,
+      sources: false,
+    },
+  });
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlImageMarkerLayer-") + uuidv4());
   const mapContext = useContext(MapContext);
   const layerInitializedRef = useRef(false);
@@ -59,24 +68,29 @@ const MlImageMarkerLayer = (props) => {
       ...props.options,
     };
     tmpOptions.layout["icon-image"] = imageIdRef.current;
-    mapRef.current.addLayer(
-      tmpOptions,
-      props.insertBeforeLayer,
-      componentId.current
-    );
+    mapRef.current.addLayer(tmpOptions, props.insertBeforeLayer, componentId.current);
   }, [props]);
 
   useEffect(() => {
-    if (
-      !props.options ||
-      !mapContext.mapExists(props.mapId) ||
-      layerInitializedRef.current
-    )
-      return;
+    if (!props.options || !mapContext.mapExists(props.mapId) || layerInitializedRef.current) return;
 
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     mapRef.current = mapContext.getMap(props.mapId);
+
+    //check if insertBeforeLayer exists
+    if (props.insertBeforeLayer) {
+      let layerFound = false;
+
+      mapState?.layers?.forEach((layer) => {
+        if (layer.id === props.insertBeforeLayer) {
+          layerFound = true;
+        }
+      });
+      if (!layerFound) {
+        return;
+      }
+    }
 
     layerInitializedRef.current = true;
 
@@ -88,7 +102,7 @@ const MlImageMarkerLayer = (props) => {
       });
     }
     addLayer();
-  }, [mapContext.mapIds, mapContext, props, addLayer]);
+  }, [mapContext.mapIds, mapContext, props, addLayer, mapState.layers]);
 
   useEffect(() => {
     if (

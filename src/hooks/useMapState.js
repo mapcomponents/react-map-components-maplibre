@@ -34,11 +34,11 @@ function useMapState(props) {
    */
   const layerIdFilter = useCallback(
     (layer) => {
-      if (!props.filter.includeBaseLayers && layer.baseLayer) {
+      if (!props?.filter?.includeBaseLayers && layer.baseLayer) {
         return false;
       }
 
-      if (typeof props.filter.matchLayerIds !== "undefined") {
+      if (typeof props.filter?.matchLayerIds !== "undefined") {
         if (props.filter.matchLayerIds instanceof RegExp) {
           return props.filter.matchLayerIds.test(layer.id);
         } else {
@@ -58,7 +58,7 @@ function useMapState(props) {
       layersRef.current = _layerStateString;
       setLayers(_layerState);
     }
-  },[layerIdFilter]);
+  }, [layerIdFilter]);
 
   useEffect(() => {
     let _componentId = componentId.current;

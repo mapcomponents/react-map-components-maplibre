@@ -91,7 +91,7 @@ const MapLibreGlWrapper = function (props) {
     /**
      * Array containing an object for each layer in the MapLibre instance providing information on visibility, loading state, order, paint & layout properties
      */
-    layerState: {},
+    layerState: [],
     /**
      * Maps layerIds to layerState in JSON string form for quick deep comparisons
      */

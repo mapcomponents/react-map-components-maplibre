@@ -2,15 +2,23 @@ import React, { useRef, useEffect, useContext } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 import { MapContext } from "@mapcomponents/react-core";
+import useMapState from "../../hooks/useMapState";
 
 const MlLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext = useContext(MapContext);
+
+  const mapState = useMapState({
+    mapId: props.mapId,
+    watch: {
+      viewport: false,
+      layers: true,
+      sources: false,
+    },
+  });
   const layerInitializedRef = useRef(false);
   const mapRef = useRef(null);
-  const componentId = useRef(
-    (props.layerId ? props.layerId : "MlLayer-") + uuidv4()
-  );
+  const componentId = useRef((props.layerId ? props.layerId : "MlLayer-") + uuidv4());
   const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const layerId = useRef(props.layerId || componentId.current);
   const layerPaintConfRef = useRef(undefined);
@@ -60,6 +68,20 @@ const MlLayer = (props) => {
     // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
+    //check if insertBeforeLayer exists
+    if (props.insertBeforeLayer) {
+      let layerFound = false;
+
+      mapState?.layers?.forEach((layer) => {
+        if (layer.id === props.insertBeforeLayer) {
+          layerFound = true;
+        }
+      });
+      if (!layerFound) {
+        return;
+      }
+    }
+
     mapRef.current = mapContext.getMap(props.mapId);
     if (mapRef.current) {
       layerInitializedRef.current = true;
@@ -78,7 +100,7 @@ const MlLayer = (props) => {
       layerPaintConfRef.current = JSON.stringify(props.options?.paint);
       layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
     }
-  }, [mapContext.mapIds, mapContext, props, layerId]);
+  }, [mapContext.mapIds, mapContext, props, mapState.layers]);
 
   return <></>;
 };

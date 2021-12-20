@@ -87,11 +87,13 @@ const MlFollowGps = (props) => {
             "fill-color": "#ee7700",
             "fill-opacity": 0.5,
           }}
+          insertBeforeLayer={"MlFollowGpsMarker"}
         />
       )}
 
       {isFollowed && geoJson && (
         <MlImageMarkerLayer
+          layerId={"MlFollowGpsMarker"}
           options={{
             type: "symbol",
             source: {
@@ -123,7 +125,7 @@ const MlFollowGps = (props) => {
         }}
       >
         {" "}
-        <RoomIcon sx={{fontSize: props.style.fontSize}}/>{" "}
+        <RoomIcon sx={{ fontSize: props.style.fontSize }} />{" "}
       </Button>
     </>
   );
