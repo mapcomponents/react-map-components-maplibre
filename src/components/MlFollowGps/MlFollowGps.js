@@ -5,7 +5,7 @@ import {MapContext} from "@mapcomponents/react-core";
 import {v4 as uuidv4} from "uuid";
 import Button from "@mui/material/Button";
 import RoomIcon from "@mui/icons-material/Room";
-import {point} from "@turf/turf"
+import {point, circle} from "@turf/turf"
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import MlImageMarkerLayer from "../MlImageMarkerLayer/MlImageMarkerLayer";
 
@@ -31,7 +31,7 @@ const MlFollowGps = (props) => {
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlFollowGps-") + uuidv4());
-  const [accuracyRadius, setAccuracyRadius] = useState(30);
+  const [accuracyGeoJson, setAccuracyGeoJson] = useState();
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -67,8 +67,9 @@ const MlFollowGps = (props) => {
   const getLocationSuccess = (pos) => {
     if (!mapRef.current) return;
     mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude]);
-    setAccuracyRadius(pos.coords.accuracy);
-    setGeoJson(point([pos.coords.longitude, pos.coords.latitude]));
+    const geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude])
+    setGeoJson(geoJsonPoint);
+    setAccuracyGeoJson(circle(geoJsonPoint, pos.coords.accuracy/1000))
   };
 
   const getLocationError = (err) => {
@@ -80,23 +81,11 @@ const MlFollowGps = (props) => {
     <>
       {isFollowed && geoJson && (
         <MlGeoJsonLayer
-          geojson={geoJson}
-          type={"circle"}
+          geojson={accuracyGeoJson}
+          type={"fill"}
           paint={{
-            "circle-radius": {
-              stops: [
-                [0, 0],
-                [
-                  20,
-                  accuracyRadius /
-                    0.075 /
-                    Math.cos((geoJson.geometry.coordinates[1] * Math.PI) / 180),
-                ],
-              ],
-              base: 2,
-            },
-            "circle-color": "#ee7700",
-            "circle-opacity": 0.5,
+            "fill-color": "#ee7700",
+            "fill-opacity": 0.5,
           }}
         />
       )}
