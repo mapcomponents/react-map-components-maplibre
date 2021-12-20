@@ -1,43 +1,18 @@
-import React, { useRef, useCallback, useEffect, useContext } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 
-import useMapState from "../../hooks/useMapState";
-import { v4 as uuidv4 } from "uuid";
-import { MapContext } from "@mapcomponents/react-core";
+import useMap from "../../hooks/useMap";
 
 const MlImageMarkerLayer = (props) => {
-  // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  const mapRef = useRef(null);
-  const mapState = useMapState({
-    mapId: props.mapId,
-    watch: {
-      viewport: false,
-      layers: true,
-      sources: false,
-    },
-  });
-  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlImageMarkerLayer-") + uuidv4());
-  const mapContext = useContext(MapContext);
+  const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
+
   const layerInitializedRef = useRef(false);
-  const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  const layerId = useRef(props.layerId || componentId.current);
-
-  useEffect(() => {
-    let _componentId = componentId.current;
-    return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
-
-        mapRef.current = null;
-      }
-    };
-  }, []);
+  const layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
 
   useEffect(() => {
     if (
-      !mapRef.current ||
-      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId.current)) ||
+      !mapHook.mapIsReady ||
+      (mapHook.map && !mapHook.map.getLayer(layerId.current)) ||
       !props.options
     )
       return;
@@ -47,19 +22,15 @@ const MlImageMarkerLayer = (props) => {
 
     if (props.options.layout) {
       for (key in props.options.layout) {
-        mapContext
-          .getMap(props.mapId)
-          .setLayoutProperty(layerId.current, key, props.options.layout[key]);
+        mapHook.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
       }
     }
     if (props.options.paint) {
       for (key in props.options.paint) {
-        mapContext
-          .getMap(props.mapId)
-          .setPaintProperty(layerId.current, key, props.options.paint[key]);
+        mapHook.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
       }
     }
-  }, [props.options, layerId.current, mapContext, props.mapId]);
+  }, [props.options, layerId.current, props.mapId]);
 
   const addLayer = useCallback(() => {
     let tmpOptions = {
@@ -68,55 +39,35 @@ const MlImageMarkerLayer = (props) => {
       ...props.options,
     };
     tmpOptions.layout["icon-image"] = imageIdRef.current;
-    mapRef.current.addLayer(tmpOptions, props.insertBeforeLayer, componentId.current);
-  }, [props]);
+    mapHook.map.addLayer(tmpOptions, props.insertBeforeLayer, mapHook.componentId);
+  }, [props, mapHook.mapIsReady, mapHook.map]);
 
   useEffect(() => {
-    if (!props.options || !mapContext.mapExists(props.mapId) || layerInitializedRef.current) return;
-
-    // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-    mapRef.current = mapContext.getMap(props.mapId);
-
-    //check if insertBeforeLayer exists
-    if (props.insertBeforeLayer) {
-      let layerFound = false;
-
-      mapState?.layers?.forEach((layer) => {
-        if (layer.id === props.insertBeforeLayer) {
-          layerFound = true;
-        }
-      });
-      if (!layerFound) {
-        return;
-      }
-    }
+    if (!props.options || !mapHook.mapIsReady || layerInitializedRef.current) return;
 
     layerInitializedRef.current = true;
 
-    console.log(props.imgSrc);
     if (props.imgSrc) {
-      mapRef.current.loadImage(props.imgSrc, function (error, image) {
+      mapHook.map.loadImage(props.imgSrc, function (error, image) {
         if (error) throw error;
-        mapRef.current.addImage(imageIdRef.current, image, componentId.current);
+        mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
       });
     }
+
     addLayer();
-  }, [mapContext.mapIds, mapContext, props, addLayer, mapState.layers]);
+  }, [mapHook.mapIsReady, mapHook.map, addLayer, props]);
 
   useEffect(() => {
     if (
-      !mapRef.current ||
-      (mapRef.current && !mapContext.getMap(props.mapId).getLayer(layerId.current)) ||
+      !mapHook.mapIsReady ||
+      (mapHook.map && !mapHook.map.getLayer(layerId.current)) ||
       !props.options
     ) {
       return;
     }
-    // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-    mapRef.current.getSource(layerId.current).setData(props.options.source.data);
-  }, [props.options.source.data, mapContext, props]);
+    mapHook.map.getSource(layerId.current).setData(props.options.source.data);
+  }, [props.options.source.data, props]);
 
   return <></>;
 };

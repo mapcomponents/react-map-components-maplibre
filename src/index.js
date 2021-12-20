@@ -20,3 +20,4 @@ export { default as GeoJsonContext } from "./components/MlGPXViewer/util/GeoJson
 export { default as MlSpatialElevationProfile } from "./components/MlSpatialElevationProfile/MlSpatialElevationProfile";
 
 export { default as useMapState } from "./hooks/useMapState";
+export { default as useMap } from "./hooks/useMap";

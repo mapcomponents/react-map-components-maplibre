@@ -1,3 +1,4 @@
+// @ts-ignore: TS export Problem to be fixed upstream
 import maplibregl from "maplibre-gl/dist/maplibre-gl";
 
 /**
@@ -499,17 +500,17 @@ const MapLibreGlWrapper = function (props) {
     self.wrapper.refreshViewport();
     self.wrapper.fire("viewportchange");
 
-      self.map.on("move", () => {
-        self.wrapper.viewportState = self.wrapper.getViewport();
-        self.wrapper.fire("viewportchange");
-      });
-      self.map.on("data", () => {
-        self.wrapper.refreshLayerState();
-        self.wrapper.fire("layerchange");
-      });
-      if (typeof props.onReady === "function") {
-        props.onReady(self.map, self);
-      }
+    self.map.on("move", () => {
+      self.wrapper.viewportState = self.wrapper.getViewport();
+      self.wrapper.fire("viewportchange");
+    });
+    self.map.on("data", () => {
+      self.wrapper.refreshLayerState();
+      self.wrapper.fire("layerchange");
+    });
+    if (typeof props.onReady === "function") {
+      props.onReady(self.map, self);
+    }
   };
   initializeMapLibre();
 };
