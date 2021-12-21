@@ -1,6 +1,7 @@
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
 export { default as MlComponentTemplate } from "./components/MlComponentTemplate/MlComponentTemplate";
 export { default as MlFillExtrusionLayer } from "./components/MlFillExtrusionLayer/MlFillExtrusionLayer";
+export { default as MlFollowGps } from "./components/MlFollowGps/MlFollowGps";
 export { default as MlCreatePdfButton } from "./components/MlCreatePdfButton/MlCreatePdfButton";
 export { default as MlGeoJsonLayer } from "./components/MlGeoJsonLayer/MlGeoJsonLayer";
 export { default as MlImageMarkerLayer } from "./components/MlImageMarkerLayer/MlImageMarkerLayer";
