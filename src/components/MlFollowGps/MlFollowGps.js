@@ -110,7 +110,7 @@ const MlFollowGps = (props) => {
       )}
 
       <Button
-        sx={{ zIndex: 1002, color: isFollowed ? "#bbb" : "#666", ...props.style }}
+        sx={{ zIndex: 1002, color: isFollowed ? props.onColor : props.offColor, ...props.style }}
         disabled={locationAccessDenied}
         onClick={() => {
           if (isFollowed) {
@@ -147,6 +147,8 @@ MlFollowGps.defaultProps = {
       color: "#ececec",
     },
   },
+  onColor: "#ececec",
+  offColor: "#666"
 };
 
 MlFollowGps.propTypes = {
@@ -158,5 +160,13 @@ MlFollowGps.propTypes = {
    * CSS style object that is applied to the button component
    */
   style: PropTypes.object,
+  /**
+   * Active button font color
+   */
+  onColor: PropTypes.string,
+  /**
+   * Inactive button font color
+   */
+  offColor: PropTypes.string,
 };
 export default MlFollowGps;

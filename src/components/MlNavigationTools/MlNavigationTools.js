@@ -29,7 +29,6 @@ const MlNavigationTools = (props) => {
     minHeight: "20px",
     width: mediaIsMobile ? "50px" : "30px",
     height: mediaIsMobile ? "50px" : "30px",
-    color: "#bbb",
     backgroundColor: "#414141",
     borderRadius: "23%",
     //border: "1px solid #bbb",
@@ -38,8 +37,8 @@ const MlNavigationTools = (props) => {
     fontSize: mediaIsMobile ? "1.5em" : "1.2em",
     ":hover": {
       backgroundColor: "#515151",
-      color: "#ececec",
     },
+    color: "#ececec"
   };
 
   useEffect(() => {
@@ -144,7 +143,7 @@ const MlNavigationTools = (props) => {
       <Button sx={buttonStyle} onClick={moveToCurrentLocation} disabled={locationAccessDenied}>
         <GpsFixedIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
       </Button>
-      <MlFollowGps style={buttonStyle}/>
+      <MlFollowGps style={{...(({color, ...rest}) => rest)(buttonStyle)}} />
       <ButtonGroup
         orientation="vertical"
         sx={{
@@ -154,10 +153,10 @@ const MlNavigationTools = (props) => {
           "Button:hover": {border: "none"},
         }}
       >
-        <Button sx={buttonStyle} onClick={zoomIn}>
+        <Button sx={{...buttonStyle, color: "#ececec",}} onClick={zoomIn}>
           <ControlPointIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
         </Button>
-        <Button sx={buttonStyle} onClick={zoomOut}>
+        <Button sx={{...buttonStyle, color: "#ececec",}} onClick={zoomOut}>
           <RemoveCircleOutlineIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
         </Button>
       </ButtonGroup>
