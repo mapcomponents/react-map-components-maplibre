@@ -46,12 +46,12 @@ If no attribute mapId is provided the map component is expected to work with the
 
 ```
 ./src/components/{component_name}/
-├── {component_name}.doc.en.md
-├── {component_name}.doc.de.md
-├── {component_name}.meta.json 
-├── {component_name}.js 
-├── {component_name}.test.js 
-└── {component_name}.stories.js
+├── {component_name}.js         // the only mandatory file is the component code
+├── {component_name}.test.js    // jest tests
+└── {component_name}.stories.js // Storybook & catalogue
+├── {component_name}.doc.en.md  // Catalogue only
+├── {component_name}.doc.de.md  // catalogue only
+├── {component_name}.meta.json  // catalogue only
 ```
 
 ### {component_name}.js
@@ -178,6 +178,22 @@ Serve the documentation:
 yarn docs-serve
 ```
 
+# Release NPM package
+
+The version property in package.json must not be adjusted manually.
+Once the main branch ist ready for a new release you can use one of:
+
+```yarn version --patch```
+
+
+```yarn version --minor```
+
+
+```yarn version --major```
+
+to have yarn up the version number in package.json, create a new commit with the new version number as commit message and tag the commit with the same string (e.g. ```v0.1.15```).
+
+After pushing the commits to the repository remember to also push the tags using ```git push --tags```. A new tag starting with "v" pushed to the repository will trigger a github workflow that builds the npm release from the referenced branch.
 # Catalogue
 
 ## Screenshots
