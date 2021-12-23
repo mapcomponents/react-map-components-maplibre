@@ -39,13 +39,11 @@ function useMap(props) {
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
 
-    console.log("initialize useMap hook");
     //check if insertBeforeLayer exists
     if (props.waitForLayer) {
       let layerFound = false;
 
       mapState?.layers?.forEach((layer) => {
-        console.log(layer.id + " " + props.waitForLayer);
         if (layer.id === props.waitForLayer) {
           layerFound = true;
         }
@@ -54,7 +52,6 @@ function useMap(props) {
         return;
       }
     }
-    console.log("done initialize useMap hook");
     // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
