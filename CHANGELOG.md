@@ -1,17 +1,24 @@
 # Change Log
  
- 
 
 ## [Unreleased] - yyyy-mm-dd
+ 
+### Added
+### Changed
+ 
+### Fixed
+
+## [v0.1.16] - 2021-12-23
  
 ### Added
 - Add CHANGELOG.md
  
 ### Changed
+- Migrate MlComponentTemplate to utilize useMap hook
+- Migrate MlFollowGps to utilize useMap hook
  
 ### Fixed
-
-
+- Fix MlFollowGps - remove example code (setCenter)
 
 ## [v0.1.15] - 2021-12-21
  
