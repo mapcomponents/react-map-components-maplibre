@@ -6,13 +6,11 @@ import MlFollowGps from "./MlFollowGps";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 
 const mockGeolocation = {
-  watchPosition: jest.fn(),
+  watchPosition: jest.fn(() => 1),
   clearWatch: jest.fn(),
-}
+};
 
 global.navigator.geolocation = mockGeolocation;
-
-global.navigator.geolocation.watchPosition.mockReturnValue(1);
 
 const MlFollowGPSTestComponent = (props) => {
   const [componentVisible, setComponentVisible] = useState(true);
@@ -60,6 +58,6 @@ describe("<MlFollowGps>", () => {
     wrapper.find("MlFollowGps button").simulate("click");
     //wrapper.find(".toggle_layer_visible").simulate("click");
 
-    await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(2));
   });
 });

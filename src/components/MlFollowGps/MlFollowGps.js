@@ -1,11 +1,10 @@
-import React, {useRef, useEffect, useContext, useState} from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
+import useMap from "../../hooks/useMap";
 
-import {MapContext} from "@mapcomponents/react-core";
-import {v4 as uuidv4} from "uuid";
 import Button from "@mui/material/Button";
 import RoomIcon from "@mui/icons-material/Room";
-import {point, circle} from "@turf/turf"
+import { point, circle } from "@turf/turf";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import MlImageMarkerLayer from "../MlImageMarkerLayer/MlImageMarkerLayer";
 
@@ -21,61 +20,53 @@ import marker from "./assets/marker.png";
  * @component
  */
 const MlFollowGps = (props) => {
-  // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  const mapContext = useContext(MapContext);
+  const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
+
   const [isFollowed, setIsFollowed] = useState(false);
   const [geoJson, setGeoJson] = useState(undefined);
   const watchIdRef = useRef(undefined);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
 
-  const initializedRef = useRef(false);
-  const mapRef = useRef(undefined);
-  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlFollowGps-") + uuidv4());
   const [accuracyGeoJson, setAccuracyGeoJson] = useState();
 
   useEffect(() => {
-    let _componentId = componentId.current;
-
     return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      // try to remove anything this component has added to the MapLibre-gl instance
-      // e.g.: remove the layer
-      // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
-      // check for the existence of map.style before calling getLayer or getSource
-
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
-        mapRef.current = undefined;
-      }
       if (watchIdRef.current) {
-        initializedRef.current = false;
         navigator.geolocation.clearWatch(watchIdRef.current);
         watchIdRef.current = undefined;
       }
     };
   }, []);
 
-  useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-    initializedRef.current = true;
-    mapRef.current = mapContext.getMap(props.mapId);
-    mapRef.current.setCenter([7.132122000552613, 50.716405378037706]);
-  }, [mapContext.mapIds, mapContext, props.mapId]);
+  const getLocationSuccess = useCallback(
+    (pos) => {
+      if (!mapHook.map) return;
 
-  const getLocationSuccess = (pos) => {
-    if (!mapRef.current) return;
-    mapRef.current.setCenter([pos.coords.longitude, pos.coords.latitude]);
-    const geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude])
-    setGeoJson(geoJsonPoint);
-    setAccuracyGeoJson(circle(geoJsonPoint, pos.coords.accuracy/1000))
-  };
+      mapHook.map.setCenter([pos.coords.longitude, pos.coords.latitude]);
+      const geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
+      setGeoJson(geoJsonPoint);
+      setAccuracyGeoJson(circle(geoJsonPoint, pos.coords.accuracy / 1000));
+    },
+    [mapHook.map]
+  );
 
   const getLocationError = (err) => {
     console.log("Access of user location denied");
     setLocationAccessDenied(true);
   };
+
+  useEffect(() => {
+    if (!mapHook.map) return;
+
+    if (isFollowed) {
+      watchIdRef.current = navigator.geolocation.watchPosition(
+        getLocationSuccess,
+        getLocationError
+      );
+    } else {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+    }
+  }, [isFollowed, getLocationSuccess]);
 
   return (
     <>
@@ -86,6 +77,7 @@ const MlFollowGps = (props) => {
           paint={{
             "fill-color": "#ee7700",
             "fill-opacity": 0.5,
+            ...props.accuracyPaint,
           }}
           insertBeforeLayer={"MlFollowGpsMarker"}
         />
@@ -103,9 +95,10 @@ const MlFollowGps = (props) => {
             layout: {
               "icon-size": 0.1,
               "icon-offset": [0, -340],
+              ...props.markerLayout,
             },
           }}
-          imgSrc={marker}
+          imgSrc={props.markerImage || marker}
         />
       )}
 
@@ -113,14 +106,6 @@ const MlFollowGps = (props) => {
         sx={{ zIndex: 1002, color: isFollowed ? props.onColor : props.offColor, ...props.style }}
         disabled={locationAccessDenied}
         onClick={() => {
-          if (isFollowed) {
-            navigator.geolocation.clearWatch(watchIdRef.current);
-          } else {
-            watchIdRef.current = navigator.geolocation.watchPosition(
-              getLocationSuccess,
-              getLocationError
-            );
-          }
           setIsFollowed(!isFollowed);
         }}
       >
@@ -148,7 +133,7 @@ MlFollowGps.defaultProps = {
     },
   },
   onColor: "#ececec",
-  offColor: "#666"
+  offColor: "#666",
 };
 
 MlFollowGps.propTypes = {
@@ -168,5 +153,21 @@ MlFollowGps.propTypes = {
    * Inactive button font color
    */
   offColor: PropTypes.string,
+  /**
+   * Accuracy paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the accuracy circle.
+   * Use any available paint prop from layer type "fill".
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+   */
+  accuracyPaint: PropTypes.object,
+  /**
+   * Marker layout property object, that is passed to the MlImageMarkerLayer responsible for drawing the position marker.
+   * Use any available layout property from layer type "symbol".
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
+   */
+  markerLayout: PropTypes.object,
+  /**
+   * Replace the default marker image with a custom one.
+   */
+  markerImage: PropTypes.string,
 };
 export default MlFollowGps;
