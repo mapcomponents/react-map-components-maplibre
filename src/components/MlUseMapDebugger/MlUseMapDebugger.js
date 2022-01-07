@@ -1,11 +1,8 @@
 import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 
-import { Drawer, IconButton } from "@mui/material";
-import CodeIcon from "@mui/icons-material/Code";
 
 import useMapState from "../../hooks/useMapState";
-import { render } from "@testing-library/react";
 
 /**
  * Renders a collapsable top-drawer containing live map debug information
@@ -30,8 +27,6 @@ const MlUseMapDebugger = (props) => {
   });
   const renderCounter = useRef(0);
   renderCounter.current = renderCounter.current + 1;
-  const [debuggerOpen, setDebuggerOpen] = useState(true);
-  //const [maxHeight /*setMaxHeight*/] = useState("50%");
 
   return (
     <>
