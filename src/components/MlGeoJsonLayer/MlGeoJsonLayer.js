@@ -2,10 +2,8 @@ import React, { useRef, useEffect, useContext, useCallback } from "react";
 import PropTypes from "prop-types";
 
 import * as turf from "@turf/turf";
-import { MapContext } from "@mapcomponents/react-core";
 
 import useMap from "../../hooks/useMap";
-import useMapState from "../../hooks/useMapState";
 
 import { _transitionToGeojson } from "./util/transitionFunctions";
 
@@ -18,11 +16,9 @@ const msPerStep = 50;
  */
 const MlGeoJsonLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  const mapContext = useContext(MapContext);
   const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 
   const oldGeojsonRef = useRef(null);
-  const mapRef = useRef(null);
   const initializedRef = useRef(false);
   const transitionInProgressRef = useRef(false);
   const transitionTimeoutRef = useRef(undefined);
@@ -89,13 +85,13 @@ const MlGeoJsonLayer = (props) => {
       transitionGeojsonCommonDataRef.current = [];
       transitionToGeojson(props.geojson);
     } else {
-      mapRef.current.getSource(layerId.current).setData(props.geojson);
+      mapHook.map.getSource(layerId.current).setData(props.geojson);
     }
     oldGeojsonRef.current = props.geojson;
   }, [
     props.geojson,
     props.mapId,
-    mapContext,
+    mapHook.map,
     props.type,
     transitionToGeojson,
     props.transitionTime,
@@ -155,13 +151,13 @@ const MlGeoJsonLayer = (props) => {
   }, [mapHook.map, props, transitionToGeojson]);
 
   useEffect(() => {
-    if (!mapHook.map || !props.geojson || initializedRef.current) return;
+    if (!mapHook.mapIsReady || !props.geojson || initializedRef.current) return;
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     initializedRef.current = true;
 
     createLayer();
-  }, [mapHook.mapIsReady, mapHook.map, createLayer, props]);
+  }, [mapHook.mapIsReady, createLayer, props]);
 
   return <></>;
 };
