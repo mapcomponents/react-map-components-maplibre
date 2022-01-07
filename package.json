@@ -12,7 +12,7 @@
     "@fontsource/roboto": "^4.5.1",
     "@mapbox/mapbox-gl-draw": "^1.2.0",
     "@mapbox/mapbox-gl-sync-move": "^0.3.0",
-    "@mapcomponents/react-core": "^0.1.1",
+    "@mapcomponents/react-core": "^0.1.7",
     "@mui/icons-material": "^5.0.1",
     "@mui/material": "5.0.0",
     "@mui/styles": "^5.0.1",
