@@ -5,9 +5,7 @@ import MlGPXViewer from "../MlGPXViewer/MlGPXViewer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 import GeoJsonProvider from "../MlGPXViewer/util/GeoJsonProvider";
-import Button from "@mui/material/Button";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import InfoIcon from "@mui/icons-material/Info";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import IconButton from "@mui/material/IconButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 

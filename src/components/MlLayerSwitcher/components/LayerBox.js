@@ -1,8 +1,7 @@
-import { React, useEffect, useState } from "react";
-import { css, cx } from "@emotion/css";
+import React from "react";
+import { css } from "@emotion/css";
 import { Box } from "@mui/system";
 import ImageLoader from "../../../ui_components/ImageLoader";
-import { propsToClassKey } from "@mui/styles";
 import useMapState from "../../../hooks/useMapState";
 
 /**
@@ -10,8 +9,6 @@ import useMapState from "../../../hooks/useMapState";
  *
  */
 const LayerBox = (props) => {
-  const [activeClassName, setActiveClassName] = useState("");
-  const [className, setClassName] = useState("mllayerswitcher-layer-box ");
   const { layers } = useMapState({
     mapId: props.mapId,
     watch: {
@@ -23,33 +20,12 @@ const LayerBox = (props) => {
       matchLayerIds: props.layerId,
     },
   });
-  const hoverBorderColor = "#1C62D7"; //Navy Blue
-  const activeBorderColor = "";
   const width = "40px";
 
   const defaultClass = css`
     & img:hover {
     }
   `;
-  const activeClass =
-    defaultClass +
-    `& img {
-        border-color:  rgb(196, 240, 0);
-        border-radius: 8px;
-      }
-    
-      `;
-  const hoverClass = css``;
-
-  useEffect(() => {
-    const isActive = props.activeLayers?.indexOf(props.layerId) !== -1;
-
-    if (isActive) {
-      setClassName(activeClass);
-    } else {
-      setClassName(defaultClass);
-    }
-  }, [props.activeLayers]);
 
   return (
     <>

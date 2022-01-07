@@ -15,8 +15,6 @@ function useMapState(props) {
   const initializedRef = useRef(false);
   const mapRef = useRef(undefined);
 
-  const [center, setCenter] = useState(undefined);
-
   const [viewport, setViewport] = useState(undefined);
   const viewportRef = useRef(undefined);
 
@@ -24,7 +22,6 @@ function useMapState(props) {
   const layersRef = useRef(undefined);
   //const mapRef = useRef(props.map);
   const componentId = useRef(uuidv4());
-
 
   /**
    * returns the element if it matches the defined filter criteria
@@ -79,16 +76,6 @@ function useMapState(props) {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
 
-    /*
-    mapRef.current.on(
-      "move",
-      () => {
-        setCenter(mapRef.current.getCenter());
-      },
-      componentId.current
-    );
-    */
-
     if (props?.watch?.viewport) {
       setViewport(mapRef.current.wrapper.viewportState);
 
@@ -97,7 +84,6 @@ function useMapState(props) {
         () => {
           if (viewportRef.current !== mapRef.current?.wrapper.viewportStateString) {
             setViewport(mapRef.current?.wrapper.viewportState);
-            setCenter(mapRef.current?.wrapper.viewportState?.center);
           }
         },
         componentId.current

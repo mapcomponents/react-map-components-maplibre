@@ -155,10 +155,6 @@ const MlWmsLoader = (props) => {
     };
   }, [getFeatureInfoUrl]);
 
-  const clearState = () => {
-    setLayers([]);
-  };
-
   useEffect(() => {
     if (!capabilities?.Service) return;
 

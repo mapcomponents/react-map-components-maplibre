@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import useMap from "../../hooks/useMap";
 
@@ -11,7 +11,7 @@ import useMap from "../../hooks/useMap";
  * @component
  */
 const MlComponentTemplate = (props) => {
-  const mapHook = useMap({mapId: props.mapId, waitForLayer: props.insertBeforeLayer});
+  const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
   const initializedRef = useRef(false);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const MlComponentTemplate = (props) => {
     initializedRef.current = true;
 
     mapHook.map.setCenter([7.132122000552613, 50.716405378037706]);
-  }, [mapHook.map, props.mapId]);
+  }, [mapHook.map, mapHook.mapIsReady, props.mapId]);
 
   return <></>;
 };

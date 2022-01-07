@@ -67,7 +67,6 @@ const MlMarker = (props) => {
   useEffect(() => {
     if (mapRef.current && iframe.current?.contentWindow?.document?.body?.scrollHeight) {
       setTimeout(() => {
-        let mapWidth = mapRef.current._container.clientWidth;
         let mapHeight = mapRef.current._container.clientHeight;
 
         const _pixelPos = mapRef.current.project([props.lng, props.lat]);
@@ -124,6 +123,7 @@ const MlMarker = (props) => {
             ref={iframe}
             sandbox="allow-same-origin allow-popups-to-escape-sandbox"
             frameBorder="0"
+            title={componentId.current}
           ></iframe>
         </Paper>
       )}

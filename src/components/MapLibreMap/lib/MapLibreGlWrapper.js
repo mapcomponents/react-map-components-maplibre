@@ -69,6 +69,7 @@ const MapLibreGlWrapper = function (props) {
         if (!Object.is(item.handler, handler)) {
           return item;
         }
+        return false;
       });
     },
     /**
@@ -111,7 +112,7 @@ const MapLibreGlWrapper = function (props) {
       //if (self.baseLayers.indexOf(layer.id) === -1) {
       let paint = {};
       let values = layer.paint?._values;
-      Object.keys(values || {}).map((propName) => {
+      Object.keys(values || {}).forEach((propName) => {
         paint[propName] =
           typeof values[propName].value !== "undefined"
             ? values[propName].value.value
@@ -119,7 +120,7 @@ const MapLibreGlWrapper = function (props) {
       });
       let layout = {};
       values = layer.layout?._values;
-      Object.keys(values || {}).map((propName) => {
+      Object.keys(values || {}).forEach((propName) => {
         layout[propName] =
           typeof values[propName].value !== "undefined"
             ? values[propName].value.value

@@ -1,11 +1,10 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React from "react";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
 import MlLayerSwitcher from "./MlLayerSwitcher";
-import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer'
+import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 import sample_geojson_1 from "./assets/sample_1.json";
 import sample_geojson_2 from "./assets/sample_2.json";
-import { Props } from "@storybook/addon-docs/blocks";
 
 const storyoptions = {
   title: "MapComponents/MlLayerSwitcher",
@@ -17,9 +16,7 @@ const storyoptions = {
   decorators: mapContextDecorator,
 };
 export default storyoptions;
-const layerId = "nw_uraufnahme_rw";
 const Template = (args) => {
-  const [geojson, setGeojson] = useState(sample_geojson_1);
   return (
     <>
       <MlWmsLayer
@@ -39,7 +36,7 @@ const Template = (args) => {
       <MlGeoJsonLayer
         type="line"
         layout={{ visibility: args.geojsonLayerVisible ? "visible" : "none" }}
-        geojson={geojson}
+        geojson={sample_geojson_1}
         layerId="geojson1"
       />
       <MlGeoJsonLayer

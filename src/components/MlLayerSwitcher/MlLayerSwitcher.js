@@ -2,7 +2,6 @@
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
-import { css, cx } from '@emotion/css'
 import "./MlLayerSwitcher.css";
 //External
 import { useEffect, useContext, useState } from "react";
@@ -14,7 +13,6 @@ import { MapContext } from "@mapcomponents/react-core";
 import LayerBox from "./components/LayerBox";
 import Divider from "@mui/material/Divider";
 import useMapState from "../../hooks/useMapState";
-import LoadingOverlay from "../../ui_components/LoadingOverlay";
 /**
  * @component
  *

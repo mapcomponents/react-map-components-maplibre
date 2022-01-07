@@ -1,6 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
-
 
 import useMapState from "../../hooks/useMapState";
 

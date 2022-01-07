@@ -45,7 +45,12 @@ const ImageLoader = (props) => {
 
   const ReadyImage = () => {
     return (
-      <img className={props.className} style={{ ...boxStyle, ...props.style }} src={props.src} />
+      <img
+        className={props.className}
+        style={{ ...boxStyle, ...props.style }}
+        src={props.src}
+        alt={props.alt || ""}
+      />
     );
   };
   const ErrorImage = () => {
@@ -62,9 +67,9 @@ const ImageLoader = (props) => {
         return <ReadyImage />;
       case "error":
         return <ErrorImage />;
+      default:
+        return <LoadingImage />;
     }
-
-    return <LoadingImage />;
   };
 
   return <>{renderImage(state)}</>;

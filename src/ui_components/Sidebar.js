@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { useTheme, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import Drawer from "@mui/material/Drawer";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";

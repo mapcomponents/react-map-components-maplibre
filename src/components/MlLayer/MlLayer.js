@@ -19,7 +19,6 @@ const MlLayer = (props) => {
   const layerInitializedRef = useRef(false);
   const mapRef = useRef(null);
   const componentId = useRef((props.layerId ? props.layerId : "MlLayer-") + uuidv4());
-  const idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   const layerId = useRef(props.layerId || componentId.current);
   const layerPaintConfRef = useRef(undefined);
   const layerLayoutConfRef = useRef(undefined);
