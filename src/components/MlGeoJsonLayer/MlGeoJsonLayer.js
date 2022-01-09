@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext, useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 
 import * as turf from "@turf/turf";
