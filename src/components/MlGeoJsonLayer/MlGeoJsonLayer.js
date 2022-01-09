@@ -6,8 +6,11 @@ import * as turf from "@turf/turf";
 import useMap from "../../hooks/useMap";
 
 import { _transitionToGeojson } from "./util/transitionFunctions";
+import getDefaultPaintPropsByType from "./util/getDefaultPaintPropsByType";
+import getDefaulLayerTypeByGeometry from "./util/getDefaultLayerTypeByGeometry";
 
 const msPerStep = 50;
+const legalLayerTypes = ["circle", "fill", "line"];
 
 /**
  * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
@@ -17,15 +20,17 @@ const msPerStep = 50;
 const MlGeoJsonLayer = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
-
-  const oldGeojsonRef = useRef(null);
   const initializedRef = useRef(false);
+  const layerId = useRef(props.layerId || "MlGeoJsonLayer-" + mapHook.componentId);
+  const layerTypeRef = useRef(undefined);
+
+  // transition effect variables
+  const oldGeojsonRef = useRef(null);
   const transitionInProgressRef = useRef(false);
   const transitionTimeoutRef = useRef(undefined);
   const currentTransitionStepRef = useRef(false);
   const transitionGeojsonDataRef = useRef([]);
   const transitionGeojsonCommonDataRef = useRef([]);
-  const layerId = useRef(props.layerId || "MlGeoJsonLayer-" + mapHook.componentId);
 
   useEffect(() => {
     return () => {
@@ -110,6 +115,8 @@ const MlGeoJsonLayer = (props) => {
       geojson = tmpChunks.features[0];
     }
 
+    layerTypeRef.current = props.type || getDefaulLayerTypeByGeometry(props.geojson);
+
     mapHook.map.addLayer(
       {
         id: layerId.current,
@@ -117,11 +124,8 @@ const MlGeoJsonLayer = (props) => {
           type: "geojson",
           data: geojson,
         },
-        type: props.type || "line",
-        paint: props.paint || {
-          "line-color": "rgb(100,200,100)",
-          "line-width": 10,
-        },
+        type: layerTypeRef.current,
+        paint: props.paint || getDefaultPaintPropsByType(layerTypeRef.current),
         layout: props.layout || {},
       },
       props.insertBeforeLayer,
@@ -151,9 +155,23 @@ const MlGeoJsonLayer = (props) => {
   }, [mapHook.map, props, transitionToGeojson]);
 
   useEffect(() => {
-    if (!mapHook.mapIsReady || !props.geojson || initializedRef.current) return;
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+    if (!mapHook.mapIsReady || !props.geojson) return;
 
+    if (
+      initializedRef.current &&
+      legalLayerTypes.indexOf(props.type) !== -1 &&
+      layerTypeRef.current &&
+      props.type !== layerTypeRef.current
+    ) {
+      mapHook.map.cleanup(mapHook.componentId);
+    } else if (
+      (initializedRef.current && !layerTypeRef.current) ||
+      (initializedRef.current && legalLayerTypes.indexOf(props.type) === -1)
+    ) {
+      return;
+    }
+
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
 
     createLayer();

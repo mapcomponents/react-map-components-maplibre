@@ -7,7 +7,9 @@ import { MapContext } from "@mapcomponents/react-core";
 
 import sample_geojson_1 from "./assets/sample_1.json";
 import sample_geojson_2 from "./assets/sample_2.json";
+import sample_polygon_geojson_1 from "./assets/sample_polygon_1.json";
 
+console.log(sample_polygon_geojson_1);
 const storyoptions = {
   title: "MapComponents/MlGeoJsonLayer",
   component: MlGeoJsonLayer,
@@ -20,6 +22,13 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (props) => {
+  return (
+    <>
+      <MlGeoJsonLayer {...props} />
+    </>
+  );
+};
+const LinestringTransitionTemplate = (props) => {
   const mapContext = useContext(MapContext);
   const [geojson, setGeojson] = useState(sample_geojson_1);
   const initializedRef = useRef(false);
@@ -28,9 +37,7 @@ const Template = (props) => {
     if (!mapContext.getMap() || initializedRef.current) return;
 
     initializedRef.current = true;
-    mapContext
-      .getMap()
-      .setCenter({ lng: 7.137609868988648, lat: 50.74746799549129 });
+    mapContext.getMap().setCenter({ lng: 7.137609868988648, lat: 50.74746799549129 });
     mapContext.getMap().setZoom(9.5);
 
     setTimeout(() => {
@@ -45,6 +52,13 @@ const Template = (props) => {
   );
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+export const LinestringExample = LinestringTransitionTemplate.bind({});
+LinestringExample.parameters = {};
+LinestringExample.args = {};
+
+export const PolygonExample = Template.bind({});
+PolygonExample.parameters = {};
+PolygonExample.args = {
+  type: "line",
+  geojson: sample_polygon_geojson_1,
+};
