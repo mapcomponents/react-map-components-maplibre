@@ -166,11 +166,15 @@ const MlGeoJsonLayer = (props) => {
       mapHook.map.cleanup(mapHook.componentId);
     } else if (
       (initializedRef.current && !layerTypeRef.current) ||
-      (initializedRef.current && legalLayerTypes.indexOf(props.type) === -1)
+      (initializedRef.current && legalLayerTypes.indexOf(props.type) === -1) ||
+      (initializedRef.current &&
+        legalLayerTypes.indexOf(props.type) !== -1 &&
+        props.type === layerTypeRef.current)
     ) {
       return;
     }
 
+    console.log("create layer");
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
 
