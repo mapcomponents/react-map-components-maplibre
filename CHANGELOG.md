@@ -8,26 +8,35 @@
  
 ### Fixed
 
+## [0.1.17] - 2022-01-09
+ 
+### Added
+- add implicit layer-type (props.type) casting for MlGeoJsonLayer
+### Changed
+ 
+### Fixed
+- fix MlGeoJsonLayer type prop: remove and add a new layer of the new type, if props.type changes
+
 ## [v0.1.16] - 2021-12-23
  
 ### Added
-- Add CHANGELOG.md
+- add CHANGELOG.md
  
 ### Changed
-- Migrate MlComponentTemplate to utilize useMap hook
-- Migrate MlFollowGps to utilize useMap hook
+- migrate MlComponentTemplate to utilize useMap hook
+- migrate MlFollowGps to utilize useMap hook
  
 ### Fixed
-- Fix MlFollowGps - remove example code (setCenter)
+- fix MlFollowGps - remove example code (setCenter)
 
 ## [v0.1.15] - 2021-12-21
  
 ### Added
-- Export MlFollowGps component from esm module
-- Add a useMap hook to reduce boilerplate code in components
+- export MlFollowGps component from esm module
+- add a useMap hook to reduce boilerplate code in components
  
 ### Changed
-- Adjust MlImageMarkerLayer to make use of the new useMap hook
+- adjust MlImageMarkerLayer to make use of the new useMap hook
  
 ### Fixed
  

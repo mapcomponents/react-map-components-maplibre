@@ -38,14 +38,9 @@ function ownKeys(object, enumerableOnly) {
 
   if (Object.getOwnPropertySymbols) {
     var symbols = Object.getOwnPropertySymbols(object);
-
-    if (enumerableOnly) {
-      symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-    }
-
-    keys.push.apply(keys, symbols);
+    enumerableOnly && (symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    })), keys.push.apply(keys, symbols);
   }
 
   return keys;
@@ -53,19 +48,12 @@ function ownKeys(object, enumerableOnly) {
 
 function _objectSpread2(target) {
   for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
+    var source = null != arguments[i] ? arguments[i] : {};
+    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+    });
   }
 
   return target;
@@ -74,17 +62,11 @@ function _objectSpread2(target) {
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function (obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function (obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
 }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -319,6 +301,8 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
         if (!Object.is(item.handler, handler)) {
           return item;
         }
+
+        return false;
       });
     },
 
@@ -366,12 +350,12 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
       //if (self.baseLayers.indexOf(layer.id) === -1) {
       var paint = {};
       var values = (_layer$paint = layer.paint) === null || _layer$paint === void 0 ? void 0 : _layer$paint._values;
-      Object.keys(values || {}).map(function (propName) {
+      Object.keys(values || {}).forEach(function (propName) {
         paint[propName] = typeof values[propName].value !== "undefined" ? values[propName].value.value : values[propName];
       });
       var layout = {};
       values = (_layer$layout = layer.layout) === null || _layer$layout === void 0 ? void 0 : _layer$layout._values;
-      Object.keys(values || {}).map(function (propName) {
+      Object.keys(values || {}).forEach(function (propName) {
         layout[propName] = typeof values[propName].value !== "undefined" ? values[propName].value.value : values[propName];
       });
       return {
@@ -868,20 +852,15 @@ function useMapState(props) {
 
   var _useState = useState(undefined),
       _useState2 = _slicedToArray(_useState, 2),
-      center = _useState2[0],
-      setCenter = _useState2[1];
-
-  var _useState3 = useState(undefined),
-      _useState4 = _slicedToArray(_useState3, 2),
-      viewport = _useState4[0],
-      setViewport = _useState4[1];
+      viewport = _useState2[0],
+      setViewport = _useState2[1];
 
   var viewportRef = useRef(undefined);
 
-  var _useState5 = useState(undefined),
-      _useState6 = _slicedToArray(_useState5, 2),
-      layers = _useState6[0],
-      setLayers = _useState6[1];
+  var _useState3 = useState(undefined),
+      _useState4 = _slicedToArray(_useState3, 2),
+      layers = _useState4[0],
+      setLayers = _useState4[1];
 
   var layersRef = useRef(undefined); //const mapRef = useRef(props.map);
 
@@ -939,15 +918,6 @@ function useMapState(props) {
 
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
-    /*
-    mapRef.current.on(
-      "move",
-      () => {
-        setCenter(mapRef.current.getCenter());
-      },
-      componentId.current
-    );
-    */
 
     if (props !== null && props !== void 0 && (_props$watch = props.watch) !== null && _props$watch !== void 0 && _props$watch.viewport) {
       setViewport(mapRef.current.wrapper.viewportState);
@@ -955,10 +925,9 @@ function useMapState(props) {
         var _mapRef$current;
 
         if (viewportRef.current !== ((_mapRef$current = mapRef.current) === null || _mapRef$current === void 0 ? void 0 : _mapRef$current.wrapper.viewportStateString)) {
-          var _mapRef$current2, _mapRef$current3, _mapRef$current3$wrap;
+          var _mapRef$current2;
 
           setViewport((_mapRef$current2 = mapRef.current) === null || _mapRef$current2 === void 0 ? void 0 : _mapRef$current2.wrapper.viewportState);
-          setCenter((_mapRef$current3 = mapRef.current) === null || _mapRef$current3 === void 0 ? void 0 : (_mapRef$current3$wrap = _mapRef$current3.wrapper.viewportState) === null || _mapRef$current3$wrap === void 0 ? void 0 : _mapRef$current3$wrap.center);
         }
       }, componentId.current);
     }
@@ -1102,7 +1071,7 @@ var MlComponentTemplate = function MlComponentTemplate(props) {
 
     initializedRef.current = true;
     mapHook.map.setCenter([7.132122000552613, 50.716405378037706]);
-  }, [mapHook.map, props.mapId]);
+  }, [mapHook.map, mapHook.mapIsReady, props.mapId]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
@@ -1412,7 +1381,58 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
   }, msPerStep);
 };
 
+var getDefaultPaintPropsByType = function getDefaultPaintPropsByType(type) {
+  switch (type) {
+    case "fill":
+      return {
+        "fill-color": "rgba(10,240,256,0.6)"
+      };
+
+    case "line":
+      return {
+        "line-color": "rgb(100,200,100)",
+        "line-width": 5
+      };
+
+    case "circle":
+    default:
+      return {
+        "circle-color": "#44aaaa",
+        "circle-stroke-color": "#fff",
+        "circle-stroke-width": 2
+      };
+  }
+};
+
+var mapGeometryTypesToLayerTypes = {
+  Position: "circle",
+  Point: "circle",
+  MultiPoint: "circle",
+  LineString: "line",
+  MultiLineString: "line",
+  Polygon: "fill",
+  MultiPolygon: "fill",
+  GeometryCollection: "circle"
+};
+
+var getDefaulLayerTypeByGeometry = function getDefaulLayerTypeByGeometry(geojson) {
+  if ((geojson === null || geojson === void 0 ? void 0 : geojson.type) === "Feature") {
+    var _geojson$geometry;
+
+    return mapGeometryTypesToLayerTypes !== null && mapGeometryTypesToLayerTypes !== void 0 && mapGeometryTypesToLayerTypes[geojson === null || geojson === void 0 ? void 0 : (_geojson$geometry = geojson.geometry) === null || _geojson$geometry === void 0 ? void 0 : _geojson$geometry.type] ? mapGeometryTypesToLayerTypes[geojson.geometry.type] : "circle";
+  }
+
+  if ((geojson === null || geojson === void 0 ? void 0 : geojson.type) === "FeatureCollection") {
+    if (geojson.features.length) {
+      return getDefaulLayerTypeByGeometry(geojson.features[0]);
+    }
+
+    return "circle";
+  }
+};
+
 var msPerStep = 50;
+var legalLayerTypes = ["circle", "fill", "line"];
 /**
  * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
  *
@@ -1421,61 +1441,49 @@ var msPerStep = 50;
 
 var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  var mapContext = useContext(MapContext);
-  var mapState = useMapState({
+  var mapHook = useMap({
     mapId: props.mapId,
-    watch: {
-      viewport: false,
-      layers: true,
-      sources: false
-    }
+    waitForLayer: props.insertBeforeLayer
   });
-  var oldGeojsonRef = useRef(null);
-  var mapRef = useRef(null);
   var initializedRef = useRef(false);
+  var layerId = useRef(props.layerId || "MlGeoJsonLayer-" + mapHook.componentId);
+  var layerTypeRef = useRef(undefined); // transition effect variables
+
+  var oldGeojsonRef = useRef(null);
   var transitionInProgressRef = useRef(false);
   var transitionTimeoutRef = useRef(undefined);
   var currentTransitionStepRef = useRef(false);
   var transitionGeojsonDataRef = useRef([]);
   var transitionGeojsonCommonDataRef = useRef([]);
-  var componentId = useRef((props.layerId ? props.layerId : "MlGeoJsonLayer-") + (props.idSuffix || v4()));
-  var layerId = useRef(props.layerId || componentId.current);
   useEffect(function () {
-    var _componentId = componentId.current;
     return function () {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       if (transitionTimeoutRef.current) {
         clearTimeout(transitionTimeoutRef.current);
       }
-
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
-        mapRef.current = null;
-      }
     };
   }, []);
   useEffect(function () {
-    if (!mapRef.current || !initializedRef.current) return;
+    if (!mapHook.map || !initializedRef.current) return;
 
     for (var key in props.layout) {
-      mapContext.getMap(props.mapId).setLayoutProperty(layerId.current, key, props.layout[key]);
+      mapHook.map.setLayoutProperty(layerId.current, key, props.layout[key]);
     }
-  }, [props.layout, mapContext, props.mapId]);
+  }, [props.layout, mapHook.map, props.mapId]);
   useEffect(function () {
-    if (!mapRef.current || !initializedRef.current) return;
+    if (!mapHook.map || !initializedRef.current) return;
 
     for (var key in props.paint) {
-      mapContext.getMap(props.mapId).setPaintProperty(layerId.current, key, props.paint[key]);
+      mapHook.map.setPaintProperty(layerId.current, key, props.paint[key]);
     }
-  }, [props.paint, mapContext, props.mapId]);
+  }, [props.paint, mapHook.map, props.mapId]);
   var transitionToGeojson = useCallback(function (newGeojson) {
-    _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapRef.current, componentId.current, transitionTimeoutRef);
-  }, [props]);
+    _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapHook.map, layerId.current, transitionTimeoutRef);
+  }, [props, mapHook.map]);
   useEffect(function () {
-    var _mapRef$current, _mapRef$current$getSo;
+    var _mapHook$map;
 
-    if (!((_mapRef$current = mapRef.current) !== null && _mapRef$current !== void 0 && (_mapRef$current$getSo = _mapRef$current.getSource) !== null && _mapRef$current$getSo !== void 0 && _mapRef$current$getSo.call(_mapRef$current, componentId.current)) || !initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+    if (!(mapHook !== null && mapHook !== void 0 && (_mapHook$map = mapHook.map) !== null && _mapHook$map !== void 0 && _mapHook$map.getSource(layerId.current)) || !initializedRef.current) return;
 
     if (typeof props.transitionTime !== "undefined" && props.type === "line" && oldGeojsonRef.current) {
       transitionInProgressRef.current = false;
@@ -1484,73 +1492,61 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       transitionGeojsonCommonDataRef.current = [];
       transitionToGeojson(props.geojson);
     } else {
-      mapRef.current.getSource(componentId.current).setData(props.geojson);
+      mapHook.map.getSource(layerId.current).setData(props.geojson);
     }
 
     oldGeojsonRef.current = props.geojson;
-  }, [props.geojson, props.mapId, mapContext, props.type, transitionToGeojson, props.transitionTime]);
-  useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+  }, [props.geojson, props.mapId, mapHook.map, props.type, transitionToGeojson, props.transitionTime]);
+  var createLayer = useCallback(function () {
+    var geojson = props.geojson;
 
-    if (props.geojson) {
-      //check if insertBeforeLayer exists
-      if (props.insertBeforeLayer) {
-        var _mapState$layers;
-
-        var layerFound = false;
-        mapState === null || mapState === void 0 ? void 0 : (_mapState$layers = mapState.layers) === null || _mapState$layers === void 0 ? void 0 : _mapState$layers.forEach(function (layer) {
-          if (layer.id === props.insertBeforeLayer) {
-            layerFound = true;
-          }
-        });
-
-        if (!layerFound) {
-          return;
-        }
-      }
-
-      initializedRef.current = true;
-      var geojson = props.geojson;
-
-      if (props.type === "line" && typeof props.transitionTime !== "undefined" && props.transitionTime && typeof props.geojson.geometry !== "undefined") {
-        var tmpChunks = lineChunk(props.geojson, 0.01);
-        geojson = tmpChunks.features[0];
-      }
-
-      mapRef.current = mapContext.getMap(props.mapId);
-      mapRef.current.addLayer({
-        id: layerId.current,
-        source: {
-          type: "geojson",
-          data: geojson
-        },
-        type: props.type || "line",
-        paint: props.paint || {
-          "line-color": "rgb(100,200,100)",
-          "line-width": 10
-        },
-        layout: props.layout || {}
-      }, props.insertBeforeLayer, componentId.current);
-
-      if (typeof props.onHover !== "undefined") {
-        mapRef.current.on("mousemove", componentId.current, props.onHover, componentId.current);
-      }
-
-      if (typeof props.onClick !== "undefined") {
-        mapRef.current.on("click", componentId.current, props.onClick, componentId.current);
-      }
-
-      if (typeof props.onLeave !== "undefined") {
-        mapRef.current.on("mouseleave", componentId.current, props.onLeave, componentId.current);
-      }
-
-      if (props.type === "line" && typeof props.transitionTime !== "undefined" && typeof props.geojson.geometry !== "undefined") {
-        transitionToGeojson(props.geojson);
-        oldGeojsonRef.current = props.geojson;
-      }
+    if (props.type === "line" && typeof props.transitionTime !== "undefined" && props.transitionTime && typeof props.geojson.geometry !== "undefined") {
+      var tmpChunks = lineChunk(props.geojson, 0.01);
+      geojson = tmpChunks.features[0];
     }
-  }, [mapContext.mapIds, mapContext, props, transitionToGeojson, mapState.layers]);
+
+    layerTypeRef.current = props.type || getDefaulLayerTypeByGeometry(props.geojson);
+    mapHook.map.addLayer({
+      id: layerId.current,
+      source: {
+        type: "geojson",
+        data: geojson
+      },
+      type: layerTypeRef.current,
+      paint: props.paint || getDefaultPaintPropsByType(layerTypeRef.current),
+      layout: props.layout || {}
+    }, props.insertBeforeLayer, mapHook.componentId);
+
+    if (typeof props.onHover !== "undefined") {
+      mapHook.map.on("mousemove", mapHook.componentId, props.onHover, mapHook.componentId);
+    }
+
+    if (typeof props.onClick !== "undefined") {
+      mapHook.map.on("click", mapHook.componentId, props.onClick, mapHook.componentId);
+    }
+
+    if (typeof props.onLeave !== "undefined") {
+      mapHook.map.on("mouseleave", mapHook.componentId, props.onLeave, mapHook.componentId);
+    }
+
+    if (props.type === "line" && typeof props.transitionTime !== "undefined" && typeof props.geojson.geometry !== "undefined") {
+      transitionToGeojson(props.geojson);
+      oldGeojsonRef.current = props.geojson;
+    }
+  }, [mapHook.map, props, transitionToGeojson]);
+  useEffect(function () {
+    if (!mapHook.mapIsReady || !props.geojson) return;
+
+    if (initializedRef.current && legalLayerTypes.indexOf(props.type) !== -1 && layerTypeRef.current && props.type !== layerTypeRef.current) {
+      mapHook.map.cleanup(mapHook.componentId);
+    } else if (initializedRef.current && (legalLayerTypes.indexOf(props.type) === -1 || legalLayerTypes.indexOf(props.type) !== -1 && props.type === layerTypeRef.current)) {
+      return;
+    } // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+
+    initializedRef.current = true;
+    createLayer();
+  }, [mapHook.mapIsReady, createLayer, props]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
@@ -1620,13 +1616,7 @@ MlGeoJsonLayer.propTypes = {
    * Creates transition animation whenever the geojson prop changes.
    * Only works with layer type "line" and LineString GeoJSON data.
    */
-  transitionTime: PropTypes.number,
-
-  /**
-   * Id suffix string that is appended to the componentId.
-   * Probably removed soon.
-   */
-  idSuffix: PropTypes.string
+  transitionTime: PropTypes.number
 };
 
 var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
@@ -2483,7 +2473,6 @@ var MlLayer = function MlLayer(props) {
   var layerInitializedRef = useRef(false);
   var mapRef = useRef(null);
   var componentId = useRef((props.layerId ? props.layerId : "MlLayer-") + v4());
-  var idSuffixRef = useRef(props.idSuffix || new Date().getTime());
   var layerId = useRef(props.layerId || componentId.current);
   var layerPaintConfRef = useRef(undefined);
   var layerLayoutConfRef = useRef(undefined);
