@@ -1520,7 +1520,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     }
 
     layerTypeRef.current = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-    mapHook.map.addLayer({
+    mapHook.map.addLayer(_objectSpread2({
       id: layerId.current,
       source: {
         type: "geojson",
@@ -1529,7 +1529,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       type: layerTypeRef.current,
       paint: props.paint || getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides),
       layout: props.layout || {}
-    }, props.insertBeforeLayer, mapHook.componentId);
+    }, props.options), props.insertBeforeLayer, mapHook.componentId);
 
     if (typeof props.onHover !== "undefined") {
       mapHook.map.on("mousemove", mapHook.componentId, props.onHover, mapHook.componentId);
@@ -1598,6 +1598,11 @@ MlGeoJsonLayer.propTypes = {
    * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
    */
   defaultPaintOverrides: PropTypes.object,
+
+  /**
+   * Javascript object that is spread into the addLayer commands first parameter.
+   */
+  options: PropTypes.object,
 
   /**
    * GeoJSON data that is supposed to be rendered by this component.
