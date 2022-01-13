@@ -132,6 +132,7 @@ const MlGeoJsonLayer = (props) => {
           props.paint ||
           getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides),
         layout: props.layout || {},
+        ...props.options,
       },
       props.insertBeforeLayer,
       mapHook.componentId
@@ -216,6 +217,10 @@ MlGeoJsonLayer.propTypes = {
    * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
    */
   defaultPaintOverrides: PropTypes.object,
+  /**
+   * Javascript object that is spread into the addLayer commands first parameter.
+   */
+  options: PropTypes.object,
   /**
    * GeoJSON data that is supposed to be rendered by this component.
    */
