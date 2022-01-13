@@ -184,31 +184,45 @@
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlgeojsonlayer--linestring-example": {
-      "id": "mapcomponents-mlgeojsonlayer--linestring-example",
-      "name": "Linestring Example",
+    "mapcomponents-mlgeojsonlayer--linestring": {
+      "id": "mapcomponents-mlgeojsonlayer--linestring",
+      "name": "Linestring",
       "title": "MapComponents/MlGeoJsonLayer",
       "importPath": 1071,
       "kind": "MapComponents/MlGeoJsonLayer",
-      "story": "Linestring Example",
+      "story": "Linestring",
       "parameters": {
         "fileName": 1071,
         "framework": "react",
-        "__id": "mapcomponents-mlgeojsonlayer--linestring-example",
+        "__id": "mapcomponents-mlgeojsonlayer--linestring",
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlgeojsonlayer--polygon-example": {
-      "id": "mapcomponents-mlgeojsonlayer--polygon-example",
-      "name": "Polygon Example",
+    "mapcomponents-mlgeojsonlayer--polygon": {
+      "id": "mapcomponents-mlgeojsonlayer--polygon",
+      "name": "Polygon",
       "title": "MapComponents/MlGeoJsonLayer",
       "importPath": 1071,
       "kind": "MapComponents/MlGeoJsonLayer",
-      "story": "Polygon Example",
+      "story": "Polygon",
       "parameters": {
         "fileName": 1071,
         "framework": "react",
-        "__id": "mapcomponents-mlgeojsonlayer--polygon-example",
+        "__id": "mapcomponents-mlgeojsonlayer--polygon",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlgeojsonlayer--default-paint-overrides": {
+      "id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
+      "name": "Default Paint Overrides",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 1071,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Default Paint Overrides",
+      "parameters": {
+        "fileName": 1071,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
         "__isArgsStory": true
       }
     },
