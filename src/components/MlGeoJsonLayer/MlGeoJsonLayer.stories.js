@@ -52,13 +52,28 @@ const LinestringTransitionTemplate = (props) => {
   );
 };
 
-export const LinestringExample = LinestringTransitionTemplate.bind({});
-LinestringExample.parameters = {};
-LinestringExample.args = {};
+export const Linestring = LinestringTransitionTemplate.bind({});
+Linestring.parameters = {};
+Linestring.args = {};
 
-export const PolygonExample = Template.bind({});
-PolygonExample.parameters = {};
-PolygonExample.args = {
-  type: "line",
+export const Polygon = Template.bind({});
+Polygon.parameters = {};
+Polygon.args = {
+  geojson: sample_polygon_geojson_1,
+};
+export const DefaultPaintOverrides = Template.bind({});
+DefaultPaintOverrides.parameters = {};
+DefaultPaintOverrides.args = {
+  defaultPaintOverrides: {
+    fill: {
+      "fill-color": "blue",
+    },
+    circle: {
+      "circle-color": "red",
+    },
+    line: {
+      "line-color": "orange",
+    },
+  },
   geojson: sample_polygon_geojson_1,
 };

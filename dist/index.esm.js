@@ -1381,14 +1381,22 @@ var _transitionToGeojson = function _transitionToGeojson(newGeojson, props, tran
   }, msPerStep);
 };
 
-var getDefaultPaintPropsByType = function getDefaultPaintPropsByType(type) {
+var getDefaultPaintPropsByType = function getDefaultPaintPropsByType(type, defaultPaintOverrides) {
   switch (type) {
     case "fill":
+      if (defaultPaintOverrides !== null && defaultPaintOverrides !== void 0 && defaultPaintOverrides.fill) {
+        return defaultPaintOverrides.fill;
+      }
+
       return {
         "fill-color": "rgba(10,240,256,0.6)"
       };
 
     case "line":
+      if (defaultPaintOverrides !== null && defaultPaintOverrides !== void 0 && defaultPaintOverrides.line) {
+        return defaultPaintOverrides.line;
+      }
+
       return {
         "line-color": "rgb(100,200,100)",
         "line-width": 5
@@ -1396,6 +1404,10 @@ var getDefaultPaintPropsByType = function getDefaultPaintPropsByType(type) {
 
     case "circle":
     default:
+      if (defaultPaintOverrides !== null && defaultPaintOverrides !== void 0 && defaultPaintOverrides.circle) {
+        return defaultPaintOverrides.circle;
+      }
+
       return {
         "circle-color": "#44aaaa",
         "circle-stroke-color": "#fff",
@@ -1473,10 +1485,12 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
   useEffect(function () {
     if (!mapHook.map || !initializedRef.current) return;
 
-    for (var key in props.paint) {
-      mapHook.map.setPaintProperty(layerId.current, key, props.paint[key]);
+    var _paint = props.paint || getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides);
+
+    for (var key in _paint) {
+      mapHook.map.setPaintProperty(layerId.current, key, _paint[key]);
     }
-  }, [props.paint, mapHook.map, props.mapId]);
+  }, [props.paint, mapHook.map, props.mapId, props.defaultPaintOverrides]);
   var transitionToGeojson = useCallback(function (newGeojson) {
     _transitionToGeojson(newGeojson, props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapHook.map, layerId.current, transitionTimeoutRef);
   }, [props, mapHook.map]);
@@ -1513,7 +1527,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
         data: geojson
       },
       type: layerTypeRef.current,
-      paint: props.paint || getDefaultPaintPropsByType(layerTypeRef.current),
+      paint: props.paint || getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides),
       layout: props.layout || {}
     }, props.insertBeforeLayer, mapHook.componentId);
 
@@ -1579,6 +1593,11 @@ MlGeoJsonLayer.propTypes = {
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
   paint: PropTypes.object,
+
+  /**
+   * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
+   */
+  defaultPaintOverrides: PropTypes.object,
 
   /**
    * GeoJSON data that is supposed to be rendered by this component.

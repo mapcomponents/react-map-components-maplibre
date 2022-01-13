@@ -52,10 +52,13 @@ const MlGeoJsonLayer = (props) => {
   useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;
 
-    for (var key in props.paint) {
-      mapHook.map.setPaintProperty(layerId.current, key, props.paint[key]);
+    let _paint =
+      props.paint || getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides);
+
+    for (var key in _paint) {
+      mapHook.map.setPaintProperty(layerId.current, key, _paint[key]);
     }
-  }, [props.paint, mapHook.map, props.mapId]);
+  }, [props.paint, mapHook.map, props.mapId, props.defaultPaintOverrides]);
 
   const transitionToGeojson = useCallback(
     (newGeojson) => {
@@ -125,7 +128,9 @@ const MlGeoJsonLayer = (props) => {
           data: geojson,
         },
         type: layerTypeRef.current,
-        paint: props.paint || getDefaultPaintPropsByType(layerTypeRef.current),
+        paint:
+          props.paint ||
+          getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides),
         layout: props.layout || {},
       },
       props.insertBeforeLayer,
@@ -207,6 +212,10 @@ MlGeoJsonLayer.propTypes = {
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
   paint: PropTypes.object,
+  /**
+   * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
+   */
+  defaultPaintOverrides: PropTypes.object,
   /**
    * GeoJSON data that is supposed to be rendered by this component.
    */
