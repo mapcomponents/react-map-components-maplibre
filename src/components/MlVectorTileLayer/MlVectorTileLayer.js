@@ -48,7 +48,7 @@ const MlVectorTileLayer = (props) => {
       tiles: [props.url],
       tileSize: 512,
       attribution: "",
-      //...props.sourceOptions,
+      ...props.sourceOptions,
     });
 
     for (let key in props.layers) {
