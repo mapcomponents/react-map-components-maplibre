@@ -8,6 +8,19 @@
  
 ### Fixed
 
+## [0.1.20] - 2022-01-09
+
+### Added
+- add props.sourceOptions to MlVectorTileLayer
+## [0.1.19] - 2022-01-09
+
+### Added
+- add props.options to MlGeoJsonLayer 
+## [0.1.18] - 2022-01-09
+
+### Added
+- add props.defaultPaintOverrides to MlGeoJsonLayer 
+
 ## [0.1.17] - 2022-01-09
  
 ### Added
