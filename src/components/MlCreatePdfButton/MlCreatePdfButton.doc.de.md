@@ -1,3 +1,3 @@
-# Component Beschreibung
+# Beschreibung
 
-Beschreibungstext
+Export auf Knopfdruck ein PDF des aktuellen Kartenausschnitts.
