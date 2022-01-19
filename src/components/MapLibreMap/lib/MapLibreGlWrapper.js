@@ -97,7 +97,7 @@ const MapLibreGlWrapper = function (props) {
     /**
      * Maps layerIds to layerState in JSON string form for quick deep comparisons
      */
-    layerStateStrings: {},
+    layerStateString: "",
     /**
      * Previous Version of layerStateString
      */
@@ -110,29 +110,29 @@ const MapLibreGlWrapper = function (props) {
      */
     buildLayerObject: (layer) => {
       //if (self.baseLayers.indexOf(layer.id) === -1) {
-      let paint = {};
-      let values = layer.paint?._values;
-      Object.keys(values || {}).forEach((propName) => {
-        paint[propName] =
-          typeof values[propName].value !== "undefined"
-            ? values[propName].value.value
-            : values[propName];
-      });
-      let layout = {};
-      values = layer.layout?._values;
-      Object.keys(values || {}).forEach((propName) => {
-        layout[propName] =
-          typeof values[propName].value !== "undefined"
-            ? values[propName].value.value
-            : values[propName];
-      });
+      //let paint = {};
+      //let values = layer.paint?._values;
+      //Object.keys(values || {}).map((propName) => {
+      //  paint[propName] =
+      //    typeof values[propName].value !== "undefined"
+      //      ? values[propName].value.value
+      //      : values[propName];
+      //});
+      //let layout = {};
+      //values = layer.layout?._values;
+      //Object.keys(values || {}).map((propName) => {
+      //  layout[propName] =
+      //    typeof values[propName].value !== "undefined"
+      //      ? values[propName].value.value
+      //      : values[propName];
+      //});
       return {
         id: layer.id,
         type: layer.type,
         visible: layer.visibility === "none" ? false : true,
         baseLayer: self.baseLayers.indexOf(layer.id) !== -1,
-        paint,
-        layout,
+        //paint,
+        //layout,
         //filter: layers[layerId].filter,
         //layout: layers[layerId].layout,
         //maxzoom: layers[layerId].maxzoom,
@@ -161,7 +161,10 @@ const MapLibreGlWrapper = function (props) {
      */
     refreshLayerState: () => {
       self.wrapper.layerState = self.wrapper.buildLayerObjects();
-      self.wrapper.layerStateStrings = self.wrapper.layerState.map((el) => JSON.stringify(el));
+      if (JSON.stringify(self.wrapper.layerState) !== self.wrapper.layerStateString) {
+        self.wrapper.fire("layerchange");
+        self.wrapper.layerStateString = JSON.stringify(self.wrapper.layerState);
+      }
     },
     /**
      * Object containing information on the current viewport state
@@ -505,9 +508,11 @@ const MapLibreGlWrapper = function (props) {
       self.wrapper.viewportState = self.wrapper.getViewport();
       self.wrapper.fire("viewportchange");
     });
+    self.map.on("idle", () => {
+      self.wrapper.refreshLayerState();
+    });
     self.map.on("data", () => {
       self.wrapper.refreshLayerState();
-      self.wrapper.fire("layerchange");
     });
     if (typeof props.onReady === "function") {
       props.onReady(self.map, self);
