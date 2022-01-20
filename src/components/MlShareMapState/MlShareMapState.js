@@ -114,7 +114,7 @@ const MlShareMapState = (props) => {
     if (!mapRef.current) return;
 
     refreshUrlParameters();
-  }, [refreshUrlParametersi]);
+  }, [refreshUrlParameters]);
 
   useEffect(() => {
     if (!mapRef.current) return;
