@@ -59,6 +59,8 @@ const MlShareMapState = (props) => {
   const mapStateRef = useRef({});
 
   const refreshUrlParameters = useCallback(() => {
+    if (!props.active) return;
+
     let mapLayers = [];
     for (let x in mapState.layers) {
       mapLayers.push({
@@ -86,7 +88,7 @@ const MlShareMapState = (props) => {
         "?" + urlParams.toString()
       );
     }
-  }, [mapState.layers]);
+  }, [mapState.layers, props.active]);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -112,7 +114,7 @@ const MlShareMapState = (props) => {
     if (!mapRef.current) return;
 
     refreshUrlParameters();
-  }, [refreshUrlParameters]);
+  }, [refreshUrlParametersi]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -124,7 +126,7 @@ const MlShareMapState = (props) => {
     return () => {
       mapRef.current?.off("moveend", _refreshUrlParameters);
     };
-  }, [refreshUrlParameters, map, props.active]);
+  }, [refreshUrlParameters, map]);
 
   useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
