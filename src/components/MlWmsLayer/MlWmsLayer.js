@@ -88,7 +88,7 @@ const MlWmsLayer = (props) => {
       {
         id: layerId.current,
         type: "raster",
-        source: mapHook.componentId,
+        source: layerId.current,
         ...props.layerOptions,
       },
       props.insertBeforeLayer,
