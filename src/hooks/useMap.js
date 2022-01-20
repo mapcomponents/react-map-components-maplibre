@@ -25,8 +25,12 @@ function useMap(props) {
 
   useEffect(() => {
     let _componentId = componentId.current;
+    console.log("initialize maphook");
 
     return () => {
+      console.log("cleanup maphook");
+      console.log(typeof mapRef.current);
+      console.log(JSON.stringify(mapRef.current.style._order));
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;

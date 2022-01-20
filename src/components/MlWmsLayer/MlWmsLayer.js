@@ -47,9 +47,8 @@ const defaultProps = {
 const MlWmsLayer = (props) => {
   const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 
-  const componentId = useRef(props.layerId || "MlWmsLayer-" + uuidv4());
   const initializedRef = useRef(false);
-  const layerId = useRef(props.layerId || componentId.current);
+  const layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
 
   useEffect(() => {
     if (!mapHook.map || initializedRef.current) return;
@@ -82,22 +81,22 @@ const MlWmsLayer = (props) => {
         attribution: props.attribution,
         ...props.sourceOptions,
       },
-      componentId.current
+      mapHook.componentId
     );
 
     mapHook.map.addLayer(
       {
         id: layerId.current,
         type: "raster",
-        source: componentId.current,
+        source: mapHook.componentId,
         ...props.layerOptions,
       },
       props.insertBeforeLayer,
-      componentId.current
+      mapHook.componentId
     );
 
     if (!props.visible) {
-      mapHook.map.setLayoutProperty(componentId.current, "visibility", "none");
+      mapHook.map.setLayoutProperty(layerId.current, "visibility", "none");
     }
   }, [mapHook.map, props]);
 
@@ -106,9 +105,9 @@ const MlWmsLayer = (props) => {
 
     // toggle layer visibility by changing the layout object's visibility property
     if (props.visible) {
-      mapHook.map.setLayoutProperty(componentId.current, "visibility", "visible");
+      mapHook.map.setLayoutProperty(layerId.current, "visibility", "visible");
     } else {
-      mapHook.map.setLayoutProperty(componentId.current, "visibility", "none");
+      mapHook.map.setLayoutProperty(layerId.current, "visibility", "none");
     }
   }, [props.visible, mapHook.map]);
 
