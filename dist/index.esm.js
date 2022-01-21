@@ -331,7 +331,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
     /**
      * Maps layerIds to layerState in JSON string form for quick deep comparisons
      */
-    layerStateStrings: {},
+    layerStateString: "",
 
     /**
      * Previous Version of layerStateString
@@ -345,26 +345,30 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      * @returns object
      */
     buildLayerObject: function buildLayerObject(layer) {
-      var _layer$paint, _layer$layout;
-
       //if (self.baseLayers.indexOf(layer.id) === -1) {
-      var paint = {};
-      var values = (_layer$paint = layer.paint) === null || _layer$paint === void 0 ? void 0 : _layer$paint._values;
-      Object.keys(values || {}).forEach(function (propName) {
-        paint[propName] = typeof values[propName].value !== "undefined" ? values[propName].value.value : values[propName];
-      });
-      var layout = {};
-      values = (_layer$layout = layer.layout) === null || _layer$layout === void 0 ? void 0 : _layer$layout._values;
-      Object.keys(values || {}).forEach(function (propName) {
-        layout[propName] = typeof values[propName].value !== "undefined" ? values[propName].value.value : values[propName];
-      });
+      //let paint = {};
+      //let values = layer.paint?._values;
+      //Object.keys(values || {}).map((propName) => {
+      //  paint[propName] =
+      //    typeof values[propName].value !== "undefined"
+      //      ? values[propName].value.value
+      //      : values[propName];
+      //});
+      //let layout = {};
+      //values = layer.layout?._values;
+      //Object.keys(values || {}).map((propName) => {
+      //  layout[propName] =
+      //    typeof values[propName].value !== "undefined"
+      //      ? values[propName].value.value
+      //      : values[propName];
+      //});
       return {
         id: layer.id,
         type: layer.type,
         visible: layer.visibility === "none" ? false : true,
-        baseLayer: self.baseLayers.indexOf(layer.id) !== -1,
-        paint: paint,
-        layout: layout //filter: layers[layerId].filter,
+        baseLayer: self.baseLayers.indexOf(layer.id) !== -1 //paint,
+        //layout,
+        //filter: layers[layerId].filter,
         //layout: layers[layerId].layout,
         //maxzoom: layers[layerId].maxzoom,
         //metadata: layers[layerId].metadata,
@@ -394,9 +398,11 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      */
     refreshLayerState: function refreshLayerState() {
       self.wrapper.layerState = self.wrapper.buildLayerObjects();
-      self.wrapper.layerStateStrings = self.wrapper.layerState.map(function (el) {
-        return JSON.stringify(el);
-      });
+
+      if (JSON.stringify(self.wrapper.layerState) !== self.wrapper.layerStateString) {
+        self.wrapper.fire("layerchange");
+        self.wrapper.layerStateString = JSON.stringify(self.wrapper.layerState);
+      }
     },
 
     /**
@@ -733,16 +739,18 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
                 self.wrapper.viewportState = self.wrapper.getViewport();
                 self.wrapper.fire("viewportchange");
               });
+              self.map.on("idle", function () {
+                self.wrapper.refreshLayerState();
+              });
               self.map.on("data", function () {
                 self.wrapper.refreshLayerState();
-                self.wrapper.fire("layerchange");
               });
 
               if (typeof props.onReady === "function") {
                 props.onReady(self.map, self);
               }
 
-            case 10:
+            case 11:
             case "end":
               return _context.stop();
           }
@@ -1008,7 +1016,12 @@ function useMap(props) {
 
   useEffect(function () {
     var _componentId = componentId.current;
+    console.log("initialize maphook");
     return function () {
+      console.log("cleanup maphook");
+      console.log(_typeof(mapRef.current));
+      console.log(JSON.stringify(mapRef.current.style._order));
+
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
@@ -1532,15 +1545,15 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
     }, props.options), props.insertBeforeLayer, mapHook.componentId);
 
     if (typeof props.onHover !== "undefined") {
-      mapHook.map.on("mousemove", mapHook.componentId, props.onHover, mapHook.componentId);
+      mapHook.map.on("mousemove", layerId.current, props.onHover, mapHook.componentId);
     }
 
     if (typeof props.onClick !== "undefined") {
-      mapHook.map.on("click", mapHook.componentId, props.onClick, mapHook.componentId);
+      mapHook.map.on("click", layerId.current, props.onClick, mapHook.componentId);
     }
 
     if (typeof props.onLeave !== "undefined") {
-      mapHook.map.on("mouseleave", mapHook.componentId, props.onLeave, mapHook.componentId);
+      mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
     }
 
     if (props.type === "line" && typeof props.transitionTime !== "undefined" && typeof props.geojson.geometry !== "undefined") {
@@ -2706,13 +2719,12 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId); // Add the new layer to the openlayers instance once it is available
 
-    mapRef.current.addSource(sourceName + idSuffixRef.current, {
+    mapRef.current.addSource(sourceName + idSuffixRef.current, _objectSpread2({
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
-      attribution: "" //...props.sourceOptions,
-
-    });
+      attribution: ""
+    }, props.sourceOptions));
 
     for (var key in props.layers) {
       var layerId = layerName + "_" + key + "_" + idSuffixRef.current;
@@ -2752,12 +2764,17 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
     }
   }, [props.layers, props, mapContext]);
   useEffect(function () {
-    if (!mapRef.current) return; // toggle layer visibility by changing the layout object's visibility property
+    if (!mapRef.current) return;
 
-    if (props.visible) {
-      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "visible");
-    } else {
-      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "none");
+    for (var key in props.layers) {
+      if (mapRef.current.getLayer(layerIdsRef.current[key])) {
+        // toggle layer visibility by changing the layout object's visibility property
+        if (props.visible) {
+          mapContext.getMap(props.mapId).setLayoutProperty(layerIdsRef.current[key], "visibility", "visible");
+        } else {
+          mapContext.getMap(props.mapId).setLayoutProperty(layerIdsRef.current[key], "visibility", "none");
+        }
+      }
     }
   }, [props.visible]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
@@ -2778,6 +2795,11 @@ MlVectorTileLayer.propTypes = {
    * Object that hold layers
    */
   layers: PropTypes.object,
+
+  /**
+   * Boolean value to control the visibility of this layer
+   */
+  visible: PropTypes.bool,
 
   /**
    * String of the URL of a wms layer
@@ -2826,29 +2848,16 @@ var defaultProps = {
  */
 
 var MlWmsLayer = function MlWmsLayer(props) {
-  var mapContext = useContext(MapContext);
-  var componentId = useRef(props.layerId || "MlWmsLayer-" + v4());
-  var mapRef = useRef(null);
+  var mapHook = useMap({
+    mapId: props.mapId,
+    waitForLayer: props.insertBeforeLayer
+  });
   var initializedRef = useRef(false);
-  var layerId = useRef(props.layerId || componentId.current);
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
-        mapRef.current = null;
-      }
-
-      initializedRef.current = false;
-    };
-  }, []);
+  var layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
   useEffect(function () {
     var _propsUrlParams2;
 
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    mapRef.current = mapContext.getMap(props.mapId);
-    if (!mapRef.current) return;
+    if (!mapHook.map || initializedRef.current) return;
     initializedRef.current = true;
 
     var _propsUrlParams;
@@ -2867,31 +2876,31 @@ var MlWmsLayer = function MlWmsLayer(props) {
 
     var urlParams = new URLSearchParams(urlParamsObj);
     var urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
-    mapRef.current.addSource(layerId.current, _objectSpread2({
+    mapHook.map.addSource(layerId.current, _objectSpread2({
       type: "raster",
       tiles: [_wmsUrl + "?" + urlParamsStr],
       tileSize: urlParamsObj.width,
       attribution: props.attribution
-    }, props.sourceOptions), componentId.current);
-    mapRef.current.addLayer(_objectSpread2({
+    }, props.sourceOptions), mapHook.componentId);
+    mapHook.map.addLayer(_objectSpread2({
       id: layerId.current,
       type: "raster",
-      source: componentId.current
-    }, props.layerOptions), props.insertBeforeLayer, componentId.current);
+      source: layerId.current
+    }, props.layerOptions), props.insertBeforeLayer, mapHook.componentId);
 
     if (!props.visible) {
-      mapRef.current.setLayoutProperty(componentId.current, "visibility", "none");
+      mapHook.map.setLayoutProperty(layerId.current, "visibility", "none");
     }
-  }, [mapContext.mapIds, mapContext, props]);
+  }, [mapHook.map, props]);
   useEffect(function () {
-    if (!mapRef.current || !initializedRef.current) return; // toggle layer visibility by changing the layout object's visibility property
+    if (!mapHook.map || !initializedRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
     if (props.visible) {
-      mapRef.current.setLayoutProperty(componentId.current, "visibility", "visible");
+      mapHook.map.setLayoutProperty(layerId.current, "visibility", "visible");
     } else {
-      mapRef.current.setLayoutProperty(componentId.current, "visibility", "none");
+      mapHook.map.setLayoutProperty(layerId.current, "visibility", "none");
     }
-  }, [props.visible]);
+  }, [props.visible, mapHook.map]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
