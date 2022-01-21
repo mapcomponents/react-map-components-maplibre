@@ -139,15 +139,15 @@ const MlGeoJsonLayer = (props) => {
     );
 
     if (typeof props.onHover !== "undefined") {
-      mapHook.map.on("mousemove", mapHook.componentId, props.onHover, mapHook.componentId);
+      mapHook.map.on("mousemove", layerId.current, props.onHover, mapHook.componentId);
     }
 
     if (typeof props.onClick !== "undefined") {
-      mapHook.map.on("click", mapHook.componentId, props.onClick, mapHook.componentId);
+      mapHook.map.on("click", layerId.current, props.onClick, mapHook.componentId);
     }
 
     if (typeof props.onLeave !== "undefined") {
-      mapHook.map.on("mouseleave", mapHook.componentId, props.onLeave, mapHook.componentId);
+      mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
     }
 
     if (
