@@ -100,11 +100,19 @@ const MlVectorTileLayer = (props) => {
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // toggle layer visibility by changing the layout object's visibility property
-    if (props.visible) {
-      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "visible");
-    } else {
-      mapRef.current.setLayoutProperty(layerName + idSuffixRef.current, "visibility", "none");
+    for (var key in props.layers) {
+      if (mapRef.current.getLayer(layerIdsRef.current[key])) {
+        // toggle layer visibility by changing the layout object's visibility property
+        if (props.visible) {
+          mapContext
+            .getMap(props.mapId)
+            .setLayoutProperty(layerIdsRef.current[key], "visibility", "visible");
+        } else {
+          mapContext
+            .getMap(props.mapId)
+            .setLayoutProperty(layerIdsRef.current[key], "visibility", "none");
+        }
+      }
     }
   }, [props.visible]);
 
@@ -124,6 +132,10 @@ MlVectorTileLayer.propTypes = {
    * Object that hold layers
    */
   layers: PropTypes.object,
+  /**
+   * Boolean value to control the visibility of this layer
+   */
+  visible: PropTypes.bool,
   /**
    * String of the URL of a wms layer
    */
