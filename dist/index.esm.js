@@ -1016,12 +1016,7 @@ function useMap(props) {
 
   useEffect(function () {
     var _componentId = componentId.current;
-    console.log("initialize maphook");
     return function () {
-      console.log("cleanup maphook");
-      console.log(_typeof(mapRef.current));
-      console.log(JSON.stringify(mapRef.current.style._order));
-
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
@@ -2694,6 +2689,7 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
   var idSuffixRef = useRef(new Date().getTime());
   var layerIdsRef = useRef({});
   var layerPaintConfsRef = useRef({});
+  var layerLayoutConfsRef = useRef({});
   var initializedRef = useRef(false);
   var mapRef = useRef(null);
 
@@ -2743,6 +2739,7 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
         }
       }, props.layers[key]));
       layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
+      layerLayoutConfsRef.current[key] = JSON.stringify(props.layers[key].layout);
     }
   }, [mapContext.mapIds, props, mapContext]);
   useEffect(function () {
