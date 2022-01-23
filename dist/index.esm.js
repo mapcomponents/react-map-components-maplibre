@@ -2751,15 +2751,26 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
 
     for (var key in props.layers) {
       if (mapRef.current.getLayer(layerIdsRef.current[key])) {
-        var layerConfString = JSON.stringify(props.layers[key].paint);
+        // update changed paint property
+        var layerPaintConfString = JSON.stringify(props.layers[key].paint);
 
-        if (layerConfString !== layerPaintConfsRef.current[key]) {
+        if (layerPaintConfString !== layerPaintConfsRef.current[key]) {
           for (var paintKey in props.layers[key].paint) {
             mapContext.getMap(props.mapId).setPaintProperty(layerIdsRef.current[key], paintKey, props.layers[key].paint[paintKey]);
           }
         }
 
-        layerPaintConfsRef.current[key] = layerConfString;
+        layerPaintConfsRef.current[key] = layerPaintConfString; // update changed layout property
+
+        var layerLayoutConfString = JSON.stringify(props.layers[key].layout);
+
+        if (layerLayoutConfString !== layerLayoutConfsRef.current[key]) {
+          for (var layoutKey in props.layers[key].layout) {
+            mapContext.getMap(props.mapId).setLayoutProperty(layerIdsRef.current[key], layoutKey, props.layers[key].layout[layoutKey]);
+          }
+        }
+
+        layerLayoutConfsRef.current[key] = layerLayoutConfString;
       }
     }
   }, [props.layers, props, mapContext]);

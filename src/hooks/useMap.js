@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { MapContext } from "@mapcomponents/react-core";
 import useMapState from "./useMapState";
