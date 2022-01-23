@@ -1,12 +1,12 @@
 import { layerRemovalTest, sourceRemovalTest } from "../../util";
 
 import MlVectorTileLayer from "./MlVectorTileLayer";
+import { uuid_regex } from "../../setupTests";
 
 const testComponent = (
   <MlVectorTileLayer
     {...{
-      url:
-        "https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf",
+      url: "https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf",
       layers: {
         landuseLine: {
           "source-layer": "landuse",
@@ -28,12 +28,12 @@ const testComponent = (
 layerRemovalTest(
   "<MlVectorTileLayer />",
   testComponent,
-  /^.*"vector-tile-layer-_landuseLine_[0-9]*".*$/,
-  "vector-tile-layer-_landuseLine_{unix-timestamp}"
+  new RegExp('^.*"MlVectorTileLayer-' + uuid_regex + '_landuseLine".*$'),
+  "MlVectorTileLayer-{uuid}_landuseLine"
 );
 sourceRemovalTest(
   "<MlVectorTileLayer />",
   testComponent,
-  /^.*"vector-tile-source-[0-9]*".*$/,
-  "vector-tile-source-{unix-timestamp}"
+  new RegExp('^.*"MlVectorTileLayer-' + uuid_regex + '".*$'),
+  "MlVectorTileLayer-{uuid}"
 );
