@@ -2696,7 +2696,7 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
     if (!mapHook.map || initializedRef.current) return;
     initializedRef.current = true; // Add the new layer to the openlayers instance once it is available
 
-    mapHook.map.addSource(layerId, _objectSpread2({
+    mapHook.map.addSource(layerId.current, _objectSpread2({
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
@@ -2707,7 +2707,6 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
       var _layerId = layerId.current + "_" + key;
 
       layerIdsRef.current[key] = _layerId;
-      console.log(_layerId);
       mapHook.map.addLayer(_objectSpread2({
         id: _layerId,
         source: layerId.current,
