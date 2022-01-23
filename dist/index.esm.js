@@ -2683,51 +2683,34 @@ MlOsmLayer.propTypes = {
  */
 
 var MlVectorTileLayer = function MlVectorTileLayer(props) {
-  var mapContext = useContext(MapContext);
-  var layerName = "vector-tile-layer-";
-  var sourceName = "vector-tile-source-";
-  var idSuffixRef = useRef(new Date().getTime());
+  var mapHook = useMap({
+    mapId: props.mapId,
+    waitForLayer: props.insertBeforeLayer
+  });
   var layerIdsRef = useRef({});
+  var layerId = useRef(props.layerId || "MlVectorTileLayer-" + mapHook.componentId);
   var layerPaintConfsRef = useRef({});
   var layerLayoutConfsRef = useRef({});
   var initializedRef = useRef(false);
-  var mapRef = useRef(null);
-
-  var cleanup = function cleanup() {
-    if (mapRef.current && mapRef.current.style) {
-      for (var key in layerIdsRef.current) {
-        if (mapRef.current.getLayer(layerIdsRef.current[key])) {
-          mapRef.current.removeLayer(layerIdsRef.current[key]);
-        }
-      }
-
-      if (mapRef.current.getSource(sourceName + idSuffixRef.current)) {
-        mapRef.current.removeSource(sourceName + idSuffixRef.current);
-      }
-    }
-  };
-
   useEffect(function () {
-    return cleanup;
-  }, []);
-  useEffect(function () {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    initializedRef.current = true;
-    mapRef.current = mapContext.getMap(props.mapId); // Add the new layer to the openlayers instance once it is available
+    if (!mapHook.map || initializedRef.current) return;
+    initializedRef.current = true; // Add the new layer to the openlayers instance once it is available
 
-    mapRef.current.addSource(sourceName + idSuffixRef.current, _objectSpread2({
+    mapHook.map.addSource(layerId, _objectSpread2({
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
       attribution: ""
-    }, props.sourceOptions));
+    }, props.sourceOptions), mapHook.componentId);
 
     for (var key in props.layers) {
-      var layerId = layerName + "_" + key + "_" + idSuffixRef.current;
-      layerIdsRef.current[key] = layerId;
-      mapRef.current.addLayer(_objectSpread2({
-        id: layerId,
-        source: sourceName + idSuffixRef.current,
+      var _layerId = layerId.current + "_" + key;
+
+      layerIdsRef.current[key] = _layerId;
+      console.log(_layerId);
+      mapHook.map.addLayer(_objectSpread2({
+        id: _layerId,
+        source: layerId.current,
         type: "line",
         minzoom: 0,
         maxzoom: 22,
@@ -2737,23 +2720,22 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
           "line-color": "rgb(80, 80, 80)",
           "line-width": 2
         }
-      }, props.layers[key]));
+      }, props.layers[key]), props.insertBeforeLayer, mapHook.componentId);
       layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
       layerLayoutConfsRef.current[key] = JSON.stringify(props.layers[key].layout);
     }
-  }, [mapContext.mapIds, props, mapContext]);
+  }, [mapHook.map, props]);
   useEffect(function () {
-    if (!mapRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+    if (!mapHook.map || !initializedRef.current) return; // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.layers) {
-      if (mapRef.current.getLayer(layerIdsRef.current[key])) {
+      if (mapHook.map.getLayer(layerIdsRef.current[key])) {
         // update changed paint property
         var layerPaintConfString = JSON.stringify(props.layers[key].paint);
 
         if (layerPaintConfString !== layerPaintConfsRef.current[key]) {
           for (var paintKey in props.layers[key].paint) {
-            mapContext.getMap(props.mapId).setPaintProperty(layerIdsRef.current[key], paintKey, props.layers[key].paint[paintKey]);
+            mapHook.map.setPaintProperty(layerIdsRef.current[key], paintKey, props.layers[key].paint[paintKey]);
           }
         }
 
@@ -2763,28 +2745,14 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
 
         if (layerLayoutConfString !== layerLayoutConfsRef.current[key]) {
           for (var layoutKey in props.layers[key].layout) {
-            mapContext.getMap(props.mapId).setLayoutProperty(layerIdsRef.current[key], layoutKey, props.layers[key].layout[layoutKey]);
+            mapHook.map.setLayoutProperty(layerIdsRef.current[key], layoutKey, props.layers[key].layout[layoutKey]);
           }
         }
 
         layerLayoutConfsRef.current[key] = layerLayoutConfString;
       }
     }
-  }, [props.layers, props, mapContext]);
-  useEffect(function () {
-    if (!mapRef.current) return;
-
-    for (var key in props.layers) {
-      if (mapRef.current.getLayer(layerIdsRef.current[key])) {
-        // toggle layer visibility by changing the layout object's visibility property
-        if (props.visible) {
-          mapContext.getMap(props.mapId).setLayoutProperty(layerIdsRef.current[key], "visibility", "visible");
-        } else {
-          mapContext.getMap(props.mapId).setLayoutProperty(layerIdsRef.current[key], "visibility", "none");
-        }
-      }
-    }
-  }, [props.visible]);
+  }, [props.layers, mapHook.map]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
@@ -2803,11 +2771,6 @@ MlVectorTileLayer.propTypes = {
    * Object that hold layers
    */
   layers: PropTypes.object,
-
-  /**
-   * Boolean value to control the visibility of this layer
-   */
-  visible: PropTypes.bool,
 
   /**
    * String of the URL of a wms layer
