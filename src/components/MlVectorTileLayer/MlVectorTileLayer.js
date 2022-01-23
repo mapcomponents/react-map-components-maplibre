@@ -24,7 +24,7 @@ const MlVectorTileLayer = (props) => {
 
     // Add the new layer to the openlayers instance once it is available
     mapHook.map.addSource(
-      layerId,
+      layerId.current,
       {
         type: "vector",
         tiles: [props.url],
@@ -39,7 +39,6 @@ const MlVectorTileLayer = (props) => {
       let _layerId = layerId.current + "_" + key;
       layerIdsRef.current[key] = _layerId;
 
-      console.log(_layerId);
       mapHook.map.addLayer(
         {
           id: _layerId,
