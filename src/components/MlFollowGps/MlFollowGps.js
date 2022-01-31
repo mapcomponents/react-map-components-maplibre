@@ -24,19 +24,9 @@ const MlFollowGps = (props) => {
 
   const [isFollowed, setIsFollowed] = useState(false);
   const [geoJson, setGeoJson] = useState(undefined);
-  const watchIdRef = useRef(undefined);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
 
   const [accuracyGeoJson, setAccuracyGeoJson] = useState();
-
-  useEffect(() => {
-    return () => {
-      if (watchIdRef.current) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-        watchIdRef.current = undefined;
-      }
-    };
-  }, []);
 
   const getLocationSuccess = useCallback(
     (pos) => {
@@ -59,12 +49,11 @@ const MlFollowGps = (props) => {
     if (!mapHook.map) return;
 
     if (isFollowed) {
-      watchIdRef.current = navigator.geolocation.watchPosition(
-        getLocationSuccess,
-        getLocationError
-      );
-    } else {
-      navigator.geolocation.clearWatch(watchIdRef.current);
+      let _watchId = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
+
+      return () => {
+        navigator.geolocation.clearWatch(_watchId);
+      };
     }
   }, [isFollowed, getLocationSuccess]);
 
@@ -79,26 +68,20 @@ const MlFollowGps = (props) => {
             "fill-opacity": 0.5,
             ...props.accuracyPaint,
           }}
-          insertBeforeLayer={"MlFollowGpsMarker"}
+          insertBeforeLayer={props.insertBeforeLayer}
         />
       )}
 
       {isFollowed && geoJson && (
-        <MlImageMarkerLayer
-          layerId={"MlFollowGpsMarker"}
-          options={{
-            type: "symbol",
-            source: {
-              type: "geojson",
-              data: geoJson,
-            },
-            layout: {
-              "icon-size": 0.1,
-              "icon-offset": [0, -340],
-              ...props.markerLayout,
-            },
+        <MlGeoJsonLayer
+          geojson={geoJson}
+          type={"circle"}
+          paint={{
+            "circle-color": "#ee9900",
+            "circle-radius": 5,
+            ...props.circlePaint,
           }}
-          imgSrc={props.markerImage || marker}
+          insertBeforeLayer={props.insertBeforeLayer}
         />
       )}
 
@@ -160,14 +143,10 @@ MlFollowGps.propTypes = {
    */
   accuracyPaint: PropTypes.object,
   /**
-   * Marker layout property object, that is passed to the MlImageMarkerLayer responsible for drawing the position marker.
-   * Use any available layout property from layer type "symbol".
-   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
+   * position circle paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the accuracy circle.
+   * Use any available paint prop from layer type "fill".
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
-  markerLayout: PropTypes.object,
-  /**
-   * Replace the default marker image with a custom one.
-   */
-  markerImage: PropTypes.string,
+  circlePaint: PropTypes.object,
 };
 export default MlFollowGps;

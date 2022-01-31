@@ -1709,8 +1709,6 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
-var marker = "b556faa3bc6829d2.png";
-
 /**
  * Adds a button that makes the map follow the users GPS position using
  * navigator.geolocation.watchPosition if activated
@@ -1737,8 +1735,6 @@ var MlFollowGps = function MlFollowGps(props) {
       geoJson = _useState4[0],
       setGeoJson = _useState4[1];
 
-  var watchIdRef = useRef(undefined);
-
   var _useState5 = useState(false),
       _useState6 = _slicedToArray(_useState5, 2),
       locationAccessDenied = _useState6[0],
@@ -1749,14 +1745,6 @@ var MlFollowGps = function MlFollowGps(props) {
       accuracyGeoJson = _useState8[0],
       setAccuracyGeoJson = _useState8[1];
 
-  useEffect(function () {
-    return function () {
-      if (watchIdRef.current) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-        watchIdRef.current = undefined;
-      }
-    };
-  }, []);
   var getLocationSuccess = useCallback(function (pos) {
     if (!mapHook.map) return;
     mapHook.map.setCenter([pos.coords.longitude, pos.coords.latitude]);
@@ -1774,9 +1762,11 @@ var MlFollowGps = function MlFollowGps(props) {
     if (!mapHook.map) return;
 
     if (isFollowed) {
-      watchIdRef.current = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
-    } else {
-      navigator.geolocation.clearWatch(watchIdRef.current);
+      var _watchId = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
+
+      return function () {
+        navigator.geolocation.clearWatch(_watchId);
+      };
     }
   }, [isFollowed, getLocationSuccess]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, isFollowed && geoJson && /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, {
@@ -1786,21 +1776,15 @@ var MlFollowGps = function MlFollowGps(props) {
       "fill-color": "#ee7700",
       "fill-opacity": 0.5
     }, props.accuracyPaint),
-    insertBeforeLayer: "MlFollowGpsMarker"
-  }), isFollowed && geoJson && /*#__PURE__*/React__default.createElement(MlImageMarkerLayer, {
-    layerId: "MlFollowGpsMarker",
-    options: {
-      type: "symbol",
-      source: {
-        type: "geojson",
-        data: geoJson
-      },
-      layout: _objectSpread2({
-        "icon-size": 0.1,
-        "icon-offset": [0, -340]
-      }, props.markerLayout)
-    },
-    imgSrc: props.markerImage || marker
+    insertBeforeLayer: props.insertBeforeLayer
+  }), isFollowed && geoJson && /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, {
+    geojson: geoJson,
+    type: "circle",
+    paint: _objectSpread2({
+      "circle-color": "#ee9900",
+      "circle-radius": 5
+    }, props.circlePaint),
+    insertBeforeLayer: props.insertBeforeLayer
   }), /*#__PURE__*/React__default.createElement(Button, {
     sx: _objectSpread2({
       zIndex: 1002,
@@ -1865,16 +1849,11 @@ MlFollowGps.propTypes = {
   accuracyPaint: PropTypes.object,
 
   /**
-   * Marker layout property object, that is passed to the MlImageMarkerLayer responsible for drawing the position marker.
-   * Use any available layout property from layer type "symbol".
-   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
+   * position circle paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the accuracy circle.
+   * Use any available paint prop from layer type "fill".
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
-  markerLayout: PropTypes.object,
-
-  /**
-   * Replace the default marker image with a custom one.
-   */
-  markerImage: PropTypes.string
+  circlePaint: PropTypes.object
 };
 
 var nmMap = {

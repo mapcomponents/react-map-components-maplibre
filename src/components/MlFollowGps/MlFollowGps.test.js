@@ -58,6 +58,6 @@ describe("<MlFollowGps>", () => {
     wrapper.find("MlFollowGps button").simulate("click");
     //wrapper.find(".toggle_layer_visible").simulate("click");
 
-    await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(1));
   });
 });
