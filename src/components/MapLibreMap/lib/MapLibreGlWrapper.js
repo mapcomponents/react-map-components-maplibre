@@ -413,7 +413,7 @@ const MapLibreGlWrapper = function (props) {
 
   this.addNativeMaplibreFunctionsAndProps = () => {
     //  add MapLibre-gl functions
-    Object.keys(this.map.__proto__).forEach((item) => {
+    Object.getOwnPropertyNames(Object.getPrototypeOf(this.map)).forEach((item) => {
       if (typeof this[item] === "undefined") {
         this[item] = (...props) => self.map[item](...props);
       }
@@ -503,6 +503,10 @@ const MapLibreGlWrapper = function (props) {
     self.addNativeMaplibreFunctionsAndProps();
     self.wrapper.refreshViewport();
     self.wrapper.fire("viewportchange");
+
+    self.map.on("load", () => {
+      self.addNativeMaplibreFunctionsAndProps();
+    });
 
     self.map.on("move", () => {
       self.wrapper.viewportState = self.wrapper.getViewport();
