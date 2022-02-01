@@ -8,20 +8,60 @@
  
 ### Fixed
 
-## [0.1.20] - 2022-01-09
+## [v0.1.25] - 2022-01-31
+
+### Fixed
+
+- fix MlFollowGps needsRedraw bug; refactor MlFollowGps
+
+## [v0.1.24] - 2022-01-23
+
+### Fixed
+
+- fix MlVectorTileLayer sourceId
+
+## [v0.1.23] - 2022-01-23
+
+### Changed
+
+- migrate MlVectorTileLayer to useMap hook & provide full control over layer & source id
+
+## [v0.1.22] - 2022-01-23
+
+### Changed
+
+- make MlVectorTileLayer props.layers[].layout properties update dynamically
+
+## [v0.1.21] - 2022-01-21
+
+### Fixed
+
+- migrate MlVectorTileLayer to useMap hook & provide full control over layer & source id
+
+## [v0.1.20] - 2022-01-17
+
+### Changed
+- migrate MlWmsLayer to use useMap hook instead of mapContext
+
+### Fixed
+- adjust MapLibreGlWrapper to fire layerchange events more efficiently
+- MlShareMapState: prevent pushing new history states if props.active is false
+- fix MlWmsLayer & tests
+- fix MlVectorTileLayer visible property
+- fix MlGeoJsonLayer props.onHover, props.onClick, props.onLeave
 
 ### Added
 - add props.sourceOptions to MlVectorTileLayer
-## [0.1.19] - 2022-01-09
+## [v0.1.19] - 2022-01-09
 
 ### Added
 - add props.options to MlGeoJsonLayer 
-## [0.1.18] - 2022-01-09
+## [v0.1.18] - 2022-01-09
 
 ### Added
 - add props.defaultPaintOverrides to MlGeoJsonLayer 
 
-## [0.1.17] - 2022-01-09
+## [v0.1.17] - 2022-01-09
  
 ### Added
 - add implicit layer-type (props.type) casting for MlGeoJsonLayer
