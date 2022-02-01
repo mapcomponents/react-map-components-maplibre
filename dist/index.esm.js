@@ -1651,64 +1651,6 @@ MlGeoJsonLayer.propTypes = {
   transitionTime: PropTypes.number
 };
 
-var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
-  var mapHook = useMap({
-    mapId: props.mapId,
-    waitForLayer: props.insertBeforeLayer
-  });
-  var layerInitializedRef = useRef(false);
-  var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  var layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
-  useEffect(function () {
-    if (!mapHook.mapIsReady || mapHook.map && !mapHook.map.getLayer(layerId.current) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-
-    var key;
-
-    if (props.options.layout) {
-      for (key in props.options.layout) {
-        mapHook.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
-      }
-    }
-
-    if (props.options.paint) {
-      for (key in props.options.paint) {
-        mapHook.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
-      }
-    }
-  }, [props.options, layerId.current, props.mapId]);
-  var addLayer = useCallback(function () {
-    var tmpOptions = _objectSpread2({
-      id: layerId.current,
-      layout: {}
-    }, props.options);
-
-    tmpOptions.layout["icon-image"] = imageIdRef.current;
-    mapHook.map.addLayer(tmpOptions, props.insertBeforeLayer, mapHook.componentId);
-  }, [props, mapHook.mapIsReady, mapHook.map]);
-  useEffect(function () {
-    if (!props.options || !mapHook.mapIsReady || layerInitializedRef.current) return;
-    layerInitializedRef.current = true;
-
-    if (props.imgSrc) {
-      mapHook.map.loadImage(props.imgSrc, function (error, image) {
-        if (error) throw error;
-        mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
-      });
-    }
-
-    addLayer();
-  }, [mapHook.mapIsReady, mapHook.map, addLayer, props]);
-  useEffect(function () {
-    if (!mapHook.mapIsReady || mapHook.map && !mapHook.map.getLayer(layerId.current) || !props.options) {
-      return;
-    }
-
-    mapHook.map.getSource(layerId.current).setData(props.options.source.data);
-  }, [props.options.source.data, props]);
-  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
-};
-
 /**
  * Adds a button that makes the map follow the users GPS position using
  * navigator.geolocation.watchPosition if activated
@@ -1747,7 +1689,12 @@ var MlFollowGps = function MlFollowGps(props) {
 
   var getLocationSuccess = useCallback(function (pos) {
     if (!mapHook.map) return;
-    mapHook.map.setCenter([pos.coords.longitude, pos.coords.latitude]);
+    mapHook.map.flyTo({
+      center: [pos.coords.longitude, pos.coords.latitude],
+      zoom: 18,
+      speed: 1,
+      curve: 1
+    });
     var geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
     setGeoJson(geoJsonPoint);
     setAccuracyGeoJson(circle(geoJsonPoint, pos.coords.accuracy / 1000));
@@ -1773,16 +1720,18 @@ var MlFollowGps = function MlFollowGps(props) {
     geojson: accuracyGeoJson,
     type: "fill",
     paint: _objectSpread2({
-      "fill-color": "#ee7700",
-      "fill-opacity": 0.5
+      "fill-color": "#cbd300",
+      "fill-opacity": 0.3
     }, props.accuracyPaint),
     insertBeforeLayer: props.insertBeforeLayer
   }), isFollowed && geoJson && /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, {
     geojson: geoJson,
     type: "circle",
     paint: _objectSpread2({
-      "circle-color": "#ee9900",
-      "circle-radius": 5
+      "circle-color": "#009ee0",
+      "circle-radius": 5,
+      "circle-stroke-color": "#fafaff",
+      "circle-stroke-width": 1
     }, props.circlePaint),
     insertBeforeLayer: props.insertBeforeLayer
   }), /*#__PURE__*/React__default.createElement(Button, {
@@ -2041,6 +1990,64 @@ MlCreatePdfButton.propTypes = {
    * Id of the target MapLibre instance in mapContext
    */
   mapId: PropTypes.string
+};
+
+var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
+  var mapHook = useMap({
+    mapId: props.mapId,
+    waitForLayer: props.insertBeforeLayer
+  });
+  var layerInitializedRef = useRef(false);
+  var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
+  var layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
+  useEffect(function () {
+    if (!mapHook.mapIsReady || mapHook.map && !mapHook.map.getLayer(layerId.current) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+    var key;
+
+    if (props.options.layout) {
+      for (key in props.options.layout) {
+        mapHook.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
+      }
+    }
+
+    if (props.options.paint) {
+      for (key in props.options.paint) {
+        mapHook.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
+      }
+    }
+  }, [props.options, layerId.current, props.mapId]);
+  var addLayer = useCallback(function () {
+    var tmpOptions = _objectSpread2({
+      id: layerId.current,
+      layout: {}
+    }, props.options);
+
+    tmpOptions.layout["icon-image"] = imageIdRef.current;
+    mapHook.map.addLayer(tmpOptions, props.insertBeforeLayer, mapHook.componentId);
+  }, [props, mapHook.mapIsReady, mapHook.map]);
+  useEffect(function () {
+    if (!props.options || !mapHook.mapIsReady || layerInitializedRef.current) return;
+    layerInitializedRef.current = true;
+
+    if (props.imgSrc) {
+      mapHook.map.loadImage(props.imgSrc, function (error, image) {
+        if (error) throw error;
+        mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
+      });
+    }
+
+    addLayer();
+  }, [mapHook.mapIsReady, mapHook.map, addLayer, props]);
+  useEffect(function () {
+    if (!mapHook.mapIsReady || mapHook.map && !mapHook.map.getLayer(layerId.current) || !props.options) {
+      return;
+    }
+
+    mapHook.map.getSource(layerId.current).setData(props.options.source.data);
+  }, [props.options.source.data, props]);
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }

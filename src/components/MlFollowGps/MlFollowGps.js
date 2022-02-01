@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import useMap from "../../hooks/useMap";
 
@@ -6,9 +6,6 @@ import Button from "@mui/material/Button";
 import RoomIcon from "@mui/icons-material/Room";
 import { point, circle } from "@turf/turf";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
-import MlImageMarkerLayer from "../MlImageMarkerLayer/MlImageMarkerLayer";
-
-import marker from "./assets/marker.png";
 
 /**
  * Adds a button that makes the map follow the users GPS position using
@@ -32,7 +29,12 @@ const MlFollowGps = (props) => {
     (pos) => {
       if (!mapHook.map) return;
 
-      mapHook.map.setCenter([pos.coords.longitude, pos.coords.latitude]);
+      mapHook.map.flyTo({
+        center: [pos.coords.longitude, pos.coords.latitude],
+        zoom: 18,
+        speed: 1,
+        curve: 1,
+      });
       const geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
       setGeoJson(geoJsonPoint);
       setAccuracyGeoJson(circle(geoJsonPoint, pos.coords.accuracy / 1000));
@@ -64,8 +66,8 @@ const MlFollowGps = (props) => {
           geojson={accuracyGeoJson}
           type={"fill"}
           paint={{
-            "fill-color": "#ee7700",
-            "fill-opacity": 0.5,
+            "fill-color": "#cbd300",
+            "fill-opacity": 0.3,
             ...props.accuracyPaint,
           }}
           insertBeforeLayer={props.insertBeforeLayer}
@@ -77,8 +79,10 @@ const MlFollowGps = (props) => {
           geojson={geoJson}
           type={"circle"}
           paint={{
-            "circle-color": "#ee9900",
+            "circle-color": "#009ee0",
             "circle-radius": 5,
+            "circle-stroke-color": "#fafaff",
+            "circle-stroke-width": 1,
             ...props.circlePaint,
           }}
           insertBeforeLayer={props.insertBeforeLayer}
