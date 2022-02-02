@@ -63,7 +63,7 @@ function useWms(props) {
   useEffect(() => {
     if (!capabilities?.Service) return;
 
-    setWmsUrl(capabilities.Service.OnlineResource);
+    setWmsUrl(capabilities.Capability?.Request?.GetMap?.DCPType?.[0]?.HTTP?.Get?.OnlineResource);
     // set getFeatureInfo url
     setGetFeatureInfoUrl(
       capabilities.Capability?.Request?.GetFeatureInfo?.DCPType?.[0]?.HTTP?.Get?.OnlineResource
