@@ -1,12 +1,12 @@
 # Change Log
  
 
-## [Unreleased] - yyyy-mm-dd
- 
-### Added
-### Changed
- 
+## [v0.1.26] - 2022-02-02
+
 ### Fixed
+
+- adjust MlFollowGps position marker style & add flyTo instead of setCenter for new Gps positions
+- fix useWms hook retrieval of WMS GetMap URL
 
 ## [v0.1.25] - 2022-01-31
 
