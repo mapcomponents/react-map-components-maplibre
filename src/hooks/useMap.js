@@ -14,6 +14,9 @@ function useMap(props) {
       layers: true,
       sources: false,
     },
+    filter: {
+      includeBaseLayers: true,
+    },
   });
 
   const initializedRef = useRef(false);
@@ -21,7 +24,7 @@ function useMap(props) {
 
   const componentId = useRef(uuidv4());
 
-  const [mapIsReady, setMapIsReady] = useState(undefined);
+  const [mapIsReady, setMapIsReady] = useState(false);
 
   useEffect(() => {
     let _componentId = componentId.current;

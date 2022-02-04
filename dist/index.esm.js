@@ -1003,13 +1003,16 @@ function useMap(props) {
       viewport: false,
       layers: true,
       sources: false
+    },
+    filter: {
+      includeBaseLayers: true
     }
   });
   var initializedRef = useRef(false);
   var mapRef = useRef(undefined);
   var componentId = useRef(v4());
 
-  var _useState = useState(undefined),
+  var _useState = useState(false),
       _useState2 = _slicedToArray(_useState, 2),
       mapIsReady = _useState2[0],
       setMapIsReady = _useState2[1];
