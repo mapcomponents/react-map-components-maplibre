@@ -5,11 +5,9 @@ import * as turf from "@turf/turf";
 
 import useMap from "../../hooks/useMap";
 
-import { _transitionToGeojson } from "./util/transitionFunctions";
 import getDefaultPaintPropsByType from "./util/getDefaultPaintPropsByType";
 import getDefaulLayerTypeByGeometry from "./util/getDefaultLayerTypeByGeometry";
 
-const msPerStep = 50;
 const legalLayerTypes = ["circle", "fill", "line"];
 
 /**
@@ -23,23 +21,6 @@ const MlGeoJsonLayer = (props) => {
   const initializedRef = useRef(false);
   const layerId = useRef(props.layerId || "MlGeoJsonLayer-" + mapHook.componentId);
   const layerTypeRef = useRef(undefined);
-
-  // transition effect variables
-  const oldGeojsonRef = useRef(null);
-  const transitionInProgressRef = useRef(false);
-  const transitionTimeoutRef = useRef(undefined);
-  const currentTransitionStepRef = useRef(false);
-  const transitionGeojsonDataRef = useRef([]);
-  const transitionGeojsonCommonDataRef = useRef([]);
-
-  useEffect(() => {
-    return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      if (transitionTimeoutRef.current) {
-        clearTimeout(transitionTimeoutRef.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;
@@ -60,63 +41,14 @@ const MlGeoJsonLayer = (props) => {
     }
   }, [props.paint, mapHook.map, props.mapId, props.defaultPaintOverrides]);
 
-  const transitionToGeojson = useCallback(
-    (newGeojson) => {
-      _transitionToGeojson(
-        newGeojson,
-        props,
-        transitionGeojsonCommonDataRef,
-        transitionGeojsonDataRef,
-        transitionInProgressRef,
-        oldGeojsonRef,
-        msPerStep,
-        currentTransitionStepRef,
-        mapHook.map,
-        layerId.current,
-        transitionTimeoutRef
-      );
-    },
-    [props, mapHook.map]
-  );
-
   useEffect(() => {
     if (!mapHook?.map?.getSource(layerId.current) || !initializedRef.current) return;
 
-    if (
-      typeof props.transitionTime !== "undefined" &&
-      props.type === "line" &&
-      oldGeojsonRef.current
-    ) {
-      transitionInProgressRef.current = false;
-      currentTransitionStepRef.current = false;
-      transitionGeojsonDataRef.current = [];
-      transitionGeojsonCommonDataRef.current = [];
-      transitionToGeojson(props.geojson);
-    } else {
-      mapHook.map.getSource(layerId.current).setData(props.geojson);
-    }
-    oldGeojsonRef.current = props.geojson;
-  }, [
-    props.geojson,
-    props.mapId,
-    mapHook.map,
-    props.type,
-    transitionToGeojson,
-    props.transitionTime,
-  ]);
+    mapHook.map.getSource(layerId.current).setData(props.geojson);
+  }, [props.geojson, mapHook.map, props.type]);
 
   const createLayer = useCallback(() => {
     let geojson = props.geojson;
-
-    if (
-      props.type === "line" &&
-      typeof props.transitionTime !== "undefined" &&
-      props.transitionTime &&
-      typeof props.geojson.geometry !== "undefined"
-    ) {
-      var tmpChunks = turf.lineChunk(props.geojson, 0.01);
-      geojson = tmpChunks.features[0];
-    }
 
     layerTypeRef.current = props.type || getDefaulLayerTypeByGeometry(props.geojson);
 
@@ -149,16 +81,7 @@ const MlGeoJsonLayer = (props) => {
     if (typeof props.onLeave !== "undefined") {
       mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
     }
-
-    if (
-      props.type === "line" &&
-      typeof props.transitionTime !== "undefined" &&
-      typeof props.geojson.geometry !== "undefined"
-    ) {
-      transitionToGeojson(props.geojson);
-      oldGeojsonRef.current = props.geojson;
-    }
-  }, [mapHook.map, props, transitionToGeojson]);
+  }, [mapHook.map, props]);
 
   useEffect(() => {
     if (!mapHook.mapIsReady || !props.geojson) return;
@@ -247,11 +170,6 @@ MlGeoJsonLayer.propTypes = {
    * left/unhovered.
    */
   onLeave: PropTypes.func,
-  /**
-   * Creates transition animation whenever the geojson prop changes.
-   * Only works with layer type "line" and LineString GeoJSON data.
-   */
-  transitionTime: PropTypes.number,
 };
 
 export default MlGeoJsonLayer;
