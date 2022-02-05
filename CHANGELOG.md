@@ -1,5 +1,11 @@
 # Change Log
+## [v0.1.27] - 2022-02-05
  
+### Fixed
+- 743b8ed: set includeBaseLayers filter in useMap hool to true to make waiting for base layers possible
+
+### Changed
+- da55245: make the registration of an onlayerchange event handler by the useMap hook dependent on its waitForLayer prop
 
 ## [v0.1.26] - 2022-02-02
 
