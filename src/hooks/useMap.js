@@ -11,7 +11,7 @@ function useMap(props) {
     mapId: props.mapId,
     watch: {
       viewport: false,
-      layers: true,
+      layers: props.waitForLayer ? true : false,
       sources: false,
     },
     filter: {

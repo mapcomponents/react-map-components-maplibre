@@ -61,6 +61,7 @@ function useMapState(props) {
     let _componentId = componentId.current;
 
     return () => {
+      // cleanup all event listeners
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
@@ -79,6 +80,7 @@ function useMapState(props) {
     if (props?.watch?.viewport) {
       setViewport(mapRef.current.wrapper.viewportState);
 
+      // register viewportchange event handler
       mapRef.current.wrapper.on(
         "viewportchange",
         () => {
@@ -90,6 +92,7 @@ function useMapState(props) {
       );
     }
 
+    // register layerchange event handler
     if (props?.watch?.layers) {
       refreshLayerState();
 
