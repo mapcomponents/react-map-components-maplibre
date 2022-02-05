@@ -910,6 +910,7 @@ function useMapState(props) {
   useEffect(function () {
     var _componentId = componentId.current;
     return function () {
+      // cleanup all event listeners
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
@@ -928,7 +929,8 @@ function useMapState(props) {
     mapRef.current = mapContext.getMap(props.mapId);
 
     if (props !== null && props !== void 0 && (_props$watch = props.watch) !== null && _props$watch !== void 0 && _props$watch.viewport) {
-      setViewport(mapRef.current.wrapper.viewportState);
+      setViewport(mapRef.current.wrapper.viewportState); // register viewportchange event handler
+
       mapRef.current.wrapper.on("viewportchange", function () {
         var _mapRef$current;
 
@@ -938,7 +940,8 @@ function useMapState(props) {
           setViewport((_mapRef$current2 = mapRef.current) === null || _mapRef$current2 === void 0 ? void 0 : _mapRef$current2.wrapper.viewportState);
         }
       }, componentId.current);
-    }
+    } // register layerchange event handler
+
 
     if (props !== null && props !== void 0 && (_props$watch2 = props.watch) !== null && _props$watch2 !== void 0 && _props$watch2.layers) {
       var _props$filter3, _props$filter4;
@@ -1001,7 +1004,7 @@ function useMap(props) {
     mapId: props.mapId,
     watch: {
       viewport: false,
-      layers: true,
+      layers: props.waitForLayer ? true : false,
       sources: false
     },
     filter: {
