@@ -48,7 +48,7 @@ describe("<MlNavigationCompass>", () => {
     );
 
     // MapLibreGlWrapper now subscribes to "data", "move" events on its own
-    await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(4));
+    await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5));
   });
 
   it("should deregister 1 event listener to the maplibre instance", async () => {
@@ -59,7 +59,7 @@ describe("<MlNavigationCompass>", () => {
     );
 
     // MapLibreGlWrapper now subscribes to "data", "move" events on its own
-    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(4);
+    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5);
 
     wrapper.find(".toggle_layer_visible").simulate("click");
 
