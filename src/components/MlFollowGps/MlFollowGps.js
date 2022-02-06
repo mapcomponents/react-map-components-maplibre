@@ -57,7 +57,7 @@ const MlFollowGps = (props) => {
         navigator.geolocation.clearWatch(_watchId);
       };
     }
-  }, [isFollowed, getLocationSuccess]);
+  }, [mapHook.map, isFollowed, getLocationSuccess]);
 
   return (
     <>

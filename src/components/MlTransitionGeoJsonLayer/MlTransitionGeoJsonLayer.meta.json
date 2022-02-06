@@ -1,0 +1,15 @@
+{
+  "name": "MlTransitionGeoJsonLayer",
+  "title": "GeoJSON layer",
+  "description": "",
+  "i18n": {
+    "de": {
+      "title": "GeoJSON Ebene",
+      "description": ""
+    }
+  },
+  "tags": [],
+  "category": "",
+  "type": "component",
+  "price": 0
+}

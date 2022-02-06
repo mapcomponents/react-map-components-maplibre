@@ -106,7 +106,7 @@ function useMapState(props) {
         componentId.current
       );
     }
-  }, [mapContext.mapIds, mapContext, props.mapId, refreshLayerState]);
+  }, [mapContext.mapIds, mapContext, props.mapId, refreshLayerState, props]);
 
   return {
     layers,
