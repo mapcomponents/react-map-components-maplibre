@@ -9,12 +9,12 @@ const testComponent = <MlTransitionGeoJsonLayer type="line" geojson={geojson} />
 layerRemovalTest(
   "<MlTransitionGeoJsonLayer />",
   testComponent,
-  new RegExp('^.*"MlTransitionGeoJsonLayer-' + uuid_regex + '".*$'),
+  new RegExp('^.*"MlGeoJsonLayer-' + uuid_regex + '".*$'),
   "MlTransitionGeoJsonLayer-{uuid}"
 );
 sourceRemovalTest(
   "<MlTransitionGeoJsonLayer />",
   testComponent,
-  new RegExp('^.*"MlTransitionGeoJsonLayer-' + uuid_regex + '".*$'),
+  new RegExp('^.*"MlGeoJsonLayer-' + uuid_regex + '".*$'),
   "MlTransitionGeoJsonLayer-{uuid}"
 );
