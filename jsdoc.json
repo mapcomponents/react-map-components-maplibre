@@ -8,9 +8,9 @@
     },
     "recurseDepth": 10,
     "opts": {
-        "template": "node_modules/better-docs",
-        "destination": "docs/"
-      },
+      "template": "node_modules/better-docs",
+      "destination": "docs/jsdocs"
+    },
     "source": {
         "include": ["./src/"],
         "excludePattern": ".*/(utils|MlFeatureEditor\/lib)/.*"
