@@ -1,8 +1,6 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 
-import * as turf from "@turf/turf";
-
 import useMap from "../../hooks/useMap";
 
 import getDefaultPaintPropsByType from "./util/getDefaultPaintPropsByType";
@@ -81,10 +79,10 @@ const MlGeoJsonLayer = (props) => {
     if (typeof props.onLeave !== "undefined") {
       mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
     }
-  }, [mapHook.map, props]);
+  }, [mapHook, props]);
 
   useEffect(() => {
-    if (!mapHook.mapIsReady || !props.geojson) return;
+    if (!mapHook.map || !props.geojson) return;
 
     if (
       initializedRef.current &&
@@ -92,6 +90,7 @@ const MlGeoJsonLayer = (props) => {
       layerTypeRef.current &&
       props.type !== layerTypeRef.current
     ) {
+      // remove (cleanup) & reinitialize the layer if type has changed
       mapHook.map.cleanup(mapHook.componentId);
     } else if (
       initializedRef.current &&
@@ -101,11 +100,10 @@ const MlGeoJsonLayer = (props) => {
       return;
     }
 
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
 
     createLayer();
-  }, [mapHook.mapIsReady, createLayer, props]);
+  }, [mapHook, createLayer, props]);
 
   return <></>;
 };

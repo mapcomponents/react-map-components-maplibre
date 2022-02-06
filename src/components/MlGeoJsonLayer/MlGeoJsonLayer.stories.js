@@ -1,12 +1,10 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React from "react";
 
 import MlGeoJsonLayer from "./MlGeoJsonLayer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
-import { MapContext } from "@mapcomponents/react-core";
 
 import sample_geojson_1 from "./assets/sample_1.json";
-import sample_geojson_2 from "./assets/sample_2.json";
 import sample_polygon_geojson_1 from "./assets/sample_polygon_1.json";
 
 console.log(sample_polygon_geojson_1);

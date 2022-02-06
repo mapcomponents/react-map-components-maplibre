@@ -21,13 +21,6 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
-  return (
-    <>
-      <MlTransitionGeoJsonLayer {...props} />
-    </>
-  );
-};
 const LinestringTransitionTemplate = (props) => {
   const mapContext = useContext(MapContext);
   const [geojson, setGeojson] = useState(sample_geojson_1);
@@ -47,33 +40,13 @@ const LinestringTransitionTemplate = (props) => {
 
   return (
     <>
-      <MlTransitionGeoJsonLayer type="line" geojson={geojson} transitionTime={2000} />
+      <MlTransitionGeoJsonLayer type="line" geojson={geojson} transitionTime={2000} {...props} />
     </>
   );
 };
 
 export const Linestring = LinestringTransitionTemplate.bind({});
 Linestring.parameters = {};
-Linestring.args = {};
-
-export const Polygon = Template.bind({});
-Polygon.parameters = {};
-Polygon.args = {
-  geojson: sample_polygon_geojson_1,
-};
-export const DefaultPaintOverrides = Template.bind({});
-DefaultPaintOverrides.parameters = {};
-DefaultPaintOverrides.args = {
-  defaultPaintOverrides: {
-    fill: {
-      "fill-color": "blue",
-    },
-    circle: {
-      "circle-color": "red",
-    },
-    line: {
-      "line-color": "orange",
-    },
-  },
-  geojson: sample_polygon_geojson_1,
+Linestring.args = {
+  paint: { "line-color": "red", "line-width": 4 },
 };

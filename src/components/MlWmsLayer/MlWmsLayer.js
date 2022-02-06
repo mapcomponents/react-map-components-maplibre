@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from "react";
 import useMap from "../../hooks/useMap";
 
 import PropTypes from "prop-types";
-import { v4 as uuidv4 } from "uuid";
 
 const defaultProps = {
   visible: true,
@@ -98,7 +97,7 @@ const MlWmsLayer = (props) => {
     if (!props.visible) {
       mapHook.map.setLayoutProperty(layerId.current, "visibility", "none");
     }
-  }, [mapHook.map, props]);
+  }, [mapHook, props]);
 
   useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;

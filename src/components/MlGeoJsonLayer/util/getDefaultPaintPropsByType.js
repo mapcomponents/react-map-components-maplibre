@@ -12,7 +12,7 @@ const getDefaultPaintPropsByType = (type, defaultPaintOverrides) => {
         return defaultPaintOverrides.line;
       }
       return {
-        "line-color": "rgb(100,200,100)",
+        "line-color": "rgb(203,211,2)",
         "line-width": 5,
       };
     case "circle":
@@ -21,7 +21,7 @@ const getDefaultPaintPropsByType = (type, defaultPaintOverrides) => {
         return defaultPaintOverrides.circle;
       }
       return {
-        "circle-color": "#44aaaa",
+        "circle-color": "rgba(10,240,256)",
         "circle-stroke-color": "#fff",
         "circle-stroke-width": 2,
       };

@@ -69,7 +69,7 @@ const MlTransitionGeoJsonLayer = (props) => {
       transitionToGeojson();
     }
     oldGeojsonRef.current = props.geojson;
-  }, [mapHook.map, transitionToGeojson, props.transitionTime]);
+  }, [mapHook.map, transitionToGeojson, props]);
 
   const startTransition = useCallback(() => {
     if (
@@ -82,7 +82,7 @@ const MlTransitionGeoJsonLayer = (props) => {
       transitionToGeojson(props.geojson);
       oldGeojsonRef.current = props.geojson;
     }
-  }, [mapHook.map, props, transitionToGeojson]);
+  }, [props, transitionToGeojson]);
 
   useEffect(() => {
     if (!mapHook.mapIsReady || !props.geojson) return;
