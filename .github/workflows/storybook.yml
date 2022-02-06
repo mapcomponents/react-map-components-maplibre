@@ -17,7 +17,7 @@ jobs:
           yarn build-catalogue-meta
           yarn build-catalogue-markdown-docs
           yarn build-storybook
-          npm install -g jsdoc parcel-bundler
+          npm install -g jsdoc
           yarn docs-create
           npx sb extract ./docs-build ./docs-build/stories.json
       - name: Deploy 🚀
