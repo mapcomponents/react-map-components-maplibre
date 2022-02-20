@@ -7,6 +7,7 @@ import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 
 import "./style.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import MlNavgiationTools from "../components/MlNavigationTools/MlNavigationTools";
 
 const theme = createTheme({});
 
@@ -64,6 +65,11 @@ const decorators = [
                     //],
                   }}
                 />
+
+                <MlNavgiationTools 
+                mapId="map_1">
+
+                </MlNavgiationTools>
               </div>
             </div>
         </MapComponentsProvider>

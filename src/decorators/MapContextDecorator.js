@@ -4,6 +4,7 @@ import { MapComponentsProvider } from "@mapcomponents/react-core";
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 import "./style.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import MlNavgiationTools from "../components/MlNavigationTools/MlNavigationTools";
 
 const theme = createTheme({});
 
@@ -21,6 +22,10 @@ const decorators = [
             }}
             mapId="map_1"
           />
+          <MlNavgiationTools 
+          mapId="map_1">
+
+          </MlNavgiationTools>
         </MapComponentsProvider>
       </ThemeProvider>
     </div>
