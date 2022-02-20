@@ -1,8 +1,22 @@
 # Change Log
 ## [v0.1.28] - 2022-02-20
 
+### Added
+- 486b7a2: add device orientation indicator to MlFollowGps component
 ### Changed
 - aba9483: upgrade maplibre-gl to v2.1.6
+- 2f5d769: add MlNavigationtools to all storybook demos by integrating it into storybook decorators
+- ae871c0: migrate MlScaleReference to useMap hook
+- a322419: migrate MlNavigationTools to useMap hook
+- 241c28d: migrate MlNavigationCompass to useMap hook
+- 1de0269: migrate MlOsmLayer to useMap hook
+- 83694e5: migrate MlGPXViewer to useMap hook
+- f1e7c3d: upgrade @mui dependencies
+- 1c873d9: upgrade three, xmldom & jspdf dependencies
+- 2890587: Remove all LineString transition logic from MlGeoJsonLayer to MlTransitionGeoJsonLayer
+
+### Fixed
+- 2890587: Merge pull request #5 from mapcomponents/feature/add-mltransitiongeojsonlayer
 
 ## [v0.1.27] - 2022-02-05
  
