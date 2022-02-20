@@ -82,7 +82,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "import/no-webpack-loader-syntax": "off"
+    }
   },
   "browserslist": {
     "production": [
