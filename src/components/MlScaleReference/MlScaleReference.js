@@ -1,63 +1,29 @@
-import React, { useRef, useEffect, useState, useContext } from "react";
-
-import { MapContext } from "@mapcomponents/react-core";
-import { v4 as uuidv4 } from "uuid";
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import useMap from "../../hooks/useMap";
 
 const MlScaleReference = (props) => {
-  // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  const mapContext = useContext(MapContext);
-  const mapRef = useRef(undefined);
-  const initializedRef = useRef(false);
   const zoomRef = useRef(0);
-
-  const componentId = useRef(
-    (props.idPrefix ? props.idPrefix : "MlScaleReference-") + uuidv4()
-  );
+  const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 
   const [pxWidth, setPxWidth] = useState(0);
   const [text, setText] = useState("");
 
-  useEffect(() => {
-    let _componentId = componentId.current;
-
-    return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      // try to remove anything this component has added to the MapLibre-gl instance
-      // e.g.: remove the layer
-      // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
-      // check for the existence of map.style before calling getLayer or getSource
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
-        mapRef.current = undefined;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-    initializedRef.current = true;
-    mapRef.current = mapContext.getMap(props.mapId);
-    mapRef.current.on("move", updateScale.current, componentId.current);
-    updateScale.current();
-  }, [mapContext.mapIds, mapContext, props.mapId]);
-
-  const updateScale = useRef(() => {
-    if (mapRef.current.map.getZoom() === zoomRef.current) {
+  const updateScale = useCallback(() => {
+    if (mapHook.map?.map.getZoom() === zoomRef.current) {
       return;
     }
+    if (!mapHook.map) return;
 
-    zoomRef.current = mapRef.current.map.getZoom();
+    zoomRef.current = mapHook.map?.map.getZoom();
     // Calculation from MapLibre
     // A horizontal scale is imagined to be present at center of the map
     // Using spherical law of cosines approximation, the real distance is
     // found between the two coordinates.
     const maxWidth = props.maxWidth || 100;
 
-    const y = mapRef.current._container.clientHeight / 2;
-    const left = mapRef.current.unproject([0, y]);
-    const right = mapRef.current.unproject([maxWidth, y]);
+    const y = mapHook.map._container.clientHeight / 2;
+    const left = mapHook.map.unproject([0, y]);
+    const right = mapHook.map.unproject([maxWidth, y]);
     const maxMeters = left.distanceTo(right);
     // The real distance corresponding to 100px scale length is rounded off to
     // near pretty number and the scale length for the same is found out.
@@ -66,39 +32,31 @@ const MlScaleReference = (props) => {
       const maxFeet = 3.2808 * maxMeters;
       if (maxFeet > 5280) {
         const maxMiles = maxFeet / 5280;
-        setScale(
-          maxWidth,
-          maxMiles,
-          mapRef.current._getUIString("ScaleControl.Miles")
-        );
+        setScale(maxWidth, maxMiles, mapHook.map._getUIString("ScaleControl.Miles"));
       } else {
-        setScale(
-          maxWidth,
-          maxFeet,
-          mapRef.current._getUIString("ScaleControl.Feet")
-        );
+        setScale(maxWidth, maxFeet, mapHook.map._getUIString("ScaleControl.Feet"));
       }
     } else if (props.unit === "nautical") {
       const maxNauticals = maxMeters / 1852;
-      setScale(
-        maxWidth,
-        maxNauticals,
-        mapRef.current._getUIString("ScaleControl.NauticalMiles")
-      );
+      setScale(maxWidth, maxNauticals, mapHook.map._getUIString("ScaleControl.NauticalMiles"));
     } else if (maxMeters >= 1000) {
-      setScale(
-        maxWidth,
-        maxMeters / 1000,
-        mapRef.current._getUIString("ScaleControl.Kilometers")
-      );
+      setScale(maxWidth, maxMeters / 1000, mapHook.map._getUIString("ScaleControl.Kilometers"));
     } else {
-      setScale(
-        maxWidth,
-        maxMeters,
-        mapRef.current._getUIString("ScaleControl.Meters")
-      );
+      setScale(maxWidth, maxMeters, mapHook.map._getUIString("ScaleControl.Meters"));
     }
-  });
+  }, [mapHook.map, props.unit, props.maxWidth]);
+
+  useEffect(() => {
+    if (!mapHook.map) return;
+
+    let _updateScale = updateScale;
+    mapHook.map.on("move", _updateScale, mapHook.componentId);
+    updateScale();
+
+    return () => {
+      mapHook.map.off("move", _updateScale);
+    };
+  }, [mapHook.map, updateScale]);
 
   const setScale = (maxWidth, maxDistance, unit) => {
     const distance = getRoundNum(maxDistance);
@@ -116,18 +74,7 @@ const MlScaleReference = (props) => {
     const pow10 = Math.pow(10, `${Math.floor(num)}`.length - 1);
     let d = num / pow10;
 
-    d =
-      d >= 10
-        ? 10
-        : d >= 5
-        ? 5
-        : d >= 3
-        ? 3
-        : d >= 2
-        ? 2
-        : d >= 1
-        ? 1
-        : getDecimalRoundNum(d);
+    d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : d >= 1 ? 1 : getDecimalRoundNum(d);
 
     return pow10 * d;
   };
