@@ -12400,10 +12400,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-maplibre-gl@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/maplibre-gl/-/maplibre-gl-2.1.1.tgz#561f5ad94a2e7e1f3e1be75ed994a5bf0b54c9c9"
-  integrity sha512-FRAHc4kPYKDF0+QMm8tnkyhv65Ed5SKLbzcH6hHM20XAK+9pqHMIHxlwpxcb4zGl+czz1bUegYf/KXjJRh9aDA==
+maplibre-gl@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/maplibre-gl/-/maplibre-gl-2.1.6.tgz#774dea8043d3b898b881e33b1f4684b733997f5e"
+  integrity sha512-UHdw4YeCkIyfG7vMdNK6e/sDNPB7jjUN5MUytKE1DFQB7sKM9V19ar1GUyn0uYRvQwJ5iC01fWhH3r/5bbHlKQ==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.1"
     "@mapbox/jsonlint-lines-primitives" "^2.0.2"

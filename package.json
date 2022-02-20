@@ -18,7 +18,7 @@
     "@mui/styles": "^5.3.0",
     "@turf/turf": "^6.5.0",
     "jspdf": "^2.5.1",
-    "maplibre-gl": "^2.1.1",
+    "maplibre-gl": "^2.1.6",
     "react-i18next": "^11.14.3",
     "three": "^0.137.5",
     "uuid": "^8.3.2",
