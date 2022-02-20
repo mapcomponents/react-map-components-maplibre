@@ -63,6 +63,6 @@ describe("<MlNavigationCompass>", () => {
 
     wrapper.find(".toggle_layer_visible").simulate("click");
 
-    expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1);
+    expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2);
   });
 });

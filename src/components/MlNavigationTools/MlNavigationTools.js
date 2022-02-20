@@ -1,25 +1,19 @@
 import React from "react";
 
-import {MapContext} from "@mapcomponents/react-core";
-import {useEffect, useRef, useContext, useState} from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-//import ZoomOutIcon from "@mui/icons-material/ZoomOut";
-//import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
-import {v4 as uuidv4} from "uuid";
 
 import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
 import MlFollowGps from "../MlFollowGps/MlFollowGps";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import useMap from "../../hooks/useMap";
 
 const MlNavigationTools = (props) => {
-  const mapContext = useContext(MapContext);
-  const initializedRef = useRef(false);
-  const mapRef = useRef(undefined);
-  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlComponentTemplate-") + uuidv4());
+  const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 
   const [pitch, setPitch] = useState(0);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
@@ -38,67 +32,42 @@ const MlNavigationTools = (props) => {
     ":hover": {
       backgroundColor: "#515151",
     },
-    color: "#ececec"
+    color: "#ececec",
   };
 
   useEffect(() => {
-    let _componentId = componentId.current;
+    if (!mapHook.map) return;
 
-    return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      // try to remove anything this component has added to the MapLibre-gl instance
-      // e.g.: remove the layer
-      // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
-      // check for the existence of map.style before calling getLayer or getSource
-
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
-        mapRef.current = undefined;
-      }
-      initializedRef.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-    initializedRef.current = true;
-    mapRef.current = mapContext.getMap(props.mapId);
-    mapRef.current.on(
-      "pitchend",
-      () => {
-        setPitch(mapRef.current.getPitch());
-      },
-      componentId.current
-    );
-    setPitch(mapRef.current.getPitch());
-  }, [mapContext.mapIds, mapContext, props.mapId]);
+    mapHook.map.on("pitchend", () => {
+      setPitch(mapHook.map.getPitch());
+    });
+    setPitch(mapHook.map.getPitch());
+  }, [mapHook.mapIds, mapHook, props.mapId]);
 
   const zoomIn = () => {
-    if (!mapRef.current) return;
+    if (!mapHook.map) return;
 
-    if (mapRef.current.transform._zoom + 0.5 <= mapRef.current.transform._maxZoom) {
-      mapRef.current.easeTo({zoom: mapRef.current.transform._zoom + 0.5});
+    if (mapHook.map.transform._zoom + 0.5 <= mapHook.map.transform._maxZoom) {
+      mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom + 0.5 });
     }
   };
 
   const zoomOut = () => {
-    if (!mapRef.current) return;
+    if (!mapHook.map) return;
 
-    if (mapRef.current.transform._zoom - 0.5 >= mapRef.current.transform._minZoom) {
-      mapRef.current.easeTo({zoom: mapRef.current.transform._zoom - 0.5});
+    if (mapHook.map.transform._zoom - 0.5 >= mapHook.map.transform._minZoom) {
+      mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom - 0.5 });
     }
   };
 
   const adjustPitch = () => {
-    if (!mapRef.current) return;
+    if (!mapHook.map) return;
 
     let targetPitch = 60;
-    if (mapRef.current.getPitch() !== 0) {
+    if (mapHook.map.getPitch() !== 0) {
       targetPitch = 0;
     }
-    mapRef.current.easeTo({pitch: targetPitch});
+    mapHook.map.easeTo({ pitch: targetPitch });
   };
 
   const moveToCurrentLocation = () => {
@@ -106,7 +75,7 @@ const MlNavigationTools = (props) => {
   };
 
   const getLocationSuccess = (location) => {
-    mapRef.current.setCenter([location.coords.longitude, location.coords.latitude]);
+    mapHook.map.setCenter([location.coords.longitude, location.coords.latitude]);
   };
 
   const getLocationError = () => {
@@ -131,33 +100,33 @@ const MlNavigationTools = (props) => {
           position: "relative",
           height: mediaIsMobile ? "55px" : "45px",
           marginLeft: mediaIsMobile ? "3px" : "-5px",
-          transform: mediaIsMobile ? "scale(1.6)" : "scale(1)"
+          transform: mediaIsMobile ? "scale(1.6)" : "scale(1)",
         }}
         backgroundStyle={{
           boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
         }}
       />
-      <Button sx={{...buttonStyle, fontWeight: 600}} onClick={adjustPitch}>
+      <Button sx={{ ...buttonStyle, fontWeight: 600 }} onClick={adjustPitch}>
         {pitch ? "2D" : "3D"}
       </Button>
       <Button sx={buttonStyle} onClick={moveToCurrentLocation} disabled={locationAccessDenied}>
-        <GpsFixedIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
+        <GpsFixedIcon sx={{ fontSize: mediaIsMobile ? "1.5em" : "1.2em" }} />
       </Button>
-      <MlFollowGps style={{...(({color, ...rest}) => rest)(buttonStyle)}} />
+      <MlFollowGps style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
       <ButtonGroup
         orientation="vertical"
         sx={{
           width: "50px",
           border: "none",
-          Button: {minWidth: "20px !important", border: "none", padding: 0},
-          "Button:hover": {border: "none"},
+          Button: { minWidth: "20px !important", border: "none", padding: 0 },
+          "Button:hover": { border: "none" },
         }}
       >
-        <Button sx={{...buttonStyle, color: "#ececec",}} onClick={zoomIn}>
-          <ControlPointIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
+        <Button sx={{ ...buttonStyle, color: "#ececec" }} onClick={zoomIn}>
+          <ControlPointIcon sx={{ fontSize: mediaIsMobile ? "1.5em" : "1.2em" }} />
         </Button>
-        <Button sx={{...buttonStyle, color: "#ececec",}} onClick={zoomOut}>
-          <RemoveCircleOutlineIcon sx={{fontSize: mediaIsMobile ? "1.5em" : "1.2em"}}/>
+        <Button sx={{ ...buttonStyle, color: "#ececec" }} onClick={zoomOut}>
+          <RemoveCircleOutlineIcon sx={{ fontSize: mediaIsMobile ? "1.5em" : "1.2em" }} />
         </Button>
       </ButtonGroup>
     </div>
