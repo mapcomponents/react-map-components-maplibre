@@ -1,4 +1,9 @@
 # Change Log
+## [v0.1.28] - 2022-02-20
+
+### Changed
+- aba9483: upgrade maplibre-gl to v2.1.6
+
 ## [v0.1.27] - 2022-02-05
  
 ### Fixed
