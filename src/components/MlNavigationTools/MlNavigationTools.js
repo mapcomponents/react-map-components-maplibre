@@ -1,6 +1,4 @@
-import React from "react";
-
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
@@ -42,7 +40,7 @@ const MlNavigationTools = (props) => {
       setPitch(mapHook.map.getPitch());
     });
     setPitch(mapHook.map.getPitch());
-  }, [mapHook.mapIds, mapHook, props.mapId]);
+  }, [mapHook.map, props.mapId]);
 
   const zoomIn = () => {
     if (!mapHook.map) return;
