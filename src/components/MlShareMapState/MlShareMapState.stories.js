@@ -79,9 +79,7 @@ const Template = () => {
                         "visibility",
                         currentVisibility === "none" ? "visible" : "none"
                       );
-                    setTimeout(() => {
-                      mapHook.map._render();
-                    }, 100);
+                    mapHook.map.map.fire("zoom");
                   }}
                 >
                   {el.visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
