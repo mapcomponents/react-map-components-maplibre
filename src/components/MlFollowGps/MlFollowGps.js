@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import useMap from "../../hooks/useMap";
 
 import Button from "@mui/material/Button";
-import RoomIcon from "@mui/icons-material/Room";
-import { point, circle } from "@turf/turf";
+import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import { point, circle, lineArc } from "@turf/turf";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 
 /**
@@ -20,10 +20,10 @@ const MlFollowGps = (props) => {
   const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 
   const [isFollowed, setIsFollowed] = useState(false);
-  const [geoJson, setGeoJson] = useState(undefined);
+  const [userLocationGeoJson, setUserLocationGeoJson] = useState(undefined);
   const [locationAccessDenied, setLocationAccessDenied] = useState(false);
-
   const [accuracyGeoJson, setAccuracyGeoJson] = useState();
+  const [deviceOrientation, setDeviceOrientation] = useState(0);
 
   const getLocationSuccess = useCallback(
     (pos) => {
@@ -35,17 +35,49 @@ const MlFollowGps = (props) => {
         speed: 1,
         curve: 1,
       });
+      if (!props.showUserLocation) return;
       const geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
-      setGeoJson(geoJsonPoint);
+      setUserLocationGeoJson(geoJsonPoint);
       setAccuracyGeoJson(circle(geoJsonPoint, pos.coords.accuracy / 1000));
     },
-    [mapHook.map]
+    [mapHook.map, props]
   );
 
   const getLocationError = (err) => {
     console.log("Access of user location denied");
     setLocationAccessDenied(true);
   };
+
+  const orientationCone = useMemo(
+    () => {
+      if (!userLocationGeoJson) {
+        return undefined;
+      }
+      let radius = 0.02;
+      let bearing1 = deviceOrientation - 15;
+      let bearing2 = deviceOrientation + 15;
+      const options = {steps: 65};
+      let arc = lineArc(userLocationGeoJson, radius, bearing1, bearing2, options);
+      let copy = arc;
+      copy.geometry.coordinates.push(userLocationGeoJson.geometry.coordinates);
+      copy.geometry.coordinates.slice(0, 0, userLocationGeoJson.geometry.coordinates);
+      return copy;
+    }, [deviceOrientation, userLocationGeoJson]
+  )
+
+  const handleOrientation = (event) => {
+    setDeviceOrientation(-event.alpha)
+  } 
+
+  useEffect(() => {
+    if (isFollowed) {
+      let _handleOrientation = handleOrientation;
+      window.addEventListener('deviceorientation', _handleOrientation)
+      return () => {
+        window.removeEventListener('deviceorientation', _handleOrientation)
+      }
+    }
+  }, [isFollowed]);
 
   useEffect(() => {
     if (!mapHook.map) return;
@@ -61,7 +93,7 @@ const MlFollowGps = (props) => {
 
   return (
     <>
-      {isFollowed && geoJson && (
+      {isFollowed && userLocationGeoJson && (
         <MlGeoJsonLayer
           geojson={accuracyGeoJson}
           type={"fill"}
@@ -74,9 +106,22 @@ const MlFollowGps = (props) => {
         />
       )}
 
-      {isFollowed && geoJson && (
+      {isFollowed && orientationCone && (
         <MlGeoJsonLayer
-          geojson={geoJson}
+          geojson={orientationCone}
+          type={"fill"}
+          paint={{
+            "fill-color": "#0000ff",
+            "fill-antialias": false,
+            "fill-opacity": 0.3,
+          }}
+          insertBeforeLayer={props.insertBeforeLayer}
+        />
+      )}
+
+      {isFollowed && userLocationGeoJson && (
+        <MlGeoJsonLayer
+          geojson={userLocationGeoJson}
           type={"circle"}
           paint={{
             "circle-color": "#009ee0",
@@ -97,7 +142,7 @@ const MlFollowGps = (props) => {
         }}
       >
         {" "}
-        <RoomIcon sx={{ fontSize: props.style.fontSize }} />{" "}
+        <GpsFixedIcon sx={{ fontSize: props.style.fontSize }} />{" "}
       </Button>
     </>
   );
@@ -121,6 +166,9 @@ MlFollowGps.defaultProps = {
   },
   onColor: "#ececec",
   offColor: "#666",
+  showAccuracyCircle: true,
+  showUserLocation: true,
+  showOrientation: true
 };
 
 MlFollowGps.propTypes = {
@@ -152,5 +200,19 @@ MlFollowGps.propTypes = {
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
   circlePaint: PropTypes.object,
+  /**
+   * By default, if showUserLocation is true, a transparent circle will be drawn around the user location 
+   * indicating the accuracy (95% confidence level) of the user's location. Set to false to disable. 
+   */
+  showAccuracyCircle: PropTypes.bool,
+  /**
+   * By default a dot will be shown on the map at the user's location. Set to false to disable.
+   */
+  showUserLocation: PropTypes.bool,
+  /**
+   * By default a cone will be shown on the map at the user's location to indicate the device's orientation.
+   * Set to false to disable.
+   */
+  showOrientation: PropTypes.bool,
 };
 export default MlFollowGps;
