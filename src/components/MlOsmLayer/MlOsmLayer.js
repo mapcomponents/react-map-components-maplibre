@@ -1,9 +1,7 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
-import { MapContext } from "@mapcomponents/react-core";
-import { v4 as uuidv4 } from "uuid";
+import React, { useRef, useEffect, useState } from "react";
 
-import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
+import useMap from "../../hooks/useMap";
 
 /**
  * Adds a standard OSM tile layer to the maplibre-gl instancereference by
@@ -12,81 +10,42 @@ import PropTypes from "prop-types";
  * @component
  */
 const MlOsmLayer = (props) => {
-  const mapContext = useContext(MapContext);
-  const mapRef = useRef(undefined);
+  const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 
-  const [showLayer, setShowLayer] = useState(true);
-  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-") + uuidv4());
-  const initializedRef = useRef(false);
-  const sourceIdRef = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-source-") + uuidv4());
-  const layerIdRef = useRef((props.idPrefix ? props.idPrefix : "MlOsmLayer-layer-") + uuidv4());
+  const layerId = useRef(props.layerId || "MlOsmLayer-" + mapHook.componentId);
 
   useEffect(() => {
-    let _componentId = componentId.current;
-    return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
+    if (!mapHook.map) return;
 
-        mapRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-
-    initializedRef.current = true;
-    mapRef.current = mapContext.getMap(props.mapId);
-
-    mapRef.current.addSource(
-      sourceIdRef.current,
+    mapHook.map.addSource(
+      layerId.current,
       {
         type: "raster",
         tileSize: 256,
         ...props.sourceOptions,
       },
-      componentId.current
+      mapHook.componentId
     );
-    mapRef.current.addLayer(
+    mapHook.map.addLayer(
       {
-        id: layerIdRef.current,
+        id: layerId.current,
         type: "raster",
-        source: sourceIdRef.current,
+        source: layerId.current,
         minzoom: 0,
         maxzoom: 22,
         ...props.layerOptions,
       },
       props.insertBeforeLayer,
-      componentId.current
+      mapHook.componentId
     );
-  }, [mapContext.mapIds, props, mapContext]);
+  }, [props, mapHook.map]);
 
-  useEffect(() => {
-    if (!mapRef.current) return;
-
-    // toggle layer visibility by changing the layout object's visibility property
-    if (showLayer) {
-      mapRef.current.setLayoutProperty(layerIdRef.current, "visibility", "visible");
-    } else {
-      mapRef.current.setLayoutProperty(layerIdRef.current, "visibility", "none");
-    }
-  }, [showLayer]);
-
-  return (
-    <Button
-      color="primary"
-      variant={showLayer ? "contained" : "outlined"}
-      onClick={() => setShowLayer(!showLayer)}
-    >
-      OSM
-    </Button>
-  );
+  return <></>;
 };
 
 MlOsmLayer.propTypes = {
   /**
-   * Id of the target MapLibre instance in mapContext
+   * Id of the target MapLibre instance in mapHook
    */
   mapId: PropTypes.string,
   /**

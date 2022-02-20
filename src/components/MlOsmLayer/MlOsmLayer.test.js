@@ -8,12 +8,12 @@ const testComponent = <MlOsmLayer />;
 layerRemovalTest(
   "<MlOsmLayer />",
   testComponent,
-  new RegExp('^.*"MlOsmLayer-layer-' + uuid_regex + '".*$'),
-  "MlOsmLayer-layer-{uuid}"
+  new RegExp('^.*"MlOsmLayer-' + uuid_regex + '".*$'),
+  "MlOsmLayer-{uuid}"
 );
 sourceRemovalTest(
   "<MlOsmLayer />",
   testComponent,
-  new RegExp('^.*"MlOsmLayer-source-' + uuid_regex + '".*$'),
-  "MlOsmLayer-source-{uuid}"
+  new RegExp('^.*"MlOsmLayer-' + uuid_regex + '".*$'),
+  "MlOsmLayer-{uuid}"
 );
