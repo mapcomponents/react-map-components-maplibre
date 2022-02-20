@@ -1,4 +1,10 @@
 # Change Log
+
+## [v0.1.29] - 2022-02-20
+
+### Fixed
+- 26dc071: exclude maplibre-gl from transpilation using ! webpack import syntax to prevent "Uncaught ReferenceError" bug
+
 ## [v0.1.28] - 2022-02-20
 
 ### Added
