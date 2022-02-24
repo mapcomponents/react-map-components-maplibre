@@ -6,7 +6,7 @@ import * as turf from "@turf/turf";
 import useMap from "../../hooks/useMap";
 
 import { _transitionToGeojson } from "./util/transitionFunctions";
-import { MlGeoJsonLayer } from "../..";
+import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 
 const msPerStep = 50;
 

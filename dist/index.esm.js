@@ -1,12 +1,12 @@
 import React__default, { useRef, useContext, useEffect, useState, useCallback, useMemo, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { MapContext } from '@mapcomponents/react-core';
-import maplibregl from 'maplibre-gl/dist/maplibre-gl';
+import maplibregl from '!maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { v4 } from 'uuid';
 import Button from '@mui/material/Button';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import { point, circle, lineArc, bbox, lineOffset, distance } from '@turf/turf';
+import { point, circle, lineArc, bbox, lineOffset, distance, lineString as lineString$1, length, lineChunk, featureCollection } from '@turf/turf';
 import maplibregl$1, { Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@mui/icons-material/Print';
@@ -117,6 +117,24 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
+}
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
 }
 
 function _objectWithoutPropertiesLoose(source, excluded) {
@@ -1915,10 +1933,10 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
 
 function SvgRotateRight(props) {
-  return /*#__PURE__*/createElement("svg", _extends({
+  return /*#__PURE__*/createElement("svg", _extends$1({
     width: "39.675098mm",
     height: "104.27064mm",
     viewBox: "0 0 39.675098 104.27064"
@@ -1935,10 +1953,10 @@ function SvgRotateRight(props) {
 
 var _g;
 
-function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
+function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
 
 function SvgRotateLeft(props) {
-  return /*#__PURE__*/createElement("svg", _extends$1({
+  return /*#__PURE__*/createElement("svg", _extends$2({
     width: "39.675098mm",
     height: "104.27064mm",
     viewBox: "0 0 39.675098 104.27064"
@@ -1951,10 +1969,10 @@ function SvgRotateLeft(props) {
 
 var _g$1;
 
-function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
+function _extends$3() { _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$3.apply(this, arguments); }
 
 function SvgNeedle(props) {
-  return /*#__PURE__*/createElement("svg", _extends$2({
+  return /*#__PURE__*/createElement("svg", _extends$3({
     width: "75.967445mm",
     height: "234.71339mm",
     viewBox: "0 0 75.967445 234.71339"
@@ -5555,5 +5573,288 @@ MlSpatialElevationProfile.propTypes = {
   insertBeforeLayer: PropTypes.string
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlVectorTileLayer, MlWmsLayer, useMap, useMapState };
+var _showNextTransitionSegment = function _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson) {
+  var _arguments = arguments;
+
+  if (typeof transitionGeojsonDataRef.current[currentTransitionStepRef.current] !== "undefined") {
+    // if at last transition step set to target geojson
+    // else to an assembled LineString from common geometry and the current transition step geometry
+    var newData = currentTransitionStepRef.current + 1 === transitionGeojsonDataRef.current.length ? props.geojson : lineString$1([].concat(_toConsumableArray(transitionGeojsonCommonDataRef.current), _toConsumableArray(transitionGeojsonDataRef.current[currentTransitionStepRef.current].geometry.coordinates)));
+    setDisplayGeojson(newData);
+
+    if (typeof props.onTransitionFrame === "function") {
+      props.onTransitionFrame(newData);
+    }
+
+    currentTransitionStepRef.current++;
+
+    if (transitionInProgressRef.current && currentTransitionStepRef.current < transitionGeojsonDataRef.current.length) {
+      transitionTimeoutRef.current = setTimeout(function () {
+        return _showNextTransitionSegment.apply(void 0, _toConsumableArray(_arguments));
+      }, msPerStep);
+    } else {
+      if (typeof props.onTransitionEnd === "function") {
+        props.onTransitionEnd(props.geojson);
+      }
+
+      transitionInProgressRef.current = false;
+    }
+  }
+};
+
+var _transitionToGeojson = function _transitionToGeojson(props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, transitionTimeoutRef, setDisplayGeojson) {
+  // create the transition geojson between oldGeojsonRef.current and props.geojson
+  // create a geojson that contains no common point between the two line features
+  var transitionCoordinatesShort = [];
+  var transitionCoordinatesLong = [];
+  var targetCoordinates = [];
+  var srcCoordinates = [];
+  transitionGeojsonCommonDataRef.current = [];
+  var sourceGeojson = oldGeojsonRef.current || {
+    geometry: {
+      type: "LineString",
+      coordinates: []
+    },
+    properties: {},
+    type: "Feature"
+  };
+  var targetGeojson = props.geojson;
+  var longerGeojson = targetGeojson;
+  var shorterGeojson = sourceGeojson;
+  var reverseOrder = false; // In case one geojson is missing completely use the first two coordinates of the other geojson
+
+  if (typeof longerGeojson.geometry === "undefined" && typeof shorterGeojson.geometry !== "undefined" && shorterGeojson.geometry.coordinates.length > 1) {
+    longerGeojson = lineString$1(shorterGeojson.geometry.coordinates.slice(0, 2));
+  } else if (typeof shorterGeojson.geometry === "undefined" && typeof longerGeojson.geometry !== "undefined" && longerGeojson.geometry.coordinates.length > 1) {
+    shorterGeojson = lineString$1(longerGeojson.geometry.coordinates.slice(0, 2));
+  } else if (typeof shorterGeojson.geometry === "undefined" && typeof longerGeojson.geometry === "undefined") {
+    return;
+  }
+
+  if (longerGeojson.geometry.coordinates.length < shorterGeojson.geometry.coordinates.length) {
+    longerGeojson = sourceGeojson;
+    shorterGeojson = targetGeojson;
+    reverseOrder = true;
+  }
+
+  if (longerGeojson && shorterGeojson) {
+    for (var i = 0, len = longerGeojson.geometry.coordinates.length; i < len; i++) {
+      if (typeof shorterGeojson.geometry.coordinates[i] !== "undefined" && longerGeojson.geometry.coordinates[i][0] === shorterGeojson.geometry.coordinates[i][0] && longerGeojson.geometry.coordinates[i][1] === shorterGeojson.geometry.coordinates[i][1]) {
+        // if coordinates are equal
+        transitionGeojsonCommonDataRef.current.push(longerGeojson.geometry.coordinates[i]);
+      } else {
+        if (typeof longerGeojson.geometry.coordinates[i] !== "undefined") {
+          transitionCoordinatesLong.push(longerGeojson.geometry.coordinates[i]);
+        }
+
+        if (typeof shorterGeojson.geometry.coordinates[i] !== "undefined") {
+          transitionCoordinatesShort.push(shorterGeojson.geometry.coordinates[i]);
+        }
+      }
+    }
+  }
+
+  if (reverseOrder) {
+    targetCoordinates = transitionCoordinatesShort;
+    srcCoordinates = transitionCoordinatesLong;
+  } else {
+    targetCoordinates = transitionCoordinatesLong;
+    srcCoordinates = transitionCoordinatesShort;
+  }
+
+  if (targetCoordinates.length < 2 && srcCoordinates < 2) return; // create props.transitionTime / msPerStep (=: transitionSteps) Versions of transitionGeojsonCommonDataRef.current + transitionCoordinates making the transitionCoordinates transitionCoordinatesDistance / transitionSteps longer on each step
+
+  var transitionSteps = props.transitionTime / msPerStep;
+  var srcCoordinatesDistance = srcCoordinates.length > 1 ? Math.round(length(lineString$1(srcCoordinates))) : 0;
+  var targetCoordinatesDistance = targetCoordinates.length > 1 ? Math.round(length(lineString$1(targetCoordinates))) : 0;
+  var transitionDistance = targetCoordinatesDistance + srcCoordinatesDistance;
+  var srcCoordinatesShare = srcCoordinatesDistance / transitionDistance;
+  var srcTransitionSteps = Math.round(transitionSteps * srcCoordinatesShare);
+  var srcPerStepDistance = Math.round(srcCoordinatesDistance / srcTransitionSteps * 100) / 100;
+  var targetCoordinatesShare = targetCoordinatesDistance / transitionDistance;
+  var targetTransitionSteps = Math.round(transitionSteps * targetCoordinatesShare);
+  var targetPerStepDistance = Math.round(targetCoordinatesDistance / targetTransitionSteps * 100) / 100; // use srcPerStepDistance as src coordinates are always animated backwards
+
+
+  var transitionStepData;
+  transitionStepData = _toConsumableArray(createTransitionSteps(srcCoordinates, srcPerStepDistance, srcTransitionSteps));
+  transitionStepData.reverse();
+  transitionStepData = [].concat(_toConsumableArray(transitionStepData), _toConsumableArray(createTransitionSteps(targetCoordinates, targetPerStepDistance, targetTransitionSteps)));
+  transitionStepData.push(targetGeojson);
+  transitionGeojsonDataRef.current = transitionStepData;
+  currentTransitionStepRef.current = 1;
+  transitionInProgressRef.current = true;
+  transitionTimeoutRef.current = setTimeout(function () {
+    return _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson);
+  }, msPerStep);
+};
+
+var createTransitionSteps = function createTransitionSteps(linestringCoordinates, perStepDistance, stepCnt) {
+  var transitionSteps = [];
+
+  if (linestringCoordinates.length > 1) {
+    var tmpChunks = lineChunk(lineString$1(linestringCoordinates), perStepDistance); // tmpLineString contains all coordinates of all previous plus current loop iteration
+
+    var tmpLinestring = tmpChunks.features[0];
+
+    for (var i = 0; i < stepCnt; i++) {
+      transitionSteps.push(tmpLinestring);
+
+      if (typeof tmpChunks.features[i] !== "undefined") {
+        tmpLinestring = lineString$1([].concat(_toConsumableArray(tmpLinestring.geometry.coordinates), _toConsumableArray(tmpChunks.features[i].geometry.coordinates)));
+      } else {
+        break;
+      }
+    }
+  }
+
+  return transitionSteps;
+};
+
+var _excluded$2 = ["geojson"];
+var msPerStep = 50;
+/**
+ * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
+ *
+ * @component
+ */
+
+var MlTransitionGeoJsonLayer = function MlTransitionGeoJsonLayer(props) {
+  var geojson = props.geojson,
+      restProps = _objectWithoutProperties(props, _excluded$2); // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+
+
+  var mapHook = useMap({
+    mapId: props.mapId,
+    waitForLayer: props.insertBeforeLayer
+  });
+  var initializedRef = useRef(false); // transition effect variables
+
+  var oldGeojsonRef = useRef(null);
+  var transitionInProgressRef = useRef(false);
+  var transitionTimeoutRef = useRef(undefined);
+  var currentTransitionStepRef = useRef(false);
+  var transitionGeojsonDataRef = useRef([]);
+  var transitionGeojsonCommonDataRef = useRef([]);
+
+  var _useState = useState(featureCollection([])),
+      _useState2 = _slicedToArray(_useState, 2),
+      displayGeojson = _useState2[0],
+      setDisplayGeojson = _useState2[1];
+
+  useEffect(function () {
+    return function () {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
+  var transitionToGeojson = useCallback(function () {
+    _transitionToGeojson(props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapHook.map, transitionTimeoutRef, setDisplayGeojson);
+  }, [props, mapHook.map]);
+  useEffect(function () {
+    if (!mapHook.map || !initializedRef.current) return;
+
+    if (typeof props.transitionTime !== "undefined" && props.type === "line" && oldGeojsonRef.current) {
+      transitionInProgressRef.current = false;
+      currentTransitionStepRef.current = false;
+      transitionGeojsonDataRef.current = [];
+      transitionGeojsonCommonDataRef.current = [];
+      transitionToGeojson();
+    }
+
+    oldGeojsonRef.current = props.geojson;
+  }, [mapHook.map, transitionToGeojson, props]);
+  var startTransition = useCallback(function () {
+    if (props.type === "line" && typeof props.transitionTime !== "undefined" && props.transitionTime && typeof props.geojson.geometry !== "undefined" && JSON.stringify(oldGeojsonRef.current) !== JSON.stringify(props.geojson)) {
+      transitionToGeojson(props.geojson);
+      oldGeojsonRef.current = props.geojson;
+    }
+  }, [props, transitionToGeojson]);
+  useEffect(function () {
+    if (!mapHook.mapIsReady || !props.geojson) return;
+    initializedRef.current = true;
+    startTransition();
+  }, [mapHook.mapIsReady, startTransition, props]);
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, _extends({}, restProps, {
+    geojson: displayGeojson
+  })));
+};
+
+MlTransitionGeoJsonLayer.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Type of the layer that will be added to the MapLibre instance.
+   * Possible values: "line", "circle", "fill"
+   */
+  type: PropTypes.string,
+
+  /**
+   * Layout property object, that is passed to the addLayer call.
+   * Possible props depend on the layer type.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+   */
+  layout: PropTypes.object,
+
+  /**
+   * Paint property object, that is passed to the addLayer call.
+   * Possible props depend on the layer type.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+   */
+  paint: PropTypes.object,
+
+  /**
+   * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
+   */
+  defaultPaintOverrides: PropTypes.object,
+
+  /**
+   * Javascript object that is spread into the addLayer commands first parameter.
+   */
+  options: PropTypes.object,
+
+  /**
+   * GeoJSON data that is supposed to be rendered by this component.
+   */
+  geojson: PropTypes.object,
+
+  /**
+   * Id of an existing layer in the mapLibre instance to help specify the layer order
+   * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+   */
+  insertBeforeLayer: PropTypes.string,
+
+  /**
+   * Click event handler that is executed whenever a geometry rendered by this component is clicked.
+   */
+  onClick: PropTypes.func,
+
+  /**
+   * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
+   */
+  onHover: PropTypes.func,
+
+  /**
+   * Leave event handler that is executed whenever a geometry rendered by this component is
+   * left/unhovered.
+   */
+  onLeave: PropTypes.func,
+
+  /**
+   * Creates transition animation whenever the geojson prop changes.
+   * Only works with layer type "line" and LineString GeoJSON data.
+   */
+  transitionTime: PropTypes.number
+};
+
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, useMap, useMapState };
 //# sourceMappingURL=index.esm.js.map
