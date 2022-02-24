@@ -1,6 +1,11 @@
 # Change Log
 
-## [v0.1.29] - 2022-02-20
+## [v0.1.31] - 2022-02-24
+
+### Added
+- acbaa59: export MlTransitionGeoJsonLayer from esm module
+
+## [v0.1.30] - 2022-02-20
 
 ### Fixed
 - 26dc071: exclude maplibre-gl from transpilation using ! webpack import syntax to prevent "Uncaught ReferenceError" bug
