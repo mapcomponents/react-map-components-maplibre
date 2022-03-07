@@ -1,3 +1,1 @@
-# Component Beschreibung
-
-Beschreibungstext
+Erzeugen und Bearbeiten von Objekten
