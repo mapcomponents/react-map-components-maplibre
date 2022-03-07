@@ -1,3 +1,1 @@
-# Kartenvorhang
-
-Blendet einen Teil einer MapLibe-gl Instanz aus.
+Verschiebbare Darstellung verschiedener Karten
