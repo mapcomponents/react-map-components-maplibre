@@ -1,3 +1,1 @@
-# Component Beschreibung
-
-Beschreibungstext
+Upload und Darstellung von GPX Tracks 
