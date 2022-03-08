@@ -5,7 +5,7 @@
   "i18n": {
     "de": {
       "title": "Skizzen Werkzeug",
-      "description": "Ermöglicht das Bearbeiten von Punkt, Linestring und Polygon GeoJSON Daten."
+      "description": "Erzeugen und Bearbeiten von Objekten."
     }
   },
   "tags": ["Map add-on"],

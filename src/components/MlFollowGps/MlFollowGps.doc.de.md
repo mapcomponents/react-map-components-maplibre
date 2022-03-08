@@ -1,3 +1,1 @@
-# Component Beschreibung
-
-Beschreibungstext
+Darstellung der aktuellen Position und Blickrichtung

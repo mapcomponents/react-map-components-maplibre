@@ -1,3 +1,1 @@
-# Component Beschreibung
-
-Beschreibungstext
+Darstellung von Vector Tiles

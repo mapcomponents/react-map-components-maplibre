@@ -1,3 +1,1 @@
-# Component Beschreibung
-
-Beschreibungstext
+Stellt GeoJSON Objekte dar

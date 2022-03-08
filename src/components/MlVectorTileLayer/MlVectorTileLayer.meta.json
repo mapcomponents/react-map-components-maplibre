@@ -4,7 +4,7 @@
   "description": "Adds a vector tile layer to the map",
   "i18n": {
     "de": {
-      "title": "Vektorenkacheln",
+      "title": "Vector Tiles",
       "description": "Baustein: Vektorenkacheln/Vector Tiles (der Anwendung/Karte hinzufügen)"
     }
   },

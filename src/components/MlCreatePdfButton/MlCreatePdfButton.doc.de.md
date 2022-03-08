@@ -1,3 +1,1 @@
-# Beschreibung
-
-Export auf Knopfdruck ein PDF des aktuellen Kartenausschnitts.
+Exportiert die ausgewählte Kartenansicht als PDF

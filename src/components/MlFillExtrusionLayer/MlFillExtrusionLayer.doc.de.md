@@ -1,3 +1,1 @@
-# Component Beschreibung
-
-Beschreibungstext
+OpenStreetMap Gebäude in einfachem 3D

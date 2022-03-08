@@ -4,7 +4,7 @@
   "description": "Creates a PDF file with the current map view.",
   "i18n": {
     "de": {
-      "title": "Einfacher Kartendruck",
+      "title": "PDF Export",
       "description": "Erzeugt eine PDF Datei aus der aktuellen Kartenansicht."
     }
   },
