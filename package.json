@@ -1,6 +1,6 @@
 {
   "name": "@mapcomponents/react-maplibre",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "license": "MIT",
   "private": false,
   "module": "dist/index.esm.js",
