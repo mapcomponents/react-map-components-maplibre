@@ -1,5 +1,9 @@
 # Change Log
 
+## [v0.1.32] - 2022-03-15
+
+### Added
+- bd333ce: add exports for useWms and MlMarker
 ## [v0.1.31] - 2022-02-24
 
 ### Added
