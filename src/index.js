@@ -20,6 +20,8 @@ export { default as GeoJsonProvider } from "./components/MlGPXViewer/util/GeoJso
 export { default as GeoJsonContext } from "./components/MlGPXViewer/util/GeoJsonContext";
 export { default as MlSpatialElevationProfile } from "./components/MlSpatialElevationProfile/MlSpatialElevationProfile";
 export { default as MlTransitionGeoJsonLayer } from "./components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer";
+export { default as MlMarker } from "./components/MlMarker/MlMarker";
 
 export { default as useMapState } from "./hooks/useMapState";
 export { default as useMap } from "./hooks/useMap";
+export { default as useWms } from "./hooks/useWms";

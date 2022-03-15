@@ -31,6 +31,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { lineString, polygon } from '@turf/helpers';
+import Paper from '@mui/material/Paper';
+import WMSCapabilities from 'wms-capabilities';
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -5856,5 +5858,263 @@ MlTransitionGeoJsonLayer.propTypes = {
   transitionTime: PropTypes.number
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, useMap, useMapState };
+/**
+ * Adds a marker to the map and displays a marker description next to it
+ *
+ * @param {object} props
+ * @param {string} props.mapId Id of the target MapLibre instance in mapContext
+ * @param {number} props.lng
+ * @param {number} props.lat
+ * @param {string} props.content
+ *
+ * @component
+ */
+
+var MlMarker = function MlMarker(props) {
+  var mapContext = useContext(MapContext);
+  var mapState = useMapState({
+    mapId: props.mapId,
+    watch: {
+      viewport: true
+    }
+  });
+  var iframe = useRef(undefined);
+  var initializedRef = useRef(false);
+  var mapRef = useRef(undefined);
+  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlMarker-") + v4());
+
+  var _useState = useState({
+    width: "400px",
+    height: "500px"
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      iframeDimensions = _useState2[0],
+      setIframeDimensions = _useState2[1];
+
+  var _useState3 = useState(undefined),
+      _useState4 = _slicedToArray(_useState3, 2),
+      markerPixelPos = _useState4[0],
+      setMarkerPixelPos = _useState4[1];
+
+  useEffect(function () {
+    var _componentId = componentId.current;
+    return function () {
+      // This is the cleanup function, it is called when this react component is removed from react-dom
+      // try to remove anything this component has added to the MapLibre-gl instance
+      // e.g.: remove the layer
+      // mapContext.getMap(props.mapId).removeLayer(layerRef.current);
+      // check for the existence of map.style before calling getLayer or getSource
+      if (mapRef.current) {
+        mapRef.current.cleanup(_componentId);
+        mapRef.current = undefined;
+      }
+
+      initializedRef.current = false;
+    };
+  }, []);
+  useEffect(function () {
+    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+
+    initializedRef.current = true;
+    mapRef.current = mapContext.getMap(props.mapId);
+  }, [mapContext.mapIds, mapContext, props.mapId]);
+  useEffect(function () {
+    var _mapRef$current;
+
+    if (!((_mapRef$current = mapRef.current) !== null && _mapRef$current !== void 0 && _mapRef$current.project)) return;
+
+    var _pixelPos = mapRef.current.project([props.lng, props.lat]);
+
+    setMarkerPixelPos(_pixelPos);
+  }, [props.lng, props.lat, mapState.viewport]);
+  useEffect(function () {
+    var _iframe$current, _iframe$current$conte, _iframe$current$conte2, _iframe$current$conte3;
+
+    if (mapRef.current && (_iframe$current = iframe.current) !== null && _iframe$current !== void 0 && (_iframe$current$conte = _iframe$current.contentWindow) !== null && _iframe$current$conte !== void 0 && (_iframe$current$conte2 = _iframe$current$conte.document) !== null && _iframe$current$conte2 !== void 0 && (_iframe$current$conte3 = _iframe$current$conte2.body) !== null && _iframe$current$conte3 !== void 0 && _iframe$current$conte3.scrollHeight) {
+      setTimeout(function () {
+        var _iframe$current2, _iframe$current2$cont, _iframe$current2$cont2, _iframe$current2$cont3, _iframe$current3, _iframe$current3$cont, _iframe$current3$cont2, _iframe$current3$cont3;
+
+        var mapHeight = mapRef.current._container.clientHeight;
+
+        var _pixelPos = mapRef.current.project([props.lng, props.lat]);
+
+        var pixelToBottom = mapHeight - _pixelPos.y;
+        var iframeHeight = (_iframe$current2 = iframe.current) === null || _iframe$current2 === void 0 ? void 0 : (_iframe$current2$cont = _iframe$current2.contentWindow) === null || _iframe$current2$cont === void 0 ? void 0 : (_iframe$current2$cont2 = _iframe$current2$cont.document) === null || _iframe$current2$cont2 === void 0 ? void 0 : (_iframe$current2$cont3 = _iframe$current2$cont2.body) === null || _iframe$current2$cont3 === void 0 ? void 0 : _iframe$current2$cont3.scrollHeight;
+        var iframeWidth = (_iframe$current3 = iframe.current) === null || _iframe$current3 === void 0 ? void 0 : (_iframe$current3$cont = _iframe$current3.contentWindow) === null || _iframe$current3$cont === void 0 ? void 0 : (_iframe$current3$cont2 = _iframe$current3$cont.document) === null || _iframe$current3$cont2 === void 0 ? void 0 : (_iframe$current3$cont3 = _iframe$current3$cont2.body) === null || _iframe$current3$cont3 === void 0 ? void 0 : _iframe$current3$cont3.scrollWidth;
+        setIframeDimensions({
+          width: iframeWidth,
+          height: pixelToBottom < iframeHeight ? pixelToBottom : iframeHeight
+        });
+      }, 100);
+    }
+  }, [props.lng, props.lat, props.content]);
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, {
+    geojson: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [props.lng, props.lat]
+      },
+      properties: {}
+    },
+    paint: {
+      "circle-radius": 14,
+      "circle-color": "rgba(40,200,20,0.5)"
+    },
+    type: "circle",
+    mapId: props.mapId
+  }), markerPixelPos && /*#__PURE__*/React__default.createElement(Paper, {
+    sx: {
+      opacity: 0.7,
+      position: "fixed",
+      display: "flex",
+
+      /** TODO: fix positioning delay when moving the map */
+      left: markerPixelPos.x,
+      top: markerPixelPos.y,
+      width: iframeDimensions.width,
+      height: iframeDimensions.height,
+      "&:hover": {
+        opacity: 1
+      },
+      zIndex: -1
+    }
+  }, /*#__PURE__*/React__default.createElement("iframe", {
+    style: {
+      width: "100%"
+    },
+    srcDoc: props.content,
+    ref: iframe,
+    sandbox: "allow-same-origin allow-popups-to-escape-sandbox",
+    frameBorder: "0",
+    title: componentId.current
+  })));
+};
+
+MlMarker.defaultProps = {
+  mapId: undefined
+};
+MlMarker.propTypes = {
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: PropTypes.string,
+
+  /**
+   * Longitude of the marker position
+   */
+  lng: PropTypes.number,
+
+  /**
+   * Latitude of the marker position
+   */
+  lat: PropTypes.number,
+
+  /**
+   * Content of the description popup
+   */
+  content: PropTypes.string
+};
+
+function useWms(props) {
+  // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+  var _useState = useState(undefined),
+      _useState2 = _slicedToArray(_useState, 2),
+      getFeatureInfoUrl = _useState2[0],
+      setGetFeatureInfoUrl = _useState2[1];
+
+  var _useState3 = useState(props.url),
+      _useState4 = _slicedToArray(_useState3, 2),
+      url = _useState4[0],
+      setUrl = _useState4[1];
+
+  var _useState5 = useState(""),
+      _useState6 = _slicedToArray(_useState5, 2),
+      wmsUrl = _useState6[0],
+      setWmsUrl = _useState6[1];
+
+  var _useState7 = useState(undefined),
+      _useState8 = _slicedToArray(_useState7, 2),
+      capabilities = _useState8[0],
+      setCapabilities = _useState8[1];
+
+  var _useState9 = useState(undefined),
+      _useState10 = _slicedToArray(_useState9, 2),
+      error = _useState10[0],
+      setError = _useState10[1];
+
+  var clearState = function clearState() {
+    setGetFeatureInfoUrl(undefined);
+    setCapabilities(undefined); //setLayers([]);
+
+    setWmsUrl("");
+  };
+
+  useEffect(function () {
+    var _propsUrlParams2;
+
+    // extract URL parameters from the given URL
+    clearState();
+    setError(undefined);
+    if (!url) return;
+
+    var _propsUrlParams;
+
+    var _wmsUrl = url;
+
+    if (url.indexOf("?") !== -1) {
+      _propsUrlParams = url.split("?");
+      _wmsUrl = _propsUrlParams[0];
+    }
+
+    var _urlParamsFromUrl = new URLSearchParams((_propsUrlParams2 = _propsUrlParams) === null || _propsUrlParams2 === void 0 ? void 0 : _propsUrlParams2[1]);
+
+    var urlParamsObj = _objectSpread2(_objectSpread2({}, Object.fromEntries(_urlParamsFromUrl)), props.urlParameters); // create URLSearchParams object to assemble the URL Parameters
+
+
+    var urlParams = new URLSearchParams(urlParamsObj);
+    var urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+    fetch(_wmsUrl + "?" + urlParamsStr).then(function (res) {
+      if (!res.ok) {
+        throw Error(res.statusText + " (" + res.status + " - " + res.type + ")");
+      } else {
+        return res.text();
+      }
+    }).then(function (data) {
+      setCapabilities(new WMSCapabilities(data).toJSON());
+    }).catch(function (error) {
+      //reset local state
+      clearState();
+      console.log(error);
+      setError(error.message);
+    });
+  }, [url, props.urlParameters]);
+  useEffect(function () {
+    var _capabilities$Capabil, _capabilities$Capabil2, _capabilities$Capabil3, _capabilities$Capabil4, _capabilities$Capabil5, _capabilities$Capabil6, _capabilities$Capabil7, _capabilities$Capabil8, _capabilities$Capabil9, _capabilities$Capabil10, _capabilities$Capabil11, _capabilities$Capabil12, _capabilities$Capabil13, _capabilities$Capabil14;
+
+    if (!(capabilities !== null && capabilities !== void 0 && capabilities.Service)) return;
+    setWmsUrl((_capabilities$Capabil = capabilities.Capability) === null || _capabilities$Capabil === void 0 ? void 0 : (_capabilities$Capabil2 = _capabilities$Capabil.Request) === null || _capabilities$Capabil2 === void 0 ? void 0 : (_capabilities$Capabil3 = _capabilities$Capabil2.GetMap) === null || _capabilities$Capabil3 === void 0 ? void 0 : (_capabilities$Capabil4 = _capabilities$Capabil3.DCPType) === null || _capabilities$Capabil4 === void 0 ? void 0 : (_capabilities$Capabil5 = _capabilities$Capabil4[0]) === null || _capabilities$Capabil5 === void 0 ? void 0 : (_capabilities$Capabil6 = _capabilities$Capabil5.HTTP) === null || _capabilities$Capabil6 === void 0 ? void 0 : (_capabilities$Capabil7 = _capabilities$Capabil6.Get) === null || _capabilities$Capabil7 === void 0 ? void 0 : _capabilities$Capabil7.OnlineResource); // set getFeatureInfo url
+
+    setGetFeatureInfoUrl((_capabilities$Capabil8 = capabilities.Capability) === null || _capabilities$Capabil8 === void 0 ? void 0 : (_capabilities$Capabil9 = _capabilities$Capabil8.Request) === null || _capabilities$Capabil9 === void 0 ? void 0 : (_capabilities$Capabil10 = _capabilities$Capabil9.GetFeatureInfo) === null || _capabilities$Capabil10 === void 0 ? void 0 : (_capabilities$Capabil11 = _capabilities$Capabil10.DCPType) === null || _capabilities$Capabil11 === void 0 ? void 0 : (_capabilities$Capabil12 = _capabilities$Capabil11[0]) === null || _capabilities$Capabil12 === void 0 ? void 0 : (_capabilities$Capabil13 = _capabilities$Capabil12.HTTP) === null || _capabilities$Capabil13 === void 0 ? void 0 : (_capabilities$Capabil14 = _capabilities$Capabil13.Get) === null || _capabilities$Capabil14 === void 0 ? void 0 : _capabilities$Capabil14.OnlineResource);
+  }, [capabilities]);
+  return {
+    capabilities: capabilities,
+    getFeatureInfoUrl: getFeatureInfoUrl,
+    wmsUrl: wmsUrl,
+    error: error,
+    setUrl: setUrl
+  };
+}
+
+useWms.defaultProps = {
+  url: "",
+  urlParameters: {
+    SERVICE: "WMS",
+    VERSION: "1.3.0",
+    REQUEST: "getCapabilities"
+  }
+};
+
+export { GeoJsonContext, GeoJsonProvider, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, useMap, useMapState, useWms };
 //# sourceMappingURL=index.esm.js.map
