@@ -1,1 +1,1 @@
-Upload and presentarion of GPX tracks.
+Upload and presentaion of GPX tracks.
