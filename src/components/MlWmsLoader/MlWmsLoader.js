@@ -153,7 +153,7 @@ const MlWmsLoader = (props) => {
     return () => {
       mapRef.current?.off?.("click", _getFeatureInfo);
     };
-  }, [getFeatureInfoUrl]);
+  }, [getFeatureInfo]);
 
   useEffect(() => {
     if (!capabilities?.Service) return;
