@@ -1,13 +1,12 @@
 import React__default, { useRef, useContext, useEffect, useState, useCallback, useMemo, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { MapContext } from '@mapcomponents/react-core';
-import maplibregl from '!maplibre-gl';
+import maplibregl, { Popup } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { v4 } from 'uuid';
 import Button from '@mui/material/Button';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { point, circle, lineArc, bbox, lineOffset, distance, lineString as lineString$1, length, lineChunk, featureCollection } from '@turf/turf';
-import maplibregl$1, { Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@mui/icons-material/Print';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -1736,7 +1735,7 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
   container.style.height = toPixels(height);
   hidden.appendChild(container); //Render map
 
-  var renderMap = new maplibregl$1.Map({
+  var renderMap = new maplibregl.Map({
     container: container,
     center: map.getCenter(),
     zoom: map.getZoom(),
