@@ -1,5 +1,5 @@
-// @ts-ignore: TS export Problem to be fixed upstream
-import maplibregl from "maplibre-gl";
+/* eslint:disable-next-line */
+import maplibregl from "!maplibre-gl";
 
 /**
  * Creates a MapLibre-gl-js instance and offers all of the native MapLibre functions and properties as well as additional functionality such as element registration & cleanup and more events.

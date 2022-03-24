@@ -1,12 +1,13 @@
 import React__default, { useRef, useContext, useEffect, useState, useCallback, useMemo, createElement } from 'react';
 import PropTypes from 'prop-types';
 import { MapContext } from '@mapcomponents/react-core';
-import maplibregl, { Popup } from 'maplibre-gl';
+import maplibregl from '!maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { v4 } from 'uuid';
 import Button from '@mui/material/Button';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { point, circle, lineArc, bbox, lineOffset, distance, lineString as lineString$1, length, lineChunk, featureCollection } from '@turf/turf';
+import maplibregl$1, { Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import PrinterIcon from '@mui/icons-material/Print';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -33,223 +34,7 @@ import { lineString, polygon } from '@turf/helpers';
 import Paper from '@mui/material/Paper';
 import WMSCapabilities from 'wms-capabilities';
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    enumerableOnly && (symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    })), keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = null != arguments[i] ? arguments[i] : {};
-    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
-      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-    });
-  }
-
-  return target;
-}
-
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  }, _typeof(obj);
-}
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
-
-  if (info.done) {
-    resolve(value);
-  } else {
-    Promise.resolve(value).then(_next, _throw);
-  }
-}
-
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new Promise(function (resolve, reject) {
-      var gen = fn.apply(self, args);
-
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-      }
-
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
-    });
-  };
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
-}
-
-function _objectWithoutProperties(source, excluded) {
-  if (source == null) return {};
-
-  var target = _objectWithoutPropertiesLoose(source, excluded);
-
-  var key, i;
-
-  if (Object.getOwnPropertySymbols) {
-    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-
-    for (i = 0; i < sourceSymbolKeys.length; i++) {
-      key = sourceSymbolKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-      target[key] = source[key];
-    }
-  }
-
-  return target;
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-
-function _iterableToArrayLimit(arr, i) {
-  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
-
-  if (_i == null) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-
-  var _s, _e;
-
-  try {
-    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-var _excluded = ["lng", "lat"];
+/* eslint:disable-next-line */
 /**
  * Creates a MapLibre-gl-js instance and offers all of the native MapLibre functions and properties as well as additional functionality such as element registration & cleanup and more events.
  *
@@ -258,11 +43,11 @@ var _excluded = ["lng", "lat"];
  * @class
  */
 
-var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
+const MapLibreGlWrapper = function (props) {
   var _this = this;
 
   // closure variable to safely point to the object context of the current MapLibreGlWrapper instance
-  var self = this; // element registration and cleanup on a component level is experimental
+  let self = this; // element registration and cleanup on a component level is experimental
 
   this.registeredElements = {}; // array of base layer ids, all layers that have been added by the style passed to the MapLibreGl coonstructor
 
@@ -286,7 +71,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      * @param {string} componentId
      * @returns {undefined}
      */
-    on: function on(eventName, handler, options, componentId) {
+    on: (eventName, handler, options, componentId) => {
       if (!self.eventHandlers[eventName]) return;
 
       if (typeof options === "string") {
@@ -295,10 +80,10 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
       }
 
       self.eventHandlers[eventName].push({
-        handler: handler,
-        options: options
+        handler,
+        options
       });
-      var _arguments = [eventName, handler];
+      let _arguments = [eventName, handler];
 
       if (componentId && typeof componentId === "string") {
         self.initRegisteredElements(componentId);
@@ -313,9 +98,9 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      * @param {function} handler
      * @returns {undefined}
      */
-    off: function off(eventName, handler) {
+    off: (eventName, handler) => {
       if (!self.eventHandlers[eventName]) return;
-      self.eventHandlers[eventName] = self.eventHandlers[eventName].filter(function (item) {
+      self.eventHandlers[eventName] = self.eventHandlers[eventName].filter(item => {
         if (!Object.is(item.handler, handler)) {
           return item;
         }
@@ -331,10 +116,10 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      * @param {object} context
      * @returns {undefined}
      */
-    fire: function fire(eventName, context) {
+    fire: (eventName, context) => {
       if (!self.eventHandlers[eventName]) return;
       var scope = context || window;
-      var event = new Event(eventName);
+      let event = new Event(eventName);
       event.data = self;
       self.eventHandlers[eventName].forEach(function (item) {
         item.handler.call(scope, event);
@@ -362,7 +147,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      * @param {string} layer
      * @returns object
      */
-    buildLayerObject: function buildLayerObject(layer) {
+    buildLayerObject: layer => {
       //if (self.baseLayers.indexOf(layer.id) === -1) {
       //let paint = {};
       //let values = layer.paint?._values;
@@ -403,18 +188,16 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      *
      * @returns array
      */
-    buildLayerObjects: function buildLayerObjects() {
-      return self.style._order.map(function (layerId) {
+    buildLayerObjects: () => {
+      return self.style._order.map(layerId => {
         return self.wrapper.buildLayerObject(self.map.style._layers[layerId]);
-      }).filter(function (n) {
-        return n;
-      });
+      }).filter(n => n);
     },
 
     /**
      * Updates layer state info objects
      */
-    refreshLayerState: function refreshLayerState() {
+    refreshLayerState: () => {
       self.wrapper.layerState = self.wrapper.buildLayerObjects();
 
       if (JSON.stringify(self.wrapper.layerState) !== self.wrapper.layerStateString) {
@@ -437,24 +220,23 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
      * Previous version of viewportStateString
      */
     oldViewportStateString: "{}",
-    getViewport: function getViewport() {
-      return typeof self.map.getCenter === "function" ? {
-        center: function (_ref) {
-          var lng = _ref.lng,
-              lat = _ref.lat,
-              rest = _objectWithoutProperties(_ref, _excluded);
-
-          return {
-            lng: lng,
-            lat: lat
-          };
-        }(self.map.getCenter()),
-        zoom: self.map.getZoom(),
-        bearing: self.map.getBearing(),
-        pitch: self.map.getPitch()
-      } : {};
-    },
-    refreshViewport: function refreshViewport() {
+    getViewport: () => typeof self.map.getCenter === "function" ? {
+      center: (_ref => {
+        let {
+          lng,
+          lat,
+          ...rest
+        } = _ref;
+        return {
+          lng,
+          lat
+        };
+      })(self.map.getCenter()),
+      zoom: self.map.getZoom(),
+      bearing: self.map.getBearing(),
+      pitch: self.map.getPitch()
+    } : {},
+    refreshViewport: () => {
       self.wrapper.viewportState = self.wrapper.getViewport();
     }
   };
@@ -465,7 +247,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
    * @param {boolean} force
    */
 
-  this.initRegisteredElements = function (componentId, force) {
+  this.initRegisteredElements = (componentId, force) => {
     if (typeof self.registeredElements[componentId] === "undefined" || force !== "undefined" && force) {
       self.registeredElements[componentId] = {
         layers: [],
@@ -487,7 +269,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
    */
 
 
-  this.addLayer = function (layer, beforeId, componentId) {
+  this.addLayer = (layer, beforeId, componentId) => {
     if (!self.map.style) {
       return;
     }
@@ -496,7 +278,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].layers.push(layer.id);
 
-      if (_typeof(layer.source) === "object") {
+      if (typeof layer.source === "object") {
         self.registeredElements[componentId].sources.push(layer.id);
       }
     }
@@ -514,7 +296,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
    */
 
 
-  this.addSource = function (sourceId, source, options, componentId) {
+  this.addSource = (sourceId, source, options, componentId) => {
     if (!self.map.style) {
       return;
     }
@@ -541,7 +323,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
    */
 
 
-  this.addImage = function (id, image, ref, componentId) {
+  this.addImage = (id, image, ref, componentId) => {
     if (!self.map.style) {
       return;
     }
@@ -568,14 +350,12 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
    */
 
 
-  this.on = function (type, layerId, listener, componentId) {
-    var _self$map;
-
+  this.on = (type, layerId, listener, componentId) => {
     if (typeof listener === "string" && typeof layerId === "function") {
       return self.on.call(self, type, undefined, layerId, listener);
     }
 
-    var _arguments = [type, layerId, listener];
+    let _arguments = [type, layerId, listener];
 
     if (!layerId) {
       _arguments = [type, listener];
@@ -586,7 +366,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
       self.registeredElements[componentId].events.push(_arguments);
     }
 
-    (_self$map = self.map).on.apply(_self$map, _toConsumableArray(_arguments));
+    self.map.on(..._arguments);
   };
   /**
    * Overrides MapLibre-gl-js addControl function providing an additional componentId parameter for the wrapper element registration.
@@ -597,7 +377,7 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
    */
 
 
-  this.addControl = function (control, position, componentId) {
+  this.addControl = (control, position, componentId) => {
     if (componentId && typeof componentId === "string") {
       self.initRegisteredElements(componentId);
       self.registeredElements[componentId].controls.push(control);
@@ -612,177 +392,144 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
    */
 
 
-  this.cleanup = function (componentId) {
+  this.cleanup = componentId => {
     if (self.map.style && typeof self.registeredElements[componentId] !== "undefined") {
       // cleanup layers
-      self.registeredElements[componentId].layers.forEach(function (item) {
+      self.registeredElements[componentId].layers.forEach(item => {
         if (self.map.style.getLayer(item)) {
           self.map.style.removeLayer(item);
         }
       }); // cleanup sources
 
-      self.registeredElements[componentId].sources.forEach(function (item) {
+      self.registeredElements[componentId].sources.forEach(item => {
         if (self.map.style.getSource(item)) {
           self.map.style.removeSource(item);
         }
       }); // cleanup images
 
-      self.registeredElements[componentId].images.forEach(function (item) {
+      self.registeredElements[componentId].images.forEach(item => {
         if (self.map.hasImage(item)) {
           self.map.style.removeImage(item);
         }
       }); // cleanup events
 
-      self.registeredElements[componentId].events.forEach(function (item) {
-        var _self$map2;
-
-        (_self$map2 = self.map).off.apply(_self$map2, _toConsumableArray(item));
+      self.registeredElements[componentId].events.forEach(item => {
+        self.map.off(...item);
       }); // cleanup controls
 
-      self.registeredElements[componentId].controls.forEach(function (item) {
+      self.registeredElements[componentId].controls.forEach(item => {
         self.map.removeControl(item);
       }); // cleanup wrapper events
 
-      self.registeredElements[componentId].wrapperEvents.forEach(function (item) {
-        var _self$wrapper;
-
-        (_self$wrapper = self.wrapper).off.apply(_self$wrapper, _toConsumableArray(item));
+      self.registeredElements[componentId].wrapperEvents.forEach(item => {
+        self.wrapper.off(...item);
       });
       self.initRegisteredElements(componentId, true);
     }
   }; // add style prop functions that require map._update to be called afterwards
 
 
-  var updatingStyleFunctions = ["moveLayer", "removeLayer", "removeSource", "setPaintProperty", "setLayoutProperty"];
-  updatingStyleFunctions.forEach(function (item) {
-    _this[item] = function () {
+  let updatingStyleFunctions = ["moveLayer", "removeLayer", "removeSource", "setPaintProperty", "setLayoutProperty"];
+  updatingStyleFunctions.forEach(item => {
+    this[item] = function () {
       if (self.map && _this.map.style && typeof self.map.style[item] === "function") {
-        var _self$map$style;
-
-        (_self$map$style = self.map.style)[item].apply(_self$map$style, arguments);
+        self.map.style[item](...arguments);
       }
 
       return self.map._update ? self.map._update(true) : undefined;
     };
   }); // add style prop functions
 
-  var styleFunctions = ["getLayer", "getSource", "listImages", "getPaintProperty", "getLayoutProperty", "removeImage"];
-  styleFunctions.forEach(function (item) {
-    _this[item] = function () {
+  let styleFunctions = ["getLayer", "getSource", "listImages", "getPaintProperty", "getLayoutProperty", "removeImage"];
+  styleFunctions.forEach(item => {
+    this[item] = function () {
       if (self.map && self.map.style) {
-        var _self$map$style2;
-
-        return (_self$map$style2 = self.map.style)[item].apply(_self$map$style2, arguments);
+        return self.map.style[item](...arguments);
       }
 
       return false;
     };
   });
 
-  this.addNativeMaplibreFunctionsAndProps = function () {
+  this.addNativeMaplibreFunctionsAndProps = () => {
     //  add MapLibre-gl functions
-    Object.getOwnPropertyNames(Object.getPrototypeOf(_this.map)).forEach(function (item) {
-      if (typeof _this[item] === "undefined") {
-        _this[item] = function () {
-          var _self$map3;
-
-          return (_self$map3 = self.map)[item].apply(_self$map3, arguments);
+    Object.getOwnPropertyNames(Object.getPrototypeOf(this.map)).forEach(item => {
+      if (typeof this[item] === "undefined") {
+        this[item] = function () {
+          return self.map[item](...arguments);
         };
       }
     }); //  add MapLibre-gl properties
 
-    Object.keys(_this.map).forEach(function (item) {
-      if (typeof _this[item] === "undefined") {
-        _this[item] = self.map[item];
+    Object.keys(this.map).forEach(item => {
+      if (typeof this[item] === "undefined") {
+        this[item] = self.map[item];
       }
     });
   }; // add functions that are missing on the MapLibre instances prototype
 
 
-  var missingFunctions = ["getZoom", "setZoom", "getCenter", "setCenter", "getBearing", "setBearing", "getPitch", "setPitch", "jumpTo", "flyTo", "panTo", "panBy", "panBy", "zoomTo", "zoomIn", "zoomOut", "getPadding", "setPadding", "rotateTo", "resetNorth", "resetNorthPitch", "snapToNorth", "cameraForBounds", "fitBounds", "fitScreenCoordinates", "getFreeCameraOptions", "setFreeCameraOptions", "easeTo", "stop"];
-  missingFunctions.forEach(function (item) {
-    _this[item] = function () {
+  let missingFunctions = ["getZoom", "setZoom", "getCenter", "setCenter", "getBearing", "setBearing", "getPitch", "setPitch", "jumpTo", "flyTo", "panTo", "panBy", "panBy", "zoomTo", "zoomIn", "zoomOut", "getPadding", "setPadding", "rotateTo", "resetNorth", "resetNorthPitch", "snapToNorth", "cameraForBounds", "fitBounds", "fitScreenCoordinates", "getFreeCameraOptions", "setFreeCameraOptions", "easeTo", "stop"];
+  missingFunctions.forEach(item => {
+    this[item] = function () {
       if (typeof self.map[item] === "function") {
-        var _self$map$item;
-
         for (var _len = arguments.length, props = new Array(_len), _key = 0; _key < _len; _key++) {
           props[_key] = arguments[_key];
         }
 
-        return (_self$map$item = self.map[item]).call.apply(_self$map$item, [self.map].concat(props));
+        return self.map[item].call(self.map, ...props);
       }
 
       return undefined;
     };
   }); // initialize the MapLibre-gl instance
 
-  var initializeMapLibre = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              if (!(typeof props.mapOptions.style === "string" && props.mapOptions.style.indexOf("mapbox://") === -1)) {
-                _context.next = 3;
-                break;
-              }
-
-              _context.next = 3;
-              return fetch(props.mapOptions.style).then(function (response) {
-                if (response.ok) {
-                  return response.json();
-                } else {
-                  throw new Error("error loading map style.json");
-                }
-              }).then(function (styleJson) {
-                styleJson.layers.forEach(function (item) {
-                  self.baseLayers.push(item.id);
-
-                  if (!self.firstSymbolLayer && item.type === "symbol") {
-                    self.firstSymbolLayer = item.id;
-                  }
-                });
-                self.styleJson = styleJson;
-                props.mapOptions.style = styleJson;
-              }).catch(function (error) {
-                console.log(error);
-              });
-
-            case 3:
-              self.map = new maplibregl.Map(props.mapOptions);
-              self.addNativeMaplibreFunctionsAndProps();
-              self.wrapper.refreshViewport();
-              self.wrapper.fire("viewportchange");
-              self.map.on("load", function () {
-                self.addNativeMaplibreFunctionsAndProps();
-              });
-              self.map.on("move", function () {
-                self.wrapper.viewportState = self.wrapper.getViewport();
-                self.wrapper.fire("viewportchange");
-              });
-              self.map.on("idle", function () {
-                self.wrapper.refreshLayerState();
-              });
-              self.map.on("data", function () {
-                self.wrapper.refreshLayerState();
-              });
-
-              if (typeof props.onReady === "function") {
-                props.onReady(self.map, self);
-              }
-
-            case 12:
-            case "end":
-              return _context.stop();
-          }
+  let initializeMapLibre = async () => {
+    // if mapOptions style URL is given and if it is not a mapbox URL fetch the json and initialize the mapbox object
+    if (typeof props.mapOptions.style === "string" && props.mapOptions.style.indexOf("mapbox://") === -1) {
+      await fetch(props.mapOptions.style).then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("error loading map style.json");
         }
-      }, _callee);
-    }));
+      }).then(styleJson => {
+        styleJson.layers.forEach(item => {
+          self.baseLayers.push(item.id);
 
-    return function initializeMapLibre() {
-      return _ref2.apply(this, arguments);
-    };
-  }();
+          if (!self.firstSymbolLayer && item.type === "symbol") {
+            self.firstSymbolLayer = item.id;
+          }
+        });
+        self.styleJson = styleJson;
+        props.mapOptions.style = styleJson;
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+
+    self.map = new maplibregl.Map(props.mapOptions);
+    self.addNativeMaplibreFunctionsAndProps();
+    self.wrapper.refreshViewport();
+    self.wrapper.fire("viewportchange");
+    self.map.on("load", () => {
+      self.addNativeMaplibreFunctionsAndProps();
+    });
+    self.map.on("move", () => {
+      self.wrapper.viewportState = self.wrapper.getViewport();
+      self.wrapper.fire("viewportchange");
+    });
+    self.map.on("idle", () => {
+      self.wrapper.refreshLayerState();
+    });
+    self.map.on("data", () => {
+      self.wrapper.refreshLayerState();
+    });
+
+    if (typeof props.onReady === "function") {
+      props.onReady(self.map, self);
+    }
+  };
 
   initializeMapLibre();
 };
@@ -798,17 +545,17 @@ var MapLibreGlWrapper = function MapLibreGlWrapper(props) {
  * @component
  */
 
-var MapLibreMap = function MapLibreMap(props) {
-  var map = useRef(null);
-  var mapContainer = useRef(null);
-  var mapContext = useContext(MapContext);
-  var mapContextRef = useRef(mapContext);
-  var mapIdRef = useRef(props.mapId);
-  var mapOptions = props.options;
-  useEffect(function () {
-    var mapId = mapIdRef.current;
-    var _mapContext = mapContextRef.current;
-    return function () {
+const MapLibreMap = props => {
+  const map = useRef(null);
+  const mapContainer = useRef(null);
+  const mapContext = useContext(MapContext);
+  const mapContextRef = useRef(mapContext);
+  const mapIdRef = useRef(props.mapId);
+  const mapOptions = props.options;
+  useEffect(() => {
+    let mapId = mapIdRef.current;
+    let _mapContext = mapContextRef.current;
+    return () => {
       var _map$current, _map$current$remove;
 
       _mapContext.removeMap(mapId);
@@ -817,14 +564,15 @@ var MapLibreMap = function MapLibreMap(props) {
       map.current = null;
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (mapContainer.current) {
       map.current = new MapLibreGlWrapper({
-        mapOptions: _objectSpread2({
-          container: mapContainer.current
-        }, mapOptions),
-        onReady: function onReady(map, wrapper) {
-          map.once("load", function () {
+        mapOptions: {
+          container: mapContainer.current,
+          ...mapOptions
+        },
+        onReady: (map, wrapper) => {
+          map.once("load", () => {
             if (props.mapId) {
               mapContext.registerMap(props.mapId, wrapper);
             } else {
@@ -875,25 +623,15 @@ MapLibreMap.propTypes = {
 
 function useMapState(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  var mapContext = useContext(MapContext);
-  var initializedRef = useRef(false);
-  var mapRef = useRef(undefined);
+  const mapContext = useContext(MapContext);
+  const initializedRef = useRef(false);
+  const mapRef = useRef(undefined);
+  const [viewport, setViewport] = useState(undefined);
+  const viewportRef = useRef(undefined);
+  const [layers, setLayers] = useState(undefined);
+  const layersRef = useRef(undefined); //const mapRef = useRef(props.map);
 
-  var _useState = useState(undefined),
-      _useState2 = _slicedToArray(_useState, 2),
-      viewport = _useState2[0],
-      setViewport = _useState2[1];
-
-  var viewportRef = useRef(undefined);
-
-  var _useState3 = useState(undefined),
-      _useState4 = _slicedToArray(_useState3, 2),
-      layers = _useState4[0],
-      setLayers = _useState4[1];
-
-  var layersRef = useRef(undefined); //const mapRef = useRef(props.map);
-
-  var componentId = useRef(v4());
+  const componentId = useRef(v4());
   /**
    * returns the element if it matches the defined filter criteria
    * to be used as filter function on the layers array
@@ -901,7 +639,7 @@ function useMapState(props) {
    * @param {object} layer
    */
 
-  var layerIdFilter = useCallback(function (layer) {
+  const layerIdFilter = useCallback(layer => {
     var _props$filter, _props$filter2;
 
     if (!(props !== null && props !== void 0 && (_props$filter = props.filter) !== null && _props$filter !== void 0 && _props$filter.includeBaseLayers) && layer.baseLayer) {
@@ -918,19 +656,19 @@ function useMapState(props) {
 
     return true;
   }, [props.filter]);
-  var refreshLayerState = useCallback(function () {
-    var _layerState = mapRef.current.wrapper.layerState.filter(layerIdFilter);
+  const refreshLayerState = useCallback(() => {
+    let _layerState = mapRef.current.wrapper.layerState.filter(layerIdFilter);
 
-    var _layerStateString = JSON.stringify(_layerState);
+    let _layerStateString = JSON.stringify(_layerState);
 
     if (layersRef.current !== _layerStateString) {
       layersRef.current = _layerStateString;
       setLayers(_layerState);
     }
   }, [layerIdFilter]);
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
+  useEffect(() => {
+    let _componentId = componentId.current;
+    return () => {
       // cleanup all event listeners
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
@@ -940,7 +678,7 @@ function useMapState(props) {
       initializedRef.current = false;
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     var _props$watch, _props$watch2;
 
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
@@ -952,7 +690,7 @@ function useMapState(props) {
     if (props !== null && props !== void 0 && (_props$watch = props.watch) !== null && _props$watch !== void 0 && _props$watch.viewport) {
       setViewport(mapRef.current.wrapper.viewportState); // register viewportchange event handler
 
-      mapRef.current.wrapper.on("viewportchange", function () {
+      mapRef.current.wrapper.on("viewportchange", () => {
         var _mapRef$current;
 
         if (viewportRef.current !== ((_mapRef$current = mapRef.current) === null || _mapRef$current === void 0 ? void 0 : _mapRef$current.wrapper.viewportStateString)) {
@@ -975,8 +713,8 @@ function useMapState(props) {
     }
   }, [mapContext.mapIds, mapContext, props.mapId, refreshLayerState, props]);
   return {
-    layers: layers,
-    viewport: viewport
+    layers,
+    viewport
   };
 }
 
@@ -1020,8 +758,8 @@ useMapState.propTypes = {
 
 function useMap(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  var mapContext = useContext(MapContext);
-  var mapState = useMapState({
+  const mapContext = useContext(MapContext);
+  const mapState = useMapState({
     mapId: props.mapId,
     watch: {
       viewport: false,
@@ -1032,18 +770,13 @@ function useMap(props) {
       includeBaseLayers: true
     }
   });
-  var initializedRef = useRef(false);
-  var mapRef = useRef(undefined);
-  var componentId = useRef(v4());
-
-  var _useState = useState(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      mapIsReady = _useState2[0],
-      setMapIsReady = _useState2[1];
-
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
+  const initializedRef = useRef(false);
+  const mapRef = useRef(undefined);
+  const componentId = useRef(v4());
+  const [mapIsReady, setMapIsReady] = useState(false);
+  useEffect(() => {
+    let _componentId = componentId.current;
+    return () => {
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
@@ -1053,15 +786,15 @@ function useMap(props) {
       setMapIsReady(false);
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // check if waitForLayer (string, layer id of the layer this hook is supposed to wait for)
     // exists as layer in the MapLibre instance
 
     if (props.waitForLayer) {
       var _mapState$layers;
 
-      var layerFound = false;
-      mapState === null || mapState === void 0 ? void 0 : (_mapState$layers = mapState.layers) === null || _mapState$layers === void 0 ? void 0 : _mapState$layers.forEach(function (layer) {
+      let layerFound = false;
+      mapState === null || mapState === void 0 ? void 0 : (_mapState$layers = mapState.layers) === null || _mapState$layers === void 0 ? void 0 : _mapState$layers.forEach(layer => {
         if (layer.id === props.waitForLayer) {
           layerFound = true;
         }
@@ -1080,7 +813,7 @@ function useMap(props) {
   }, [mapContext.mapIds, mapState.layers, mapContext, props.waitForLayer, props.mapId]);
   return {
     map: mapRef.current,
-    mapIsReady: mapIsReady,
+    mapIsReady,
     componentId: componentId.current,
     layers: mapState.layers
   };
@@ -1095,13 +828,13 @@ function useMap(props) {
  * @component
  */
 
-var MlComponentTemplate = function MlComponentTemplate(props) {
-  var mapHook = useMap({
+const MlComponentTemplate = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var initializedRef = useRef(false);
-  useEffect(function () {
+  const initializedRef = useRef(false);
+  useEffect(() => {
     if (!mapHook.mapIsReady || initializedRef.current) return; // the MapLibre-gl instance (mapHook.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
@@ -1127,21 +860,16 @@ MlComponentTemplate.propTypes = {
  * @Component
  */
 
-var MlFillExtrusionLayer = function MlFillExtrusionLayer(props) {
-  var mapContext = useContext(MapContext);
-  var mapRef = useRef(null);
-
-  var _useState = useState(true),
-      _useState2 = _slicedToArray(_useState, 2),
-      showLayer = _useState2[0],
-      setShowLayer = _useState2[1];
-
-  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlFillExtrusionLayer-") + v4());
-  var initializedRef = useRef(false);
-  var layerId = useRef(props.layerId || "MlFillExtrusionLayer-" + v4());
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
+const MlFillExtrusionLayer = props => {
+  const mapContext = useContext(MapContext);
+  const mapRef = useRef(null);
+  const [showLayer, setShowLayer] = useState(true);
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlFillExtrusionLayer-") + v4());
+  const initializedRef = useRef(false);
+  const layerId = useRef(props.layerId || "MlFillExtrusionLayer-" + v4());
+  useEffect(() => {
+    let _componentId = componentId.current;
+    return () => {
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = undefined;
@@ -1150,13 +878,13 @@ var MlFillExtrusionLayer = function MlFillExtrusionLayer(props) {
       initializedRef.current = false;
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
-    var lastLabelLayerId = undefined;
+    let lastLabelLayerId = undefined;
 
     if (mapContext.map.getLayer("waterway-name")) {
       lastLabelLayerId = "waterway-name";
@@ -1172,10 +900,11 @@ var MlFillExtrusionLayer = function MlFillExtrusionLayer(props) {
       source: props.sourceId || "openmaptiles",
       "source-layer": props.sourceLayer || "building",
       minzoom: props.minZoom || 14,
-      paint: _objectSpread2({}, props.paint)
+      paint: { ...props.paint
+      }
     }, props.insertBeforeLayer || lastLabelLayerId, componentId.current);
   }, [mapContext, props.insertBeforeLayer, props.mapId, props.minZoom, props.paint, props.sourceId, props.sourceLayer]);
-  useEffect(function () {
+  useEffect(() => {
     if (!initializedRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
     mapRef.current.setLayoutProperty(layerId.current, "visibility", showLayer ? "visible" : "none");
@@ -1183,9 +912,7 @@ var MlFillExtrusionLayer = function MlFillExtrusionLayer(props) {
   return /*#__PURE__*/React__default.createElement(Button, {
     color: "primary",
     variant: showLayer ? "contained" : "outlined",
-    onClick: function onClick() {
-      return setShowLayer(!showLayer);
-    }
+    onClick: () => setShowLayer(!showLayer)
   }, "Composite");
 };
 
@@ -1254,7 +981,7 @@ MlFillExtrusionLayer.propTypes = {
   insertBeforeLayer: PropTypes.string
 };
 
-var getDefaultPaintPropsByType = function getDefaultPaintPropsByType(type, defaultPaintOverrides) {
+const getDefaultPaintPropsByType = (type, defaultPaintOverrides) => {
   switch (type) {
     case "fill":
       if (defaultPaintOverrides !== null && defaultPaintOverrides !== void 0 && defaultPaintOverrides.fill) {
@@ -1289,7 +1016,7 @@ var getDefaultPaintPropsByType = function getDefaultPaintPropsByType(type, defau
   }
 };
 
-var mapGeometryTypesToLayerTypes = {
+const mapGeometryTypesToLayerTypes = {
   Position: "circle",
   Point: "circle",
   MultiPoint: "circle",
@@ -1300,7 +1027,7 @@ var mapGeometryTypesToLayerTypes = {
   GeometryCollection: "circle"
 };
 
-var getDefaulLayerTypeByGeometry = function getDefaulLayerTypeByGeometry(geojson) {
+const getDefaulLayerTypeByGeometry = geojson => {
   if ((geojson === null || geojson === void 0 ? void 0 : geojson.type) === "Feature") {
     var _geojson$geometry;
 
@@ -1316,48 +1043,48 @@ var getDefaulLayerTypeByGeometry = function getDefaulLayerTypeByGeometry(geojson
   }
 };
 
-var legalLayerTypes = ["circle", "fill", "line"];
+const legalLayerTypes = ["circle", "fill", "line"];
 /**
  * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
  *
  * @component
  */
 
-var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
+const MlGeoJsonLayer = props => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  var mapHook = useMap({
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var initializedRef = useRef(false);
-  var layerId = useRef(props.layerId || "MlGeoJsonLayer-" + mapHook.componentId);
-  var layerTypeRef = useRef(undefined);
-  useEffect(function () {
+  const initializedRef = useRef(false);
+  const layerId = useRef(props.layerId || "MlGeoJsonLayer-" + mapHook.componentId);
+  const layerTypeRef = useRef(undefined);
+  useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;
 
     for (var key in props.layout) {
       mapHook.map.setLayoutProperty(layerId.current, key, props.layout[key]);
     }
   }, [props.layout, mapHook.map, props.mapId]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;
 
-    var _paint = props.paint || getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides);
+    let _paint = props.paint || getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides);
 
     for (var key in _paint) {
       mapHook.map.setPaintProperty(layerId.current, key, _paint[key]);
     }
   }, [props.paint, mapHook.map, props.mapId, props.defaultPaintOverrides]);
-  useEffect(function () {
+  useEffect(() => {
     var _mapHook$map;
 
     if (!(mapHook !== null && mapHook !== void 0 && (_mapHook$map = mapHook.map) !== null && _mapHook$map !== void 0 && _mapHook$map.getSource(layerId.current)) || !initializedRef.current) return;
     mapHook.map.getSource(layerId.current).setData(props.geojson);
   }, [props.geojson, mapHook.map, props.type]);
-  var createLayer = useCallback(function () {
-    var geojson = props.geojson;
+  const createLayer = useCallback(() => {
+    let geojson = props.geojson;
     layerTypeRef.current = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-    mapHook.map.addLayer(_objectSpread2({
+    mapHook.map.addLayer({
       id: layerId.current,
       source: {
         type: "geojson",
@@ -1365,8 +1092,9 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       },
       type: layerTypeRef.current,
       paint: props.paint || getDefaultPaintPropsByType(layerTypeRef.current, props.defaultPaintOverrides),
-      layout: props.layout || {}
-    }, props.options), props.insertBeforeLayer, mapHook.componentId);
+      layout: props.layout || {},
+      ...props.options
+    }, props.insertBeforeLayer, mapHook.componentId);
 
     if (typeof props.onHover !== "undefined") {
       mapHook.map.on("mousemove", layerId.current, props.onHover, mapHook.componentId);
@@ -1380,7 +1108,7 @@ var MlGeoJsonLayer = function MlGeoJsonLayer(props) {
       mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
     }
   }, [mapHook, props]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map || !props.geojson) return;
 
     if (initializedRef.current && legalLayerTypes.indexOf(props.type) !== -1 && layerTypeRef.current && props.type !== layerTypeRef.current) {
@@ -1479,38 +1207,17 @@ MlGeoJsonLayer.propTypes = {
  * @component
  */
 
-var MlFollowGps = function MlFollowGps(props) {
-  var mapHook = useMap({
+const MlFollowGps = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-
-  var _useState = useState(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      isFollowed = _useState2[0],
-      setIsFollowed = _useState2[1];
-
-  var _useState3 = useState(undefined),
-      _useState4 = _slicedToArray(_useState3, 2),
-      userLocationGeoJson = _useState4[0],
-      setUserLocationGeoJson = _useState4[1];
-
-  var _useState5 = useState(false),
-      _useState6 = _slicedToArray(_useState5, 2),
-      locationAccessDenied = _useState6[0],
-      setLocationAccessDenied = _useState6[1];
-
-  var _useState7 = useState(),
-      _useState8 = _slicedToArray(_useState7, 2),
-      accuracyGeoJson = _useState8[0],
-      setAccuracyGeoJson = _useState8[1];
-
-  var _useState9 = useState(0),
-      _useState10 = _slicedToArray(_useState9, 2),
-      deviceOrientation = _useState10[0],
-      setDeviceOrientation = _useState10[1];
-
-  var getLocationSuccess = useCallback(function (pos) {
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [userLocationGeoJson, setUserLocationGeoJson] = useState(undefined);
+  const [locationAccessDenied, setLocationAccessDenied] = useState(false);
+  const [accuracyGeoJson, setAccuracyGeoJson] = useState();
+  const [deviceOrientation, setDeviceOrientation] = useState(0);
+  const getLocationSuccess = useCallback(pos => {
     if (!mapHook.map) return;
     mapHook.map.flyTo({
       center: [pos.coords.longitude, pos.coords.latitude],
@@ -1519,54 +1226,54 @@ var MlFollowGps = function MlFollowGps(props) {
       curve: 1
     });
     if (!props.showUserLocation) return;
-    var geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
+    const geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
     setUserLocationGeoJson(geoJsonPoint);
     setAccuracyGeoJson(circle(geoJsonPoint, pos.coords.accuracy / 1000));
   }, [mapHook.map, props]);
 
-  var getLocationError = function getLocationError(err) {
+  const getLocationError = err => {
     console.log("Access of user location denied");
     setLocationAccessDenied(true);
   };
 
-  var orientationCone = useMemo(function () {
+  const orientationCone = useMemo(() => {
     if (!userLocationGeoJson) {
       return undefined;
     }
 
-    var radius = 0.02;
-    var bearing1 = deviceOrientation - 15;
-    var bearing2 = deviceOrientation + 15;
-    var options = {
+    let radius = 0.02;
+    let bearing1 = deviceOrientation - 15;
+    let bearing2 = deviceOrientation + 15;
+    const options = {
       steps: 65
     };
-    var arc = lineArc(userLocationGeoJson, radius, bearing1, bearing2, options);
-    var copy = arc;
+    let arc = lineArc(userLocationGeoJson, radius, bearing1, bearing2, options);
+    let copy = arc;
     copy.geometry.coordinates.push(userLocationGeoJson.geometry.coordinates);
     copy.geometry.coordinates.slice(0, 0, userLocationGeoJson.geometry.coordinates);
     return copy;
   }, [deviceOrientation, userLocationGeoJson]);
 
-  var handleOrientation = function handleOrientation(event) {
+  const handleOrientation = event => {
     setDeviceOrientation(-event.alpha);
   };
 
-  useEffect(function () {
+  useEffect(() => {
     if (isFollowed) {
-      var _handleOrientation = handleOrientation;
+      let _handleOrientation = handleOrientation;
       window.addEventListener('deviceorientation', _handleOrientation);
-      return function () {
+      return () => {
         window.removeEventListener('deviceorientation', _handleOrientation);
       };
     }
   }, [isFollowed]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map) return;
 
     if (isFollowed) {
-      var _watchId = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
+      let _watchId = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
 
-      return function () {
+      return () => {
         navigator.geolocation.clearWatch(_watchId);
       };
     }
@@ -1574,10 +1281,11 @@ var MlFollowGps = function MlFollowGps(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, isFollowed && userLocationGeoJson && /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, {
     geojson: accuracyGeoJson,
     type: "fill",
-    paint: _objectSpread2({
+    paint: {
       "fill-color": "#cbd300",
-      "fill-opacity": 0.3
-    }, props.accuracyPaint),
+      "fill-opacity": 0.3,
+      ...props.accuracyPaint
+    },
     insertBeforeLayer: props.insertBeforeLayer
   }), isFollowed && orientationCone && /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, {
     geojson: orientationCone,
@@ -1591,20 +1299,22 @@ var MlFollowGps = function MlFollowGps(props) {
   }), isFollowed && userLocationGeoJson && /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, {
     geojson: userLocationGeoJson,
     type: "circle",
-    paint: _objectSpread2({
+    paint: {
       "circle-color": "#009ee0",
       "circle-radius": 5,
       "circle-stroke-color": "#fafaff",
-      "circle-stroke-width": 1
-    }, props.circlePaint),
+      "circle-stroke-width": 1,
+      ...props.circlePaint
+    },
     insertBeforeLayer: props.insertBeforeLayer
   }), /*#__PURE__*/React__default.createElement(Button, {
-    sx: _objectSpread2({
+    sx: {
       zIndex: 1002,
-      color: isFollowed ? props.onColor : props.offColor
-    }, props.style),
+      color: isFollowed ? props.onColor : props.offColor,
+      ...props.style
+    },
     disabled: locationAccessDenied,
-    onClick: function onClick() {
+    onClick: () => {
       setIsFollowed(!isFollowed);
     }
   }, " ", /*#__PURE__*/React__default.createElement(GpsFixedIcon, {
@@ -1689,7 +1399,7 @@ MlFollowGps.propTypes = {
   showOrientation: PropTypes.bool
 };
 
-var nmMap = {
+const nmMap = {
   street: ["footway", "street", "road", "street_name", "residential", "path", "pedestrian", "road_reference", "road_reference_intl", "square", "place"],
   number: ["house_number", "street_number"],
   place: ["city", "village", "hamlet", "locality", "croft", "neighbourhood", "suburb", "city_district", "district", "quarter", "borough", "city_block", "residential", "commercial", "industrial", "houses", "subdivision", "allotments", "postal_city", "town", "municipality", "local_administrative_area"],
@@ -1697,11 +1407,11 @@ var nmMap = {
   state: ["state", "province", "state_code"]
 };
 
-var nmConverter = function nmConverter(nmAddress) {
-  var addressArr = [];
+const nmConverter = nmAddress => {
+  const addressArr = [];
 
-  for (var key in nmMap) {
-    nmMap[key].some(function (element) {
+  for (let key in nmMap) {
+    nmMap[key].some(element => {
       if (nmAddress.hasOwnProperty(element)) {
         addressArr.push(nmAddress[element]);
         return true;
@@ -1714,28 +1424,28 @@ var nmConverter = function nmConverter(nmAddress) {
   return addressArr.join(", ");
 };
 
-var toPixels = function toPixels(length) {
-  var conversionFactor = 96;
+const toPixels = length => {
+  let conversionFactor = 96;
   conversionFactor /= 25.4;
   return conversionFactor * length + "px";
 };
 
-var createPdf = function createPdf(map, locationValue, setLoading) {
+const createPdf = (map, locationValue, setLoading) => {
   setLoading(true);
-  var width = 210;
-  var height = 297; // Calculate pixel ratio
+  const width = 210;
+  const height = 297; // Calculate pixel ratio
 
-  var actualPixelRatio = window.devicePixelRatio; // Create map container
+  const actualPixelRatio = window.devicePixelRatio; // Create map container
 
-  var hidden = document.createElement("div");
+  const hidden = document.createElement("div");
   hidden.className = "hidden-map";
   document.body.appendChild(hidden);
-  var container = document.createElement("div");
+  const container = document.createElement("div");
   container.style.width = toPixels(width);
   container.style.height = toPixels(height);
   hidden.appendChild(container); //Render map
 
-  var renderMap = new maplibregl.Map({
+  var renderMap = new maplibregl$1.Map({
     container: container,
     center: map.getCenter(),
     zoom: map.getZoom(),
@@ -1746,21 +1456,17 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
     fadeDuration: 0,
     attributionControl: false
   });
-  var style = map.getStyle();
+  let style = map.getStyle();
 
-  var _loop = function _loop(name) {
-    var src = style.sources[name];
-    Object.keys(src).forEach(function (key) {
+  for (let name in style.sources) {
+    let src = style.sources[name];
+    Object.keys(src).forEach(key => {
       //delete properties if value is undefined.
       // for instance, raster-dem might has undefined value in "url" and "bounds"
       if (!src[key]) {
         delete src[key];
       }
     });
-  };
-
-  for (var name in style.sources) {
-    _loop(name);
   }
 
   renderMap.setStyle(style);
@@ -1768,32 +1474,32 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
     var _hidden$parentNode;
 
     // TO DO: It is still under development
-    var pdf = new jsPDF({
+    const pdf = new jsPDF({
       orientation: "p",
       unit: "mm",
       compress: true
     });
     Object.defineProperty(window, "devicePixelRatio", {
-      get: function get() {
+      get: function () {
         return 300 / 96;
       }
     });
-    var offsetX = 2.5;
-    var offsetY = 2.5;
-    var marginTop = 3;
-    var marginBottom = 3;
-    var innerMargin = 2;
-    var logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAACxCAMAAABnTAbVAAAC8VBMVEUAAAD/AACAAACqAFW/AECZMzOqK1W2JEm/IECqHDmzGk25F0aqFUCxJzu2JEmqIkSvIEC0HjyqHEeuG0OzGkC2GD2uI0axIUO1IECtHz2xHUWzHEKtG0CwGj6zIkS1IUKyHz60HkSvHUKxHECzHD6uG0OxIUGzIECuHz6wHkOyHkG0HUCwHD6xHEOzIUGvIECxHz6zH0KvHkGxHUCyHT+vHEKwHEGyIECzHz+wH0KxHkGzHkCwHT+xHUKyHEGvIECxHz+yH0KzHkGwHkCxHj+zHUKwHUGxHECyHz+wH0GxH0GyHkCwHj+xHUGyHUGzHUCwHz+xH0GyH0GwHkCxHj+yHkGwHUCxHUCyHT+wH0GxH0CxHkCyHj+wHkGxHkCyHUCwHT+xH0GyH0CwH0CxHj+yHkGwHkCxHUCxHT+yHUGwH0CxH0CyHj+wHkGxHkCyHkCwHT+xHUGxH0CyH0CxHz+xHkGyHkCwHkCxHj+yHUGwHUCxH0CwHkGxHkCxHkCyHj+xHUGxHUCyH0CwHz+xHkGyHkCwHkCxHj+xHkGwHUCxHUCxHz+yH0GxHkCyHj+wHkGxHUCxHUCwHz+xH0GxHkCyHkCxHj+xHkGyHkCxHUCxHT+yH0GwHkCxHkCxHj+wHkGxHkCxHkCyHT+xH0GxH0CyHkCxHj+xHkGxHkCwHkCxHT+xHUCwH0CxHkCxHj+yHkCxHkCxHkCyHj+xHUCxH0CxHkCwHj+xHkCxHkCwHkCxHj+xHkCyHUCxH0CxHj+xHkCxHkCxHkCxHj+wHkCxHUCxH0CyHj+xHkCxHkCyHkCxHj+xHkCxHUCxHz+xHkCwHkCxHkCxHj+yHkCxHkCxHkCxHkCxHkCxHkCxHj+xHkCwHkCxHT+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xH0CxHkCxHkCyHj+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xHkCxHkD///9g21WfAAAA+XRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fn+AgYKDhIWGh4iJiouMjY6PkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc/Q0dLT1NXW19ja29zd3uDh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7v1AMKAAAAAWJLR0T61W0GSgAACWZJREFUGBnVwXlAVHUCB/DvmxkuD0QswFo3TcwzS0p01RVMpUytLKxMSVNpLUsLj7VDo7btsNTssrTMdAtWNjNbkyzF3EotwrXMI7XwAAxE5Jz5/rcaMMx782Z452/p84GV2na+ZmRqasrwxE4OtFRhI/+29SS9qn/86PGUKLQ4CW+X0p/n+xeTnGhB4v/NgIpXj3aihZhRyaCOPNYRwrW+KwkKmWxWTVYfiBRy49qzxW0hN5FaeLLiIUrv5UUkl0Au9iy1qXk1BgJIIzZ7eMG1kHuBmpVMkWCz0LQC1itzQkb6hTpsiYOdQmcfZ6M8yPWmLoWDYBsp9SCbZENuDPWpmgKbJO+mr9WQm0y95sEO8Zso9z7k7qJuj8JyzofPUeFjyA2nfvfDYl23089eyPWkfrXDYCXXI1X0Vy5BxllC/U50hHU676aqbpDLogEfoEFUR5g0qoTqJkJuAo0YjQZPpcIMab6bAayBXMgxGrDfiXrhBVnRMOyiTxhQkQtyGTTidjS4quZIEgzqfYRBjIFc2Pc0YCcaLWbdXyUY8acSBrMBCgPqqJ+nExpEniL/FQn9hpczKHdPKCyiAfeh0SMkf+wDvSbWsBlroCCtpX6volFkOcmzqdBntofN8QyGQkQudcuF12qe554DPWZRg70hUAjNoV6fwyuFv1nuhGYT3dRiDpRCVlCnHHiFlfM3m9tCo5trqUlFX/hJO0ddFqJJLut9HQ1NrquiRoc7wM/V31GPa9DkGTbIvwga9C+nZrlO+Al9opqabYWPqWy0NwbNuvQEdXgJKuI/oEaVfeFjFL32xaEZYV+yQeWBbVlZq15f9sp7W/YcrmYAS6AmOY9aeCbA13Vssv8SBPcazzuaPS/5Yvhy9bhtYfZxqlgiQU3SFg+bUzUJMtfTR0EUgpnK2s/n9oQ6qe+cT85R6SUnVPVYXsag9iVCLo2+dkQgsKv3zI9FUBGpuR7KbY6CulZ3bqplICfmhUHhWcpsdCGgi6FB16dOUeaHeATSbtyKI/Tn2TEtAn7yKLdSgkmt55ygr9M3I4ies9fkV7PJwXVTO0HFxbVUWAjTWj10kr7eikRQIb3vSJ8//5l5aSN7RyGAJ6nkuQXmRS1108eRZJgUeZp+yvvAAoP20od7VRxMeZEqDkXDAiFPuumjLCMExo3yUM2nLljhhhL6+iHVAYO6nqK6TFii05eU2ZfmhBHdf2YA7mRYIiybcnvTwqDbgJMM6Gh7WML5JhVOPvNH6CLNqmYQ62ENaSmVatbfFArNEvIoV7Phvmti2rXukrJgazXPmw6LLKa/4uUDHdAi/h8eylQtjoNX1H355JlOsIb0PtUUrhgTgeAcoza5KfddD8hIN37LjbBI+BdUV/HJI4NCEIBr2LKjVNrcFkquhypvh0UuOsCAzm5bktYnBHLRQx/d9Cv9veeCir550bBI3yoGVXv40xWZGdNT09LTH12yZmcR1X0VDlVtR8Aqc2mBXzrCdo7PaN44CHBZKc36CELMpUk1XSBE6EGa8xYEmUBT3L0giLSLZnwIYW6iGbdCGMdhGlcaAXHm07g3IVCHczRsHER6l0bVRkGk22jUTgjVpooGPQuxttCg8RDrARp0OcTqRWPKJYjlqqQh+RBtDw1ZD9FW0pDnIdqDNCQDoo2iIVMgWiINGQvRLqchwyBaFA35M0STamjEIAh3mkYMhnClNOJ6CHeGRqRCuCoakQ7RImhIJkSLoyFvQbSraMhWiDaWhhyFaDNpiKcdBFtOYwZCsG00ZjrEkoppzGsQqzsNyodY99CgukgI9TaNSoZIUiGNWgSREmjYfyDSszSsrj3EcRyjceMgTgpNWAlx1tGEYhdEiaygGddBlIdoyisQJKKQphx3QYxZNGk0hAj7mSblQIiZNKs2DgJEn6RpcyDACpr3kwu2S3TTAnfAbq58WmEP7PYYgzq1fdXf56anT5/ycOayNZ8WMaChsNeQWgZy4NXJie0hFzciY2MF1WyDrWJ/oaritfdchgAiRr18jP5ugI0cW6jCnZsWgaAcwzd6qPCdA/Z5mv4Ozr8EGvR4pZpyE2CbSR4qHU53QaP4LA99FbaDTW6po8L+iU7oMHg3fS2DPYZVUe50uhP6uBbWsom7P+xw7RnKrYuFfgMPsUl+KKw39FfKHEqBIW3Xs8lSWC61ijKrW8Egx1I2uQ0We8BNX1WzYMIsNxuVd4eVnIspc6gfTJnkZqP/RsM6l26nTG4UTHqAXl+1gVWGn6DMhnCYlkmvz8JhidDFHsqsdMICb9BrUxtY4M97KbdMghXCvqFXwWUwq+NaKjwHi3Qto1dhf5gSOruMCu9IsMqdbFI11wnDwmcepdLmEFhnHX18PQDGtM44Tj+72sBCl5yhD88/+0G/K18sor/CWFhqDuV2psfCq/UMNCdm9rdUU5cMa4V8TwVP/uszRicmJAyZ9m5ZJfCXpBAE4Lx2wWc1VLcQVhvHIN4DxrM0J2NwBBRikmdmlzCgrQ5YzbGfgaUA0k6eV1OQ8/y9qSMHJQy96e4HH389r5hBFcXBelMZ0DEngEQPdZsCG4T9zECewgUrqdcOCXZYyACqL8UFHYqoT21f2OJyD9WtQr1p1Oc52GQ3VXl6oZ6URz1OtYFNHqaqj9AovoI6LIBd/kBVQ+E1m9qVRMI2P1LFDjRx5FGzx2GfN+nPMxA+OpVQo7L2sM9k+suGzHhq9AJs1Jl+arpBbhW1uRJ2KqXSMii0LqAWu2Crb6hQGgOlrr9Sgxmw1ftUSIe/MR42q7I9bPU05bZLUPEEm5UDe02jTGU3qJHWsjn3wl7jKbMA6iK+YjO6wF430te3IQgg9hCDOgCbJdNH+RUIqMtxBvMybDaAPiYhiH5lDOJW2Kwfm7yBoJIqGFhX2CyJXgURCG74OQZS4YDNxrJR6RVozohKBrAHdpvEBjUj0LyUCqpbDbvdzwaTocWQUqqaB7stYr1MaJNQRDV3wG7v8DdrJGjU7SBVXA+7fcELPgyFZh2+oL/+sJmjjOd9HAYdWuXQzxWwWS+e92EodJEWeagQA5tNJ7khFHrdUk65cNgsh8wOhX4991GmFewVVs7nHTAiYil9tYO9Uuruh1F3n2GTONjr6dEwrnMevfrBXrEwwzGvig3GomXrvoP1HkQLJ6WV8II30OJ1XO0huQu/AwN3k5Vh+B1wpP3EIfhdCE2fhv+X/wF/AO+L9vuzfwAAAABJRU5ErkJggg==";
-    var textBuffer = 1;
-    var lineHeight = 3.25;
-    var text = locationValue ? nmConverter(locationValue.address) : "";
-    var textChunksSeperator = text.split(",");
-    var textChunks = [];
+    const offsetX = 2.5;
+    const offsetY = 2.5;
+    const marginTop = 3;
+    const marginBottom = 3;
+    const innerMargin = 2;
+    const logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKgAAACxCAMAAABnTAbVAAAC8VBMVEUAAAD/AACAAACqAFW/AECZMzOqK1W2JEm/IECqHDmzGk25F0aqFUCxJzu2JEmqIkSvIEC0HjyqHEeuG0OzGkC2GD2uI0axIUO1IECtHz2xHUWzHEKtG0CwGj6zIkS1IUKyHz60HkSvHUKxHECzHD6uG0OxIUGzIECuHz6wHkOyHkG0HUCwHD6xHEOzIUGvIECxHz6zH0KvHkGxHUCyHT+vHEKwHEGyIECzHz+wH0KxHkGzHkCwHT+xHUKyHEGvIECxHz+yH0KzHkGwHkCxHj+zHUKwHUGxHECyHz+wH0GxH0GyHkCwHj+xHUGyHUGzHUCwHz+xH0GyH0GwHkCxHj+yHkGwHUCxHUCyHT+wH0GxH0CxHkCyHj+wHkGxHkCyHUCwHT+xH0GyH0CwH0CxHj+yHkGwHkCxHUCxHT+yHUGwH0CxH0CyHj+wHkGxHkCyHkCwHT+xHUGxH0CyH0CxHz+xHkGyHkCwHkCxHj+yHUGwHUCxH0CwHkGxHkCxHkCyHj+xHUGxHUCyH0CwHz+xHkGyHkCwHkCxHj+xHkGwHUCxHUCxHz+yH0GxHkCyHj+wHkGxHUCxHUCwHz+xH0GxHkCyHkCxHj+xHkGyHkCxHUCxHT+yH0GwHkCxHkCxHj+wHkGxHkCxHkCyHT+xH0GxH0CyHkCxHj+xHkGxHkCwHkCxHT+xHUCwH0CxHkCxHj+yHkCxHkCxHkCyHj+xHUCxH0CxHkCwHj+xHkCxHkCwHkCxHj+xHkCyHUCxH0CxHj+xHkCxHkCxHkCxHj+wHkCxHUCxH0CyHj+xHkCxHkCyHkCxHj+xHkCxHUCxHz+xHkCwHkCxHkCxHj+yHkCxHkCxHkCxHkCxHkCxHkCxHj+xHkCwHkCxHT+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xH0CxHkCxHkCyHj+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xHkCxHkCxHkCxHj+xHkCxHkD///9g21WfAAAA+XRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fn+AgYKDhIWGh4iJiouMjY6PkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc/Q0dLT1NXW19ja29zd3uDh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7v1AMKAAAAAWJLR0T61W0GSgAACWZJREFUGBnVwXlAVHUCB/DvmxkuD0QswFo3TcwzS0p01RVMpUytLKxMSVNpLUsLj7VDo7btsNTssrTMdAtWNjNbkyzF3EotwrXMI7XwAAxE5Jz5/rcaMMx782Z452/p84GV2na+ZmRqasrwxE4OtFRhI/+29SS9qn/86PGUKLQ4CW+X0p/n+xeTnGhB4v/NgIpXj3aihZhRyaCOPNYRwrW+KwkKmWxWTVYfiBRy49qzxW0hN5FaeLLiIUrv5UUkl0Au9iy1qXk1BgJIIzZ7eMG1kHuBmpVMkWCz0LQC1itzQkb6hTpsiYOdQmcfZ6M8yPWmLoWDYBsp9SCbZENuDPWpmgKbJO+mr9WQm0y95sEO8Zso9z7k7qJuj8JyzofPUeFjyA2nfvfDYl23089eyPWkfrXDYCXXI1X0Vy5BxllC/U50hHU676aqbpDLogEfoEFUR5g0qoTqJkJuAo0YjQZPpcIMab6bAayBXMgxGrDfiXrhBVnRMOyiTxhQkQtyGTTidjS4quZIEgzqfYRBjIFc2Pc0YCcaLWbdXyUY8acSBrMBCgPqqJ+nExpEniL/FQn9hpczKHdPKCyiAfeh0SMkf+wDvSbWsBlroCCtpX6volFkOcmzqdBntofN8QyGQkQudcuF12qe554DPWZRg70hUAjNoV6fwyuFv1nuhGYT3dRiDpRCVlCnHHiFlfM3m9tCo5trqUlFX/hJO0ddFqJJLut9HQ1NrquiRoc7wM/V31GPa9DkGTbIvwga9C+nZrlO+Al9opqabYWPqWy0NwbNuvQEdXgJKuI/oEaVfeFjFL32xaEZYV+yQeWBbVlZq15f9sp7W/YcrmYAS6AmOY9aeCbA13Vssv8SBPcazzuaPS/5Yvhy9bhtYfZxqlgiQU3SFg+bUzUJMtfTR0EUgpnK2s/n9oQ6qe+cT85R6SUnVPVYXsag9iVCLo2+dkQgsKv3zI9FUBGpuR7KbY6CulZ3bqplICfmhUHhWcpsdCGgi6FB16dOUeaHeATSbtyKI/Tn2TEtAn7yKLdSgkmt55ygr9M3I4ies9fkV7PJwXVTO0HFxbVUWAjTWj10kr7eikRQIb3vSJ8//5l5aSN7RyGAJ6nkuQXmRS1108eRZJgUeZp+yvvAAoP20od7VRxMeZEqDkXDAiFPuumjLCMExo3yUM2nLljhhhL6+iHVAYO6nqK6TFii05eU2ZfmhBHdf2YA7mRYIiybcnvTwqDbgJMM6Gh7WML5JhVOPvNH6CLNqmYQ62ENaSmVatbfFArNEvIoV7Phvmti2rXukrJgazXPmw6LLKa/4uUDHdAi/h8eylQtjoNX1H355JlOsIb0PtUUrhgTgeAcoza5KfddD8hIN37LjbBI+BdUV/HJI4NCEIBr2LKjVNrcFkquhypvh0UuOsCAzm5bktYnBHLRQx/d9Cv9veeCir550bBI3yoGVXv40xWZGdNT09LTH12yZmcR1X0VDlVtR8Aqc2mBXzrCdo7PaN44CHBZKc36CELMpUk1XSBE6EGa8xYEmUBT3L0giLSLZnwIYW6iGbdCGMdhGlcaAXHm07g3IVCHczRsHER6l0bVRkGk22jUTgjVpooGPQuxttCg8RDrARp0OcTqRWPKJYjlqqQh+RBtDw1ZD9FW0pDnIdqDNCQDoo2iIVMgWiINGQvRLqchwyBaFA35M0STamjEIAh3mkYMhnClNOJ6CHeGRqRCuCoakQ7RImhIJkSLoyFvQbSraMhWiDaWhhyFaDNpiKcdBFtOYwZCsG00ZjrEkoppzGsQqzsNyodY99CgukgI9TaNSoZIUiGNWgSREmjYfyDSszSsrj3EcRyjceMgTgpNWAlx1tGEYhdEiaygGddBlIdoyisQJKKQphx3QYxZNGk0hAj7mSblQIiZNKs2DgJEn6RpcyDACpr3kwu2S3TTAnfAbq58WmEP7PYYgzq1fdXf56anT5/ycOayNZ8WMaChsNeQWgZy4NXJie0hFzciY2MF1WyDrWJ/oaritfdchgAiRr18jP5ugI0cW6jCnZsWgaAcwzd6qPCdA/Z5mv4Ozr8EGvR4pZpyE2CbSR4qHU53QaP4LA99FbaDTW6po8L+iU7oMHg3fS2DPYZVUe50uhP6uBbWsom7P+xw7RnKrYuFfgMPsUl+KKw39FfKHEqBIW3Xs8lSWC61ijKrW8Egx1I2uQ0We8BNX1WzYMIsNxuVd4eVnIspc6gfTJnkZqP/RsM6l26nTG4UTHqAXl+1gVWGn6DMhnCYlkmvz8JhidDFHsqsdMICb9BrUxtY4M97KbdMghXCvqFXwWUwq+NaKjwHi3Qto1dhf5gSOruMCu9IsMqdbFI11wnDwmcepdLmEFhnHX18PQDGtM44Tj+72sBCl5yhD88/+0G/K18sor/CWFhqDuV2psfCq/UMNCdm9rdUU5cMa4V8TwVP/uszRicmJAyZ9m5ZJfCXpBAE4Lx2wWc1VLcQVhvHIN4DxrM0J2NwBBRikmdmlzCgrQ5YzbGfgaUA0k6eV1OQ8/y9qSMHJQy96e4HH389r5hBFcXBelMZ0DEngEQPdZsCG4T9zECewgUrqdcOCXZYyACqL8UFHYqoT21f2OJyD9WtQr1p1Oc52GQ3VXl6oZ6URz1OtYFNHqaqj9AovoI6LIBd/kBVQ+E1m9qVRMI2P1LFDjRx5FGzx2GfN+nPMxA+OpVQo7L2sM9k+suGzHhq9AJs1Jl+arpBbhW1uRJ2KqXSMii0LqAWu2Crb6hQGgOlrr9Sgxmw1ftUSIe/MR42q7I9bPU05bZLUPEEm5UDe02jTGU3qJHWsjn3wl7jKbMA6iK+YjO6wF430te3IQgg9hCDOgCbJdNH+RUIqMtxBvMybDaAPiYhiH5lDOJW2Kwfm7yBoJIqGFhX2CyJXgURCG74OQZS4YDNxrJR6RVozohKBrAHdpvEBjUj0LyUCqpbDbvdzwaTocWQUqqaB7stYr1MaJNQRDV3wG7v8DdrJGjU7SBVXA+7fcELPgyFZh2+oL/+sJmjjOd9HAYdWuXQzxWwWS+e92EodJEWeagQA5tNJ7khFHrdUk65cNgsh8wOhX4991GmFewVVs7nHTAiYil9tYO9Uuruh1F3n2GTONjr6dEwrnMevfrBXrEwwzGvig3GomXrvoP1HkQLJ6WV8II30OJ1XO0huQu/AwN3k5Vh+B1wpP3EIfhdCE2fhv+X/wF/AO+L9vuzfwAAAABJRU5ErkJggg==";
+    const textBuffer = 1;
+    const lineHeight = 3.25;
+    const text = locationValue ? nmConverter(locationValue.address) : "";
+    const textChunksSeperator = text.split(",");
+    const textChunks = [];
 
     if (textChunks.length) {
-      textChunksSeperator.forEach(function (chunk) {
-        var limitChunks = chunk.match(/.{1,34}/g);
-        textChunks.push.apply(textChunks, _toConsumableArray(limitChunks));
+      textChunksSeperator.forEach(chunk => {
+        const limitChunks = chunk.match(/.{1,34}/g);
+        textChunks.push(...limitChunks);
       });
     } //Render map image
 
@@ -1807,7 +1513,7 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
     pdf.text("Datenquelle: © OpenStreetMap-Mitwirkende", 140, pdf.internal.pageSize.height - 3); //Render infobox
 
     pdf.setFillColor("white");
-    var infoBoxSize = textChunks.length * lineHeight + marginTop + marginBottom + lineHeight * 2 + innerMargin * 2 + textBuffer;
+    const infoBoxSize = textChunks.length * lineHeight + marginTop + marginBottom + lineHeight * 2 + innerMargin * 2 + textBuffer;
     pdf.rect(offsetX, 2, 66.5, infoBoxSize, "F");
     pdf.setFontSize(10);
     pdf.text("Karten PDF:", 6, offsetY + marginTop); //Render inner infobox
@@ -1815,7 +1521,7 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
     pdf.rect(6, 7, 60, textChunks.length * lineHeight + innerMargin * 2 + textBuffer);
     pdf.setFontSize(10); //Write out address
 
-    textChunks.forEach(function (text, i) {
+    textChunks.forEach((text, i) => {
       pdf.text(text.trim(), 8, 10 + i * 3.5 + innerMargin);
     }); //Add WG Logo
 
@@ -1834,7 +1540,7 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
     renderMap.remove();
     (_hidden$parentNode = hidden.parentNode) === null || _hidden$parentNode === void 0 ? void 0 : _hidden$parentNode.removeChild(hidden);
     Object.defineProperty(window, "devicePixelRatio", {
-      get: function get() {
+      get: function () {
         return actualPixelRatio;
       }
     });
@@ -1848,11 +1554,11 @@ var createPdf = function createPdf(map, locationValue, setLoading) {
  * @component
  */
 
-var MlCreatePdfButton = function MlCreatePdfButton(props) {
-  var mapContext = useContext(MapContext);
-  var initializedRef = useRef(false);
-  var mapRef = useRef(undefined);
-  useEffect(function () {
+const MlCreatePdfButton = props => {
+  const mapContext = useContext(MapContext);
+  const initializedRef = useRef(false);
+  const mapRef = useRef(undefined);
+  useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
@@ -1860,8 +1566,8 @@ var MlCreatePdfButton = function MlCreatePdfButton(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(Button, {
     color: "primary",
     variant: "contained",
-    onClick: function onClick() {
-      createPdf(mapRef.current, null, function () {});
+    onClick: () => {
+      createPdf(mapRef.current, null, () => {});
     }
   }, /*#__PURE__*/React__default.createElement(PrinterIcon, null)));
 };
@@ -1876,15 +1582,15 @@ MlCreatePdfButton.propTypes = {
   mapId: PropTypes.string
 };
 
-var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
-  var mapHook = useMap({
+const MlImageMarkerLayer = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var layerInitializedRef = useRef(false);
-  var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-  var layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
-  useEffect(function () {
+  const layerInitializedRef = useRef(false);
+  const imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
+  const layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
+  useEffect(() => {
     if (!mapHook.mapIsReady || mapHook.map && !mapHook.map.getLayer(layerId.current) || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
@@ -1902,16 +1608,16 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
       }
     }
   }, [props.options, layerId.current, props.mapId]);
-  var addLayer = useCallback(function () {
-    var tmpOptions = _objectSpread2({
+  const addLayer = useCallback(() => {
+    let tmpOptions = {
       id: layerId.current,
-      layout: {}
-    }, props.options);
-
+      layout: {},
+      ...props.options
+    };
     tmpOptions.layout["icon-image"] = imageIdRef.current;
     mapHook.map.addLayer(tmpOptions, props.insertBeforeLayer, mapHook.componentId);
   }, [props, mapHook.mapIsReady, mapHook.map]);
-  useEffect(function () {
+  useEffect(() => {
     if (!props.options || !mapHook.mapIsReady || layerInitializedRef.current) return;
     layerInitializedRef.current = true;
 
@@ -1924,7 +1630,7 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
 
     addLayer();
   }, [mapHook.mapIsReady, mapHook.map, addLayer, props]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.mapIsReady || mapHook.map && !mapHook.map.getLayer(layerId.current) || !props.options) {
       return;
     }
@@ -1934,10 +1640,10 @@ var MlImageMarkerLayer = function MlImageMarkerLayer(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
-function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function SvgRotateRight(props) {
-  return /*#__PURE__*/createElement("svg", _extends$1({
+  return /*#__PURE__*/createElement("svg", _extends({
     width: "39.675098mm",
     height: "104.27064mm",
     viewBox: "0 0 39.675098 104.27064"
@@ -1954,10 +1660,10 @@ function SvgRotateRight(props) {
 
 var _g;
 
-function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
+function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
 
 function SvgRotateLeft(props) {
-  return /*#__PURE__*/createElement("svg", _extends$2({
+  return /*#__PURE__*/createElement("svg", _extends$1({
     width: "39.675098mm",
     height: "104.27064mm",
     viewBox: "0 0 39.675098 104.27064"
@@ -1970,10 +1676,10 @@ function SvgRotateLeft(props) {
 
 var _g$1;
 
-function _extends$3() { _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$3.apply(this, arguments); }
+function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
 
 function SvgNeedle(props) {
-  return /*#__PURE__*/createElement("svg", _extends$3({
+  return /*#__PURE__*/createElement("svg", _extends$2({
     width: "75.967445mm",
     height: "234.71339mm",
     viewBox: "0 0 75.967445 234.71339"
@@ -1988,7 +1694,7 @@ function SvgNeedle(props) {
 
 function _EMOTION_STRINGIFIED_CSS_ERROR__() { return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop)."; }
 
-var NeedleButton = _styled("div", process.env.NODE_ENV === "production" ? {
+const NeedleButton = _styled("div", process.env.NODE_ENV === "production" ? {
   target: "e12lzm5x2"
 } : {
   target: "e12lzm5x2",
@@ -2003,7 +1709,7 @@ var NeedleButton = _styled("div", process.env.NODE_ENV === "production" ? {
   toString: _EMOTION_STRINGIFIED_CSS_ERROR__
 });
 
-var NeedleContainer = _styled("div", process.env.NODE_ENV === "production" ? {
+const NeedleContainer = _styled("div", process.env.NODE_ENV === "production" ? {
   target: "e12lzm5x1"
 } : {
   target: "e12lzm5x1",
@@ -2018,7 +1724,7 @@ var NeedleContainer = _styled("div", process.env.NODE_ENV === "production" ? {
   toString: _EMOTION_STRINGIFIED_CSS_ERROR__
 });
 
-var RotateButton = _styled("div", process.env.NODE_ENV === "production" ? {
+const RotateButton = _styled("div", process.env.NODE_ENV === "production" ? {
   target: "e12lzm5x0"
 } : {
   target: "e12lzm5x0",
@@ -2041,21 +1747,16 @@ var RotateButton = _styled("div", process.env.NODE_ENV === "production" ? {
  */
 
 
-var MlNavigationCompass = function MlNavigationCompass(props) {
-  var mapHook = useMap({
+const MlNavigationCompass = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-
-  var _useState = useState(0),
-      _useState2 = _slicedToArray(_useState, 2),
-      bearing = _useState2[0],
-      setBearing = _useState2[1];
-
-  useEffect(function () {
+  const [bearing, setBearing] = useState(0);
+  useEffect(() => {
     if (!mapHook.map) return;
 
-    var _updateBearing = function _updateBearing() {
+    let _updateBearing = () => {
       setBearing(Math.round(mapHook.map.getBearing()));
     };
 
@@ -2063,18 +1764,19 @@ var MlNavigationCompass = function MlNavigationCompass(props) {
 
     _updateBearing();
 
-    return function () {
+    return () => {
       mapHook.map.off("rotate", _updateBearing);
     };
   }, [mapHook.map, props.mapId]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement("div", {
-    className: /*#__PURE__*/css(_objectSpread2({
+    className: /*#__PURE__*/css({
       zIndex: 1000,
       top: 0,
-      position: "absolute"
-    }, props.style), process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBNkdtQiIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
+      position: "absolute",
+      ...props.style
+    }, process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBNkdtQiIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
   }, /*#__PURE__*/React__default.createElement("div", {
-    className: /*#__PURE__*/css(_objectSpread2({
+    className: /*#__PURE__*/css({
       position: "absolute",
       border: "10px solid #bcbcbc",
       backgroundColor: "#717171",
@@ -2084,16 +1786,18 @@ var MlNavigationCompass = function MlNavigationCompass(props) {
       borderRadius: "50%",
       display: "flex",
       justifyContent: "center",
-      transform: "scale(0.2) translateX(-448px) translateY(-448px)"
-    }, props.backgroundStyle), process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBcUhxQiIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
+      transform: "scale(0.2) translateX(-448px) translateY(-448px)",
+      ...props.backgroundStyle
+    }, process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBcUhxQiIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
   }, /*#__PURE__*/React__default.createElement(RotateButton, {
-    className: /*#__PURE__*/css(_objectSpread2({}, props.rotateRightStyle), process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBbUltQyIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
+    className: /*#__PURE__*/css({ ...props.rotateRightStyle
+    }, process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBbUltQyIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
   }, /*#__PURE__*/React__default.createElement(SvgRotateRight, {
-    onClick: function onClick() {
+    onClick: () => {
       var _mapHook$map, _mapHook$map2;
 
-      var bearing = Math.round((_mapHook$map = mapHook.map) === null || _mapHook$map === void 0 ? void 0 : _mapHook$map.getBearing());
-      var rest = Math.round(bearing % 90);
+      let bearing = Math.round((_mapHook$map = mapHook.map) === null || _mapHook$map === void 0 ? void 0 : _mapHook$map.getBearing());
+      let rest = Math.round(bearing % 90);
 
       if (bearing > 0) {
         rest = 90 - rest;
@@ -2106,8 +1810,9 @@ var MlNavigationCompass = function MlNavigationCompass(props) {
       (_mapHook$map2 = mapHook.map) === null || _mapHook$map2 === void 0 ? void 0 : _mapHook$map2.setBearing(Math.round(bearing + Math.abs(rest)));
     }
   })), /*#__PURE__*/React__default.createElement(NeedleButton, {
-    className: /*#__PURE__*/css(_objectSpread2({}, props.needleStyle), process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBbUp1QiIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */"),
-    onClick: function onClick() {
+    className: /*#__PURE__*/css({ ...props.needleStyle
+    }, process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBbUp1QiIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */"),
+    onClick: () => {
       var _mapHook$map3;
 
       (_mapHook$map3 = mapHook.map) === null || _mapHook$map3 === void 0 ? void 0 : _mapHook$map3.setBearing(0);
@@ -2117,13 +1822,14 @@ var MlNavigationCompass = function MlNavigationCompass(props) {
       transform: "rotate(" + bearing + "deg)"
     }
   }, /*#__PURE__*/React__default.createElement(SvgNeedle, null))), /*#__PURE__*/React__default.createElement(RotateButton, {
-    className: /*#__PURE__*/css(_objectSpread2({}, props.rotateLeftStyle), process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBZ0ttQyIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
+    className: /*#__PURE__*/css({ ...props.rotateLeftStyle
+    }, process.env.NODE_ENV === "production" ? "" : ";label:MlNavigationCompass;", process.env.NODE_ENV === "production" ? "" : "/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIk1sTmF2aWdhdGlvbkNvbXBhc3MuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBZ0ttQyIsImZpbGUiOiJNbE5hdmlnYXRpb25Db21wYXNzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlLCB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCBQcm9wVHlwZXMgZnJvbSBcInByb3AtdHlwZXNcIjtcblxuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgUm90YXRlUmlnaHRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9yaWdodC5zdmdcIjtcbmltcG9ydCB7IFJlYWN0Q29tcG9uZW50IGFzIFJvdGF0ZUxlZnRJY29uIH0gZnJvbSBcIi4vYXNzZXRzL3JvdGF0ZV9sZWZ0LnN2Z1wiO1xuaW1wb3J0IHsgUmVhY3RDb21wb25lbnQgYXMgTmVlZGxlSWNvbiB9IGZyb20gXCIuL2Fzc2V0cy9uZWVkbGUuc3ZnXCI7XG5cbmltcG9ydCBzdHlsZWQgZnJvbSBcIkBlbW90aW9uL3N0eWxlZFwiO1xuaW1wb3J0IHsgY3NzIH0gZnJvbSBcIkBlbW90aW9uL2Nzc1wiO1xuaW1wb3J0IHVzZU1hcCBmcm9tIFwiLi4vLi4vaG9va3MvdXNlTWFwXCI7XG5cbmNvbnN0IE5lZWRsZUJ1dHRvbiA9IHN0eWxlZC5kaXZgXG4gIHdpZHRoOiA0MCU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHBhdGgge1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCAxNXB4IHJnYmEoMCwgMCwgMCwgMC4yKSk7XG4gIH1cbiAgJjpob3ZlciBwYXRoIHtcbiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDBweCAwcHggMTNweCByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkpO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMikge1xuICAgIGZpbGw6ICMzNDM0MzQ7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDIpIHtcbiAgICBmaWxsOiAjNDM0MzQzO1xuICB9XG4gIHBhdGg6bnRoLW9mLXR5cGUoMSkge1xuICAgIGZpbGw6ICNlOTAzMTg7XG4gIH1cbiAgJjpob3ZlciBwYXRoOm50aC1vZi10eXBlKDEpIHtcbiAgICBmaWxsOiAjZmI0MDUyO1xuICB9XG5gO1xuY29uc3QgTmVlZGxlQ29udGFpbmVyID0gc3R5bGVkLmRpdmBcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHotaW5kZXg6IDEwMDI7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICBtYXJnaW4tbGVmdDogLTMwJTtcbiAgcGF0aDpudGgtb2YtdHlwZSgyKSB7XG4gIH1cbiAgc3ZnIGcge1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC03Ni43MDUzLCAtMjkuNzcyNykgc2NhbGUoMiwgMSk7XG4gIH1cbiAgc3ZnIHtcbiAgICB6LWluZGV4OiA5OTkwO1xuICAgIGhlaWdodDogMTUwcHg7XG4gICAgd2lkdGg6IDIwMHB4O1xuICB9XG5gO1xuY29uc3QgUm90YXRlQnV0dG9uID0gc3R5bGVkLmRpdmBcbiAgd2lkdGg6IDMwJTtcbiAgbWFyZ2luLXRvcDogMTRweDtcbiAgei1pbmRleDogOTk5O1xuICBkaXNwbGF5OiBmbGV4O1xuXG4gIHN2Zzpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICB9XG4gIHN2Zzpob3ZlciBwYXRoIHtcbiAgICBmaWxsOiAjZWNlY2VjO1xuICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMHB4IDBweCA1cHggcmdiYSgwLCAwLCAwLCAwLjEpKTtcbiAgfVxuICBwYXRoIHtcbiAgICBmaWxsOiAjYmJiO1xuICB9XG4gIHN2ZyB7XG4gICAgdHJhbnNmb3JtOiBzY2FsZSgwLjYpO1xuICAgIHotaW5kZXg6IDk5OTA7XG4gICAgaGVpZ2h0OiAxNzJweDtcbiAgfVxuYDtcblxuLyoqXG4gKiBOYXZpZ2F0aW9uIGNvbXBvbmVudCB0aGF0IGRpc3BsYXlzIGEgY29tcGFzcyBjb21wb25lbnQgd2hpY2ggaW5kaWNhdGVzIHRoZSBjdXJyZW50IG9yaWFudGF0aW9uIG9mIHRoZSBtYXAgaXQgaXMgcmVnaXN0ZXJlZCBmb3IgYW5kIG9mZmVycyBjb250cm9scyB0byB0dXJuIHRoZSBiZWFyaW5nIDkwwrAgbGVmdC9yaWdodCBvciByZXNldCBub3J0aCB0byBwb2ludCB1cC5cbiAqXG4gKiBBbGwgc3R5bGUgcHJvcHMgYXJlIGFwcGxpZWQgdXNpbmcgQGVtb3Rpb24vY3NzIHRvIGFsbG93IG1vcmUgY29tcGxleCBjc3Mgc2VsZWN0b3JzLlxuICpcbiAqIEBjb21wb25lbnRcbiAqL1xuY29uc3QgTWxOYXZpZ2F0aW9uQ29tcGFzcyA9IChwcm9wcykgPT4ge1xuICBjb25zdCBtYXBIb29rID0gdXNlTWFwKHsgbWFwSWQ6IHByb3BzLm1hcElkLCB3YWl0Rm9yTGF5ZXI6IHByb3BzLmluc2VydEJlZm9yZUxheWVyIH0pO1xuICBjb25zdCBbYmVhcmluZywgc2V0QmVhcmluZ10gPSB1c2VTdGF0ZSgwKTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIGlmICghbWFwSG9vay5tYXApIHJldHVybjtcblxuICAgIGxldCBfdXBkYXRlQmVhcmluZyA9ICgpID0+IHtcbiAgICAgIHNldEJlYXJpbmcoTWF0aC5yb3VuZChtYXBIb29rLm1hcC5nZXRCZWFyaW5nKCkpKTtcbiAgICB9O1xuXG4gICAgbWFwSG9vay5tYXAub24oXCJyb3RhdGVcIiwgX3VwZGF0ZUJlYXJpbmcsIG1hcEhvb2suY29tcG9uZW50SWQpO1xuICAgIF91cGRhdGVCZWFyaW5nKCk7XG5cbiAgICByZXR1cm4gKCkgPT4ge1xuICAgICAgbWFwSG9vay5tYXAub2ZmKFwicm90YXRlXCIsIF91cGRhdGVCZWFyaW5nKTtcbiAgICB9O1xuICB9LCBbbWFwSG9vay5tYXAsIHByb3BzLm1hcElkXSk7XG5cbiAgcmV0dXJuIChcbiAgICA8PlxuICAgICAgPGRpdlxuICAgICAgICBjbGFzc05hbWU9e2Nzcyh7XG4gICAgICAgICAgekluZGV4OiAxMDAwLFxuICAgICAgICAgIHRvcDogMCxcbiAgICAgICAgICBwb3NpdGlvbjogXCJhYnNvbHV0ZVwiLFxuICAgICAgICAgIC4uLnByb3BzLnN0eWxlLFxuICAgICAgICB9KX1cbiAgICAgID5cbiAgICAgICAgPGRpdlxuICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHtcbiAgICAgICAgICAgIHBvc2l0aW9uOiBcImFic29sdXRlXCIsXG4gICAgICAgICAgICBib3JkZXI6IFwiMTBweCBzb2xpZCAjYmNiY2JjXCIsXG4gICAgICAgICAgICBiYWNrZ3JvdW5kQ29sb3I6IFwiIzcxNzE3MVwiLFxuICAgICAgICAgICAgYmFja2dyb3VuZDogXCJyYWRpYWwtZ3JhZGllbnQoIzcxNzE3MSwgIzQxNDE0MSlcIixcbiAgICAgICAgICAgIGhlaWdodDogXCIyMDBweFwiLFxuICAgICAgICAgICAgd2lkdGg6IFwiMjAwcHhcIixcbiAgICAgICAgICAgIGJvcmRlclJhZGl1czogXCI1MCVcIixcbiAgICAgICAgICAgIGRpc3BsYXk6IFwiZmxleFwiLFxuICAgICAgICAgICAganVzdGlmeUNvbnRlbnQ6IFwiY2VudGVyXCIsXG4gICAgICAgICAgICB0cmFuc2Zvcm06IFwic2NhbGUoMC4yKSB0cmFuc2xhdGVYKC00NDhweCkgdHJhbnNsYXRlWSgtNDQ4cHgpXCIsXG4gICAgICAgICAgICAuLi5wcm9wcy5iYWNrZ3JvdW5kU3R5bGUsXG4gICAgICAgICAgfSl9XG4gICAgICAgID5cbiAgICAgICAgICA8Um90YXRlQnV0dG9uIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMucm90YXRlUmlnaHRTdHlsZSB9KX0+XG4gICAgICAgICAgICA8Um90YXRlUmlnaHRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPiAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgLSByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgKyBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlUmlnaHRJY29uPlxuICAgICAgICAgIDwvUm90YXRlQnV0dG9uPlxuICAgICAgICAgIDxOZWVkbGVCdXR0b25cbiAgICAgICAgICAgIGNsYXNzTmFtZT17Y3NzKHsgLi4ucHJvcHMubmVlZGxlU3R5bGUgfSl9XG4gICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7XG4gICAgICAgICAgICAgIG1hcEhvb2subWFwPy5zZXRCZWFyaW5nKDApO1xuICAgICAgICAgICAgfX1cbiAgICAgICAgICA+XG4gICAgICAgICAgICA8TmVlZGxlQ29udGFpbmVyXG4gICAgICAgICAgICAgIHN0eWxlPXt7XG4gICAgICAgICAgICAgICAgdHJhbnNmb3JtOiBcInJvdGF0ZShcIiArIGJlYXJpbmcgKyBcImRlZylcIixcbiAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgPE5lZWRsZUljb24gLz5cbiAgICAgICAgICAgIDwvTmVlZGxlQ29udGFpbmVyPlxuICAgICAgICAgIDwvTmVlZGxlQnV0dG9uPlxuICAgICAgICAgIDxSb3RhdGVCdXR0b24gY2xhc3NOYW1lPXtjc3MoeyAuLi5wcm9wcy5yb3RhdGVMZWZ0U3R5bGUgfSl9PlxuICAgICAgICAgICAgPFJvdGF0ZUxlZnRJY29uXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHtcbiAgICAgICAgICAgICAgICBsZXQgYmVhcmluZyA9IE1hdGgucm91bmQobWFwSG9vay5tYXA/LmdldEJlYXJpbmcoKSk7XG4gICAgICAgICAgICAgICAgbGV0IHJlc3QgPSBNYXRoLnJvdW5kKGJlYXJpbmcgJSA5MCk7XG4gICAgICAgICAgICAgICAgaWYgKGJlYXJpbmcgPCAwKSB7XG4gICAgICAgICAgICAgICAgICByZXN0ID0gOTAgKyByZXN0O1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBpZiAocmVzdCA9PT0gMCkge1xuICAgICAgICAgICAgICAgICAgcmVzdCA9IDkwO1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBtYXBIb29rLm1hcD8uc2V0QmVhcmluZyhNYXRoLnJvdW5kKGJlYXJpbmcgLSBNYXRoLmFicyhyZXN0KSkpO1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgPjwvUm90YXRlTGVmdEljb24+XG4gICAgICAgICAgPC9Sb3RhdGVCdXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC8+XG4gICk7XG59O1xuXG5NbE5hdmlnYXRpb25Db21wYXNzLnByb3BUeXBlcyA9IHtcbiAgLyoqXG4gICAqIENvbXBvbmVudCBpZCBwcmVmaXhcbiAgICovXG4gIGlkUHJlZml4OiBQcm9wVHlwZXMuc3RyaW5nLFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGNvbXBvbmVudC5cbiAgICovXG4gIHN0eWxlOiBQcm9wVHlwZXMub2JqZWN0LFxuICAvKipcbiAgICogU3R5bGUgb2JqZWN0IHRvIGFkanVzdCBjc3MgZGVmaW5pdGlvbnMgb2YgdGhlIGJhY2tncm91bmQuXG4gICAqL1xuICBiYWNrZ3JvdW5kU3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG4gIC8qKlxuICAgKiBTdHlsZSBvYmplY3QgdG8gYWRqdXN0IGNzcyBkZWZpbml0aW9ucyBvZiB0aGUgY29tcGFzcyBuZWVkbGUuXG4gICAqL1xuICBuZWVkbGVTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgcmlnaHQgYnV0dG9uLlxuICAgKi9cbiAgcm90YXRlUmlnaHRTdHlsZTogUHJvcFR5cGVzLm9iamVjdCxcbiAgLyoqXG4gICAqIFN0eWxlIG9iamVjdCB0byBhZGp1c3QgY3NzIGRlZmluaXRpb25zIG9mIHRoZSByb3RhdGUgbGVmdCBidXR0b24uXG4gICAqL1xuICByb3RhdGVMZWZ0U3R5bGU6IFByb3BUeXBlcy5vYmplY3QsXG59O1xuXG5leHBvcnQgZGVmYXVsdCBNbE5hdmlnYXRpb25Db21wYXNzO1xuIl19 */")
   }, /*#__PURE__*/React__default.createElement(SvgRotateLeft, {
-    onClick: function onClick() {
+    onClick: () => {
       var _mapHook$map4, _mapHook$map5;
 
-      var bearing = Math.round((_mapHook$map4 = mapHook.map) === null || _mapHook$map4 === void 0 ? void 0 : _mapHook$map4.getBearing());
-      var rest = Math.round(bearing % 90);
+      let bearing = Math.round((_mapHook$map4 = mapHook.map) === null || _mapHook$map4 === void 0 ? void 0 : _mapHook$map4.getBearing());
+      let rest = Math.round(bearing % 90);
 
       if (bearing < 0) {
         rest = 90 + rest;
@@ -2170,26 +1876,15 @@ MlNavigationCompass.propTypes = {
   rotateLeftStyle: PropTypes.object
 };
 
-var _excluded$1 = ["color"];
-
-var MlNavigationTools = function MlNavigationTools(props) {
-  var mapHook = useMap({
+const MlNavigationTools = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-
-  var _useState = useState(0),
-      _useState2 = _slicedToArray(_useState, 2),
-      pitch = _useState2[0],
-      setPitch = _useState2[1];
-
-  var _useState3 = useState(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      locationAccessDenied = _useState4[0],
-      setLocationAccessDenied = _useState4[1];
-
-  var mediaIsMobile = useMediaQuery("(max-width:900px)");
-  var buttonStyle = {
+  const [pitch, setPitch] = useState(0);
+  const [locationAccessDenied, setLocationAccessDenied] = useState(false);
+  const mediaIsMobile = useMediaQuery("(max-width:900px)");
+  const buttonStyle = {
     minWidth: "20px",
     minHeight: "20px",
     width: mediaIsMobile ? "50px" : "30px",
@@ -2205,15 +1900,15 @@ var MlNavigationTools = function MlNavigationTools(props) {
     },
     color: "#ececec"
   };
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map) return;
-    mapHook.map.on("pitchend", function () {
+    mapHook.map.on("pitchend", () => {
       setPitch(mapHook.map.getPitch());
     });
     setPitch(mapHook.map.getPitch());
   }, [mapHook.map, props.mapId]);
 
-  var zoomIn = function zoomIn() {
+  const zoomIn = () => {
     if (!mapHook.map) return;
 
     if (mapHook.map.transform._zoom + 0.5 <= mapHook.map.transform._maxZoom) {
@@ -2223,7 +1918,7 @@ var MlNavigationTools = function MlNavigationTools(props) {
     }
   };
 
-  var zoomOut = function zoomOut() {
+  const zoomOut = () => {
     if (!mapHook.map) return;
 
     if (mapHook.map.transform._zoom - 0.5 >= mapHook.map.transform._minZoom) {
@@ -2233,9 +1928,9 @@ var MlNavigationTools = function MlNavigationTools(props) {
     }
   };
 
-  var adjustPitch = function adjustPitch() {
+  const adjustPitch = () => {
     if (!mapHook.map) return;
-    var targetPitch = 60;
+    let targetPitch = 60;
 
     if (mapHook.map.getPitch() !== 0) {
       targetPitch = 0;
@@ -2246,15 +1941,15 @@ var MlNavigationTools = function MlNavigationTools(props) {
     });
   };
 
-  var moveToCurrentLocation = function moveToCurrentLocation() {
+  const moveToCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
   };
 
-  var getLocationSuccess = function getLocationSuccess(location) {
+  const getLocationSuccess = location => {
     mapHook.map.setCenter([location.coords.longitude, location.coords.latitude]);
   };
 
-  var getLocationError = function getLocationError() {
+  const getLocationError = () => {
     console.log("Access of user location denied");
     setLocationAccessDenied(true);
   };
@@ -2280,9 +1975,9 @@ var MlNavigationTools = function MlNavigationTools(props) {
       boxShadow: "0px 0px 18px rgba(0,0,0,.5)"
     }
   }), /*#__PURE__*/React__default.createElement(Button, {
-    sx: _objectSpread2(_objectSpread2({}, buttonStyle), {}, {
+    sx: { ...buttonStyle,
       fontWeight: 600
-    }),
+    },
     onClick: adjustPitch
   }, pitch ? "2D" : "3D"), /*#__PURE__*/React__default.createElement(Button, {
     sx: buttonStyle,
@@ -2293,12 +1988,14 @@ var MlNavigationTools = function MlNavigationTools(props) {
       fontSize: mediaIsMobile ? "1.5em" : "1.2em"
     }
   })), /*#__PURE__*/React__default.createElement(MlFollowGps, {
-    style: _objectSpread2({}, function (_ref) {
-      var color = _ref.color,
-          rest = _objectWithoutProperties(_ref, _excluded$1);
-
-      return rest;
-    }(buttonStyle))
+    style: { ...(_ref => {
+        let {
+          color,
+          ...rest
+        } = _ref;
+        return rest;
+      })(buttonStyle)
+    }
   }), /*#__PURE__*/React__default.createElement(ButtonGroup, {
     orientation: "vertical",
     sx: {
@@ -2314,18 +2011,18 @@ var MlNavigationTools = function MlNavigationTools(props) {
       }
     }
   }, /*#__PURE__*/React__default.createElement(Button, {
-    sx: _objectSpread2(_objectSpread2({}, buttonStyle), {}, {
+    sx: { ...buttonStyle,
       color: "#ececec"
-    }),
+    },
     onClick: zoomIn
   }, /*#__PURE__*/React__default.createElement(ControlPointIcon, {
     sx: {
       fontSize: mediaIsMobile ? "1.5em" : "1.2em"
     }
   })), /*#__PURE__*/React__default.createElement(Button, {
-    sx: _objectSpread2(_objectSpread2({}, buttonStyle), {}, {
+    sx: { ...buttonStyle,
       color: "#ececec"
-    }),
+    },
     onClick: zoomOut
   }, /*#__PURE__*/React__default.createElement(RemoveCircleOutlineIcon, {
     sx: {
@@ -2334,10 +2031,10 @@ var MlNavigationTools = function MlNavigationTools(props) {
   }))));
 };
 
-var MlLayer = function MlLayer(props) {
+const MlLayer = props => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  var mapContext = useContext(MapContext);
-  var mapState = useMapState({
+  const mapContext = useContext(MapContext);
+  const mapState = useMapState({
     mapId: props.mapId,
     watch: {
       viewport: false,
@@ -2345,29 +2042,29 @@ var MlLayer = function MlLayer(props) {
       sources: false
     }
   });
-  var layerInitializedRef = useRef(false);
-  var mapRef = useRef(null);
-  var componentId = useRef((props.layerId ? props.layerId : "MlLayer-") + v4());
-  var layerId = useRef(props.layerId || componentId.current);
-  var layerPaintConfRef = useRef(undefined);
-  var layerLayoutConfRef = useRef(undefined);
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
+  const layerInitializedRef = useRef(false);
+  const mapRef = useRef(null);
+  const componentId = useRef((props.layerId ? props.layerId : "MlLayer-") + v4());
+  const layerId = useRef(props.layerId || componentId.current);
+  const layerPaintConfRef = useRef(undefined);
+  const layerLayoutConfRef = useRef(undefined);
+  useEffect(() => {
+    let _componentId = componentId.current;
+    return () => {
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
         mapRef.current = null;
       }
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     var _mapContext$getMap, _mapContext$getMap$ge;
 
     if (!mapContext.mapExists(props.mapId) || !((_mapContext$getMap = mapContext.getMap(props.mapId)) !== null && _mapContext$getMap !== void 0 && (_mapContext$getMap$ge = _mapContext$getMap.getLayer) !== null && _mapContext$getMap$ge !== void 0 && _mapContext$getMap$ge.call(_mapContext$getMap, layerId)) || !layerInitializedRef.current || !props.options) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     var key;
-    var layoutString = JSON.stringify(props.options.layout);
+    let layoutString = JSON.stringify(props.options.layout);
 
     if (props.options.layout && layoutString !== layerLayoutConfRef.current) {
       for (key in props.options.layout) {
@@ -2377,7 +2074,7 @@ var MlLayer = function MlLayer(props) {
       layerLayoutConfRef.current = layoutString;
     }
 
-    var paintString = JSON.stringify(props.options.paint);
+    let paintString = JSON.stringify(props.options.paint);
 
     if (props.options.paint && paintString === layerPaintConfRef.current) {
       for (key in props.options.paint) {
@@ -2385,7 +2082,7 @@ var MlLayer = function MlLayer(props) {
       }
     }
   }, [props.options, layerId, mapContext, props]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || layerInitializedRef.current) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     //check if insertBeforeLayer exists
@@ -2393,8 +2090,8 @@ var MlLayer = function MlLayer(props) {
     if (props.insertBeforeLayer) {
       var _mapState$layers;
 
-      var layerFound = false;
-      mapState === null || mapState === void 0 ? void 0 : (_mapState$layers = mapState.layers) === null || _mapState$layers === void 0 ? void 0 : _mapState$layers.forEach(function (layer) {
+      let layerFound = false;
+      mapState === null || mapState === void 0 ? void 0 : (_mapState$layers = mapState.layers) === null || _mapState$layers === void 0 ? void 0 : _mapState$layers.forEach(layer => {
         if (layer.id === props.insertBeforeLayer) {
           layerFound = true;
         }
@@ -2411,13 +2108,14 @@ var MlLayer = function MlLayer(props) {
       var _props$options, _props$options2;
 
       layerInitializedRef.current = true;
-      mapRef.current.addLayer(_objectSpread2({
+      mapRef.current.addLayer({
         id: layerId.current,
         type: "background",
         paint: {
           "background-color": "rgba(0,0,0,0)"
-        }
-      }, props.options), props.insertBeforeLayer, componentId.current);
+        },
+        ...props.options
+      }, props.insertBeforeLayer, componentId.current);
       layerPaintConfRef.current = JSON.stringify((_props$options = props.options) === null || _props$options === void 0 ? void 0 : _props$options.paint);
       layerLayoutConfRef.current = JSON.stringify((_props$options2 = props.options) === null || _props$options2 === void 0 ? void 0 : _props$options2.layout);
     }
@@ -2432,25 +2130,27 @@ var MlLayer = function MlLayer(props) {
  * @component
  */
 
-var MlOsmLayer = function MlOsmLayer(props) {
-  var mapHook = useMap({
+const MlOsmLayer = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var layerId = useRef(props.layerId || "MlOsmLayer-" + mapHook.componentId);
-  useEffect(function () {
+  const layerId = useRef(props.layerId || "MlOsmLayer-" + mapHook.componentId);
+  useEffect(() => {
     if (!mapHook.map) return;
-    mapHook.map.addSource(layerId.current, _objectSpread2({
+    mapHook.map.addSource(layerId.current, {
       type: "raster",
-      tileSize: 256
-    }, props.sourceOptions), mapHook.componentId);
-    mapHook.map.addLayer(_objectSpread2({
+      tileSize: 256,
+      ...props.sourceOptions
+    }, mapHook.componentId);
+    mapHook.map.addLayer({
       id: layerId.current,
       type: "raster",
       source: layerId.current,
       minzoom: 0,
-      maxzoom: 22
-    }, props.layerOptions), props.insertBeforeLayer, mapHook.componentId);
+      maxzoom: 22,
+      ...props.layerOptions
+    }, props.insertBeforeLayer, mapHook.componentId);
   }, [props, mapHook.map]);
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
@@ -2491,32 +2191,33 @@ MlOsmLayer.propTypes = {
  * @component
  */
 
-var MlVectorTileLayer = function MlVectorTileLayer(props) {
-  var mapHook = useMap({
+const MlVectorTileLayer = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var layerIdsRef = useRef({});
-  var layerId = useRef(props.layerId || "MlVectorTileLayer-" + mapHook.componentId);
-  var layerPaintConfsRef = useRef({});
-  var layerLayoutConfsRef = useRef({});
-  var initializedRef = useRef(false);
-  useEffect(function () {
+  const layerIdsRef = useRef({});
+  const layerId = useRef(props.layerId || "MlVectorTileLayer-" + mapHook.componentId);
+  const layerPaintConfsRef = useRef({});
+  const layerLayoutConfsRef = useRef({});
+  const initializedRef = useRef(false);
+  useEffect(() => {
     if (!mapHook.map || initializedRef.current) return;
     initializedRef.current = true; // Add the new layer to the openlayers instance once it is available
 
-    mapHook.map.addSource(layerId.current, _objectSpread2({
+    mapHook.map.addSource(layerId.current, {
       type: "vector",
       tiles: [props.url],
       tileSize: 512,
-      attribution: ""
-    }, props.sourceOptions), mapHook.componentId);
+      attribution: "",
+      ...props.sourceOptions
+    }, mapHook.componentId);
 
-    for (var key in props.layers) {
-      var _layerId = layerId.current + "_" + key;
+    for (let key in props.layers) {
+      let _layerId = layerId.current + "_" + key;
 
       layerIdsRef.current[key] = _layerId;
-      mapHook.map.addLayer(_objectSpread2({
+      mapHook.map.addLayer({
         id: _layerId,
         source: layerId.current,
         type: "line",
@@ -2527,32 +2228,33 @@ var MlVectorTileLayer = function MlVectorTileLayer(props) {
           "line-opacity": 0.5,
           "line-color": "rgb(80, 80, 80)",
           "line-width": 2
-        }
-      }, props.layers[key]), props.insertBeforeLayer, mapHook.componentId);
+        },
+        ...props.layers[key]
+      }, props.insertBeforeLayer, mapHook.componentId);
       layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
       layerLayoutConfsRef.current[key] = JSON.stringify(props.layers[key].layout);
     }
   }, [mapHook.map, props]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return; // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     for (var key in props.layers) {
       if (mapHook.map.getLayer(layerIdsRef.current[key])) {
         // update changed paint property
-        var layerPaintConfString = JSON.stringify(props.layers[key].paint);
+        let layerPaintConfString = JSON.stringify(props.layers[key].paint);
 
         if (layerPaintConfString !== layerPaintConfsRef.current[key]) {
-          for (var paintKey in props.layers[key].paint) {
+          for (let paintKey in props.layers[key].paint) {
             mapHook.map.setPaintProperty(layerIdsRef.current[key], paintKey, props.layers[key].paint[paintKey]);
           }
         }
 
         layerPaintConfsRef.current[key] = layerPaintConfString; // update changed layout property
 
-        var layerLayoutConfString = JSON.stringify(props.layers[key].layout);
+        let layerLayoutConfString = JSON.stringify(props.layers[key].layout);
 
         if (layerLayoutConfString !== layerLayoutConfsRef.current[key]) {
-          for (var layoutKey in props.layers[key].layout) {
+          for (let layoutKey in props.layers[key].layout) {
             mapHook.map.setLayoutProperty(layerIdsRef.current[key], layoutKey, props.layers[key].layout[layoutKey]);
           }
         }
@@ -2586,7 +2288,7 @@ MlVectorTileLayer.propTypes = {
   url: PropTypes.string
 };
 
-var defaultProps = {
+const defaultProps = {
   visible: true,
   urlParameters: {
     bbox: "{bbox-epsg-3857}",
@@ -2626,52 +2328,56 @@ var defaultProps = {
  * @component
  */
 
-var MlWmsLayer = function MlWmsLayer(props) {
-  var mapHook = useMap({
+const MlWmsLayer = props => {
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var initializedRef = useRef(false);
-  var layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
-  useEffect(function () {
+  const initializedRef = useRef(false);
+  const layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
+  useEffect(() => {
     var _propsUrlParams2;
 
     if (!mapHook.map || initializedRef.current) return;
     initializedRef.current = true;
 
-    var _propsUrlParams;
+    let _propsUrlParams;
 
-    var _wmsUrl = props.url;
+    let _wmsUrl = props.url;
 
     if (props.url.indexOf("?") !== -1) {
       _propsUrlParams = props.url.split("?");
       _wmsUrl = _propsUrlParams[0];
     }
 
-    var _urlParamsFromUrl = new URLSearchParams((_propsUrlParams2 = _propsUrlParams) === null || _propsUrlParams2 === void 0 ? void 0 : _propsUrlParams2[1]); // first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
+    let _urlParamsFromUrl = new URLSearchParams((_propsUrlParams2 = _propsUrlParams) === null || _propsUrlParams2 === void 0 ? void 0 : _propsUrlParams2[1]); // first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
 
 
-    var urlParamsObj = _objectSpread2(_objectSpread2(_objectSpread2({}, defaultProps.urlParameters), Object.fromEntries(_urlParamsFromUrl)), props.urlParameters);
-
-    var urlParams = new URLSearchParams(urlParamsObj);
-    var urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
-    mapHook.map.addSource(layerId.current, _objectSpread2({
+    let urlParamsObj = { ...defaultProps.urlParameters,
+      ...Object.fromEntries(_urlParamsFromUrl),
+      ...props.urlParameters
+    };
+    let urlParams = new URLSearchParams(urlParamsObj);
+    let urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+    mapHook.map.addSource(layerId.current, {
       type: "raster",
       tiles: [_wmsUrl + "?" + urlParamsStr],
       tileSize: urlParamsObj.width,
-      attribution: props.attribution
-    }, props.sourceOptions), mapHook.componentId);
-    mapHook.map.addLayer(_objectSpread2({
+      attribution: props.attribution,
+      ...props.sourceOptions
+    }, mapHook.componentId);
+    mapHook.map.addLayer({
       id: layerId.current,
       type: "raster",
-      source: layerId.current
-    }, props.layerOptions), props.insertBeforeLayer, mapHook.componentId);
+      source: layerId.current,
+      ...props.layerOptions
+    }, props.insertBeforeLayer, mapHook.componentId);
 
     if (!props.visible) {
       mapHook.map.setLayoutProperty(layerId.current, "visibility", "none");
     }
   }, [mapHook, props]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return; // toggle layer visibility by changing the layout object's visibility property
 
     if (props.visible) {
@@ -2683,7 +2389,8 @@ var MlWmsLayer = function MlWmsLayer(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 };
 
-MlWmsLayer.defaultProps = _objectSpread2({}, defaultProps);
+MlWmsLayer.defaultProps = { ...defaultProps
+};
 MlWmsLayer.propTypes = {
   /**
    * WMS URL
@@ -2737,7 +2444,7 @@ MlWmsLayer.propTypes = {
   visible: PropTypes.bool
 };
 
-var classes = {
+const classes = {
   CONTROL_BASE: 'mapboxgl-ctrl',
   CONTROL_PREFIX: 'mapboxgl-ctrl-',
   CONTROL_BUTTON: 'mapbox-gl-draw_ctrl-draw-btn',
@@ -2752,19 +2459,23 @@ var classes = {
   ACTIVE_BUTTON: 'active',
   BOX_SELECT: 'mapbox-gl-draw_boxselect'
 };
-var cursors = {
+const sources = {
+  HOT: 'mapbox-gl-draw-hot',
+  COLD: 'mapbox-gl-draw-cold'
+};
+const cursors = {
   ADD: 'add',
   MOVE: 'move',
   DRAG: 'drag',
   POINTER: 'pointer',
   NONE: 'none'
 };
-var types = {
+const types = {
   POLYGON: 'polygon',
   LINE: 'line_string',
   POINT: 'point'
 };
-var geojsonTypes = {
+const geojsonTypes = {
   FEATURE: 'Feature',
   POLYGON: 'Polygon',
   LINE_STRING: 'LineString',
@@ -2775,7 +2486,15 @@ var geojsonTypes = {
   MULTI_LINE_STRING: 'MultiLineString',
   MULTI_POLYGON: 'MultiPolygon'
 };
-var events = {
+const modes = {
+  DRAW_LINE_STRING: 'draw_line_string',
+  DRAW_POLYGON: 'draw_polygon',
+  DRAW_POINT: 'draw_point',
+  SIMPLE_SELECT: 'simple_select',
+  DIRECT_SELECT: 'direct_select',
+  STATIC: 'static'
+};
+const events = {
   CREATE: 'draw.create',
   DELETE: 'draw.delete',
   UPDATE: 'draw.update',
@@ -2786,29 +2505,51 @@ var events = {
   COMBINE_FEATURES: 'draw.combine',
   UNCOMBINE_FEATURES: 'draw.uncombine'
 };
-var updateActions = {
+const updateActions = {
   MOVE: 'move',
   CHANGE_COORDINATES: 'change_coordinates'
 };
-var meta = {
+const meta = {
   FEATURE: 'feature',
   MIDPOINT: 'midpoint',
   VERTEX: 'vertex'
 };
-var activeStates = {
+const activeStates = {
   ACTIVE: 'true',
   INACTIVE: 'false'
 };
-var LAT_MIN = -90;
-var LAT_RENDERED_MIN = -85;
-var LAT_MAX = 90;
-var LAT_RENDERED_MAX = 85;
-var LNG_MIN = -270;
-var LNG_MAX = 270;
+const interactions = ['scrollZoom', 'boxZoom', 'dragRotate', 'dragPan', 'keyboard', 'doubleClickZoom', 'touchZoomRotate'];
+const LAT_MIN = -90;
+const LAT_RENDERED_MIN = -85;
+const LAT_MAX = 90;
+const LAT_RENDERED_MAX = 85;
+const LNG_MIN = -270;
+const LNG_MAX = 270;
+
+var Constants = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  classes: classes,
+  sources: sources,
+  cursors: cursors,
+  types: types,
+  geojsonTypes: geojsonTypes,
+  modes: modes,
+  events: events,
+  updateActions: updateActions,
+  meta: meta,
+  activeStates: activeStates,
+  interactions: interactions,
+  LAT_MIN: LAT_MIN,
+  LAT_RENDERED_MIN: LAT_RENDERED_MIN,
+  LAT_MAX: LAT_MAX,
+  LAT_RENDERED_MAX: LAT_RENDERED_MAX,
+  LNG_MIN: LNG_MIN,
+  LNG_MAX: LNG_MAX
+});
 
 function isOfMetaType(type) {
   return function (e) {
-    var featureTarget = e.featureTarget;
+    const featureTarget = e.featureTarget;
     if (!featureTarget) return false;
     if (!featureTarget.properties) return false;
     return featureTarget.properties.meta === type;
@@ -2838,7 +2579,7 @@ function isFeature(e) {
   return e.featureTarget.properties.meta === meta.FEATURE;
 }
 function isVertex(e) {
-  var featureTarget = e.featureTarget;
+  const featureTarget = e.featureTarget;
   if (!featureTarget) return false;
   if (!featureTarget.properties) return false;
   return featureTarget.properties.meta === meta.VERTEX;
@@ -2854,9 +2595,9 @@ function isEnterKey(e) {
   return e.keyCode === 13;
 }
 
-var doubleClickZoom = {
-  enable: function enable(ctx) {
-    setTimeout(function () {
+const doubleClickZoom = {
+  enable(ctx) {
+    setTimeout(() => {
       // First check we've got a map and some context.
       if (!ctx.map || !ctx.map.doubleClickZoom || !ctx._ctx || !ctx._ctx.store || !ctx._ctx.store.getInitialConfigValue) return; // Now check initial state wasn't false (we leave it disabled if so)
 
@@ -2864,13 +2605,15 @@ var doubleClickZoom = {
       ctx.map.doubleClickZoom.enable();
     }, 0);
   },
-  disable: function disable(ctx) {
-    setTimeout(function () {
+
+  disable(ctx) {
+    setTimeout(() => {
       if (!ctx.map || !ctx.map.doubleClickZoom) return; // Always disable here, as it's necessary in some cases.
 
       ctx.map.doubleClickZoom.disable();
     }, 0);
   }
+
 };
 
 function isEventAtCoordinates(event, coordinates) {
@@ -2890,7 +2633,7 @@ function isEventAtCoordinates(event, coordinates) {
  * @return {GeoJSON} Point
  */
 
-var create_vertex = function create_vertex(parentId, coordinates, path, selected) {
+const create_vertex = function (parentId, coordinates, path, selected) {
   return {
     type: geojsonTypes.FEATURE,
     properties: {
@@ -2901,16 +2644,16 @@ var create_vertex = function create_vertex(parentId, coordinates, path, selected
     },
     geometry: {
       type: geojsonTypes.POINT,
-      coordinates: coordinates
+      coordinates
     }
   };
 };
 
-var CustomPolygonMode = {};
+const CustomPolygonMode = {};
 
 CustomPolygonMode.onSetup = function () {
   console.log("Change mode: custom polygon");
-  var polygon = this.newFeature({
+  const polygon = this.newFeature({
     type: geojsonTypes.FEATURE,
     properties: {},
     geometry: {
@@ -2929,7 +2672,7 @@ CustomPolygonMode.onSetup = function () {
     trash: true
   });
   return {
-    polygon: polygon,
+    polygon,
     currentVertexPosition: 0
   };
 };
@@ -3012,13 +2755,13 @@ CustomPolygonMode.onStop = function (state) {
 };
 
 CustomPolygonMode.toDisplayFeatures = function (state, geojson, display) {
-  var isActivePolygon = geojson.properties.id === state.polygon.id;
+  const isActivePolygon = geojson.properties.id === state.polygon.id;
   geojson.properties.active = isActivePolygon ? activeStates.ACTIVE : activeStates.INACTIVE;
   if (!isActivePolygon) return display(geojson); // Don't render a polygon until it has two positions
   // (and a 3rd which is just the first repeated)
 
   if (geojson.geometry.coordinates.length === 0) return;
-  var coordinateCount = geojson.geometry.coordinates[0].length; // 2 coordinates after selecting a draw type
+  const coordinateCount = geojson.geometry.coordinates[0].length; // 2 coordinates after selecting a draw type
   // 3 after creating the first point
 
   if (coordinateCount < 3) {
@@ -3031,14 +2774,14 @@ CustomPolygonMode.toDisplayFeatures = function (state, geojson, display) {
   if (coordinateCount > 3) {
     // Add a start position marker to the map, clicking on this will finish the feature
     // This should only be shown when we're in a valid spot
-    var endPos = geojson.geometry.coordinates[0].length - 3;
+    const endPos = geojson.geometry.coordinates[0].length - 3;
     display(create_vertex(state.polygon.id, geojson.geometry.coordinates[0][endPos], "0.".concat(endPos), false));
   }
 
   if (coordinateCount <= 4) {
     // If we've only drawn two positions (plus the closer),
     // make a LineString instead of a Polygon
-    var lineCoordinates = [[geojson.geometry.coordinates[0][0][0], geojson.geometry.coordinates[0][0][1]], [geojson.geometry.coordinates[0][1][0], geojson.geometry.coordinates[0][1][1]]]; // create an initial vertex so that we can track the first point on mobile devices
+    const lineCoordinates = [[geojson.geometry.coordinates[0][0][0], geojson.geometry.coordinates[0][0][1]], [geojson.geometry.coordinates[0][1][0], geojson.geometry.coordinates[0][1][1]]]; // create an initial vertex so that we can track the first point on mobile devices
 
     display({
       type: geojsonTypes.FEATURE,
@@ -3075,20 +2818,20 @@ CustomPolygonMode.onTrash = function (state) {
  */
 
 function mouseEventPoint(mouseEvent, container) {
-  var rect = container.getBoundingClientRect();
+  const rect = container.getBoundingClientRect();
   return new Point(mouseEvent.clientX - rect.left - (container.clientLeft || 0), mouseEvent.clientY - rect.top - (container.clientTop || 0));
 }
 
-var create_midpoint = function create_midpoint(parent, startVertex, endVertex) {
-  var startCoord = startVertex.geometry.coordinates;
-  var endCoord = endVertex.geometry.coordinates; // If a coordinate exceeds the projection, we can't calculate a midpoint,
+const create_midpoint = function (parent, startVertex, endVertex) {
+  const startCoord = startVertex.geometry.coordinates;
+  const endCoord = endVertex.geometry.coordinates; // If a coordinate exceeds the projection, we can't calculate a midpoint,
   // so run away
 
   if (startCoord[1] > LAT_RENDERED_MAX || startCoord[1] < LAT_RENDERED_MIN || endCoord[1] > LAT_RENDERED_MAX || endCoord[1] < LAT_RENDERED_MIN) {
     return null;
   }
 
-  var mid = {
+  const mid = {
     lng: (startCoord[0] + endCoord[0]) / 2,
     lat: (startCoord[1] + endCoord[1]) / 2
   };
@@ -3096,7 +2839,7 @@ var create_midpoint = function create_midpoint(parent, startVertex, endVertex) {
     type: geojsonTypes.FEATURE,
     properties: {
       meta: meta.MIDPOINT,
-      parent: parent,
+      parent,
       lng: mid.lng,
       lat: mid.lat,
       coord_path: endVertex.properties.coord_path
@@ -3109,13 +2852,14 @@ var create_midpoint = function create_midpoint(parent, startVertex, endVertex) {
 };
 
 function createSupplementaryPoints(geojson) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var basePath = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-  var _geojson$geometry = geojson.geometry,
-      type = _geojson$geometry.type,
-      coordinates = _geojson$geometry.coordinates;
-  var featureId = geojson.properties && geojson.properties.id;
-  var supplementaryPoints = [];
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let basePath = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  const {
+    type,
+    coordinates
+  } = geojson.geometry;
+  const featureId = geojson.properties && geojson.properties.id;
+  let supplementaryPoints = [];
 
   if (type === geojsonTypes.POINT) {
     // For points, just create a vertex
@@ -3123,7 +2867,7 @@ function createSupplementaryPoints(geojson) {
   } else if (type === geojsonTypes.POLYGON) {
     // Cycle through a Polygon's rings and
     // process each line
-    coordinates.forEach(function (line, lineIndex) {
+    coordinates.forEach((line, lineIndex) => {
       processLine(line, basePath !== null ? "".concat(basePath, ".").concat(lineIndex) : String(lineIndex));
     });
   } else if (type === geojsonTypes.LINE_STRING) {
@@ -3133,16 +2877,16 @@ function createSupplementaryPoints(geojson) {
   }
 
   function processLine(line, lineBasePath) {
-    var firstPointString = "";
-    var lastVertex = null;
-    line.forEach(function (point, pointIndex) {
-      var pointPath = lineBasePath !== undefined && lineBasePath !== null ? "".concat(lineBasePath, ".").concat(pointIndex) : String(pointIndex);
-      var vertex = create_vertex(featureId, point, pointPath, isSelectedPath(pointPath)); // If we're creating midpoints, check if there was a
+    let firstPointString = "";
+    let lastVertex = null;
+    line.forEach((point, pointIndex) => {
+      const pointPath = lineBasePath !== undefined && lineBasePath !== null ? "".concat(lineBasePath, ".").concat(pointIndex) : String(pointIndex);
+      const vertex = create_vertex(featureId, point, pointPath, isSelectedPath(pointPath)); // If we're creating midpoints, check if there was a
       // vertex before this one. If so, add a midpoint
       // between that vertex and this one.
 
       if (options.midpoints && lastVertex) {
-        var midpoint = create_midpoint(featureId, lastVertex, vertex);
+        const midpoint = create_midpoint(featureId, lastVertex, vertex);
 
         if (midpoint) {
           supplementaryPoints.push(midpoint);
@@ -3153,7 +2897,7 @@ function createSupplementaryPoints(geojson) {
       // point, we want to draw a midpoint before it but not another vertex on it
       // (since we already a vertex there, from the first point).
 
-      var stringifiedPoint = JSON.stringify(point);
+      const stringifiedPoint = JSON.stringify(point);
 
       if (firstPointString !== stringifiedPoint) {
         supplementaryPoints.push(vertex);
@@ -3174,9 +2918,9 @@ function createSupplementaryPoints(geojson) {
 
 
   function processMultiGeometry() {
-    var subType = type.replace(geojsonTypes.MULTI_PREFIX, "");
-    coordinates.forEach(function (subCoordinates, index) {
-      var subFeature = {
+    const subType = type.replace(geojsonTypes.MULTI_PREFIX, "");
+    coordinates.forEach((subCoordinates, index) => {
+      const subFeature = {
         type: geojsonTypes.FEATURE,
         properties: geojson.properties,
         geometry: {
@@ -3197,7 +2941,7 @@ function StringSet(items) {
   this._length = items ? items.length : 0;
   if (!items) return;
 
-  for (var i = 0, l = items.length; i < l; i++) {
+  for (let i = 0, l = items.length; i < l; i++) {
     this.add(items[i]);
     if (items[i] === undefined) continue;
     if (typeof items[i] === 'string') this._items[items[i]] = i;else this._nums[items[i]] = i;
@@ -3225,26 +2969,20 @@ StringSet.prototype.has = function (x) {
 };
 
 StringSet.prototype.values = function () {
-  var _this = this;
-
-  var values = [];
-  Object.keys(this._items).forEach(function (k) {
+  const values = [];
+  Object.keys(this._items).forEach(k => {
     values.push({
-      k: k,
-      v: _this._items[k]
+      k,
+      v: this._items[k]
     });
   });
-  Object.keys(this._nums).forEach(function (k) {
+  Object.keys(this._nums).forEach(k => {
     values.push({
       k: JSON.parse(k),
-      v: _this._nums[k]
+      v: this._nums[k]
     });
   });
-  return values.sort(function (a, b) {
-    return a.v - b.v;
-  }).map(function (a) {
-    return a.k;
-  });
+  return values.sort((a, b) => a.v - b.v).map(a => a.k);
 };
 
 StringSet.prototype.clear = function () {
@@ -3254,31 +2992,33 @@ StringSet.prototype.clear = function () {
   return this;
 };
 
-var LAT_MIN$1 = LAT_MIN,
-    LAT_MAX$1 = LAT_MAX,
-    LAT_RENDERED_MIN$1 = LAT_RENDERED_MIN,
-    LAT_RENDERED_MAX$1 = LAT_RENDERED_MAX,
-    LNG_MIN$1 = LNG_MIN,
-    LNG_MAX$1 = LNG_MAX; // Ensure that we do not drag north-south far enough for
+const {
+  LAT_MIN: LAT_MIN$1,
+  LAT_MAX: LAT_MAX$1,
+  LAT_RENDERED_MIN: LAT_RENDERED_MIN$1,
+  LAT_RENDERED_MAX: LAT_RENDERED_MAX$1,
+  LNG_MIN: LNG_MIN$1,
+  LNG_MAX: LNG_MAX$1
+} = Constants; // Ensure that we do not drag north-south far enough for
 // - any part of any feature to exceed the poles
 // - any feature to be completely lost in the space between the projection's
 //   edge and the poles, such that it couldn't be re-selected and moved back
 
-var constrain_feature_movement = function constrain_feature_movement(geojsonFeatures, delta) {
+const constrain_feature_movement = function (geojsonFeatures, delta) {
   // "inner edge" = a feature's latitude closest to the equator
-  var northInnerEdge = LAT_MIN$1;
-  var southInnerEdge = LAT_MAX$1; // "outer edge" = a feature's latitude furthest from the equator
+  let northInnerEdge = LAT_MIN$1;
+  let southInnerEdge = LAT_MAX$1; // "outer edge" = a feature's latitude furthest from the equator
 
-  var northOuterEdge = LAT_MIN$1;
-  var southOuterEdge = LAT_MAX$1;
-  var westEdge = LNG_MAX$1;
-  var eastEdge = LNG_MIN$1;
-  geojsonFeatures.forEach(function (feature) {
-    var bounds = extent(feature);
-    var featureSouthEdge = bounds[1];
-    var featureNorthEdge = bounds[3];
-    var featureWestEdge = bounds[0];
-    var featureEastEdge = bounds[2];
+  let northOuterEdge = LAT_MIN$1;
+  let southOuterEdge = LAT_MAX$1;
+  let westEdge = LNG_MAX$1;
+  let eastEdge = LNG_MIN$1;
+  geojsonFeatures.forEach(feature => {
+    const bounds = extent(feature);
+    const featureSouthEdge = bounds[1];
+    const featureNorthEdge = bounds[3];
+    const featureWestEdge = bounds[0];
+    const featureEastEdge = bounds[2];
     if (featureSouthEdge > northInnerEdge) northInnerEdge = featureSouthEdge;
     if (featureNorthEdge < southInnerEdge) southInnerEdge = featureNorthEdge;
     if (featureNorthEdge > northOuterEdge) northOuterEdge = featureNorthEdge;
@@ -3289,7 +3029,7 @@ var constrain_feature_movement = function constrain_feature_movement(geojsonFeat
   // edge but also have hit the outer edge and therefore need
   // another readjustment
 
-  var constrainedDelta = delta;
+  const constrainedDelta = delta;
 
   if (northInnerEdge + constrainedDelta.lat > LAT_RENDERED_MAX$1) {
     constrainedDelta.lat = LAT_RENDERED_MAX$1 - northInnerEdge;
@@ -3318,34 +3058,24 @@ var constrain_feature_movement = function constrain_feature_movement(geojsonFeat
   return constrainedDelta;
 };
 
-var move_features = function move_features(features, delta) {
-  var constrainedDelta = constrain_feature_movement(features.map(function (feature) {
-    return feature.toGeoJSON();
-  }), delta);
-  features.forEach(function (feature) {
-    var currentCoordinates = feature.getCoordinates();
+var move_features = function (features, delta) {
+  const constrainedDelta = constrain_feature_movement(features.map(feature => feature.toGeoJSON()), delta);
+  features.forEach(feature => {
+    const currentCoordinates = feature.getCoordinates();
 
-    var moveCoordinate = function moveCoordinate(coord) {
-      var point = {
+    const moveCoordinate = coord => {
+      const point = {
         lng: coord[0] + constrainedDelta.lng,
         lat: coord[1] + constrainedDelta.lat
       };
       return [point.lng, point.lat];
     };
 
-    var moveRing = function moveRing(ring) {
-      return ring.map(function (coord) {
-        return moveCoordinate(coord);
-      });
-    };
+    const moveRing = ring => ring.map(coord => moveCoordinate(coord));
 
-    var moveMultiPolygon = function moveMultiPolygon(multi) {
-      return multi.map(function (ring) {
-        return moveRing(ring);
-      });
-    };
+    const moveMultiPolygon = multi => multi.map(ring => moveRing(ring));
 
-    var nextCoordinates;
+    let nextCoordinates;
 
     if (feature.type === geojsonTypes.POINT) {
       nextCoordinates = moveCoordinate(currentCoordinates);
@@ -3361,14 +3091,12 @@ var move_features = function move_features(features, delta) {
   });
 };
 
-var CustomSelectMode = {};
+const CustomSelectMode = {};
 
 CustomSelectMode.onSetup = function (opts) {
-  var _this = this;
-
   console.log("Change mode: custom select"); // turn the opts into state.
 
-  var state = {
+  const state = {
     dragMoveLocation: null,
     boxSelectStartLocation: null,
     boxSelectElement: undefined,
@@ -3378,9 +3106,7 @@ CustomSelectMode.onSetup = function (opts) {
     canDragMove: false,
     initiallySelectedFeatureIds: opts.featureIds || []
   };
-  this.setSelected(state.initiallySelectedFeatureIds.filter(function (id) {
-    return _this.getFeature(id) !== undefined;
-  }));
+  this.setSelected(state.initiallySelectedFeatureIds.filter(id => this.getFeature(id) !== undefined));
   this.fireActionable();
   this.setActionableState({
     combineFeatures: true,
@@ -3393,47 +3119,37 @@ CustomSelectMode.onSetup = function (opts) {
 CustomSelectMode.fireUpdate = function () {
   this.map.fire(events.UPDATE, {
     action: updateActions.MOVE,
-    features: this.getSelected().map(function (f) {
-      return f.toGeoJSON();
-    })
+    features: this.getSelected().map(f => f.toGeoJSON())
   });
 };
 
 CustomSelectMode.fireActionable = function () {
-  var _this2 = this;
-
-  var selectedFeatures = this.getSelected();
-  var multiFeatures = selectedFeatures.filter(function (feature) {
-    return _this2.isInstanceOf("MultiFeature", feature);
-  });
-  var combineFeatures = false;
+  const selectedFeatures = this.getSelected();
+  const multiFeatures = selectedFeatures.filter(feature => this.isInstanceOf("MultiFeature", feature));
+  let combineFeatures = false;
 
   if (selectedFeatures.length > 1) {
     combineFeatures = true;
-    var featureType = selectedFeatures[0].type.replace("Multi", "");
-    selectedFeatures.forEach(function (feature) {
+    const featureType = selectedFeatures[0].type.replace("Multi", "");
+    selectedFeatures.forEach(feature => {
       if (feature.type.replace("Multi", "") !== featureType) {
         combineFeatures = false;
       }
     });
   }
 
-  var uncombineFeatures = multiFeatures.length > 0;
-  var trash = selectedFeatures.length > 0;
+  const uncombineFeatures = multiFeatures.length > 0;
+  const trash = selectedFeatures.length > 0;
   this.setActionableState({
-    combineFeatures: combineFeatures,
-    uncombineFeatures: uncombineFeatures,
-    trash: trash
+    combineFeatures,
+    uncombineFeatures,
+    trash
   });
 };
 
 CustomSelectMode.getUniqueIds = function (allFeatures) {
   if (!allFeatures.length) return [];
-  var ids = allFeatures.map(function (s) {
-    return s.properties.id;
-  }).filter(function (id) {
-    return id !== undefined;
-  }).reduce(function (memo, id) {
+  const ids = allFeatures.map(s => s.properties.id).filter(id => id !== undefined).reduce((memo, id) => {
     memo.add(id);
     return memo;
   }, new StringSet());
@@ -3481,16 +3197,12 @@ CustomSelectMode.onTap = CustomSelectMode.onClick = function (state, e) {
 };
 
 CustomSelectMode.clickAnywhere = function (state) {
-  var _this3 = this;
-
   // Clear the re-render selection
-  var wasSelected = this.getSelectedIds();
+  const wasSelected = this.getSelectedIds();
 
   if (wasSelected.length) {
     this.clearSelectedFeatures();
-    wasSelected.forEach(function (id) {
-      return _this3.doRender(id);
-    });
+    wasSelected.forEach(id => this.doRender(id));
   }
 
   doubleClickZoom.enable(this);
@@ -3523,20 +3235,18 @@ CustomSelectMode.startOnActiveFeature = function (state, e) {
 };
 
 CustomSelectMode.clickOnFeature = function (state, e) {
-  var _this4 = this;
-
   // Stop everything
   doubleClickZoom.disable(this);
   this.stopExtendedInteractions(state);
-  var isShiftClick = isShiftDown(e);
-  var selectedFeatureIds = this.getSelectedIds();
-  var featureId = e.featureTarget.properties.id;
-  var isFeatureSelected = this.isSelected(featureId); // Click (without shift) on any selected feature but a point
+  const isShiftClick = isShiftDown(e);
+  const selectedFeatureIds = this.getSelectedIds();
+  const featureId = e.featureTarget.properties.id;
+  const isFeatureSelected = this.isSelected(featureId); // Click (without shift) on any selected feature but a point
 
   if (!isShiftClick && isFeatureSelected && this.getFeature(featureId).type !== geojsonTypes.POINT) {
     // Enter direct select mode
     return this.changeMode("custom_direct_select", {
-      featureId: featureId
+      featureId
     });
   } // Shift-click on a selected feature
 
@@ -3560,9 +3270,7 @@ CustomSelectMode.clickOnFeature = function (state, e) {
     }); // Click (without shift) on an unselected feature
   } else if (!isFeatureSelected && !isShiftClick) {
     // Make it the only selected feature
-    selectedFeatureIds.forEach(function (id) {
-      return _this4.doRender(id);
-    });
+    selectedFeatureIds.forEach(id => this.doRender(id));
     this.setSelected(featureId);
     this.updateUIClasses({
       mouse: cursors.MOVE
@@ -3608,12 +3316,12 @@ CustomSelectMode.whileBoxSelect = function (state, e) {
   } // Adjust the box node's width and xy position
 
 
-  var current = mouseEventPoint(e.originalEvent, this.map.getContainer());
-  var minX = Math.min(state.boxSelectStartLocation.x, current.x);
-  var maxX = Math.max(state.boxSelectStartLocation.x, current.x);
-  var minY = Math.min(state.boxSelectStartLocation.y, current.y);
-  var maxY = Math.max(state.boxSelectStartLocation.y, current.y);
-  var translateValue = "translate(".concat(minX, "px, ").concat(minY, "px)");
+  const current = mouseEventPoint(e.originalEvent, this.map.getContainer());
+  const minX = Math.min(state.boxSelectStartLocation.x, current.x);
+  const maxX = Math.max(state.boxSelectStartLocation.x, current.x);
+  const minY = Math.min(state.boxSelectStartLocation.y, current.y);
+  const maxY = Math.max(state.boxSelectStartLocation.y, current.y);
+  const translateValue = "translate(".concat(minX, "px, ").concat(minY, "px)");
   state.boxSelectElement.style.transform = translateValue;
   state.boxSelectElement.style.WebkitTransform = translateValue;
   state.boxSelectElement.style.width = "".concat(maxX - minX, "px");
@@ -3624,7 +3332,7 @@ CustomSelectMode.dragMove = function (state, e) {
   // Dragging when drag move is enabled
   state.dragMoving = true;
   e.originalEvent.stopPropagation();
-  var delta = {
+  const delta = {
     lng: e.lngLat.lng - state.dragMoveLocation.lng,
     lat: e.lngLat.lat - state.dragMoveLocation.lat
   };
@@ -3633,23 +3341,17 @@ CustomSelectMode.dragMove = function (state, e) {
 };
 
 CustomSelectMode.onMouseUp = function (state, e) {
-  var _this5 = this;
-
   // End any extended interactions
   if (state.dragMoving) {
     this.fireUpdate();
   } else if (state.boxSelecting) {
-    var bbox = [state.boxSelectStartLocation, mouseEventPoint(e.originalEvent, this.map.getContainer())];
-    var featuresInBox = this.featuresAt(null, bbox, "click");
-    var idsToSelect = this.getUniqueIds(featuresInBox).filter(function (id) {
-      return !_this5.isSelected(id);
-    });
+    const bbox = [state.boxSelectStartLocation, mouseEventPoint(e.originalEvent, this.map.getContainer())];
+    const featuresInBox = this.featuresAt(null, bbox, "click");
+    const idsToSelect = this.getUniqueIds(featuresInBox).filter(id => !this.isSelected(id));
 
     if (idsToSelect.length) {
       this.select(idsToSelect);
-      idsToSelect.forEach(function (id) {
-        return _this5.doRender(id);
-      });
+      idsToSelect.forEach(id => this.doRender(id));
       this.updateUIClasses({
         mouse: cursors.MOVE
       });
@@ -3673,21 +3375,21 @@ CustomSelectMode.onTrash = function () {
 };
 
 CustomSelectMode.onCombineFeatures = function () {
-  var selectedFeatures = this.getSelected();
+  const selectedFeatures = this.getSelected();
   if (selectedFeatures.length === 0 || selectedFeatures.length < 2) return;
-  var coordinates = [],
-      featuresCombined = [];
-  var featureType = selectedFeatures[0].type.replace("Multi", "");
+  const coordinates = [],
+        featuresCombined = [];
+  const featureType = selectedFeatures[0].type.replace("Multi", "");
 
-  for (var i = 0; i < selectedFeatures.length; i++) {
-    var feature = selectedFeatures[i];
+  for (let i = 0; i < selectedFeatures.length; i++) {
+    const feature = selectedFeatures[i];
 
     if (feature.type.replace("Multi", "") !== featureType) {
       return;
     }
 
     if (feature.type.includes("Multi")) {
-      feature.getCoordinates().forEach(function (subcoords) {
+      feature.getCoordinates().forEach(subcoords => {
         coordinates.push(subcoords);
       });
     } else {
@@ -3698,12 +3400,12 @@ CustomSelectMode.onCombineFeatures = function () {
   }
 
   if (featuresCombined.length > 1) {
-    var multiFeature = this.newFeature({
+    const multiFeature = this.newFeature({
       type: geojsonTypes.FEATURE,
       properties: featuresCombined[0].properties,
       geometry: {
         type: "Multi".concat(featureType),
-        coordinates: coordinates
+        coordinates
       }
     });
     this.addFeature(multiFeature);
@@ -3721,41 +3423,31 @@ CustomSelectMode.onCombineFeatures = function () {
 };
 
 CustomSelectMode.onUncombineFeatures = function () {
-  var _this6 = this;
-
-  var selectedFeatures = this.getSelected();
+  const selectedFeatures = this.getSelected();
   if (selectedFeatures.length === 0) return;
-  var createdFeatures = [];
-  var featuresUncombined = [];
+  const createdFeatures = [];
+  const featuresUncombined = [];
 
-  var _loop = function _loop(i) {
-    var feature = selectedFeatures[i];
+  for (let i = 0; i < selectedFeatures.length; i++) {
+    const feature = selectedFeatures[i];
 
-    if (_this6.isInstanceOf("MultiFeature", feature)) {
-      feature.getFeatures().forEach(function (subFeature) {
-        _this6.addFeature(subFeature);
-
+    if (this.isInstanceOf("MultiFeature", feature)) {
+      feature.getFeatures().forEach(subFeature => {
+        this.addFeature(subFeature);
         subFeature.properties = feature.properties;
         createdFeatures.push(subFeature.toGeoJSON());
-
-        _this6.select([subFeature.id]);
+        this.select([subFeature.id]);
       });
-
-      _this6.deleteFeature(feature.id, {
+      this.deleteFeature(feature.id, {
         silent: true
       });
-
       featuresUncombined.push(feature.toGeoJSON());
     }
-  };
-
-  for (var i = 0; i < selectedFeatures.length; i++) {
-    _loop(i);
   }
 
   if (createdFeatures.length > 1) {
     this.map.fire(events.UNCOMBINE_FEATURES, {
-      createdFeatures: createdFeatures,
+      createdFeatures,
       deletedFeatures: featuresUncombined
     });
   }
@@ -3763,13 +3455,13 @@ CustomSelectMode.onUncombineFeatures = function () {
   this.fireActionable();
 };
 
-var drawUtils = {
-  getMatchingVertices: function getMatchingVertices(vertex, featureId, allFeatures, map) {
+const drawUtils = {
+  getMatchingVertices: (vertex, featureId, allFeatures, map) => {
     // number of decimals should probably be dynamic depending on zoom level
-    var decimals = 5;
-    var matchingVertices = [];
-    var v_lng = vertex[0].toFixed(decimals);
-    var v_lat = vertex[1].toFixed(decimals);
+    let decimals = 5;
+    let matchingVertices = [];
+    let v_lng = vertex[0].toFixed(decimals);
+    let v_lat = vertex[1].toFixed(decimals);
 
     for (var i = 0; i < allFeatures.length; i++) {
       if (allFeatures[i].id !== featureId) {
@@ -3791,7 +3483,7 @@ var drawUtils = {
 
     return matchingVertices;
   },
-  getDrawInstance: function getDrawInstance(map) {
+  getDrawInstance: map => {
     for (var i = map._controls.length - 1; i >= 0; i--) {
       if (map._controls[i].options && map._controls[i].options.defaultMode === "custom_select") {
         return map._controls[i];
@@ -3802,16 +3494,14 @@ var drawUtils = {
   }
 };
 
-var isVertex$1 = isOfMetaType(meta.VERTEX);
-var isMidpoint = isOfMetaType(meta.MIDPOINT);
-var DirectSelect = {}; // INTERNAL FUCNTIONS
+const isVertex$1 = isOfMetaType(meta.VERTEX);
+const isMidpoint = isOfMetaType(meta.MIDPOINT);
+const DirectSelect = {}; // INTERNAL FUCNTIONS
 
 DirectSelect.fireUpdate = function () {
   this.map.fire(events.UPDATE, {
     action: updateActions.CHANGE_COORDINATES,
-    features: this.getSelected().map(function (f) {
-      return f.toGeoJSON();
-    })
+    features: this.getSelected().map(f => f.toGeoJSON())
   });
 };
 
@@ -3838,8 +3528,8 @@ DirectSelect.stopDragging = function (state) {
 
 DirectSelect.onVertex = function (state, e) {
   this.startDragging(state, e);
-  var about = e.featureTarget.properties;
-  var selectedIndex = state.selectedCoordPaths.indexOf(about.coord_path);
+  const about = e.featureTarget.properties;
+  const selectedIndex = state.selectedCoordPaths.indexOf(about.coord_path);
 
   if (!isShiftDown(e) && selectedIndex === -1) {
     state.selectedCoordPaths = [about.coord_path];
@@ -3848,33 +3538,31 @@ DirectSelect.onVertex = function (state, e) {
   } // currently this work with single selected vertices only
 
 
-  var allFeatures = drawUtils.getDrawInstance(this.map).getAll();
-  var matchingVertices = drawUtils.getMatchingVertices(e.featureTarget._geometry.coordinates, e.featureTarget.properties.parent, allFeatures.features, this.map);
+  let allFeatures = drawUtils.getDrawInstance(this.map).getAll();
+  let matchingVertices = drawUtils.getMatchingVertices(e.featureTarget._geometry.coordinates, e.featureTarget.properties.parent, allFeatures.features, this.map);
   state.groupMove_vertices = matchingVertices;
 
-  for (var i = 0; i < state.groupMove_vertices.length; i++) {
+  for (let i = 0; i < state.groupMove_vertices.length; i++) {
     state.groupMove_vertices[i].feature = this.getFeature(state.groupMove_vertices[i].featureId);
   }
 
-  var selectedCoordinates = this.pathsToCoordinates(state.featureId, state.selectedCoordPaths);
+  const selectedCoordinates = this.pathsToCoordinates(state.featureId, state.selectedCoordPaths);
   this.setSelectedCoordinates(selectedCoordinates);
 };
 
 DirectSelect.onMidpoint = function (state, e) {
   this.startDragging(state, e);
-  var about = e.featureTarget.properties;
+  const about = e.featureTarget.properties;
   state.feature.addCoordinate(about.coord_path, about.lng, about.lat);
   this.fireUpdate();
   state.selectedCoordPaths = [about.coord_path];
 };
 
 DirectSelect.pathsToCoordinates = function (featureId, paths) {
-  return paths.map(function (coord_path) {
-    return {
-      feature_id: featureId,
-      coord_path: coord_path
-    };
-  });
+  return paths.map(coord_path => ({
+    feature_id: featureId,
+    coord_path
+  }));
 };
 
 DirectSelect.onFeature = function (state, e) {
@@ -3887,30 +3575,26 @@ DirectSelect.dragFeature = function (state, e, delta) {
 };
 
 DirectSelect.dragVertex = function (state, e, delta) {
-  var selectedCoords = state.selectedCoordPaths.map(function (coord_path) {
-    return state.feature.getCoordinate(coord_path);
-  });
-  var selectedCoordPoints = selectedCoords.map(function (coords) {
-    return {
-      type: geojsonTypes.FEATURE,
-      properties: {},
-      geometry: {
-        type: geojsonTypes.POINT,
-        coordinates: coords
-      }
-    };
-  });
-  var constrainedDelta = constrain_feature_movement(selectedCoordPoints, delta);
+  const selectedCoords = state.selectedCoordPaths.map(coord_path => state.feature.getCoordinate(coord_path));
+  const selectedCoordPoints = selectedCoords.map(coords => ({
+    type: geojsonTypes.FEATURE,
+    properties: {},
+    geometry: {
+      type: geojsonTypes.POINT,
+      coordinates: coords
+    }
+  }));
+  const constrainedDelta = constrain_feature_movement(selectedCoordPoints, delta);
 
-  for (var i = 0; i < selectedCoords.length; i++) {
-    var coord = selectedCoords[i];
+  for (let i = 0; i < selectedCoords.length; i++) {
+    const coord = selectedCoords[i];
     state.feature.updateCoordinate(state.selectedCoordPaths[i], coord[0] + constrainedDelta.lng, coord[1] + constrainedDelta.lat);
 
-    for (var k = 0; k < state.groupMove_vertices.length; k++) {
-      var coord_path_m = state.groupMove_vertices[k].coord_path.split(".");
+    for (let k = 0; k < state.groupMove_vertices.length; k++) {
+      let coord_path_m = state.groupMove_vertices[k].coord_path.split(".");
 
       if (typeof coord_path_m[0] !== "undefined" && typeof coord_path_m[1] !== "undefined" && typeof state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]] !== "undefined" && typeof state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]][coord_path_m[1]] !== "undefined") {
-        var coord_m = state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]][coord_path_m[1]];
+        let coord_m = state.groupMove_vertices[k].feature.coordinates[coord_path_m[0]][coord_path_m[1]];
         state.groupMove_vertices[k].feature.updateCoordinate(state.groupMove_vertices[k].coord_path, coord_m[0] + constrainedDelta.lng, coord_m[1] + constrainedDelta.lat);
       }
     }
@@ -3933,8 +3617,8 @@ DirectSelect.clickActiveFeature = function (state) {
 
 
 DirectSelect.onSetup = function (opts) {
-  var featureId = opts.featureId;
-  var feature = this.getFeature(featureId);
+  const featureId = opts.featureId;
+  const feature = this.getFeature(featureId);
 
   if (!feature) {
     throw new Error("You must provide a featureId to enter direct_select mode");
@@ -3944,9 +3628,9 @@ DirectSelect.onSetup = function (opts) {
     throw new TypeError("direct_select mode doesn't handle point features");
   }
 
-  var state = {
-    featureId: featureId,
-    feature: feature,
+  const state = {
+    featureId,
+    feature,
     dragMoveLocation: opts.startPos || null,
     dragMoving: false,
     canDragMove: false,
@@ -3987,13 +3671,9 @@ DirectSelect.toDisplayFeatures = function (state, geojson, push) {
 DirectSelect.onTrash = function (state) {
   // Uses number-aware sorting to make sure '9' < '10'. Comparison is reversed because we want them
   // in reverse order so that we can remove by index safely.
-  state.selectedCoordPaths.sort(function (a, b) {
-    return b.localeCompare(a, "en", {
-      numeric: true
-    });
-  }).forEach(function (id) {
-    return state.feature.removeCoordinate(id);
-  });
+  state.selectedCoordPaths.sort((a, b) => b.localeCompare(a, "en", {
+    numeric: true
+  })).forEach(id => state.feature.removeCoordinate(id));
   this.fireUpdate();
   state.selectedCoordPaths = [];
   this.clearSelectedCoordinates();
@@ -4007,9 +3687,9 @@ DirectSelect.onTrash = function (state) {
 
 DirectSelect.onMouseMove = function (state, e) {
   // On mousemove that is not a drag, stop vertex movement.
-  var isFeature = isActiveFeature(e);
-  var onVertex = isVertex$1(e);
-  var noCoords = state.selectedCoordPaths.length === 0;
+  const isFeature = isActiveFeature(e);
+  const onVertex = isVertex$1(e);
+  const noCoords = state.selectedCoordPaths.length === 0;
   if (isFeature && noCoords) this.updateUIClasses({
     mouse: cursors.MOVE
   });else if (onVertex && !noCoords) this.updateUIClasses({
@@ -4035,7 +3715,7 @@ DirectSelect.onDrag = function (state, e) {
   if (state.canDragMove !== true) return;
   state.dragMoving = true;
   e.originalEvent.stopPropagation();
-  var delta = {
+  const delta = {
     lng: e.lngLat.lng - state.dragMoveLocation.lng,
     lat: e.lngLat.lat - state.dragMoveLocation.lat
   };
@@ -4065,38 +3745,26 @@ DirectSelect.onTouchEnd = DirectSelect.onMouseUp = function (state) {
 };
 
 function MlFeatureEditor(props) {
-  var mapRef = useRef(null);
-  var draw = useRef(null);
-  var mapContext = useContext(MapContext);
-  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlFeatureEditor-") + v4());
-  var onChangeRef = useRef(props.onChange);
+  const mapRef = useRef(null);
+  const draw = useRef(null);
+  const mapContext = useContext(MapContext);
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlFeatureEditor-") + v4());
+  const onChangeRef = useRef(props.onChange);
+  const [drawToolsInitialized, setDrawToolsInitialized] = useState(false);
+  const [drawToolsReady, setDrawToolsReady] = useState(false);
+  const [mouseUpTrigger, setMouseUpTrigger] = useState(false);
 
-  var _useState = useState(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      drawToolsInitialized = _useState2[0],
-      setDrawToolsInitialized = _useState2[1];
-
-  var _useState3 = useState(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      drawToolsReady = _useState4[0],
-      setDrawToolsReady = _useState4[1];
-
-  var _useState5 = useState(false),
-      _useState6 = _slicedToArray(_useState5, 2),
-      mouseUpTrigger = _useState6[0],
-      setMouseUpTrigger = _useState6[1];
-
-  var modeChangeHandler = function modeChangeHandler(e) {
+  const modeChangeHandler = e => {
     console.log("MlFeatureEditor mode change to " + e.mode); //setDrawMode(e.mode);
   };
 
-  var mouseUpHandler = function mouseUpHandler() {
+  const mouseUpHandler = () => {
     setMouseUpTrigger(Math.random());
   };
 
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
+  useEffect(() => {
+    let _componentId = componentId.current;
+    return () => {
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId); //mapRef.current.removeControl(draw.current, "top-left");
 
@@ -4104,7 +3772,7 @@ function MlFeatureEditor(props) {
       }
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (mapContext.mapExists(props.mapId) && mapContext.getMap(props.mapId).style && !drawToolsInitialized) {
       mapRef.current = mapContext.getMap(props.mapId);
       setDrawToolsInitialized(true);
@@ -4129,7 +3797,7 @@ function MlFeatureEditor(props) {
       setDrawToolsReady(true);
     }
   }, [mapContext.map, mapContext, props, drawToolsInitialized]);
-  useEffect(function () {
+  useEffect(() => {
     if (draw.current && props.geojson && props.geojson.geometry && props.geojson.geometry.coordinates) {
       draw.current.set({
         type: "FeatureCollection",
@@ -4137,17 +3805,17 @@ function MlFeatureEditor(props) {
       });
     }
   }, [props.geojson, drawToolsReady]);
-  useEffect(function () {
+  useEffect(() => {
     if (draw.current && mouseUpTrigger) {
       // update drawnFeatures state object
-      var currentFeatureCollection = draw.current.getAll();
+      let currentFeatureCollection = draw.current.getAll();
 
       if (typeof onChangeRef.current === "function") {
         onChangeRef.current(currentFeatureCollection.features);
       }
     }
   }, [mouseUpTrigger]);
-  useEffect(function () {
+  useEffect(() => {
     if (props.mode && draw.current) {
       draw.current.changeMode(props.mode);
     }
@@ -4155,14 +3823,14 @@ function MlFeatureEditor(props) {
   return /*#__PURE__*/React__default.createElement(React__default.Fragment, null);
 }
 
-var MlBasicComponent = function MlBasicComponent(props) {
+const MlBasicComponent = props => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
   // const layerRef = useRef(null);
-  var mapContext = useContext(MapContext);
-  useEffect(function () {
+  const mapContext = useContext(MapContext);
+  useEffect(() => {
     if (!mapContext.mapExists()) return;
-    return function () {
+    return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       // try to remove anything this component has added to the MapLibre-gl instance
       // e.g.: remove the layer
@@ -4172,7 +3840,7 @@ var MlBasicComponent = function MlBasicComponent(props) {
       }
     };
   });
-  useEffect(function () {
+  useEffect(() => {
     if (!mapContext.mapExists(props.mapId)) return; // the MapLibre-gl instance (mapContext.map) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance
 
@@ -4191,32 +3859,17 @@ var MlBasicComponent = function MlBasicComponent(props) {
  * @component
  */
 
-var MlLayerMagnify = function MlLayerMagnify(props) {
-  var mapContext = useContext(MapContext);
-  var syncMoveInitializedRef = useRef(false);
-  var syncCleanupFunctionRef = useRef(null);
-
-  var _useState = useState(50),
-      _useState2 = _slicedToArray(_useState, 2),
-      swipeX = _useState2[0],
-      setSwipeX = _useState2[1];
-
-  var swipeXRef = useRef(50);
-
-  var _useState3 = useState(50),
-      _useState4 = _slicedToArray(_useState3, 2),
-      swipeY = _useState4[0],
-      setSwipeY = _useState4[1];
-
-  var swipeYRef = useRef(50);
-  var magnifierRadiusRef = useRef(props.magnifierRadius);
-
-  var _useState5 = useState(magnifierRadiusRef.current),
-      _useState6 = _slicedToArray(_useState5, 2),
-      magnifierRadius = _useState6[0],
-      setMagnifierRadius = _useState6[1];
-
-  var mapExists = useCallback(function () {
+const MlLayerMagnify = props => {
+  const mapContext = useContext(MapContext);
+  const syncMoveInitializedRef = useRef(false);
+  const syncCleanupFunctionRef = useRef(null);
+  const [swipeX, setSwipeX] = useState(50);
+  const swipeXRef = useRef(50);
+  const [swipeY, setSwipeY] = useState(50);
+  const swipeYRef = useRef(50);
+  const magnifierRadiusRef = useRef(props.magnifierRadius);
+  const [magnifierRadius, setMagnifierRadius] = useState(magnifierRadiusRef.current);
+  const mapExists = useCallback(() => {
     if (!props.map1Id || !props.map2Id) {
       return false;
     }
@@ -4227,17 +3880,17 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
 
     return true;
   }, [props, mapContext]);
-  var onResize = useRef(function () {
+  const onResize = useRef(() => {
     if (!mapExists()) return;
     onMove({
       clientX: swipeXRef.current,
       clientY: swipeYRef.current
     });
   });
-  useEffect(function () {
+  useEffect(() => {
     window.addEventListener("resize", onResize.current);
-    var _onResize = onResize.current;
-    return function () {
+    let _onResize = onResize.current;
+    return () => {
       window.removeEventListener("resize", _onResize);
 
       if (syncCleanupFunctionRef.current) {
@@ -4245,15 +3898,15 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
       }
     };
   }, []);
-  var onMove = useCallback(function (e) {
+  const onMove = useCallback(e => {
     if (!mapExists()) return;
-    var bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
-    var clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
-    var clientY = e.clientY || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientY : 0);
+    let bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
+    let clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
+    let clientY = e.clientY || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientY : 0);
     clientX -= bounds.x;
     clientY -= bounds.y;
-    var swipeX_tmp = (clientX / bounds.width * 100).toFixed(2);
-    var swipeY_tmp = (clientY / bounds.height * 100).toFixed(2);
+    let swipeX_tmp = (clientX / bounds.width * 100).toFixed(2);
+    let swipeY_tmp = (clientY / bounds.height * 100).toFixed(2);
 
     if (swipeXRef.current !== swipeX_tmp || swipeYRef.current !== swipeY_tmp) {
       setSwipeX(swipeX_tmp);
@@ -4263,7 +3916,7 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
       mapContext.maps[props.map2Id].getContainer().style.clipPath = "circle(".concat(magnifierRadiusRef.current, "px at ") + swipeXRef.current * bounds.width / 100 + "px " + swipeYRef.current * bounds.height / 100 + "px)";
     }
   }, [mapContext, mapExists, props]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapExists() || syncMoveInitializedRef.current) return;
     syncMoveInitializedRef.current = true;
     syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
@@ -4284,7 +3937,7 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
     });
   }, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
 
-  var onDown = function onDown(e) {
+  const onDown = e => {
     if (e.touches) {
       document.addEventListener("touchmove", onMove);
       document.addEventListener("touchend", onTouchEnd);
@@ -4294,18 +3947,18 @@ var MlLayerMagnify = function MlLayerMagnify(props) {
     }
   };
 
-  var onTouchEnd = function onTouchEnd() {
+  const onTouchEnd = () => {
     document.removeEventListener("touchmove", onMove);
     document.removeEventListener("touchend", onTouchEnd);
   };
 
-  var onMouseUp = function onMouseUp() {
+  const onMouseUp = () => {
     document.removeEventListener("mousemove", onMove);
     document.removeEventListener("mouseup", onMouseUp);
   };
 
-  var onWheel = function onWheel(e) {
-    var evCopy = new WheelEvent(e.type, e);
+  const onWheel = e => {
+    let evCopy = new WheelEvent(e.type, e);
     mapContext.map.getCanvas().dispatchEvent(evCopy);
   };
 
@@ -4362,18 +4015,13 @@ MlLayerMagnify.propTypes = {
  * @component
  */
 
-var MlLayerSwipe = function MlLayerSwipe(props) {
-  var mapContext = useContext(MapContext);
-  var initializedRef = useRef(false);
-
-  var _useState = useState(50),
-      _useState2 = _slicedToArray(_useState, 2),
-      swipeX = _useState2[0],
-      setSwipeX = _useState2[1];
-
-  var swipeXRef = useRef(50);
-  var syncCleanupFunctionRef = useRef(null);
-  var mapExists = useCallback(function () {
+const MlLayerSwipe = props => {
+  const mapContext = useContext(MapContext);
+  const initializedRef = useRef(false);
+  const [swipeX, setSwipeX] = useState(50);
+  const swipeXRef = useRef(50);
+  const syncCleanupFunctionRef = useRef(null);
+  const mapExists = useCallback(() => {
     if (!props.map1Id || !props.map2Id) {
       return false;
     }
@@ -4385,18 +4033,18 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
     return true;
   }, [mapContext, props.map1Id, props.map2Id]);
 
-  var cleanup = function cleanup() {
+  const cleanup = () => {
     if (syncCleanupFunctionRef.current) {
       syncCleanupFunctionRef.current();
     }
   };
 
-  var onMove = useCallback(function (e) {
+  const onMove = useCallback(e => {
     if (!mapExists()) return;
-    var bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
-    var clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
+    let bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
+    let clientX = e.clientX || (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined" ? e.touches[0].clientX : 0);
     clientX -= bounds.x;
-    var swipeX_tmp = (clientX / bounds.width * 100).toFixed(2);
+    let swipeX_tmp = (clientX / bounds.width * 100).toFixed(2);
 
     if (swipeXRef.current !== swipeX_tmp) {
       setSwipeX(swipeX_tmp);
@@ -4405,10 +4053,10 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
       mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
     }
   }, [mapContext, mapExists, props.map1Id, props.map2Id]);
-  useEffect(function () {
+  useEffect(() => {
     return cleanup;
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapExists() || initializedRef.current) return;
     initializedRef.current = true;
     syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
@@ -4417,7 +4065,7 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
     });
   }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
-  var onDown = function onDown(e) {
+  const onDown = e => {
     if (e.touches) {
       document.addEventListener("touchmove", onMove);
       document.addEventListener("touchend", onTouchEnd);
@@ -4427,12 +4075,12 @@ var MlLayerSwipe = function MlLayerSwipe(props) {
     }
   };
 
-  var onTouchEnd = function onTouchEnd() {
+  const onTouchEnd = () => {
     document.removeEventListener("touchmove", onMove);
     document.removeEventListener("touchend", onTouchEnd);
   };
 
-  var onMouseUp = function onMouseUp() {
+  const onMouseUp = () => {
     document.removeEventListener("mousemove", onMove);
     document.removeEventListener("mouseup", onMouseUp);
   };
@@ -4474,8 +4122,8 @@ MlLayerSwipe.propTypes = {
   map2Id: PropTypes.string
 };
 
-var GeoJsonContext = /*#__PURE__*/React__default.createContext({});
-var GeoJsonContextProvider = GeoJsonContext.Provider;
+const GeoJsonContext = /*#__PURE__*/React__default.createContext({});
+const GeoJsonContextProvider = GeoJsonContext.Provider;
 
 /**
  * https://github.com/mapbox/togeojson
@@ -4567,9 +4215,7 @@ var toGeoJSON = function () {
 
 
   function extend(x, y) {
-    for (var k in y) {
-      x[k] = y[k];
-    }
+    for (var k in y) x[k] = y[k];
   } // get one coordinate from a coordinate array, if any
 
 
@@ -4626,10 +4272,10 @@ var toGeoJSON = function () {
     /* istanbul ignore next */
     serializer = new XMLSerializer();
   } else {
-    var isNodeEnv = (typeof process === "undefined" ? "undefined" : _typeof(process)) === "object" && !process.browser;
-    var isTitaniumEnv = (typeof Titanium === "undefined" ? "undefined" : _typeof(Titanium)) === "object";
+    var isNodeEnv = typeof process === "object" && !process.browser;
+    var isTitaniumEnv = typeof Titanium === "object";
 
-    if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && (isNodeEnv || isTitaniumEnv)) {
+    if (typeof exports === "object" && (isNodeEnv || isTitaniumEnv)) {
       serializer = new (require("xmldom").XMLSerializer)();
     } else {
       throw new Error("Unable to initialize serializer");
@@ -4646,7 +4292,7 @@ var toGeoJSON = function () {
   }
 
   var t = {
-    kml: function kml(doc) {
+    kml: function (doc) {
       var gj = fc(),
           // styleindex keeps track of hashed styles in order to match features
       styleIndex = {},
@@ -4713,15 +4359,11 @@ var toGeoJSON = function () {
             times = [];
         if (elems.length === 0) elems = get(root, "gx:coord");
 
-        for (var i = 0; i < elems.length; i++) {
-          coords.push(gxCoord(nodeVal(elems[i])));
-        }
+        for (var i = 0; i < elems.length; i++) coords.push(gxCoord(nodeVal(elems[i])));
 
         var timeElems = get(root, "when");
 
-        for (var j = 0; j < timeElems.length; j++) {
-          times.push(nodeVal(timeElems[j]));
-        }
+        for (var j = 0; j < timeElems.length; j++) times.push(nodeVal(timeElems[j]));
 
         return {
           coords: coords,
@@ -4922,7 +4564,7 @@ var toGeoJSON = function () {
 
       return gj;
     },
-    gpx: function gpx(doc) {
+    gpx: function (doc) {
       var i,
           tracks = get(doc, "trk"),
           routes = get(doc, "rte"),
@@ -5101,41 +4743,27 @@ var toGeoJSON = function () {
  * @component
  */
 
-var MlGPXViewer = function MlGPXViewer(props) {
-  var dataSource = useContext(GeoJsonContext);
-  var initializedRef = useRef(false);
-  var mapHook = useMap({
+const MlGPXViewer = props => {
+  const dataSource = useContext(GeoJsonContext);
+  const initializedRef = useRef(false);
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var sourceName = "import-source";
-  var layerNameLines = "importer-layer-lines";
-  var layerNamePoints = "importer-layer-points";
-
-  var _useState = useState(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      open = _useState2[0],
-      setIsOpen = _useState2[1];
-
-  var dropZone = useRef(null);
-
-  var _useState3 = useState(0),
-      _useState4 = _slicedToArray(_useState3, 2),
-      zIndex = _useState4[0],
-      setZIndex = _useState4[1];
-
-  var _useState5 = useState([]),
-      _useState6 = _slicedToArray(_useState5, 2),
-      metaData = _useState6[0],
-      setMetaData = _useState6[1];
-
-  var fileupload = useRef(null);
-  var mediaIsMobile = useMediaQuery("(max-width:900px)");
-  var popup = useRef(new Popup({
+  const sourceName = "import-source";
+  const layerNameLines = "importer-layer-lines";
+  const layerNamePoints = "importer-layer-points";
+  const [open, setIsOpen] = useState(false);
+  const dropZone = useRef(null);
+  const [zIndex, setZIndex] = useState(0);
+  const [metaData, setMetaData] = useState([]);
+  const fileupload = useRef(null);
+  const mediaIsMobile = useMediaQuery("(max-width:900px)");
+  const popup = useRef(new Popup({
     closeButton: false,
     closeOnClick: true
   }));
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map || initializedRef.current) return;
     initializedRef.current = true;
     mapHook.map.addSource(sourceName, {
@@ -5161,14 +4789,14 @@ var MlGPXViewer = function MlGPXViewer(props) {
       },
       filter: ["==", "$type", "Point"]
     }, props.insertBeforeLayer, mapHook.componentId);
-    [layerNameLines, layerNamePoints].forEach(function (layerName) {
+    [layerNameLines, layerNamePoints].forEach(layerName => {
       mapHook.map.setLayoutProperty(layerName, "visibility", "visible");
     });
-    mapHook.map.on("mouseenter", layerNamePoints, function (e) {
+    mapHook.map.on("mouseenter", layerNamePoints, e => {
       // Change the cursor style as a UI indicator.
-      var coordinates = e.features[0].geometry.coordinates.slice(); //const description = e.features[0].properties.desc;
+      const coordinates = e.features[0].geometry.coordinates.slice(); //const description = e.features[0].properties.desc;
 
-      var name = e.features[0].properties.name; // Ensure that if the map is zoomed out such that multiple
+      const name = e.features[0].properties.name; // Ensure that if the map is zoomed out such that multiple
       // copies of the feature are visible, the popup appears
       // over the copy being pointed to.
 
@@ -5186,19 +4814,19 @@ var MlGPXViewer = function MlGPXViewer(props) {
     }, mapHook.componentId);
     mapHook.map.setZoom(10);
   }, [mapHook.map]);
-  useEffect(function () {
-    var dropZoneCurrent = dropZone.current;
+  useEffect(() => {
+    const dropZoneCurrent = dropZone.current;
 
-    var raiseDropZoneAndStopDefault = function raiseDropZoneAndStopDefault(event) {
+    const raiseDropZoneAndStopDefault = event => {
       setZIndex(1000);
       stopDefault(event);
     };
 
-    var lowerDropZone = function lowerDropZone() {
+    const lowerDropZone = () => {
       setZIndex(0);
     };
 
-    var lowerDropZoneAndStopDefault = function lowerDropZoneAndStopDefault(event) {
+    const lowerDropZoneAndStopDefault = event => {
       setZIndex(0);
       stopDefault(event);
     };
@@ -5207,7 +4835,7 @@ var MlGPXViewer = function MlGPXViewer(props) {
     window.addEventListener("dragover", stopDefault);
     dropZoneCurrent.addEventListener("dragleave", lowerDropZone);
     window.addEventListener("drop", lowerDropZoneAndStopDefault);
-    return function () {
+    return () => {
       window.removeEventListener("dragenter", raiseDropZoneAndStopDefault);
       window.removeEventListener("dragover", stopDefault);
       dropZoneCurrent.removeEventListener("dragleave", lowerDropZone);
@@ -5215,20 +4843,20 @@ var MlGPXViewer = function MlGPXViewer(props) {
     };
   });
 
-  var stopDefault = function stopDefault(event) {
+  const stopDefault = event => {
     event.preventDefault();
     event.stopPropagation();
   };
 
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map) return;
-    var visibility = props.visible ? "visible" : "none";
-    [layerNameLines, layerNamePoints].forEach(function (layerName) {
+    const visibility = props.visible ? "visible" : "none";
+    [layerNameLines, layerNamePoints].forEach(layerName => {
       mapHook.map.setLayoutProperty(layerName, "visibility", visibility);
     });
   }, [props.visible]);
 
-  var dropHandler = function dropHandler(event) {
+  const dropHandler = event => {
     event.preventDefault();
 
     if (event.dataTransfer.items) {
@@ -5238,74 +4866,70 @@ var MlGPXViewer = function MlGPXViewer(props) {
 
 
       if (event.dataTransfer.items[0].kind === "file") {
-        var reader = new FileReader();
+        const reader = new FileReader();
 
-        reader.onload = function (payload) {
+        reader.onload = payload => {
           addGPXToMap(payload.currentTarget.result);
         };
 
-        var file = event.dataTransfer.items[0].getAsFile();
+        const file = event.dataTransfer.items[0].getAsFile();
         reader.readAsText(file);
       }
     }
   };
 
-  var addGPXToMap = function addGPXToMap(gpxAsString) {
+  const addGPXToMap = gpxAsString => {
     if (!mapHook.map) return;
 
     try {
       setMetaData([]);
-      var domParser = new DOMParser();
-      var gpxDoc = domParser.parseFromString(gpxAsString, "application/xml");
-      var metadata = gpxDoc.querySelector("metadata");
-      metadata.childNodes.forEach(function (node) {
-        var value = node.textContent;
-        var title = node.nodeName;
+      const domParser = new DOMParser();
+      const gpxDoc = domParser.parseFromString(gpxAsString, "application/xml");
+      const metadata = gpxDoc.querySelector("metadata");
+      metadata.childNodes.forEach(node => {
+        let value = node.textContent;
+        const title = node.nodeName;
 
         if (node.nodeName === "link") {
           value = node.getAttribute("href");
         }
 
         if (!!value.trim().length) {
-          var metaDatEntry = {
+          const metaDatEntry = {
             title: title,
             value: value,
             id: new Date().getTime()
           };
-          setMetaData(function (prevState) {
-            return [].concat(_toConsumableArray(prevState), [metaDatEntry]);
-          });
+          setMetaData(prevState => [...prevState, metaDatEntry]);
         }
       });
-      var data = toGeoJSON.gpx(gpxDoc);
+      const data = toGeoJSON.gpx(gpxDoc);
       dataSource.setData(data);
       mapHook.map.getSource(sourceName).setData(data);
-      var bounds = bbox(data);
+      const bounds = bbox(data);
       mapHook.map.fitBounds(bounds);
     } catch (e) {
       console.log(e);
     }
   };
 
-  var toogleDrawer = function toogleDrawer() {
-    setIsOpen(function (prevState) {
-      return !prevState;
-    });
+  const toogleDrawer = () => {
+    setIsOpen(prevState => !prevState);
   };
 
-  var fileUploadOnChange = function fileUploadOnChange() {
-    var file = fileupload.current.files[0];
+  const fileUploadOnChange = () => {
+    const file = fileupload.current.files[0];
     if (!file) return false;
-    var reader = new FileReader();
+    const reader = new FileReader();
 
-    reader.onload = function (payload) {
+    reader.onload = payload => {
       addGPXToMap(payload.currentTarget.result);
     };
 
     reader.readAsText(file);
   };
 
-  var manualUpload = function manualUpload() {
+  const manualUpload = () => {
     fileupload.current.click();
   };
 
@@ -5351,13 +4975,11 @@ var MlGPXViewer = function MlGPXViewer(props) {
       padding: "1em"
     },
     noWrap: true
-  }, "Informationen zur Route"), /*#__PURE__*/React__default.createElement(Divider, null), /*#__PURE__*/React__default.createElement(List, null, metaData.map(function (item) {
-    return /*#__PURE__*/React__default.createElement(ListItem, {
-      key: "item--".concat(item.id)
-    }, /*#__PURE__*/React__default.createElement(ListItemText, {
-      primary: item.value
-    }));
-  }))), /*#__PURE__*/React__default.createElement("div", {
+  }, "Informationen zur Route"), /*#__PURE__*/React__default.createElement(Divider, null), /*#__PURE__*/React__default.createElement(List, null, metaData.map(item => /*#__PURE__*/React__default.createElement(ListItem, {
+    key: "item--".concat(item.id)
+  }, /*#__PURE__*/React__default.createElement(ListItemText, {
+    primary: item.value
+  }))))), /*#__PURE__*/React__default.createElement("div", {
     onDrop: dropHandler,
     ref: dropZone,
     style: {
@@ -5408,28 +5030,26 @@ MlGPXViewer.propTypes = {
   insertBeforeLayer: PropTypes.string
 };
 
-var GeoJsonProvider = function GeoJsonProvider(_ref) {
-  var children = _ref.children;
-
-  var _useState = useState({
+const GeoJsonProvider = _ref => {
+  let {
+    children
+  } = _ref;
+  const [data, setData] = useState({
     type: "FeatureCollection",
     features: []
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      data = _useState2[0],
-      setData = _useState2[1];
+  });
 
-  var getEmptyFeatureCollection = function getEmptyFeatureCollection() {
+  const getEmptyFeatureCollection = () => {
     return {
       type: "FeatureCollection",
       features: []
     };
   };
 
-  var value = {
-    data: data,
-    setData: setData,
-    getEmptyFeatureCollection: getEmptyFeatureCollection
+  const value = {
+    data,
+    setData,
+    getEmptyFeatureCollection
   };
   return /*#__PURE__*/React__default.createElement(GeoJsonContextProvider, {
     value: value
@@ -5446,31 +5066,31 @@ GeoJsonProvider.propTypes = {
  * @component
  */
 
-var MlSpatialElevationProfile = function MlSpatialElevationProfile(props) {
-  var mapContext = useContext(MapContext);
-  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlSpatialElevationProfile-") + v4());
-  var mapRef = useRef(null);
-  var initializedRef = useRef(false);
-  var dataSource = useContext(GeoJsonContext);
-  var sourceName = useRef("elevationprofile-" + v4());
-  var layerName = useRef("elevationprofile-layer-" + v4());
-  var createStep = useCallback(function (x, y, z, x2, y2) {
+const MlSpatialElevationProfile = props => {
+  const mapContext = useContext(MapContext);
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlSpatialElevationProfile-") + v4());
+  const mapRef = useRef(null);
+  const initializedRef = useRef(false);
+  const dataSource = useContext(GeoJsonContext);
+  const sourceName = useRef("elevationprofile-" + v4());
+  const layerName = useRef("elevationprofile-layer-" + v4());
+  const createStep = useCallback((x, y, z, x2, y2) => {
     //const summand = 0.0002;
-    var line = lineString([[x, y], [x2, y2]]);
-    var offsetLine = lineOffset(line, 5, {
+    const line = lineString([[x, y], [x2, y2]]);
+    const offsetLine = lineOffset(line, 5, {
       units: "meters"
     });
-    var x3 = offsetLine.geometry.coordinates[0][0];
-    var y3 = offsetLine.geometry.coordinates[0][1];
-    var x4 = offsetLine.geometry.coordinates[1][0];
-    var y4 = offsetLine.geometry.coordinates[1][1];
+    const x3 = offsetLine.geometry.coordinates[0][0];
+    const y3 = offsetLine.geometry.coordinates[0][1];
+    const x4 = offsetLine.geometry.coordinates[1][0];
+    const y4 = offsetLine.geometry.coordinates[1][1];
     return polygon([[[x, y], [x2, y2], [x4, y4], [x3, y3], [x, y]]], {
       height: z * props.elevationFactor
     });
   }, [props.elevationFactor]);
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
+  useEffect(() => {
+    let _componentId = componentId.current;
+    return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       if (mapRef.current) {
         mapRef.current.cleanup(_componentId);
@@ -5478,7 +5098,7 @@ var MlSpatialElevationProfile = function MlSpatialElevationProfile(props) {
       }
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
@@ -5497,51 +5117,51 @@ var MlSpatialElevationProfile = function MlSpatialElevationProfile(props) {
       }
     }, props.insertBeforeLayer, componentId.current);
   }, [mapContext.mapIds, props.insertBeforeLayer, props.mapId, dataSource, mapContext]);
-  useEffect(function () {
+  useEffect(() => {
     var _mapRef$current$getSo;
 
     if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
-    var data = dataSource.data;
+    const {
+      data
+    } = dataSource;
     if (!data || !data.features) return;
-    var line = data.features.find(function (element) {
+    const line = data.features.find(element => {
       return element.geometry.type === "LineString";
     });
     if (!line || !line.geometry) return;
-    var heights = line.geometry.coordinates.map(function (coordinate, index) {
+    const heights = line.geometry.coordinates.map((coordinate, index) => {
       return coordinate[2];
     });
-    var min = Math.min.apply(Math, _toConsumableArray(heights));
-    var max = Math.max.apply(Math, _toConsumableArray(heights)) - min;
+    const min = Math.min(...heights);
+    let max = Math.max(...heights) - min;
     max = max === 0 ? 1 : max;
     mapRef.current.setPaintProperty(layerName.current, "fill-extrusion-color", ["interpolate", ["linear"], ["get", "height"], 0, "rgb(0,255,55)", max * props.elevationFactor, "rgb(255,0,0)"]);
 
-    var lerp = function lerp(x, y, a) {
-      return x * (1 - a) + y * a;
-    };
+    const lerp = (x, y, a) => x * (1 - a) + y * a;
 
-    var points = [];
-    line.geometry.coordinates.forEach(function (coordinate, index) {
+    const points = [];
+    line.geometry.coordinates.forEach((coordinate, index) => {
       //const point = createPoint(coordinate[0],coordinate[1],coordinate[2]-min);
       //points.push(point);
       if (line.geometry.coordinates[index + 1]) {
-        var wayLength = distance([coordinate[0], coordinate[1]], [line.geometry.coordinates[index + 1][0], line.geometry.coordinates[index + 1][1]], {
+        const wayLength = distance([coordinate[0], coordinate[1]], [line.geometry.coordinates[index + 1][0], line.geometry.coordinates[index + 1][1]], {
           units: "kilometers"
         });
-        var listLength = ~~(wayLength * 1000 / 10);
+        let listLength = ~~(wayLength * 1000 / 10);
         listLength = listLength < 1 ? 1 : listLength;
 
-        for (var i = 0; i < listLength; i++) {
-          var x = lerp(line.geometry.coordinates[index][0], line.geometry.coordinates[index + 1][0], i / listLength);
-          var y = lerp(line.geometry.coordinates[index][1], line.geometry.coordinates[index + 1][1], i / listLength);
-          var z = lerp(line.geometry.coordinates[index][2] - min, line.geometry.coordinates[index + 1][2] - min, i / listLength);
-          var x2 = lerp(line.geometry.coordinates[index][0], line.geometry.coordinates[index + 1][0], (i + 1) / listLength);
-          var y2 = lerp(line.geometry.coordinates[index][1], line.geometry.coordinates[index + 1][1], (i + 1) / listLength);
-          var point = createStep(x, y, z, x2, y2);
+        for (let i = 0; i < listLength; i++) {
+          const x = lerp(line.geometry.coordinates[index][0], line.geometry.coordinates[index + 1][0], i / listLength);
+          const y = lerp(line.geometry.coordinates[index][1], line.geometry.coordinates[index + 1][1], i / listLength);
+          const z = lerp(line.geometry.coordinates[index][2] - min, line.geometry.coordinates[index + 1][2] - min, i / listLength);
+          const x2 = lerp(line.geometry.coordinates[index][0], line.geometry.coordinates[index + 1][0], (i + 1) / listLength);
+          const y2 = lerp(line.geometry.coordinates[index][1], line.geometry.coordinates[index + 1][1], (i + 1) / listLength);
+          const point = createStep(x, y, z, x2, y2);
           points.push(point);
         }
       }
     });
-    var newData = dataSource.getEmptyFeatureCollection();
+    const newData = dataSource.getEmptyFeatureCollection();
     newData.features = points;
     (_mapRef$current$getSo = mapRef.current.getSource(sourceName.current)) === null || _mapRef$current$getSo === void 0 ? void 0 : _mapRef$current$getSo.setData(newData);
   }, [dataSource.data, createStep, dataSource, props.elevationFactor, mapContext]);
@@ -5574,13 +5194,29 @@ MlSpatialElevationProfile.propTypes = {
   insertBeforeLayer: PropTypes.string
 };
 
-var _showNextTransitionSegment = function _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson) {
-  var _arguments = arguments;
+function _extends$3() {
+  _extends$3 = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
 
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends$3.apply(this, arguments);
+}
+
+const _showNextTransitionSegment = function (props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson) {
   if (typeof transitionGeojsonDataRef.current[currentTransitionStepRef.current] !== "undefined") {
     // if at last transition step set to target geojson
     // else to an assembled LineString from common geometry and the current transition step geometry
-    var newData = currentTransitionStepRef.current + 1 === transitionGeojsonDataRef.current.length ? props.geojson : lineString$1([].concat(_toConsumableArray(transitionGeojsonCommonDataRef.current), _toConsumableArray(transitionGeojsonDataRef.current[currentTransitionStepRef.current].geometry.coordinates)));
+    let newData = currentTransitionStepRef.current + 1 === transitionGeojsonDataRef.current.length ? props.geojson : lineString$1([...transitionGeojsonCommonDataRef.current, ...transitionGeojsonDataRef.current[currentTransitionStepRef.current].geometry.coordinates]);
     setDisplayGeojson(newData);
 
     if (typeof props.onTransitionFrame === "function") {
@@ -5590,9 +5226,7 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, map,
     currentTransitionStepRef.current++;
 
     if (transitionInProgressRef.current && currentTransitionStepRef.current < transitionGeojsonDataRef.current.length) {
-      transitionTimeoutRef.current = setTimeout(function () {
-        return _showNextTransitionSegment.apply(void 0, _toConsumableArray(_arguments));
-      }, msPerStep);
+      transitionTimeoutRef.current = setTimeout(() => _showNextTransitionSegment(...arguments), msPerStep);
     } else {
       if (typeof props.onTransitionEnd === "function") {
         props.onTransitionEnd(props.geojson);
@@ -5603,15 +5237,15 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, map,
   }
 };
 
-var _transitionToGeojson = function _transitionToGeojson(props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, transitionTimeoutRef, setDisplayGeojson) {
+const _transitionToGeojson = (props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, map, transitionTimeoutRef, setDisplayGeojson) => {
   // create the transition geojson between oldGeojsonRef.current and props.geojson
   // create a geojson that contains no common point between the two line features
-  var transitionCoordinatesShort = [];
-  var transitionCoordinatesLong = [];
-  var targetCoordinates = [];
-  var srcCoordinates = [];
+  let transitionCoordinatesShort = [];
+  let transitionCoordinatesLong = [];
+  let targetCoordinates = [];
+  let srcCoordinates = [];
   transitionGeojsonCommonDataRef.current = [];
-  var sourceGeojson = oldGeojsonRef.current || {
+  let sourceGeojson = oldGeojsonRef.current || {
     geometry: {
       type: "LineString",
       coordinates: []
@@ -5619,10 +5253,10 @@ var _transitionToGeojson = function _transitionToGeojson(props, transitionGeojso
     properties: {},
     type: "Feature"
   };
-  var targetGeojson = props.geojson;
-  var longerGeojson = targetGeojson;
-  var shorterGeojson = sourceGeojson;
-  var reverseOrder = false; // In case one geojson is missing completely use the first two coordinates of the other geojson
+  let targetGeojson = props.geojson;
+  let longerGeojson = targetGeojson;
+  let shorterGeojson = sourceGeojson;
+  let reverseOrder = false; // In case one geojson is missing completely use the first two coordinates of the other geojson
 
   if (typeof longerGeojson.geometry === "undefined" && typeof shorterGeojson.geometry !== "undefined" && shorterGeojson.geometry.coordinates.length > 1) {
     longerGeojson = lineString$1(shorterGeojson.geometry.coordinates.slice(0, 2));
@@ -5665,44 +5299,42 @@ var _transitionToGeojson = function _transitionToGeojson(props, transitionGeojso
 
   if (targetCoordinates.length < 2 && srcCoordinates < 2) return; // create props.transitionTime / msPerStep (=: transitionSteps) Versions of transitionGeojsonCommonDataRef.current + transitionCoordinates making the transitionCoordinates transitionCoordinatesDistance / transitionSteps longer on each step
 
-  var transitionSteps = props.transitionTime / msPerStep;
-  var srcCoordinatesDistance = srcCoordinates.length > 1 ? Math.round(length(lineString$1(srcCoordinates))) : 0;
-  var targetCoordinatesDistance = targetCoordinates.length > 1 ? Math.round(length(lineString$1(targetCoordinates))) : 0;
-  var transitionDistance = targetCoordinatesDistance + srcCoordinatesDistance;
-  var srcCoordinatesShare = srcCoordinatesDistance / transitionDistance;
-  var srcTransitionSteps = Math.round(transitionSteps * srcCoordinatesShare);
-  var srcPerStepDistance = Math.round(srcCoordinatesDistance / srcTransitionSteps * 100) / 100;
-  var targetCoordinatesShare = targetCoordinatesDistance / transitionDistance;
-  var targetTransitionSteps = Math.round(transitionSteps * targetCoordinatesShare);
-  var targetPerStepDistance = Math.round(targetCoordinatesDistance / targetTransitionSteps * 100) / 100; // use srcPerStepDistance as src coordinates are always animated backwards
+  let transitionSteps = props.transitionTime / msPerStep;
+  let srcCoordinatesDistance = srcCoordinates.length > 1 ? Math.round(length(lineString$1(srcCoordinates))) : 0;
+  let targetCoordinatesDistance = targetCoordinates.length > 1 ? Math.round(length(lineString$1(targetCoordinates))) : 0;
+  let transitionDistance = targetCoordinatesDistance + srcCoordinatesDistance;
+  let srcCoordinatesShare = srcCoordinatesDistance / transitionDistance;
+  let srcTransitionSteps = Math.round(transitionSteps * srcCoordinatesShare);
+  let srcPerStepDistance = Math.round(srcCoordinatesDistance / srcTransitionSteps * 100) / 100;
+  let targetCoordinatesShare = targetCoordinatesDistance / transitionDistance;
+  let targetTransitionSteps = Math.round(transitionSteps * targetCoordinatesShare);
+  let targetPerStepDistance = Math.round(targetCoordinatesDistance / targetTransitionSteps * 100) / 100; // use srcPerStepDistance as src coordinates are always animated backwards
 
 
-  var transitionStepData;
-  transitionStepData = _toConsumableArray(createTransitionSteps(srcCoordinates, srcPerStepDistance, srcTransitionSteps));
+  let transitionStepData;
+  transitionStepData = [...createTransitionSteps(srcCoordinates, srcPerStepDistance, srcTransitionSteps)];
   transitionStepData.reverse();
-  transitionStepData = [].concat(_toConsumableArray(transitionStepData), _toConsumableArray(createTransitionSteps(targetCoordinates, targetPerStepDistance, targetTransitionSteps)));
+  transitionStepData = [...transitionStepData, ...createTransitionSteps(targetCoordinates, targetPerStepDistance, targetTransitionSteps)];
   transitionStepData.push(targetGeojson);
   transitionGeojsonDataRef.current = transitionStepData;
   currentTransitionStepRef.current = 1;
   transitionInProgressRef.current = true;
-  transitionTimeoutRef.current = setTimeout(function () {
-    return _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson);
-  }, msPerStep);
+  transitionTimeoutRef.current = setTimeout(() => _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson), msPerStep);
 };
 
-var createTransitionSteps = function createTransitionSteps(linestringCoordinates, perStepDistance, stepCnt) {
-  var transitionSteps = [];
+let createTransitionSteps = (linestringCoordinates, perStepDistance, stepCnt) => {
+  let transitionSteps = [];
 
   if (linestringCoordinates.length > 1) {
-    var tmpChunks = lineChunk(lineString$1(linestringCoordinates), perStepDistance); // tmpLineString contains all coordinates of all previous plus current loop iteration
+    let tmpChunks = lineChunk(lineString$1(linestringCoordinates), perStepDistance); // tmpLineString contains all coordinates of all previous plus current loop iteration
 
-    var tmpLinestring = tmpChunks.features[0];
+    let tmpLinestring = tmpChunks.features[0];
 
-    for (var i = 0; i < stepCnt; i++) {
+    for (let i = 0; i < stepCnt; i++) {
       transitionSteps.push(tmpLinestring);
 
       if (typeof tmpChunks.features[i] !== "undefined") {
-        tmpLinestring = lineString$1([].concat(_toConsumableArray(tmpLinestring.geometry.coordinates), _toConsumableArray(tmpChunks.features[i].geometry.coordinates)));
+        tmpLinestring = lineString$1([...tmpLinestring.geometry.coordinates, ...tmpChunks.features[i].geometry.coordinates]);
       } else {
         break;
       }
@@ -5712,49 +5344,44 @@ var createTransitionSteps = function createTransitionSteps(linestringCoordinates
   return transitionSteps;
 };
 
-var _excluded$2 = ["geojson"];
-var msPerStep = 50;
+const msPerStep = 50;
 /**
  * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
  *
  * @component
  */
 
-var MlTransitionGeoJsonLayer = function MlTransitionGeoJsonLayer(props) {
-  var geojson = props.geojson,
-      restProps = _objectWithoutProperties(props, _excluded$2); // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+const MlTransitionGeoJsonLayer = props => {
+  const {
+    geojson,
+    ...restProps
+  } = props; // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 
-
-  var mapHook = useMap({
+  const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer
   });
-  var initializedRef = useRef(false); // transition effect variables
+  const initializedRef = useRef(false); // transition effect variables
 
-  var oldGeojsonRef = useRef(null);
-  var transitionInProgressRef = useRef(false);
-  var transitionTimeoutRef = useRef(undefined);
-  var currentTransitionStepRef = useRef(false);
-  var transitionGeojsonDataRef = useRef([]);
-  var transitionGeojsonCommonDataRef = useRef([]);
-
-  var _useState = useState(featureCollection([])),
-      _useState2 = _slicedToArray(_useState, 2),
-      displayGeojson = _useState2[0],
-      setDisplayGeojson = _useState2[1];
-
-  useEffect(function () {
-    return function () {
+  const oldGeojsonRef = useRef(null);
+  const transitionInProgressRef = useRef(false);
+  const transitionTimeoutRef = useRef(undefined);
+  const currentTransitionStepRef = useRef(false);
+  const transitionGeojsonDataRef = useRef([]);
+  const transitionGeojsonCommonDataRef = useRef([]);
+  const [displayGeojson, setDisplayGeojson] = useState(featureCollection([]));
+  useEffect(() => {
+    return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       if (transitionTimeoutRef.current) {
         clearTimeout(transitionTimeoutRef.current);
       }
     };
   }, []);
-  var transitionToGeojson = useCallback(function () {
+  const transitionToGeojson = useCallback(() => {
     _transitionToGeojson(props, transitionGeojsonCommonDataRef, transitionGeojsonDataRef, transitionInProgressRef, oldGeojsonRef, msPerStep, currentTransitionStepRef, mapHook.map, transitionTimeoutRef, setDisplayGeojson);
   }, [props, mapHook.map]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;
 
     if (typeof props.transitionTime !== "undefined" && props.type === "line" && oldGeojsonRef.current) {
@@ -5767,18 +5394,18 @@ var MlTransitionGeoJsonLayer = function MlTransitionGeoJsonLayer(props) {
 
     oldGeojsonRef.current = props.geojson;
   }, [mapHook.map, transitionToGeojson, props]);
-  var startTransition = useCallback(function () {
+  const startTransition = useCallback(() => {
     if (props.type === "line" && typeof props.transitionTime !== "undefined" && props.transitionTime && typeof props.geojson.geometry !== "undefined" && JSON.stringify(oldGeojsonRef.current) !== JSON.stringify(props.geojson)) {
       transitionToGeojson(props.geojson);
       oldGeojsonRef.current = props.geojson;
     }
   }, [props, transitionToGeojson]);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapHook.mapIsReady || !props.geojson) return;
     initializedRef.current = true;
     startTransition();
   }, [mapHook.mapIsReady, startTransition, props]);
-  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, _extends({}, restProps, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(MlGeoJsonLayer, _extends$3({}, restProps, {
     geojson: displayGeojson
   })));
 };
@@ -5869,35 +5496,26 @@ MlTransitionGeoJsonLayer.propTypes = {
  * @component
  */
 
-var MlMarker = function MlMarker(props) {
-  var mapContext = useContext(MapContext);
-  var mapState = useMapState({
+const MlMarker = props => {
+  const mapContext = useContext(MapContext);
+  const mapState = useMapState({
     mapId: props.mapId,
     watch: {
       viewport: true
     }
   });
-  var iframe = useRef(undefined);
-  var initializedRef = useRef(false);
-  var mapRef = useRef(undefined);
-  var componentId = useRef((props.idPrefix ? props.idPrefix : "MlMarker-") + v4());
-
-  var _useState = useState({
+  const iframe = useRef(undefined);
+  const initializedRef = useRef(false);
+  const mapRef = useRef(undefined);
+  const componentId = useRef((props.idPrefix ? props.idPrefix : "MlMarker-") + v4());
+  const [iframeDimensions, setIframeDimensions] = useState({
     width: "400px",
     height: "500px"
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      iframeDimensions = _useState2[0],
-      setIframeDimensions = _useState2[1];
-
-  var _useState3 = useState(undefined),
-      _useState4 = _slicedToArray(_useState3, 2),
-      markerPixelPos = _useState4[0],
-      setMarkerPixelPos = _useState4[1];
-
-  useEffect(function () {
-    var _componentId = componentId.current;
-    return function () {
+  });
+  const [markerPixelPos, setMarkerPixelPos] = useState(undefined);
+  useEffect(() => {
+    let _componentId = componentId.current;
+    return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
       // try to remove anything this component has added to the MapLibre-gl instance
       // e.g.: remove the layer
@@ -5911,36 +5529,36 @@ var MlMarker = function MlMarker(props) {
       initializedRef.current = false;
     };
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (!mapContext.mapExists(props.mapId) || initializedRef.current) return; // the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
     // initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
   }, [mapContext.mapIds, mapContext, props.mapId]);
-  useEffect(function () {
+  useEffect(() => {
     var _mapRef$current;
 
     if (!((_mapRef$current = mapRef.current) !== null && _mapRef$current !== void 0 && _mapRef$current.project)) return;
 
-    var _pixelPos = mapRef.current.project([props.lng, props.lat]);
+    const _pixelPos = mapRef.current.project([props.lng, props.lat]);
 
     setMarkerPixelPos(_pixelPos);
   }, [props.lng, props.lat, mapState.viewport]);
-  useEffect(function () {
+  useEffect(() => {
     var _iframe$current, _iframe$current$conte, _iframe$current$conte2, _iframe$current$conte3;
 
     if (mapRef.current && (_iframe$current = iframe.current) !== null && _iframe$current !== void 0 && (_iframe$current$conte = _iframe$current.contentWindow) !== null && _iframe$current$conte !== void 0 && (_iframe$current$conte2 = _iframe$current$conte.document) !== null && _iframe$current$conte2 !== void 0 && (_iframe$current$conte3 = _iframe$current$conte2.body) !== null && _iframe$current$conte3 !== void 0 && _iframe$current$conte3.scrollHeight) {
-      setTimeout(function () {
+      setTimeout(() => {
         var _iframe$current2, _iframe$current2$cont, _iframe$current2$cont2, _iframe$current2$cont3, _iframe$current3, _iframe$current3$cont, _iframe$current3$cont2, _iframe$current3$cont3;
 
-        var mapHeight = mapRef.current._container.clientHeight;
+        let mapHeight = mapRef.current._container.clientHeight;
 
-        var _pixelPos = mapRef.current.project([props.lng, props.lat]);
+        const _pixelPos = mapRef.current.project([props.lng, props.lat]);
 
-        var pixelToBottom = mapHeight - _pixelPos.y;
-        var iframeHeight = (_iframe$current2 = iframe.current) === null || _iframe$current2 === void 0 ? void 0 : (_iframe$current2$cont = _iframe$current2.contentWindow) === null || _iframe$current2$cont === void 0 ? void 0 : (_iframe$current2$cont2 = _iframe$current2$cont.document) === null || _iframe$current2$cont2 === void 0 ? void 0 : (_iframe$current2$cont3 = _iframe$current2$cont2.body) === null || _iframe$current2$cont3 === void 0 ? void 0 : _iframe$current2$cont3.scrollHeight;
-        var iframeWidth = (_iframe$current3 = iframe.current) === null || _iframe$current3 === void 0 ? void 0 : (_iframe$current3$cont = _iframe$current3.contentWindow) === null || _iframe$current3$cont === void 0 ? void 0 : (_iframe$current3$cont2 = _iframe$current3$cont.document) === null || _iframe$current3$cont2 === void 0 ? void 0 : (_iframe$current3$cont3 = _iframe$current3$cont2.body) === null || _iframe$current3$cont3 === void 0 ? void 0 : _iframe$current3$cont3.scrollWidth;
+        let pixelToBottom = mapHeight - _pixelPos.y;
+        let iframeHeight = (_iframe$current2 = iframe.current) === null || _iframe$current2 === void 0 ? void 0 : (_iframe$current2$cont = _iframe$current2.contentWindow) === null || _iframe$current2$cont === void 0 ? void 0 : (_iframe$current2$cont2 = _iframe$current2$cont.document) === null || _iframe$current2$cont2 === void 0 ? void 0 : (_iframe$current2$cont3 = _iframe$current2$cont2.body) === null || _iframe$current2$cont3 === void 0 ? void 0 : _iframe$current2$cont3.scrollHeight;
+        let iframeWidth = (_iframe$current3 = iframe.current) === null || _iframe$current3 === void 0 ? void 0 : (_iframe$current3$cont = _iframe$current3.contentWindow) === null || _iframe$current3$cont === void 0 ? void 0 : (_iframe$current3$cont2 = _iframe$current3$cont.document) === null || _iframe$current3$cont2 === void 0 ? void 0 : (_iframe$current3$cont3 = _iframe$current3$cont2.body) === null || _iframe$current3$cont3 === void 0 ? void 0 : _iframe$current3$cont3.scrollWidth;
         setIframeDimensions({
           width: iframeWidth,
           height: pixelToBottom < iframeHeight ? pixelToBottom : iframeHeight
@@ -6018,39 +5636,20 @@ MlMarker.propTypes = {
 
 function useWms(props) {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  var _useState = useState(undefined),
-      _useState2 = _slicedToArray(_useState, 2),
-      getFeatureInfoUrl = _useState2[0],
-      setGetFeatureInfoUrl = _useState2[1];
+  const [getFeatureInfoUrl, setGetFeatureInfoUrl] = useState(undefined);
+  const [url, setUrl] = useState(props.url);
+  const [wmsUrl, setWmsUrl] = useState("");
+  const [capabilities, setCapabilities] = useState(undefined);
+  const [error, setError] = useState(undefined);
 
-  var _useState3 = useState(props.url),
-      _useState4 = _slicedToArray(_useState3, 2),
-      url = _useState4[0],
-      setUrl = _useState4[1];
-
-  var _useState5 = useState(""),
-      _useState6 = _slicedToArray(_useState5, 2),
-      wmsUrl = _useState6[0],
-      setWmsUrl = _useState6[1];
-
-  var _useState7 = useState(undefined),
-      _useState8 = _slicedToArray(_useState7, 2),
-      capabilities = _useState8[0],
-      setCapabilities = _useState8[1];
-
-  var _useState9 = useState(undefined),
-      _useState10 = _slicedToArray(_useState9, 2),
-      error = _useState10[0],
-      setError = _useState10[1];
-
-  var clearState = function clearState() {
+  const clearState = () => {
     setGetFeatureInfoUrl(undefined);
     setCapabilities(undefined); //setLayers([]);
 
     setWmsUrl("");
   };
 
-  useEffect(function () {
+  useEffect(() => {
     var _propsUrlParams2;
 
     // extract URL parameters from the given URL
@@ -6058,38 +5657,39 @@ function useWms(props) {
     setError(undefined);
     if (!url) return;
 
-    var _propsUrlParams;
+    let _propsUrlParams;
 
-    var _wmsUrl = url;
+    let _wmsUrl = url;
 
     if (url.indexOf("?") !== -1) {
       _propsUrlParams = url.split("?");
       _wmsUrl = _propsUrlParams[0];
     }
 
-    var _urlParamsFromUrl = new URLSearchParams((_propsUrlParams2 = _propsUrlParams) === null || _propsUrlParams2 === void 0 ? void 0 : _propsUrlParams2[1]);
+    let _urlParamsFromUrl = new URLSearchParams((_propsUrlParams2 = _propsUrlParams) === null || _propsUrlParams2 === void 0 ? void 0 : _propsUrlParams2[1]);
 
-    var urlParamsObj = _objectSpread2(_objectSpread2({}, Object.fromEntries(_urlParamsFromUrl)), props.urlParameters); // create URLSearchParams object to assemble the URL Parameters
+    let urlParamsObj = { ...Object.fromEntries(_urlParamsFromUrl),
+      ...props.urlParameters
+    }; // create URLSearchParams object to assemble the URL Parameters
 
-
-    var urlParams = new URLSearchParams(urlParamsObj);
-    var urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
-    fetch(_wmsUrl + "?" + urlParamsStr).then(function (res) {
+    let urlParams = new URLSearchParams(urlParamsObj);
+    let urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+    fetch(_wmsUrl + "?" + urlParamsStr).then(res => {
       if (!res.ok) {
         throw Error(res.statusText + " (" + res.status + " - " + res.type + ")");
       } else {
         return res.text();
       }
-    }).then(function (data) {
+    }).then(data => {
       setCapabilities(new WMSCapabilities(data).toJSON());
-    }).catch(function (error) {
+    }).catch(error => {
       //reset local state
       clearState();
       console.log(error);
       setError(error.message);
     });
   }, [url, props.urlParameters]);
-  useEffect(function () {
+  useEffect(() => {
     var _capabilities$Capabil, _capabilities$Capabil2, _capabilities$Capabil3, _capabilities$Capabil4, _capabilities$Capabil5, _capabilities$Capabil6, _capabilities$Capabil7, _capabilities$Capabil8, _capabilities$Capabil9, _capabilities$Capabil10, _capabilities$Capabil11, _capabilities$Capabil12, _capabilities$Capabil13, _capabilities$Capabil14;
 
     if (!(capabilities !== null && capabilities !== void 0 && capabilities.Service)) return;
@@ -6098,11 +5698,11 @@ function useWms(props) {
     setGetFeatureInfoUrl((_capabilities$Capabil8 = capabilities.Capability) === null || _capabilities$Capabil8 === void 0 ? void 0 : (_capabilities$Capabil9 = _capabilities$Capabil8.Request) === null || _capabilities$Capabil9 === void 0 ? void 0 : (_capabilities$Capabil10 = _capabilities$Capabil9.GetFeatureInfo) === null || _capabilities$Capabil10 === void 0 ? void 0 : (_capabilities$Capabil11 = _capabilities$Capabil10.DCPType) === null || _capabilities$Capabil11 === void 0 ? void 0 : (_capabilities$Capabil12 = _capabilities$Capabil11[0]) === null || _capabilities$Capabil12 === void 0 ? void 0 : (_capabilities$Capabil13 = _capabilities$Capabil12.HTTP) === null || _capabilities$Capabil13 === void 0 ? void 0 : (_capabilities$Capabil14 = _capabilities$Capabil13.Get) === null || _capabilities$Capabil14 === void 0 ? void 0 : _capabilities$Capabil14.OnlineResource);
   }, [capabilities]);
   return {
-    capabilities: capabilities,
-    getFeatureInfoUrl: getFeatureInfoUrl,
-    wmsUrl: wmsUrl,
-    error: error,
-    setUrl: setUrl
+    capabilities,
+    getFeatureInfoUrl,
+    wmsUrl,
+    error,
+    setUrl
   };
 }
 
