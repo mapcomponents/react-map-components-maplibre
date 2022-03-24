@@ -1,8 +1,13 @@
 # Change Log
 
+## [v0.1.34] - 2022-03-24
+
+### Fixed
+- 0ced5c1: revert to webpack inline transpilation exclusion as there is no effect on codesandbox installation issues
+
 ## [v0.1.33] - 2022-03-24
 
-### Fixe5b80cac: remove webpack inline transpilation exclusion to fix codesandbox installation issues …d
+### Fixed
 - 5b80cac: remove webpack inline transpilation exclusion to fix codesandbox installation issues
 
 ## [v0.1.32] - 2022-03-15
