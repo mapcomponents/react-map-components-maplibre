@@ -10,8 +10,6 @@ const storyoptions = {
   name: "MlLayerSwipe",
   component: MlLayerSwipe,
   argTypes: {
-    url: {},
-    layer: {},
   },
   decorators: multiMapContextDecorator,
 };

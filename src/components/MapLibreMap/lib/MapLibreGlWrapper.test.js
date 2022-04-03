@@ -26,8 +26,8 @@ var mockMapLibreMethods = {
 mockMapLibreMethods.style = {
   ...mockMapLibreMethods,
 };
-jest.mock("maplibre-gl/dist/maplibre-gl", () => {
-  const originalModule = jest.requireActual("maplibre-gl/dist/maplibre-gl");
+jest.mock("maplibre-gl", () => {
+  const originalModule = jest.requireActual("maplibre-gl");
 
   return {
     ...originalModule,
@@ -159,7 +159,7 @@ const SourceTestComponent = (props) => {
       {...props}
       afterInit={(map, componentId) => {
         for (let i = 0; i < props.cnt; i++) {
-          map.addSource(uuidv4(), {}, undefined, componentId);
+          map.addSource(uuidv4(), {}, componentId);
         }
       }}
     />

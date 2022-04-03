@@ -10,11 +10,6 @@ const storyoptions = {
   title: "MapComponents/MlCreatePdfButton",
   component: MlCreatePdfButton,
   argTypes: {
-    options: {
-      control: {
-        type: "object",
-      },
-    },
   },
   decorators: mapContextDecorator,
 };

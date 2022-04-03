@@ -8,10 +8,7 @@ import wgMarker from "./assets/wg-marker.png";
 const storyoptions = {
   title: "MapComponents/MlImageMarkerLayer",
   component: MlImageMarkerLayer,
-  argTypes: {
-    url: {},
-    layer: {},
-  },
+  argTypes: { },
   decorators: mapContextDecorator,
 };
 export default storyoptions;

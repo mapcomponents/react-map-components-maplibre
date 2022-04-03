@@ -1,3 +1,7 @@
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
 export const classes = {
   CONTROL_BASE: 'mapboxgl-ctrl',
   CONTROL_PREFIX: 'mapboxgl-ctrl-',

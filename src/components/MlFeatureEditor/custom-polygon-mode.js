@@ -1,8 +1,12 @@
-import * as CommonSelectors from "./lib/common_selectors";
-import doubleClickZoom from "./lib/double_click_zoom";
-import * as Constants from "./lib/constants";
-import isEventAtCoordinates from "./lib/is_event_at_coordinates";
-import createVertex from "./lib/create_vertex";
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
+import * as CommonSelectors from "./lib/common_selectors.js";
+import doubleClickZoom from "./lib/double_click_zoom.js";
+import * as Constants from "./lib/constants.js";
+import isEventAtCoordinates from "./lib/is_event_at_coordinates.js";
+import createVertex from "./lib/create_vertex.js";
 
 const CustomPolygonMode = {};
 

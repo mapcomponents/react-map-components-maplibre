@@ -1,3 +1,7 @@
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
 import extent from "@mapbox/geojson-extent";
 import * as Constants from "./constants";
 

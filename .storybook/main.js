@@ -3,7 +3,12 @@ module.exports = {
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "@storybook/preset-create-react-app",
+    {
+      name: "@storybook/addon-docs",
+      options: {
+        configureJSX: true,
+      },
+    },
   ],
   webpackFinal: async (config, { configType }) => {
     // split into more chunks
@@ -17,4 +22,13 @@ module.exports = {
 
     return config;
   },
+  typescript: {
+      check: false,
+      checkOptions: {},
+      reactDocgen: 'react-docgen-typescript',
+      reactDocgenTypescriptOptions: {
+        shouldExtractLiteralValuesFromEnum: true,
+        propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+      },
+    }
 };

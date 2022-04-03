@@ -1,0 +1,26 @@
+{
+  "plugins": [
+    "@babel/plugin-transform-typescript",
+    "babel-plugin-styled-components",
+    [
+      "inline-react-svg",
+      {
+        "svgo": {
+          "plugins": [
+            {
+              "name": "preset-default",
+              "params": {
+                "overrides": { "mergePaths": false }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  ],
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-typescript",
+    "@babel/preset-react"
+  ]
+}

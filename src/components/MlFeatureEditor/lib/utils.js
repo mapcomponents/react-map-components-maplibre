@@ -1,3 +1,7 @@
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
 const drawUtils = {
   getMatchingVertices: (vertex, featureId, allFeatures, map) => {
     // number of decimals should probably be dynamic depending on zoom level
