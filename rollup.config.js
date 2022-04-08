@@ -42,7 +42,7 @@ const config = {
     "d3",
     "@emotion/react",
     "@emotion/styled",
-    ...Object.keys(pkg.peerDependencies || {}),
+    ...Object.keys(pkg.peerDependencies || pkg.devDependencies),
   ],
   inlineDynamicImports: true,
   onwarn: function (warning, warn) {
