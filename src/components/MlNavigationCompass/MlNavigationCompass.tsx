@@ -167,7 +167,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
           >
             <NeedleContainer
               style={{
-                transform: "rotate(" + bearing + "deg)",
+                transform: "rotate(" + (bearing>0?"-"+bearing:-1*bearing) + "deg)",
               }}
             >
               <NeedleIcon />
