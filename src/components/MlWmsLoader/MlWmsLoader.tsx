@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, useCallback, useState } from "react";
-import PropTypes from "prop-types";
 
+// @ts-ignore
 import { MapContext } from "@mapcomponents/react-core";
 import { v4 as uuidv4 } from "uuid";
 
@@ -15,9 +15,11 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
+import {LngLat} from "maplibre-gl";
+import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
 
 var originShift = (2 * Math.PI * 6378137) / 2.0;
-const lngLatToMeters = function (lnglat, validate, accuracy = { enable: true, decimal: 1 }) {
+const lngLatToMeters = function (lnglat:LngLat, accuracy = { enable: true, decimal: 1 }) {
   var lng = lnglat.lng;
   var lat = lnglat.lat;
   var x = (lng * originShift) / 180.0;
@@ -29,6 +31,32 @@ const lngLatToMeters = function (lnglat, validate, accuracy = { enable: true, de
   }
   return [x, y];
 };
+
+interface MlWmsLoaderProps {
+  /**
+   * WMS URL
+   */
+  url: string;
+  /**
+   * Id of the target MapLibre instance in mapContext
+   */
+  mapId: string;
+  /**
+   * URL parameters that will be used in the getCapabilities request
+   */
+  urlParameters: object;
+  /**
+   * URL parameters that will be added when requesting WMS capabilities
+   */
+  wmsUrlParameters: object;
+  /**
+   * URL parameters that will be added when requesting tiles
+   */
+  layerUrlParameters: object;
+  lngLat: LngLat;
+  idPrefix: string;
+};
+
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
@@ -37,21 +65,23 @@ const lngLatToMeters = function (lnglat, validate, accuracy = { enable: true, de
  *
  * @component
  */
-const MlWmsLoader = (props) => {
+const MlWmsLoader = (props: MlWmsLoaderProps) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  const mapContext = useContext(MapContext);
-  const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl } = useWms({
+  const mapContext: MapContextType = useContext(MapContext);
+  const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl }: any = useWms({
     url: undefined,
     urlParameters: props.urlParameters,
   });
+  let layerType : { visible: boolean, queryable: boolean, Name: string, Title: string, LatLonBoundingBox: Array<number>,
+    EX_GeographicBoundingBox: Array<number>, Abstract: any}
 
   const initializedRef = useRef(false);
-  const mapRef = useRef(undefined);
+  const mapRef = useRef<MapLibreGlWrapper>();
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4());
-  const [layers, setLayers] = useState([]);
+  const [layers, setLayers] = useState<Array<typeof layerType>>([]);
 
   const [featureInfoLngLat, setFeatureInfoLngLat] = useState(undefined);
-  const [featureInfoContent, setFeatureInfoContent] = useState(undefined);
+  const [featureInfoContent, setFeatureInfoContent] = useState<string|undefined>(undefined);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -79,9 +109,10 @@ const MlWmsLoader = (props) => {
 
   const getFeatureInfo = useCallback(
     (ev) => {
+      if(!mapRef.current) return;
       setFeatureInfoLngLat(undefined);
       setFeatureInfoContent(undefined);
-      let _bounds = mapRef.current.getBounds();
+      let _bounds = mapRef.current.map.getBounds();
       let _sw = lngLatToMeters(_bounds._sw);
       let _ne = lngLatToMeters(_bounds._ne);
       let bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
@@ -96,13 +127,13 @@ const MlWmsLoader = (props) => {
             : "text/plain",
         FEATURE_COUNT: "10",
         LAYERS: layers
-          .map((layer, idx) => (layer.visible && layer.queryable ? layer.Name : undefined))
+          .map((layer: typeof layerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
           .filter((n) => n),
         QUERY_LAYERS: layers
-          .map((layer, idx) => (layer.visible && layer.queryable ? layer.Name : undefined))
+          .map((layer: typeof layerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
           .filter((n) => n),
-        WIDTH: mapRef.current._container.clientWidth,
-        HEIGHT: mapRef.current._container.clientHeight,
+        WIDTH: mapRef.current?.map._container.clientWidth,
+        HEIGHT: mapRef.current?.map._container.clientHeight,
         srs: "EPSG:3857",
         CRS: "EPSG:3857",
         version: "1.3.0",
@@ -113,7 +144,7 @@ const MlWmsLoader = (props) => {
         buffer: "50",
       };
 
-      let _gfiUrl = getFeatureInfoUrl;
+      let _gfiUrl : string | undefined = getFeatureInfoUrl;
       let _gfiUrlParts;
       if (_gfiUrl?.indexOf?.("?") !== -1) {
         _gfiUrlParts = props.url.split("?");
@@ -126,7 +157,7 @@ const MlWmsLoader = (props) => {
         ..._getFeatureInfoUrlParams,
       };
       // create URLSearchParams object to assemble the URL Parameters
-      let urlParams = new URLSearchParams(urlParamsObj);
+      let urlParams = new URLSearchParams(urlParamsObj.toString());
 
       fetch(props.url + "?" + urlParams.toString())
         .then((res) => {
@@ -151,7 +182,7 @@ const MlWmsLoader = (props) => {
 
     mapRef.current.on("click", _getFeatureInfo, componentId.current);
     return () => {
-      mapRef.current?.off?.("click", _getFeatureInfo);
+      mapRef.current?.map.off?.("click", _getFeatureInfo);
     };
   }, [getFeatureInfo]);
 
@@ -167,9 +198,9 @@ const MlWmsLoader = (props) => {
         "MlWmsLoader (" + capabilities.Service.Title + "): WGS 84/Pseudo-Mercator supported"
       );
 
-      let _LatLonBoundingBox;
+      let _LatLonBoundingBox: Array<number> = [];
       setLayers(
-        capabilities?.Capability?.Layer?.Layer.map((layer, idx) => {
+        capabilities?.Capability?.Layer?.Layer.map((layer: typeof layerType, idx: number) => {
           if (idx === 0) {
             _LatLonBoundingBox = layer.LatLonBoundingBox;
             if (!_LatLonBoundingBox) {
@@ -182,8 +213,8 @@ const MlWmsLoader = (props) => {
       );
 
       // zoom to extent of first layer
-      if (mapRef.current && _LatLonBoundingBox?.length > 3) {
-        mapRef.current.fitBounds([
+      if (mapRef.current && _LatLonBoundingBox.length > 3) {
+        mapRef.current.map.fitBounds([
           [_LatLonBoundingBox[0], _LatLonBoundingBox[1]],
           [_LatLonBoundingBox[2], _LatLonBoundingBox[3]],
         ]);
@@ -206,7 +237,7 @@ const MlWmsLoader = (props) => {
       {error && <p>{error}</p>}
       <h3 key="title">{capabilities?.Service?.Title}</h3>
       {console.log(componentId.current)}
-      {capabilities?.Capability?.Layer?.Layer.map((layer, idx) => (
+      {capabilities?.Capability?.Layer?.Layer.map((idx: number) => (
         <MlLayer
           layerId={"Order-" + componentId.current + "-" + idx}
           key={componentId.current + "-" + idx}
@@ -219,7 +250,7 @@ const MlWmsLoader = (props) => {
       ))}
       <List dense key="layers">
         {wmsUrl &&
-          layers?.map?.((layer, idx) => {
+          layers?.map?.((layer: typeof layerType, idx) => {
             return layer?.Name ? (
               <ListItem
                 key={layer.Name + idx}
@@ -228,7 +259,7 @@ const MlWmsLoader = (props) => {
                     edge="end"
                     aria-label="toggle visibility"
                     onClick={() => {
-                      let _layers = [...layers];
+                      let _layers: Array<typeof layerType> = [...layers];
                       _layers[idx].visible = !_layers[idx].visible;
                       setLayers([..._layers]);
                     }}
@@ -270,29 +301,6 @@ MlWmsLoader.defaultProps = {
   wmsUrlParameters: {
     TRANSPARENT: "TRUE",
   },
-};
-
-MlWmsLoader.propTypes = {
-  /**
-   * WMS URL
-   */
-  url: PropTypes.string.isRequired,
-  /**
-   * Id of the target MapLibre instance in mapContext
-   */
-  mapId: PropTypes.string,
-  /**
-   * URL parameters that will be used in the getCapabilities request
-   */
-  urlParameters: PropTypes.object,
-  /**
-   * URL parameters that will be added when requesting WMS capabilities
-   */
-  wmsUrlParameters: PropTypes.object,
-  /**
-   * URL parameters that will be added when requesting tiles
-   */
-  layerUrlParameters: PropTypes.object,
 };
 
 export default MlWmsLoader;
