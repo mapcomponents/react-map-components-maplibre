@@ -12159,20 +12159,17 @@ function useLayer(props) {
     useEffect(function () {
         if (!mapHook.map)
             return;
-        console.log("create layer");
         if (initializedRef.current &&
             legalLayerTypes.indexOf(props.options.type) !== -1 &&
             layerTypeRef.current &&
             props.options.type !== layerTypeRef.current) {
             // remove (cleanup) & reinitialize the layer if type has changed
-            console.log("create layer 1");
             cleanup();
         }
         else if (initializedRef.current &&
             (legalLayerTypes.indexOf(props.options.type) === -1 ||
                 (legalLayerTypes.indexOf(props.options.type) !== -1 &&
                     props.options.type === layerTypeRef.current))) {
-            console.log("create layer 2");
             return;
         }
         createLayer();
@@ -12206,9 +12203,6 @@ function useLayer(props) {
         var paintString = JSON.stringify(props.options.paint);
         if (paintString !== layerPaintConfRef.current) {
             var oldPaint = JSON.parse(layerPaintConfRef.current);
-            console.log("update paint props");
-            console.log(oldPaint);
-            console.log(props.options.paint);
             for (key in props.options.paint) {
                 if (((_e = props.options.paint) === null || _e === void 0 ? void 0 : _e[key]) &&
                     props.options.paint[key] !== oldPaint[key]) {
@@ -12335,9 +12329,8 @@ var getDefaulLayerTypeByGeometry = function (geojson) {
  */
 var MlGeoJsonLayer = function (props) {
     var layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-    console.log(layerType);
     // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-    var layerHook = useLayer({
+    useLayer({
         mapId: props.mapId,
         layerId: props.layerId || "MlGeoJsonLayer-" + v4(),
         geojson: props.geojson,
@@ -12348,9 +12341,6 @@ var MlGeoJsonLayer = function (props) {
         onClick: props.onClick,
         onLeave: props.onLeave,
     });
-    useEffect(function () {
-        console.log(layerHook.layer);
-    }, [layerHook.layer]);
     return (React__default.createElement(React__default.Fragment, null));
 };
 
