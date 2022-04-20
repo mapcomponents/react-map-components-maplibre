@@ -1,5 +1,14 @@
 # Change Log
 
+## [v0.1.36] - 2022-04-20
+
+### Changed
+- re add @mapcomponents/react-core to dependencies
+
+## [v0.1.35] - 2022-04-20
+
+### Changed
+- de78279: migrate components and hooks to typescript
 ## [v0.1.34] - 2022-03-24
 
 ### Fixed
