@@ -107,7 +107,10 @@ function useMapState(props: {
     initializedRef.current = true;
     mapRef.current = mapContext.getMap(props.mapId);
 
-    if (!mapRef.current) return;
+    if (!mapRef.current) {
+      initializedRef.current = true;
+      return;
+    }
 
     if (props?.watch?.viewport) {
       setViewport(mapRef.current.wrapper.viewportState);
@@ -116,9 +119,7 @@ function useMapState(props: {
       mapRef.current.wrapper.on(
         "viewportchange",
         () => {
-          if (
-            viewportRef.current !== mapRef.current?.wrapper.viewportStateString
-          ) {
+          if (viewportRef.current !== mapRef.current?.wrapper.viewportStateString) {
             setViewport(mapRef.current?.wrapper.viewportState);
           }
         },
@@ -180,14 +181,8 @@ useMapState.propTypes = {
    */
   filter: PropTypes.shape({
     includeBaseLayers: PropTypes.bool,
-    matchLayerIds: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RegExp),
-    ]),
-    matchSourceIds: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.instanceOf(RegExp),
-    ]),
+    matchLayerIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
+    matchSourceIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
   }),
 };
 
