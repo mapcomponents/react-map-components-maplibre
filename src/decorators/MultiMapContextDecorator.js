@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MapComponentsProvider } from "@mapcomponents/react-core";
+import { MapComponentsProvider } from "../index";
 
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 

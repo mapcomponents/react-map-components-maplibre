@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { mount, configure } from "enzyme";
 import { waitFor } from "@testing-library/react";
-import { MapContext, MapComponentsProvider } from "@mapcomponents/react-core";
+import { MapContext, MapComponentsProvider } from "../../index";
 import MapLibreMap from "./MapLibreMap";
 
 const MapLibreMapTestComponent = (props) => {

@@ -9,7 +9,7 @@ declare module "*.js" {
   export default content;
 }
 
-//declare module '@mapcomponents/react-core';
+//declare module '../index';
 type MapContextType= {
   mapIds: [string?];
   mapExists: Function;

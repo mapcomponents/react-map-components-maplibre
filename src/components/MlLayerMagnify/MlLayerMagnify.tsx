@@ -10,7 +10,7 @@ import React, {
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
 // @ts-ignore
-import { MapContext } from "@mapcomponents/react-core";
+import { MapContext } from "../../index";
 
 interface MlLayerMagnifyProps {
   /**

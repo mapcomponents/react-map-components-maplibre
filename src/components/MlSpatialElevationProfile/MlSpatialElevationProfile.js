@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useContext, useEffect } from "react";
-import { MapContext } from "@mapcomponents/react-core";
+import { MapContext } from "../../index";
 import GeoJsonContext from "../MlGPXViewer/util/GeoJsonContext";
 import { polygon, lineString } from "@turf/helpers";
 import { distance, lineOffset } from "@turf/turf";

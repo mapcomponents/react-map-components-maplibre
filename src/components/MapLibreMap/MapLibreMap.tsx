@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext, FC } from "react";
 
 // @ts-ignore
-import { MapContext } from "@mapcomponents/react-core";
+import { MapContext } from "../../index";
 // @ts-ignore
 import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 

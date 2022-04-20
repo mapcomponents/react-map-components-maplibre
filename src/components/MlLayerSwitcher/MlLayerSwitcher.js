@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 //Internal
-import { MapContext } from "@mapcomponents/react-core";
+import { MapContext } from "../../index";
 import LayerBox from "./components/LayerBox";
 import Divider from "@mui/material/Divider";
 import useMapState from "../../hooks/useMapState";

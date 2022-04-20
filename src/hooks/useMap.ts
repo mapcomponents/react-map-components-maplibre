@@ -7,7 +7,7 @@ import {
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 // @ts-ignore
-import { MapContext } from "@mapcomponents/react-core";
+import { MapContext } from "../index";
 import useMapState from "./useMapState";
 import MapLibreGlWrapper, {
   LayerState,
