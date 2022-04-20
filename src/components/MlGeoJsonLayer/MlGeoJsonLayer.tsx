@@ -77,9 +77,8 @@ type MlGeoJsonLayerProps = {
  */
 const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
   const layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-  console.log(layerType)
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  const layerHook = useLayer({
+  useLayer({
     mapId: props.mapId,
     layerId: props.layerId || "MlGeoJsonLayer-" + uuidv4(),
     geojson: props.geojson,
@@ -99,10 +98,6 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
     onClick: props.onClick,
     onLeave: props.onLeave,
   });
-
-  useEffect(() => {
-    console.log(layerHook.layer);
-  }, [layerHook.layer]);
 
   return (<></>);
 };

@@ -119,7 +119,6 @@ function useLayer(props: useLayerProps): useLayerType {
   useEffect(() => {
     if (!mapHook.map) return;
 
-    console.log("create layer");
     if (
       initializedRef.current &&
       legalLayerTypes.indexOf(props.options.type) !== -1 &&
@@ -127,7 +126,6 @@ function useLayer(props: useLayerProps): useLayerType {
       props.options.type !== layerTypeRef.current
     ) {
       // remove (cleanup) & reinitialize the layer if type has changed
-      console.log("create layer 1");
       cleanup();
     } else if (
       initializedRef.current &&
@@ -135,7 +133,6 @@ function useLayer(props: useLayerProps): useLayerType {
         (legalLayerTypes.indexOf(props.options.type) !== -1 &&
           props.options.type === layerTypeRef.current))
     ) {
-      console.log("create layer 2");
       return;
     }
 
@@ -185,9 +182,6 @@ function useLayer(props: useLayerProps): useLayerType {
     let paintString = JSON.stringify(props.options.paint);
     if (paintString !== layerPaintConfRef.current) {
       let oldPaint = JSON.parse(layerPaintConfRef.current);
-      console.log("update paint props");
-      console.log(oldPaint);
-      console.log(props.options.paint);
       for (key in props.options.paint) {
         if (
           props.options.paint?.[key] &&

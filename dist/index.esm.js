@@ -766,8 +766,10 @@ function useMapState(props) {
         // initialize the layer and add it to the MapLibre-gl instance or do something else with it
         initializedRef.current = true;
         mapRef.current = mapContext.getMap(props.mapId);
-        if (!mapRef.current)
+        if (!mapRef.current) {
+            initializedRef.current = false;
             return;
+        }
         if ((_a = props === null || props === void 0 ? void 0 : props.watch) === null || _a === void 0 ? void 0 : _a.viewport) {
             setViewport(mapRef.current.wrapper.viewportState);
             // register viewportchange event handler
@@ -823,14 +825,8 @@ useMapState.propTypes = {
      */
     filter: PropTypes.shape({
         includeBaseLayers: PropTypes.bool,
-        matchLayerIds: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.instanceOf(RegExp),
-        ]),
-        matchSourceIds: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.instanceOf(RegExp),
-        ]),
+        matchLayerIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
+        matchSourceIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
     }),
 };
 
