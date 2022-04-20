@@ -8,8 +8,6 @@ const storyoptions = {
   title: "MapComponents/MlComponentTemplate",
   component: MlComponentTemplate,
   argTypes: {
-    url: {},
-    layer: {},
   },
   decorators: mapContextDecorator,
 };

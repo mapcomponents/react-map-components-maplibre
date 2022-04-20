@@ -8,8 +8,6 @@ const storyoptions = {
   title: "MapComponents/MlFollowGps",
   component: MlFollowGps,
   argTypes: {
-    url: {},
-    layer: {},
   },
   decorators: mapContextDecorator,
 };

@@ -1,23 +1,27 @@
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
 import {
   noTarget,
   isOfMetaType,
   isActiveFeature,
   isInactiveFeature,
   isShiftDown,
-} from "./lib/common_selectors";
-import createSupplementaryPoints from "./lib/create_supplementary_points";
-import constrainFeatureMovement from "./lib/constrain_feature_movement";
-import doubleClickZoom from "./lib/double_click_zoom";
-import * as Constants from "./lib/constants";
-import moveFeatures from "./lib/move_features";
-import drawUtils from "./lib/utils";
+} from "./lib/common_selectors.js";
+import createSupplementaryPoints from "./lib/create_supplementary_points.js";
+import constrainFeatureMovement from "./lib/constrain_feature_movement.js";
+import doubleClickZoom from "./lib/double_click_zoom.js";
+import * as Constants from "./lib/constants.js";
+import moveFeatures from "./lib/move_features.js";
+import drawUtils from "./lib/utils.js";
 
 const isVertex = isOfMetaType(Constants.meta.VERTEX);
 const isMidpoint = isOfMetaType(Constants.meta.MIDPOINT);
 
 const DirectSelect = {};
 
-// INTERNAL FUCNTIONS
+// INTERNAL FUNCTIONS
 
 DirectSelect.fireUpdate = function () {
   this.map.fire(Constants.events.UPDATE, {

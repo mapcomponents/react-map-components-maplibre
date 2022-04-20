@@ -1,3 +1,7 @@
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
 function StringSet(items) {
   this._items = {};
   this._nums = {};

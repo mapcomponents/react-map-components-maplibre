@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { mount, configure } from "enzyme";
 import { waitFor } from "@testing-library/react";
 import { MapContext, MapComponentsProvider } from "@mapcomponents/react-core";

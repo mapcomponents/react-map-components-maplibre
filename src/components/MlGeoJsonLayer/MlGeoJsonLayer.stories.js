@@ -12,8 +12,6 @@ const storyoptions = {
   title: "MapComponents/MlGeoJsonLayer",
   component: MlGeoJsonLayer,
   argTypes: {
-    url: {},
-    layer: {},
   },
   decorators: mapContextDecorator,
 };
@@ -36,12 +34,18 @@ const LinestringTemplate = (props) => {
 
 export const Linestring = LinestringTemplate.bind({});
 Linestring.parameters = {};
-Linestring.args = {};
+Linestring.args = {
+  type:''
+};
 
 export const Polygon = Template.bind({});
 Polygon.parameters = {};
 Polygon.args = {
   geojson: sample_polygon_geojson_1,
+  paint:{
+    "fill-color": 'rgba(120,20,80,.5)'
+  },
+  type:''
 };
 export const DefaultPaintOverrides = Template.bind({});
 DefaultPaintOverrides.parameters = {};
@@ -58,4 +62,5 @@ DefaultPaintOverrides.args = {
     },
   },
   geojson: sample_polygon_geojson_1,
+  type:''
 };

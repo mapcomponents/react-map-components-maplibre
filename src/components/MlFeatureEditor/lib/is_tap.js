@@ -1,3 +1,7 @@
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
 import euclideanDistance from './euclidean_distance';
 
 export const TAP_TOLERANCE = 25;

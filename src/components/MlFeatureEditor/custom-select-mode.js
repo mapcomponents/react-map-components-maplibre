@@ -1,10 +1,14 @@
-import * as CommonSelectors from "./lib/common_selectors";
-import doubleClickZoom from "./lib/double_click_zoom";
-import * as Constants from "./lib/constants";
-import mouseEventPoint from "./lib/mouse_event_point";
-import createSupplementaryPoints from "./lib/create_supplementary_points";
-import StringSet from "./lib/string_set";
-import moveFeatures from "./lib/move_features";
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
+import * as CommonSelectors from "./lib/common_selectors.js";
+import doubleClickZoom from "./lib/double_click_zoom.js";
+import * as Constants from "./lib/constants.js";
+import mouseEventPoint from "./lib/mouse_event_point.js";
+import createSupplementaryPoints from "./lib/create_supplementary_points.js";
+import StringSet from "./lib/string_set.js";
+import moveFeatures from "./lib/move_features.js";
 
 const CustomSelectMode = {};
 CustomSelectMode.onSetup = function (opts) {

@@ -1,3 +1,7 @@
+/**
+ * Code from https://github.com/mapbox/mapbox-gl-draw
+ * and licensed under ISC
+ */
 import constrainFeatureMovement from "./constrain_feature_movement";
 import * as Constants from "./constants";
 

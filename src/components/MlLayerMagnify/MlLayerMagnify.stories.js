@@ -9,8 +9,6 @@ const storyoptions = {
   title: "MapComponents/MlLayerMagnify",
   component: MlLayerMagnify,
   argTypes: {
-    url: {},
-    layer: {},
   },
   decorators: multiMapContextDecorator,
 };
@@ -34,7 +32,9 @@ const Template = (args) => (
 );
 
 export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
+ExampleConfig.parameters = {
+
+};
 ExampleConfig.args = {
   wmsLayerMapId: "map_2",
   magnifierRadius: 200,
