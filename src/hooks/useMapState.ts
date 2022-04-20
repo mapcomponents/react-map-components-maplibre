@@ -108,7 +108,7 @@ function useMapState(props: {
     mapRef.current = mapContext.getMap(props.mapId);
 
     if (!mapRef.current) {
-      initializedRef.current = true;
+      initializedRef.current = false;
       return;
     }
 
