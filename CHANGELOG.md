@@ -1,11 +1,13 @@
 # Change Log
 
-## [v0.1.36] - 2022-04-20
+## [v0.1.38] - 2022-04-21
 
 ### Changed
-- re add @mapcomponents/react-core to dependencies
+- integrate MapContext from @mapcomonents/react-core
 
-## [v0.1.35] - 2022-04-20
+## [v0.1.37] (broken build) - 2022-04-20
+## [v0.1.36] (broken build) - 2022-04-20
+## [v0.1.35] (broken build) - 2022-04-20
 
 ### Changed
 - migrate components and hooks to typescript
