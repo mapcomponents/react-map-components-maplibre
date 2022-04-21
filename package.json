@@ -1,6 +1,6 @@
 {
   "name": "@mapcomponents/react-maplibre",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "main": "index.js",
   "license": "MIT",
   "module": "dist/index.esm.js",
@@ -27,13 +27,13 @@
     "@mui/material": "5.5.3",
     "@mui/styles": "^5.5.3",
     "@turf/turf": "^6.5.0",
+    "d3": "^7.4.4",
     "jspdf": "^2.5.1",
     "maplibre-gl": "^2.1.7",
     "react-i18next": "^11.14.3",
     "three": "^0.139.1",
     "uuid": "^8.3.2",
     "wms-capabilities": "^0.5.1",
-    "d3": "^7.4.4",
     "xmldom": "^0.6.0"
   },
   "peerDependencies": {},
