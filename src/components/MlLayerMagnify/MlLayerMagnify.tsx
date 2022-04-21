@@ -9,8 +9,7 @@ import React, {
 // @ts-ignore
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
-// @ts-ignore
-import { MapContext } from "@mapcomponents/react-core";
+import  MapContext  from "../../contexts/MapContext";
 
 interface MlLayerMagnifyProps {
   /**
@@ -35,7 +34,7 @@ interface MlLayerMagnifyProps {
 const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
   const mapContext:MapContextType = useContext(MapContext);
   const syncMoveInitializedRef = useRef(false);
-  const syncCleanupFunctionRef = useRef(null);
+  const syncCleanupFunctionRef = useRef(() => {});
 
   const [swipeX, setSwipeX] = useState('50');
   const swipeXRef = useRef('50');
@@ -72,10 +71,7 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 
     return () => {
       window.removeEventListener("resize", _onResize);
-      if (typeof syncCleanupFunctionRef.current === 'function') {
-        // @ts-ignore
-        syncCleanupFunctionRef.current();
-      }
+      syncCleanupFunctionRef.current();
     };
   }, []);
 

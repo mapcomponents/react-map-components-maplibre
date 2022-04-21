@@ -1,7 +1,10 @@
 import React, { useEffect, useContext } from "react";
 
-import { MapContext } from "@mapcomponents/react-core";
+import MapContext from "../contexts/MapContext";
 
+/**
+ * This component is deprecated and will be removed in the next major release
+ */
 const MlBasicComponent = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   // without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)

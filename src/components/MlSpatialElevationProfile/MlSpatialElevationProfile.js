@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useContext, useEffect } from "react";
-import { MapContext } from "@mapcomponents/react-core";
+import MapContext from "../../contexts/MapContext";
 import GeoJsonContext from "../MlGPXViewer/util/GeoJsonContext";
 import { polygon, lineString } from "@turf/helpers";
 import { distance, lineOffset } from "@turf/turf";
@@ -110,13 +110,7 @@ const MlSpatialElevationProfile = (props) => {
       props.insertBeforeLayer,
       componentId.current
     );
-  }, [
-    mapContext.mapIds,
-    props.insertBeforeLayer,
-    props.mapId,
-    dataSource,
-    mapContext,
-  ]);
+  }, [mapContext.mapIds, props.insertBeforeLayer, props.mapId, dataSource, mapContext]);
 
   useEffect(() => {
     if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
@@ -155,10 +149,7 @@ const MlSpatialElevationProfile = (props) => {
       if (line.geometry.coordinates[index + 1]) {
         const wayLength = distance(
           [coordinate[0], coordinate[1]],
-          [
-            line.geometry.coordinates[index + 1][0],
-            line.geometry.coordinates[index + 1][1],
-          ],
+          [line.geometry.coordinates[index + 1][0], line.geometry.coordinates[index + 1][1]],
           { units: "kilometers" }
         );
         let listLength = ~~((wayLength * 1000) / 10);
@@ -228,6 +219,6 @@ MlSpatialElevationProfile.propTypes = {
    * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
    */
   insertBeforeLayer: PropTypes.string,
-}
+};
 
 export default MlSpatialElevationProfile;

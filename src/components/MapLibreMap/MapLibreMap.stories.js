@@ -1,7 +1,7 @@
 import React from "react";
 
 import MapLibreMap from "./MapLibreMap";
-import { MapComponentsProvider } from "@mapcomponents/react-core";
+import { MapComponentsProvider } from "../../contexts/MapContext";
 
 const storyoptions = {
   title: "Core/MapLibreMap",

@@ -2,7 +2,7 @@ import MlLayerMagnify from "./MlLayerMagnify";
 
 import React, { useContext, useState } from "react";
 import { mount } from "enzyme";
-import { MapContext, MapComponentsProvider } from "@mapcomponents/react-core";
+import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 // Mapbox sync-move mockup

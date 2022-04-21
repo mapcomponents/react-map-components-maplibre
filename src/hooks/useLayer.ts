@@ -53,8 +53,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
   const initializedRef = useRef<boolean>(false);
   const layerId = useRef(
-    props.layerId ||
-      (props.idPrefix ? props.idPrefix : "Layer-") + mapHook.componentId
+    props.layerId || (props.idPrefix ? props.idPrefix : "Layer-") + mapHook.componentId
   );
 
   const createLayer = useCallback(() => {
@@ -85,30 +84,15 @@ function useLayer(props: useLayerProps): useLayerType {
     setLayer(mapHook.map.map.getLayer(layerId.current));
 
     if (typeof props.onHover !== "undefined") {
-      mapHook.map.on(
-        "mousemove",
-        layerId.current,
-        props.onHover,
-        mapHook.componentId
-      );
+      mapHook.map.on("mousemove", layerId.current, props.onHover, mapHook.componentId);
     }
 
     if (typeof props.onClick !== "undefined") {
-      mapHook.map.on(
-        "click",
-        layerId.current,
-        props.onClick,
-        mapHook.componentId
-      );
+      mapHook.map.on("click", layerId.current, props.onClick, mapHook.componentId);
     }
 
     if (typeof props.onLeave !== "undefined") {
-      mapHook.map.on(
-        "mouseleave",
-        layerId.current,
-        props.onLeave,
-        mapHook.componentId
-      );
+      mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
     }
 
     layerPaintConfRef.current = JSON.stringify(props.options?.paint);
@@ -140,22 +124,15 @@ function useLayer(props: useLayerProps): useLayerType {
   }, [mapHook.map, props.options, createLayer]);
 
   useEffect(() => {
-    if (
-      !initializedRef.current ||
-      !mapHook?.map?.map.getSource(layerId.current)
-    )
+    if (!initializedRef.current || !mapHook.map?.map?.getSource(layerId.current))
       return;
 
-    // @ts-ignore
-    mapHook.map.map.getSource(layerId.current).setData(props.geojson);
+      //@ts-ignore setData only exists on GeoJsonSource
+    mapHook.map.map.getSource(layerId.current)?.setData?.(props.geojson);
   }, [props.geojson, mapHook.map, props.options.type]);
 
   useEffect(() => {
-    if (
-      !mapHook.map ||
-      !mapHook.map?.map?.getLayer?.(layerId.current) ||
-      !initializedRef.current
-    )
+    if (!mapHook.map || !mapHook.map?.map?.getLayer?.(layerId.current) || !initializedRef.current)
       return;
 
     var key;
@@ -165,15 +142,8 @@ function useLayer(props: useLayerProps): useLayerType {
       let oldLayout = JSON.parse(layerLayoutConfRef.current);
 
       for (key in props.options.layout) {
-        if (
-          props.options.layout?.[key] &&
-          props.options.layout[key] !== oldLayout[key]
-        ) {
-          mapHook.map.map.setLayoutProperty(
-            layerId.current,
-            key,
-            props.options.layout[key]
-          );
+        if (props.options.layout?.[key] && props.options.layout[key] !== oldLayout[key]) {
+          mapHook.map.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
         }
       }
       layerLayoutConfRef.current = layoutString;
@@ -183,15 +153,8 @@ function useLayer(props: useLayerProps): useLayerType {
     if (paintString !== layerPaintConfRef.current) {
       let oldPaint = JSON.parse(layerPaintConfRef.current);
       for (key in props.options.paint) {
-        if (
-          props.options.paint?.[key] &&
-          props.options.paint[key] !== oldPaint[key]
-        ) {
-          mapHook.map.map.setPaintProperty(
-            layerId.current,
-            key,
-            props.options.paint[key]
-          );
+        if (props.options.paint?.[key] && props.options.paint[key] !== oldPaint[key]) {
+          mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
         }
       }
       layerPaintConfRef.current = paintString;

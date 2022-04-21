@@ -1,8 +1,7 @@
 import { useContext, useCallback, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
-// @ts-ignore
-import { MapContext } from "@mapcomponents/react-core";
+import MapContext from "../contexts/MapContext";
 import MapLibreGlWrapper, {
   LayerState,
   ViewportState,
@@ -19,6 +18,7 @@ type MapContext = {
   getMap: Function;
   setMap: Function;
 };
+
 /**
  * React hook that allows subscribing to map state changes
  *
@@ -38,7 +38,7 @@ function useMapState(props: {
   };
 }): useMapStateType {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-  const mapContext: MapContext = useContext(MapContext);
+  const mapContext = useContext<MapContextType>(MapContext);
 
   const initializedRef = useRef(false);
   const mapRef = useRef<MapLibreGlWrapper>();

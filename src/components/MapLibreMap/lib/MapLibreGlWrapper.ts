@@ -1,4 +1,4 @@
-import { Map, IControl, MapOptions } from "maplibre-gl";
+import { Map, IControl, MapOptions as MapOptionsType } from "maplibre-gl";
 
 type EventArgArray = [string, string | Function, Function?];
 type LayerState = {
@@ -64,7 +64,7 @@ class MapLibreGlWrapper {
   on: Function;
   cleanup: Function;
 
-  constructor(props: { mapOptions: MapOptions; onReady: Function }) {
+  constructor(props: { mapOptions: MapOptionsType; onReady: Function }) {
     // closure variable to safely point to the object context of the current MapLibreGlWrapper instance
     let self = this;
 
