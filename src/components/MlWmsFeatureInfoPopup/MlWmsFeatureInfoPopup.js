@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 
-import { MapContext } from "../../index";
+import MapContext from "../../contexts/MapContext";
 import { v4 as uuidv4 } from "uuid";
 
 /**

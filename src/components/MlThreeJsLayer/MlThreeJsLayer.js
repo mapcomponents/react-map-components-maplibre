@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
-import { MapContext } from "../../index";
+import MapContext from "../../contexts/MapContext";
 
 import Button from "@mui/material/Button";
 import maplibregl from "maplibre-gl";

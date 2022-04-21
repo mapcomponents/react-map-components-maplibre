@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, useState } from "react";
 import { mount } from "enzyme";
-import { MapContext, MapComponentsProvider } from "../../index";
+import MapContext, { MapComponentsProvider } from "../../../contexts/MapContext";
 import { v4 as uuidv4 } from "uuid";
 import MapLibreMap from "../MapLibreMap";
 

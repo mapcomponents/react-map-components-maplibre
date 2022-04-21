@@ -126,7 +126,8 @@
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
       "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
-      "^!maplibre-gl$": "<rootDir>/node_modules/maplibre-gl"
+      "^!maplibre-gl$": "<rootDir>/node_modules/maplibre-gl",
+      "d3": "<rootDir>/node_modules/d3/dist/d3.min.js"
     },
     "moduleFileExtensions": [
       "web.js",

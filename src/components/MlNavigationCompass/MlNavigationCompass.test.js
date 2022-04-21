@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { mount, configure } from "enzyme";
 import { waitFor } from "@testing-library/react";
-import { MapContext, MapComponentsProvider } from "../../index";
+import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
 import MlNavigationCompass from "./MlNavigationCompass";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 import maplibregl from "maplibre-gl/dist/maplibre-gl";

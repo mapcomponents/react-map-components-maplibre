@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, useCallback, useState } from "react";
 
-import { MapContext } from "../../index";
+import MapContext from "../../contexts/MapContext";
 import { v4 as uuidv4 } from "uuid";
 
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
