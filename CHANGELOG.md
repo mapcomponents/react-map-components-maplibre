@@ -1,5 +1,9 @@
 # Change Log
 
+## [v0.1.39] - 2022-04-21
+
+### Changed
+- move d3 from devDependencies to dependencies
 ## [v0.1.38] - 2022-04-21
 
 ### Changed
