@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useContext, useCallback, useState } from "react";
 
-// @ts-ignore
 import { MapContext } from "../../index";
 import { v4 as uuidv4 } from "uuid";
 

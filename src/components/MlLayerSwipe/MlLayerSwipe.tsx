@@ -8,7 +8,6 @@ import React, {
 // @ts-ignore
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
-// @ts-ignore
 import MapContext from "../../contexts/MapContext";
 
 interface MlLayerSwipeProps {
@@ -32,7 +31,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
   const [swipeX, setSwipeX] = useState(50);
   const swipeXRef = useRef(0);
 
-  const syncCleanupFunctionRef = useRef(null);
+  const syncCleanupFunctionRef = useRef(() => {});
 
   const mapExists = useCallback(() => {
     if (!props.map1Id || !props.map2Id) {
@@ -46,10 +45,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
   }, [mapContext, props.map1Id, props.map2Id]);
 
   const cleanup = () => {
-    if (syncCleanupFunctionRef.current) {
-      // @ts-ignore
       syncCleanupFunctionRef.current();
-    }
   };
 
   const onMove = useCallback(
@@ -68,7 +64,6 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
       clientX -= bounds.x;
       let swipeX_tmp = parseFloat(((clientX / bounds.width) * 100).toFixed(2));
 
-      console.log(swipeX_tmp);
       if (swipeXRef.current !== swipeX_tmp) {
         setSwipeX(swipeX_tmp);
         swipeXRef.current = swipeX_tmp;

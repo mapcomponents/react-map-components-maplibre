@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useContext, FC } from "react";
+import React, { useRef, useEffect, useContext, FC,  RefObject } from "react";
 
 import MapContext from "../../contexts/MapContext";
 import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 
+import { MapOptions as MapOptionsType } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type MapLibreMapProps = {
@@ -15,7 +16,7 @@ type MapLibreMapProps = {
    * See https://maplibre.org/maplibre-gl-js-docs/api/map/ for a formal documentation of al
    * available properties.
    */
-  options?: object;
+  options?: MapOptionsType;
   /**
    * css style definition passed to the map container DOM element
    */
@@ -27,6 +28,23 @@ const defaultProps: MapLibreMapProps = {
   options: {
     center: { lng: 8.607, lat: 53.1409349 },
     zoom: 11,
+    container: '',
+    style: {
+      version: 8,
+      name: "blank",
+      center: [0, 0],
+      zoom: 0,
+      sources: {},
+      layers: [
+        {
+          id: "background",
+          type: "background",
+          paint: {
+            "background-color": "rgba(80,0,0,0)",
+          },
+        },
+      ],
+    },
   },
 };
 
@@ -41,13 +59,13 @@ const defaultProps: MapLibreMapProps = {
  * @category Map components
  */
 const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
-  const map: any = useRef(null);
-  const mapContainer = useRef(null);
+  const map: any = useRef<MapLibreGlWrapper>(null);
+  const mapContainer = useRef<HTMLDivElement>();
 
-  const mapContext: any = useContext(MapContext);
+  const mapContext: any = useContext<MapContextType>(MapContext);
 
   const mapIdRef = useRef(props.mapId);
-  const mapOptions = props.options;
+  const initializedRef = useRef(false);
 
   useEffect(() => {
     let mapId = mapIdRef.current;
@@ -60,12 +78,15 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
   }, []);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+
     if (mapContainer.current) {
+      initializedRef.current = true;
       map.current = new MapLibreGlWrapper({
-        // @ts-ignore
         mapOptions: {
+          style: '',
           container: mapContainer.current,
-          ...mapOptions,
+          ...props.options,
         },
         onReady: (map: any, wrapper: any) => {
           map.once("load", () => {
@@ -78,10 +99,9 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
         },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapContainer]);
+  }, [props.options, props.mapId]);
 
-  return <div ref={mapContainer} className="mapContainer" style={props.style} />;
+  return <div ref={mapContainer as RefObject<HTMLDivElement>} className="mapContainer" style={props.style} />;
 };
 
 MapLibreMap.defaultProps = defaultProps;

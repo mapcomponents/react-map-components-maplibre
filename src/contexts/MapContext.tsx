@@ -13,8 +13,8 @@ MapComponentsProvider must be used one level higher than the first use of MapCon
 
 const MapComponentsProvider = ({ children }:{children:any}) => {
   const [map, setMap] = useState<(MapLibreGlWrapper | undefined)>(undefined);
-  const [mapIds, setMapIds] = useState<[...any[]]>([]);
-  let mapIds_raw = useRef<[...any[]]>([]);
+  const [mapIds, setMapIds] = useState<[...string[]]>([]);
+  let mapIds_raw = useRef<[...string[]]>([]);
   let maps = useRef<any>({});
 
 

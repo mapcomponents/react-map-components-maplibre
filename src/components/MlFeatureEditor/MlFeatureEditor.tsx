@@ -111,7 +111,6 @@ const MlFeatureEditor = (props:MlFeatureEditorProps) => {
       draw.current &&
       props.geojson?.geometry
     ) {
-      // @ts-ignore
       draw.current.set({ type: "FeatureCollection", features: [props.geojson] });
     }
   }, [props.geojson, drawToolsReady]);
