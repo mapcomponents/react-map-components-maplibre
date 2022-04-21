@@ -1,4 +1,4 @@
-import { Map, IControl, MapOptions as MapOptionsType } from "maplibre-gl";
+import { Map, IControl, MapOptions as MapOptionsType } from "!maplibre-gl";
 
 type EventArgArray = [string, string | Function, Function?];
 type LayerState = {

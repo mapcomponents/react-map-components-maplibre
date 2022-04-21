@@ -1,8 +1,9 @@
 import * as React from 'react';
 import React__default, { useState, useRef, useContext, useEffect, useCallback, Children, isValidElement, cloneElement, useMemo } from 'react';
-import { Map as Map$1, Popup } from 'maplibre-gl';
+import { Map as Map$1 } from '!maplibre-gl';
 import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
+import { Map as Map$2, Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import styled$3 from '@emotion/styled';
 import { keyframes } from '@emotion/react';
@@ -1104,7 +1105,7 @@ var createPdf = function (map, locationValue, setLoading) {
         _loop_1(name_1);
     }
     //Render map
-    var renderMap = new Map$1({
+    var renderMap = new Map$2({
         container: container,
         center: map.map.getCenter(),
         zoom: map.map.getZoom(),

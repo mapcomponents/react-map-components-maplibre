@@ -17,6 +17,10 @@
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "!maplibre-gl": ["node_modules/maplibre-gl"] // This mapping is relative to "baseUrl"
+    }
   },
   "include": ["src", "src/custom.d.tsx"],
   "exclude": ["node_modules", "lib"],
