@@ -1,8 +1,6 @@
 import React, { useRef, useEffect, useContext, FC } from "react";
 
-// @ts-ignore
-import { MapContext } from "../../index";
-// @ts-ignore
+import MapContext from "../../contexts/MapContext";
 import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -83,9 +81,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapContainer]);
 
-  return (
-    <div ref={mapContainer} className="mapContainer" style={props.style} />
-  );
+  return <div ref={mapContainer} className="mapContainer" style={props.style} />;
 };
 
 MapLibreMap.defaultProps = defaultProps;

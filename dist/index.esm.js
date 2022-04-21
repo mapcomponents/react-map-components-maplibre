@@ -1,9 +1,9 @@
 import * as React from 'react';
-import React__default, { useRef, useContext, useEffect, useState, useCallback, Children, isValidElement, cloneElement, useMemo } from 'react';
-import { v4 } from 'uuid';
+import React__default, { useState, useRef, useContext, useEffect, useCallback, Children, isValidElement, cloneElement, useMemo } from 'react';
 import { Map as Map$1, Popup } from 'maplibre-gl';
-import jsPDF from 'jspdf';
+import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
+import jsPDF from 'jspdf';
 import styled$3 from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
@@ -107,6 +107,85 @@ function __makeTemplateObject(cooked, raw) {
     if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
     return cooked;
 }
+
+var MapContext = React__default.createContext({});
+/**
+ * MapComponentsProvider must be imported and wrapped around component where at least one of its child nodes requires access to a MapLibre-gl or openlayers instance that is registered in this mapContext.
+MapComponentsProvider must be used one level higher than the first use of MapContext.
+ *
+ * MapComponentsProvider requires at least one use of the MapLibreMap component somewhere down the component tree that will create the MapLibre-gl object and set the reference at MapContext.map. For MapLibre maps it is a good idea to provide a mapId attribute to the MapLibreMap Component even if you are only using a single map instance at start. It will make a later transition to using multiple instances within the same project much easier.
+ */
+var MapComponentsProvider = function (_a) {
+    var children = _a.children;
+    var _b = useState(undefined), map = _b[0], setMap = _b[1];
+    var _c = useState([]), mapIds = _c[0], setMapIds = _c[1];
+    var mapIds_raw = useRef([]);
+    var maps = useRef({});
+    var removeMap = function (mapId) {
+        if (mapId) {
+            if (typeof maps.current[mapId] !== "undefined") {
+                delete maps.current[mapId];
+            }
+            var mapIdIndex = mapIds_raw.current.indexOf(mapId);
+            if (mapIdIndex > -1) {
+                mapIds_raw.current.splice(mapIdIndex, 1);
+            }
+            setMapIds(__spreadArray([], mapIds_raw.current, true));
+            if (mapIds.length === 1 && map) {
+                setMap(undefined);
+            }
+        }
+        else {
+            setMap(undefined);
+            removeMap("anonymous_map");
+        }
+    };
+    var setMapHandler = function (mapInstance) {
+        setMap(mapInstance);
+        if (mapIds.length === 0) {
+            var mapId = "anonymous_map";
+            setMapIds(__spreadArray(__spreadArray([], mapIds, true), [mapId], false));
+            maps.current[mapId] = mapInstance;
+        }
+    };
+    var value = {
+        map: map,
+        setMap: setMapHandler,
+        maps: maps.current,
+        mapIds: mapIds,
+        registerMap: function (mapId, mapInstance) {
+            if (mapId && mapInstance) {
+                maps.current[mapId] = mapInstance;
+                mapIds_raw.current.push(mapId);
+                setMapIds(__spreadArray([], mapIds_raw.current, true));
+                if (!map) {
+                    setMap(mapInstance);
+                }
+            }
+        },
+        removeMap: removeMap,
+        mapExists: function (mapId) {
+            if (mapId && Object.keys(maps.current).indexOf(mapId) === -1) {
+                return false;
+            }
+            else if (!mapId && !map) {
+                return false;
+            }
+            return true;
+        },
+        getMap: function (mapId) {
+            if (mapId && mapIds.indexOf(mapId) !== -1) {
+                return maps.current[mapId];
+            }
+            else if (!mapId && map) {
+                return map;
+            }
+            return null;
+        },
+    };
+    //@ts-ignore
+    return React__default.createElement(MapContext.Provider, { value: value }, children);
+};
 
 /**
  * Creates a MapLibre-gl-js instance and offers all of the native MapLibre functions and properties as well as additional functionality such as element registration & cleanup and more events.
@@ -696,7 +775,7 @@ var MapLibreMap = function (props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapContainer]);
-    return (React__default.createElement("div", { ref: mapContainer, className: "mapContainer", style: props.style }));
+    return React__default.createElement("div", { ref: mapContainer, className: "mapContainer", style: props.style });
 };
 MapLibreMap.defaultProps = defaultProps$2;
 
@@ -884,19 +963,13 @@ function useMap(props) {
         // @ts-ignore
         setMap(mapRef.current);
         setMapIsReady(true);
-    }, [
-        mapContext.mapIds,
-        mapState.layers,
-        mapContext,
-        props.waitForLayer,
-        props.mapId,
-    ]);
+    }, [mapContext.mapIds, mapState.layers, mapContext, props.waitForLayer, props.mapId]);
     return {
         map: map,
         mapIsReady: mapIsReady,
         componentId: componentId.current,
         layers: mapState.layers,
-        cleanup: cleanup
+        cleanup: cleanup,
     };
 }
 
@@ -18482,85 +18555,6 @@ useWms.defaultProps = {
     VERSION: "1.3.0",
     REQUEST: "getCapabilities"
   }
-};
-
-var MapContext = React__default.createContext({});
-/**
- * MapComponentsProvider must be imported and wrapped around component where at least one of its child nodes requires access to a MapLibre-gl or openlayers instance that is registered in this mapContext.
-MapComponentsProvider must be used one level higher than the first use of MapContext.
- *
- * MapComponentsProvider requires at least one use of the MapLibreMap component somewhere down the component tree that will create the MapLibre-gl object and set the reference at MapContext.map. For MapLibre maps it is a good idea to provide a mapId attribute to the MapLibreMap Component even if you are only using a single map instance at start. It will make a later transition to using multiple instances within the same project much easier.
- */
-var MapComponentsProvider = function (_a) {
-    var children = _a.children;
-    var _b = useState(undefined), map = _b[0], setMap = _b[1];
-    var _c = useState([]), mapIds = _c[0], setMapIds = _c[1];
-    var mapIds_raw = useRef([]);
-    var maps = useRef({});
-    var removeMap = function (mapId) {
-        if (mapId) {
-            if (typeof maps.current[mapId] !== "undefined") {
-                delete maps.current[mapId];
-            }
-            var mapIdIndex = mapIds_raw.current.indexOf(mapId);
-            if (mapIdIndex > -1) {
-                mapIds_raw.current.splice(mapIdIndex, 1);
-            }
-            setMapIds(__spreadArray([], mapIds_raw.current, true));
-            if (mapIds.length === 1 && map) {
-                setMap(undefined);
-            }
-        }
-        else {
-            setMap(undefined);
-            removeMap("anonymous_map");
-        }
-    };
-    var setMapHandler = function (mapInstance) {
-        setMap(mapInstance);
-        if (mapIds.length === 0) {
-            var mapId = "anonymous_map";
-            setMapIds(__spreadArray(__spreadArray([], mapIds, true), [mapId], false));
-            maps.current[mapId] = mapInstance;
-        }
-    };
-    var value = {
-        map: map,
-        setMap: setMapHandler,
-        maps: maps.current,
-        mapIds: mapIds,
-        registerMap: function (mapId, mapInstance) {
-            if (mapId && mapInstance) {
-                maps.current[mapId] = mapInstance;
-                mapIds_raw.current.push(mapId);
-                setMapIds(__spreadArray([], mapIds_raw.current, true));
-                if (!map) {
-                    setMap(mapInstance);
-                }
-            }
-        },
-        removeMap: removeMap,
-        mapExists: function (mapId) {
-            if (mapId && Object.keys(maps.current).indexOf(mapId) === -1) {
-                return false;
-            }
-            else if (!mapId && !map) {
-                return false;
-            }
-            return true;
-        },
-        getMap: function (mapId) {
-            if (mapId && mapIds.indexOf(mapId) !== -1) {
-                return maps.current[mapId];
-            }
-            else if (!mapId && map) {
-                return map;
-            }
-            return null;
-        },
-    };
-    //@ts-ignore
-    return React__default.createElement(MapContext.Provider, { value: value }, children);
 };
 
 var SimpleDataContext = /*#__PURE__*/React__default.createContext({});

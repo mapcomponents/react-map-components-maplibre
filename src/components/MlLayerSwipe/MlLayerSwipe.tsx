@@ -9,7 +9,7 @@ import React, {
 import syncMove from "@mapbox/mapbox-gl-sync-move";
 import "./style.css";
 // @ts-ignore
-import { MapContext } from "../../index";
+import MapContext from "../../contexts/MapContext";
 
 interface MlLayerSwipeProps {
   /**

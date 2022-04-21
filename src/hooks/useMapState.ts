@@ -1,8 +1,7 @@
 import { useContext, useCallback, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
-// @ts-ignore
-import { MapContext } from "../index";
+import MapContext from "../contexts/MapContext";
 import MapLibreGlWrapper, {
   LayerState,
   ViewportState,
@@ -19,6 +18,7 @@ type MapContext = {
   getMap: Function;
   setMap: Function;
 };
+
 /**
  * React hook that allows subscribing to map state changes
  *

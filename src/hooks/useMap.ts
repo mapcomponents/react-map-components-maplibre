@@ -1,24 +1,15 @@
-import {
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-  MutableRefObject,
-} from "react";
+import { useContext, useState, useEffect, useRef, MutableRefObject } from "react";
 import { v4 as uuidv4 } from "uuid";
-// @ts-ignore
-import { MapContext } from "../index";
+import MapContext from "../contexts/MapContext";
 import useMapState from "./useMapState";
-import MapLibreGlWrapper, {
-  LayerState,
-} from "../components/MapLibreMap/lib/MapLibreGlWrapper";
+import MapLibreGlWrapper, { LayerState } from "../components/MapLibreMap/lib/MapLibreGlWrapper";
 
 type useMapType = {
   map: MapLibreGlWrapper | undefined;
   mapIsReady: boolean;
   componentId: string;
   layers: (LayerState | undefined)[];
-  cleanup: Function
+  cleanup: Function;
 };
 
 function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
@@ -39,8 +30,7 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
   });
 
   const initializedRef = useRef(false);
-  const mapRef: MutableRefObject<MapLibreGlWrapper | undefined> =
-    useRef(undefined);
+  const mapRef: MutableRefObject<MapLibreGlWrapper | undefined> = useRef(undefined);
 
   const componentId = useRef(uuidv4());
 
@@ -83,23 +73,17 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
     // @ts-ignore
     setMap(mapRef.current);
     setMapIsReady(true);
-  }, [
-    mapContext.mapIds,
-    mapState.layers,
-    mapContext,
-    props.waitForLayer,
-    props.mapId,
-  ]);
+  }, [mapContext.mapIds, mapState.layers, mapContext, props.waitForLayer, props.mapId]);
 
   return {
     map: map,
     mapIsReady,
     componentId: componentId.current,
     layers: mapState.layers,
-    cleanup
+    cleanup,
   };
 }
 
 export default useMap;
 
-export type {useMapType};
+export type { useMapType };

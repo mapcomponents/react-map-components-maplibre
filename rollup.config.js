@@ -50,11 +50,6 @@ const config = {
   ],
   inlineDynamicImports: true,
   onwarn: function (warning, warn) {
-    if (
-      warning.code === "CIRCULAR_DEPENDENCY" ||
-      warning.code === "THIS_IS_UNDEFINED"
-    )
-      return;
     warn(warning);
   },
 };
