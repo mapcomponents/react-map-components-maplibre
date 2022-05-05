@@ -35,7 +35,7 @@ const config = {
       tsconfig: "tsconfig.json",
     }),
     css(),
-    del({ targets: ["dist/*"] }),
+    del({ targets: ["build/*"] }),
   ],
   external: [
     "prop-types",

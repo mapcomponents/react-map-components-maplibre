@@ -156,7 +156,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
         ..._getFeatureInfoUrlParams,
       };
       // create URLSearchParams object to assemble the URL Parameters
-      let urlParams = new URLSearchParams(urlParamsObj.toString());
+      // "as any" can be removed once the URLSearchParams ts spec is fixed
+      let urlParams = new URLSearchParams(urlParamsObj as any);
 
       fetch(props.url + "?" + urlParams.toString())
         .then((res) => {
@@ -236,7 +237,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
       {error && <p>{error}</p>}
       <h3 key="title">{capabilities?.Service?.Title}</h3>
       {console.log(componentId.current)}
-      {capabilities?.Capability?.Layer?.Layer.map((idx: number) => (
+      {capabilities?.Capability?.Layer?.Layer.map((layer:any,idx: number) => (
         <MlLayer
           layerId={"Order-" + componentId.current + "-" + idx}
           key={componentId.current + "-" + idx}

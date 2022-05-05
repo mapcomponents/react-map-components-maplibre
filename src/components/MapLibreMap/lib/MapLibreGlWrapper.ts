@@ -604,6 +604,8 @@ class MapLibreGlWrapper {
       }
 
       self.map = new Map(props.mapOptions);
+      //@ts-ignore
+      window._map = self.map;
 
       self.addNativeMaplibreFunctionsAndProps();
       self.wrapper.refreshViewport();
