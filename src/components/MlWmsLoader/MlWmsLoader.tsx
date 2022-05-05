@@ -14,11 +14,11 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
-import {LngLat} from "maplibre-gl";
+import { LngLat } from "maplibre-gl";
 import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
 
 var originShift = (2 * Math.PI * 6378137) / 2.0;
-const lngLatToMeters = function (lnglat:LngLat, accuracy = { enable: true, decimal: 1 }) {
+const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
   var lng = lnglat.lng;
   var lat = lnglat.lat;
   var x = (lng * originShift) / 180.0;
@@ -54,7 +54,7 @@ interface MlWmsLoaderProps {
   layerUrlParameters: object;
   lngLat: LngLat;
   idPrefix: string;
-};
+}
 
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
@@ -71,16 +71,23 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
     url: undefined,
     urlParameters: props.urlParameters,
   });
-  let layerType : { visible: boolean, queryable: boolean, Name: string, Title: string, LatLonBoundingBox: Array<number>,
-    EX_GeographicBoundingBox: Array<number>, Abstract: any}
+  let layerType: {
+    visible: boolean;
+    queryable: boolean;
+    Name: string;
+    Title: string;
+    LatLonBoundingBox: Array<number>;
+    EX_GeographicBoundingBox: Array<number>;
+    Abstract: any;
+  };
 
   const initializedRef = useRef(false);
   const mapRef = useRef<MapLibreGlWrapper>();
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4());
   const [layers, setLayers] = useState<Array<typeof layerType>>([]);
 
-  const [featureInfoLngLat, setFeatureInfoLngLat] = useState(undefined);
-  const [featureInfoContent, setFeatureInfoContent] = useState<string|undefined>(undefined);
+  const [featureInfoLngLat, setFeatureInfoLngLat] = useState({});
+  const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     let _componentId = componentId.current;
@@ -108,8 +115,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
   const getFeatureInfo = useCallback(
     (ev) => {
-      if(!mapRef.current) return;
-      setFeatureInfoLngLat(undefined);
+      if (!mapRef.current) return;
+      setFeatureInfoLngLat({});
       setFeatureInfoContent(undefined);
       let _bounds = mapRef.current.map.getBounds();
       let _sw = lngLatToMeters(_bounds._sw);
@@ -126,10 +133,14 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
             : "text/plain",
         FEATURE_COUNT: "10",
         LAYERS: layers
-          .map((layer: typeof layerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
+          .map((layer: typeof layerType) =>
+            layer.visible && layer.queryable ? layer.Name : undefined
+          )
           .filter((n) => n),
         QUERY_LAYERS: layers
-          .map((layer: typeof layerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
+          .map((layer: typeof layerType) =>
+            layer.visible && layer.queryable ? layer.Name : undefined
+          )
           .filter((n) => n),
         WIDTH: mapRef.current?.map._container.clientWidth,
         HEIGHT: mapRef.current?.map._container.clientHeight,
@@ -143,7 +154,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
         buffer: "50",
       };
 
-      let _gfiUrl : string | undefined = getFeatureInfoUrl;
+      let _gfiUrl: string | undefined = getFeatureInfoUrl;
       let _gfiUrlParts;
       if (_gfiUrl?.indexOf?.("?") !== -1) {
         _gfiUrlParts = props.url.split("?");
@@ -237,7 +248,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
       {error && <p>{error}</p>}
       <h3 key="title">{capabilities?.Service?.Title}</h3>
       {console.log(componentId.current)}
-      {capabilities?.Capability?.Layer?.Layer.map((layer:any,idx: number) => (
+      {capabilities?.Capability?.Layer?.Layer.map((layer: any, idx: number) => (
         <MlLayer
           layerId={"Order-" + componentId.current + "-" + idx}
           key={componentId.current + "-" + idx}
@@ -286,7 +297,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
         {capabilities?.Capability?.Layer?.Abstract}
       </p>
 
-      {featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
+      {featureInfoLngLat && featureInfoLngLat?.lng && featureInfoLngLat?.lat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
     </>
   );
 };

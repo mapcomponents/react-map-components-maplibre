@@ -697,6 +697,8 @@ var MapLibreGlWrapper = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         self.map = new Map$1(props.mapOptions);
+                        //@ts-ignore
+                        window._map = self.map;
                         self.addNativeMaplibreFunctionsAndProps();
                         self.wrapper.refreshViewport();
                         self.wrapper.fire("viewportchange");
