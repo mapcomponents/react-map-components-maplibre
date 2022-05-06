@@ -26,14 +26,14 @@
 
 ## Project setup
 
-### Starting a new project
+<!--  ### Starting a new project
 
-Fork our codesandbox project setup template to get started instantly. https://codesandbox.io/s/base-template-n0vp9
+Fork our codesandbox project setup template to get started instantly. https://codesandbox.io/s/base-template-n0vp9  -->
 
 ### Integrate MapComponents into an existing react project
 
 1. Add the dependency ```yarn add @mapcomponents/react-maplibre```
-2. Add a MapcomponentsProvider to your react-dom (e.g.  https://codesandbox.io/s/base-template-n0vp9?file=/src/index.js)
+2. Add a MapcomponentsProvider to your react-dom <!-- (e.g.  https://codesandbox.io/s/base-template-n0vp9?file=/src/index.js)  -->
 3. Add a MapLibreMap and any MapComponent you like to use in your app below MapcomponentsProvider.
 ## Anatomy of a MapComponent
 
