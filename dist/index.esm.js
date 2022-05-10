@@ -12208,8 +12208,6 @@ var legalLayerTypes = [
     "background",
 ];
 function useLayer(props) {
-    console.log("use layer");
-    console.log(props);
     var mapHook = useMap({
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
@@ -12224,14 +12222,12 @@ function useLayer(props) {
         var _a, _b;
         if (!mapHook.map)
             return;
-        console.log("createlayer 1");
         if (mapHook.map.map.getLayer(layerId.current)) {
             mapHook.map.map.removeLayer(layerId.current);
         }
         if (mapHook.map.map.getSource(layerId.current)) {
             mapHook.map.map.removeSource(layerId.current);
         }
-        console.log("createlayer 2");
         initializedRef.current = true;
         mapHook.map.addLayer(__assign(__assign(__assign({}, props.options), (props.geojson
             ? {
@@ -12262,12 +12258,10 @@ function useLayer(props) {
     useEffect(function () {
         if (!mapHook.map)
             return;
-        console.log("create layer effect ");
         if (initializedRef.current &&
             (legalLayerTypes.indexOf(props.options.type) === -1 ||
                 (legalLayerTypes.indexOf(props.options.type) !== -1 &&
                     props.options.type === layerTypeRef.current))) {
-            console.log("jump out");
             return;
         }
         createLayer();
@@ -12425,9 +12419,6 @@ var getDefaulLayerTypeByGeometry = function (geojson) {
  */
 var MlGeoJsonLayer = function (props) {
     var layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-    console.log('GEOJSONLAYER');
-    console.log(layerType);
-    console.log(props.geojson);
     // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
     useLayer({
         mapId: props.mapId,
