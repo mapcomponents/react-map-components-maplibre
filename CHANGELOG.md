@@ -1,5 +1,11 @@
 # Change Log
 
+
+## [v0.1.44] - 2022-05-10
+
+### Fixed
+- a81bb06: fix useLayer setPaintProperty error when changing geojson type using implicit layer types
+
 ## [v0.1.43] - 2022-05-10
 
 ### Fixed
