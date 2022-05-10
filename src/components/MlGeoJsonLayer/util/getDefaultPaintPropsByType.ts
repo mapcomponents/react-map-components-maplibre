@@ -21,7 +21,7 @@ const getDefaultPaintPropsByType:Function = (type:string, defaultPaintOverrides:
         return defaultPaintOverrides.circle;
       }
       return {
-        "circle-color": "rgba(10,240,256)",
+        "circle-color": "rgba(10,240,256,0.8)",
         "circle-stroke-color": "#fff",
         "circle-stroke-width": 2,
       };
