@@ -955,10 +955,12 @@ function useMap(props) {
             mapRef.current = undefined;
         }
         initializedRef.current = false;
-        setMapIsReady(false);
     };
     useEffect(function () {
-        return cleanup;
+        return function () {
+            cleanup();
+            setMapIsReady(false);
+        };
     }, []);
     useEffect(function () {
         var _a;
@@ -12221,6 +12223,10 @@ function useLayer(props) {
         if (initializedRef.current || !mapHook.map)
             return;
         initializedRef.current = true;
+        if (mapHook.map.map.getLayer(layerId.current)) {
+            // remove (cleanup) & reinitialize the layer if type has changed
+            cleanup();
+        }
         mapHook.map.addLayer(__assign(__assign(__assign({}, props.options), (props.geojson
             ? {
                 source: {
@@ -12251,13 +12257,6 @@ function useLayer(props) {
         if (!mapHook.map)
             return;
         if (initializedRef.current &&
-            legalLayerTypes.indexOf(props.options.type) !== -1 &&
-            layerTypeRef.current &&
-            props.options.type !== layerTypeRef.current) {
-            // remove (cleanup) & reinitialize the layer if type has changed
-            cleanup();
-        }
-        else if (initializedRef.current &&
             (legalLayerTypes.indexOf(props.options.type) === -1 ||
                 (legalLayerTypes.indexOf(props.options.type) !== -1 &&
                     props.options.type === layerTypeRef.current))) {
@@ -12274,7 +12273,7 @@ function useLayer(props) {
     }, [props.geojson, mapHook.map, props.options.type]);
     useEffect(function () {
         var _a, _b, _c, _d, _e;
-        if (!mapHook.map || !((_c = (_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getLayer) === null || _c === void 0 ? void 0 : _c.call(_b, layerId.current)) || !initializedRef.current)
+        if (!mapHook.map || !((_c = (_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getLayer) === null || _c === void 0 ? void 0 : _c.call(_b, layerId.current)) || !initializedRef.current || props.options.type !== layerTypeRef.current)
             return;
         var key;
         var layoutString = JSON.stringify(props.options.layout);
@@ -12375,7 +12374,7 @@ var getDefaultPaintPropsByType = function (type, defaultPaintOverrides) {
                 return defaultPaintOverrides.circle;
             }
             return {
-                "circle-color": "rgba(10,240,256)",
+                "circle-color": "rgba(10,240,256,0.8)",
                 "circle-stroke-color": "#fff",
                 "circle-stroke-width": 2,
             };
