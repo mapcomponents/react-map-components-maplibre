@@ -60,6 +60,11 @@ function useLayer(props: useLayerProps): useLayerType {
     if (initializedRef.current || !mapHook.map) return;
     initializedRef.current = true;
 
+    if (mapHook.map.map.getLayer(layerId.current)) {
+      // remove (cleanup) & reinitialize the layer if type has changed
+      cleanup();
+    }
+
     mapHook.map.addLayer(
       {
         ...props.options,
@@ -104,15 +109,6 @@ function useLayer(props: useLayerProps): useLayerType {
     if (!mapHook.map) return;
 
     if (
-      initializedRef.current &&
-      ((props.options.type && legalLayerTypes.indexOf(props.options.type) !== -1) ||
-        !props.options.type) &&
-      layerTypeRef.current &&
-      props.options.type !== layerTypeRef.current
-    ) {
-      // remove (cleanup) & reinitialize the layer if type has changed
-      cleanup();
-    } else if (
       initializedRef.current &&
       (legalLayerTypes.indexOf(props.options.type) === -1 ||
         (legalLayerTypes.indexOf(props.options.type) !== -1 &&
