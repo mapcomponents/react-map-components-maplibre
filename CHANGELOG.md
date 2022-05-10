@@ -1,5 +1,9 @@
 # Change Log
 
+## [v0.1.42] - 2022-05-10
+
+### Fixed
+- d974415: fix geojsonlayer default circle color
 ## [v0.1.41] - 2022-05-10
 
 ### Fixed
