@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.41] - 2022-05-10
+
+### Fixed
+- 4c1f5b6: fix MlWmsLoader 
+- 32e6a3f: fix useLayer reinitialization bug 
+
 ## [v0.1.39] - 2022-04-21
 
 ### Changed
