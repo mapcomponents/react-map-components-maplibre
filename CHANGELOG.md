@@ -1,15 +1,16 @@
 # Change Log
 
 
+## [v0.1.45] - 2022-05-10
+
+### Fixed
+- 336bca8: fix useLayer implicit layer types
+
 ## [v0.1.44] - 2022-05-10
 
 ### Fixed
 - a81bb06: fix useLayer setPaintProperty error when changing geojson type using implicit layer types
 
-## [v0.1.43] - 2022-05-10
-
-### Fixed
-- 6aa2885: ensure cleanup in useLayer hook if layer with same id already exists
 ## [v0.1.42] - 2022-05-10
 
 ### Fixed
