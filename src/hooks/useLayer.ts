@@ -105,7 +105,8 @@ function useLayer(props: useLayerProps): useLayerType {
 
     if (
       initializedRef.current &&
-      legalLayerTypes.indexOf(props.options.type) !== -1 &&
+      ((props.options.type && legalLayerTypes.indexOf(props.options.type) !== -1) ||
+        !props.options.type) &&
       layerTypeRef.current &&
       props.options.type !== layerTypeRef.current
     ) {
@@ -124,10 +125,9 @@ function useLayer(props: useLayerProps): useLayerType {
   }, [mapHook.map, props.options, createLayer]);
 
   useEffect(() => {
-    if (!initializedRef.current || !mapHook.map?.map?.getSource(layerId.current))
-      return;
+    if (!initializedRef.current || !mapHook.map?.map?.getSource(layerId.current)) return;
 
-      //@ts-ignore setData only exists on GeoJsonSource
+    //@ts-ignore setData only exists on GeoJsonSource
     mapHook.map.map.getSource(layerId.current)?.setData?.(props.geojson);
   }, [props.geojson, mapHook.map, props.options.type]);
 

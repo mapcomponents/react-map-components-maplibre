@@ -42,11 +42,13 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
       mapRef.current = undefined;
     }
     initializedRef.current = false;
-    setMapIsReady(false);
   };
 
   useEffect(() => {
-    return cleanup;
+    return () => {
+      cleanup();
+      setMapIsReady(false);
+    }
   }, []);
 
   useEffect(() => {
