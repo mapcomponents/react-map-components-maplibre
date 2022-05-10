@@ -128,8 +128,7 @@ function useLayer(props: useLayerProps): useLayerType {
   }, [props.geojson, mapHook.map, props.options.type]);
 
   useEffect(() => {
-    if (!mapHook.map || !mapHook.map?.map?.getLayer?.(layerId.current) || !initializedRef.current)
-      return;
+    if (!mapHook.map || !mapHook.map?.map?.getLayer?.(layerId.current) || !initializedRef.current || props.options.type !== layerTypeRef.current)return;
 
     var key;
 
