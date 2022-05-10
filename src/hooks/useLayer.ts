@@ -57,13 +57,15 @@ function useLayer(props: useLayerProps): useLayerType {
   );
 
   const createLayer = useCallback(() => {
-    if (initializedRef.current || !mapHook.map) return;
-    initializedRef.current = true;
+    if (!mapHook.map) return;
 
     if (mapHook.map.map.getLayer(layerId.current)) {
-      // remove (cleanup) & reinitialize the layer if type has changed
-      cleanup();
+      mapHook.map.map.removeLayer(layerId.current);
     }
+    if (mapHook.map.map.getSource(layerId.current)) {
+      mapHook.map.map.removeSource(layerId.current);
+    }
+    initializedRef.current = true;
 
     mapHook.map.addLayer(
       {
@@ -128,7 +130,13 @@ function useLayer(props: useLayerProps): useLayerType {
   }, [props.geojson, mapHook.map, props.options.type]);
 
   useEffect(() => {
-    if (!mapHook.map || !mapHook.map?.map?.getLayer?.(layerId.current) || !initializedRef.current || props.options.type !== layerTypeRef.current)return;
+    if (
+      !mapHook.map ||
+      !mapHook.map?.map?.getLayer?.(layerId.current) ||
+      !initializedRef.current ||
+      props.options.type !== layerTypeRef.current
+    )
+      return;
 
     var key;
 
