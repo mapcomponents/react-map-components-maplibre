@@ -86,7 +86,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
   const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4());
   const [layers, setLayers] = useState<Array<typeof layerType>>([]);
 
-  const [featureInfoLngLat, setFeatureInfoLngLat] = useState({});
+  const [featureInfoLngLat, setFeatureInfoLngLat] = useState<{lng:number,lat:number} | undefined>();
   const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
   const getFeatureInfo = useCallback(
     (ev) => {
       if (!mapRef.current) return;
-      setFeatureInfoLngLat({});
+      setFeatureInfoLngLat(undefined);
       setFeatureInfoContent(undefined);
       let _bounds = mapRef.current.map.getBounds();
       let _sw = lngLatToMeters(_bounds._sw);
@@ -297,7 +297,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
         {capabilities?.Capability?.Layer?.Abstract}
       </p>
 
-      {featureInfoLngLat && featureInfoLngLat?.lng && featureInfoLngLat?.lat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
+      {featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
     </>
   );
 };
