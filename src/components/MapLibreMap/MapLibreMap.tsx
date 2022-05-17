@@ -66,6 +66,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 
   const mapIdRef = useRef(props.mapId);
   const initializedRef = useRef(false);
+  const currentStyle = useRef(props.options?.style);
 
   useEffect(() => {
     let mapId = mapIdRef.current;
@@ -100,6 +101,15 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
       });
     }
   }, [props.options, props.mapId]);
+
+  useEffect(() => {
+    if (map.current?.map && props?.options?.style && currentStyle.current !== props.options.style) {
+      console.log("set style");
+      currentStyle.current = props.options.style;
+      map.current.map.setStyle(props.options.style);
+    }
+    // @ts-ignore: props.options is either passed or populated with default values
+  }, [props.options.style])
 
   return <div ref={mapContainer as RefObject<HTMLDivElement>} className="mapContainer" style={props.style} />;
 };
