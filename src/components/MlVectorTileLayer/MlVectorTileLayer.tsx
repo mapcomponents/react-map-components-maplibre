@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import useMap from "../../hooks/useMap";
 import PropTypes from "prop-types";
 
@@ -24,17 +24,19 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
   });
 
   const layerIdsRef = useRef({});
-  const layerId = useRef(
-    props.layerId || "MlVectorTileLayer-" + mapHook.componentId
-  );
+  const layerId = useRef(props.layerId || "MlVectorTileLayer-" + mapHook.componentId);
   const layerPaintConfsRef = useRef({});
   const layerLayoutConfsRef = useRef({});
   const initializedRef = useRef(false);
 
-  useEffect(() => {
-    if (!mapHook.map || initializedRef.current) return;
+  const createLayer = useCallback(() => {
+    if (!mapHook.map) return;
 
     initializedRef.current = true;
+
+    if (mapHook.map.map.getLayer(layerId.current)) {
+      mapHook.cleanup();
+    }
 
     // Add the new layer to the openlayers instance once it is available
     mapHook.map.addSource(
@@ -72,11 +74,27 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
         mapHook.componentId
       );
       layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
-      layerLayoutConfsRef.current[key] = JSON.stringify(
-        props.layers[key].layout
+      layerLayoutConfsRef.current[key] = JSON.stringify(props.layers[key].layout);
+
+      // recreate layer if style has changed
+      mapHook.map.on(
+        "styledata",
+        () => {
+          if (initializedRef.current && !mapHook.map?.map.getSource(layerId.current)) {
+            console.log("Recreate Layer " + layerId.current);
+            createLayer();
+          }
+        },
+        mapHook.componentId
       );
     }
   }, [mapHook.map, props]);
+
+  useEffect(() => {
+    if (initializedRef.current) return;
+
+    createLayer();
+  }, [createLayer]);
 
   useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;

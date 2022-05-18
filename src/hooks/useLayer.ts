@@ -60,7 +60,7 @@ function useLayer(props: useLayerProps): useLayerType {
     if (!mapHook.map) return;
 
     if (mapHook.map.map.getLayer(layerId.current)) {
-      mapHook.map.map.removeLayer(layerId.current);
+      mapHook.cleanup();
     }
     if (mapHook.map.map.getSource(layerId.current)) {
       mapHook.map.map.removeSource(layerId.current);
@@ -106,7 +106,7 @@ function useLayer(props: useLayerProps): useLayerType {
     mapHook.map.on(
       "styledata",
       () => {
-        if (initializedRef.current && !mapHook.map.map.getLayer(layerId.current)) {
+        if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
           console.log("Recreate Layer");
           createLayer();
         }

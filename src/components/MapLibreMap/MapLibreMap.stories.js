@@ -94,7 +94,6 @@ export const StyleChangeConfig = StyleChangeTemplate.bind({});
 StyleChangeConfig.args = {
   options: {
     zoom: 14.5,
-    style: "https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json",
     center: [7.0851268, 50.73884],
   },
 };

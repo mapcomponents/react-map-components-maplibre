@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import useMap from "../../hooks/useMap";
 
 import PropTypes from "prop-types";
@@ -54,7 +54,7 @@ interface MlWmsLayerProps {
  *
  * @component
  */
-const MlWmsLayer = (props:MlWmsLayerProps) => {
+const MlWmsLayer = (props: MlWmsLayerProps) => {
   const mapHook = useMap({
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer,
@@ -63,10 +63,14 @@ const MlWmsLayer = (props:MlWmsLayerProps) => {
   const initializedRef = useRef(false);
   const layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
 
-  useEffect(() => {
-    if (!mapHook.map || initializedRef.current) return;
+  const createLayer = useCallback(() => {
+    if (!mapHook.map) return;
 
     initializedRef.current = true;
+
+    if (mapHook.map.map.getLayer(layerId.current)) {
+      mapHook.cleanup();
+    }
 
     let _propsUrlParams;
     let _wmsUrl = props.url;
@@ -83,8 +87,7 @@ const MlWmsLayer = (props:MlWmsLayerProps) => {
     };
     let urlParams = new URLSearchParams(urlParamsObj);
     let urlParamsStr =
-      decodeURIComponent(urlParams.toString()) +
-      "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+      decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
 
     mapHook.map.addSource(
       layerId.current,
@@ -109,10 +112,27 @@ const MlWmsLayer = (props:MlWmsLayerProps) => {
       mapHook.componentId
     );
 
+    // recreate layer if map style.json has changed
+    mapHook.map.on(
+      "styledata",
+      () => {
+        if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
+          console.log("Recreate Layer " + layerId.current);
+          createLayer();
+        }
+      },
+      mapHook.componentId
+    );
     if (!props.visible) {
       mapHook.map.map.setLayoutProperty(layerId.current, "visibility", "none");
     }
-  }, [mapHook, props]);
+  }, [mapHook.map, props]);
+
+  useEffect(() => {
+    if (initializedRef.current) return;
+
+    createLayer();
+  }, [createLayer]);
 
   useEffect(() => {
     if (!mapHook.map || !initializedRef.current) return;

@@ -4,7 +4,7 @@ import MlWmsLayer from "./MlWmsLayer";
 import TopToolbar from "../../ui_components/TopToolbar";
 import Button from "@mui/material/Button";
 
-import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
+import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 import "../../App.css";
 
@@ -15,7 +15,7 @@ const storyoptions = {
     url: {},
     layer: {},
   },
-  decorators: multiMapContextDecorator,
+  decorators: mapContextDecorator,
 };
 export default storyoptions;
 
@@ -41,7 +41,6 @@ const Template = (props) => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
-  mapId: "map_2",
   url: "https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme",
   urlParameters: {
     layers: "nw_uraufnahme_rw",
