@@ -32,7 +32,7 @@ const Template = (args) => (
     </Grid>
 
     <Box m={2} style={{ textAlign: "left" }}>
-      <MlMeasureTool measureTool={"polygon"} />
+      <MlMeasureTool measureType={"polygon"} />
     </Box>
   </div>
 )
@@ -52,7 +52,7 @@ const LineTemplate = (args) => (
     </Grid>
 
     <Box m={2} style={{ textAlign: "left" }}>
-      <MlMeasureTool measureTool={"line"} />
+      <MlMeasureTool measureType={"line"} />
     </Box>
   </div>
 )

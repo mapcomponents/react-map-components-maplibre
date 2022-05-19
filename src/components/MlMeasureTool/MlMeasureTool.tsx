@@ -14,22 +14,13 @@ interface MlMeasureToolProps {
    */
   insertBeforeLayer?: string;
   /**
-   *
+   * String that specify if the Tool measures an area ("polygon") or length ("line")
    */
-  debug: boolean;
-  /**
-   *
-   */
-  features: any;
-  /**
-   *
-   */
-  measureTool: string;
+  measureType: string;
 }
 
 /**
- * Component template
- *
+ * Tool that can measures either the length or area between dots created by mouse click events
  */
 const MlMeasureTool = (props: MlMeasureToolProps) => {
   const mapHook = useMap({
@@ -46,27 +37,24 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
     initializedRef.current = true;
 
     mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
-  }, [mapHook.map, props.mapId]);
+  }, [mapHook.map]);
 
   return (
     <>
       <MlFeatureEditor
         onChange={(features) => {
           console.log(features);
-          try {
-            setLength(props.measureTool === "polygon" ? turf.area(features[0]) / 1000000 : turf.length(features[0]));
-          } catch (e) {
-            console.log(e);
-          }
-        }}
-        mode= {(props.measureTool === "polygon" ? "custom_polygon" : "draw_line_string")}
+          if(features[0]) {
+            setLength(props.measureType === "polygon" ? turf.area(features[0]) / 1000000 : turf.length(features[0]));
+          }}}
+        mode = {props.measureType === "polygon" ? "custom_polygon" : "draw_line_string"}
       />
-      Area: {length.toFixed(2)} {props.measureTool === "polygon" ? "km²" : "km"}
+      {props.measureType === "polygon" ? "Area" : "Length"}: {length.toFixed(2)} {props.measureType === "polygon" ? "km²" : "km"}
   </>);
 };
 
 MlMeasureTool.defaultProps = {
   mapId: undefined,
-  measureTool: "Line",
+  measureType: "line",
 };
 export default MlMeasureTool;
