@@ -32,7 +32,7 @@ export { default as useMapState } from "./hooks/useMapState";
 export { default as useMap } from "./hooks/useMap";
 export { default as useWms } from "./hooks/useWms.js";
 
-export { MapComponentsProvider } from './contexts/MapContext';
-export { default as MapContext } from './contexts/MapContext';
-export { default as SimpleDataProvider } from './contexts/SimpleDataProvider';
-export { default as SimpleDataContext } from './contexts/SimpleDataContext';
+export { MapComponentsProvider } from "./contexts/MapContext";
+export { default as MapContext } from "./contexts/MapContext";
+export { default as SimpleDataProvider } from "./contexts/SimpleDataProvider";
+export { default as SimpleDataContext } from "./contexts/SimpleDataContext";
