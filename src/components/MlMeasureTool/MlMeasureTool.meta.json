@@ -1,10 +1,10 @@
 {
   "name": "MlMeasureTool",
-  "title": "",
+  "title": "Measure tool",
   "description": "",
   "i18n": {
     "de": {
-      "title": "",
+      "title": "Messwerkzeug",
       "description": ""
     }
   },
