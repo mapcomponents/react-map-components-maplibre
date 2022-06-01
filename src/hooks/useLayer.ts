@@ -60,7 +60,7 @@ function useLayer(props: useLayerProps): useLayerType {
     if (!mapHook.map) return;
 
     if (mapHook.map.map.getLayer(layerId.current)) {
-      mapHook.map.map.removeLayer(layerId.current);
+      mapHook.cleanup();
     }
     if (mapHook.map.map.getSource(layerId.current)) {
       mapHook.map.map.removeSource(layerId.current);
@@ -101,6 +101,18 @@ function useLayer(props: useLayerProps): useLayerType {
     if (typeof props.onLeave !== "undefined") {
       mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
     }
+
+    // recreate layer if style has changed
+    mapHook.map.on(
+      "styledata",
+      () => {
+        if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
+          console.log("Recreate Layer");
+          createLayer();
+        }
+      },
+      mapHook.componentId
+    );
 
     layerPaintConfRef.current = JSON.stringify(props.options?.paint);
     layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
@@ -164,14 +176,10 @@ function useLayer(props: useLayerProps): useLayerType {
     }
   }, [props.options, mapHook.map]);
 
-  const cleanup = () => {
-    initializedRef.current = false;
-    mapHook.cleanup();
-  };
-
   useEffect(() => {
     return () => {
-      cleanup();
+      initializedRef.current = false;
+      mapHook.cleanup();
     };
   }, []);
 

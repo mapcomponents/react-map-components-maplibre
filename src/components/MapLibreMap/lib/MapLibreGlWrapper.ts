@@ -213,7 +213,7 @@ class MapLibreGlWrapper {
        */
       buildLayerObjects: () => {
         // @ts-ignore
-        return self.style._order
+        return self.map.style._order
           .map((layerId: string) => {
             return self.wrapper.buildLayerObject(
               self.map.style._layers[layerId]
@@ -487,7 +487,7 @@ class MapLibreGlWrapper {
       this[item] = (...props: any[]) => {
         if (
           self.map &&
-          this.map.style &&
+          self.map.style &&
           typeof self.map.style[item] === "function"
         ) {
           self.map.style[item](...props);
