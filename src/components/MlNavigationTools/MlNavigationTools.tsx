@@ -131,12 +131,6 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
             sx={{ fontSize: mediaIsMobile ? "1.5em" : "1.2em" }}
           />
         </Button>
-        <Button sx={{ ...buttonStyle, color: "#ececec" }} onClick={() => { mapHook.map?.map?.setStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json')}}>
-        da
-        </Button>
-        <Button sx={{ ...buttonStyle, color: "#ececec" }} onClick={() => { mapHook.map?.map?.setStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json')}}>
-        br
-        </Button>
       </ButtonGroup>
     </div>
   );
