@@ -40,7 +40,7 @@ const defaultProps: MapLibreMapProps = {
           id: "background",
           type: "background",
           paint: {
-            "background-color": "rgba(80,0,0,0)",
+            "background-color": "rgba(0,0,0,0)",
           },
         },
       ],
