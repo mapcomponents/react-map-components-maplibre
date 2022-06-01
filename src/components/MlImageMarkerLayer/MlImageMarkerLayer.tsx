@@ -130,8 +130,7 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
   };
 
   const createMapLibreElements = useCallback(() => {
-    // @ts-ignore
-    if (!mapHook.map && !initializedRef.current && mapHook.map?.map.getLayer(layerId.current))
+    if (!mapHook.map || initializedRef.current || mapHook.map?.map.getLayer(layerId.current))
       return;
 
     initializedRef.current = true;
@@ -147,7 +146,7 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
     } else {
       createLayer(mapHook, props, createMapLibreElements);
     }
-  }, [props, mapHook.map]);
+  }, [props, mapHook]);
 
   useEffect(() => {
     if (initializedRef.current) return;
