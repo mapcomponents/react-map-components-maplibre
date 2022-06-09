@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, { useRef, useState } from "react";
 
 import MlMeasureTool from "./MlMeasureTool";
 
@@ -7,28 +7,30 @@ import StraightenOutlinedIcon from "@mui/icons-material/StraightenOutlined";
 import SquareFootOutlinedIcon from "@mui/icons-material/SquareFootOutlined";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import {MenuItem, Select} from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 
 const storyoptions = {
   title: "MapComponents/MlMeasureTool",
   component: MlMeasureTool,
-  argTypes: {
-  },
+  argTypes: {},
   decorators: mapContextDecorator,
 };
 export default storyoptions;
 
 const Template = (args) => {
   const [unit, setUnit] = useState("kilometers");
-  const unitRef = useRef("kilometers")
   const handleChange = (event) => {
-    setUnit(event.target.value)
-    unitRef.current = event.target.value
-  }
+    setUnit(event.target.value);
+  };
 
   return (
-    <div style={{width: "200px", position: "absolute", zIndex: 105}}>
-      <Select name={"units"} onChange={handleChange} label={"Unit for measurement"} defaultValue={"kilometers"}>
+    <div style={{ width: "200px", position: "absolute", zIndex: 105 }}>
+      <Select
+        name={"units"}
+        onChange={handleChange}
+        label={"Unit for measurement"}
+        defaultValue={"kilometers"}
+      >
         <MenuItem value={"kilometers"}>Kilometers</MenuItem>
         <MenuItem value={"miles"}>Miles</MenuItem>
       </Select>
@@ -39,26 +41,31 @@ const Template = (args) => {
           alignItems: "center",
         }}
       >
-        <SquareFootOutlinedIcon/>
-        <h4 style={{margin: "0px"}}>Measure Polygon</h4>
+        <SquareFootOutlinedIcon />
+        <h4 style={{ margin: "0px" }}>Measure Polygon</h4>
       </Grid>
 
-      <Box m={2} style={{textAlign: "left"}}>
-        Area: <MlMeasureTool measureType={"polygon"} unit={unit}/>
+      <Box m={2} style={{ textAlign: "left" }}>
+        Area: <MlMeasureTool measureType={"polygon"} unit={unit} />
       </Box>
     </div>
-  )
-}
+  );
+};
 
 const LineTemplate = (args) => {
   const [unit, setUnit] = useState("kilometers");
   const handleChange = (event) => {
-    setUnit(event.target.value)
-  }
+    setUnit(event.target.value);
+  };
 
   return (
-    <div style={{width: "200px", position: "absolute", zIndex: 105,}}>
-      <Select name={"units"} onChange={handleChange} label={"Unit for measurement"} defaultValue={"kilometers"}>
+    <div style={{ width: "200px", position: "absolute", zIndex: 105 }}>
+      <Select
+        name={"units"}
+        onChange={handleChange}
+        label={"Unit for measurement"}
+        defaultValue={"kilometers"}
+      >
         <MenuItem value={"kilometers"}> Kilometers</MenuItem>
         <MenuItem value={"miles"}> Miles</MenuItem>
       </Select>
@@ -69,18 +76,18 @@ const LineTemplate = (args) => {
           alignItems: "center",
         }}
       >
-        <StraightenOutlinedIcon/>
-        <h4 style={{margin: "0px"}}>Measure Line</h4>
+        <StraightenOutlinedIcon />
+        <h4 style={{ margin: "0px" }}>Measure Line</h4>
       </Grid>
 
-      <Box m={2} style={{textAlign: "left"}}>
-        Length: <MlMeasureTool measureType={"line"} unit={unit}/>
+      <Box m={2} style={{ textAlign: "left" }}>
+        Length: <MlMeasureTool measureType={"line"} unit={unit} />
       </Box>
     </div>
-  )
-}
+  );
+};
 
-export const MeasureLine = LineTemplate.bind( {});
+export const MeasureLine = LineTemplate.bind({});
 MeasureLine.parameters = {};
 MeasureLine.args = {};
 
