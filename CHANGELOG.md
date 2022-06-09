@@ -1,6 +1,15 @@
 # Change Log
 
 
+## [v0.1.46] - 2022-06-09
+
+### Fixed
+- 16e78aa: fix MlImageMarkerLayer initialization conditions 
+
+### Added
+- 06e30aa: add MeasureTool to catalog
+- 35bc0ff: make MapLibreMap options.style property reactive to dynamic changes during runtime
+
 ## [v0.1.45] - 2022-05-10
 
 ### Fixed
