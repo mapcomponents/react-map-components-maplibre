@@ -1,7 +1,16 @@
 # Change Log
 
 
-## [v0.1.47] - 2022-06-15
+## [v0.1.48] - 2022-06-15
+
+### Added
+
+- 4d53b8a: Merge pull request #17 from mapcomponents/feature/MeasureTool-add-miles-option 
+### Fixed
+
+- 0082e6d: fix MlMeasureTools typescript transpilation errors
+
+## [v0.1.47] (broken build) - 2022-06-15
 
 ### Fixed
 
