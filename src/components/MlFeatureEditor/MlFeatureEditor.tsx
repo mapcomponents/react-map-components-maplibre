@@ -14,16 +14,16 @@ interface MlFeatureEditorProps {
   /**
    * Id of the target MapLibre instance in mapContext
    */
-  mapId: string;
+  mapId?: string;
   /**
    * Id of an existing layer in the mapLibre instance to help specify the layer order
    * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
    */
-  insertBeforeLayer: string;
+  insertBeforeLayer?: string;
   /**
    * Input GeoJson data at initialization
    */
-  geojson: any;
+  geojson?: any;
   /**
    * Callback function that is called each time the GeoJson data within has changed within MlFeatureEditor.
    * First parameter is the new GeoJson feature.

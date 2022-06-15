@@ -331,7 +331,7 @@ var MapLibreGlWrapper = /** @class */ (function () {
              */
             buildLayerObjects: function () {
                 // @ts-ignore
-                return self.style._order
+                return self.map.style._order
                     .map(function (layerId) {
                     return self.wrapper.buildLayerObject(self.map.style._layers[layerId]);
                 })
@@ -568,7 +568,7 @@ var MapLibreGlWrapper = /** @class */ (function () {
                     props[_i] = arguments[_i];
                 }
                 if (self.map &&
-                    _this.map.style &&
+                    self.map.style &&
                     typeof self.map.style[item] === "function") {
                     (_a = self.map.style)[item].apply(_a, props);
                 }
@@ -744,7 +744,7 @@ var defaultProps$2 = {
                     id: "background",
                     type: "background",
                     paint: {
-                        "background-color": "rgba(80,0,0,0)",
+                        "background-color": "rgba(0,0,0,0)",
                     },
                 },
             ],
@@ -762,11 +762,13 @@ var defaultProps$2 = {
  * @category Map components
  */
 var MapLibreMap = function (props) {
+    var _a;
     var map = useRef(null);
     var mapContainer = useRef();
     var mapContext = useContext(MapContext);
     var mapIdRef = useRef(props.mapId);
     var initializedRef = useRef(false);
+    var currentStyle = useRef((_a = props.options) === null || _a === void 0 ? void 0 : _a.style);
     useEffect(function () {
         var mapId = mapIdRef.current;
         return function () {
@@ -796,6 +798,15 @@ var MapLibreMap = function (props) {
             });
         }
     }, [props.options, props.mapId]);
+    useEffect(function () {
+        var _a, _b;
+        if (((_a = map.current) === null || _a === void 0 ? void 0 : _a.map) && ((_b = props === null || props === void 0 ? void 0 : props.options) === null || _b === void 0 ? void 0 : _b.style) && currentStyle.current !== props.options.style) {
+            console.log("set style");
+            currentStyle.current = props.options.style;
+            map.current.map.setStyle(props.options.style);
+        }
+        // @ts-ignore: props.options is either passed or populated with default values
+    }, [props.options.style]);
     return React__default.createElement("div", { ref: mapContainer, className: "mapContainer", style: props.style });
 };
 MapLibreMap.defaultProps = defaultProps$2;
@@ -12223,7 +12234,7 @@ function useLayer(props) {
         if (!mapHook.map)
             return;
         if (mapHook.map.map.getLayer(layerId.current)) {
-            mapHook.map.map.removeLayer(layerId.current);
+            mapHook.cleanup();
         }
         if (mapHook.map.map.getSource(layerId.current)) {
             mapHook.map.map.removeSource(layerId.current);
@@ -12251,6 +12262,14 @@ function useLayer(props) {
         if (typeof props.onLeave !== "undefined") {
             mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
         }
+        // recreate layer if style has changed
+        mapHook.map.on("styledata", function () {
+            var _a;
+            if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
+                console.log("Recreate Layer");
+                createLayer();
+            }
+        }, mapHook.componentId);
         layerPaintConfRef.current = JSON.stringify((_a = props.options) === null || _a === void 0 ? void 0 : _a.paint);
         layerLayoutConfRef.current = JSON.stringify((_b = props.options) === null || _b === void 0 ? void 0 : _b.layout);
         layerTypeRef.current = props.options.type;
@@ -12302,13 +12321,10 @@ function useLayer(props) {
             layerPaintConfRef.current = paintString;
         }
     }, [props.options, mapHook.map]);
-    var cleanup = function () {
-        initializedRef.current = false;
-        mapHook.cleanup();
-    };
     useEffect(function () {
         return function () {
-            cleanup();
+            initializedRef.current = false;
+            mapHook.cleanup();
         };
     }, []);
     return {
@@ -12569,16 +12585,16 @@ var MlImageMarkerLayer = function (props) {
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
     });
-    var layerInitializedRef = useRef(false);
+    var initializedRef = useRef(false);
+    var recreationInProgress = useRef(false);
     var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
     var layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
+    // effect to sync Layer paint & layout properties
     useEffect(function () {
         if (!mapHook.map ||
             (mapHook.map && !mapHook.map.map.getLayer(layerId.current)) ||
             !props.options)
             return;
-        // the MapLibre-gl instance (mapContext.map) is accessible here
-        // initialize the layer and add it to the MapLibre-gl instance or do something else with it
         var key;
         if (props.options.layout) {
             for (key in props.options.layout) {
@@ -12591,39 +12607,118 @@ var MlImageMarkerLayer = function (props) {
             }
         }
     }, [props.options, layerId.current, props.mapId]);
-    var addLayer = useCallback(function () {
-        if (!mapHook.map)
+    var createImage = function (mapHook, props, callback) {
+        if (!mapHook.map) {
+            initializedRef.current = false;
+            return;
+        }
+        if (props.imgSrc && !mapHook.map.map.hasImage(imageIdRef.current)) {
+            mapHook.map.map.loadImage(props.imgSrc, function (error, image) {
+                if (error)
+                    throw error;
+                if (!mapHook.map || mapHook.map.map.hasImage(imageIdRef.current))
+                    return;
+                mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
+                if (typeof callback === "function") {
+                    callback();
+                }
+            });
+        }
+        else {
+            if (typeof callback === "function") {
+                callback();
+            }
+        }
+    };
+    var createLayer = function (mapHook, props, createMapLibreElements) {
+        var _a;
+        if (!props.options || !mapHook.map || ((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current)))
             return;
         var tmpOptions = __assign({ id: layerId.current, layout: {} }, props.options);
         tmpOptions.layout["icon-image"] = imageIdRef.current;
         mapHook.map.addLayer(tmpOptions, props.insertBeforeLayer, mapHook.componentId);
-    }, [props, mapHook.map]);
-    useEffect(function () {
-        if (!props.options || !mapHook.map || layerInitializedRef.current)
+        // recreate layer if map style.json has changed
+        mapHook.map.on("styledata", function () {
+            var _a;
+            if (initializedRef.current &&
+                !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current)) &&
+                !recreationInProgress.current) {
+                initializedRef.current = false;
+                recreationInProgress.current = true;
+                console.log("Recreate Layer " + layerId.current);
+                createMapLibreElements();
+            }
+        }, mapHook.componentId);
+        if (recreationInProgress.current) {
+            recreationInProgress.current = false;
+        }
+    };
+    var createMapLibreElements = useCallback(function () {
+        var _a;
+        if (!mapHook.map || initializedRef.current || ((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current)))
             return;
-        layerInitializedRef.current = true;
+        initializedRef.current = true;
+        if (recreationInProgress.current) {
+            mapHook.cleanup();
+        }
         if (props.imgSrc) {
-            mapHook.map.map.loadImage(props.imgSrc, function (error, image) {
-                if (error)
-                    throw error;
-                if (!mapHook.map)
-                    return;
-                mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
+            createImage(mapHook, props, function () {
+                createLayer(mapHook, props, createMapLibreElements);
             });
         }
-        addLayer();
-    }, [mapHook.map, addLayer, props]);
+        else {
+            createLayer(mapHook, props, createMapLibreElements);
+        }
+    }, [props, mapHook]);
+    useEffect(function () {
+        if (initializedRef.current)
+            return;
+        createMapLibreElements();
+    }, [createMapLibreElements]);
     useEffect(function () {
         if (!mapHook.map ||
             (mapHook.map && !mapHook.map.map.getLayer(layerId.current)) ||
             !props.options) {
             return;
         }
-        mapHook.map.map
-            .getSource(layerId.current)
-            .setData(props.options.source.data);
+        mapHook.map.map.getSource(layerId.current).setData(props.options.source.data);
     }, [props.options.source.data, props]);
     return React__default.createElement(React__default.Fragment, null);
+};
+
+//const unitSquareConvert = {
+//  kilometers: 1,
+//  miles: 1 / 2.58998811,
+//};
+function getUnitSquareMultiplier(measureType) {
+    return measureType === "miles" ? 1 / 2.58998811 : 1;
+}
+function getUnitLabel(measureType) {
+    return measureType === "miles" ? 'mi' : 'km';
+}
+var MlMeasureTool = function (props) {
+    var _a = useState(0), length = _a[0], setLength = _a[1];
+    var _b = useState([undefined]), currentFeatures = _b[0], setCurrentFeatures = _b[1];
+    useEffect(function () {
+        if (currentFeatures[0]) {
+            setLength(props.measureType === "polygon"
+                ? (turf.area(currentFeatures[0]) / 1000000) * getUnitSquareMultiplier(props.unit)
+                : turf.length(currentFeatures[0], { units: props.unit }));
+        }
+    }, [props.unit, currentFeatures]);
+    return (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(MlFeatureEditor, { onChange: function (features) {
+                setCurrentFeatures(features);
+            }, mode: props.measureType === "polygon" ? "custom_polygon" : "draw_line_string" }),
+        length.toFixed(2),
+        " ",
+        getUnitLabel(props.unit),
+        props.measureType === "polygon" ? "²" : ""));
+};
+MlMeasureTool.defaultProps = {
+    mapId: undefined,
+    measureType: "line",
+    unit: "kilometers",
 };
 
 function getButtonGroupUtilityClass(slot) {
@@ -13342,10 +13437,13 @@ var MlVectorTileLayer = function (props) {
     var layerPaintConfsRef = useRef({});
     var layerLayoutConfsRef = useRef({});
     var initializedRef = useRef(false);
-    useEffect(function () {
-        if (!mapHook.map || initializedRef.current)
+    var createLayer = useCallback(function () {
+        if (!mapHook.map)
             return;
         initializedRef.current = true;
+        if (mapHook.map.map.getLayer(layerId.current)) {
+            mapHook.cleanup();
+        }
         // Add the new layer to the openlayers instance once it is available
         mapHook.map.addSource(layerId.current, __assign({ type: "vector", tiles: [props.url], tileSize: 512, attribution: "" }, props.sourceOptions), mapHook.componentId);
         for (var key in props.layers) {
@@ -13358,8 +13456,21 @@ var MlVectorTileLayer = function (props) {
                 } }, props.layers[key]), props.insertBeforeLayer, mapHook.componentId);
             layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
             layerLayoutConfsRef.current[key] = JSON.stringify(props.layers[key].layout);
+            // recreate layer if style has changed
+            mapHook.map.on("styledata", function () {
+                var _a;
+                if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getSource(layerId.current))) {
+                    console.log("Recreate Layer " + layerId.current);
+                    createLayer();
+                }
+            }, mapHook.componentId);
         }
     }, [mapHook.map, props]);
+    useEffect(function () {
+        if (initializedRef.current)
+            return;
+        createLayer();
+    }, [createLayer]);
     useEffect(function () {
         if (!mapHook.map || !initializedRef.current)
             return;
@@ -13452,10 +13563,13 @@ var MlWmsLayer = function (props) {
     });
     var initializedRef = useRef(false);
     var layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
-    useEffect(function () {
-        if (!mapHook.map || initializedRef.current)
+    var createLayer = useCallback(function () {
+        if (!mapHook.map)
             return;
         initializedRef.current = true;
+        if (mapHook.map.map.getLayer(layerId.current)) {
+            mapHook.cleanup();
+        }
         var _propsUrlParams;
         var _wmsUrl = props.url;
         if (props.url.indexOf("?") !== -1) {
@@ -13466,14 +13580,26 @@ var MlWmsLayer = function (props) {
         // first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
         var urlParamsObj = __assign(__assign(__assign({}, defaultProps.urlParameters), Object.fromEntries(_urlParamsFromUrl)), props.urlParameters);
         var urlParams = new URLSearchParams(urlParamsObj);
-        var urlParamsStr = decodeURIComponent(urlParams.toString()) +
-            "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+        var urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
         mapHook.map.addSource(layerId.current, __assign({ type: "raster", tiles: [_wmsUrl + "?" + urlParamsStr], tileSize: urlParamsObj.width, attribution: props.attribution }, props.sourceOptions), mapHook.componentId);
         mapHook.map.addLayer(__assign({ id: layerId.current, type: "raster", source: layerId.current }, props.layerOptions), props.insertBeforeLayer, mapHook.componentId);
+        // recreate layer if map style.json has changed
+        mapHook.map.on("styledata", function () {
+            var _a;
+            if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
+                console.log("Recreate Layer " + layerId.current);
+                createLayer();
+            }
+        }, mapHook.componentId);
         if (!props.visible) {
             mapHook.map.map.setLayoutProperty(layerId.current, "visibility", "none");
         }
-    }, [mapHook, props]);
+    }, [mapHook.map, props]);
+    useEffect(function () {
+        if (initializedRef.current)
+            return;
+        createLayer();
+    }, [createLayer]);
     useEffect(function () {
         if (!mapHook.map || !initializedRef.current)
             return;
@@ -18567,7 +18693,7 @@ useWms.defaultProps = {
   urlParameters: {
     SERVICE: "WMS",
     VERSION: "1.3.0",
-    REQUEST: "getCapabilities"
+    REQUEST: "GetCapabilities"
   }
 };
 
@@ -18633,5 +18759,5 @@ SimpleDataProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, useLayer, useMap, useMapState, useWms };
+export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlMeasureTool, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, useLayer, useMap, useMapState, useWms };
 //# sourceMappingURL=index.esm.js.map
