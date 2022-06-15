@@ -1,6 +1,11 @@
 # Change Log
 
 
+## [v0.1.47] - 2022-06-15
+
+### Fixed
+
+- ed194ff: fix MlWmsLoader & useWms hooks default param values of GetCapabilities request
 ## [v0.1.46] - 2022-06-09
 
 ### Fixed
