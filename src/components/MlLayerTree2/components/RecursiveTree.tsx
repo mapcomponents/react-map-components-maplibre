@@ -54,7 +54,6 @@ const RecursiveTree = ({ listMeta, onSelectCallback }: RecursiveTreeProps) => {
           }}
           isSelected={branch.selected}
           label={branch.label}
-          layer={branch.layer && branch.layer}
         >
           {branch.layer}
         </TreeItem>
