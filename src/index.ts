@@ -11,6 +11,7 @@ export { default as MlNavigationCompass } from "./components/MlNavigationCompass
 export { default as MlLayer } from "./components/MlLayer/MlLayer";
 export { default as MlVectorTileLayer } from "./components/MlVectorTileLayer/MlVectorTileLayer";
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
+export { default as MlLayerTree2 } from "./components/MlLayerTree2/MlLayerTree2";
 
 export { default as MlLayerMagnify } from "./components/MlLayerMagnify/MlLayerMagnify";
 export { default as MlLayerSwipe } from "./components/MlLayerSwipe/MlLayerSwipe";
