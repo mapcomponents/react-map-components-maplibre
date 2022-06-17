@@ -1,4 +1,5 @@
 import useSource from "./useSource";
+import React from "react"
 
 import mapContextDecorator from "../decorators/MapContextDecorator";
 import MlGeoJsonLayer from "../components/MlGeoJsonLayer/MlGeoJsonLayer"
@@ -22,9 +23,5 @@ const Template = (props) => {
 }
 
 export const useSourceExample = Template.bind({});
-ViewportOnly.parameters = {};
-ViewportOnly.args = {
-	mapId: "map_1",
-};
 
 
