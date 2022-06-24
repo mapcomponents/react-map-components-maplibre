@@ -4,6 +4,7 @@ import React from "react"
 import mapContextDecorator from "../decorators/MapContextDecorator";
 import MlGeoJsonLayer from "../components/MlGeoJsonLayer/MlGeoJsonLayer"
 import sample_geojson from "../components/MlGeoJsonLayer/assets/sample_1.json"
+import wg_geojson from "./assets/pointWG.json"
 
 const storyoptions = {
 	title: "Hooks/UseSource",
@@ -13,7 +14,8 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
+const Template = (args) => {
+	useSource({ ...args });
 	return (
 		<>
 			<MlGeoJsonLayer type="line" geojson={sample_geojson} />
@@ -24,4 +26,9 @@ const Template = (props) => {
 
 export const useSourceExample = Template.bind({});
 
+useSourceExample.args = {
+	mapId: "map_1",
+	sourceId: "my-data",
+	geojson: wg_geojson
+}
 

@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import useMap from "./useMap";
 interface useSourceProps {
   mapId?: string;
+  geojson?: object;
   sourceId: string;
   type: string;
   data: string;
@@ -11,20 +13,22 @@ function useSource(props: useSourceProps) {
     mapId: props.mapId,
   });
 
-  mapHook.map?.addSource("my-data", {
-    type: "geojson",
-    data: {
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [7.0847929969609424, 50.73855193187643],
+  useEffect(() => {
+    if (!mapHook.map) return;
+    mapHook.map?.addSource(props.sourceId, {
+      type: "geojson",
+      data: props.geojson,
+    });
+    mapHook.map?.addLayer({
+      id: props.sourceId,
+      type: "circle",
+      source: props.sourceId,
+      paint: {
+        "circle-radius": 6,
+        "circle-color": "#B42222",
       },
-      properties: {
-        title: "Bonn",
-        "marker-symbol": "monument",
-      },
-    },
-  });
+    });
+  }, [props, mapHook.map]);
 }
 
 export default useSource;
