@@ -14,6 +14,8 @@
 
 ## Getting started
 
+Use our Codesandbox template to quickly try out this library without any setup required. https://codesandbox.io/s/base-template-n0vp9
+
 ### **How to use @mapcomponents/react-maplibre in ...**
 
 ### **... a new project**
