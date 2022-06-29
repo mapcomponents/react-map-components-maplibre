@@ -55,7 +55,10 @@ const TreeItem = ({ onSelectCallback, label, layer, isSelected, children }: Tree
           {label}
         </StyledLabel>
       </StyledTreeItem>
-      <StyledTreeChildren sx={{display:(isOpen?'block':'none')}}>{children}</StyledTreeChildren>
+      <StyledTreeChildren sx={{ display: isOpen ? "block" : "none" }}>
+        {layer}
+        {children}
+      </StyledTreeChildren>
     </div>
   );
 };

@@ -10,56 +10,23 @@ export interface RecursiveTreeProps {
 }
 
 const RecursiveTree = ({ listMeta, onSelectCallback }: RecursiveTreeProps) => {
-  // const createTree = (branch: LayerTreeBranch) =>
-  //   branch.branches && (
-  //     <TreeItem
-  //       id={branch.id}
-  //       key={branch.id}
-  //       onSelectCallback={(e: React.MouseEvent<HTMLElement>) => {
-  //         onSelectCallback(branch);
-  //       }}
-  //       isSelected={branch.selected}
-  //       label={branch.label}
-  //     >
-  //       {branch.branches.map((branch: LayerTreeBranch) => {
-  //         return <Fragment key={branch.id}>{createTree(branch)}</Fragment>;
-  //       })}
-  //     </TreeItem>
-  //   );
-
-  const createTree = (branch: LayerTreeBranch) => {
-    if (branch.branches.length > 0) {
-      return (
-        <TreeItem
-          id={branch.id}
-          key={branch.id}
-          onSelectCallback={(e: React.MouseEvent<HTMLElement>) => {
-            onSelectCallback(branch);
-          }}
-          isSelected={branch.selected}
-          label={branch.label}
-        >
-          {branch.branches.map((branch: LayerTreeBranch) => {
-            return <Fragment key={branch.id}>{createTree(branch)}</Fragment>;
-          })}
-        </TreeItem>
-      );
-    } else {
-      return (
-        <TreeItem
-          id={branch.id}
-          key={branch.id}
-          onSelectCallback={(e: React.MouseEvent<HTMLElement>) => {
-            onSelectCallback(branch);
-          }}
-          isSelected={branch.selected}
-          label={branch.label}
-        >
-          {branch.layer}
-        </TreeItem>
-      );
-    }
-  };
+  const createTree = (branch: LayerTreeBranch) =>
+    branch.branches && (
+      <TreeItem
+        id={branch.id}
+        key={branch.id}
+        onSelectCallback={(e: React.MouseEvent<HTMLElement>) => {
+          onSelectCallback(branch);
+        }}
+        isSelected={branch.selected}
+        label={branch.label}
+        layer={branch.layer}
+      >
+        {branch.branches.map((branch: LayerTreeBranch) => {
+          return <Fragment key={branch.id}>{createTree(branch)}</Fragment>;
+        })}
+      </TreeItem>
+    );
 
   return (
     <Box>
