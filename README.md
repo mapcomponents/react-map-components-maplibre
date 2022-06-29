@@ -53,11 +53,11 @@ If no attribute mapId is provided the map component is expected to work with the
 
 ### Cleanup functions
 
-To make sure a component cleans up anything it has added to the MapLibre instance when it is removed from reactDOM, declare a reference to the map instance using the useRef hook. 
+Once a component is removed from reactDOM we need to make sure everything it has added to the maplibre-gl instance is removed with it. The mapHook offers a convenient way to do this. 
 
 **- Retrieve the maplibre instance using the useMap hook**
 
-This happens within the effect that discovers the map instance for the first time (watch the mapContext.mapIds state variable for added or removed map engine instances).
+Add `mapHook.map` to the dependency array of e.g. a useEffect hook to trigger it once the map instance becomes available.
 
 ```js
 
@@ -69,7 +69,7 @@ This happens within the effect that discovers the map instance for the first tim
   useEffect(() => {
     if (!mapHook.map) return;
     // the MapLibre-gl instance (mapHook.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
+    // initialize the layer and add it to the MapLibre-gl instance 
 
     // optionally add layers, sources, event listeners, controls, images to the MapLibre instance that are required by this component
     mapHook.map.addLayer(
@@ -77,12 +77,16 @@ This happens within the effect that discovers the map instance for the first tim
         props.insertBeforeLayer,
         mapHook.componentId)
 
+    return () => {
+      mapHook.cleanup();
+    }
+
   }, [mapHook.map]);
 
 ```
 **- Component cleanup function**
 
-After everything has been undone set the map reference (mapRef.current) to undefined.
+`mapHook.cleanup()` will remove all ressources from the maplibre-gl instance that have been added using `mapHook.componentId` as additional parameter in `map.addLayer`, `map.addSource`, `map.on`, `map.addImage` or `map.addControl` calls.
 
 ```js
 
@@ -95,7 +99,6 @@ After everything has been undone set the map reference (mapRef.current) to undef
   }, []);
 
 ```
-
 
 **- addLayer, addSource, addImage, addControls, on**
 
