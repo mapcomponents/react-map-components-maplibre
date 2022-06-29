@@ -57,8 +57,6 @@ const MlLayerTree2 = (props: MlLayerTree2Props) => {
 
   useEffect(() => {
     if (!mapHook.map || initializedRef.current) return;
-    // the MapLibre-gl instance (mapHook.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
     initializedRef.current = true;
 
     mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);

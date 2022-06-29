@@ -20,9 +20,74 @@ const storyoptions = {
 };
 export default storyoptions;
 
+const geoJsonArray = [sample_geojson_1, sample_polygon_1];
+
+let layerConfig = [
+  {
+    label: "Group 0",
+    id: "group_0",
+    branches: [
+      {
+        label: "WMS",
+        id: "layer_2",
+        branches: [],
+        layer: (
+          <MlWmsLayer
+            layerId="layer_2"
+            layout={{ visibility: "visible" }}
+            url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
+            urlParameters={{ layers: "nw_uraufnahme_rw" }}
+            key="2"
+          />
+        ),
+      },
+      {
+        label: "Geojson Line",
+        id: "layer_0",
+        branches: [],
+        layer: (
+          <MlGeoJsonLayer
+            layout={{ visibility: "visible" }}
+            layerId="layer_0"
+            geojson={geoJsonArray[0]}
+            key="1"
+          />
+        ),
+      },
+    ],
+  },
+  {
+    label: "Group 1",
+    id: "group_1",
+    branches: [
+      {
+        label: "Geojson Polygon",
+        id: "layer_4",
+        branches: [],
+        layer: (
+          <MlGeoJsonLayer
+            layerId="layer_4"
+            geojson={geoJsonArray[1]}
+            key="4"
+            layout={{ visibility: "visible" }}
+          />
+        ),
+      },
+      // {
+      //   label: "Vector Tile Layer",
+      //   layer: <MlVectorTileLayer {...vectorTileLayerConfig}></MlVectorTileLayer>,
+      // },
+    ],
+  },
+  // {
+  //   label: "Single Layer",
+  //   visible: true,
+  //   layer: <MlVectorTileLayer {...vectorTileLayerConfig}></MlVectorTileLayer>,
+  // },
+];
+
 const Template = (args) => {
   const mapId = "map_1";
-  const geoJsonArray = [sample_geojson_1, sample_polygon_1];
   // TODO Currently not working
   // const marker = {
   //   content: "WhereGroup",
@@ -45,186 +110,12 @@ const Template = (args) => {
     },
   };
   const mapHook = useMap({ mapId: mapId });
-  const mapState = useMapState({
-    mapId: mapId,
-    watch: {
-      layers: true,
-    },
-  });
 
-  /**
-   * Type: LayerTree
-   */
-  const mockOrgTreeList = [
-    {
-      label: "Liberty Health",
-      id: "1",
-      branches: [
-        {
-          label: "Pacific Northwest",
-          id: "2",
-          branches: [
-            {
-              label: "East Portland Clinic",
-              id: "3",
-              branches: [],
-            },
-            {
-              label: "Beaverton / Tigard",
-              id: "4",
-              branches: [],
-            },
-            {
-              label: "Lake Oswego Regency",
-              id: "5",
-              branches: [],
-            },
-          ],
-        },
-        {
-          label: "Alaska",
-          id: "6",
-          branches: [],
-        },
-      ],
-    },
-    {
-      label: "Northstar Alliance",
-      id: "7",
-      branches: [
-        {
-          label: "Chicago",
-          id: "8",
-          branches: [
-            {
-              label: "Southwest Region",
-              id: "9",
-              branches: [
-                {
-                  label: "Desplains",
-                  id: "10",
-                  branches: [],
-                },
-                {
-                  label: "Oak Lawn",
-                  id: "11",
-                  branches: [],
-                },
-              ],
-            },
-            {
-              label: "Northwest Region",
-              id: "12",
-              branches: [
-                {
-                  label: "East Morland",
-                  id: "13",
-                  branches: [],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          label: "New York",
-          id: "14",
-          branches: [
-            {
-              label: "Manhattan",
-              id: "15",
-              branches: [],
-            },
-            {
-              label: "Queens",
-              id: "16",
-              branches: [],
-            },
-            {
-              label: "5372 Arlington Heights",
-              id: "17",
-              branches: [],
-            },
-            {
-              label: "The Earlmore Institute of Health",
-              id: "18",
-              branches: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Single Item",
-      id: "9",
-      branches: [],
-    },
-  ];
-
-  let layerConfig = [
-    {
-      label: "Group 0",
-      id: "0",
-      branches: [
-        {
-          label: "Geojson Line",
-          id: "1",
-          branches: [],
-          layer: (
-            <MlGeoJsonLayer
-              layout={{ visibility: "visible" }}
-              layerId="1"
-              geojson={geoJsonArray[0]}
-              key="1"
-            />
-          ),
-        },
-        {
-          label: "WMS",
-          id: "2",
-          branches: [],
-          layer: (
-            <MlWmsLayer
-              layerId="2"
-              layout={{ visibility: "none" }}
-              url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
-              urlParameters={{ layers: "nw_uraufnahme_rw" }}
-              key="2"
-            />
-          ),
-        },
-      ],
-    },
-    {
-      label: "Group 1",
-      id: "3",
-      branches: [
-        {
-          label: "Geojson Polygon",
-          id: "4",
-          branches: [],
-          layer: (
-            <MlGeoJsonLayer
-              layerId="4"
-              geojson={geoJsonArray[1]}
-              key="4"
-              layout={{ visibility: "visible" }}
-            />
-          ),
-        },
-        // {
-        //   label: "Vector Tile Layer",
-        //   layer: <MlVectorTileLayer {...vectorTileLayerConfig}></MlVectorTileLayer>,
-        // },
-      ],
-    },
-    // {
-    //   label: "Single Layer",
-    //   visible: true,
-    //   layer: <MlVectorTileLayer {...vectorTileLayerConfig}></MlVectorTileLayer>,
-    // },
-  ];
-
-  return <MlLayerTree2 layerConfig={layerConfig} />;
+  return (
+    <>
+      <MlLayerTree2 layerConfig={layerConfig} />
+    </>
+  );
 };
 
 export const ExampleConfig = Template.bind({});

@@ -5,33 +5,27 @@ import { LayerTree } from "../types/LayerTree";
 import TreeItem from "./TreeItem";
 
 export interface RecursiveTreeProps {
-  readonly listMeta: LayerTree;
-  readonly onSelectCallback: (value: LayerTreeBranch) => void;
+  readonly listMeta: LayerTree | undefined;
+  readonly onSelectCallback?: (value: LayerTreeBranch) => void;
 }
 
 const RecursiveTree = ({ listMeta, onSelectCallback }: RecursiveTreeProps) => {
-  const createTree = (branch: LayerTreeBranch) =>
-    branch.branches && (
-      <TreeItem
-        id={branch.id}
-        key={branch.id}
-        onSelectCallback={(e: React.MouseEvent<HTMLElement>) => {
-          onSelectCallback(branch);
-        }}
-        isSelected={branch.selected}
-        label={branch.label}
-        layer={branch.layer}
-      >
-        {branch.branches.map((branch: LayerTreeBranch) => {
-          return <Fragment key={branch.id}>{createTree(branch)}</Fragment>;
-        })}
-      </TreeItem>
-    );
 
   return (
     <Box>
       {listMeta.map((branch: LayerTreeBranch, i: any) => (
-        <Box key={i}>{createTree(branch)}</Box>
+        <TreeItem
+          id={branch.id}
+          key={branch.id}
+          onSelectCallback={(e: React.MouseEvent<HTMLElement>) => {
+            onSelectCallback(branch);
+          }}
+          isSelected={branch.selected}
+          label={branch.label}
+          layer={branch.layer}
+        >
+          <RecursiveTree listMeta={branch.branches} onSelectCallback={onSelectCallback} />
+        </TreeItem>
       ))}
     </Box>
   );

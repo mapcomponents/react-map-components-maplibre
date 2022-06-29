@@ -13,7 +13,7 @@ interface TreeItemProps {
 }
 
 const TreeItem = ({ onSelectCallback, label, layer, isSelected, children }: TreeItemProps) => {
-  const [isOpen, toggleItemOpen] = useState<boolean | null>(null);
+  const [isOpen, toggleItemOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState(isSelected);
 
   const StyledTreeItem = styled(Box)({
@@ -55,8 +55,8 @@ const TreeItem = ({ onSelectCallback, label, layer, isSelected, children }: Tree
           {label}
         </StyledLabel>
       </StyledTreeItem>
+      {layer}
       <StyledTreeChildren sx={{ display: isOpen ? "block" : "none" }}>
-        {layer}
         {children}
       </StyledTreeChildren>
     </div>
