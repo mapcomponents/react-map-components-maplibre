@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useMap, { useMapType } from "./useMap";
 import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
+import { SourceSpecification } from "maplibre-gl";
 
 type useSourceType = {
   map: MapLibreGlWrapper | undefined;
+  source: SourceSpecification;
+  sourceId: string;
   componentId: string;
   mapHook: useMapType;
 };
@@ -20,12 +23,15 @@ function useSource(props: useSourceProps): useSourceType {
     mapId: props.mapId,
   });
 
+  const source = useRef<any>();
+
   useEffect(() => {
     if (!mapHook.map) return;
 
-    if (mapHook.map.map.getSource(props.sourceId)) {
-      //mapHook.map.map.removeSource(props.sourceId);
-    }
+    //if (mapHook.map.map.getSource(props.sourceId)) {
+    //  mapHook.map.map.removeSource(props.sourceId);
+    //}
+
     mapHook.map?.addSource(
       props.sourceId,
       {
@@ -47,6 +53,7 @@ function useSource(props: useSourceProps): useSourceType {
       false,
       mapHook.componentId
     );
+    source.current = mapHook.map.map.getSource(props.sourceId);
     return () => {
       mapHook.cleanup();
     };
@@ -54,6 +61,8 @@ function useSource(props: useSourceProps): useSourceType {
 
   return {
     map: mapHook.map,
+    source: source.current,
+    sourceId: props.sourceId,
     componentId: mapHook.componentId,
     mapHook: mapHook,
   };
