@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import useMap, { useMapType } from "./useMap";
 import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
 import { SourceSpecification } from "maplibre-gl";
@@ -12,6 +12,7 @@ type useSourceType = {
 };
 interface useSourceProps {
   mapId?: string;
+  idPrefix?: string;
   geojson?: object;
   sourceId: string;
   type: string;
@@ -24,13 +25,16 @@ function useSource(props: useSourceProps): useSourceType {
   });
 
   const source = useRef<any>();
+  const sourceId = useRef(
+    props.sourceId || (props.idPrefix ? props.idPrefix : "Source-") + mapHook.componentId
+  );
 
-  useEffect(() => {
+  const createSource = useCallback(() => {
     if (!mapHook.map) return;
 
-    //if (mapHook.map.map.getSource(props.sourceId)) {
-    //  mapHook.map.map.removeSource(props.sourceId);
-    //}
+    if (mapHook.map.map.getSource(sourceId.current)) {
+      mapHook.cleanup();
+    }
 
     mapHook.map?.addSource(
       props.sourceId,
@@ -53,16 +57,26 @@ function useSource(props: useSourceProps): useSourceType {
       false,
       mapHook.componentId
     );
-    source.current = mapHook.map.map.getSource(props.sourceId);
+    source.current = mapHook.map.map.getSource(sourceId.current);
+    console.log(source.current);
+  }, [props, mapHook.map]);
+
+  // cleanup
+  useEffect(() => {
     return () => {
       mapHook.cleanup();
     };
-  }, [props, mapHook.map]);
+  }, []);
+
+  useEffect(() => {
+    if (!mapHook.map) return;
+    createSource();
+  }, [mapHook.map, createSource]);
 
   return {
     map: mapHook.map,
     source: source.current,
-    sourceId: props.sourceId,
+    sourceId: sourceId.current,
     componentId: mapHook.componentId,
     mapHook: mapHook,
   };

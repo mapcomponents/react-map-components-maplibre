@@ -15,7 +15,7 @@ export default storyoptions;
 
 const Template = (args) => {
 	const source = useSource({ ...args });
-
+	console.log(source);
 	return (
 		<>
 		</>
