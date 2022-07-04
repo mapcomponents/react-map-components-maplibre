@@ -28,6 +28,7 @@ export const useSourceExample = Template.bind({});
 useSourceExample.args = {
 	mapId: "map_1",
 	sourceId: "my-source",
-	geojson: wg_geojson
+	data: wg_geojson,
+	type: "geojson",
 }
 

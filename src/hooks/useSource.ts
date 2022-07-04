@@ -13,10 +13,9 @@ type useSourceType = {
 interface useSourceProps {
   mapId?: string;
   idPrefix?: string;
-  geojson?: object;
+  data: object;
   sourceId: string;
   type: string;
-  data: string;
 }
 
 function useSource(props: useSourceProps): useSourceType {
@@ -42,8 +41,8 @@ function useSource(props: useSourceProps): useSourceType {
     mapHook.map?.addSource(
       sourceId.current,
       {
-        type: "geojson",
-        data: props.geojson,
+        type: props.type,
+        data: props.data,
       },
       mapHook.componentId
     );
@@ -61,7 +60,6 @@ function useSource(props: useSourceProps): useSourceType {
     //  mapHook.componentId
     //);
     setSource(mapHook.map.map.getSource(sourceId.current));
-    console.log(source);
   }, [props, mapHook.map]);
 
   // cleanup
