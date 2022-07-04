@@ -40,7 +40,7 @@ function useSource(props: useSourceProps): useSourceType {
     initializedRef.current = true;
 
     mapHook.map?.addSource(
-      props.sourceId,
+      sourceId.current,
       {
         type: "geojson",
         data: props.geojson,
