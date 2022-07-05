@@ -9,7 +9,6 @@ import CustomDirectSelectMode from "./custom-direct-select-mode.js";
 
 import useMap from "../../hooks/useMap";
 
-
 interface MlFeatureEditorProps {
   /**
    * Id of the target MapLibre instance in mapContext
@@ -28,7 +27,7 @@ interface MlFeatureEditorProps {
    * Callback function that is called each time the GeoJson data within has changed within MlFeatureEditor.
    * First parameter is the new GeoJson feature.
    */
-  onChange?: Function
+  onChange?: Function;
   /**
    * Feature editor mode:
    * - "custom_select" edit features
@@ -36,13 +35,13 @@ interface MlFeatureEditorProps {
    * - "draw_point" draw Point
    * - "draw_line_string" draw LineString
    */
-  mode?:string
+  mode?: string;
 }
 
 /**
  * GeoJson Feature editor that allows to create or manipulate GeoJson data
  */
-const MlFeatureEditor = (props:MlFeatureEditorProps) => {
+const MlFeatureEditor = (props: MlFeatureEditorProps) => {
   const draw = useRef<MapboxDraw>();
   const mapHook = useMap({
     mapId: props.mapId,
@@ -55,7 +54,7 @@ const MlFeatureEditor = (props:MlFeatureEditorProps) => {
 
   const [mouseUpTrigger, setMouseUpTrigger] = useState(0);
 
-  const modeChangeHandler = (e:any) => {
+  const modeChangeHandler = (e: any) => {
     console.log("MlFeatureEditor mode change to " + e.mode);
     //setDrawMode(e.mode);
   };
@@ -64,12 +63,12 @@ const MlFeatureEditor = (props:MlFeatureEditorProps) => {
     setMouseUpTrigger(Math.random());
   };
 
+  const touchHandler = () => {
+    setMouseUpTrigger(Math.random());
+  };
+
   useEffect(() => {
-    if (
-      mapHook.map &&
-      !drawToolsInitialized.current
-    ) {
-      
+    if (mapHook.map && !drawToolsInitialized.current) {
       drawToolsInitialized.current = true;
 
       if (
@@ -102,15 +101,14 @@ const MlFeatureEditor = (props:MlFeatureEditorProps) => {
 
       mapHook.map.on("mouseup", mouseUpHandler, mapHook.componentId);
 
+      mapHook.map.on("touchend", touchHandler, mapHook.componentId);
+
       setDrawToolsReady(true);
     }
-  }, [mapHook.map,  props, drawToolsInitialized]);
+  }, [mapHook.map, props, drawToolsInitialized]);
 
   useEffect(() => {
-    if (
-      draw.current &&
-      props.geojson?.geometry
-    ) {
+    if (draw.current && props.geojson?.geometry) {
       draw.current.set({ type: "FeatureCollection", features: [props.geojson] });
     }
   }, [props.geojson, drawToolsReady]);
@@ -132,7 +130,7 @@ const MlFeatureEditor = (props:MlFeatureEditorProps) => {
     }
   }, [props.mode]);
 
-  return (<></>);
-}
+  return <></>;
+};
 
 export default MlFeatureEditor;
