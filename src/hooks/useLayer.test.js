@@ -170,7 +170,7 @@ describe("useLayer hook", () => {
     // useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
     await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
   });
-  it("should deregister 1 event listener 'leave' to the maplibre instance if type is changed during component runtime", async () => {
+  it("should deregister 1 event listener 'hover' to the maplibre instance if type is changed during component runtime", async () => {
     var testAttributes = {
       onHover: () => {},
     };
