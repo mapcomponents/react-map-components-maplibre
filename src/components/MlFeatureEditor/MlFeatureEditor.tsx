@@ -95,7 +95,7 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
   }, [mapHook.map, props, drawToolsInitialized]);
 
   useEffect(() => {
-    if (!mapHook.map) return;
+    if (!mapHook.map || !drawToolsReady) return;
 
     const changeHandler = () => {
       if (draw.current) {
@@ -107,9 +107,9 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
       }
     };
 
-    mapHook.map.on("mouseup", changeHandler, mapHook.componentId);
+    mapHook.map.on("mouseup", changeHandler);
 
-    mapHook.map.on("touchend", changeHandler, mapHook.componentId);
+    mapHook.map.on("touchend", changeHandler);
 
     return () => {
       if (!mapHook.map) return;
