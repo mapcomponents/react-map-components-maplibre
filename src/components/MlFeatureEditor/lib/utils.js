@@ -39,8 +39,7 @@ const drawUtils = {
   getDrawInstance: (map) => {
     for (var i = map._controls.length - 1; i >= 0; i--) {
       if (
-        map._controls[i].options &&
-        map._controls[i].modes.SIMPLE_SELECT === "simple_select"
+        map._controls[i]?.modes?.SIMPLE_SELECT === "simple_select"
       ) {
         return map._controls[i];
       }
