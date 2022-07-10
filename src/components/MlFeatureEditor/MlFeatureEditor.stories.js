@@ -15,11 +15,10 @@ export default storyoptions;
 const Template = (args) => {
   return (
     <MlFeatureEditor
-      debug={true}
+      {...args}
       onChange={(features) => {
         console.log(features);
       }}
-      {...args}
     />
   );
 };
