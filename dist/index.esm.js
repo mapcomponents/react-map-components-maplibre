@@ -11859,7 +11859,9 @@ var drawUtils = {
   },
   getDrawInstance: function getDrawInstance(map) {
     for (var i = map._controls.length - 1; i >= 0; i--) {
-      if (map._controls[i].options && map._controls[i].options.defaultMode === "custom_select") {
+      var _map$_controls$i, _map$_controls$i$mode;
+
+      if (((_map$_controls$i = map._controls[i]) === null || _map$_controls$i === void 0 ? void 0 : (_map$_controls$i$mode = _map$_controls$i.modes) === null || _map$_controls$i$mode === void 0 ? void 0 : _map$_controls$i$mode.SIMPLE_SELECT) === "simple_select") {
         return map._controls[i];
       }
     }
@@ -12143,21 +12145,15 @@ var MlFeatureEditor = function (props) {
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
     });
-    var onChangeRef = useRef(props.onChange);
     var drawToolsInitialized = useRef(false);
     var _a = useState(false), drawToolsReady = _a[0], setDrawToolsReady = _a[1];
-    var _b = useState(0), mouseUpTrigger = _b[0], setMouseUpTrigger = _b[1];
     var modeChangeHandler = function (e) {
         console.log("MlFeatureEditor mode change to " + e.mode);
         //setDrawMode(e.mode);
     };
-    var mouseUpHandler = function () {
-        setMouseUpTrigger(Math.random());
-    };
     useEffect(function () {
         var _a;
-        if (mapHook.map &&
-            !drawToolsInitialized.current) {
+        if (mapHook.map && !drawToolsInitialized.current) {
             drawToolsInitialized.current = true;
             if (mapHook.map.map.style &&
                 mapHook.map.map.getSource("mapbox-gl-draw-cold") &&
@@ -12176,35 +12172,46 @@ var MlFeatureEditor = function (props) {
                     custom_direct_select: DirectSelect,
                 }, MapboxDraw.modes),
             });
-            mapHook.map.on("draw.modechange", modeChangeHandler, mapHook.componentId);
             mapHook.map.addControl(draw.current, "top-left", mapHook.componentId);
-            mapHook.map.on("mouseup", mouseUpHandler, mapHook.componentId);
+            mapHook.map.on("draw.modechange", modeChangeHandler, mapHook.componentId);
             setDrawToolsReady(true);
         }
     }, [mapHook.map, props, drawToolsInitialized]);
     useEffect(function () {
+        if (!mapHook.map || !drawToolsReady)
+            return;
+        var changeHandler = function () {
+            var _a, _b;
+            if (draw.current) {
+                // update drawnFeatures state object
+                if (typeof props.onChange === "function") {
+                    var currentFeatureCollection = (_b = (_a = draw.current).getAll) === null || _b === void 0 ? void 0 : _b.call(_a);
+                    props.onChange(currentFeatureCollection === null || currentFeatureCollection === void 0 ? void 0 : currentFeatureCollection.features);
+                }
+            }
+        };
+        mapHook.map.on("mouseup", changeHandler);
+        mapHook.map.on("touchend", changeHandler);
+        return function () {
+            if (!mapHook.map)
+                return;
+            mapHook.map.map.off("mouseup", changeHandler);
+            mapHook.map.map.off("touchend", changeHandler);
+        };
+    }, [drawToolsReady, mapHook.map]);
+    useEffect(function () {
         var _a;
-        if (draw.current &&
-            ((_a = props.geojson) === null || _a === void 0 ? void 0 : _a.geometry)) {
+        if (draw.current && ((_a = props.geojson) === null || _a === void 0 ? void 0 : _a.geometry)) {
             draw.current.set({ type: "FeatureCollection", features: [props.geojson] });
         }
     }, [props.geojson, drawToolsReady]);
-    useEffect(function () {
-        if (draw.current && mouseUpTrigger) {
-            // update drawnFeatures state object
-            var currentFeatureCollection = draw.current.getAll();
-            if (typeof onChangeRef.current === "function") {
-                onChangeRef.current(currentFeatureCollection.features);
-            }
-        }
-    }, [mouseUpTrigger]);
     useEffect(function () {
         if (props.mode && draw.current) {
             // @ts-ignore
             draw.current.changeMode(props.mode);
         }
     }, [props.mode]);
-    return (React__default.createElement(React__default.Fragment, null));
+    return React__default.createElement(React__default.Fragment, null);
 };
 
 var legalLayerTypes = [
