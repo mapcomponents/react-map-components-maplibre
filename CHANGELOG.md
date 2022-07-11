@@ -1,6 +1,21 @@
 # Change Log
 
 
+## [v0.1.49] - 2022-07-11
+
+### Added
+
+- c119564: add useLayer hook tests
+- 27d9ded: add typescript type definitions
+### Changed
+
+- 9244711: update readme to make it more beginner friendly
+
+### Fixed
+
+- 6b3c223: add touch support to MlFeatureEditor
+- a531174: refactor MlFeatureEditor
+
 ## [v0.1.48] - 2022-06-15
 
 ### Added
