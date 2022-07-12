@@ -1,16 +1,17 @@
 # Change Log
 
-## [v0.1.50] - 2022-07-12
+## [v0.1.51] - 2022-07-12
 
 ### Changed
 
-- 938f665: improve typescript type definitions for MlGeoJsonLayer attributes, useLayer hook props, maplibre reference returned by useMap hook
+- @ 938f665: improve typescript type definitions for MlGeoJsonLayer attributes, useLayer hook props, maplibre reference returned by useMap hook
+- 3349332: improve MlTransitionGeoJsonLayer attribute types
 
 ## [v0.1.49] - 2022-07-11
 
 ### Added
 
-- c119564: add useLayer hook tests
+- @c119564: add useLayer hook tests
 - 27d9ded: add typescript type definitions
 ### Changed
 
