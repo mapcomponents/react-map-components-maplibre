@@ -7,6 +7,7 @@ import useMap from "../../hooks/useMap";
 import { _transitionToGeojson } from "./util/transitionFunctions";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 import { Feature, FeatureCollection } from "@turf/turf";
+import { CircleLayerSpecification, FillLayerSpecification, LineLayerSpecification, MapLayerMouseEvent } from "maplibre-gl";
 
 const msPerStep = 50;
 
@@ -16,18 +17,14 @@ interface MlTransitionGeoJsonLayerProps {
    */
   mapId: string;
   /**
+   * GeoJSON data that is supposed to be rendered by this component.
+   */
+  geojson: Feature | FeatureCollection | undefined;
+  /**
    * Type of the layer that will be added to the MapLibre instance.
    * Possible values: "line", "circle", "fill"
    */
-  type: string;
-  /**
-   * Layout property object, that is passed to the addLayer call.
-   * Possible props depend on the layer type.
-   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
-   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
-   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
-   */
-  layout: any;
+  type?: "fill" | "line" | "circle";
   /**
    * Paint property object, that is passed to the addLayer call.
    * Possible props depend on the layer type.
@@ -35,37 +32,41 @@ interface MlTransitionGeoJsonLayerProps {
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
-  paint: any;
+  paint?: CircleLayerSpecification['paint'] | FillLayerSpecification['paint'] | LineLayerSpecification['layout'];
   /**
-   * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
+   * Layout property object, that is passed to the addLayer call.
+   * Possible props depend on the layer type.
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+   * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
-  defaultPaintOverrides: any;
+  layout?: CircleLayerSpecification['layout'] | FillLayerSpecification['layout'] | LineLayerSpecification['layout'];
   /**
    * Javascript object that is spread into the addLayer commands first parameter.
    */
-  options: any;
+  options?: CircleLayerSpecification | FillLayerSpecification | LineLayerSpecification;
   /**
-   * GeoJSON data that is supposed to be rendered by this component.
+   * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
    */
-  geojson: Feature | FeatureCollection;
+  defaultPaintOverrides?: { circle?: CircleLayerSpecification['paint'], fill?: FillLayerSpecification['paint'], line?: LineLayerSpecification['paint'] };
   /**
    * Id of an existing layer in the mapLibre instance to help specify the layer order
    * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
    */
   insertBeforeLayer: string;
   /**
-   * Click event handler that is executed whenever a geometry rendered by this component is clicked.
-   */
-  onClick: Function;
-  /**
    * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
    */
-  onHover: Function;
+  onHover?: MapLayerMouseEvent;
+  /**
+   * Click event handler that is executed whenever a geometry rendered by this component is clicked.
+   */
+  onClick?: MapLayerMouseEvent;
   /**
    * Leave event handler that is executed whenever a geometry rendered by this component is
    * left/unhovered.
    */
-  onLeave: Function;
+  onLeave?: MapLayerMouseEvent;
   /**
    * Creates transition animation whenever the geojson prop changes.
    * Only works with layer type "line" and LineString GeoJSON data.
