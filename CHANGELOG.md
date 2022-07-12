@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.1.50] - 2022-07-12
+
+### Changed
+
+- 938f665: improve typescript type definitions for MlGeoJsonLayer attributes, useLayer hook props, maplibre reference returned by useMap hook
 
 ## [v0.1.49] - 2022-07-11
 
@@ -20,7 +25,7 @@
 
 ### Added
 
-- 4d53b8a: Merge pull request #17 from mapcomponents/feature/MeasureTool-add-miles-option 
+- 4d53b8a: add miles option to MlMeasureTool
 ### Fixed
 
 - 0082e6d: fix MlMeasureTools typescript transpilation errors
