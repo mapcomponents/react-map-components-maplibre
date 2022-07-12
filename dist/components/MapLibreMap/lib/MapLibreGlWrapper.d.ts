@@ -1,4 +1,5 @@
-import { Map, IControl, MapOptions as MapOptionsType } from "!maplibre-gl";
+import { IControl, MapOptions as MapOptionsType } from "!maplibre-gl";
+import { Map as MapType } from "maplibre-gl";
 declare type EventArgArray = [string, string | Function, Function?];
 declare type LayerState = {
     id: string;
@@ -57,7 +58,7 @@ declare class MapLibreGlWrapper {
     };
     initRegisteredElements: Function;
     addNativeMaplibreFunctionsAndProps: Function;
-    map: Map;
+    map: MapType;
     style: object;
     styleJson: object;
     addLayer: Function;
