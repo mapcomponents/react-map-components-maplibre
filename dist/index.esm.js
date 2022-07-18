@@ -13316,8 +13316,55 @@ function useMediaQuery(queryInput, options = {}) {
 }
 
 /**
-* @component
-*/
+ * Component template
+ *
+ */
+var MlCenterPosition = function (props) {
+    var _a, _b;
+    var mapHook = useMap({
+        mapId: props.mapId,
+        waitForLayer: props.insertBeforeLayer,
+    });
+    var _c = useState(false), locationAccessDenied = _c[0], setLocationAccessDenied = _c[1];
+    var centerCurrentLocation = function () {
+        navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
+    };
+    var getLocationSuccess = useCallback(function (location) {
+        var _a, _b, _c;
+        (_c = (_a = mapHook.map) === null || _a === void 0 ? void 0 : (_b = _a.map).setCenter) === null || _c === void 0 ? void 0 : _c.call(_b, [location.coords.longitude, location.coords.latitude]);
+    }, [mapHook.map]);
+    var getLocationError = function () {
+        console.log("Access of user location denied");
+        setLocationAccessDenied(true);
+    };
+    return React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(Button$2, { sx: __assign({ zIndex: 1002, color: !locationAccessDenied ? props.onColor : props.offColor }, props.style), onClick: centerCurrentLocation, disabled: locationAccessDenied },
+            React__default.createElement(default_1$4, { sx: __assign({}, (((_a = props.style) === null || _a === void 0 ? void 0 : _a.fontSize) ? { fontSize: (_b = props.style) === null || _b === void 0 ? void 0 : _b.fontSize } : {})) }),
+            " "));
+};
+MlCenterPosition.defaultProps = {
+    mapId: undefined,
+    style: {
+        minWidth: "30px",
+        minHeight: "30px",
+        width: "30px",
+        height: "30px",
+        backgroundColor: "#414141",
+        borderRadius: "23%",
+        margin: 0.15,
+        fontSize: "1.3em",
+        ":hover": {
+            backgroundColor: "#515151",
+            color: "#ececec",
+        },
+    },
+    onColor: "#ececec",
+    offColor: "#666",
+};
+
+/**
+ * @component
+ */
 var MlNavigationTools = function (props) {
     var mapHook = useMap({
         mapId: props.mapId,
@@ -13354,16 +13401,14 @@ var MlNavigationTools = function (props) {
     var zoomIn = function () {
         if (!mapHook.map)
             return;
-        if (mapHook.map.map.transform._zoom + 0.5 <=
-            mapHook.map.map.transform._maxZoom) {
+        if (mapHook.map.map.transform._zoom + 0.5 <= mapHook.map.map.transform._maxZoom) {
             mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom + 0.5 });
         }
     };
     var zoomOut = function () {
         if (!mapHook.map)
             return;
-        if (mapHook.map.map.transform._zoom - 0.5 >=
-            mapHook.map.map.transform._minZoom) {
+        if (mapHook.map.map.transform._zoom - 0.5 >= mapHook.map.map.transform._minZoom) {
             mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom - 0.5 });
         }
     };
@@ -13393,11 +13438,17 @@ var MlNavigationTools = function (props) {
             }, backgroundStyle: {
                 boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
             } }),
-        React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { fontSize: mediaIsMobile ? '1.4em' : '1em', fontWeight: 600 }), onClick: adjustPitch }, pitch ? "2D" : "3D"),
-        React__default.createElement(MlFollowGps, { style: __assign({}, (function (_a) {
-                _a.color; var rest = __rest(_a, ["color"]);
-                return rest;
-            })(buttonStyle)) }),
+        React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }), onClick: adjustPitch }, pitch ? "2D" : "3D"),
+        props.showFollowGpsButton &&
+            React__default.createElement(MlFollowGps, { style: __assign({}, (function (_a) {
+                    _a.color; var rest = __rest(_a, ["color"]);
+                    return rest;
+                })(buttonStyle)) }),
+        props.showCenterLocationButton &&
+            React__default.createElement(MlCenterPosition, { style: __assign({}, (function (_a) {
+                    _a.color; var rest = __rest(_a, ["color"]);
+                    return rest;
+                })(buttonStyle)) }),
         React__default.createElement(ButtonGroup$1, { orientation: "vertical", sx: {
                 width: "50px",
                 border: "none",
@@ -13408,6 +13459,11 @@ var MlNavigationTools = function (props) {
                 React__default.createElement(default_1$3, { sx: { fontSize: mediaIsMobile ? "1.5em" : "1.2em" } })),
             React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { color: "#ececec" }), onClick: zoomOut },
                 React__default.createElement(default_1$2, { sx: { fontSize: mediaIsMobile ? "1.5em" : "1.2em" } })))));
+};
+MlNavigationTools.defaultProps = {
+    mapId: undefined,
+    showFollowGpsButton: true,
+    showCenterLocationButton: false,
 };
 
 /**
