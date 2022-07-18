@@ -18,14 +18,14 @@ if [ ! -d "$target_path$component_name" ]; then
 
   mv $target_path$component_name/$template_name.doc.de.md $target_path$component_name/$component_name.doc.de.md
 
-  mv $target_path$component_name/$template_name.js $target_path$component_name/$component_name.js
+  mv $target_path$component_name/$template_name.tsx $target_path$component_name/$component_name.tsx
 
   mv $target_path$component_name/$template_name.meta_.json $target_path$component_name/$component_name.meta_.json
 
   mv $target_path$component_name/$template_name.stories.js $target_path$component_name/$component_name.stories.js
 
   sed -i "s/$template_name/$component_name/g" $target_path$component_name/$component_name.doc.de.md
-  sed -i "s/$template_name/$component_name/g" $target_path$component_name/$component_name.js
+  sed -i "s/$template_name/$component_name/g" $target_path$component_name/$component_name.tsx
   sed -i "s/$template_name/$component_name/g" $target_path$component_name/$component_name.meta_.json
   sed -i "s/$template_name/$component_name/g" $target_path$component_name/$component_name.stories.js
 
