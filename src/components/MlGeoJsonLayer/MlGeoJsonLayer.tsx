@@ -43,7 +43,7 @@ type MlGeoJsonLayerProps = {
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
-  paint?: CircleLayerSpecification['paint'] | FillLayerSpecification['paint'] | LineLayerSpecification['layout'];
+  paint?: CircleLayerSpecification['paint'] | FillLayerSpecification['paint'] | LineLayerSpecification['paint'];
   /**
    * Layout property object, that is passed to the addLayer call.
    * Possible props depend on the layer type.
