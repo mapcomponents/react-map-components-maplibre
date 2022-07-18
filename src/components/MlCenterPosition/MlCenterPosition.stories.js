@@ -1,23 +1,21 @@
 import React from "react";
 
-import MlNavigationTools from "./MlNavigationTools";
+import MlCenterPosition from "./MlCenterPosition";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlNavigationTools",
-  component: MlNavigationTools,
+  title: "MapComponents/MlCenterPosition",
+  component: MlCenterPosition,
   argTypes: {
-    url: {},
-    layer: {},
   },
   decorators: mapContextDecorator,
+  parameters: { docs: { source: { type: 'code' } } }
 };
 export default storyoptions;
 
-const Template = (args) => <MlNavigationTools {...args} />;
+const Template = (args) => <MlCenterPosition />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
-ExampleConfig.args = {
-};
+ExampleConfig.args = {};
