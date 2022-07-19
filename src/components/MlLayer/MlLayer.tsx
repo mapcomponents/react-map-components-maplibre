@@ -24,7 +24,7 @@ interface MlLayerProps {
   /**
    * GeoJSON data that is supposed to be rendered by this component.
    */
-  geojson: Feature | FeatureCollection | undefined;
+  geojson?: Feature | FeatureCollection | undefined;
 }
 
 /**
