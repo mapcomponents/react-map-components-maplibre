@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.1.53] - 2022-07-18
+
+- 1a7ac4e: add more configuration options to MlNavigationTools
+### Changed
+
 ## [v0.1.52] - 2022-07-18
 
 ### Added
