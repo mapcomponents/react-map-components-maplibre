@@ -1,9 +1,16 @@
 # Change Log
 
+## [v0.1.54] - 2022-07-18
+
+### Changed
+
+- ad54e39: add geojson attribute to MlLayer component
+
 ## [v0.1.53] - 2022-07-18
 
-- 1a7ac4e: add more configuration options to MlNavigationTools
 ### Changed
+
+- 1a7ac4e: add more configuration options to MlNavigationTools
 
 ## [v0.1.52] - 2022-07-18
 
