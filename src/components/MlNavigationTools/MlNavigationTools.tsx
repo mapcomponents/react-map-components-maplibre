@@ -21,6 +21,14 @@ interface MlNavigationToolsProps {
    */
   insertBeforeLayer?: string;
   /**
+   * Show 3D button
+   */
+  show3DButton?: boolean;
+  /**
+   * Show zoom button
+   */
+  showZoomButtons?: boolean;
+  /**
    * Show follow GPS button
    */
   showFollowGpsButton?: boolean;
@@ -28,6 +36,10 @@ interface MlNavigationToolsProps {
    * Show center on current position button
    */
   showCenterLocationButton?: boolean;
+  /**
+   * Additional JSX Elements to be rendered below MlNavigationTools buttons
+   */
+  children?: JSX.Element;
 }
 
 /**
@@ -51,12 +63,15 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
     //border: "1px solid #bbb",
     //boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
     margin: 0.15,
-    fontSize: mediaIsMobile ? "1.5em" : "1.2em",
+    fontSize: mediaIsMobile ? "1.4em" : "1.2em",
     ":hover": {
       backgroundColor: "#515151",
     },
     color: "#ececec",
   };
+  const iconStyle = {
+    fontSize: buttonStyle.fontSize,
+  }
 
   useEffect(() => {
     if (!mapHook.map) return;
@@ -122,18 +137,20 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
           boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
         }}
       />
-      <Button
-        sx={{ ...buttonStyle, fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }}
-        onClick={adjustPitch}
-      >
-        {pitch ? "2D" : "3D"}
-      </Button>
-      {props.showFollowGpsButton &&
-      <MlFollowGps style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
-      }
-      {props.showCenterLocationButton &&
-      <MlCenterPosition style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
-      }
+      {props.show3DButton && (
+        <Button
+          sx={{ ...buttonStyle, fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }}
+          onClick={adjustPitch}
+        >
+          {pitch ? "2D" : "3D"}
+        </Button>
+      )}
+      {props.showFollowGpsButton && (
+        <MlFollowGps style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
+      )}
+      {props.showCenterLocationButton && (
+        <MlCenterPosition style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
+      )}
       <ButtonGroup
         orientation="vertical"
         sx={{
@@ -143,21 +160,31 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
           "Button:hover": { border: "none" },
         }}
       >
-        <Button sx={{ ...buttonStyle, color: "#ececec" }} onClick={zoomIn}>
-          <ControlPointIcon sx={{ fontSize: mediaIsMobile ? "1.5em" : "1.2em" }} />
-        </Button>
-        <Button sx={{ ...buttonStyle, color: "#ececec" }} onClick={zoomOut}>
-          <RemoveCircleOutlineIcon sx={{ fontSize: mediaIsMobile ? "1.5em" : "1.2em" }} />
-        </Button>
+        {props.showZoomButtons && (
+          <>
+            <Button sx={{ ...buttonStyle }} onClick={zoomIn}>
+              <ControlPointIcon sx={{...iconStyle}} />
+            </Button>
+            <Button sx={{ ...buttonStyle }} onClick={zoomOut}>
+              <RemoveCircleOutlineIcon  sx={{...iconStyle}} />
+            </Button>
+          </>
+        )}
       </ButtonGroup>
+      {props.children &&
+        React.cloneElement(props.children, {
+          sx: { ...buttonStyle },
+        })}
     </div>
   );
 };
 
 MlNavigationTools.defaultProps = {
   mapId: undefined,
+  show3DButton: true,
   showFollowGpsButton: true,
   showCenterLocationButton: false,
+  showZoomButtons: true,
 };
 
 export default MlNavigationTools;
