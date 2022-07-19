@@ -1,3 +1,4 @@
+import { Feature, FeatureCollection } from "@turf/turf";
 interface MlLayerProps {
     /**
      * Id of the target MapLibre instance in mapContext
@@ -16,6 +17,10 @@ interface MlLayerProps {
      * Javascript object that is passed the addLayer command as first parameter.
      */
     options?: any;
+    /**
+     * GeoJSON data that is supposed to be rendered by this component.
+     */
+    geojson: Feature | FeatureCollection | undefined;
 }
 /**
  * Basic layer component that create a layer in a MapLibre-gl instance and keeps it updated according to it attribute configuration.

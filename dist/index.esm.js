@@ -13483,6 +13483,7 @@ var MlLayer = function (props) {
         idPrefix: 'MlLayer-',
         layerId: props.layerId,
         mapId: props.mapId,
+        geojson: props.geojson,
         options: __assign({ type: "background", paint: {
                 "background-color": "rgba(0,0,0,0)",
             } }, props.options),
