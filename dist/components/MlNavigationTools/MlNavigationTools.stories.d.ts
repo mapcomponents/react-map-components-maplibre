@@ -1,5 +1,10 @@
 export default storyoptions;
-export const ExampleConfig: any;
+export const DefaultConfig: any;
+export const No3DButton: any;
+export const ShowCenterLocationButton: any;
+export const NoZoomButtons: any;
+export const NoFollowGpsButton: any;
+export const CustomButton: any;
 declare namespace storyoptions {
     export const title: string;
     export { MlNavigationTools as component };
@@ -7,7 +12,7 @@ declare namespace storyoptions {
         const url: {};
         const layer: {};
     }
-    export { mapContextDecorator as decorators };
+    export { noNavToolsDecorator as decorators };
 }
 import MlNavigationTools from "./MlNavigationTools";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+import noNavToolsDecorator from "../../decorators/NoNavToolsDecorator";

@@ -9,6 +9,14 @@ interface MlNavigationToolsProps {
      */
     insertBeforeLayer?: string;
     /**
+     * Show 3D button
+     */
+    show3DButton?: boolean;
+    /**
+     * Show zoom button
+     */
+    showZoomButtons?: boolean;
+    /**
      * Show follow GPS button
      */
     showFollowGpsButton?: boolean;
@@ -16,6 +24,10 @@ interface MlNavigationToolsProps {
      * Show center on current position button
      */
     showCenterLocationButton?: boolean;
+    /**
+     * Additional JSX Elements to be rendered below MlNavigationTools buttons
+     */
+    children?: JSX.Element;
 }
 /**
  * @component
@@ -24,8 +36,10 @@ declare const MlNavigationTools: {
     (props: MlNavigationToolsProps): JSX.Element;
     defaultProps: {
         mapId: undefined;
+        show3DButton: boolean;
         showFollowGpsButton: boolean;
         showCenterLocationButton: boolean;
+        showZoomButtons: boolean;
     };
 };
 export default MlNavigationTools;

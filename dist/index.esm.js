@@ -13382,11 +13382,14 @@ var MlNavigationTools = function (props) {
         //border: "1px solid #bbb",
         //boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
         margin: 0.15,
-        fontSize: mediaIsMobile ? "1.5em" : "1.2em",
+        fontSize: mediaIsMobile ? "1.4em" : "1.2em",
         ":hover": {
             backgroundColor: "#515151",
         },
         color: "#ececec",
+    };
+    var iconStyle = {
+        fontSize: buttonStyle.fontSize,
     };
     useEffect(function () {
         if (!mapHook.map)
@@ -13438,32 +13441,36 @@ var MlNavigationTools = function (props) {
             }, backgroundStyle: {
                 boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
             } }),
-        React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }), onClick: adjustPitch }, pitch ? "2D" : "3D"),
-        props.showFollowGpsButton &&
-            React__default.createElement(MlFollowGps, { style: __assign({}, (function (_a) {
-                    _a.color; var rest = __rest(_a, ["color"]);
-                    return rest;
-                })(buttonStyle)) }),
-        props.showCenterLocationButton &&
-            React__default.createElement(MlCenterPosition, { style: __assign({}, (function (_a) {
-                    _a.color; var rest = __rest(_a, ["color"]);
-                    return rest;
-                })(buttonStyle)) }),
+        props.show3DButton && (React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }), onClick: adjustPitch }, pitch ? "2D" : "3D")),
+        props.showFollowGpsButton && (React__default.createElement(MlFollowGps, { style: __assign({}, (function (_a) {
+                _a.color; var rest = __rest(_a, ["color"]);
+                return rest;
+            })(buttonStyle)) })),
+        props.showCenterLocationButton && (React__default.createElement(MlCenterPosition, { style: __assign({}, (function (_a) {
+                _a.color; var rest = __rest(_a, ["color"]);
+                return rest;
+            })(buttonStyle)) })),
         React__default.createElement(ButtonGroup$1, { orientation: "vertical", sx: {
                 width: "50px",
                 border: "none",
                 Button: { minWidth: "20px !important", border: "none", padding: 0 },
                 "Button:hover": { border: "none" },
-            } },
-            React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { color: "#ececec" }), onClick: zoomIn },
-                React__default.createElement(default_1$3, { sx: { fontSize: mediaIsMobile ? "1.5em" : "1.2em" } })),
-            React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { color: "#ececec" }), onClick: zoomOut },
-                React__default.createElement(default_1$2, { sx: { fontSize: mediaIsMobile ? "1.5em" : "1.2em" } })))));
+            } }, props.showZoomButtons && (React__default.createElement(React__default.Fragment, null,
+            React__default.createElement(Button$1, { sx: __assign({}, buttonStyle), onClick: zoomIn },
+                React__default.createElement(default_1$3, { sx: __assign({}, iconStyle) })),
+            React__default.createElement(Button$1, { sx: __assign({}, buttonStyle), onClick: zoomOut },
+                React__default.createElement(default_1$2, { sx: __assign({}, iconStyle) }))))),
+        props.children &&
+            React__default.cloneElement(props.children, {
+                sx: __assign({}, buttonStyle),
+            })));
 };
 MlNavigationTools.defaultProps = {
     mapId: undefined,
+    show3DButton: true,
     showFollowGpsButton: true,
     showCenterLocationButton: false,
+    showZoomButtons: true,
 };
 
 /**
