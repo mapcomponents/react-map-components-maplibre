@@ -1,6 +1,7 @@
 import React from "react";
 
 import useLayer from "../../hooks/useLayer";
+import { Feature, FeatureCollection } from "@turf/turf";
 
 interface MlLayerProps {
   /**
