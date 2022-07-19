@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.1.55] - 2022-07-18
+
+### Changed
+
+- be4fa69: make MlLayer geojson attribute optional
 ## [v0.1.54] - 2022-07-18
 
 ### Changed
