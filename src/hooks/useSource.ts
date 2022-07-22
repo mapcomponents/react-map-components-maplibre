@@ -13,7 +13,9 @@ type useSourceType = {
 interface useSourceProps {
   mapId?: string;
   idPrefix?: string;
-  data: object;
+  data?: object;
+  url?: string;
+  tilesize?: number;
   sourceId: string;
   type: string;
 }
@@ -41,11 +43,14 @@ function useSource(props: useSourceProps): useSourceType {
     mapHook.map?.addSource(
       sourceId.current,
       {
-        type: props.type,
-        data: props.data,
+        ...(props.type === "geojson" ? { type: props.type, data: props.data } : {}),
+        ...(props.type === "vector"
+          ? { type: props.type, tiles: [props.url], tilesize: props.tilesize }
+          : {}),
       },
       mapHook.componentId
     );
+    // example addLayer
     //mapHook.map?.addLayer(
     //  {
     //    id: props.sourceId,
@@ -59,6 +64,25 @@ function useSource(props: useSourceProps): useSourceType {
     //  false,
     //  mapHook.componentId
     //);
+    // example addVector
+    //mapHook.map.addLayer(
+    //  {
+    //    id: props.sourceId,
+    //    type: "line",
+    //    source: props.sourceId,
+    //    minzoom: 0,
+    //    maxzoom: 22,
+    //    "source-layer": "landuse",
+    //    layout: {
+    //      "line-cap": "round",
+    //      "line-join": "round",
+    //    },
+    //    paint: { "line-width": 2, "line-color": "#ff0000" },
+    //  },
+    //  false,
+    //  mapHook.componentId
+    //);
+
     setSource(mapHook.map.map.getSource(sourceId.current));
   }, [props, mapHook.map]);
 

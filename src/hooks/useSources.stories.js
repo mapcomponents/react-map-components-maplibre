@@ -4,6 +4,7 @@ import React from "react"
 import mapContextDecorator from "../decorators/MapContextDecorator";
 import MlGeoJsonLayer from "../components/MlGeoJsonLayer/MlGeoJsonLayer"
 import wg_geojson from "./assets/pointWG.json"
+const vectorUrl = "https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf"
 
 const storyoptions = {
 	title: "Hooks/UseSource",
@@ -23,12 +24,21 @@ const Template = (args) => {
 
 }
 
-export const useSourceExample = Template.bind({});
+export const useGeojsonSourceExample = Template.bind({});
 
-useSourceExample.args = {
+useGeojsonSourceExample.args = {
 	mapId: "map_1",
 	sourceId: "my-source",
 	data: wg_geojson,
 	type: "geojson",
 }
 
+export const useVectorSourceExample = Template.bind({});
+
+useVectorSourceExample.args = {
+	mapId: "map_1",
+	sourceId: "my-source",
+	url: vectorUrl,
+	tilesize: 512,
+	type: "vector",
+}
