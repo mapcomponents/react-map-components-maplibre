@@ -36,7 +36,7 @@ const TreeItem = ({ onSelectCallback, label, layer, isSelected, children }: Tree
   return (
     <div>
       <StyledTreeItem>
-        {children.length > 0 && (
+        {children && (
           <Box className="icon-container" onClick={() => toggleItemOpen(!isOpen)}>
             {isOpen ? <ExpandMore /> : <ChevronRight />}
           </Box>

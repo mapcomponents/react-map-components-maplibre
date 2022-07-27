@@ -63,8 +63,10 @@ const MlLayerTree2 = (props: MlLayerTree2Props) => {
   }, [mapHook.map, props.mapId]);
 
   const onSelect = (value: LayerTreeBranch) => {
-    // You can put whatever here
-    alert("you clicked: " + value.label);
+    if (value.layer) {
+      let visibility = value.layer.props.layout.visibility;
+      value.layer.props.layout.visibility = "visible" ? visibility != "visible" : "none";
+    }
   };
 
   return (

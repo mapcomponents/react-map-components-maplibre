@@ -10,6 +10,23 @@ export interface RecursiveTreeProps {
 }
 
 const RecursiveTree = ({ listMeta, onSelectCallback }: RecursiveTreeProps) => {
+  const createTree = (branch: LayerTreeBranch) =>
+    branch.branches && (
+      <TreeItem
+        id={branch.id}
+        key={branch.id}
+        onSelectCallback={(e: React.MouseEvent<HTMLElement>) => {
+          onSelectCallback(branch);
+        }}
+        isSelected={branch.selected}
+        label={branch.label}
+        layer={branch.layer}
+      >
+        {branch.branches.map((branch: LayerTreeBranch) => {
+          return <Fragment key={branch.id}>{createTree(branch)}</Fragment>;
+        })}
+      </TreeItem>
+    );
 
   return (
     <Box>
