@@ -1,5 +1,7 @@
 import useSource from "./useSource";
-import React from "react"
+import React, { useEffect } from "react"
+import useMap from "./useMap";
+
 
 import mapContextDecorator from "../decorators/MapContextDecorator";
 import MlGeoJsonLayer from "../components/MlGeoJsonLayer/MlGeoJsonLayer"
@@ -17,9 +19,46 @@ export default storyoptions;
 const Template = (args) => {
 	const source = useSource({ ...args });
 	console.log(source);
+  const mapHook = useMap({
+    mapId: args.mapId,
+    waitForLayer: false,
+  });
+
+  useEffect(() => {
+    if (!mapHook.map) return;
+
+    mapHook.map?.addLayer(
+      {
+        id: "layer1",
+        type: "circle",
+        source: args.sourceId,
+        paint: {
+          "circle-radius": 6,
+          "circle-color": "#B42222",
+        },
+      },
+      false,
+      mapHook.componentId
+    );
+    mapHook.map?.addLayer(
+      {
+        id: "layer2",
+        type: "circle",
+        source: args.sourceId,
+        paint: {
+          "circle-radius": 4,
+          "circle-color": "#27b422",
+        },
+      },
+      false,
+      mapHook.componentId
+    );
+
+  }, [mapHook.map])
+
+
 	return (
-		<>
-		</>
+    <></>
 	);
 
 }
