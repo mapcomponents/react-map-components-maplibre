@@ -174,5 +174,16 @@
       "(.stories)\\.(ts|tsx|js)$",
       "/distribution/.*\\.(ts|js)$"
     ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "ignorePatterns": [".gitignore", "node_modules/"]
   }
 }
