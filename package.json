@@ -184,6 +184,6 @@
     "plugins": [
       "@typescript-eslint"
     ],
-    "ignorePatterns": [".gitignore", "node_modules/"]
+    "ignorePatterns": [".gitignore", "**/node_modules/*"]
   }
 }

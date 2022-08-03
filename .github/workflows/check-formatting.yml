@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - uses: sibiraj-s/action-eslint@v2
         with:
-          eslint-args: "--ignore-path=.gitignore --quiet"
+          eslint-args: "--ignore-path=.gitignore **/node_modules/* --quiet"
           extentions: "jx,jsx,ts,tsx"
           annonations: true
 
