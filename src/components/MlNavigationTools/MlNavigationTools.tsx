@@ -40,6 +40,14 @@ interface MlNavigationToolsProps {
    * Additional JSX Elements to be rendered below MlNavigationTools buttons
    */
   children?: JSX.Element;
+  /**
+   *
+   */
+  position?: any;
+  /**
+   *
+   */
+  mobileMargin?: any;
 }
 
 /**
@@ -71,7 +79,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
   };
   const iconStyle = {
     fontSize: buttonStyle.fontSize,
-  }
+  };
 
   useEffect(() => {
     if (!mapHook.map) return;
@@ -119,10 +127,10 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
       style={{
         zIndex: 501,
         position: "absolute",
-        right: mediaIsMobile ? "15px" : "5px",
-        bottom: mediaIsMobile ? "40px" : "20px",
         display: "flex",
         flexDirection: "column",
+        margin: mediaIsMobile ? props.mobileMargin.margin : "",
+        ...props.position,
       }}
     >
       <MlNavigationCompass
@@ -163,10 +171,10 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
         {props.showZoomButtons && (
           <>
             <Button sx={{ ...buttonStyle }} onClick={zoomIn}>
-              <ControlPointIcon sx={{...iconStyle}} />
+              <ControlPointIcon sx={{ ...iconStyle }} />
             </Button>
             <Button sx={{ ...buttonStyle }} onClick={zoomOut}>
-              <RemoveCircleOutlineIcon  sx={{...iconStyle}} />
+              <RemoveCircleOutlineIcon sx={{ ...iconStyle }} />
             </Button>
           </>
         )}
@@ -185,6 +193,13 @@ MlNavigationTools.defaultProps = {
   showFollowGpsButton: true,
   showCenterLocationButton: false,
   showZoomButtons: true,
+  position: {
+    right: "5px",
+    bottom: "20px",
+  },
+  mobileMargin: {
+    margin: "20px 10px 20px 10px",
+  },
 };
 
 export default MlNavigationTools;
