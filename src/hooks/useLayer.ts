@@ -21,6 +21,7 @@ interface useLayerProps {
   insertBeforeLayer?: string;
   insertBeforeFirstSymbolLayer?: boolean;
   geojson?: object;
+  source?: object;
   options: LayerSpecification;
   onHover?: Function;
   onClick?: Function;
@@ -65,17 +66,29 @@ function useLayer(props: useLayerProps): useLayerType {
     if (mapHook.map.map.getSource(layerId.current)) {
       mapHook.map.map.removeSource(layerId.current);
     }
+
+    if (typeof props.source === "string") {
+      if (props.source === "" || !mapHook.map.map.getSource(props.source)) {
+        return;
+      }
+    }
+
     initializedRef.current = true;
 
     mapHook.map.addLayer(
       {
         ...props.options,
-        ...(props.geojson
+        ...(props.geojson && !props.source
           ? {
               source: {
                 type: "geojson",
                 data: props.geojson,
               },
+            }
+          : {}),
+        ...(props.source
+          ? {
+              source: props.source,
             }
           : {}),
         id: layerId.current,
@@ -140,6 +153,32 @@ function useLayer(props: useLayerProps): useLayerType {
     //@ts-ignore setData only exists on GeoJsonSource
     mapHook.map.map.getSource(layerId.current)?.setData?.(props.geojson);
   }, [props.geojson, mapHook.map, props.options.type]);
+
+  useEffect(() => {
+    if (
+      !mapHook.map ||
+      !mapHook.map?.map?.getLayer?.(layerId.current) ||
+      !initializedRef.current ||
+      typeof props.source !== "string"
+    )
+      return;
+
+    let _onSourceDataHandler = () => {
+      if (
+        !initializedRef.current &&
+        typeof props.source === "string" &&
+        mapHook.map?.map?.getSource(props.source)
+      ) {
+        createLayer();
+      }
+    };
+
+    mapHook.map.map.on("sourcedata", _onSourceDataHandler);
+
+    return () => {
+      mapHook.map?.map?.off?.("sourcedata", _onSourceDataHandler);
+    };
+  }, [props.source, mapHook.map]);
 
   useEffect(() => {
     if (
