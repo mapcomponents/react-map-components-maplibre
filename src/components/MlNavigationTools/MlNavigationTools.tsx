@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import Box from "@mui/material/Box";
 
 import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
 import MlFollowGps from "../MlFollowGps/MlFollowGps";
@@ -41,13 +42,9 @@ interface MlNavigationToolsProps {
    */
   children?: JSX.Element;
   /**
-   *
+   * Style attribute for NavigationTools container
    */
-  position?: any;
-  /**
-   *
-   */
-  mobileMargin?: any;
+  sx?: any;
 }
 
 /**
@@ -123,14 +120,14 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
   };
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         zIndex: 501,
         position: "absolute",
         display: "flex",
         flexDirection: "column",
-        margin: mediaIsMobile ? props.mobileMargin.margin : "",
-        ...props.position,
+        margin: mediaIsMobile ? "20px 10px 20px 10px" : "",
+        ...props.sx,
       }}
     >
       <MlNavigationCompass
@@ -183,7 +180,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
         React.cloneElement(props.children, {
           sx: { ...buttonStyle },
         })}
-    </div>
+    </Box>
   );
 };
 
@@ -193,12 +190,9 @@ MlNavigationTools.defaultProps = {
   showFollowGpsButton: true,
   showCenterLocationButton: false,
   showZoomButtons: true,
-  position: {
+  sx: {
     right: "5px",
     bottom: "20px",
-  },
-  mobileMargin: {
-    margin: "20px 10px 20px 10px",
   },
 };
 
