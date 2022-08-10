@@ -26,7 +26,7 @@ const decorators = [
             sx={{ top: "10px", right: "5px" }}
             showZoomButtons={false}
             mapId="map_1"
-          ></MlNavgiationTools>
+          />
         </MapComponentsProvider>
       </ThemeProvider>
     </div>
