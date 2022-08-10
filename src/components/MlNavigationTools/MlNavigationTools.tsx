@@ -4,6 +4,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Box from "@mui/material/Box";
+import { SxProps } from "@mui/material";
 
 import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
 import MlFollowGps from "../MlFollowGps/MlFollowGps";
@@ -44,7 +45,7 @@ interface MlNavigationToolsProps {
   /**
    * Style attribute for NavigationTools container
    */
-  sx?: any;
+  sx?: SxProps;
 }
 
 /**
