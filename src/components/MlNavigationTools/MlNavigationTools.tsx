@@ -127,7 +127,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
         position: "absolute",
         display: "flex",
         flexDirection: "column",
-        margin: mediaIsMobile ? "20px 10px 20px 10px" : "",
+        ...(mediaIsMobile ? { margin: "20px 10px 20px 10px" } : {}),
         ...props.sx,
       }}
     >
