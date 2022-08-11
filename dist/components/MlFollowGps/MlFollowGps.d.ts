@@ -1,3 +1,5 @@
+import { SxProps } from "@mui/material";
+import { CircleLayerSpecification, FillLayerSpecification } from "maplibre-gl";
 interface MlFollowGpsProps {
     /**
      * Id of the target MapLibre instance in mapContext
@@ -23,11 +25,27 @@ interface MlFollowGpsProps {
      */
     showAccuracyCircle?: boolean;
     /**
-     * position circle paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the accuracy circle.
+     * Use the MapLibre.flyTo function to center the map to the current users position if true.
+     * Otherwise the MapLibre.setCenter function is used.
+     */
+    useFlyTo?: boolean;
+    /**
+     * Center map to current position once updated location data is recieved.
+     * "false" will center the map once on component activation and then display the updated user location on the map.
+     */
+    centerUserPosition?: boolean;
+    /**
+     * Orientation cone paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the orientation cone polygon.
      * Use any available paint prop from layer type "fill".
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
      */
-    circlePaint?: any;
+    orientationConePaint?: FillLayerSpecification["paint"];
+    /**
+     * Position circle paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the position circle.
+     * Use any available paint prop from layer type "circle".
+     * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
+     */
+    circlePaint?: CircleLayerSpecification["paint"];
     /**
      * Active button font color
      */
@@ -37,15 +55,15 @@ interface MlFollowGpsProps {
      */
     offColor?: string;
     /**
-     * Accuracy paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the accuracy circle.
+     * Accuracy paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the accuracy polygon.
      * Use any available paint prop from layer type "fill".
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
      */
-    accuracyPaint?: any;
+    accuracyPaint?: FillLayerSpecification["paint"];
     /**
      * CSS style object that is applied to the button component
      */
-    style?: any;
+    buttonSx?: SxProps | any;
 }
 /**
  * Adds a button that makes the map follow the users GPS position using
@@ -56,7 +74,7 @@ declare const MlFollowGps: {
     (props: MlFollowGpsProps): JSX.Element;
     defaultProps: {
         mapId: undefined;
-        style: {
+        buttonSx: {
             minWidth: string;
             minHeight: string;
             width: string;
@@ -75,6 +93,8 @@ declare const MlFollowGps: {
         showAccuracyCircle: boolean;
         showUserLocation: boolean;
         showOrientation: boolean;
+        centerUserPosition: boolean;
+        useFlyTo: boolean;
     };
 };
 export default MlFollowGps;

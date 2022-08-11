@@ -20,7 +20,7 @@ interface MlLayerProps {
     /**
      * GeoJSON data that is supposed to be rendered by this component.
      */
-    geojson: Feature | FeatureCollection | undefined;
+    geojson?: Feature | FeatureCollection | undefined;
 }
 /**
  * Basic layer component that create a layer in a MapLibre-gl instance and keeps it updated according to it attribute configuration.

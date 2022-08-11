@@ -1,3 +1,4 @@
+import { SxProps } from "@mui/material";
 interface MlNavigationToolsProps {
     /**
      * Id of the target MapLibre instance in mapContext
@@ -28,6 +29,10 @@ interface MlNavigationToolsProps {
      * Additional JSX Elements to be rendered below MlNavigationTools buttons
      */
     children?: JSX.Element;
+    /**
+     * Style attribute for NavigationTools container
+     */
+    sx?: SxProps;
 }
 /**
  * @component
@@ -40,6 +45,10 @@ declare const MlNavigationTools: {
         showFollowGpsButton: boolean;
         showCenterLocationButton: boolean;
         showZoomButtons: boolean;
+        sx: {
+            right: string;
+            bottom: string;
+        };
     };
 };
 export default MlNavigationTools;

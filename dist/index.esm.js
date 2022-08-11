@@ -4414,7 +4414,7 @@ function getModalUtilityClass(slot) {
 }
 generateUtilityClasses('MuiModal', ['root', 'hidden']);
 
-const _excluded$r = ["BackdropComponent", "BackdropProps", "children", "classes", "className", "closeAfterTransition", "component", "components", "componentsProps", "container", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "manager", "onBackdropClick", "onClose", "onKeyDown", "open", "theme", "onTransitionEnter", "onTransitionExited"];
+const _excluded$s = ["BackdropComponent", "BackdropProps", "children", "classes", "className", "closeAfterTransition", "component", "components", "componentsProps", "container", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "manager", "onBackdropClick", "onClose", "onKeyDown", "open", "theme", "onTransitionEnter", "onTransitionExited"];
 
 const useUtilityClasses$e = ownerState => {
   const {
@@ -4486,7 +4486,7 @@ const ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props
     onTransitionEnter,
     onTransitionExited
   } = props,
-        other = _objectWithoutPropertiesLoose(props, _excluded$r);
+        other = _objectWithoutPropertiesLoose(props, _excluded$s);
 
   const [exited, setExited] = React.useState(true);
   const modal = React.useRef({});
@@ -5688,7 +5688,7 @@ const styleFunctionSx = unstable_createStyleFunctionSx();
 styleFunctionSx.filterProps = ['sx'];
 var defaultStyleFunctionSx = styleFunctionSx;
 
-const _excluded$q = ["sx"];
+const _excluded$r = ["sx"];
 
 const splitProps = props => {
   const result = {
@@ -5709,7 +5709,7 @@ function extendSxProp(props) {
   const {
     sx: inSx
   } = props,
-        other = _objectWithoutPropertiesLoose(props, _excluded$q);
+        other = _objectWithoutPropertiesLoose(props, _excluded$r);
 
   const {
     systemProps,
@@ -5738,7 +5738,7 @@ function extendSxProp(props) {
   });
 }
 
-const _excluded$p = ["values", "unit", "step"];
+const _excluded$q = ["values", "unit", "step"];
 
 const sortBreakpointsValues = values => {
   const breakpointsAsArray = Object.keys(values).map(key => ({
@@ -5774,7 +5774,7 @@ function createBreakpoints(breakpoints) {
     unit = 'px',
     step = 5
   } = breakpoints,
-        other = _objectWithoutPropertiesLoose(breakpoints, _excluded$p);
+        other = _objectWithoutPropertiesLoose(breakpoints, _excluded$q);
 
   const sortedValues = sortBreakpointsValues(values);
   const keys = Object.keys(sortedValues);
@@ -5866,7 +5866,7 @@ function createSpacing(spacingInput = 8) {
   return spacing;
 }
 
-const _excluded$o = ["breakpoints", "palette", "spacing", "shape"];
+const _excluded$p = ["breakpoints", "palette", "spacing", "shape"];
 
 function createTheme$1(options = {}, ...args) {
   const {
@@ -5875,7 +5875,7 @@ function createTheme$1(options = {}, ...args) {
     spacing: spacingInput,
     shape: shapeInput = {}
   } = options,
-        other = _objectWithoutPropertiesLoose(options, _excluded$o);
+        other = _objectWithoutPropertiesLoose(options, _excluded$p);
 
   const breakpoints = createBreakpoints(breakpointsInput);
   const spacing = createSpacing(spacingInput);
@@ -5926,6 +5926,59 @@ const systemDefaultTheme$1 = createTheme$1();
 
 function useTheme$1(defaultTheme = systemDefaultTheme$1) {
   return useTheme$2(defaultTheme);
+}
+
+const _excluded$o = ["className", "component"];
+function createBox(options = {}) {
+  const {
+    defaultTheme,
+    defaultClassName = 'MuiBox-root',
+    generateClassName,
+    styleFunctionSx = defaultStyleFunctionSx
+  } = options;
+  const BoxRoot = styled$2('div')(styleFunctionSx);
+  const Box = /*#__PURE__*/React.forwardRef(function Box(inProps, ref) {
+    const theme = useTheme$1(defaultTheme);
+
+    const _extendSxProp = extendSxProp(inProps),
+          {
+      className,
+      component = 'div'
+    } = _extendSxProp,
+          other = _objectWithoutPropertiesLoose(_extendSxProp, _excluded$o);
+
+    return /*#__PURE__*/jsxRuntime.exports.jsx(BoxRoot, _extends$3({
+      as: component,
+      ref: ref,
+      className: clsx(className, generateClassName ? generateClassName(defaultClassName) : defaultClassName),
+      theme: theme
+    }, other));
+  });
+  process.env.NODE_ENV !== "production" ? Box.propTypes
+  /* remove-proptypes */
+  = {
+    // ----------------------------- Warning --------------------------------
+    // | These PropTypes are generated from the TypeScript type definitions |
+    // |     To update them edit the d.ts file and run "yarn proptypes"     |
+    // ----------------------------------------------------------------------
+
+    /**
+     * @ignore
+     */
+    children: PropTypes.node,
+
+    /**
+     * The component used for the root node.
+     * Either a string to use a HTML element or a component.
+     */
+    component: PropTypes.elementType,
+
+    /**
+     * @ignore
+     */
+    sx: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.func])
+  } : void 0;
+  return Box;
 }
 
 const _excluded$n = ["variant"];
@@ -7199,8 +7252,8 @@ function createTheme(options = {}, ...args) {
   return muiTheme;
 }
 
-const defaultTheme = createTheme();
-var defaultTheme$1 = defaultTheme;
+const defaultTheme$1 = createTheme();
+var defaultTheme$2 = defaultTheme$1;
 
 function useThemeProps({
   props,
@@ -7209,13 +7262,13 @@ function useThemeProps({
   return useThemeProps$1({
     props,
     name,
-    defaultTheme: defaultTheme$1
+    defaultTheme: defaultTheme$2
   });
 }
 
 const rootShouldForwardProp = prop => shouldForwardProp(prop) && prop !== 'classes';
 const styled = createStyled({
-  defaultTheme: defaultTheme$1,
+  defaultTheme: defaultTheme$2,
   rootShouldForwardProp
 });
 var styled$1 = styled;
@@ -12492,15 +12545,24 @@ var MlFollowGps = function (props) {
     var _e = useState(false), locationAccessDenied = _e[0], setLocationAccessDenied = _e[1];
     var _f = useState(), accuracyGeoJson = _f[0], setAccuracyGeoJson = _f[1];
     var _g = useState(0), deviceOrientation = _g[0], setDeviceOrientation = _g[1];
+    var initiallyCentered = useRef(false);
     var getLocationSuccess = useCallback(function (pos) {
         if (!mapHook.map)
             return;
-        mapHook.map.map.flyTo({
-            center: [pos.coords.longitude, pos.coords.latitude],
-            zoom: 18,
-            speed: 1,
-            curve: 1,
-        });
+        if ((!props.centerUserPosition && !initiallyCentered.current) || props.centerUserPosition) {
+            if (props.useFlyTo) {
+                mapHook.map.map.flyTo({
+                    center: [pos.coords.longitude, pos.coords.latitude],
+                    zoom: 18,
+                    speed: 1,
+                    curve: 1,
+                });
+            }
+            else {
+                mapHook.map.map.setCenter([pos.coords.longitude, pos.coords.latitude]);
+            }
+            initiallyCentered.current = true;
+        }
         if (!props.showUserLocation)
             return;
         var geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
@@ -12536,6 +12598,9 @@ var MlFollowGps = function (props) {
                 window.removeEventListener("deviceorientation", _handleOrientation_1);
             };
         }
+        else {
+            initiallyCentered.current = false;
+        }
         return;
     }, [isFollowed]);
     useEffect(function () {
@@ -12551,22 +12616,18 @@ var MlFollowGps = function (props) {
     }, [mapHook.map, isFollowed, getLocationSuccess]);
     return (React__default.createElement(React__default.Fragment, null,
         isFollowed && userLocationGeoJson && (React__default.createElement(MlGeoJsonLayer, { geojson: accuracyGeoJson, type: "fill", paint: __assign({ "fill-color": "#cbd300", "fill-opacity": 0.3 }, props.accuracyPaint), insertBeforeLayer: props.insertBeforeLayer })),
-        isFollowed && orientationCone && (React__default.createElement(MlGeoJsonLayer, { geojson: orientationCone, type: "fill", paint: {
-                "fill-color": "#0000ff",
-                "fill-antialias": false,
-                "fill-opacity": 0.3,
-            }, insertBeforeLayer: props.insertBeforeLayer })),
+        isFollowed && orientationCone && (React__default.createElement(MlGeoJsonLayer, { geojson: orientationCone, type: "fill", paint: __assign({ "fill-color": "#0000ff", "fill-antialias": false, "fill-opacity": 0.3 }, props.orientationConePaint), insertBeforeLayer: props.insertBeforeLayer })),
         isFollowed && userLocationGeoJson && (React__default.createElement(MlGeoJsonLayer, { geojson: userLocationGeoJson, type: "circle", paint: __assign({ "circle-color": "#009ee0", "circle-radius": 5, "circle-stroke-color": "#fafaff", "circle-stroke-width": 1 }, props.circlePaint), insertBeforeLayer: props.insertBeforeLayer })),
-        React__default.createElement(Button$2, { sx: __assign({ zIndex: 1002, color: isFollowed ? props.onColor : props.offColor }, props.style), disabled: locationAccessDenied, onClick: function () {
+        React__default.createElement(Button$2, { sx: __assign({ zIndex: 1002, color: isFollowed ? props.onColor : props.offColor }, props.buttonSx), disabled: locationAccessDenied, onClick: function () {
                 setIsFollowed(!isFollowed);
             } },
             " ",
-            React__default.createElement(default_1$4, { sx: __assign({}, (((_a = props.style) === null || _a === void 0 ? void 0 : _a.fontSize) ? { fontSize: (_b = props.style) === null || _b === void 0 ? void 0 : _b.fontSize } : {})) }),
+            React__default.createElement(default_1$4, { sx: __assign({}, (((_a = props.buttonSx) === null || _a === void 0 ? void 0 : _a.fontSize) ? { fontSize: (_b = props.buttonSx) === null || _b === void 0 ? void 0 : _b.fontSize } : {})) }),
             " ")));
 };
 MlFollowGps.defaultProps = {
     mapId: undefined,
-    style: {
+    buttonSx: {
         minWidth: "30px",
         minHeight: "30px",
         width: "30px",
@@ -12585,6 +12646,8 @@ MlFollowGps.defaultProps = {
     showAccuracyCircle: true,
     showUserLocation: true,
     showOrientation: true,
+    centerUserPosition: true,
+    useFlyTo: false,
 };
 
 var MlImageMarkerLayer = function (props) {
@@ -13041,6 +13104,29 @@ var _default$2 = (0, _createSvgIcon$2.default)( /*#__PURE__*/(0, _jsxRuntime$2.j
 
 default_1$2 = RemoveCircleOutline.default = _default$2;
 
+function useTheme() {
+  const theme = useTheme$1(defaultTheme$2);
+
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useDebugValue(theme);
+  }
+
+  return theme;
+}
+
+const defaultTheme = createTheme();
+/**
+ * @ignore - do not document.
+ */
+
+const Box = createBox({
+  defaultTheme,
+  defaultClassName: 'MuiBox-root',
+  generateClassName: ClassNameGenerator$1.generate
+});
+var Box$1 = Box;
+
 function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
 
 var SvgRotateRight = function SvgRotateRight(props) {
@@ -13424,14 +13510,7 @@ var MlNavigationTools = function (props) {
         }
         mapHook.map.map.easeTo({ pitch: targetPitch });
     };
-    return (React__default.createElement("div", { style: {
-            zIndex: 501,
-            position: "absolute",
-            right: mediaIsMobile ? "15px" : "5px",
-            bottom: mediaIsMobile ? "40px" : "20px",
-            display: "flex",
-            flexDirection: "column",
-        } },
+    return (React__default.createElement(Box$1, { sx: __assign(__assign({ zIndex: 501, position: "absolute", display: "flex", flexDirection: "column" }, (mediaIsMobile ? { margin: "20px 10px 20px 10px" } : {})), props.sx) },
         React__default.createElement(MlNavigationCompass, { style: {
                 width: "31px",
                 position: "relative",
@@ -13442,7 +13521,7 @@ var MlNavigationTools = function (props) {
                 boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
             } }),
         props.show3DButton && (React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }), onClick: adjustPitch }, pitch ? "2D" : "3D")),
-        props.showFollowGpsButton && (React__default.createElement(MlFollowGps, { style: __assign({}, (function (_a) {
+        props.showFollowGpsButton && (React__default.createElement(MlFollowGps, { buttonSx: __assign({}, (function (_a) {
                 _a.color; var rest = __rest(_a, ["color"]);
                 return rest;
             })(buttonStyle)) })),
@@ -13471,6 +13550,10 @@ MlNavigationTools.defaultProps = {
     showFollowGpsButton: true,
     showCenterLocationButton: false,
     showZoomButtons: true,
+    sx: {
+        right: "5px",
+        bottom: "20px",
+    },
 };
 
 /**
@@ -14307,17 +14390,6 @@ var MlTransitionGeoJsonLayer = function (props) {
     return (React__default.createElement(React__default.Fragment, null,
         React__default.createElement(MlGeoJsonLayer, __assign({}, restProps, { geojson: displayGeojson }))));
 };
-
-function useTheme() {
-  const theme = useTheme$1(defaultTheme$1);
-
-  if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useDebugValue(theme);
-  }
-
-  return theme;
-}
 
 function getPaperUtilityClass(slot) {
   return generateUtilityClass('MuiPaper', slot);
