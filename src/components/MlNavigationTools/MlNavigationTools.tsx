@@ -152,7 +152,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
         </Button>
       )}
       {props.showFollowGpsButton && (
-        <MlFollowGps style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
+        <MlFollowGps buttonSx={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
       )}
       {props.showCenterLocationButton && (
         <MlCenterPosition style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />

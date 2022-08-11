@@ -6,7 +6,7 @@ import { Button, SxProps } from "@mui/material";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 
 import { point, circle, lineArc, Feature, Point } from "@turf/turf";
-import { CirclePaintProps, FillPaintProps } from "maplibre-gl";
+import { CircleLayerSpecification, FillLayerSpecification } from "maplibre-gl";
 
 interface MlFollowGpsProps {
   /**
@@ -33,7 +33,7 @@ interface MlFollowGpsProps {
    */
   showAccuracyCircle?: boolean;
   /**
-   * Use the MapLibre.flyTo function to center the map to the current users position if true. 
+   * Use the MapLibre.flyTo function to center the map to the current users position if true.
    * Otherwise the MapLibre.setCenter function is used.
    */
   useFlyTo?: boolean;
@@ -47,13 +47,13 @@ interface MlFollowGpsProps {
    * Use any available paint prop from layer type "fill".
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
-  orientationConePaint?: FillPaintProps;
+  orientationConePaint?: FillLayerSpecification["paint"];
   /**
    * Position circle paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the position circle.
    * Use any available paint prop from layer type "circle".
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
    */
-  circlePaint?: CirclePaintProps;
+  circlePaint?: CircleLayerSpecification["paint"];
   /**
    * Active button font color
    */
@@ -67,11 +67,11 @@ interface MlFollowGpsProps {
    * Use any available paint prop from layer type "fill".
    * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
    */
-  accuracyPaint?: FillPaintProps;
+  accuracyPaint?: FillLayerSpecification["paint"];
   /**
    * CSS style object that is applied to the button component
    */
-  buttonSx?: SxProps;
+  buttonSx?: SxProps | any;
 }
 
 /**
@@ -254,7 +254,7 @@ MlFollowGps.defaultProps = {
   showUserLocation: true,
   showOrientation: true,
   centerUserPosition: true,
-  useFlyTo: false
+  useFlyTo: false,
 };
 
 export default MlFollowGps;
