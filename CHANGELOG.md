@@ -1,5 +1,16 @@
 # Change Log
 
+## [v0.1.56] - 2022-08-11
+
+### Added
+
+- f72292b: add centerUserPosition option flag to MlFollowGps to prevent constant recentering of the map to the users current position
+- f72292b: add useFlyTo option flag to MlFollowGps to allow choosing between flyTo or setCenter as map centering function
+- f72292b: add orientationConePaint option to MlFollowGps to allow overriding the orientation cone paint layer paint properties
+
+### Changed
+- f72292b: rename MlFollowGps style option to buttonSx
+- 412c363: wrap MlNavigationTools in a @MUI Box component and expose the sx property as MlNavigationTools option
 ## [v0.1.55] - 2022-07-18
 
 ### Changed
