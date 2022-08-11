@@ -3,6 +3,8 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import Box from "@mui/material/Box";
+import { SxProps } from "@mui/material";
 
 import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
 import MlFollowGps from "../MlFollowGps/MlFollowGps";
@@ -40,6 +42,10 @@ interface MlNavigationToolsProps {
    * Additional JSX Elements to be rendered below MlNavigationTools buttons
    */
   children?: JSX.Element;
+  /**
+   * Style attribute for NavigationTools container
+   */
+  sx?: SxProps;
 }
 
 /**
@@ -71,7 +77,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
   };
   const iconStyle = {
     fontSize: buttonStyle.fontSize,
-  }
+  };
 
   useEffect(() => {
     if (!mapHook.map) return;
@@ -115,14 +121,14 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
   };
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         zIndex: 501,
         position: "absolute",
-        right: mediaIsMobile ? "15px" : "5px",
-        bottom: mediaIsMobile ? "40px" : "20px",
         display: "flex",
         flexDirection: "column",
+        ...(mediaIsMobile ? { margin: "20px 10px 20px 10px" } : {}),
+        ...props.sx,
       }}
     >
       <MlNavigationCompass
@@ -163,10 +169,10 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
         {props.showZoomButtons && (
           <>
             <Button sx={{ ...buttonStyle }} onClick={zoomIn}>
-              <ControlPointIcon sx={{...iconStyle}} />
+              <ControlPointIcon sx={{ ...iconStyle }} />
             </Button>
             <Button sx={{ ...buttonStyle }} onClick={zoomOut}>
-              <RemoveCircleOutlineIcon  sx={{...iconStyle}} />
+              <RemoveCircleOutlineIcon sx={{ ...iconStyle }} />
             </Button>
           </>
         )}
@@ -175,7 +181,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
         React.cloneElement(props.children, {
           sx: { ...buttonStyle },
         })}
-    </div>
+    </Box>
   );
 };
 
@@ -185,6 +191,10 @@ MlNavigationTools.defaultProps = {
   showFollowGpsButton: true,
   showCenterLocationButton: false,
   showZoomButtons: true,
+  sx: {
+    right: "5px",
+    bottom: "20px",
+  },
 };
 
 export default MlNavigationTools;

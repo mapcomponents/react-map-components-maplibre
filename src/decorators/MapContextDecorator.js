@@ -22,10 +22,11 @@ const decorators = [
             }}
             mapId="map_1"
           />
-          <MlNavgiationTools 
-          mapId="map_1">
-
-          </MlNavgiationTools>
+          <MlNavgiationTools
+            sx={{ top: "10px", right: "5px" }}
+            showZoomButtons={false}
+            mapId="map_1"
+          />
         </MapComponentsProvider>
       </ThemeProvider>
     </div>
