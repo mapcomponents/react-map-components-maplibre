@@ -34,7 +34,19 @@ const Template = (args) => {
     },
     insertBeforeLayer: false,
   });
-
+  useLayer({
+    mapId: args.mapId,
+    layerId: "layer2",
+    source: source?.id ? source.id : "",
+    options: {
+      type: "circle",
+      paint: {
+        "circle-radius": 2,
+        "circle-color": "green",
+      },
+    },
+    insertBeforeLayer: false,
+  });
   return <></>;
 };
 
