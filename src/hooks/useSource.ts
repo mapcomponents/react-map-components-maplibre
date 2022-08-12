@@ -35,14 +35,9 @@ function useSource(props: useSourceProps): useSourceType {
     }
 
     initializedRef.current = true;
-
-    mapHook.map?.addSource(
-      sourceId.current,
-      {
-        ...props.source,
-      },
-      mapHook.componentId
-    );
+    mapHook.map?.addSource(sourceId.current, {
+      ...props.source,
+    });
 
     setSource(mapHook.map.map.getSource(sourceId.current));
   }, [props, mapHook.map]);
@@ -51,7 +46,17 @@ function useSource(props: useSourceProps): useSourceType {
   useEffect(() => {
     return () => {
       initializedRef.current = false;
-      mapHook.cleanup();
+      function _cleanupEventually() {
+        if (mapHook.mapRef) {
+          const used = mapHook.mapRef.map.style.sourceCaches[sourceId.current].used;
+          if (!used) {
+            mapHook.mapRef.map.removeSource(sourceId.current);
+          } else {
+            setTimeout(_cleanupEventually, 1000);
+          }
+        }
+      }
+      _cleanupEventually();
     };
   }, []);
 
