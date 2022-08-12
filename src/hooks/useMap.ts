@@ -6,6 +6,7 @@ import MapLibreGlWrapper, { LayerState } from "../components/MapLibreMap/lib/Map
 
 type useMapType = {
   map: MapLibreGlWrapper | undefined;
+  mapRef: MapLibreGlWrapper | undefined;
   mapIsReady: boolean;
   componentId: string;
   layers: (LayerState | undefined)[];
@@ -30,7 +31,7 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
   });
 
   const initializedRef = useRef(false);
-  const mapRef: MutableRefObject<MapLibreGlWrapper | undefined> = useRef(undefined);
+  const mapRef = useRef<MapLibreGlWrapper>();
 
   const componentId = useRef(uuidv4());
 
@@ -48,7 +49,7 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
     return () => {
       cleanup();
       setMapIsReady(false);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -78,6 +79,7 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 
   return {
     map: map,
+    mapRef: mapRef.current,
     mapIsReady,
     componentId: componentId.current,
     layers: mapState.layers,
