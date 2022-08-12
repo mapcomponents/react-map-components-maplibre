@@ -157,27 +157,30 @@ function useLayer(props: useLayerProps): useLayerType {
   useEffect(() => {
     if (
       !mapHook.map ||
-      !mapHook.map?.map?.getLayer?.(layerId.current) ||
-      !initializedRef.current ||
+      !!mapHook.map?.map?.getLayer?.(layerId.current) ||
+      initializedRef.current ||
       typeof props.source !== "string"
     )
       return;
+    if (mapHook.map?.map?.getSource(props.source)) {
+      createLayer();
+      return;
+    } else {
+      let _onSourceDataHandler = () => {
+        if (
+          !initializedRef.current &&
+          typeof props.source === "string" &&
+          mapHook.map?.map?.getSource(props.source)
+        ) {
+          createLayer();
+        }
+      };
+      mapHook.map.map.on("sourcedata", _onSourceDataHandler);
 
-    let _onSourceDataHandler = () => {
-      if (
-        !initializedRef.current &&
-        typeof props.source === "string" &&
-        mapHook.map?.map?.getSource(props.source)
-      ) {
-        createLayer();
-      }
-    };
-
-    mapHook.map.map.on("sourcedata", _onSourceDataHandler);
-
-    return () => {
-      mapHook.map?.map?.off?.("sourcedata", _onSourceDataHandler);
-    };
+      return () => {
+        mapHook.map?.map?.off?.("sourcedata", _onSourceDataHandler);
+      };
+    }
   }, [props.source, mapHook.map]);
 
   useEffect(() => {
