@@ -6,18 +6,14 @@ import { SourceSpecification } from "maplibre-gl";
 type useSourceType = {
   map: MapLibreGlWrapper | undefined;
   source: SourceSpecification;
-  sourceId: string;
   componentId: string;
   mapHook: useMapType;
 };
 interface useSourceProps {
   mapId?: string;
   idPrefix?: string;
-  data?: object;
-  url?: string;
-  tilesize?: number;
+  source: SourceSpecification;
   sourceId: string;
-  type: string;
 }
 
 function useSource(props: useSourceProps): useSourceType {
@@ -43,45 +39,10 @@ function useSource(props: useSourceProps): useSourceType {
     mapHook.map?.addSource(
       sourceId.current,
       {
-        ...(props.type === "geojson" ? { type: props.type, data: props.data } : {}),
-        ...(props.type === "vector"
-          ? { type: props.type, tiles: [props.url], tilesize: props.tilesize }
-          : {}),
+        ...props.source,
       },
       mapHook.componentId
     );
-    // example addLayer
-    //mapHook.map?.addLayer(
-    //  {
-    //    id: props.sourceId,
-    //    type: "circle",
-    //    source: props.sourceId,
-    //    paint: {
-    //      "circle-radius": 6,
-    //      "circle-color": "#B42222",
-    //    },
-    //  },
-    //  false,
-    //  mapHook.componentId
-    //);
-    // example addVector
-    //mapHook.map.addLayer(
-    //  {
-    //    id: props.sourceId,
-    //    type: "line",
-    //    source: props.sourceId,
-    //    minzoom: 0,
-    //    maxzoom: 22,
-    //    "source-layer": "landuse",
-    //    layout: {
-    //      "line-cap": "round",
-    //      "line-join": "round",
-    //    },
-    //    paint: { "line-width": 2, "line-color": "#ff0000" },
-    //  },
-    //  false,
-    //  mapHook.componentId
-    //);
 
     setSource(mapHook.map.map.getSource(sourceId.current));
   }, [props, mapHook.map]);
@@ -96,14 +57,12 @@ function useSource(props: useSourceProps): useSourceType {
 
   useEffect(() => {
     if (!mapHook.map || initializedRef.current) return;
-
     createSource();
   }, [mapHook.map, createSource]);
 
   return {
     map: mapHook.map,
     source: source,
-    sourceId: sourceId.current,
     componentId: mapHook.componentId,
     mapHook: mapHook,
   };
