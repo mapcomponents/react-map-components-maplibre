@@ -46,17 +46,15 @@ function useSource(props: useSourceProps): useSourceType {
   useEffect(() => {
     return () => {
       initializedRef.current = false;
-      function _cleanupEventually() {
-        if (mapHook.mapRef) {
-          const used = mapHook.mapRef.map.style.sourceCaches[sourceId.current].used;
-          if (!used) {
-            mapHook.mapRef.map.removeSource(sourceId.current);
-          } else {
-            setTimeout(_cleanupEventually, 1000);
+      if (mapHook.mapRef) {
+        for (const [_, layer] of Object.entries(mapHook.mapRef.map.style._layers)) {
+          if (layer.source === sourceId.current) {
+            mapHook.mapRef.map.removeLayer(layer?.id);
           }
         }
+
+        mapHook.mapRef.map.removeSource(sourceId.current);
       }
-      _cleanupEventually();
     };
   }, []);
 
