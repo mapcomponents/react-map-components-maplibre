@@ -49,14 +49,14 @@ function useSource(props: useSourceProps): useSourceType {
     //cleanup
     return () => {
       initializedRef.current = false;
-      if (mapHook.mapRef) {
-        for (const [_, layer] of Object.entries(mapHook.mapRef.map.style._layers)) {
+      if (mapHook.map) {
+        for (const [_, layer] of Object.entries(mapHook.map.map.style._layers)) {
           if (layer.source === sourceId.current) {
-            mapHook.mapRef.map.removeLayer(layer?.id);
+            mapHook.map.map.removeLayer(layer?.id);
           }
         }
 
-        mapHook.mapRef.map.removeSource(sourceId.current);
+        mapHook.map.map.removeSource(sourceId.current);
       }
     };
   }, [mapHook.map, createSource]);
