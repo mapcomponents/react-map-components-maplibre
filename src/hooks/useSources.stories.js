@@ -1,7 +1,10 @@
 import useSource from "./useSource";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useMap from "./useMap";
 import useLayer from "./useLayer";
+import TopToolbar from "../ui_components/TopToolbar";
+import Button from "@mui/material/Button";
+import MlGeojsonLayerWithSource from "../components/MlGeojsonLayerWithSource/MlGeojsonLayerWithSource";
 
 import mapContextDecorator from "../decorators/MapContextDecorator";
 import MlGeoJsonLayer from "../components/MlGeoJsonLayer/MlGeoJsonLayer";
@@ -117,6 +120,26 @@ const RasterExample = (args) => {
   return <></>;
 };
 
+const removeExample = (args) => {
+
+  const [sourceStatus, setSourceStatus] = useState(true);
+
+  return (
+    <>
+      <TopToolbar>
+        <Button
+          color="primary"
+          variant={sourceStatus ? "contained" : "outlined"}
+          onClick={() => setSourceStatus(!sourceStatus)}
+        >
+          Source JSX Active?
+        </Button>
+      </TopToolbar>
+      {sourceStatus && <MlGeojsonLayerWithSource></MlGeojsonLayerWithSource>}
+    </>
+  );
+};
+
 export const useGeojsonSourceExample = GeojsonExample.bind({});
 useGeojsonSourceExample.args = {
   mapId: "map_1",
@@ -150,3 +173,7 @@ useRasterSourceExample.args = {
     attribution: "",
   }
 };
+
+export const removeSourceExample = removeExample.bind({})
+removeSourceExample.args = {
+}
