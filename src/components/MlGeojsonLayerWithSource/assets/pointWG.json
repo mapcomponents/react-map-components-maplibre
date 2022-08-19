@@ -1,0 +1,13 @@
+{
+	"type": "Feature",
+	"geometry": {
+		"type": "Point",
+		"coordinates": [
+			7.0851268,
+			50.73884
+		],
+		"properties": {
+			"title": "Bonn"
+		}
+	}
+}
