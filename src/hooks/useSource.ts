@@ -42,8 +42,11 @@ function useSource(props: useSourceProps): useSourceType {
     setSource(mapHook.map.map.getSource(sourceId.current));
   }, [props, mapHook.map]);
 
-  // cleanup
+
   useEffect(() => {
+    if (!mapHook.map || initializedRef.current) return;
+    createSource();
+    //cleanup
     return () => {
       initializedRef.current = false;
       if (mapHook.mapRef) {
@@ -56,11 +59,6 @@ function useSource(props: useSourceProps): useSourceType {
         mapHook.mapRef.map.removeSource(sourceId.current);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    if (!mapHook.map || initializedRef.current) return;
-    createSource();
   }, [mapHook.map, createSource]);
 
   return {
