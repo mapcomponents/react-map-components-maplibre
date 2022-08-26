@@ -27,7 +27,7 @@ const MlGeojsonLayerWithSource = (props: MlGeojsonLayerWithSourceProps) => {
   const initializedRef = useRef(false);
 
   const { source } = useSource({
-    mapId: "map_1",
+    mapId: props.mapId,
     sourceId: "geojson-source",
     source: {
       type: "geojson",

@@ -29,12 +29,12 @@ function useSource(props: useSourceProps): useSourceType {
 
   const createSource = useCallback(() => {
     if (!mapHook.map) return;
+    initializedRef.current = true;
 
     if (mapHook.map.map.getSource(sourceId.current)) {
       mapHook.cleanup();
     }
 
-    initializedRef.current = true;
     mapHook.map?.addSource(sourceId.current, {
       ...props.source,
     });
@@ -42,11 +42,13 @@ function useSource(props: useSourceProps): useSourceType {
     setSource(mapHook.map.map.getSource(sourceId.current));
   }, [props, mapHook.map]);
 
-
   useEffect(() => {
     if (!mapHook.map || initializedRef.current) return;
     createSource();
-    //cleanup
+  }, [mapHook.map, createSource]);
+
+  //cleanup
+  useEffect(() => {
     return () => {
       initializedRef.current = false;
       if (mapHook.map) {
@@ -59,7 +61,7 @@ function useSource(props: useSourceProps): useSourceType {
         mapHook.map.map.removeSource(sourceId.current);
       }
     };
-  }, [mapHook.map, createSource]);
+  }, [mapHook.map]);
 
   return {
     map: mapHook.map,
