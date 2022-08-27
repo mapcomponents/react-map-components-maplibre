@@ -12,7 +12,7 @@ type useMapType = {
   cleanup: Function;
 };
 
-function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
+function useMap(props: { mapId?: string; waitForLayer?: boolean }): useMapType {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
   const mapContext: MapContextType = useContext(MapContext);
   const [map, setMap] = useState<MapLibreGlWrapper>();

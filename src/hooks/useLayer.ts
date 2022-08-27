@@ -18,10 +18,10 @@ interface useLayerProps {
   mapId?: string;
   layerId?: string;
   idPrefix?: string;
-  insertBeforeLayer?: string;
+  insertBeforeLayer?: boolean;
   insertBeforeFirstSymbolLayer?: boolean;
   geojson?: object;
-  source?: object;
+  source?: object | string;
   options: LayerSpecification;
   onHover?: Function;
   onClick?: Function;
