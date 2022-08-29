@@ -3,17 +3,15 @@ import React from "react";
 import { MapComponentsProvider } from "../index";
 import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
 import "./style.css";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import MlNavgiationTools from "../components/MlNavigationTools/MlNavigationTools";
-
-const theme = createTheme({});
+import ThemeWrapper from "./ThemeWrapper";
 
 const decorators = [
   (Story) => (
     <div className="fullscreen_map">
-      <ThemeProvider theme={theme}>
+      <ThemeWrapper>
         <MapComponentsProvider>
-          <Story />
+          {Story()}
           <MapLibreMap
             options={{
               zoom: 14.5,
@@ -28,7 +26,7 @@ const decorators = [
             mapId="map_1"
           />
         </MapComponentsProvider>
-      </ThemeProvider>
+      </ThemeWrapper>
     </div>
   ),
 ];
