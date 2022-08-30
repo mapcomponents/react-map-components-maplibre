@@ -18,7 +18,7 @@ interface useLayerProps {
   mapId?: string;
   layerId?: string;
   idPrefix?: string;
-  insertBeforeLayer?: boolean;
+  insertBeforeLayer?: string;
   insertBeforeFirstSymbolLayer?: boolean;
   geojson?: object;
   source?: object | string;

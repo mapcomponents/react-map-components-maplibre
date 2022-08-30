@@ -34,7 +34,6 @@ const GeojsonExample = (args) => {
         "circle-color": "red",
       },
     },
-    insertBeforeLayer: false,
   });
   useLayer({
     mapId: args.mapId,
@@ -47,7 +46,6 @@ const GeojsonExample = (args) => {
         "circle-color": "green",
       },
     },
-    insertBeforeLayer: false,
   });
   return <></>;
 };
@@ -56,7 +54,6 @@ const VectorExample = (args) => {
   const { source } = useSource({ ...args });
   const mapHook = useMap({
     mapId: args.mapId,
-    waitForLayer: false,
   });
   useEffect(() => {
     if (!mapHook.map) return;
@@ -101,7 +98,6 @@ const RasterExample = (args) => {
   const { source } = useSource({ ...args });
   const mapHook = useMap({
     mapId: args.mapId,
-    waitForLayer: false,
   });
   useEffect(() => {
     if (!mapHook.map) return;

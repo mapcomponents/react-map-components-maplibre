@@ -61,7 +61,6 @@ const MlGeojsonLayerWithSource = (props: MlGeojsonLayerWithSourceProps) => {
         "circle-color": "red",
       },
     },
-    insertBeforeLayer: false,
   });
 
   useLayer({
@@ -77,7 +76,6 @@ const MlGeojsonLayerWithSource = (props: MlGeojsonLayerWithSourceProps) => {
         "circle-color": "green",
       },
     },
-    insertBeforeLayer: false,
   });
 
   useEffect(() => {
