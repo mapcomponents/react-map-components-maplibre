@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.57] - 2022-08-30
+
+### Added
+
+- f807ffd: add export for MlScaleReference
+
 ## [v0.1.56] - 2022-08-11
 
 ### Added
@@ -11,6 +17,7 @@
 ### Changed
 - f72292b: rename MlFollowGps style option to buttonSx
 - 412c363: wrap MlNavigationTools in a @MUI Box component and expose the sx property as MlNavigationTools option
+
 ## [v0.1.55] - 2022-07-18
 
 ### Changed
