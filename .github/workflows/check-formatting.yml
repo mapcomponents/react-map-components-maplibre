@@ -16,22 +16,34 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
-        # Setup .npmrc file to publish to npm
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Node cache
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
+
       - id: files
         uses: jitterbit/get-changed-files@v1
         with:
           format: csv
+
       - name: Run scoped actions
         uses: DukeManh/scoped-actions@v1
         with:
           files: ${{ steps.files.outputs.added_modified}}
           eslintTarget: "**/*.{jsx,tsx,ts,js}"
-          s0: "yarn install"
-          s1: "yarn run eslint"
+          s0: "yarn run eslint"
 #  prettier:
 #    runs-on: ubuntu-latest
 #
