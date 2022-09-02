@@ -16,7 +16,7 @@ type MapLibreMapProps = {
    * See https://maplibre.org/maplibre-gl-js-docs/api/map/ for a formal documentation of al
    * available properties.
    */
-  options?: MapOptionsType;
+  options?: Partial<MapOptionsType>;
   /**
    * css style definition passed to the map container DOM element
    */

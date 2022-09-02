@@ -58,7 +58,7 @@ DefaultPaintOverrides.args = {
       "circle-color": "red",
     },
     line: {
-      "line-color": "orange",
+      "line-color": "black",
     },
   },
   geojson: sample_polygon_geojson_1,

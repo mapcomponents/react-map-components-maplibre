@@ -13,16 +13,16 @@ interface MlFeatureEditorProps {
   /**
    * Id of the target MapLibre instance in mapContext
    */
-  mapId: string;
+  mapId?: string;
   /**
    * Id of an existing layer in the mapLibre instance to help specify the layer order
    * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
    */
-  insertBeforeLayer: string;
+  insertBeforeLayer?: string;
   /**
    * Input GeoJson data at initialization
    */
-  geojson: any;
+  geojson?: any;
   /**
    * Callback function that is called each time the GeoJson data within has changed within MlFeatureEditor.
    * First parameter is the new GeoJson feature.
@@ -47,24 +47,14 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
     mapId: props.mapId,
     waitForLayer: props.insertBeforeLayer,
   });
-  const onChangeRef = useRef(props.onChange);
 
   const drawToolsInitialized = useRef(false);
   const [drawToolsReady, setDrawToolsReady] = useState(false);
 
-  const [mouseUpTrigger, setMouseUpTrigger] = useState(0);
 
   const modeChangeHandler = (e: any) => {
     console.log("MlFeatureEditor mode change to " + e.mode);
     //setDrawMode(e.mode);
-  };
-
-  const mouseUpHandler = () => {
-    setMouseUpTrigger(Math.random());
-  };
-
-  const touchHandler = () => {
-    setMouseUpTrigger(Math.random());
   };
 
   useEffect(() => {
@@ -95,33 +85,47 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
         ),
       });
 
-      mapHook.map.on("draw.modechange", modeChangeHandler, mapHook.componentId);
-
       mapHook.map.addControl(draw.current, "top-left", mapHook.componentId);
 
-      mapHook.map.on("mouseup", mouseUpHandler, mapHook.componentId);
 
-      mapHook.map.on("touchend", touchHandler, mapHook.componentId);
+      mapHook.map.on("draw.modechange", modeChangeHandler, mapHook.componentId);
 
       setDrawToolsReady(true);
     }
   }, [mapHook.map, props, drawToolsInitialized]);
 
   useEffect(() => {
+    if (!mapHook.map || !drawToolsReady) return;
+
+    const changeHandler = () => {
+      if (draw.current) {
+        // update drawnFeatures state object
+        if (typeof props.onChange === "function") {
+          let currentFeatureCollection = draw.current.getAll?.();
+          props.onChange(currentFeatureCollection?.features);
+        }
+      }
+    };
+
+    mapHook.map.on("mouseup", changeHandler);
+
+    mapHook.map.on("touchend", changeHandler);
+
+    return () => {
+      if (!mapHook.map) return;
+
+      mapHook.map.map.off("mouseup", changeHandler);
+
+      mapHook.map.map.off("touchend", changeHandler);
+    }
+
+  }, [drawToolsReady, mapHook.map])
+
+  useEffect(() => {
     if (draw.current && props.geojson?.geometry) {
       draw.current.set({ type: "FeatureCollection", features: [props.geojson] });
     }
   }, [props.geojson, drawToolsReady]);
-
-  useEffect(() => {
-    if (draw.current && mouseUpTrigger) {
-      // update drawnFeatures state object
-      let currentFeatureCollection = draw.current.getAll();
-      if (typeof onChangeRef.current === "function") {
-        onChangeRef.current(currentFeatureCollection.features);
-      }
-    }
-  }, [mouseUpTrigger]);
 
   useEffect(() => {
     if (props.mode && draw.current) {

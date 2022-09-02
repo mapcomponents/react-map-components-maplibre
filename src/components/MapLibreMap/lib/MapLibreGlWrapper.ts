@@ -1,4 +1,5 @@
-import { Map, IControl, MapOptions as MapOptionsType } from "!maplibre-gl";
+import { Map, IControl, MapOptions as MapOptionsType,  } from "!maplibre-gl";
+import { Map as MapType  } from "maplibre-gl";
 
 type EventArgArray = [string, string | Function, Function?];
 type LayerState = {
@@ -53,7 +54,7 @@ class MapLibreGlWrapper {
   };
   initRegisteredElements: Function;
   addNativeMaplibreFunctionsAndProps: Function;
-  map: Map;
+  map: MapType;
   style: object;
 
   styleJson: object;
@@ -603,7 +604,7 @@ class MapLibreGlWrapper {
           });
       }
 
-      self.map = new Map(props.mapOptions);
+      self.map = new Map(props.mapOptions) as MapType;
       //@ts-ignore
       window._map = self.map;
 

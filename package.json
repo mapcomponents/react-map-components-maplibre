@@ -1,10 +1,11 @@
 {
   "name": "@mapcomponents/react-maplibre",
-  "version": "0.1.45",
+  "version": "0.1.57",
   "main": "index.js",
   "license": "MIT",
   "module": "dist/index.esm.js",
   "source": "src/index.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
     "start": "start-storybook -p 6006 -s public",

@@ -17,37 +17,35 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
-  const mediaIsMobile = useMediaQuery("(max-width:900px)");
-  return(
-    <>
-      {props.show === "toolbar" && (
-        <TopToolbar>
-          <MlScaleReference {...props} />
-        </TopToolbar>
-      )}
-      {props.show === "overlay" && (
-        <div
-          style={{
-            position: "absolute",
-            zIndex: 100000,
-            bottom: mediaIsMobile ? "40px" : "20px",
-            right: "20px",
-          }}
-        >
-          <MlScaleReference {...props} />
-        </div>
-      )}
-    </>
+const ToolbarTemplate = (props) => {
+  return (
+    <TopToolbar>
+      <MlScaleReference {...props} />
+    </TopToolbar>
   );
-}
+};
+const OverlayTemplate = (props) => {
+  const mediaIsMobile = useMediaQuery("(max-width:900px)");
+  return (
+    <div
+      style={{
+        position: "absolute",
+        zIndex: 100000,
+        bottom: mediaIsMobile ? "40px" : "20px",
+        right: "20px",
+      }}
+    >
+      <MlScaleReference {...props} />
+    </div>
+  );
+};
 
-export const Toolbar = Template.bind({});
+export const Toolbar = ToolbarTemplate.bind({});
 Toolbar.args = {
   show: "toolbar",
 };
 
-export const Overlay = Template.bind({});
+export const Overlay = OverlayTemplate.bind({});
 Overlay.args = {
   show: "overlay",
 };

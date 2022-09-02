@@ -43,5 +43,5 @@ ExampleConfig.args = {
    * https://www.wms.nrw.de/wms/kitas
    * https://www.wms.nrw.de/geobasis/wms_nw_vdop
    */
-  url: "https://www.wms.nrw.de/wms/kitas",
+  url: "https://www.wms.nrw.de/geobasis/wms_nw_vdop",
 };
