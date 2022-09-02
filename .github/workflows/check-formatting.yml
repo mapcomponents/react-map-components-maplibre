@@ -25,7 +25,7 @@ jobs:
         with:
           eslint-args: "--ignore-path=.gitignore **/node_modules/* --quiet"
           extentions: "jx,jsx,ts,tsx"
-          annonations: true
+          annotations: true
 
 #  prettier:
 #    runs-on: ubuntu-latest
