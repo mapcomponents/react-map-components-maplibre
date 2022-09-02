@@ -26,11 +26,11 @@ jobs:
         with:
           ignore_path: ".eslintignore"
           extra_args: "--max-warnings=0"
-          extentions: |
+          file_extensions: |
+            **/*.ts
+            **/*.tsx
             **/*.js
             **/*.jsx
-            **/*.ts
-            **/*.tsx"
 
 #  prettier:
 #    runs-on: ubuntu-latest
