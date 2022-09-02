@@ -47,6 +47,14 @@ function useSource(props: useSourceProps): useSourceType {
     createSource();
   }, [mapHook.map, props, createSource]);
 
+  useEffect(() => {
+    if (!initializedRef.current || !mapHook.map?.map?.getSource(props.sourceId)) return;
+
+    //@ts-ignore setData only exists on GeoJsonSource
+    mapHook.map.map.getSource(props.sourceId)?.setData?.(props.source.data);
+    //@ts-ignore setData only exists on GeoJsonSource
+  }, [props.source?.data]);
+
   //cleanup
   useEffect(() => {
     return () => {
