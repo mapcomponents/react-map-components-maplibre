@@ -45,7 +45,7 @@ function useSource(props: useSourceProps): useSourceType {
   useEffect(() => {
     if (!mapHook.map || initializedRef.current) return;
     createSource();
-  }, [mapHook.map, createSource]);
+  }, [mapHook.map, props, createSource]);
 
   //cleanup
   useEffect(() => {
