@@ -2,10 +2,9 @@ name: formatting-check
 on:
   push:
     branches:
-      - feature/eslint-prettier_github-action
+      - "main"
   pull_request:
-    branches:
-      - feature/eslint-prettier_github-action
+
 jobs:
   check_formatting:
     runs-on: ubuntu-latest
