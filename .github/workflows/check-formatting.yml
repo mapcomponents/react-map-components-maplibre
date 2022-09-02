@@ -31,7 +31,7 @@ jobs:
           files: ${{ steps.files.outputs.added_modified}}
           eslintTarget: "**/*.{jsx,tsx,ts,js}"
           s0: "yarn install"
-          s1: "yarn run eslint ."
+          s1: "yarn run eslint"
 #  prettier:
 #    runs-on: ubuntu-latest
 #
