@@ -21,11 +21,16 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: sibiraj-s/action-eslint@v2
+      - name: Run eslint on changed files
+      - uses: tj-actions/eslint-changed-files@v13.3
         with:
-          eslint-args: "--ignore-path=.gitignore **/node_modules/* --quiet"
-          extentions: "jx,jsx,ts,tsx"
-          annotations: true
+          ignore_path: ".eslintignore"
+          extra_args: "--max-warnings=0"
+          extentions: |
+            **/*.js
+            **/*.jsx
+            **/*.ts
+            **/*.tsx"
 
 #  prettier:
 #    runs-on: ubuntu-latest
