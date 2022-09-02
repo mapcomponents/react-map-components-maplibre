@@ -7,7 +7,7 @@ on:
     branches:
       - feature/eslint-prettier_github-action
 jobs:
-  eslint:
+  check_formatting:
     runs-on: ubuntu-latest
 
     strategy:
@@ -44,16 +44,4 @@ jobs:
           files: ${{ steps.files.outputs.added_modified}}
           eslintTarget: "**/*.{jsx,tsx,ts,js}"
           s0: "yarn run eslint"
-#  prettier:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          ref: ${{ github.head:ref }}
-#
-#      - name: Prettify code
-#        uses: creyD/prettier_action@v4.2
-#        with:
-#          #prettier optionen einbauen
+          s1: "yarn run prettier --check"
