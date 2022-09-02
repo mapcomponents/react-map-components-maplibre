@@ -21,18 +21,17 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Run eslint on changed files
-        uses: tj-actions/eslint-changed-files@v13.3
+      - id: files
+        uses: jitterbit/get-changed-files@v1
         with:
-          config_path: ".eslintrc"
-          ignore_path: ".eslintignore"
-          extra_args: "--max-warnings=0"
-          file_extensions: |
-            **/*.ts
-            **/*.tsx
-            **/*.js
-            **/*.jsx
-
+          format: csv
+      - name: Run scoped actions
+        uses: DukeManh/scoped-actions@v1
+        with:
+          files: ${{ steps.files.outputs.added_modified}}
+          eslintTarget: "**/*.{jsx,tsx,ts,js}"
+          s0: "yarn install"
+          s2: "yarn run eslint ."
 #  prettier:
 #    runs-on: ubuntu-latest
 #
