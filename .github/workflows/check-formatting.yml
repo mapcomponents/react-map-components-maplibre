@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Run eslint on changed files
-      - uses: tj-actions/eslint-changed-files@v13.3
+        uses: tj-actions/eslint-changed-files@v13.3
         with:
           ignore_path: ".eslintignore"
           extra_args: "--max-warnings=0"
