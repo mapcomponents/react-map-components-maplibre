@@ -27,10 +27,7 @@
     "@mui/material": "5.5.3",
     "@mui/styles": "^5.5.3",
     "@turf/turf": "^6.5.0",
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
     "d3": "^7.4.4",
-    "eslint": "^8.21.0",
     "jspdf": "^2.5.1",
     "maplibre-gl": "^2.1.7",
     "react-i18next": "^11.14.3",
@@ -64,6 +61,8 @@
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
     "babel-jest": "^26.6.0",
     "babel-plugin-inline-react-svg": "^2.0.1",
@@ -71,6 +70,8 @@
     "babel-preset-react-app": "^10.0.1",
     "docz": "^2.4.0",
     "enzyme": "^3.11.0",
+    "eslint": "^8.23.0",
+    "eslint-plugin-react": "^7.31.1",
     "glob": "^7.2.0",
     "jest": "26.6.0",
     "jest-circus": "26.6.0",
@@ -176,21 +177,6 @@
       "custom\\-.*\\-mode\\.js$",
       "(.stories)\\.(ts|tsx|js)$",
       "/distribution/.*\\.(ts|js)$"
-    ]
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended"
-    ],
-    "plugins": [
-      "@typescript-eslint"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "ignorePatterns": [
-      ".gitignore",
-      "**/node_modules/*"
     ]
   }
 }
