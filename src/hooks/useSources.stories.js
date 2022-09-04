@@ -1,6 +1,7 @@
 import useSource from "./useSource";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import useMap from "./useMap";
+import useMapState from "./useMapState";
 import useLayer from "./useLayer";
 import TopToolbar from "../ui_components/TopToolbar";
 import Button from "@mui/material/Button";
@@ -119,6 +120,48 @@ const RasterExample = (args) => {
 const removeExample = (args) => {
 
   const [sourceStatus, setSourceStatus] = useState(true);
+  const [activeSources, setActiveSources] = useState([]);
+  const mapHook = useMap({
+    mapId: args.mapId,
+  });
+
+  const mapState = useMapState({
+
+
+    mapId: args.mapId,
+    watch: {
+      viewport: false,
+      layers: true,
+      sources: true,
+    },
+    filter: {
+      includeBaseLayers: false,
+    },
+
+  });
+
+
+  // useEffect(() => {
+  //   if (!mapHook.map) {
+  //     return
+  //   }
+  //   if (mapHook?.map?.map?.style.sourceCaches) {
+  //     setTimeout(() => setActiveSources(Object.keys(mapHook?.map?.map?.style.sourceCaches)), 100)
+  //   }
+  // }, [mapHook?.map?.map?.style, sourceStatus])
+
+  useEffect(() => {
+    if (!mapHook.map) {
+      return
+    }
+
+    mapHook.map.map.on("sourcedata", () => {
+
+      if (mapHook?.map?.map?.style.sourceCaches) {
+        setActiveSources(Object.keys(mapHook?.map?.map?.style.sourceCaches))
+      }
+    })
+  }, [mapHook.map])
 
   return (
     <>
@@ -128,10 +171,37 @@ const removeExample = (args) => {
           variant={sourceStatus ? "contained" : "outlined"}
           onClick={() => setSourceStatus(!sourceStatus)}
         >
-          Source JSX Active?
+          MlGeoJsonLayerWithSource JSX Active?
         </Button>
       </TopToolbar>
       {sourceStatus && <MlGeojsonLayerWithSource></MlGeojsonLayerWithSource>}
+      <div
+        style={{
+          position: "fixed",
+          zIndex: 10000,
+          display: "flex",
+          flexWrap: "wrap",
+          top: "62px",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          maxHeight: '100VH',
+          backgroundColor: "rgba(80,80,80,.8)",
+          padding: "50px",
+          fontSize: "20px",
+          color: "#51ff09",
+          overflow: 'hidden',
+          pointerEvents: "none",
+        }}
+      >
+        {activeSources?.length > 0 &&
+          <div>
+            Active sources: <br></br> {JSON.stringify(activeSources, null, "  ")}
+            <br></br> <br></br> Active layers : { }
+            <pre>{JSON.stringify(mapState, null, "  ")}</pre>
+          </div>
+        }
+      </div>
     </>
   );
 };
@@ -172,4 +242,5 @@ useRasterSourceExample.args = {
 
 export const removeSourceExample = removeExample.bind({})
 removeSourceExample.args = {
+  mapId: "map_1",
 }
