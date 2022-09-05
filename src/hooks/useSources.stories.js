@@ -171,7 +171,7 @@ const removeExample = (args) => {
           variant={sourceStatus ? "contained" : "outlined"}
           onClick={() => setSourceStatus(!sourceStatus)}
         >
-          MlGeoJsonLayerWithSource JSX Active?
+          Ml GeoJsonLayer With Source JSX Active?
         </Button>
       </TopToolbar>
       {sourceStatus && <MlGeojsonLayerWithSource></MlGeojsonLayerWithSource>}
