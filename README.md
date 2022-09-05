@@ -6,196 +6,107 @@
 
 ![Tests](https://github.com/mapcomponents/react-map-components-maplibre/actions/workflows/node_version_test.yml/badge.svg)
 
+@mapcomponents/react-maplibre is a react component library for declarative GIS application development.
+## Links
 
-## Getting started (Using the storybook dev server)
+- Documentation: https://mapcomponents.github.io/react-map-components-maplibre/
+- Catalogue: https://www.mapcomponents.org/
 
-1. Clone the repository and ```cd``` into the folder 
-2. Run ```yarn``` to install all dependencies.
-3. Run ```yarn start``` to start the storybook server. It will watch files for changes and reload affected components. If cleanup functions are incomplete it might be required to reload the browser tab.
+## Getting started
 
-### Create a new component
+Use our Codesandbox template to quickly try out this library without any setup required. https://codesandbox.io/s/base-template-n0vp9
 
-1. Run ```yarn create-component {component-name}``` to create a new map component based on ./src/components/MlComponentTemplate/. It has to start with a capital letter and preferably with the prefix "Ml" if it is a MapLibre component, to follow the naming conventions of this repository.
-2. The new component should become available within your storybook webinterface. Start the component development inside the component file (former MlComponentTemplate.js) and see the changes reflected in your browser.
-3. Once the component is ready to be published to the MapComponents catalogue, remove the ```_``` from the meta.json file ({component_name}.meta_.json) and to have it included in the next release.
+### **How to use @mapcomponents/react-maplibre in ...**
 
-### Create a new example application
+### **... a new project**
 
-1. Follow all steps of "Create a new component"
-2. Change the value of the property "type" in {component_name}.meta.json to "application"
+The easiest way to start a new project using this framework is to bootstrap a react application using our [create-react-app-template](https://github.com/mapcomponents/react-map-components-maplibre-cra-template).
 
-## Project setup
+**Requirements:**
 
-### Starting a new project
+1. node.js >=16
+2. yarn
 
-Fork our codesandbox project setup template to get started instantly. https://codesandbox.io/s/base-template-n0vp9
+Run the following commands in the terminal:
 
-### Integrate MapComponents into an existing react project
+1. `npx create-react-app {your-app-name} --template @mapcomponents/cra-template`
+2. `cd {your-app-name}`
+3. `yarn start`
 
-1. Add the dependency ```yarn add @mapcomponents/react-maplibre```
-2. Add a MapcomponentsProvider to your react-dom (e.g.  https://codesandbox.io/s/base-template-n0vp9?file=/src/index.js)
-3. Add a MapLibreMap and any MapComponent you like to use in your app below MapcomponentsProvider.
-## Anatomy of a MapComponent
+This will start a development server that serves the mapcomponents app on port 3000 of your local machine as well as a browser tab with live reload enabled. This reloads the affected parts of the application if changes are detected to the corresponding files in the filesystem. Open the project folder in the IDE of your choice and start building your map client.
+
+### **... an existing react project**
+
+In this case, navigate to your project folder in a terminal and execute the following steps:
+
+1. Add @mapcomponents/react-maplibre as a dependency to your project using `yarn add @mapcomponents/react-maplibre` or `npm i @mapcomponents/react-maplibre` depending on which package manager you prefer.
+2. Add the MapComponentsProvider (named export of this module) to your applications react-DOM where it makes sense. Only children of this component will be able to render a map canvas or interact with a maplibre-gl instance. Place it in the index.js entrypoint if your application is a dedicated map app and all components have a high probability to interact with the maplibre-gl instance. Place it somewhere higher in the JSX tree if the map constitutes only a small portion of your app and components outside of the MapComponentsProvider have no need to interact with the map instance.
+3. Add a MapLibreMap component to the react-DOM wherever the map canvas is supposed to be placed.
+
+## How it works
+### Anatomy of a MapComponent
 
 A MapComponent is a react component that accepts at least 1 attribute "mapId" (there are some exceptions) and is expected to retrieve a maplibre-gl instance from mapContext and directly manipulate it or watch its state. 
-An example implementation of basic required functions for the maplibre instance retrieval process using the functions getMap, mapExists provided by mapContext, both accepting "mapId" (string) as parameter, can be seen in ./components/MlComponentTemplate/MlComponentTemplate.js. 
-If no attribute mapId is provided the map component is expected to work with the map instance provided by mapContext at ```mapContext.map``` (it is recommended to retrieve it using ```mapContext.getMap(props.mapId)```).
+An example implementation of basic required functions for the maplibre instance retrieval process using the useMap hook, can be seen in [./components/MlComponentTemplate/MlComponentTemplate.tsx](https://github.com/mapcomponents/react-map-components-maplibre/blob/main/src/components/MlComponentTemplate/MlComponentTemplate.tsx)
+If no attribute mapId is provided the map component is expected to work with the map instance provided by mapContext at ```mapContext.map``` (the first maplibre instance that is registered in MapContext).
 
 
-### File structure
+### Cleanup functions
 
-```
-./src/components/{component_name}/
-├── {component_name}.js         // the only mandatory file is the component code
-├── {component_name}.test.js    // jest tests
-└── {component_name}.stories.js // Storybook & catalogue
-├── {component_name}.doc.en.md  // Catalogue only
-├── {component_name}.doc.de.md  // catalogue only
-├── {component_name}.meta.json  // catalogue only
-```
+Once a component is removed from reactDOM we need to make sure everything it has added to the maplibre-gl instance is removed with it. The mapHook offers a convenient way to do this. 
 
-### {component_name}.js
+**- Retrieve the maplibre instance using the useMap hook**
 
-React component implementation
-
-#### Common conventions
-
-##### Cleanup functions
-
-To make sure a component cleans up anything it has added to the MapLibre instance when it is removed from reactDOM declare a reference to the map instance using the useRef hook. 
-
-**- Reference declaration**
+Add `mapHook.map` to the dependency array of e.g. a useEffect hook to trigger it once the map instance becomes available.
 
 ```js
-  const mapRef = useRef(undefined);
-```
 
+  const mapHook = useMap({
+    mapId: props.mapId,
+    waitForLayer: props.insertBeforeLayer,
+  });
+
+  useEffect(() => {
+    if (!mapHook.map) return;
+    // the MapLibre-gl instance (mapHook.map) is accessible here
+    // initialize the layer and add it to the MapLibre-gl instance 
+
+    // optionally add layers, sources, event listeners, controls, images to the MapLibre instance that are required by this component
+    mapHook.map.addLayer(
+        {/*layer-config*/},
+        props.insertBeforeLayer,
+        mapHook.componentId)
+
+    return () => {
+      mapHook.cleanup();
+    }
+
+  }, [mapHook.map]);
+
+```
 **- Component cleanup function**
 
-After everything has been undone set the map reference (mapRef.current) to undefined.
+`mapHook.cleanup()` will remove all ressources from the maplibre-gl instance that have been added using `mapHook.componentId` as additional parameter in `map.addLayer`, `map.addSource`, `map.on`, `map.addImage` or `map.addControl` calls.
 
 ```js
+
   useEffect(() => {
-    let _componentId = componentId.current;
 
     return () => {
       // This is the cleanup function, it is called when this react component is removed from react-dom
-      if (mapRef.current) {
-        mapRef.current.cleanup(_componentId);
-
-        mapRef.current = undefined;
-      }
+        mapHook.cleanup();
     };
   }, []);
-```
 
-**- Reference population**
-
-This happens within the effect that discovers the map instance for the first time (watch the mapContext.mapIds state variable for added or removed map engine instances).
-
-```js
-  useEffect(() => {
-    if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
-    // the MapLibre-gl instance (mapContext.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance or do something else with it
-
-    // set initializedRef.current to true to make sure this function gets only called once
-    initializedRef.current = true;
-
-    // populate the map reference
-    mapRef.current = mapContext.getMap(props.mapId);
-
-    // optionally add layers, sources, event listeners, controls, images to the MapLibre instance that are required by this component
-    // see the next section about adding content to the MapLibre instance
-
-  }, [mapContext.mapIds, mapContext, props, transitionToGeojson]);
 ```
 
 **- addLayer, addSource, addImage, addControls, on**
 
-The function mentioned above have been overriden in the MapLibreGlWrapper instance that is returned by the mapContext.getMap(props.mapId) function. 
-All five functions expect an additional optional parameter "component_id" (string) as last or optional parameter (except for the beforeLayerId parameter of the addLayer function, which should be defined as props.beforeLayerId to make sure the parent component is able to control the layer order).
-MapLibreGlWrapper uses the component_id to keep track of everything that has been added by a specific component (including implicitly added sources), enabling a safe and simple cleanup by calling ```mapRef.current.cleanup(component_id)``` as shown in the cleanup function example above.
+The functions mentioned above have been overridden in the MapLibreGlWrapper instance that is referenced by mapHook.map.
+All five functions expect an additional optional parameter "component_id" (string) as their last or optional parameter (except for the beforeLayerId parameter of the addLayer function, which should be defined as props.beforeLayerId to make sure the parent component is able to control the layer order).
+A uuid `componentId` property is generated and available on the object returned by mapHook.
+MapLibreGlWrapper uses the component_id to keep track of everything that has been added by a specific component (including implicitly added sources), enabling a safe and simple cleanup by calling ```mapHook.cleanup()``` as shown in the cleanup function example above.
 
-### {component_name}.meta.json *//catalogue only*
+## more links
 
-Additional meta data regarding the component, this file is required for the component to become listed in the catalogue
-
-```json
-{
-  "name":        "{component_name}", // must be identical to the react component name (string)
-  "title":       "",                 // english component title (string)
-  "description": "",                 // english short description (string)
-  "i18n":{
-    "de":{
-      "title":       "",                 // german component title (string)
-      "description": "",                 // german short description (string)
-    }
-  },
-  "tags":        [ "Map add-on" ],   // list of tags (Array<string>)
-  "category":    "add-ons",          // category (string)
-  "type":        "component",        // type "component" or "application" (string)
-}
-```
-
-### {component_name}.doc.en.md *//catalogue only*
-### {component_name}.doc.de.md *//catalogue only*
-
-Description text, that is shown on the catalogue component detail page below the main image
-
-### {component_name}.stories.js *//storybook only*
-
-Example implementation of a component in context with all required dependent components to showcase the basic functionality of a single component. Decorators to choose from are located in ./src/decorators/. During development the command ```yarn start``` will start a server (localhost:6006) with live reload functionality. In case of example applications the stories are used as a wrapper to make the application available in the storybook build that is later used to access working demos from within the catalogue.
-
-More information on writing storybook stories for react components: https://storybook.js.org/docs/react/get-started/browse-stories
-
-# Tests
-
-```
-yarn test
-```
-
-will watch the filesystem for changes and run all jest tests for affected components.
-
-
-# Building the documentation
-
-Install the dependencies globally:
-
-```
-yarn global add jsdoc parcel-bundler
-```
-
-Build the documentation:
-
-```
-yarn docs-create
-```
-
-Serve the documentation:
-
-```
-yarn docs-serve
-```
-
-# Release NPM package
-
-The version property in package.json must not be adjusted manually.
-Once the main branch ist ready for a new release you can use one of:
-
-```yarn version --patch```
-
-
-```yarn version --minor```
-
-
-```yarn version --major```
-
-to have yarn up the version number in package.json, create a new commit with the new version number as commit message and tag the commit with the same string (e.g. ```v0.1.15```).
-
-After pushing the commits to the repository remember to also push the tags using ```git push --tags```. A new tag starting with "v" pushed to the repository will trigger a github workflow that builds the npm release from the referenced branch.
-# Catalogue
-
-## Screenshots
-
-To make a component screenshot appear in the catalogue manually create a png like ./public/thumbnails/{component_name}.png and push it to the repository, it will be included in the catalogue in the next catalogue deployment.
+- @mapcomponents/react-maplibre-lab storybook: https://mapcomponents.github.io/react-map-components-maplibre-lab

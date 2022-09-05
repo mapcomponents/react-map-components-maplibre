@@ -307,7 +307,7 @@ MlWmsLoader.defaultProps = {
   urlParameters: {
     SERVICE: "WMS",
     VERSION: "1.3.0",
-    REQUEST: "getCapabilities",
+    REQUEST: "GetCapabilities",
   },
   wmsUrlParameters: {
     TRANSPARENT: "TRUE",

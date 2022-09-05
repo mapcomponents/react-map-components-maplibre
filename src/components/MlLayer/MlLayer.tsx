@@ -1,6 +1,7 @@
 import React from "react";
 
 import useLayer from "../../hooks/useLayer";
+import { Feature, FeatureCollection } from "@turf/turf";
 
 interface MlLayerProps {
   /**
@@ -20,6 +21,10 @@ interface MlLayerProps {
    * Javascript object that is passed the addLayer command as first parameter.
    */
   options?: any;
+  /**
+   * GeoJSON data that is supposed to be rendered by this component.
+   */
+  geojson?: Feature | FeatureCollection | undefined;
 }
 
 /**
@@ -32,6 +37,7 @@ const MlLayer = (props: MlLayerProps) => {
     idPrefix: 'MlLayer-',
     layerId: props.layerId,
     mapId: props.mapId,
+    geojson: props.geojson,
     options: {
       type: "background",
       paint: {

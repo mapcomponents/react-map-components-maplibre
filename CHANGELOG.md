@@ -1,6 +1,82 @@
 # Change Log
 
+## [v0.1.57] - 2022-08-30
 
+### Added
+
+- f807ffd: add export for MlScaleReference
+
+## [v0.1.56] - 2022-08-11
+
+### Added
+
+- f72292b: add centerUserPosition option flag to MlFollowGps to prevent constant recentering of the map to the users current position
+- f72292b: add useFlyTo option flag to MlFollowGps to allow choosing between flyTo or setCenter as map centering function
+- f72292b: add orientationConePaint option to MlFollowGps to allow overriding the orientation cone paint layer paint properties
+
+### Changed
+- f72292b: rename MlFollowGps style option to buttonSx
+- 412c363: wrap MlNavigationTools in a @MUI Box component and expose the sx property as MlNavigationTools option
+
+## [v0.1.55] - 2022-07-18
+
+### Changed
+
+- be4fa69: make MlLayer geojson attribute optional
+## [v0.1.54] - 2022-07-18
+
+### Changed
+
+- ad54e39: add geojson attribute to MlLayer component
+
+## [v0.1.53] - 2022-07-18
+
+### Changed
+
+- 1a7ac4e: add more configuration options to MlNavigationTools
+
+## [v0.1.52] - 2022-07-18
+
+### Added
+
+- 5c276af: add MlCenterPosition Component
+
+## [v0.1.51] - 2022-07-12
+
+### Changed
+
+- 938f665: improve typescript type definitions for MlGeoJsonLayer attributes, useLayer hook props, maplibre reference returned by useMap hook
+- 3349332: improve MlTransitionGeoJsonLayer attribute types
+
+## [v0.1.49] - 2022-07-11
+
+### Added
+
+- c119564: add useLayer hook tests
+- 27d9ded: add typescript type definitions
+### Changed
+
+- 9244711: update readme to make it more beginner friendly
+
+### Fixed
+
+- 6b3c223: add touch support to MlFeatureEditor
+- a531174: refactor MlFeatureEditor
+
+## [v0.1.48] - 2022-06-15
+
+### Added
+
+- 4d53b8a: add miles option to MlMeasureTool
+### Fixed
+
+- 0082e6d: fix MlMeasureTools typescript transpilation errors
+
+## [v0.1.47] (broken build) - 2022-06-15
+
+### Fixed
+
+- ed194ff: fix MlWmsLoader & useWms hooks default param values of GetCapabilities request
 ## [v0.1.46] - 2022-06-09
 
 ### Fixed

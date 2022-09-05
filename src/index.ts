@@ -6,11 +6,13 @@ export { default as MlFillExtrusionLayer } from "./components/MlFillExtrusionLay
 export { default as MlFollowGps } from "./components/MlFollowGps/MlFollowGps";
 export { default as MlGeoJsonLayer } from "./components/MlGeoJsonLayer/MlGeoJsonLayer";
 export { default as MlImageMarkerLayer } from "./components/MlImageMarkerLayer/MlImageMarkerLayer";
+export { default as MlMeasureTool } from "./components/MlMeasureTool/MlMeasureTool";
 export { default as MlNavigationTools } from "./components/MlNavigationTools/MlNavigationTools";
 export { default as MlNavigationCompass } from "./components/MlNavigationCompass/MlNavigationCompass";
 export { default as MlLayer } from "./components/MlLayer/MlLayer";
 export { default as MlVectorTileLayer } from "./components/MlVectorTileLayer/MlVectorTileLayer";
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
+export { default as MlScaleReference } from "./components/MlScaleReference/MlScaleReference";
 
 export { default as MlLayerMagnify } from "./components/MlLayerMagnify/MlLayerMagnify";
 export { default as MlLayerSwipe } from "./components/MlLayerSwipe/MlLayerSwipe";

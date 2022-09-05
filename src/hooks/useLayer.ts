@@ -2,9 +2,12 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 import useMap, { useMapType } from "./useMap";
 
-import { LayerSpecification } from "maplibre-gl";
+import { SourceSpecification, LayerSpecification } from "maplibre-gl";
 
 import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
+
+import { MapLayerMouseEvent } from "maplibre-gl";
+import { GeoJSONObject } from "@turf/turf";
 
 type useLayerType = {
   map: MapLibreGlWrapper | undefined;
@@ -20,12 +23,12 @@ interface useLayerProps {
   idPrefix?: string;
   insertBeforeLayer?: string;
   insertBeforeFirstSymbolLayer?: boolean;
-  geojson?: object;
-  source?: object | string;
-  options: LayerSpecification;
-  onHover?: Function;
-  onClick?: Function;
-  onLeave?: Function;
+  geojson?: GeoJSONObject;
+  source?: SourceSpecification | string;
+  options: Partial<LayerSpecification>;
+  onHover?: MapLayerMouseEvent;
+  onClick?: MapLayerMouseEvent;
+  onLeave?: MapLayerMouseEvent;
 }
 
 const legalLayerTypes = [
@@ -129,7 +132,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
     layerPaintConfRef.current = JSON.stringify(props.options?.paint);
     layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
-    layerTypeRef.current = props.options.type;
+    layerTypeRef.current = props.options.type as LayerSpecification['type'];
   }, [props, mapHook.map]);
 
   useEffect(() => {
@@ -137,8 +140,8 @@ function useLayer(props: useLayerProps): useLayerType {
 
     if (
       initializedRef.current &&
-      (legalLayerTypes.indexOf(props.options.type) === -1 ||
-        (legalLayerTypes.indexOf(props.options.type) !== -1 &&
+      (legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) === -1 ||
+        (legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) !== -1 &&
           props.options.type === layerTypeRef.current))
     ) {
       return;

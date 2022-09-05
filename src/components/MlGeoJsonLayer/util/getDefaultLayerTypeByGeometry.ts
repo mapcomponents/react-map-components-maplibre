@@ -1,4 +1,5 @@
 import { Feature, FeatureCollection } from "@turf/turf";
+import { LayerSpecification } from "maplibre-gl";
 
 const mapGeometryTypesToLayerTypes = {
   Position: "circle",
@@ -13,7 +14,7 @@ const mapGeometryTypesToLayerTypes = {
 
 const getDefaulLayerTypeByGeometry: Function = (
   geojson: Feature | FeatureCollection
-): string => {
+): LayerSpecification['type'] => {
   if (geojson?.type === "Feature") {
     return mapGeometryTypesToLayerTypes?.[geojson?.geometry?.type]
       ? mapGeometryTypesToLayerTypes[geojson.geometry.type]

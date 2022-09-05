@@ -331,7 +331,7 @@ var MapLibreGlWrapper = /** @class */ (function () {
              */
             buildLayerObjects: function () {
                 // @ts-ignore
-                return self.style._order
+                return self.map.style._order
                     .map(function (layerId) {
                     return self.wrapper.buildLayerObject(self.map.style._layers[layerId]);
                 })
@@ -568,7 +568,7 @@ var MapLibreGlWrapper = /** @class */ (function () {
                     props[_i] = arguments[_i];
                 }
                 if (self.map &&
-                    _this.map.style &&
+                    self.map.style &&
                     typeof self.map.style[item] === "function") {
                     (_a = self.map.style)[item].apply(_a, props);
                 }
@@ -744,7 +744,7 @@ var defaultProps$2 = {
                     id: "background",
                     type: "background",
                     paint: {
-                        "background-color": "rgba(80,0,0,0)",
+                        "background-color": "rgba(0,0,0,0)",
                     },
                 },
             ],
@@ -762,11 +762,13 @@ var defaultProps$2 = {
  * @category Map components
  */
 var MapLibreMap = function (props) {
+    var _a;
     var map = useRef(null);
     var mapContainer = useRef();
     var mapContext = useContext(MapContext);
     var mapIdRef = useRef(props.mapId);
     var initializedRef = useRef(false);
+    var currentStyle = useRef((_a = props.options) === null || _a === void 0 ? void 0 : _a.style);
     useEffect(function () {
         var mapId = mapIdRef.current;
         return function () {
@@ -796,6 +798,15 @@ var MapLibreMap = function (props) {
             });
         }
     }, [props.options, props.mapId]);
+    useEffect(function () {
+        var _a, _b;
+        if (((_a = map.current) === null || _a === void 0 ? void 0 : _a.map) && ((_b = props === null || props === void 0 ? void 0 : props.options) === null || _b === void 0 ? void 0 : _b.style) && currentStyle.current !== props.options.style) {
+            console.log("set style");
+            currentStyle.current = props.options.style;
+            map.current.map.setStyle(props.options.style);
+        }
+        // @ts-ignore: props.options is either passed or populated with default values
+    }, [props.options.style]);
     return React__default.createElement("div", { ref: mapContainer, className: "mapContainer", style: props.style });
 };
 MapLibreMap.defaultProps = defaultProps$2;
@@ -4403,7 +4414,7 @@ function getModalUtilityClass(slot) {
 }
 generateUtilityClasses('MuiModal', ['root', 'hidden']);
 
-const _excluded$r = ["BackdropComponent", "BackdropProps", "children", "classes", "className", "closeAfterTransition", "component", "components", "componentsProps", "container", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "manager", "onBackdropClick", "onClose", "onKeyDown", "open", "theme", "onTransitionEnter", "onTransitionExited"];
+const _excluded$s = ["BackdropComponent", "BackdropProps", "children", "classes", "className", "closeAfterTransition", "component", "components", "componentsProps", "container", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "manager", "onBackdropClick", "onClose", "onKeyDown", "open", "theme", "onTransitionEnter", "onTransitionExited"];
 
 const useUtilityClasses$e = ownerState => {
   const {
@@ -4475,7 +4486,7 @@ const ModalUnstyled = /*#__PURE__*/React.forwardRef(function ModalUnstyled(props
     onTransitionEnter,
     onTransitionExited
   } = props,
-        other = _objectWithoutPropertiesLoose(props, _excluded$r);
+        other = _objectWithoutPropertiesLoose(props, _excluded$s);
 
   const [exited, setExited] = React.useState(true);
   const modal = React.useRef({});
@@ -5677,7 +5688,7 @@ const styleFunctionSx = unstable_createStyleFunctionSx();
 styleFunctionSx.filterProps = ['sx'];
 var defaultStyleFunctionSx = styleFunctionSx;
 
-const _excluded$q = ["sx"];
+const _excluded$r = ["sx"];
 
 const splitProps = props => {
   const result = {
@@ -5698,7 +5709,7 @@ function extendSxProp(props) {
   const {
     sx: inSx
   } = props,
-        other = _objectWithoutPropertiesLoose(props, _excluded$q);
+        other = _objectWithoutPropertiesLoose(props, _excluded$r);
 
   const {
     systemProps,
@@ -5727,7 +5738,7 @@ function extendSxProp(props) {
   });
 }
 
-const _excluded$p = ["values", "unit", "step"];
+const _excluded$q = ["values", "unit", "step"];
 
 const sortBreakpointsValues = values => {
   const breakpointsAsArray = Object.keys(values).map(key => ({
@@ -5763,7 +5774,7 @@ function createBreakpoints(breakpoints) {
     unit = 'px',
     step = 5
   } = breakpoints,
-        other = _objectWithoutPropertiesLoose(breakpoints, _excluded$p);
+        other = _objectWithoutPropertiesLoose(breakpoints, _excluded$q);
 
   const sortedValues = sortBreakpointsValues(values);
   const keys = Object.keys(sortedValues);
@@ -5855,7 +5866,7 @@ function createSpacing(spacingInput = 8) {
   return spacing;
 }
 
-const _excluded$o = ["breakpoints", "palette", "spacing", "shape"];
+const _excluded$p = ["breakpoints", "palette", "spacing", "shape"];
 
 function createTheme$1(options = {}, ...args) {
   const {
@@ -5864,7 +5875,7 @@ function createTheme$1(options = {}, ...args) {
     spacing: spacingInput,
     shape: shapeInput = {}
   } = options,
-        other = _objectWithoutPropertiesLoose(options, _excluded$o);
+        other = _objectWithoutPropertiesLoose(options, _excluded$p);
 
   const breakpoints = createBreakpoints(breakpointsInput);
   const spacing = createSpacing(spacingInput);
@@ -5915,6 +5926,59 @@ const systemDefaultTheme$1 = createTheme$1();
 
 function useTheme$1(defaultTheme = systemDefaultTheme$1) {
   return useTheme$2(defaultTheme);
+}
+
+const _excluded$o = ["className", "component"];
+function createBox(options = {}) {
+  const {
+    defaultTheme,
+    defaultClassName = 'MuiBox-root',
+    generateClassName,
+    styleFunctionSx = defaultStyleFunctionSx
+  } = options;
+  const BoxRoot = styled$2('div')(styleFunctionSx);
+  const Box = /*#__PURE__*/React.forwardRef(function Box(inProps, ref) {
+    const theme = useTheme$1(defaultTheme);
+
+    const _extendSxProp = extendSxProp(inProps),
+          {
+      className,
+      component = 'div'
+    } = _extendSxProp,
+          other = _objectWithoutPropertiesLoose(_extendSxProp, _excluded$o);
+
+    return /*#__PURE__*/jsxRuntime.exports.jsx(BoxRoot, _extends$3({
+      as: component,
+      ref: ref,
+      className: clsx(className, generateClassName ? generateClassName(defaultClassName) : defaultClassName),
+      theme: theme
+    }, other));
+  });
+  process.env.NODE_ENV !== "production" ? Box.propTypes
+  /* remove-proptypes */
+  = {
+    // ----------------------------- Warning --------------------------------
+    // | These PropTypes are generated from the TypeScript type definitions |
+    // |     To update them edit the d.ts file and run "yarn proptypes"     |
+    // ----------------------------------------------------------------------
+
+    /**
+     * @ignore
+     */
+    children: PropTypes.node,
+
+    /**
+     * The component used for the root node.
+     * Either a string to use a HTML element or a component.
+     */
+    component: PropTypes.elementType,
+
+    /**
+     * @ignore
+     */
+    sx: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.func])
+  } : void 0;
+  return Box;
 }
 
 const _excluded$n = ["variant"];
@@ -7188,8 +7252,8 @@ function createTheme(options = {}, ...args) {
   return muiTheme;
 }
 
-const defaultTheme = createTheme();
-var defaultTheme$1 = defaultTheme;
+const defaultTheme$1 = createTheme();
+var defaultTheme$2 = defaultTheme$1;
 
 function useThemeProps({
   props,
@@ -7198,13 +7262,13 @@ function useThemeProps({
   return useThemeProps$1({
     props,
     name,
-    defaultTheme: defaultTheme$1
+    defaultTheme: defaultTheme$2
   });
 }
 
 const rootShouldForwardProp = prop => shouldForwardProp(prop) && prop !== 'classes';
 const styled = createStyled({
-  defaultTheme: defaultTheme$1,
+  defaultTheme: defaultTheme$2,
   rootShouldForwardProp
 });
 var styled$1 = styled;
@@ -11848,7 +11912,9 @@ var drawUtils = {
   },
   getDrawInstance: function getDrawInstance(map) {
     for (var i = map._controls.length - 1; i >= 0; i--) {
-      if (map._controls[i].options && map._controls[i].options.defaultMode === "custom_select") {
+      var _map$_controls$i, _map$_controls$i$mode;
+
+      if (((_map$_controls$i = map._controls[i]) === null || _map$_controls$i === void 0 ? void 0 : (_map$_controls$i$mode = _map$_controls$i.modes) === null || _map$_controls$i$mode === void 0 ? void 0 : _map$_controls$i$mode.SIMPLE_SELECT) === "simple_select") {
         return map._controls[i];
       }
     }
@@ -12132,21 +12198,15 @@ var MlFeatureEditor = function (props) {
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
     });
-    var onChangeRef = useRef(props.onChange);
     var drawToolsInitialized = useRef(false);
     var _a = useState(false), drawToolsReady = _a[0], setDrawToolsReady = _a[1];
-    var _b = useState(0), mouseUpTrigger = _b[0], setMouseUpTrigger = _b[1];
     var modeChangeHandler = function (e) {
         console.log("MlFeatureEditor mode change to " + e.mode);
         //setDrawMode(e.mode);
     };
-    var mouseUpHandler = function () {
-        setMouseUpTrigger(Math.random());
-    };
     useEffect(function () {
         var _a;
-        if (mapHook.map &&
-            !drawToolsInitialized.current) {
+        if (mapHook.map && !drawToolsInitialized.current) {
             drawToolsInitialized.current = true;
             if (mapHook.map.map.style &&
                 mapHook.map.map.getSource("mapbox-gl-draw-cold") &&
@@ -12165,35 +12225,46 @@ var MlFeatureEditor = function (props) {
                     custom_direct_select: DirectSelect,
                 }, MapboxDraw.modes),
             });
-            mapHook.map.on("draw.modechange", modeChangeHandler, mapHook.componentId);
             mapHook.map.addControl(draw.current, "top-left", mapHook.componentId);
-            mapHook.map.on("mouseup", mouseUpHandler, mapHook.componentId);
+            mapHook.map.on("draw.modechange", modeChangeHandler, mapHook.componentId);
             setDrawToolsReady(true);
         }
     }, [mapHook.map, props, drawToolsInitialized]);
     useEffect(function () {
+        if (!mapHook.map || !drawToolsReady)
+            return;
+        var changeHandler = function () {
+            var _a, _b;
+            if (draw.current) {
+                // update drawnFeatures state object
+                if (typeof props.onChange === "function") {
+                    var currentFeatureCollection = (_b = (_a = draw.current).getAll) === null || _b === void 0 ? void 0 : _b.call(_a);
+                    props.onChange(currentFeatureCollection === null || currentFeatureCollection === void 0 ? void 0 : currentFeatureCollection.features);
+                }
+            }
+        };
+        mapHook.map.on("mouseup", changeHandler);
+        mapHook.map.on("touchend", changeHandler);
+        return function () {
+            if (!mapHook.map)
+                return;
+            mapHook.map.map.off("mouseup", changeHandler);
+            mapHook.map.map.off("touchend", changeHandler);
+        };
+    }, [drawToolsReady, mapHook.map]);
+    useEffect(function () {
         var _a;
-        if (draw.current &&
-            ((_a = props.geojson) === null || _a === void 0 ? void 0 : _a.geometry)) {
+        if (draw.current && ((_a = props.geojson) === null || _a === void 0 ? void 0 : _a.geometry)) {
             draw.current.set({ type: "FeatureCollection", features: [props.geojson] });
         }
     }, [props.geojson, drawToolsReady]);
-    useEffect(function () {
-        if (draw.current && mouseUpTrigger) {
-            // update drawnFeatures state object
-            var currentFeatureCollection = draw.current.getAll();
-            if (typeof onChangeRef.current === "function") {
-                onChangeRef.current(currentFeatureCollection.features);
-            }
-        }
-    }, [mouseUpTrigger]);
     useEffect(function () {
         if (props.mode && draw.current) {
             // @ts-ignore
             draw.current.changeMode(props.mode);
         }
     }, [props.mode]);
-    return (React__default.createElement(React__default.Fragment, null));
+    return React__default.createElement(React__default.Fragment, null);
 };
 
 var legalLayerTypes = [
@@ -12223,7 +12294,7 @@ function useLayer(props) {
         if (!mapHook.map)
             return;
         if (mapHook.map.map.getLayer(layerId.current)) {
-            mapHook.map.map.removeLayer(layerId.current);
+            mapHook.cleanup();
         }
         if (mapHook.map.map.getSource(layerId.current)) {
             mapHook.map.map.removeSource(layerId.current);
@@ -12251,6 +12322,14 @@ function useLayer(props) {
         if (typeof props.onLeave !== "undefined") {
             mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
         }
+        // recreate layer if style has changed
+        mapHook.map.on("styledata", function () {
+            var _a;
+            if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
+                console.log("Recreate Layer");
+                createLayer();
+            }
+        }, mapHook.componentId);
         layerPaintConfRef.current = JSON.stringify((_a = props.options) === null || _a === void 0 ? void 0 : _a.paint);
         layerLayoutConfRef.current = JSON.stringify((_b = props.options) === null || _b === void 0 ? void 0 : _b.layout);
         layerTypeRef.current = props.options.type;
@@ -12302,13 +12381,10 @@ function useLayer(props) {
             layerPaintConfRef.current = paintString;
         }
     }, [props.options, mapHook.map]);
-    var cleanup = function () {
-        initializedRef.current = false;
-        mapHook.cleanup();
-    };
     useEffect(function () {
         return function () {
-            cleanup();
+            initializedRef.current = false;
+            mapHook.cleanup();
         };
     }, []);
     return {
@@ -12469,15 +12545,24 @@ var MlFollowGps = function (props) {
     var _e = useState(false), locationAccessDenied = _e[0], setLocationAccessDenied = _e[1];
     var _f = useState(), accuracyGeoJson = _f[0], setAccuracyGeoJson = _f[1];
     var _g = useState(0), deviceOrientation = _g[0], setDeviceOrientation = _g[1];
+    var initiallyCentered = useRef(false);
     var getLocationSuccess = useCallback(function (pos) {
         if (!mapHook.map)
             return;
-        mapHook.map.map.flyTo({
-            center: [pos.coords.longitude, pos.coords.latitude],
-            zoom: 18,
-            speed: 1,
-            curve: 1,
-        });
+        if ((!props.centerUserPosition && !initiallyCentered.current) || props.centerUserPosition) {
+            if (props.useFlyTo) {
+                mapHook.map.map.flyTo({
+                    center: [pos.coords.longitude, pos.coords.latitude],
+                    zoom: 18,
+                    speed: 1,
+                    curve: 1,
+                });
+            }
+            else {
+                mapHook.map.map.setCenter([pos.coords.longitude, pos.coords.latitude]);
+            }
+            initiallyCentered.current = true;
+        }
         if (!props.showUserLocation)
             return;
         var geoJsonPoint = point([pos.coords.longitude, pos.coords.latitude]);
@@ -12513,6 +12598,9 @@ var MlFollowGps = function (props) {
                 window.removeEventListener("deviceorientation", _handleOrientation_1);
             };
         }
+        else {
+            initiallyCentered.current = false;
+        }
         return;
     }, [isFollowed]);
     useEffect(function () {
@@ -12528,22 +12616,18 @@ var MlFollowGps = function (props) {
     }, [mapHook.map, isFollowed, getLocationSuccess]);
     return (React__default.createElement(React__default.Fragment, null,
         isFollowed && userLocationGeoJson && (React__default.createElement(MlGeoJsonLayer, { geojson: accuracyGeoJson, type: "fill", paint: __assign({ "fill-color": "#cbd300", "fill-opacity": 0.3 }, props.accuracyPaint), insertBeforeLayer: props.insertBeforeLayer })),
-        isFollowed && orientationCone && (React__default.createElement(MlGeoJsonLayer, { geojson: orientationCone, type: "fill", paint: {
-                "fill-color": "#0000ff",
-                "fill-antialias": false,
-                "fill-opacity": 0.3,
-            }, insertBeforeLayer: props.insertBeforeLayer })),
+        isFollowed && orientationCone && (React__default.createElement(MlGeoJsonLayer, { geojson: orientationCone, type: "fill", paint: __assign({ "fill-color": "#0000ff", "fill-antialias": false, "fill-opacity": 0.3 }, props.orientationConePaint), insertBeforeLayer: props.insertBeforeLayer })),
         isFollowed && userLocationGeoJson && (React__default.createElement(MlGeoJsonLayer, { geojson: userLocationGeoJson, type: "circle", paint: __assign({ "circle-color": "#009ee0", "circle-radius": 5, "circle-stroke-color": "#fafaff", "circle-stroke-width": 1 }, props.circlePaint), insertBeforeLayer: props.insertBeforeLayer })),
-        React__default.createElement(Button$2, { sx: __assign({ zIndex: 1002, color: isFollowed ? props.onColor : props.offColor }, props.style), disabled: locationAccessDenied, onClick: function () {
+        React__default.createElement(Button$2, { sx: __assign({ zIndex: 1002, color: isFollowed ? props.onColor : props.offColor }, props.buttonSx), disabled: locationAccessDenied, onClick: function () {
                 setIsFollowed(!isFollowed);
             } },
             " ",
-            React__default.createElement(default_1$4, { sx: __assign({}, (((_a = props.style) === null || _a === void 0 ? void 0 : _a.fontSize) ? { fontSize: (_b = props.style) === null || _b === void 0 ? void 0 : _b.fontSize } : {})) }),
+            React__default.createElement(default_1$4, { sx: __assign({}, (((_a = props.buttonSx) === null || _a === void 0 ? void 0 : _a.fontSize) ? { fontSize: (_b = props.buttonSx) === null || _b === void 0 ? void 0 : _b.fontSize } : {})) }),
             " ")));
 };
 MlFollowGps.defaultProps = {
     mapId: undefined,
-    style: {
+    buttonSx: {
         minWidth: "30px",
         minHeight: "30px",
         width: "30px",
@@ -12562,6 +12646,8 @@ MlFollowGps.defaultProps = {
     showAccuracyCircle: true,
     showUserLocation: true,
     showOrientation: true,
+    centerUserPosition: true,
+    useFlyTo: false,
 };
 
 var MlImageMarkerLayer = function (props) {
@@ -12569,16 +12655,16 @@ var MlImageMarkerLayer = function (props) {
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
     });
-    var layerInitializedRef = useRef(false);
+    var initializedRef = useRef(false);
+    var recreationInProgress = useRef(false);
     var imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
     var layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
+    // effect to sync Layer paint & layout properties
     useEffect(function () {
         if (!mapHook.map ||
             (mapHook.map && !mapHook.map.map.getLayer(layerId.current)) ||
             !props.options)
             return;
-        // the MapLibre-gl instance (mapContext.map) is accessible here
-        // initialize the layer and add it to the MapLibre-gl instance or do something else with it
         var key;
         if (props.options.layout) {
             for (key in props.options.layout) {
@@ -12591,39 +12677,118 @@ var MlImageMarkerLayer = function (props) {
             }
         }
     }, [props.options, layerId.current, props.mapId]);
-    var addLayer = useCallback(function () {
-        if (!mapHook.map)
+    var createImage = function (mapHook, props, callback) {
+        if (!mapHook.map) {
+            initializedRef.current = false;
+            return;
+        }
+        if (props.imgSrc && !mapHook.map.map.hasImage(imageIdRef.current)) {
+            mapHook.map.map.loadImage(props.imgSrc, function (error, image) {
+                if (error)
+                    throw error;
+                if (!mapHook.map || mapHook.map.map.hasImage(imageIdRef.current))
+                    return;
+                mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
+                if (typeof callback === "function") {
+                    callback();
+                }
+            });
+        }
+        else {
+            if (typeof callback === "function") {
+                callback();
+            }
+        }
+    };
+    var createLayer = function (mapHook, props, createMapLibreElements) {
+        var _a;
+        if (!props.options || !mapHook.map || ((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current)))
             return;
         var tmpOptions = __assign({ id: layerId.current, layout: {} }, props.options);
         tmpOptions.layout["icon-image"] = imageIdRef.current;
         mapHook.map.addLayer(tmpOptions, props.insertBeforeLayer, mapHook.componentId);
-    }, [props, mapHook.map]);
-    useEffect(function () {
-        if (!props.options || !mapHook.map || layerInitializedRef.current)
+        // recreate layer if map style.json has changed
+        mapHook.map.on("styledata", function () {
+            var _a;
+            if (initializedRef.current &&
+                !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current)) &&
+                !recreationInProgress.current) {
+                initializedRef.current = false;
+                recreationInProgress.current = true;
+                console.log("Recreate Layer " + layerId.current);
+                createMapLibreElements();
+            }
+        }, mapHook.componentId);
+        if (recreationInProgress.current) {
+            recreationInProgress.current = false;
+        }
+    };
+    var createMapLibreElements = useCallback(function () {
+        var _a;
+        if (!mapHook.map || initializedRef.current || ((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current)))
             return;
-        layerInitializedRef.current = true;
+        initializedRef.current = true;
+        if (recreationInProgress.current) {
+            mapHook.cleanup();
+        }
         if (props.imgSrc) {
-            mapHook.map.map.loadImage(props.imgSrc, function (error, image) {
-                if (error)
-                    throw error;
-                if (!mapHook.map)
-                    return;
-                mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
+            createImage(mapHook, props, function () {
+                createLayer(mapHook, props, createMapLibreElements);
             });
         }
-        addLayer();
-    }, [mapHook.map, addLayer, props]);
+        else {
+            createLayer(mapHook, props, createMapLibreElements);
+        }
+    }, [props, mapHook]);
+    useEffect(function () {
+        if (initializedRef.current)
+            return;
+        createMapLibreElements();
+    }, [createMapLibreElements]);
     useEffect(function () {
         if (!mapHook.map ||
             (mapHook.map && !mapHook.map.map.getLayer(layerId.current)) ||
             !props.options) {
             return;
         }
-        mapHook.map.map
-            .getSource(layerId.current)
-            .setData(props.options.source.data);
+        mapHook.map.map.getSource(layerId.current).setData(props.options.source.data);
     }, [props.options.source.data, props]);
     return React__default.createElement(React__default.Fragment, null);
+};
+
+//const unitSquareConvert = {
+//  kilometers: 1,
+//  miles: 1 / 2.58998811,
+//};
+function getUnitSquareMultiplier(measureType) {
+    return measureType === "miles" ? 1 / 2.58998811 : 1;
+}
+function getUnitLabel(measureType) {
+    return measureType === "miles" ? 'mi' : 'km';
+}
+var MlMeasureTool = function (props) {
+    var _a = useState(0), length = _a[0], setLength = _a[1];
+    var _b = useState([undefined]), currentFeatures = _b[0], setCurrentFeatures = _b[1];
+    useEffect(function () {
+        if (currentFeatures[0]) {
+            setLength(props.measureType === "polygon"
+                ? (turf.area(currentFeatures[0]) / 1000000) * getUnitSquareMultiplier(props.unit)
+                : turf.length(currentFeatures[0], { units: props.unit }));
+        }
+    }, [props.unit, currentFeatures]);
+    return (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(MlFeatureEditor, { onChange: function (features) {
+                setCurrentFeatures(features);
+            }, mode: props.measureType === "polygon" ? "custom_polygon" : "draw_line_string" }),
+        length.toFixed(2),
+        " ",
+        getUnitLabel(props.unit),
+        props.measureType === "polygon" ? "²" : ""));
+};
+MlMeasureTool.defaultProps = {
+    mapId: undefined,
+    measureType: "line",
+    unit: "kilometers",
 };
 
 function getButtonGroupUtilityClass(slot) {
@@ -12939,6 +13104,29 @@ var _default$2 = (0, _createSvgIcon$2.default)( /*#__PURE__*/(0, _jsxRuntime$2.j
 
 default_1$2 = RemoveCircleOutline.default = _default$2;
 
+function useTheme() {
+  const theme = useTheme$1(defaultTheme$2);
+
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useDebugValue(theme);
+  }
+
+  return theme;
+}
+
+const defaultTheme = createTheme();
+/**
+ * @ignore - do not document.
+ */
+
+const Box = createBox({
+  defaultTheme,
+  defaultClassName: 'MuiBox-root',
+  generateClassName: ClassNameGenerator$1.generate
+});
+var Box$1 = Box;
+
 function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
 
 var SvgRotateRight = function SvgRotateRight(props) {
@@ -13214,8 +13402,55 @@ function useMediaQuery(queryInput, options = {}) {
 }
 
 /**
-* @component
-*/
+ * Component template
+ *
+ */
+var MlCenterPosition = function (props) {
+    var _a, _b;
+    var mapHook = useMap({
+        mapId: props.mapId,
+        waitForLayer: props.insertBeforeLayer,
+    });
+    var _c = useState(false), locationAccessDenied = _c[0], setLocationAccessDenied = _c[1];
+    var centerCurrentLocation = function () {
+        navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
+    };
+    var getLocationSuccess = useCallback(function (location) {
+        var _a, _b, _c;
+        (_c = (_a = mapHook.map) === null || _a === void 0 ? void 0 : (_b = _a.map).setCenter) === null || _c === void 0 ? void 0 : _c.call(_b, [location.coords.longitude, location.coords.latitude]);
+    }, [mapHook.map]);
+    var getLocationError = function () {
+        console.log("Access of user location denied");
+        setLocationAccessDenied(true);
+    };
+    return React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(Button$2, { sx: __assign({ zIndex: 1002, color: !locationAccessDenied ? props.onColor : props.offColor }, props.style), onClick: centerCurrentLocation, disabled: locationAccessDenied },
+            React__default.createElement(default_1$4, { sx: __assign({}, (((_a = props.style) === null || _a === void 0 ? void 0 : _a.fontSize) ? { fontSize: (_b = props.style) === null || _b === void 0 ? void 0 : _b.fontSize } : {})) }),
+            " "));
+};
+MlCenterPosition.defaultProps = {
+    mapId: undefined,
+    style: {
+        minWidth: "30px",
+        minHeight: "30px",
+        width: "30px",
+        height: "30px",
+        backgroundColor: "#414141",
+        borderRadius: "23%",
+        margin: 0.15,
+        fontSize: "1.3em",
+        ":hover": {
+            backgroundColor: "#515151",
+            color: "#ececec",
+        },
+    },
+    onColor: "#ececec",
+    offColor: "#666",
+};
+
+/**
+ * @component
+ */
 var MlNavigationTools = function (props) {
     var mapHook = useMap({
         mapId: props.mapId,
@@ -13233,11 +13468,14 @@ var MlNavigationTools = function (props) {
         //border: "1px solid #bbb",
         //boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
         margin: 0.15,
-        fontSize: mediaIsMobile ? "1.5em" : "1.2em",
+        fontSize: mediaIsMobile ? "1.4em" : "1.2em",
         ":hover": {
             backgroundColor: "#515151",
         },
         color: "#ececec",
+    };
+    var iconStyle = {
+        fontSize: buttonStyle.fontSize,
     };
     useEffect(function () {
         if (!mapHook.map)
@@ -13252,16 +13490,14 @@ var MlNavigationTools = function (props) {
     var zoomIn = function () {
         if (!mapHook.map)
             return;
-        if (mapHook.map.map.transform._zoom + 0.5 <=
-            mapHook.map.map.transform._maxZoom) {
+        if (mapHook.map.map.transform._zoom + 0.5 <= mapHook.map.map.transform._maxZoom) {
             mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom + 0.5 });
         }
     };
     var zoomOut = function () {
         if (!mapHook.map)
             return;
-        if (mapHook.map.map.transform._zoom - 0.5 >=
-            mapHook.map.map.transform._minZoom) {
+        if (mapHook.map.map.transform._zoom - 0.5 >= mapHook.map.map.transform._minZoom) {
             mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom - 0.5 });
         }
     };
@@ -13274,14 +13510,7 @@ var MlNavigationTools = function (props) {
         }
         mapHook.map.map.easeTo({ pitch: targetPitch });
     };
-    return (React__default.createElement("div", { style: {
-            zIndex: 501,
-            position: "absolute",
-            right: mediaIsMobile ? "15px" : "5px",
-            bottom: mediaIsMobile ? "40px" : "20px",
-            display: "flex",
-            flexDirection: "column",
-        } },
+    return (React__default.createElement(Box$1, { sx: __assign(__assign({ zIndex: 501, position: "absolute", display: "flex", flexDirection: "column" }, (mediaIsMobile ? { margin: "20px 10px 20px 10px" } : {})), props.sx) },
         React__default.createElement(MlNavigationCompass, { style: {
                 width: "31px",
                 position: "relative",
@@ -13291,21 +13520,40 @@ var MlNavigationTools = function (props) {
             }, backgroundStyle: {
                 boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
             } }),
-        React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { fontSize: mediaIsMobile ? '1.4em' : '1em', fontWeight: 600 }), onClick: adjustPitch }, pitch ? "2D" : "3D"),
-        React__default.createElement(MlFollowGps, { style: __assign({}, (function (_a) {
+        props.show3DButton && (React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }), onClick: adjustPitch }, pitch ? "2D" : "3D")),
+        props.showFollowGpsButton && (React__default.createElement(MlFollowGps, { buttonSx: __assign({}, (function (_a) {
                 _a.color; var rest = __rest(_a, ["color"]);
                 return rest;
-            })(buttonStyle)) }),
+            })(buttonStyle)) })),
+        props.showCenterLocationButton && (React__default.createElement(MlCenterPosition, { style: __assign({}, (function (_a) {
+                _a.color; var rest = __rest(_a, ["color"]);
+                return rest;
+            })(buttonStyle)) })),
         React__default.createElement(ButtonGroup$1, { orientation: "vertical", sx: {
                 width: "50px",
                 border: "none",
                 Button: { minWidth: "20px !important", border: "none", padding: 0 },
                 "Button:hover": { border: "none" },
-            } },
-            React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { color: "#ececec" }), onClick: zoomIn },
-                React__default.createElement(default_1$3, { sx: { fontSize: mediaIsMobile ? "1.5em" : "1.2em" } })),
-            React__default.createElement(Button$1, { sx: __assign(__assign({}, buttonStyle), { color: "#ececec" }), onClick: zoomOut },
-                React__default.createElement(default_1$2, { sx: { fontSize: mediaIsMobile ? "1.5em" : "1.2em" } })))));
+            } }, props.showZoomButtons && (React__default.createElement(React__default.Fragment, null,
+            React__default.createElement(Button$1, { sx: __assign({}, buttonStyle), onClick: zoomIn },
+                React__default.createElement(default_1$3, { sx: __assign({}, iconStyle) })),
+            React__default.createElement(Button$1, { sx: __assign({}, buttonStyle), onClick: zoomOut },
+                React__default.createElement(default_1$2, { sx: __assign({}, iconStyle) }))))),
+        props.children &&
+            React__default.cloneElement(props.children, {
+                sx: __assign({}, buttonStyle),
+            })));
+};
+MlNavigationTools.defaultProps = {
+    mapId: undefined,
+    show3DButton: true,
+    showFollowGpsButton: true,
+    showCenterLocationButton: false,
+    showZoomButtons: true,
+    sx: {
+        right: "5px",
+        bottom: "20px",
+    },
 };
 
 /**
@@ -13318,6 +13566,7 @@ var MlLayer = function (props) {
         idPrefix: 'MlLayer-',
         layerId: props.layerId,
         mapId: props.mapId,
+        geojson: props.geojson,
         options: __assign({ type: "background", paint: {
                 "background-color": "rgba(0,0,0,0)",
             } }, props.options),
@@ -13342,10 +13591,13 @@ var MlVectorTileLayer = function (props) {
     var layerPaintConfsRef = useRef({});
     var layerLayoutConfsRef = useRef({});
     var initializedRef = useRef(false);
-    useEffect(function () {
-        if (!mapHook.map || initializedRef.current)
+    var createLayer = useCallback(function () {
+        if (!mapHook.map)
             return;
         initializedRef.current = true;
+        if (mapHook.map.map.getLayer(layerId.current)) {
+            mapHook.cleanup();
+        }
         // Add the new layer to the openlayers instance once it is available
         mapHook.map.addSource(layerId.current, __assign({ type: "vector", tiles: [props.url], tileSize: 512, attribution: "" }, props.sourceOptions), mapHook.componentId);
         for (var key in props.layers) {
@@ -13358,8 +13610,21 @@ var MlVectorTileLayer = function (props) {
                 } }, props.layers[key]), props.insertBeforeLayer, mapHook.componentId);
             layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
             layerLayoutConfsRef.current[key] = JSON.stringify(props.layers[key].layout);
+            // recreate layer if style has changed
+            mapHook.map.on("styledata", function () {
+                var _a;
+                if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getSource(layerId.current))) {
+                    console.log("Recreate Layer " + layerId.current);
+                    createLayer();
+                }
+            }, mapHook.componentId);
         }
     }, [mapHook.map, props]);
+    useEffect(function () {
+        if (initializedRef.current)
+            return;
+        createLayer();
+    }, [createLayer]);
     useEffect(function () {
         if (!mapHook.map || !initializedRef.current)
             return;
@@ -13452,10 +13717,13 @@ var MlWmsLayer = function (props) {
     });
     var initializedRef = useRef(false);
     var layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
-    useEffect(function () {
-        if (!mapHook.map || initializedRef.current)
+    var createLayer = useCallback(function () {
+        if (!mapHook.map)
             return;
         initializedRef.current = true;
+        if (mapHook.map.map.getLayer(layerId.current)) {
+            mapHook.cleanup();
+        }
         var _propsUrlParams;
         var _wmsUrl = props.url;
         if (props.url.indexOf("?") !== -1) {
@@ -13466,14 +13734,26 @@ var MlWmsLayer = function (props) {
         // first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
         var urlParamsObj = __assign(__assign(__assign({}, defaultProps.urlParameters), Object.fromEntries(_urlParamsFromUrl)), props.urlParameters);
         var urlParams = new URLSearchParams(urlParamsObj);
-        var urlParamsStr = decodeURIComponent(urlParams.toString()) +
-            "".replace(/%2F/g, "/").replace(/%3A/g, ":");
+        var urlParamsStr = decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
         mapHook.map.addSource(layerId.current, __assign({ type: "raster", tiles: [_wmsUrl + "?" + urlParamsStr], tileSize: urlParamsObj.width, attribution: props.attribution }, props.sourceOptions), mapHook.componentId);
         mapHook.map.addLayer(__assign({ id: layerId.current, type: "raster", source: layerId.current }, props.layerOptions), props.insertBeforeLayer, mapHook.componentId);
+        // recreate layer if map style.json has changed
+        mapHook.map.on("styledata", function () {
+            var _a;
+            if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
+                console.log("Recreate Layer " + layerId.current);
+                createLayer();
+            }
+        }, mapHook.componentId);
         if (!props.visible) {
             mapHook.map.map.setLayoutProperty(layerId.current, "visibility", "none");
         }
-    }, [mapHook, props]);
+    }, [mapHook.map, props]);
+    useEffect(function () {
+        if (initializedRef.current)
+            return;
+        createLayer();
+    }, [createLayer]);
     useEffect(function () {
         if (!mapHook.map || !initializedRef.current)
             return;
@@ -14110,17 +14390,6 @@ var MlTransitionGeoJsonLayer = function (props) {
     return (React__default.createElement(React__default.Fragment, null,
         React__default.createElement(MlGeoJsonLayer, __assign({}, restProps, { geojson: displayGeojson }))));
 };
-
-function useTheme() {
-  const theme = useTheme$1(defaultTheme$1);
-
-  if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useDebugValue(theme);
-  }
-
-  return theme;
-}
 
 function getPaperUtilityClass(slot) {
   return generateUtilityClass('MuiPaper', slot);
@@ -18567,7 +18836,7 @@ useWms.defaultProps = {
   urlParameters: {
     SERVICE: "WMS",
     VERSION: "1.3.0",
-    REQUEST: "getCapabilities"
+    REQUEST: "GetCapabilities"
   }
 };
 
@@ -18633,5 +18902,5 @@ SimpleDataProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, useLayer, useMap, useMapState, useWms };
+export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlMeasureTool, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, useLayer, useMap, useMapState, useWms };
 //# sourceMappingURL=index.esm.js.map

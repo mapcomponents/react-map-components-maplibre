@@ -13,8 +13,10 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <MlFollowGps />;
+const Template = (props) => <MlFollowGps {...props}/>;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+ExampleConfig.args = {
+  followUserPosition: false
+};
