@@ -140,16 +140,6 @@ const removeExample = (args) => {
 
   });
 
-
-  // useEffect(() => {
-  //   if (!mapHook.map) {
-  //     return
-  //   }
-  //   if (mapHook?.map?.map?.style.sourceCaches) {
-  //     setTimeout(() => setActiveSources(Object.keys(mapHook?.map?.map?.style.sourceCaches)), 100)
-  //   }
-  // }, [mapHook?.map?.map?.style, sourceStatus])
-
   useEffect(() => {
     if (!mapHook.map) {
       return
