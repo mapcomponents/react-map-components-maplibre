@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 
 import useMapState from "./useMapState";
 
-import mapContextDecorator from "../decorators/MapContextDecorator";
+import mapContextDecoratorHooks from "../decorators/MapContextDecoratorHooks";
 
 const storyoptions = {
   title: "Hooks/UseMapState",
   component: useMapState,
   argTypes: {},
-  decorators: mapContextDecorator,
+  decorators: mapContextDecoratorHooks,
 };
 export default storyoptions;
 
