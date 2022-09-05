@@ -7,7 +7,7 @@ import TopToolbar from "../ui_components/TopToolbar";
 import Button from "@mui/material/Button";
 import MlGeojsonLayerWithSource from "../components/MlGeojsonLayerWithSource/MlGeojsonLayerWithSource";
 
-import mapContextDecorator from "../decorators/MapContextDecorator";
+import mapContextDecoratorHooks from "../decorators/MapContextDecoratorHooks";
 import MlGeoJsonLayer from "../components/MlGeoJsonLayer/MlGeoJsonLayer";
 import wg_geojson from "./assets/pointWG.json";
 const vectorUrl =
@@ -17,7 +17,7 @@ const storyoptions = {
   title: "Hooks/UseSource",
   component: useSource,
   argTypes: {},
-  decorators: mapContextDecorator,
+  decorators: mapContextDecoratorHooks,
 };
 export default storyoptions;
 
