@@ -5,12 +5,12 @@ import MlCenterPosition from "./MlCenterPosition";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlCenterPosition",
-  component: MlCenterPosition,
-  argTypes: {
-  },
-  decorators: mapContextDecorator,
-  parameters: { docs: { source: { type: 'code' } } }
+	title: "MapComponents/MlCenterPosition",
+	component: MlCenterPosition,
+	argTypes: {
+	},
+	decorators: mapContextDecorator,
+	parameters: { docs: { source: { type: 'code' } } }
 };
 export default storyoptions;
 

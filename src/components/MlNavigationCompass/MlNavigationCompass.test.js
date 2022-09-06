@@ -8,61 +8,61 @@ import maplibregl from "maplibre-gl/dist/maplibre-gl";
 import { mockMapLibreMethods } from "../../setupTests";
 
 jest.mock("@mapbox/mapbox-gl-draw", () => {
-  return function () {
-    return {
-      set: jest.fn(),
-    };
-  };
+	return function () {
+		return {
+			set: jest.fn(),
+		};
+	};
 });
 const mapLibreInstance = new maplibregl.Map();
 
 const MlNavigationCompassTestComponent = (props) => {
-  const [componentVisible, setComponentVisible] = useState(true);
+	const [componentVisible, setComponentVisible] = useState(true);
 
-  return (
-    <>
-      <MapLibreMap />
+	return (
+		<>
+			<MapLibreMap />
 
-      {componentVisible && <MlNavigationCompass {...props} />}
+			{componentVisible && <MlNavigationCompass {...props} />}
 
-      <button
-        className="toggle_layer_visible"
-        onClick={() => {
-          setComponentVisible(!componentVisible);
-        }}
-      >
-        toggle component
-      </button>
-    </>
-  );
+			<button
+				className="toggle_layer_visible"
+				onClick={() => {
+					setComponentVisible(!componentVisible);
+				}}
+			>
+				toggle component
+			</button>
+		</>
+	);
 };
 
 let testAttributes = {};
 
 describe("<MlNavigationCompass>", () => {
-  it("should register 1 event listener to the maplibre instance", async () => {
-    const wrapper = mount(
-      <MapComponentsProvider>
-        <MlNavigationCompassTestComponent {...testAttributes} />
-      </MapComponentsProvider>
-    );
+	it("should register 1 event listener to the maplibre instance", async () => {
+		const wrapper = mount(
+			<MapComponentsProvider>
+				<MlNavigationCompassTestComponent {...testAttributes} />
+			</MapComponentsProvider>
+		);
 
-    // MapLibreGlWrapper now subscribes to "data", "move" events on its own
-    await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5));
-  });
+		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
+		await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5));
+	});
 
-  it("should deregister 1 event listener to the maplibre instance", async () => {
-    const wrapper = mount(
-      <MapComponentsProvider>
-        <MlNavigationCompassTestComponent {...testAttributes} />
-      </MapComponentsProvider>
-    );
+	it("should deregister 1 event listener to the maplibre instance", async () => {
+		const wrapper = mount(
+			<MapComponentsProvider>
+				<MlNavigationCompassTestComponent {...testAttributes} />
+			</MapComponentsProvider>
+		);
 
-    // MapLibreGlWrapper now subscribes to "data", "move" events on its own
-    expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5);
+		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
+		expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5);
 
-    wrapper.find(".toggle_layer_visible").simulate("click");
+		wrapper.find(".toggle_layer_visible").simulate("click");
 
-    expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2);
-  });
+		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2);
+	});
 });
