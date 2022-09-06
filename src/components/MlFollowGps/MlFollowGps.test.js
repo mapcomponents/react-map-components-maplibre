@@ -6,58 +6,58 @@ import MlFollowGps from "./MlFollowGps";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 
 const mockGeolocation = {
-  watchPosition: jest.fn(() => 1),
-  clearWatch: jest.fn(),
+	watchPosition: jest.fn(() => 1),
+	clearWatch: jest.fn(),
 };
 
 global.navigator.geolocation = mockGeolocation;
 
 const MlFollowGPSTestComponent = (props) => {
-  const [componentVisible, setComponentVisible] = useState(true);
+	const [componentVisible, setComponentVisible] = useState(true);
 
-  return (
-    <>
-      <MapLibreMap />
+	return (
+		<>
+			<MapLibreMap />
 
-      {componentVisible && <MlFollowGps {...props} />}
+			{componentVisible && <MlFollowGps {...props} />}
 
-      <button
-        className="toggle_layer_visible"
-        onClick={() => {
-          setComponentVisible(!componentVisible);
-        }}
-      >
-        toggle component
-      </button>
-    </>
-  );
+			<button
+				className="toggle_layer_visible"
+				onClick={() => {
+					setComponentVisible(!componentVisible);
+				}}
+			>
+				toggle component
+			</button>
+		</>
+	);
 };
 
 let testAttributes = {};
 
 describe("<MlFollowGps>", () => {
-  it("should call navigator.geolocation.watchPosition once", async () => {
-    const wrapper = mount(
-      <MapComponentsProvider>
-        <MlFollowGPSTestComponent {...testAttributes} />
-      </MapComponentsProvider>
-    );
+	it("should call navigator.geolocation.watchPosition once", async () => {
+		const wrapper = mount(
+			<MapComponentsProvider>
+				<MlFollowGPSTestComponent {...testAttributes} />
+			</MapComponentsProvider>
+		);
 
-    wrapper.find("MlFollowGps button").simulate("click");
-    await waitFor(() => expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1));
-  });
+		wrapper.find("MlFollowGps button").simulate("click");
+		await waitFor(() => expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1));
+	});
 
-  it("should call navigator.geolocation.clearWatch once, after MlFollowGPSButton has been pressed twice", async () => {
-    const wrapper = mount(
-      <MapComponentsProvider>
-        <MlFollowGPSTestComponent {...testAttributes} />
-      </MapComponentsProvider>
-    );
+	it("should call navigator.geolocation.clearWatch once, after MlFollowGPSButton has been pressed twice", async () => {
+		const wrapper = mount(
+			<MapComponentsProvider>
+				<MlFollowGPSTestComponent {...testAttributes} />
+			</MapComponentsProvider>
+		);
 
-    wrapper.find("MlFollowGps button").simulate("click");
-    wrapper.find("MlFollowGps button").simulate("click");
-    //wrapper.find(".toggle_layer_visible").simulate("click");
+		wrapper.find("MlFollowGps button").simulate("click");
+		wrapper.find("MlFollowGps button").simulate("click");
+		//wrapper.find(".toggle_layer_visible").simulate("click");
 
-    await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(1));
-  });
+		await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(1));
+	});
 });

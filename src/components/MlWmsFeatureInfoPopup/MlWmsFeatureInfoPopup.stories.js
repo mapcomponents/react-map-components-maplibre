@@ -5,13 +5,13 @@ import MlWmsFeatureInfoPopup from "./MlWmsFeatureInfoPopup";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlWmsFeatureInfoPopup",
-  component: MlWmsFeatureInfoPopup,
-  argTypes: {
-    url: {},
-    layer: {},
-  },
-  decorators: mapContextDecorator,
+	title: "MapComponents/MlWmsFeatureInfoPopup",
+	component: MlWmsFeatureInfoPopup,
+	argTypes: {
+		url: {},
+		layer: {},
+	},
+	decorators: mapContextDecorator,
 };
 export default storyoptions;
 

@@ -1,0 +1,11 @@
+.cache
+.github
+.storybook
+.vscode
+coverage
+dist
+docs
+docs-build
+js-docs
+node_modules
+storybook-static

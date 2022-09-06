@@ -5,11 +5,11 @@ import MlLayer from "./MlLayer";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-  title: "MapComponents/MlLayer",
-  component: MlLayer,
-  argTypes: {
-  },
-  decorators: mapContextDecorator,
+	title: "MapComponents/MlLayer",
+	component: MlLayer,
+	argTypes: {
+	},
+	decorators: mapContextDecorator,
 };
 export default storyoptions;
 

@@ -6,10 +6,10 @@ import MlFillExtrusionLayer from "./MlFillExtrusionLayer";
 const testComponent = <MlFillExtrusionLayer />;
 
 let testParams = [
-  "<MlFillExtrusionLayer />",
-  testComponent,
-  new RegExp('^.*"MlFillExtrusionLayer-' + uuid_regex + '".*$'),
-  "MlFillExtrusionLayer-{uuid}",
+	"<MlFillExtrusionLayer />",
+	testComponent,
+	new RegExp('^.*"MlFillExtrusionLayer-' + uuid_regex + '".*$'),
+	"MlFillExtrusionLayer-{uuid}",
 ];
 
 layerRemovalTest(...testParams);

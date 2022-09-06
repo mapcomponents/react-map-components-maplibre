@@ -7,45 +7,45 @@ import mapContextDecorator from "../../decorators/MapContextDecorator";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const storyoptions = {
-  title: "MapComponents/MlScaleReference",
-  component: MlScaleReference,
-  argTypes: {
-    url: {},
-    layer: {},
-  },
-  decorators: mapContextDecorator,
+	title: "MapComponents/MlScaleReference",
+	component: MlScaleReference,
+	argTypes: {
+		url: {},
+		layer: {},
+	},
+	decorators: mapContextDecorator,
 };
 export default storyoptions;
 
 const ToolbarTemplate = (props) => {
-  return (
-    <TopToolbar>
-      <MlScaleReference {...props} />
-    </TopToolbar>
-  );
+	return (
+		<TopToolbar>
+			<MlScaleReference {...props} />
+		</TopToolbar>
+	);
 };
 const OverlayTemplate = (props) => {
-  const mediaIsMobile = useMediaQuery("(max-width:900px)");
-  return (
-    <div
-      style={{
-        position: "absolute",
-        zIndex: 100000,
-        bottom: mediaIsMobile ? "40px" : "20px",
-        right: "20px",
-      }}
-    >
-      <MlScaleReference {...props} />
-    </div>
-  );
+	const mediaIsMobile = useMediaQuery("(max-width:900px)");
+	return (
+		<div
+			style={{
+				position: "absolute",
+				zIndex: 100000,
+				bottom: mediaIsMobile ? "40px" : "20px",
+				right: "20px",
+			}}
+		>
+			<MlScaleReference {...props} />
+		</div>
+	);
 };
 
 export const Toolbar = ToolbarTemplate.bind({});
 Toolbar.args = {
-  show: "toolbar",
+	show: "toolbar",
 };
 
 export const Overlay = OverlayTemplate.bind({});
 Overlay.args = {
-  show: "overlay",
+	show: "overlay",
 };

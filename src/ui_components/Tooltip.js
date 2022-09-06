@@ -5,17 +5,17 @@ import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 
 const useStyles = makeStyles((theme) => ({
-  tooltip: {
-    position: "fixed",
-    top: "100px",
-    left: "100px",
-    zIndex: 100000,
-  },
+	tooltip: {
+		position: "fixed",
+		top: "100px",
+		left: "100px",
+		zIndex: 100000,
+	},
 }));
 
 export default function Legend(props) {
-  const classes = useStyles();
-  const theme = useTheme();
+	const classes = useStyles();
+	const theme = useTheme();
 
-  return <div className={classes.tooltip}>tooltip</div>;
+	return <div className={classes.tooltip}>tooltip</div>;
 }
