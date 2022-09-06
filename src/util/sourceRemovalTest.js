@@ -4,110 +4,110 @@ import { MapContext, MapComponentsProvider } from "../index";
 import MapLibreMap from "./../components/MapLibreMap/MapLibreMap";
 
 const sourceRemovalTest = (
-  ComponentName,
-  Component,
-  regexLayerNameTest,
-  humanReadableLayerName,
-  beforeWrapperInit,
-  afterWrapperInit
+	ComponentName,
+	Component,
+	regexLayerNameTest,
+	humanReadableLayerName,
+	beforeWrapperInit,
+	afterWrapperInit
 ) => {
-  const TestComponent = (props) => {
-    const [layerVisible, setLayerVisible] = useState(true);
-    const [refreshTrigger, setRefreshTrigger] = useState(0);
-    const mapContext = useContext(MapContext);
+	const TestComponent = (props) => {
+		const [layerVisible, setLayerVisible] = useState(true);
+		const [refreshTrigger, setRefreshTrigger] = useState(0);
+		const mapContext = useContext(MapContext);
 
-    return (
-      <>
-        <MapLibreMap />
+		return (
+			<>
+				<MapLibreMap />
 
-        {layerVisible && Component}
+				{layerVisible && Component}
 
-        <button
-          className="toggle_layer_visible"
-          onClick={() => {
-            setLayerVisible(!layerVisible);
-          }}
-        >
-          toggle layer visible
-        </button>
-        <button
-          className="trigger_refresh"
-          onClick={() => {
-            setRefreshTrigger(refreshTrigger + 1);
-          }}
-        >
-          refresh
-        </button>
-        <div className="sources_json">
-          {mapContext.map &&
-            refreshTrigger &&
-            JSON.stringify(mapContext.map.map.sources)}
-        </div>
-      </>
-    );
-  };
+				<button
+					className="toggle_layer_visible"
+					onClick={() => {
+						setLayerVisible(!layerVisible);
+					}}
+				>
+					toggle layer visible
+				</button>
+				<button
+					className="trigger_refresh"
+					onClick={() => {
+						setRefreshTrigger(refreshTrigger + 1);
+					}}
+				>
+					refresh
+				</button>
+				<div className="sources_json">
+					{mapContext.map &&
+						refreshTrigger &&
+						JSON.stringify(mapContext.map.map.sources)}
+				</div>
+			</>
+		);
+	};
 
-  const createWrapper = () =>
-    mount(
-      <MapComponentsProvider>
-        <TestComponent />
-      </MapComponentsProvider>
-    );
+	const createWrapper = () =>
+		mount(
+			<MapComponentsProvider>
+				<TestComponent />
+			</MapComponentsProvider>
+		);
 
-  describe(ComponentName, () => {
-    it(
-      "should add a Source with the id '" +
-        humanReadableLayerName +
-        "' to the MapLibre instance",
-      async () => {
-        if (typeof beforeWrapperInit === "function") {
-          await beforeWrapperInit();
-        }
+	describe(ComponentName, () => {
+		it(
+			"should add a Source with the id '" +
+				humanReadableLayerName +
+				"' to the MapLibre instance",
+			async () => {
+				if (typeof beforeWrapperInit === "function") {
+					await beforeWrapperInit();
+				}
 
-        const wrapper = createWrapper();
+				const wrapper = createWrapper();
 
-        if (typeof afterWrapperInit === "function") {
-          await afterWrapperInit();
-        }
+				if (typeof afterWrapperInit === "function") {
+					await afterWrapperInit();
+				}
 
-        wrapper.find(".trigger_refresh").simulate("click");
+				wrapper.find(".trigger_refresh").simulate("click");
 
-        expect(
-          regexLayerNameTest.test(wrapper.find(".sources_json").text())
-        ).toEqual(true);
-      }
-    );
+				expect(
+					regexLayerNameTest.test(wrapper.find(".sources_json").text())
+				).toEqual(true);
+			}
+		);
 
-    it(
-      "should remove a Source with the id '" +
-        humanReadableLayerName +
-        "' from the MapLibre instance",
-      async () => {
-        if (typeof beforeWrapperInit === "function") {
-          await beforeWrapperInit();
-        }
+		it(
+			"should remove a Source with the id '" +
+				humanReadableLayerName +
+				"' from the MapLibre instance",
+			async () => {
+				if (typeof beforeWrapperInit === "function") {
+					await beforeWrapperInit();
+				}
 
-        const wrapper = createWrapper();
+				const wrapper = createWrapper();
 
-        if (typeof afterWrapperInit === "function") {
-          await afterWrapperInit();
-        }
+				if (typeof afterWrapperInit === "function") {
+					await afterWrapperInit();
+				}
 
-        wrapper.find(".trigger_refresh").simulate("click");
+				wrapper.find(".trigger_refresh").simulate("click");
 
-        expect(
-          regexLayerNameTest.test(wrapper.find(".sources_json").text())
-        ).toEqual(true);
+				expect(
+					regexLayerNameTest.test(wrapper.find(".sources_json").text())
+				).toEqual(true);
 
-        wrapper.find(".toggle_layer_visible").simulate("click");
-        wrapper.find(".trigger_refresh").simulate("click");
+				wrapper.find(".toggle_layer_visible").simulate("click");
+				wrapper.find(".trigger_refresh").simulate("click");
 
-        expect(
-          regexLayerNameTest.test(wrapper.find(".sources_json").text())
-        ).toEqual(false);
-      }
-    );
-  });
+				expect(
+					regexLayerNameTest.test(wrapper.find(".sources_json").text())
+				).toEqual(false);
+			}
+		);
+	});
 };
 
 export default sourceRemovalTest;

@@ -7,13 +7,13 @@ import BuildIcon from "@mui/icons-material/Build";
 import Button from "@mui/material/Button";
 
 const storyoptions = {
-  title: "MapComponents/MlNavigationTools",
-  component: MlNavigationTools,
-  argTypes: {
-    url: {},
-    layer: {},
-  },
-  decorators: noNavToolsDecorator,
+	title: "MapComponents/MlNavigationTools",
+	component: MlNavigationTools,
+	argTypes: {
+		url: {},
+		layer: {},
+	},
+	decorators: noNavToolsDecorator,
 };
 export default storyoptions;
 
@@ -26,40 +26,40 @@ DefaultConfig.args = {};
 export const No3DButton = Template.bind({});
 No3DButton.parameters = {};
 No3DButton.args = {
-  show3DButton: false,
+	show3DButton: false,
 };
 
 export const ShowCenterLocationButton = Template.bind({});
 ShowCenterLocationButton.parameters = {};
 ShowCenterLocationButton.args = {
-  showFollowGpsButton: false,
-  showCenterLocationButton: true,
+	showFollowGpsButton: false,
+	showCenterLocationButton: true,
 };
 
 export const AlterToolPosition = Template.bind({});
 AlterToolPosition.parameters = {};
 AlterToolPosition.args = {
-  sx: { top: "10px", right: "5px" },
+	sx: { top: "10px", right: "5px" },
 };
 
 export const NoZoomButtons = Template.bind({});
 NoZoomButtons.parameters = {};
 NoZoomButtons.args = {
-  showZoomButtons: false,
+	showZoomButtons: false,
 };
 
 export const NoFollowGpsButton = Template.bind({});
 NoFollowGpsButton.parameters = {};
 NoFollowGpsButton.args = {
-  showFollowGpsButton: false,
+	showFollowGpsButton: false,
 };
 
 export const CustomButton = Template.bind({});
 CustomButton.parameters = {};
 CustomButton.args = {
-  children: (
-    <Button onClick={() => {}}>
-      <BuildIcon sx={{ fontSize: "1em" }} />
-    </Button>
-  ),
+	children: (
+		<Button onClick={() => {}}>
+			<BuildIcon sx={{ fontSize: "1em" }} />
+		</Button>
+	),
 };

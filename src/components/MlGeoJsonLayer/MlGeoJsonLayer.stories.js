@@ -9,58 +9,58 @@ import sample_polygon_geojson_1 from "./assets/sample_polygon_1.json";
 
 console.log(sample_polygon_geojson_1);
 const storyoptions = {
-  title: "MapComponents/MlGeoJsonLayer",
-  component: MlGeoJsonLayer,
-  argTypes: {
-  },
-  decorators: mapContextDecorator,
+	title: "MapComponents/MlGeoJsonLayer",
+	component: MlGeoJsonLayer,
+	argTypes: {
+	},
+	decorators: mapContextDecorator,
 };
 export default storyoptions;
 
 const Template = (props) => {
-  return (
-    <>
-      <MlGeoJsonLayer {...props} />
-    </>
-  );
+	return (
+		<>
+			<MlGeoJsonLayer {...props} />
+		</>
+	);
 };
 const LinestringTemplate = (props) => {
-  return (
-    <>
-      <MlGeoJsonLayer type="line" geojson={sample_geojson_1} />
-    </>
-  );
+	return (
+		<>
+			<MlGeoJsonLayer type="line" geojson={sample_geojson_1} />
+		</>
+	);
 };
 
 export const Linestring = LinestringTemplate.bind({});
 Linestring.parameters = {};
 Linestring.args = {
-  type:''
+	type:''
 };
 
 export const Polygon = Template.bind({});
 Polygon.parameters = {};
 Polygon.args = {
-  geojson: sample_polygon_geojson_1,
-  paint:{
-    "fill-color": 'rgba(120,20,80,.5)'
-  },
-  type:''
+	geojson: sample_polygon_geojson_1,
+	paint:{
+		"fill-color": 'rgba(120,20,80,.5)'
+	},
+	type:''
 };
 export const DefaultPaintOverrides = Template.bind({});
 DefaultPaintOverrides.parameters = {};
 DefaultPaintOverrides.args = {
-  defaultPaintOverrides: {
-    fill: {
-      "fill-color": "blue",
-    },
-    circle: {
-      "circle-color": "red",
-    },
-    line: {
-      "line-color": "black",
-    },
-  },
-  geojson: sample_polygon_geojson_1,
-  type:''
+	defaultPaintOverrides: {
+		fill: {
+			"fill-color": "blue",
+		},
+		circle: {
+			"circle-color": "red",
+		},
+		line: {
+			"line-color": "black",
+		},
+	},
+	geojson: sample_polygon_geojson_1,
+	type:''
 };

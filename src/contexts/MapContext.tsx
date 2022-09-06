@@ -12,80 +12,80 @@ MapComponentsProvider must be used one level higher than the first use of MapCon
  */
 
 const MapComponentsProvider = ({ children }:{children:any}) => {
-  const [map, setMap] = useState<(MapLibreGlWrapper | undefined)>(undefined);
-  const [mapIds, setMapIds] = useState<[...string[]]>([]);
-  let mapIds_raw = useRef<[...string[]]>([]);
-  let maps = useRef<any>({});
+	const [map, setMap] = useState<(MapLibreGlWrapper | undefined)>(undefined);
+	const [mapIds, setMapIds] = useState<[...string[]]>([]);
+	let mapIds_raw = useRef<[...string[]]>([]);
+	let maps = useRef<any>({});
 
 
-  const removeMap = (mapId:string) => {
-    if (mapId) {
-      if (typeof maps.current[mapId] !== "undefined") {
-        delete maps.current[mapId];
-      }
-      let mapIdIndex = mapIds_raw.current.indexOf(mapId);
-      if (mapIdIndex > -1) {
-        mapIds_raw.current.splice(mapIdIndex, 1);
-      }
-      setMapIds([...mapIds_raw.current]);
+	const removeMap = (mapId:string) => {
+		if (mapId) {
+			if (typeof maps.current[mapId] !== "undefined") {
+				delete maps.current[mapId];
+			}
+			let mapIdIndex = mapIds_raw.current.indexOf(mapId);
+			if (mapIdIndex > -1) {
+				mapIds_raw.current.splice(mapIdIndex, 1);
+			}
+			setMapIds([...mapIds_raw.current]);
 
-      if (mapIds.length === 1 && map) {
-        setMap(undefined);
-      }
-    } else {
-      setMap(undefined);
-      removeMap("anonymous_map");
-    }
-  };
+			if (mapIds.length === 1 && map) {
+				setMap(undefined);
+			}
+		} else {
+			setMap(undefined);
+			removeMap("anonymous_map");
+		}
+	};
 
-  const setMapHandler = (mapInstance:MapLibreGlWrapper) => {
-    setMap(mapInstance);
+	const setMapHandler = (mapInstance:MapLibreGlWrapper) => {
+		setMap(mapInstance);
 
-    if (mapIds.length === 0) {
-      let mapId = "anonymous_map";
-      setMapIds([...mapIds, mapId]);
-      maps.current[mapId] = mapInstance;
-    }
-  };
+		if (mapIds.length === 0) {
+			let mapId = "anonymous_map";
+			setMapIds([...mapIds, mapId]);
+			maps.current[mapId] = mapInstance;
+		}
+	};
 
-  const value = {
-    map: map,
-    setMap: setMapHandler,
-    maps: maps.current,
-    mapIds: mapIds,
-    registerMap: (mapId:string, mapInstance:MapLibreGlWrapper) => {
-      if (mapId && mapInstance) {
-        maps.current[mapId] = mapInstance;
-        mapIds_raw.current.push(mapId);
-        setMapIds([...mapIds_raw.current]);
+	const value = {
+		map: map,
+		setMap: setMapHandler,
+		maps: maps.current,
+		mapIds: mapIds,
+		registerMap: (mapId:string, mapInstance:MapLibreGlWrapper) => {
+			if (mapId && mapInstance) {
+				maps.current[mapId] = mapInstance;
+				mapIds_raw.current.push(mapId);
+				setMapIds([...mapIds_raw.current]);
 
-        if (!map) {
-          setMap(mapInstance);
-        }
-      }
-    },
-    removeMap,
-    mapExists: (mapId:string) => {
-      if (mapId && Object.keys(maps.current).indexOf(mapId) === -1) {
-        return false;
-      } else if (!mapId && !map) {
-        return false;
-      }
-      return true;
-    },
-    getMap: (mapId:string):(MapLibreGlWrapper | null) => {
-      if (mapId && mapIds.indexOf(mapId) !== -1) {
-        return maps.current[mapId];
-      } else if (!mapId && map) {
-        return map;
-      }
+				if (!map) {
+					setMap(mapInstance);
+				}
+			}
+		},
+		removeMap,
+		mapExists: (mapId:string) => {
+			if (mapId && Object.keys(maps.current).indexOf(mapId) === -1) {
+				return false;
+			} else if (!mapId && !map) {
+				return false;
+			}
+			return true;
+		},
+		getMap: (mapId:string):(MapLibreGlWrapper | null) => {
+			if (mapId && mapIds.indexOf(mapId) !== -1) {
+				return maps.current[mapId];
+			} else if (!mapId && map) {
+				return map;
+			}
 
-      return null;
-    },
-  };
+			return null;
+		},
+	};
 
-  //@ts-ignore
-  return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
+	//@ts-ignore
+	return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
 };
 
 export { MapComponentsProvider };
