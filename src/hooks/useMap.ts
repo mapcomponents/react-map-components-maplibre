@@ -30,6 +30,7 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 	});
 
 	const initializedRef = useRef(false);
+
 	const mapRef = useRef<MapLibreGlWrapper>();
 
 	const componentId = useRef(uuidv4());
