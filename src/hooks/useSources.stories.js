@@ -51,6 +51,7 @@ const GeojsonExample = (args) => {
 };
 
 const VectorExample = (args) => {
+	useSource({ ...args });
 	const mapHook = useMap({
 		mapId: args.mapId,
 	});
@@ -94,6 +95,7 @@ const VectorExample = (args) => {
 };
 
 const RasterExample = (args) => {
+	useSource({ ...args });
 	const mapHook = useMap({
 		mapId: args.mapId,
 	});
