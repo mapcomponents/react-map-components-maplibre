@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef, MutableRefObject } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import MapContext from "../contexts/MapContext";
 import useMapState from "./useMapState";
@@ -9,7 +9,7 @@ type useMapType = {
 	mapIsReady: boolean;
 	componentId: string;
 	layers: (LayerState | undefined)[];
-	cleanup: Function;
+	cleanup: () => void;
 };
 
 function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
@@ -30,7 +30,8 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 	});
 
 	const initializedRef = useRef(false);
-	const mapRef: MutableRefObject<MapLibreGlWrapper | undefined> = useRef(undefined);
+
+	const mapRef = useRef<MapLibreGlWrapper>();
 
 	const componentId = useRef(uuidv4());
 
@@ -48,7 +49,7 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 		return () => {
 			cleanup();
 			setMapIsReady(false);
-		}
+		};
 	}, []);
 
 	useEffect(() => {

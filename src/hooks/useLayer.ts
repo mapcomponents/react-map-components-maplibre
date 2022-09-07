@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 import useMap, { useMapType } from "./useMap";
 
-import { LayerSpecification } from "maplibre-gl";
+import { SourceSpecification, LayerSpecification } from "maplibre-gl";
 
 import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
 
@@ -24,6 +24,7 @@ interface useLayerProps {
 	insertBeforeLayer?: string;
 	insertBeforeFirstSymbolLayer?: boolean;
 	geojson?: GeoJSONObject;
+	source?: SourceSpecification | string;
 	options: Partial<LayerSpecification>;
 	onHover?: MapLayerMouseEvent;
 	onClick?: MapLayerMouseEvent;
@@ -68,17 +69,29 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (mapHook.map.map.getSource(layerId.current)) {
 			mapHook.map.map.removeSource(layerId.current);
 		}
+
+		if (typeof props.source === "string") {
+			if (props.source === "" || !mapHook.map.map.getSource(props.source)) {
+				return;
+			}
+		}
+
 		initializedRef.current = true;
 
 		mapHook.map.addLayer(
 			{
 				...props.options,
-				...(props.geojson
+				...(props.geojson && !props.source
 					? {
 							source: {
 								type: "geojson",
 								data: props.geojson,
 							},
+						}
+					: {}),
+				...(props.source
+					? {
+							source: props.source,
 						}
 					: {}),
 				id: layerId.current,
@@ -140,6 +153,7 @@ function useLayer(props: useLayerProps): useLayerType {
 	useEffect(() => {
 		if (!initializedRef.current || !mapHook.map?.map?.getSource(layerId.current)) return;
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore setData only exists on GeoJsonSource
 		mapHook.map.map.getSource(layerId.current)?.setData?.(props.geojson);
 	}, [props.geojson, mapHook.map, props.options.type]);
@@ -153,11 +167,11 @@ function useLayer(props: useLayerProps): useLayerType {
 		)
 			return;
 
-		var key;
+		let key;
 
-		let layoutString = JSON.stringify(props.options.layout);
+		const layoutString = JSON.stringify(props.options.layout);
 		if (props.options.layout && layoutString !== layerLayoutConfRef.current) {
-			let oldLayout = JSON.parse(layerLayoutConfRef.current);
+			const oldLayout = JSON.parse(layerLayoutConfRef.current);
 
 			for (key in props.options.layout) {
 				if (props.options.layout?.[key] && props.options.layout[key] !== oldLayout[key]) {
@@ -167,9 +181,9 @@ function useLayer(props: useLayerProps): useLayerType {
 			layerLayoutConfRef.current = layoutString;
 		}
 
-		let paintString = JSON.stringify(props.options.paint);
+		const paintString = JSON.stringify(props.options.paint);
 		if (paintString !== layerPaintConfRef.current) {
-			let oldPaint = JSON.parse(layerPaintConfRef.current);
+			const oldPaint = JSON.parse(layerPaintConfRef.current);
 			for (key in props.options.paint) {
 				if (props.options.paint?.[key] && props.options.paint[key] !== oldPaint[key]) {
 					mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
