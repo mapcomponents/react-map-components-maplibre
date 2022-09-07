@@ -50,9 +50,11 @@ function useSource(props: useSourceProps): useSourceType {
 	useEffect(() => {
 		if (!initializedRef.current || !mapHook.map?.map?.getSource(props.sourceId)) return;
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore setData only exists on GeoJsonSource
 		mapHook.map.map.getSource(props.sourceId)?.setData?.(props.source.data);
-		//@ts-ignore setData only exists on GeoJsonSource
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		//@ts-ignore data only exists on GeoJsonSource
 	}, [props.source?.data]);
 
 	//cleanup
@@ -60,9 +62,9 @@ function useSource(props: useSourceProps): useSourceType {
 		return () => {
 			initializedRef.current = false;
 			if (mapHook.map) {
-				for (const [_, layer] of Object.entries(mapHook.map.map.style._layers)) {
+				for (const [layerId, layer] of Object.entries(mapHook.map.map.style._layers)) {
 					if (layer.source === sourceId.current) {
-						mapHook.map.map.removeLayer(layer?.id);
+						mapHook.map.map.removeLayer(layerId);
 					}
 				}
 

@@ -153,6 +153,7 @@ function useLayer(props: useLayerProps): useLayerType {
 	useEffect(() => {
 		if (!initializedRef.current || !mapHook.map?.map?.getSource(layerId.current)) return;
 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore setData only exists on GeoJsonSource
 		mapHook.map.map.getSource(layerId.current)?.setData?.(props.geojson);
 	}, [props.geojson, mapHook.map, props.options.type]);
@@ -166,11 +167,11 @@ function useLayer(props: useLayerProps): useLayerType {
 		)
 			return;
 
-		var key;
+		let key;
 
-		let layoutString = JSON.stringify(props.options.layout);
+		const layoutString = JSON.stringify(props.options.layout);
 		if (props.options.layout && layoutString !== layerLayoutConfRef.current) {
-			let oldLayout = JSON.parse(layerLayoutConfRef.current);
+			const oldLayout = JSON.parse(layerLayoutConfRef.current);
 
 			for (key in props.options.layout) {
 				if (props.options.layout?.[key] && props.options.layout[key] !== oldLayout[key]) {
@@ -180,9 +181,9 @@ function useLayer(props: useLayerProps): useLayerType {
 			layerLayoutConfRef.current = layoutString;
 		}
 
-		let paintString = JSON.stringify(props.options.paint);
+		const paintString = JSON.stringify(props.options.paint);
 		if (paintString !== layerPaintConfRef.current) {
-			let oldPaint = JSON.parse(layerPaintConfRef.current);
+			const oldPaint = JSON.parse(layerPaintConfRef.current);
 			for (key in props.options.paint) {
 				if (props.options.paint?.[key] && props.options.paint[key] !== oldPaint[key]) {
 					mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key]);

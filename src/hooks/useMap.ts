@@ -9,7 +9,7 @@ type useMapType = {
 	mapIsReady: boolean;
 	componentId: string;
 	layers: (LayerState | undefined)[];
-	cleanup: Function;
+	cleanup: () => void;
 };
 
 function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
