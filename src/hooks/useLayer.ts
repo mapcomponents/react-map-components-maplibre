@@ -64,8 +64,6 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (!mapHook.map) return;
 
 		if (mapHook.map.map.getLayer(layerId.current)) {
-			mapHook.map.map.removeLayer(layerId.current);
-			// remove event handlers
 			mapHook.cleanup();
 		}
 		if (mapHook.map.map.getSource(layerId.current)) {
