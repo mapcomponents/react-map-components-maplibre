@@ -7,15 +7,16 @@ import MlGeoJsonLayer from '../MlGeoJsonLayer';
 const FeatureNames = () => {
 	const names = ['Show all', 'Hofgarten', 'Stadtgarten', 'Opernplatz', 'Keiserplatz'];
 	return names.map((item) => {
+		console.log(item)
 		return (
 			<>
-				<MenuItem value={item} key={item}> {item} </MenuItem>
+				<MenuItem key={item} value={item}>{item}</MenuItem>
 			</>
 		);
 	});
 };
 
-//const types = ['line', 'fill', 'circle'];
+
 const marks = [
 	{
 		value: 0,
@@ -59,16 +60,6 @@ const PolygonStyler = (props) => {
 		setColor(`#${e.hex}`);
 	};
 
-   const handleTypeChange = (e) => {
-	setGeomType(e.target.value)
-   } 
-
-   const hadleFeatureChange = (e) => {
-	console.log(e.target.value);
-	setFeatureToShow(e.target.value)
-   }
-
-
 	return (
 		<>
 			<Sidebar>
@@ -77,25 +68,49 @@ const PolygonStyler = (props) => {
 						<Typography>Geometry type:</Typography>
 						<Select
 							value={geomType}
-							onClick={ 
-								(e) => {
-								setGeomType(e.target.innerText);
-								console.log('show= ' + geomType);
-						}}
+							onChange={(e) => {
+								setGeomType(e.target.value);
+								console.log(e.target.value);
+							}}
 						>
-							<MenuItem value={"fill"} key={1}> fill </MenuItem>
-							<MenuItem value={"circle"} key={2}> circle </MenuItem>
-							<MenuItem value={"line"} key={3}> line </MenuItem>
+							<MenuItem value={'fill'} key={1}>
+								fill
+							</MenuItem>
+							<MenuItem value={'circle'} key={2}>
+								circle
+							</MenuItem>
+							<MenuItem value={'line'} key={3}>
+								line
+							</MenuItem>
 						</Select>
 					</FormControl>
 					<Typography>Feature to show:</Typography>
+					<FormControl>
 					<Select
-						value={featureToShow}
-						onClick={hadleFeatureChange}
-					>
-						<FeatureNames />
-					</Select>
+							value={featureToShow}
+							onChange={(e) => {
+								setFeatureToShow(e.target.value);
+								console.log(e.target.value);
+							}}
+						>
+							<MenuItem value={'Show all'} key={1}>
+								Show all
+							</MenuItem>
+							<MenuItem value={'Hofgarten'} key={2}>
+							Hofgarten
+							</MenuItem>
+							<MenuItem value={'Stadtgarten'} key={3}>
+							Stadtgarten
+							</MenuItem>
+							<MenuItem value={'Opernplatz'} key={4}>
+							Opernplatz
+							</MenuItem>
+							<MenuItem value={'Keiserplatz'} key={5}>
+							Keiserplatz
+							</MenuItem>
 
+						</Select>
+					</FormControl>
 					<Typography>Display color:</Typography>
 					<ColorPicker value={color} onChange={handleColorChange} />
 
