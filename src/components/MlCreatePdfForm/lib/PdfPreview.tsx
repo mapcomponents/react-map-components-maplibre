@@ -6,9 +6,9 @@ import useLayerEvent from '../../../hooks/useLayerEvent';
 import { BBox } from '@turf/turf';
 import PdfContext from './PdfContext';
 
-const createPreviewGeojson = (geojsonProps: any, orientation) => {
-	let topLeftAngle = orientation === 'portrait' ? -35.3 : -54.7;
-	let bottomRightAngle = orientation === 'portrait' ? 144.7 : 125.3;
+const createPreviewGeojson = (geojsonProps: any, orientation:string) => {
+	const topLeftAngle = orientation === 'portrait' ? -35.3 : -54.7;
+	const bottomRightAngle = orientation === 'portrait' ? 144.7 : 125.3;
 	const topLeft = turf.destination(
 		[geojsonProps.center.lng, geojsonProps.center.lat],
 		geojsonProps.distance,
@@ -29,6 +29,9 @@ const createPreviewGeojson = (geojsonProps: any, orientation) => {
 
 	let _previewGeojson = turf.bboxPolygon(bbox as BBox);
 	_previewGeojson = turf.transformRotate(_previewGeojson, geojsonProps.bearing);
+	if(!_previewGeojson?.properties){
+		_previewGeojson.properties = {};
+	}
 	_previewGeojson.properties.bearing = geojsonProps.bearing;
 	return _previewGeojson;
 };
@@ -136,10 +139,14 @@ export default function PdfPreview(props: any) {
 				if (!draggingResizeHandle.current) return;
 
 				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
-				const _distance = turf.distance(
+				let _distance = turf.distance(
 					[tmpGeojsonProps.center.lng, tmpGeojsonProps.center.lat],
 					[e.lngLat.lng, e.lngLat.lat]
 				);
+				// limit max diagonal distance of PDF area to 120km as larger area lead to distortions for northern and southern areas
+				if(_distance > 60){
+					_distance = 60;
+				}
 				tmpGeojsonProps.distance = _distance;
 				tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
 				pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
