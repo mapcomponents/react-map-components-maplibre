@@ -9,6 +9,7 @@
 /.cache
 .jest-test-results.json
 /test-coverage
+/.yarn
 
 # testing
 /coverage
