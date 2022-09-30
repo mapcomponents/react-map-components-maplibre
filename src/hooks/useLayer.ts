@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from 'react';
 
-import useMap, { useMapType } from "./useMap";
+import useMap, { useMapType } from './useMap';
 
-import { SourceSpecification, LayerSpecification } from "maplibre-gl";
+import { SourceSpecification, LayerSpecification } from 'maplibre-gl';
 
-import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
+import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 
-import { MapLayerMouseEvent } from "maplibre-gl";
-import { GeoJSONObject } from "@turf/turf";
+import { MapLayerMouseEvent } from 'maplibre-gl';
+import { GeoJSONObject } from '@turf/turf';
 
 type useLayerType = {
 	map: MapLibreGlWrapper | undefined;
@@ -32,15 +32,15 @@ interface useLayerProps {
 }
 
 const legalLayerTypes = [
-	"fill",
-	"line",
-	"symbol",
-	"circle",
-	"heatmap",
-	"fill-extrusion",
-	"raster",
-	"hillshade",
-	"background",
+	'fill',
+	'line',
+	'symbol',
+	'circle',
+	'heatmap',
+	'fill-extrusion',
+	'raster',
+	'hillshade',
+	'background',
 ];
 
 function useLayer(props: useLayerProps): useLayerType {
@@ -49,29 +49,31 @@ function useLayer(props: useLayerProps): useLayerType {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const layerTypeRef = useRef<string>("");
-	const layerPaintConfRef = useRef<string>("");
-	const layerLayoutConfRef = useRef<string>("");
+	const layerTypeRef = useRef<string>('');
+	const layerPaintConfRef = useRef<string>('');
+	const layerLayoutConfRef = useRef<string>('');
 
 	const [layer, setLayer] = useState<any>();
 
 	const initializedRef = useRef<boolean>(false);
 	const layerId = useRef(
-		props.layerId || (props.idPrefix ? props.idPrefix : "Layer-") + mapHook.componentId
+		props.layerId || (props.idPrefix ? props.idPrefix : 'Layer-') + mapHook.componentId
 	);
 
 	const createLayer = useCallback(() => {
 		if (!mapHook.map) return;
 
 		if (mapHook.map.map.getLayer(layerId.current)) {
+			mapHook.map.map.removeLayer(layerId.current);
+			// remove event handlers
 			mapHook.cleanup();
 		}
 		if (mapHook.map.map.getSource(layerId.current)) {
 			mapHook.map.map.removeSource(layerId.current);
 		}
 
-		if (typeof props.source === "string") {
-			if (props.source === "" || !mapHook.map.map.getSource(props.source)) {
+		if (typeof props.source === 'string') {
+			if (props.source === '' || !mapHook.map.map.getSource(props.source)) {
 				return;
 			}
 		}
@@ -84,15 +86,15 @@ function useLayer(props: useLayerProps): useLayerType {
 				...(props.geojson && !props.source
 					? {
 							source: {
-								type: "geojson",
+								type: 'geojson',
 								data: props.geojson,
 							},
-						}
+					  }
 					: {}),
 				...(props.source
 					? {
 							source: props.source,
-						}
+					  }
 					: {}),
 				id: layerId.current,
 			},
@@ -106,24 +108,24 @@ function useLayer(props: useLayerProps): useLayerType {
 
 		setLayer(mapHook.map.map.getLayer(layerId.current));
 
-		if (typeof props.onHover !== "undefined") {
-			mapHook.map.on("mousemove", layerId.current, props.onHover, mapHook.componentId);
+		if (typeof props.onHover !== 'undefined') {
+			mapHook.map.on('mousemove', layerId.current, props.onHover, mapHook.componentId);
 		}
 
-		if (typeof props.onClick !== "undefined") {
-			mapHook.map.on("click", layerId.current, props.onClick, mapHook.componentId);
+		if (typeof props.onClick !== 'undefined') {
+			mapHook.map.on('click', layerId.current, props.onClick, mapHook.componentId);
 		}
 
-		if (typeof props.onLeave !== "undefined") {
-			mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
+		if (typeof props.onLeave !== 'undefined') {
+			mapHook.map.on('mouseleave', layerId.current, props.onLeave, mapHook.componentId);
 		}
 
 		// recreate layer if style has changed
 		mapHook.map.on(
-			"styledata",
+			'styledata',
 			() => {
 				if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
-					console.log("Recreate Layer");
+					console.log('Recreate Layer');
 					createLayer();
 				}
 			},
