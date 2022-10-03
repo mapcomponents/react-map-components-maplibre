@@ -3,7 +3,7 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import MlTransitionGeoJsonLayer from "./MlTransitionGeoJsonLayer";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
-import MapContext from "../../contexts/MapContext";
+import useMap from "../../hooks/useMap";
 
 import sample_geojson_1 from "./assets/sample_1.json";
 import sample_geojson_2 from "./assets/sample_2.json";
@@ -22,21 +22,22 @@ const storyoptions = {
 export default storyoptions;
 
 const LinestringTransitionTemplate = (props) => {
-	const mapContext = useContext(MapContext);
+	const mapHook = useMap({mapId: 'map_1'});
 	const [geojson, setGeojson] = useState(sample_geojson_1);
 	const initializedRef = useRef(false);
 
 	useEffect(() => {
-		if (!mapContext.getMap() || initializedRef.current) return;
+		if (!mapHook.map || initializedRef.current) return;
 
+		console.log('Hello')
 		initializedRef.current = true;
-		mapContext.getMap().setCenter({ lng: 7.137609868988648, lat: 50.74746799549129 });
-		mapContext.getMap().setZoom(9.5);
+		mapHook.map.setCenter({ lng: 7.137609868988648, lat: 50.74746799549129 });
+		mapHook.map.setZoom(9.5);
 
 		setTimeout(() => {
 			setGeojson(sample_geojson_2);
 		}, 4000);
-	}, [geojson, mapContext]);
+	}, [geojson, mapHook.map]);
 
 	return (
 		<>

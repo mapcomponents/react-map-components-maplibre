@@ -40,7 +40,6 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 	const cleanup = () => {
 		if (mapRef.current) {
 			mapRef.current.cleanup(componentId.current);
-			mapRef.current = undefined;
 		}
 		initializedRef.current = false;
 	};
@@ -49,6 +48,7 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 		return () => {
 			cleanup();
 			setMapIsReady(false);
+			mapRef.current = undefined;
 		};
 	}, []);
 
