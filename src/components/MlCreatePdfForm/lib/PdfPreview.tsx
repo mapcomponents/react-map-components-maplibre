@@ -1,12 +1,16 @@
-import React, { useContext, useMemo, useRef, useState, useEffect } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import MlGeoJsonLayer from '../../MlGeoJsonLayer/MlGeoJsonLayer';
 import * as turf from '@turf/turf';
 import useMap from '../../../hooks/useMap';
 import useLayerEvent from '../../../hooks/useLayerEvent';
-import { BBox } from '@turf/turf';
+import { BBox, Feature, Polygon } from '@turf/turf';
 import PdfContext from './PdfContext';
+import { MapMouseEvent, MapTouchEvent, MapLayerMouseEvent, LngLat } from 'maplibre-gl';
 
-const createPreviewGeojson = (geojsonProps: any, orientation:string) => {
+const createPreviewGeojson = (
+	geojsonProps: { center: LngLat; distance: number; bearing: number },
+	orientation: string
+) => {
 	const topLeftAngle = orientation === 'portrait' ? -35.3 : -54.7;
 	const bottomRightAngle = orientation === 'portrait' ? 144.7 : 125.3;
 	const topLeft = turf.destination(
@@ -25,18 +29,36 @@ const createPreviewGeojson = (geojsonProps: any, orientation:string) => {
 		bottomRight.geometry.coordinates[0],
 		bottomRight.geometry.coordinates[1],
 	];
-	console.log(bbox);
 
 	let _previewGeojson = turf.bboxPolygon(bbox as BBox);
 	_previewGeojson = turf.transformRotate(_previewGeojson, geojsonProps.bearing);
-	if(!_previewGeojson?.properties){
+	if (!_previewGeojson?.properties) {
 		_previewGeojson.properties = {};
 	}
 	_previewGeojson.properties.bearing = geojsonProps.bearing;
 	return _previewGeojson;
 };
 
-export default function PdfPreview(props: any) {
+interface PdfPreviewProps {
+	/**
+	 * Id of the target MapLibre instance in mapContext
+	 */
+	mapId?: string;
+	/**
+	 * Id of an existing layer in the mapLibre instance to help specify the layer order
+	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+	 */
+	insertBeforeLayer?: string;
+}
+
+interface geojsonProps {
+	center: { lng: number; lat: number };
+	distance: number;
+	bearing: number;
+	geojson: Feature<Polygon> | undefined;
+}
+
+export default function PdfPreview(props: PdfPreviewProps) {
 	const pdfContext = useContext(PdfContext);
 	const initializedRef = useRef(false);
 	const activeFeature = useRef();
@@ -50,11 +72,11 @@ export default function PdfPreview(props: any) {
 	const cursorOverGeometryRotationHandle = useRef(false);
 	const draggingRotationHandle = useRef(false);
 
-	const [geojsonProps, setGeojsonProps] = useState({
+	const [geojsonProps, setGeojsonProps] = useState<geojsonProps>({
 		center: { lng: 0, lat: 0 },
 		distance: 10,
 		bearing: 0,
-		geojson: undefined as any,
+		geojson: undefined,
 	});
 
 	const mapHook = useMap({
@@ -63,7 +85,14 @@ export default function PdfPreview(props: any) {
 	});
 
 	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
+		if (
+			!mapHook.map ||
+			!pdfContext.geojsonRef ||
+			!pdfContext.orientation ||
+			!pdfContext.template ||
+			initializedRef.current
+		)
+			return;
 
 		initializedRef.current = true;
 
@@ -72,7 +101,6 @@ export default function PdfPreview(props: any) {
 		const canvasWidth = mapHook.map.map._canvas.width;
 		const bboxPixelHeight = Math.ceil(canvasHeight / 2);
 		const bboxPixelWidth = Math.ceil(
-			// @ts-ignore
 			(pdfContext.template.width / pdfContext.template.height) * bboxPixelHeight
 		);
 
@@ -83,16 +111,19 @@ export default function PdfPreview(props: any) {
 
 		const distance = turf.distance([center.lng, center.lat], [topLeft.lng, topLeft.lat]);
 
-		// @ts-ignore
-		setGeojsonProps({
+		const tmpGeojsonProps = {
 			center,
 			distance,
 			bearing: 0,
 			geojson: createPreviewGeojson({ center, distance, bearing: 0 }, pdfContext.orientation),
-		});
+		};
+		setGeojsonProps(tmpGeojsonProps);
+		pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
 	}, [mapHook.map]);
 
 	useEffect(() => {
+		if (!pdfContext.orientation || !pdfContext.geojsonRef) return;
+
 		const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
 		tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
 		setGeojsonProps(tmpGeojsonProps);
@@ -103,7 +134,7 @@ export default function PdfPreview(props: any) {
 	useLayerEvent({
 		event: 'mouseenter',
 		layerId: 'pdfPreviewGeojsonResizeHandle',
-		eventHandler: function (e: any) {
+		eventHandler: function () {
 			if (!mapHook.map) return;
 
 			cursorOverGeometryResizeHandle.current = true;
@@ -114,7 +145,7 @@ export default function PdfPreview(props: any) {
 	useLayerEvent({
 		event: 'mouseleave',
 		layerId: 'pdfPreviewGeojsonResizeHandle',
-		eventHandler: function (e: any) {
+		eventHandler: function () {
 			if (!mapHook.map) return;
 
 			cursorOverGeometryResizeHandle.current = false;
@@ -126,17 +157,16 @@ export default function PdfPreview(props: any) {
 		event: 'mousedown',
 		layerId: 'pdfPreviewGeojsonResizeHandle',
 		eventHandler: function () {
-			if (!mapHook.map) return;
-			if (!cursorOverGeometryResizeHandle.current) return;
-
+			if (!mapHook.map || !cursorOverGeometryResizeHandle.current) return;
 
 			dragging.current = false;
-      cursorOverGeometry.current = false;
+			cursorOverGeometry.current = false;
 			draggingResizeHandle.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
 
-			function onMove(e: any) {
-				if (!draggingResizeHandle.current) return;
+			function onMove(e: MapMouseEvent | MapTouchEvent) {
+				if (!pdfContext.geojsonRef || !draggingResizeHandle.current || !pdfContext.orientation)
+					return;
 
 				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
 				let _distance = turf.distance(
@@ -144,7 +174,7 @@ export default function PdfPreview(props: any) {
 					[e.lngLat.lng, e.lngLat.lat]
 				);
 				// limit max diagonal distance of PDF area to 120km as larger area lead to distortions for northern and southern areas
-				if(_distance > 60){
+				if (_distance > 60) {
 					_distance = 60;
 				}
 				tmpGeojsonProps.distance = _distance;
@@ -173,7 +203,7 @@ export default function PdfPreview(props: any) {
 	useLayerEvent({
 		event: 'mouseenter',
 		layerId: 'pdfPreviewGeojsonRotationHandle',
-		eventHandler: function (e: any) {
+		eventHandler: function () {
 			if (!mapHook.map) return;
 
 			cursorOverGeometryRotationHandle.current = true;
@@ -184,7 +214,7 @@ export default function PdfPreview(props: any) {
 	useLayerEvent({
 		event: 'mouseleave',
 		layerId: 'pdfPreviewGeojsonRotationHandle',
-		eventHandler: function (e: any) {
+		eventHandler: function () {
 			if (!mapHook.map) return;
 
 			cursorOverGeometryRotationHandle.current = false;
@@ -196,17 +226,17 @@ export default function PdfPreview(props: any) {
 		event: 'mousedown',
 		layerId: 'pdfPreviewGeojsonRotationHandle',
 		eventHandler: function () {
-			if (!mapHook.map) return;
-			if (!cursorOverGeometryRotationHandle.current) return;
-
+			if (!mapHook.map || !pdfContext.orientation || !cursorOverGeometryRotationHandle.current)
+				return;
 
 			dragging.current = false;
-      cursorOverGeometry.current = false;
+			cursorOverGeometry.current = false;
 			draggingRotationHandle.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
 
-			function onMove(e: any) {
-				if (!draggingRotationHandle.current) return;
+			function onMove(e: MapMouseEvent | MapTouchEvent) {
+				if (!draggingRotationHandle.current || !pdfContext.orientation || !pdfContext.geojsonRef)
+					return;
 
 				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
 				const _bearing = turf.bearing(
@@ -239,8 +269,8 @@ export default function PdfPreview(props: any) {
 	useLayerEvent({
 		event: 'mouseenter',
 		layerId: 'pdfPreviewGeojson',
-		eventHandler: function (e: any) {
-			if (!mapHook.map) return;
+		eventHandler: function (e: MapLayerMouseEvent) {
+			if (!mapHook.map || !e?.features?.length) return;
 			cursorOverGeometry.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
 			mapHook.map.map.dragPan.disable();
@@ -263,14 +293,13 @@ export default function PdfPreview(props: any) {
 		event: 'mousedown',
 		layerId: 'pdfPreviewGeojson',
 		eventHandler: function () {
-			if (!mapHook.map) return;
-			if (!cursorOverGeometry.current) return;
+			if (!mapHook.map || !cursorOverGeometry.current) return;
 
 			dragging.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
 
-			function onMove(e: any) {
-				if (!dragging.current) return;
+			function onMove(e: MapMouseEvent | MapTouchEvent) {
+				if (!dragging.current || !pdfContext.geojsonRef || !pdfContext.orientation) return;
 
 				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
 				tmpGeojsonProps.center = e.lngLat;
@@ -330,7 +359,7 @@ export default function PdfPreview(props: any) {
 							geometry: {
 								type: 'Point',
 								//coordinates: [geojsonProps.geojson.bbox[2], geojsonProps.geojson.bbox[3]],
-								coordinates: geojsonProps.geojson.geometry.coordinates[0][2]
+								coordinates: geojsonProps.geojson.geometry.coordinates[0][2],
 							},
 							properties: {},
 						}}
@@ -348,7 +377,7 @@ export default function PdfPreview(props: any) {
 							geometry: {
 								type: 'Point',
 								//coordinates: [geojsonProps.geojson.bbox[0], geojsonProps.geojson.bbox[3]],
-								coordinates: geojsonProps.geojson.geometry.coordinates[0][3]
+								coordinates: geojsonProps.geojson.geometry.coordinates[0][3],
 							},
 							properties: {},
 						}}

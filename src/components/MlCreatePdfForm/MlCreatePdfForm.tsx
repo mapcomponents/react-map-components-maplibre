@@ -1,32 +1,33 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react';
+import React from 'react';
 import PdfPreview from './lib/PdfPreview';
 import PdfForm from './lib/PdfForm';
 import { PdfContextProvider } from './lib/PdfContext';
+import { createPdfResolverParams } from '../../hooks/exportMap/lib';
+import { SxProps } from '@mui/material';
 
 interface MlCreatePdfFormProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
-	/**
-	 * Id of an existing layer in the mapLibre instance to help specify the layer order
-	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
-	 */
-	insertBeforeLayer?: string;
-	formControlStyles?: any;
+	formControlStyles?: SxProps;
+	onCreatePdf?: (options:createPdfResolverParams) => createPdfResolverParams;
+	excludeLayerIds?: Array<string>;
+	includeLayerIds?: Array<string>;
 }
+
+export type { MlCreatePdfFormProps };
 
 /**
  * Create PDF Form Component
  *
  */
 const MlCreatePdfForm = (props: MlCreatePdfFormProps) => {
-
 	return (
 		<>
 			<PdfContextProvider>
-			  <PdfForm />
-				<PdfPreview  />
+				<PdfForm {...props} />
+				<PdfPreview />
 			</PdfContextProvider>
 		</>
 	);

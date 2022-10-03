@@ -13,10 +13,11 @@ import {
 } from '@mui/material';
 
 import useMap from '../../../hooks/useMap';
+import exportMap from '../../../hooks/exportMap';
+import { createPdfResolverParams } from '../../../hooks/exportMap/lib';
 
 import * as turf from '@turf/turf';
 
-import createPdf from './createPdf';
 import templates from './pdf.templates';
 
 const qualityOptions = [
@@ -34,32 +35,54 @@ const qualityOptions = [
 	},
 ];
 
-export default function PdfForm(props) {
+interface PdfFormProps {
+	/**
+	 * Id of the target MapLibre instance in mapContext
+	 */
+	mapId?: string;
+	onCreatePdf?: (options:createPdfResolverParams) => createPdfResolverParams;
+}
+
+export default function PdfForm(props:PdfFormProps) {
 	const pdfContext = useContext(PdfContext);
 	const mapHook = useMap({
 		// eslint-disable-next-line react/prop-types
 		mapId: props.mapId,
 	});
+	const mapExporter = exportMap({ mapId: props.mapId });
 
 	const createPdfHandler = useCallback(() => {
-		if (mapHook.map && pdfContext.geojsonRef.current) {
+		if (
+			mapHook.map &&
+			mapExporter.createExport &&
+			pdfContext.template &&
+			pdfContext.format &&
+			pdfContext.orientation &&
+			pdfContext.geojsonRef?.current?.bbox &&
+			pdfContext.geojsonRef?.current
+		) {
 			const bbox = turf.bbox(pdfContext.geojsonRef.current);
-			createPdf(
-				mapHook.map,
-				{
+
+			mapExporter
+				.createExport({
 					width: pdfContext.template.width,
 					height: pdfContext.template.height,
 					bbox: bbox,
-          bboxUnrotated: pdfContext.geojsonRef.current.bbox,
-          bearing: pdfContext.geojsonRef.current.properties.bearing,
+					bboxUnrotated: pdfContext.geojsonRef.current.bbox,
+					bearing: pdfContext.geojsonRef.current?.properties?.bearing || 0,
 					format: pdfContext.format.toLowerCase(),
 					orientation: pdfContext.orientation,
-				},
-				null,
-				() => {
-					console.log('hey');
-				}
-			);
+				})
+				.then((res) => res.createPdf())
+				.then((res) => {
+					if (typeof props.onCreatePdf === 'function') {
+						props.onCreatePdf(res);
+					}
+					return res.downloadPdf();
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		}
 	}, [mapHook.map, pdfContext]);
 
@@ -75,7 +98,6 @@ export default function PdfForm(props) {
 		]
 	);
 
-
 	return (
 		<>
 			<FormControl fullWidth sx={formControlStyles}>
@@ -86,7 +108,7 @@ export default function PdfForm(props) {
 					label="Format"
 					value={pdfContext.format}
 					onChange={(event) => {
-						pdfContext.setFormat(event.target.value);
+						pdfContext.setFormat?.(event.target.value);
 					}}
 				>
 					{Object.keys(templates).map((el) => (
@@ -104,7 +126,7 @@ export default function PdfForm(props) {
 					name="orientation-radio-buttons-group"
 					value={pdfContext.orientation}
 					onChange={(event) => {
-						pdfContext.setOrientation(event.target.value);
+						pdfContext.setOrientation?.(event.target.value);
 					}}
 				>
 					<FormControlLabel value="portrait" control={<Radio />} label="Portrait" />
@@ -119,7 +141,7 @@ export default function PdfForm(props) {
 					label="Qualität"
 					value={pdfContext.quality}
 					onChange={(event) => {
-						pdfContext.setQuality(event.target.value);
+						pdfContext.setQuality?.(event.target.value);
 					}}
 				>
 					{qualityOptions.map((el) => (
