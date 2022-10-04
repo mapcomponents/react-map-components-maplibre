@@ -1,6 +1,11 @@
 # Change Log
 
 
+## [v0.1.59] - 2022-10-04
+
+### Fixed
+
+- ac559c4: fix MlCreatePdfForm export
 ## [v0.1.58] - 2022-10-04
 
 ### Added
