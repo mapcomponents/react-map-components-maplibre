@@ -134,7 +134,7 @@ export default function PdfForm(props:PdfFormProps) {
 				</RadioGroup>
 			</FormControl>
 			<FormControl fullWidth sx={formControlStyles}>
-				<InputLabel id="quality-select-label">Qualität</InputLabel>
+				<InputLabel id="quality-select-label">Quality</InputLabel>
 				<Select
 					labelId="quality-select-label"
 					id="quality-select"

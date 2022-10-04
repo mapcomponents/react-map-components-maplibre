@@ -63,13 +63,10 @@ export default function PdfPreview(props: PdfPreviewProps) {
 	const initializedRef = useRef(false);
 	const activeFeature = useRef();
 
-	const cursorOverGeometry = useRef(false);
 	const dragging = useRef(false);
 
-	const cursorOverGeometryResizeHandle = useRef(false);
 	const draggingResizeHandle = useRef(false);
 
-	const cursorOverGeometryRotationHandle = useRef(false);
 	const draggingRotationHandle = useRef(false);
 
 	const [geojsonProps, setGeojsonProps] = useState<geojsonProps>({
@@ -137,7 +134,6 @@ export default function PdfPreview(props: PdfPreviewProps) {
 		eventHandler: function () {
 			if (!mapHook.map) return;
 
-			cursorOverGeometryResizeHandle.current = true;
 			mapHook.map.map._canvas.style.cursor = 'nwse-resize';
 			mapHook.map.map.dragPan.disable();
 		},
@@ -148,7 +144,6 @@ export default function PdfPreview(props: PdfPreviewProps) {
 		eventHandler: function () {
 			if (!mapHook.map) return;
 
-			cursorOverGeometryResizeHandle.current = false;
 			mapHook.map.map._canvas.style.cursor = '';
 			mapHook.map.map.dragPan.enable();
 		},
@@ -156,11 +151,13 @@ export default function PdfPreview(props: PdfPreviewProps) {
 	useLayerEvent({
 		event: 'mousedown',
 		layerId: 'pdfPreviewGeojsonResizeHandle',
-		eventHandler: function () {
-			if (!mapHook.map || !cursorOverGeometryResizeHandle.current) return;
+		addTouchEvents: true,
+		eventHandler: function (e: MapMouseEvent | MapTouchEvent) {
+			e.preventDefault();
+			if (!mapHook.map) return;
 
 			dragging.current = false;
-			cursorOverGeometry.current = false;
+			draggingRotationHandle.current = false;
 			draggingResizeHandle.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
 
@@ -191,11 +188,14 @@ export default function PdfPreview(props: PdfPreviewProps) {
 				mapHook.map.map.dragPan.enable();
 				// Unbind mouse events
 				mapHook.map.map.off('mousemove', onMove);
+				mapHook.map.map.off('touchmove', onMove);
 			}
 
 			// Mouse events
 			mapHook.map.map.on('mousemove', onMove);
+			mapHook.map.map.on('touchmove', onMove);
 			mapHook.map.map.once('mouseup', onUp);
+			mapHook.map.map.once('touchend', onUp);
 		},
 	});
 
@@ -206,7 +206,6 @@ export default function PdfPreview(props: PdfPreviewProps) {
 		eventHandler: function () {
 			if (!mapHook.map) return;
 
-			cursorOverGeometryRotationHandle.current = true;
 			mapHook.map.map._canvas.style.cursor = 'nwse-resize';
 			mapHook.map.map.dragPan.disable();
 		},
@@ -217,7 +216,6 @@ export default function PdfPreview(props: PdfPreviewProps) {
 		eventHandler: function () {
 			if (!mapHook.map) return;
 
-			cursorOverGeometryRotationHandle.current = false;
 			mapHook.map.map._canvas.style.cursor = '';
 			mapHook.map.map.dragPan.enable();
 		},
@@ -225,16 +223,18 @@ export default function PdfPreview(props: PdfPreviewProps) {
 	useLayerEvent({
 		event: 'mousedown',
 		layerId: 'pdfPreviewGeojsonRotationHandle',
-		eventHandler: function () {
-			if (!mapHook.map || !pdfContext.orientation || !cursorOverGeometryRotationHandle.current)
-				return;
+		addTouchEvents: true,
+		eventHandler: function (e: MapMouseEvent | MapTouchEvent) {
+			e.preventDefault();
+			if (!mapHook.map || !pdfContext.orientation) return;
 
 			dragging.current = false;
-			cursorOverGeometry.current = false;
+			draggingResizeHandle.current = false;
 			draggingRotationHandle.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
 
 			function onMove(e: MapMouseEvent | MapTouchEvent) {
+				e.preventDefault();
 				if (!draggingRotationHandle.current || !pdfContext.orientation || !pdfContext.geojsonRef)
 					return;
 
@@ -257,11 +257,14 @@ export default function PdfPreview(props: PdfPreviewProps) {
 				mapHook.map.map.dragPan.enable();
 				// Unbind mouse events
 				mapHook.map.map.off('mousemove', onMove);
+				mapHook.map.map.off('touchmove', onMove);
 			}
 
 			// Mouse events
 			mapHook.map.map.on('mousemove', onMove);
+			mapHook.map.map.on('touchmove', onMove);
 			mapHook.map.map.once('mouseup', onUp);
+			mapHook.map.map.once('touchend', onUp);
 		},
 	});
 
@@ -271,9 +274,7 @@ export default function PdfPreview(props: PdfPreviewProps) {
 		layerId: 'pdfPreviewGeojson',
 		eventHandler: function (e: MapLayerMouseEvent) {
 			if (!mapHook.map || !e?.features?.length) return;
-			cursorOverGeometry.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
-			mapHook.map.map.dragPan.disable();
 			activeFeature.current = e.features[0];
 		},
 	});
@@ -283,7 +284,6 @@ export default function PdfPreview(props: PdfPreviewProps) {
 		eventHandler: function () {
 			if (!mapHook.map) return;
 
-			cursorOverGeometry.current = false;
 			mapHook.map.map._canvas.style.cursor = '';
 			mapHook.map.map.dragPan.enable();
 			activeFeature.current = undefined;
@@ -291,14 +291,21 @@ export default function PdfPreview(props: PdfPreviewProps) {
 	});
 	useLayerEvent({
 		event: 'mousedown',
+		addTouchEvents: true,
 		layerId: 'pdfPreviewGeojson',
-		eventHandler: function () {
-			if (!mapHook.map || !cursorOverGeometry.current) return;
+		eventHandler: function (e: MapMouseEvent | MapTouchEvent) {
+			e.preventDefault();
+			console.log('mousedown');
+			if (!mapHook.map) return;
 
+			draggingResizeHandle.current = false;
+			draggingRotationHandle.current = false;
 			dragging.current = true;
 			mapHook.map.map._canvas.style.cursor = 'move';
 
 			function onMove(e: MapMouseEvent | MapTouchEvent) {
+				e.preventDefault();
+				console.log('Hallo');
 				if (!dragging.current || !pdfContext.geojsonRef || !pdfContext.orientation) return;
 
 				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
@@ -313,13 +320,17 @@ export default function PdfPreview(props: PdfPreviewProps) {
 				mapHook.map.map._canvas.style.cursor = '';
 				dragging.current = false;
 
+				mapHook.map.map.dragPan.enable();
 				// Unbind mouse events
 				mapHook.map.map.off('mousemove', onMove);
+				mapHook.map.map.off('touchmove', onMove);
 			}
 
 			// Mouse events
 			mapHook.map.map.on('mousemove', onMove);
+			mapHook.map.map.on('touchmove', onMove);
 			mapHook.map.map.once('mouseup', onUp);
+			mapHook.map.map.once('touchend', onUp);
 		},
 	});
 
