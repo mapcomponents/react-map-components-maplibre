@@ -1,5 +1,18 @@
 # Change Log
 
+
+## [v0.1.58] - 2022-10-04
+
+### Added
+- 6be40b7: automatic eslint & prettier tests as GitHub action
+- 396b1b7: useSource hook
+- 67d88a0: add MlCreatePdfForm component & useExportMap hook providing more sophisticated control on the PDF creation process such as a preview of the PDF area with drag&drop, resize & rotation  functionality as well as controlls over the paper size, quality & orientation
+
+### Fixed
+
+- 0cf90f7: fix useMapState story by adding an dedicated hook decorator
+- 4c919b8: fix useMap hook typechange bug
+
 ## [v0.1.57] - 2022-08-30
 
 ### Added
