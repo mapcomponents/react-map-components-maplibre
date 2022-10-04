@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import useMap from '../useMap';
 import { createExport, createExportOptions } from './lib';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -21,6 +21,7 @@ export default function exportMap(props: exportMapProps) {
 				return createExport({ map: mapHook.map as MapLibreGlWrapper, ...options });
 			};
 		}
+		return;
 	}, [mapHook.map]);
 
 	return {
