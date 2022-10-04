@@ -1,0 +1,15 @@
+{
+  "name": "MlCreatePdfForm",
+  "title": "Export PDF form",
+  "description": "Creates a PDF file with the current PDF preview with adjustable position, format, rotation and quality.",
+  "i18n": {
+    "de": {
+      "title": "PDF Export Formular",
+      "description": "Erzeugt eine PDF Datei aus der aktuellen Vorschau, mit anpassbarem Position, Format, Rotation und Auflösung."
+    }
+  },
+  "tags": [],
+  "category": "",
+  "type": "component",
+  "price": 0
+}
