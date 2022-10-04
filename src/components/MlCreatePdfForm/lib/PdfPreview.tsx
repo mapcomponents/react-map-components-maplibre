@@ -305,7 +305,6 @@ export default function PdfPreview(props: PdfPreviewProps) {
 
 			function onMove(e: MapMouseEvent | MapTouchEvent) {
 				e.preventDefault();
-				console.log('Hallo');
 				if (!dragging.current || !pdfContext.geojsonRef || !pdfContext.orientation) return;
 
 				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
