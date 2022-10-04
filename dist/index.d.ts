@@ -1,6 +1,7 @@
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
 export { default as MlComponentTemplate } from "./components/MlComponentTemplate/MlComponentTemplate";
 export { default as MlCreatePdfButton } from "./components/MlCreatePdfButton/MlCreatePdfButton";
+export { default as MlCreatePdfForm } from "./components/MlCreatePdfButton/MlCreatePdfButton";
 export { default as MlFeatureEditor } from "./components/MlFeatureEditor/MlFeatureEditor";
 export { default as MlFillExtrusionLayer } from "./components/MlFillExtrusionLayer/MlFillExtrusionLayer";
 export { default as MlFollowGps } from "./components/MlFollowGps/MlFollowGps";
@@ -12,6 +13,7 @@ export { default as MlNavigationCompass } from "./components/MlNavigationCompass
 export { default as MlLayer } from "./components/MlLayer/MlLayer";
 export { default as MlVectorTileLayer } from "./components/MlVectorTileLayer/MlVectorTileLayer";
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
+export { default as MlScaleReference } from "./components/MlScaleReference/MlScaleReference";
 export { default as MlLayerMagnify } from "./components/MlLayerMagnify/MlLayerMagnify";
 export { default as MlLayerSwipe } from "./components/MlLayerSwipe/MlLayerSwipe";
 export { default as MlTransitionGeoJsonLayer } from "./components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer";
@@ -26,6 +28,8 @@ export { default as useLayer } from "./hooks/useLayer";
 export { default as useMapState } from "./hooks/useMapState";
 export { default as useMap } from "./hooks/useMap";
 export { default as useWms } from "./hooks/useWms.js";
+export { default as useSource } from "./hooks/useSource";
+export { default as useExportMap } from "./hooks/exportMap";
 export { MapComponentsProvider } from "./contexts/MapContext";
 export { default as MapContext } from "./contexts/MapContext";
 export { default as SimpleDataProvider } from "./contexts/SimpleDataProvider";

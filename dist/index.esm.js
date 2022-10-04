@@ -293,18 +293,18 @@ var MapLibreGlWrapper = /** @class */ (function () {
                 //let paint = {};
                 //let values = layer.paint?._values;
                 //Object.keys(values || {}).map((propName) => {
-                //  paint[propName] =
-                //    typeof values[propName].value !== "undefined"
-                //      ? values[propName].value.value
-                //      : values[propName];
+                //	paint[propName] =
+                //		typeof values[propName].value !== "undefined"
+                //			? values[propName].value.value
+                //			: values[propName];
                 //});
                 //let layout = {};
                 //values = layer.layout?._values;
                 //Object.keys(values || {}).map((propName) => {
-                //  layout[propName] =
-                //    typeof values[propName].value !== "undefined"
-                //      ? values[propName].value.value
-                //      : values[propName];
+                //	layout[propName] =
+                //		typeof values[propName].value !== "undefined"
+                //			? values[propName].value.value
+                //			: values[propName];
                 //});
                 return {
                     id: layer.id,
@@ -598,7 +598,7 @@ var MapLibreGlWrapper = /** @class */ (function () {
             };
         });
         this.addNativeMaplibreFunctionsAndProps = function () {
-            //  add MapLibre-gl functions
+            //	add MapLibre-gl functions
             Object.getOwnPropertyNames(Object.getPrototypeOf(_this.map)).forEach(function (item) {
                 if (typeof _this[item] === "undefined") {
                     _this[item] = function () {
@@ -611,7 +611,7 @@ var MapLibreGlWrapper = /** @class */ (function () {
                     };
                 }
             });
-            //  add MapLibre-gl properties
+            //	add MapLibre-gl properties
             Object.keys(_this.map).forEach(function (item) {
                 if (typeof _this[item] === "undefined") {
                     _this[item] = self.map[item];
@@ -957,13 +957,12 @@ function useMap(props) {
         },
     });
     var initializedRef = useRef(false);
-    var mapRef = useRef(undefined);
+    var mapRef = useRef();
     var componentId = useRef(v4());
     var _b = useState(false), mapIsReady = _b[0], setMapIsReady = _b[1];
     var cleanup = function () {
         if (mapRef.current) {
             mapRef.current.cleanup(componentId.current);
-            mapRef.current = undefined;
         }
         initializedRef.current = false;
     };
@@ -971,6 +970,7 @@ function useMap(props) {
         return function () {
             cleanup();
             setMapIsReady(false);
+            mapRef.current = undefined;
         };
     }, []);
     useEffect(function () {
@@ -10091,7 +10091,7 @@ function isEventAtCoordinates(event, coordinates) {
  * @param {string} parentId
  * @param {Array<number>} coordinates
  * @param {string} path - Dot-separated numbers indicating exactly
- *   where the point exists within its parent feature's coordinates.
+ *	 where the point exists within its parent feature's coordinates.
  * @param {boolean} selected
  * @return {GeoJSON} Point
  */
@@ -11368,7 +11368,7 @@ var LAT_MIN = LAT_MIN$1,
     LNG_MAX = LNG_MAX$1; // Ensure that we do not drag north-south far enough for
 // - any part of any feature to exceed the poles
 // - any feature to be completely lost in the space between the projection's
-//   edge and the poles, such that it couldn't be re-selected and moved back
+//	 edge and the poles, such that it couldn't be re-selected and moved back
 
 var constrain_feature_movement = function constrain_feature_movement(geojsonFeatures, delta) {
   // "inner edge" = a feature's latitude closest to the equator
@@ -11617,7 +11617,7 @@ CustomSelectMode.clickOnVertex = function (state, e) {
   this.changeMode("custom_direct_select", {
     featureId: e.featureTarget.properties.parent,
     coordPath: e.featureTarget.properties.coord_path,
-    startPos: e.lngLat //    groupMove_vertices: matchingVertices,
+    startPos: e.lngLat //		groupMove_vertices: matchingVertices,
 
   });
   this.updateUIClasses({
@@ -12268,27 +12268,27 @@ var MlFeatureEditor = function (props) {
 };
 
 var legalLayerTypes = [
-    "fill",
-    "line",
-    "symbol",
-    "circle",
-    "heatmap",
-    "fill-extrusion",
-    "raster",
-    "hillshade",
-    "background",
+    'fill',
+    'line',
+    'symbol',
+    'circle',
+    'heatmap',
+    'fill-extrusion',
+    'raster',
+    'hillshade',
+    'background',
 ];
 function useLayer(props) {
     var mapHook = useMap({
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
     });
-    var layerTypeRef = useRef("");
-    var layerPaintConfRef = useRef("");
-    var layerLayoutConfRef = useRef("");
+    var layerTypeRef = useRef('');
+    var layerPaintConfRef = useRef('');
+    var layerLayoutConfRef = useRef('');
     var _a = useState(), layer = _a[0], setLayer = _a[1];
     var initializedRef = useRef(false);
-    var layerId = useRef(props.layerId || (props.idPrefix ? props.idPrefix : "Layer-") + mapHook.componentId);
+    var layerId = useRef(props.layerId || (props.idPrefix ? props.idPrefix : 'Layer-') + mapHook.componentId);
     var createLayer = useCallback(function () {
         var _a, _b;
         if (!mapHook.map)
@@ -12299,13 +12299,22 @@ function useLayer(props) {
         if (mapHook.map.map.getSource(layerId.current)) {
             mapHook.map.map.removeSource(layerId.current);
         }
+        if (typeof props.source === 'string') {
+            if (props.source === '' || !mapHook.map.map.getSource(props.source)) {
+                return;
+            }
+        }
         initializedRef.current = true;
-        mapHook.map.addLayer(__assign(__assign(__assign({}, props.options), (props.geojson
+        mapHook.map.addLayer(__assign(__assign(__assign(__assign({}, props.options), (props.geojson && !props.source
             ? {
                 source: {
-                    type: "geojson",
+                    type: 'geojson',
                     data: props.geojson,
                 },
+            }
+            : {})), (props.source
+            ? {
+                source: props.source,
             }
             : {})), { id: layerId.current }), props.insertBeforeLayer
             ? props.insertBeforeLayer
@@ -12313,20 +12322,20 @@ function useLayer(props) {
                 ? mapHook.map.firstSymbolLayer
                 : undefined, mapHook.componentId);
         setLayer(mapHook.map.map.getLayer(layerId.current));
-        if (typeof props.onHover !== "undefined") {
-            mapHook.map.on("mousemove", layerId.current, props.onHover, mapHook.componentId);
+        if (typeof props.onHover !== 'undefined') {
+            mapHook.map.on('mousemove', layerId.current, props.onHover, mapHook.componentId);
         }
-        if (typeof props.onClick !== "undefined") {
-            mapHook.map.on("click", layerId.current, props.onClick, mapHook.componentId);
+        if (typeof props.onClick !== 'undefined') {
+            mapHook.map.on('click', layerId.current, props.onClick, mapHook.componentId);
         }
-        if (typeof props.onLeave !== "undefined") {
-            mapHook.map.on("mouseleave", layerId.current, props.onLeave, mapHook.componentId);
+        if (typeof props.onLeave !== 'undefined') {
+            mapHook.map.on('mouseleave', layerId.current, props.onLeave, mapHook.componentId);
         }
         // recreate layer if style has changed
-        mapHook.map.on("styledata", function () {
+        mapHook.map.on('styledata', function () {
             var _a;
             if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
-                console.log("Recreate Layer");
+                console.log('Recreate Layer');
                 createLayer();
             }
         }, mapHook.componentId);
@@ -12349,6 +12358,7 @@ function useLayer(props) {
         var _a, _b, _c, _d;
         if (!initializedRef.current || !((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getSource(layerId.current)))
             return;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore setData only exists on GeoJsonSource
         (_d = (_c = mapHook.map.map.getSource(layerId.current)) === null || _c === void 0 ? void 0 : _c.setData) === null || _d === void 0 ? void 0 : _d.call(_c, props.geojson);
     }, [props.geojson, mapHook.map, props.options.type]);
@@ -12757,8 +12767,8 @@ var MlImageMarkerLayer = function (props) {
 };
 
 //const unitSquareConvert = {
-//  kilometers: 1,
-//  miles: 1 / 2.58998811,
+//	kilometers: 1,
+//	miles: 1 / 2.58998811,
 //};
 function getUnitSquareMultiplier(measureType) {
     return measureType === "miles" ? 1 / 2.58998811 : 1;
@@ -13179,9 +13189,9 @@ var SvgNeedle = function SvgNeedle(props) {
   }))));
 };
 
-var NeedleButton = styled$3.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  width: 40%;\n  display: flex;\n  align-items: center;\n\n  &:hover {\n    cursor: pointer;\n  }\n  path {\n    filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2));\n  }\n  &:hover path {\n    filter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1));\n  }\n  path:nth-of-type(2) {\n    fill: #343434;\n  }\n  &:hover path:nth-of-type(2) {\n    fill: #434343;\n  }\n  path:nth-of-type(1) {\n    fill: #e90318;\n  }\n  &:hover path:nth-of-type(1) {\n    fill: #fb4052;\n  }\n"], ["\n  width: 40%;\n  display: flex;\n  align-items: center;\n\n  &:hover {\n    cursor: pointer;\n  }\n  path {\n    filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2));\n  }\n  &:hover path {\n    filter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1));\n  }\n  path:nth-of-type(2) {\n    fill: #343434;\n  }\n  &:hover path:nth-of-type(2) {\n    fill: #434343;\n  }\n  path:nth-of-type(1) {\n    fill: #e90318;\n  }\n  &:hover path:nth-of-type(1) {\n    fill: #fb4052;\n  }\n"])));
-var NeedleContainer = styled$3.div(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  pointer-events: none;\n  display: flex;\n  z-index: 1002;\n  position: absolute;\n  align-items: center;\n\n  margin-left: -30%;\n  path:nth-of-type(2) {\n  }\n  svg g {\n    transform: translate(-76.7053, -29.7727) scale(2, 1);\n  }\n  svg {\n    z-index: 9990;\n    height: 150px;\n    width: 200px;\n  }\n"], ["\n  pointer-events: none;\n  display: flex;\n  z-index: 1002;\n  position: absolute;\n  align-items: center;\n\n  margin-left: -30%;\n  path:nth-of-type(2) {\n  }\n  svg g {\n    transform: translate(-76.7053, -29.7727) scale(2, 1);\n  }\n  svg {\n    z-index: 9990;\n    height: 150px;\n    width: 200px;\n  }\n"])));
-var RotateButton = styled$3.div(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  width: 30%;\n  margin-top: 14px;\n  z-index: 999;\n  display: flex;\n\n  svg:hover {\n    cursor: pointer;\n  }\n  svg:hover path {\n    fill: #ececec;\n    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));\n  }\n  path {\n    fill: #bbb;\n  }\n  svg {\n    transform: scale(0.6);\n    z-index: 9990;\n    height: 172px;\n  }\n"], ["\n  width: 30%;\n  margin-top: 14px;\n  z-index: 999;\n  display: flex;\n\n  svg:hover {\n    cursor: pointer;\n  }\n  svg:hover path {\n    fill: #ececec;\n    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));\n  }\n  path {\n    fill: #bbb;\n  }\n  svg {\n    transform: scale(0.6);\n    z-index: 9990;\n    height: 172px;\n  }\n"])));
+var NeedleButton = styled$3.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n\twidth: 40%;\n\tdisplay: flex;\n\talign-items: center;\n\n\t&:hover {\n\t\tcursor: pointer;\n\t}\n\tpath {\n\t\tfilter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2));\n\t}\n\t&:hover path {\n\t\tfilter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1));\n\t}\n\tpath:nth-of-type(2) {\n\t\tfill: #343434;\n\t}\n\t&:hover path:nth-of-type(2) {\n\t\tfill: #434343;\n\t}\n\tpath:nth-of-type(1) {\n\t\tfill: #e90318;\n\t}\n\t&:hover path:nth-of-type(1) {\n\t\tfill: #fb4052;\n\t}\n"], ["\n\twidth: 40%;\n\tdisplay: flex;\n\talign-items: center;\n\n\t&:hover {\n\t\tcursor: pointer;\n\t}\n\tpath {\n\t\tfilter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2));\n\t}\n\t&:hover path {\n\t\tfilter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1));\n\t}\n\tpath:nth-of-type(2) {\n\t\tfill: #343434;\n\t}\n\t&:hover path:nth-of-type(2) {\n\t\tfill: #434343;\n\t}\n\tpath:nth-of-type(1) {\n\t\tfill: #e90318;\n\t}\n\t&:hover path:nth-of-type(1) {\n\t\tfill: #fb4052;\n\t}\n"])));
+var NeedleContainer = styled$3.div(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n\tpointer-events: none;\n\tdisplay: flex;\n\tz-index: 1002;\n\tposition: absolute;\n\talign-items: center;\n\n\tmargin-left: -30%;\n\tpath:nth-of-type(2) {\n\t}\n\tsvg g {\n\t\ttransform: translate(-76.7053, -29.7727) scale(2, 1);\n\t}\n\tsvg {\n\t\tz-index: 9990;\n\t\theight: 150px;\n\t\twidth: 200px;\n\t}\n"], ["\n\tpointer-events: none;\n\tdisplay: flex;\n\tz-index: 1002;\n\tposition: absolute;\n\talign-items: center;\n\n\tmargin-left: -30%;\n\tpath:nth-of-type(2) {\n\t}\n\tsvg g {\n\t\ttransform: translate(-76.7053, -29.7727) scale(2, 1);\n\t}\n\tsvg {\n\t\tz-index: 9990;\n\t\theight: 150px;\n\t\twidth: 200px;\n\t}\n"])));
+var RotateButton = styled$3.div(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n\twidth: 30%;\n\tmargin-top: 14px;\n\tz-index: 999;\n\tdisplay: flex;\n\n\tsvg:hover {\n\t\tcursor: pointer;\n\t}\n\tsvg:hover path {\n\t\tfill: #ececec;\n\t\tfilter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));\n\t}\n\tpath {\n\t\tfill: #bbb;\n\t}\n\tsvg {\n\t\ttransform: scale(0.6);\n\t\tz-index: 9990;\n\t\theight: 172px;\n\t}\n"], ["\n\twidth: 30%;\n\tmargin-top: 14px;\n\tz-index: 999;\n\tdisplay: flex;\n\n\tsvg:hover {\n\t\tcursor: pointer;\n\t}\n\tsvg:hover path {\n\t\tfill: #ececec;\n\t\tfilter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));\n\t}\n\tpath {\n\t\tfill: #bbb;\n\t}\n\tsvg {\n\t\ttransform: scale(0.6);\n\t\tz-index: 9990;\n\t\theight: 172px;\n\t}\n"])));
 /**
  * Navigation component that displays a compass component which indicates the current oriantation of the map it is registered for and offers controls to turn the bearing 90° left/right or reset north to point up.
  *
@@ -13700,13 +13710,13 @@ var defaultProps = {
  * @param {object} props
  * @param {object} props.urlParameters URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object
  * @param {string} props.url WMS URL
- * @param {bool}   props.visible Sets layer "visibility" property to "visible" if true or "none" if false
+ * @param {bool}	 props.visible Sets layer "visibility" property to "visible" if true or "none" if false
  * @param {string} props.attribution MapLibre attribution shown in the bottom right of the map, if this layer is visible
  * @param {string} props.mapId Id of the target MapLibre instance in mapContext
  * @param {object} props.sourceOptions Object that is passed to the MapLibre.addSource call as config option parameter
  * @param {object} props.layerOptions Object that is passed to the MapLibre.addLayer call as config option parameter
  * @param {string} props.insertBeforeLayer Id of an existing layer in the mapLibre instance to help specify the layer order
-                                           This layer will be visually beneath the layer with the "insertBeforeLayer" id
+                                                                                     This layer will be visually beneath the layer with the "insertBeforeLayer" id
  *
  * @component
  */
@@ -13812,255 +13822,6 @@ MlWmsLayer.propTypes = {
      * Sets layer "visibility" property to "visible" if true or "none" if false
      */
     visible: PropTypes.bool,
-};
-
-/**
- *
- * Hides the MapLibreMap referenced by props.map2Id except for the "magnifier"-circle that reveals
- * the map and can be dragged around on top of the MapLibreMap referenced by props.map1Id
- */
-var MlLayerMagnify = function (props) {
-    var mapContext = useContext(MapContext);
-    var syncMoveInitializedRef = useRef(false);
-    var syncCleanupFunctionRef = useRef(function () { });
-    var _a = useState('50'), swipeX = _a[0], setSwipeX = _a[1];
-    var swipeXRef = useRef('50');
-    var _b = useState('50'), swipeY = _b[0], setSwipeY = _b[1];
-    var swipeYRef = useRef('50');
-    var magnifierRadius = useMemo(function () {
-        return props.magnifierRadius || 200;
-    }, [props.magnifierRadius]);
-    var mapExists = useCallback(function () {
-        if (!props.map1Id || !props.map2Id) {
-            return false;
-        }
-        if (!mapContext.getMap(props.map1Id) || !mapContext.getMap(props.map2Id)) {
-            return false;
-        }
-        return true;
-    }, [props, mapContext]);
-    var onResize = useRef(function () {
-        if (!mapExists())
-            return;
-        onMove({
-            clientX: swipeXRef.current,
-            clientY: swipeYRef.current,
-        });
-    });
-    useEffect(function () {
-        window.addEventListener("resize", onResize.current);
-        var _onResize = onResize.current;
-        return function () {
-            window.removeEventListener("resize", _onResize);
-            syncCleanupFunctionRef.current();
-        };
-    }, []);
-    var onMove = useCallback(function (e) {
-        if (!mapExists())
-            return;
-        var bounds = mapContext.maps[props.map1Id]
-            .getCanvas()
-            .getBoundingClientRect();
-        var clientX = e.clientX ||
-            (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
-                ? e.touches[0].clientX
-                : 0);
-        var clientY = e.clientY ||
-            (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
-                ? e.touches[0].clientY
-                : 0);
-        clientX -= bounds.x;
-        clientY -= bounds.y;
-        var swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
-        var swipeY_tmp = ((clientY / bounds.height) * 100).toFixed(2);
-        if (swipeXRef.current !== swipeX_tmp ||
-            swipeYRef.current !== swipeY_tmp) {
-            setSwipeX(swipeX_tmp);
-            swipeXRef.current = swipeX_tmp;
-            setSwipeY(swipeY_tmp);
-            swipeYRef.current = swipeY_tmp;
-            mapContext.maps[props.map2Id].getContainer().style.clipPath =
-                "circle(".concat(magnifierRadius, "px at ") +
-                    (parseFloat(swipeXRef.current) * bounds.width) / 100 +
-                    "px " +
-                    (parseFloat(swipeYRef.current) * bounds.height) / 100 +
-                    "px)";
-        }
-    }, [mapContext, mapExists, props, magnifierRadius]);
-    useEffect(function () {
-        if (!mapExists() || syncMoveInitializedRef.current)
-            return;
-        syncMoveInitializedRef.current = true;
-        syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
-        /*
-        automatically adjust radius for small screens
-        if (
-          mapContext.maps[props.map1Id].getCanvas().clientWidth >
-            mapContext.maps[props.map1Id].getCanvas().clientHeight &&
-          magnifierRadius * 2 >
-            mapContext.maps[props.map1Id].getCanvas().clientHeight
-        ) {
-          magnifierRadius = Math.floor(
-            mapContext.maps[props.map1Id].getCanvas().clientHeight / 2
-          );
-          setMagnifierRadius(magnifierRadius);
-        }
-    
-        if (
-          mapContext.maps[props.map1Id].getCanvas().clientHeight >
-            mapContext.maps[props.map1Id].getCanvas().clientWidth &&
-          magnifierRadius * 2 >
-            mapContext.maps[props.map1Id].getCanvas().clientWidth
-        ) {
-          magnifierRadius = Math.floor(
-            mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
-          );
-          setMagnifierRadius(magnifierRadius);
-        }
-        */
-        onMove({
-            clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
-            clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2,
-        });
-    }, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
-    var onDown = function (e) {
-        if (e.touches) {
-            document.addEventListener("touchmove", onMove);
-            document.addEventListener("touchend", onTouchEnd);
-        }
-        else {
-            document.addEventListener("mousemove", onMove);
-            document.addEventListener("mouseup", onMouseUp);
-        }
-    };
-    var onTouchEnd = function () {
-        document.removeEventListener("touchmove", onMove);
-        document.removeEventListener("touchend", onTouchEnd);
-    };
-    var onMouseUp = function () {
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onMouseUp);
-    };
-    var onWheel = function (e) {
-        var evCopy = new WheelEvent(e.type, e);
-        mapContext.map.getCanvas().dispatchEvent(evCopy);
-    };
-    return (React__default.createElement("div", { style: {
-            position: "absolute",
-            left: swipeX + "%",
-            top: swipeY + "%",
-            borderRadius: "50%",
-            width: magnifierRadius * 2 + 1 + "px",
-            height: magnifierRadius * 2 + 1 + "px",
-            background: "rgba(0,0,0,0)",
-            border: "2px solid #fafafa",
-            boxShadow: "1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)",
-            cursor: "pointer",
-            zIndex: "110",
-            marginLeft: magnifierRadius * -1 - 1 + "px",
-            marginTop: magnifierRadius * -1 - 1 + "px",
-            textAlign: "center",
-            lineHeight: "91px",
-            fontSize: "2em",
-            color: "#fafafa",
-            userSelect: "none",
-        }, onTouchStart: onDown, onMouseDown: onDown, onWheel: onWheel }));
-};
-MlLayerMagnify.defaultProps = {
-    magnifierRadius: 200,
-};
-
-/**
- *  creates a split view of 2 synchronised maplibre instances
- */
-var MlLayerSwipe = function (props) {
-    var mapContext = useContext(MapContext);
-    var initializedRef = useRef(false);
-    var _a = useState(50), swipeX = _a[0], setSwipeX = _a[1];
-    var swipeXRef = useRef(0);
-    var syncCleanupFunctionRef = useRef(function () { });
-    var mapExists = useCallback(function () {
-        if (!props.map1Id || !props.map2Id) {
-            return false;
-        }
-        if (!mapContext.getMap(props.map1Id) || !mapContext.getMap(props.map2Id)) {
-            return false;
-        }
-        return true;
-    }, [mapContext, props.map1Id, props.map2Id]);
-    var cleanup = function () {
-        syncCleanupFunctionRef.current();
-    };
-    var onMove = useCallback(function (e) {
-        if (!mapExists())
-            return;
-        var bounds = mapContext.maps[props.map1Id]
-            .getCanvas()
-            .getBoundingClientRect();
-        var clientX = e.clientX ||
-            (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
-                ? e.touches[0].clientX
-                : 0);
-        clientX -= bounds.x;
-        var swipeX_tmp = parseFloat(((clientX / bounds.width) * 100).toFixed(2));
-        if (swipeXRef.current !== swipeX_tmp) {
-            setSwipeX(swipeX_tmp);
-            swipeXRef.current = swipeX_tmp;
-            var clipA = "rect(0, " +
-                (swipeXRef.current * bounds.width) / 100 +
-                "px, 999em, 0)";
-            mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
-        }
-    }, [mapContext, mapExists, props.map1Id, props.map2Id]);
-    useEffect(function () {
-        return cleanup;
-    }, []);
-    useEffect(function () {
-        if (!mapExists() || initializedRef.current)
-            return;
-        initializedRef.current = true;
-        syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
-        onMove({
-            clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
-        });
-    }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
-    var onDown = function (e) {
-        if (e.touches) {
-            document.addEventListener("touchmove", onMove);
-            document.addEventListener("touchend", onTouchEnd);
-        }
-        else {
-            document.addEventListener("mousemove", onMove);
-            document.addEventListener("mouseup", onMouseUp);
-        }
-    };
-    var onTouchEnd = function () {
-        document.removeEventListener("touchmove", onMove);
-        document.removeEventListener("touchend", onTouchEnd);
-    };
-    var onMouseUp = function () {
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onMouseUp);
-    };
-    return (React__default.createElement("div", { style: {
-            position: "absolute",
-            left: swipeX + "%",
-            top: "50%",
-            borderRadius: "50%",
-            width: "100px",
-            height: "100px",
-            background: "#0066ff",
-            border: "3px solid #eaebf1",
-            cursor: "pointer",
-            zIndex: "110",
-            marginLeft: "-50px",
-            marginTop: "-50px",
-            textAlign: "center",
-            lineHeight: "91px",
-            fontSize: "2em",
-            color: "#fafafa",
-            userSelect: "none",
-        }, onTouchStart: onDown, onMouseDown: onDown }));
 };
 
 function ownKeys(object, enumerableOnly) {
@@ -14188,6 +13949,358 @@ function _nonIterableSpread() {
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
+
+var MlScaleReference = function MlScaleReference(props) {
+  var zoomRef = useRef(0);
+  var mapHook = useMap({
+    mapId: props.mapId,
+    waitForLayer: props.insertBeforeLayer
+  });
+
+  var _useState = useState(0),
+      _useState2 = _slicedToArray(_useState, 2),
+      pxWidth = _useState2[0],
+      setPxWidth = _useState2[1];
+
+  var _useState3 = useState(""),
+      _useState4 = _slicedToArray(_useState3, 2),
+      text = _useState4[0],
+      setText = _useState4[1];
+
+  var updateScale = useCallback(function () {
+    var _mapHook$map, _mapHook$map2;
+
+    if (((_mapHook$map = mapHook.map) === null || _mapHook$map === void 0 ? void 0 : _mapHook$map.map.getZoom()) === zoomRef.current) {
+      return;
+    }
+
+    if (!mapHook.map) return;
+    zoomRef.current = (_mapHook$map2 = mapHook.map) === null || _mapHook$map2 === void 0 ? void 0 : _mapHook$map2.map.getZoom(); // Calculation from MapLibre
+    // A horizontal scale is imagined to be present at center of the map
+    // Using spherical law of cosines approximation, the real distance is
+    // found between the two coordinates.
+
+    var maxWidth = props.maxWidth || 100;
+    var y = mapHook.map._container.clientHeight / 2;
+    var left = mapHook.map.unproject([0, y]);
+    var right = mapHook.map.unproject([maxWidth, y]);
+    var maxMeters = left.distanceTo(right); // The real distance corresponding to 100px scale length is rounded off to
+    // near pretty number and the scale length for the same is found out.
+    // Default unit of the scale is based on User's locale.
+
+    if (props.unit === "imperial") {
+      var maxFeet = 3.2808 * maxMeters;
+
+      if (maxFeet > 5280) {
+        var maxMiles = maxFeet / 5280;
+        setScale(maxWidth, maxMiles, mapHook.map._getUIString("ScaleControl.Miles"));
+      } else {
+        setScale(maxWidth, maxFeet, mapHook.map._getUIString("ScaleControl.Feet"));
+      }
+    } else if (props.unit === "nautical") {
+      var maxNauticals = maxMeters / 1852;
+      setScale(maxWidth, maxNauticals, mapHook.map._getUIString("ScaleControl.NauticalMiles"));
+    } else if (maxMeters >= 1000) {
+      setScale(maxWidth, maxMeters / 1000, mapHook.map._getUIString("ScaleControl.Kilometers"));
+    } else {
+      setScale(maxWidth, maxMeters, mapHook.map._getUIString("ScaleControl.Meters"));
+    }
+  }, [mapHook.map, props.unit, props.maxWidth]);
+  useEffect(function () {
+    if (!mapHook.map) return;
+    var _updateScale = updateScale;
+    mapHook.map.on("move", _updateScale, mapHook.componentId);
+    updateScale();
+    return function () {
+      mapHook.map.off("move", _updateScale);
+    };
+  }, [mapHook.map, updateScale]);
+
+  var setScale = function setScale(maxWidth, maxDistance, unit) {
+    var distance = getRoundNum(maxDistance);
+    var ratio = distance / maxDistance;
+    setPxWidth(maxWidth * ratio);
+    setText(distance + "&nbsp;" + unit);
+  };
+
+  var getDecimalRoundNum = function getDecimalRoundNum(d) {
+    var multiplier = Math.pow(10, Math.ceil(-Math.log(d) / Math.LN10));
+    return Math.round(d * multiplier) / multiplier;
+  };
+
+  var getRoundNum = function getRoundNum(num) {
+    var pow10 = Math.pow(10, "".concat(Math.floor(num)).length - 1);
+    var d = num / pow10;
+    d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : d >= 1 ? 1 : getDecimalRoundNum(d);
+    return pow10 * d;
+  };
+
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement("div", {
+    style: {
+      backgroundColor: "hsla(0,0%,100%,.75)",
+      fontSize: "10px",
+      border: "2px solid #333",
+      borderTop: "#333",
+      padding: "0 5px",
+      color: "#333",
+      boxSizing: "border-box",
+      width: pxWidth + "px",
+      fontFamily: "sans-serif"
+    },
+    dangerouslySetInnerHTML: {
+      __html: text
+    }
+  }));
+};
+
+/**
+ *
+ * Hides the MapLibreMap referenced by props.map2Id except for the "magnifier"-circle that reveals
+ * the map and can be dragged around on top of the MapLibreMap referenced by props.map1Id
+ */
+var MlLayerMagnify = function (props) {
+    var mapContext = useContext(MapContext);
+    var syncMoveInitializedRef = useRef(false);
+    var syncCleanupFunctionRef = useRef(function () { });
+    var _a = useState('50'), swipeX = _a[0], setSwipeX = _a[1];
+    var swipeXRef = useRef('50');
+    var _b = useState('50'), swipeY = _b[0], setSwipeY = _b[1];
+    var swipeYRef = useRef('50');
+    var magnifierRadius = useMemo(function () {
+        return props.magnifierRadius || 200;
+    }, [props.magnifierRadius]);
+    var mapExists = useCallback(function () {
+        if (!props.map1Id || !props.map2Id) {
+            return false;
+        }
+        if (!mapContext.getMap(props.map1Id) || !mapContext.getMap(props.map2Id)) {
+            return false;
+        }
+        return true;
+    }, [props, mapContext]);
+    var onResize = useRef(function () {
+        if (!mapExists())
+            return;
+        onMove({
+            clientX: swipeXRef.current,
+            clientY: swipeYRef.current,
+        });
+    });
+    useEffect(function () {
+        window.addEventListener("resize", onResize.current);
+        var _onResize = onResize.current;
+        return function () {
+            window.removeEventListener("resize", _onResize);
+            syncCleanupFunctionRef.current();
+        };
+    }, []);
+    var onMove = useCallback(function (e) {
+        if (!mapExists())
+            return;
+        var bounds = mapContext.maps[props.map1Id]
+            .getCanvas()
+            .getBoundingClientRect();
+        var clientX = e.clientX ||
+            (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+                ? e.touches[0].clientX
+                : 0);
+        var clientY = e.clientY ||
+            (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+                ? e.touches[0].clientY
+                : 0);
+        clientX -= bounds.x;
+        clientY -= bounds.y;
+        var swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
+        var swipeY_tmp = ((clientY / bounds.height) * 100).toFixed(2);
+        if (swipeXRef.current !== swipeX_tmp ||
+            swipeYRef.current !== swipeY_tmp) {
+            setSwipeX(swipeX_tmp);
+            swipeXRef.current = swipeX_tmp;
+            setSwipeY(swipeY_tmp);
+            swipeYRef.current = swipeY_tmp;
+            mapContext.maps[props.map2Id].getContainer().style.clipPath =
+                "circle(".concat(magnifierRadius, "px at ") +
+                    (parseFloat(swipeXRef.current) * bounds.width) / 100 +
+                    "px " +
+                    (parseFloat(swipeYRef.current) * bounds.height) / 100 +
+                    "px)";
+        }
+    }, [mapContext, mapExists, props, magnifierRadius]);
+    useEffect(function () {
+        if (!mapExists() || syncMoveInitializedRef.current)
+            return;
+        syncMoveInitializedRef.current = true;
+        syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
+        /*
+        automatically adjust radius for small screens
+        if (
+            mapContext.maps[props.map1Id].getCanvas().clientWidth >
+                mapContext.maps[props.map1Id].getCanvas().clientHeight &&
+            magnifierRadius * 2 >
+                mapContext.maps[props.map1Id].getCanvas().clientHeight
+        ) {
+            magnifierRadius = Math.floor(
+                mapContext.maps[props.map1Id].getCanvas().clientHeight / 2
+            );
+            setMagnifierRadius(magnifierRadius);
+        }
+
+        if (
+            mapContext.maps[props.map1Id].getCanvas().clientHeight >
+                mapContext.maps[props.map1Id].getCanvas().clientWidth &&
+            magnifierRadius * 2 >
+                mapContext.maps[props.map1Id].getCanvas().clientWidth
+        ) {
+            magnifierRadius = Math.floor(
+                mapContext.maps[props.map1Id].getCanvas().clientWidth / 2
+            );
+            setMagnifierRadius(magnifierRadius);
+        }
+        */
+        onMove({
+            clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
+            clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2,
+        });
+    }, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
+    var onDown = function (e) {
+        if (e.touches) {
+            document.addEventListener("touchmove", onMove);
+            document.addEventListener("touchend", onTouchEnd);
+        }
+        else {
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", onMouseUp);
+        }
+    };
+    var onTouchEnd = function () {
+        document.removeEventListener("touchmove", onMove);
+        document.removeEventListener("touchend", onTouchEnd);
+    };
+    var onMouseUp = function () {
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onMouseUp);
+    };
+    var onWheel = function (e) {
+        var evCopy = new WheelEvent(e.type, e);
+        mapContext.map.getCanvas().dispatchEvent(evCopy);
+    };
+    return (React__default.createElement("div", { style: {
+            position: "absolute",
+            left: swipeX + "%",
+            top: swipeY + "%",
+            borderRadius: "50%",
+            width: magnifierRadius * 2 + 1 + "px",
+            height: magnifierRadius * 2 + 1 + "px",
+            background: "rgba(0,0,0,0)",
+            border: "2px solid #fafafa",
+            boxShadow: "1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)",
+            cursor: "pointer",
+            zIndex: "110",
+            marginLeft: magnifierRadius * -1 - 1 + "px",
+            marginTop: magnifierRadius * -1 - 1 + "px",
+            textAlign: "center",
+            lineHeight: "91px",
+            fontSize: "2em",
+            color: "#fafafa",
+            userSelect: "none",
+        }, onTouchStart: onDown, onMouseDown: onDown, onWheel: onWheel }));
+};
+MlLayerMagnify.defaultProps = {
+    magnifierRadius: 200,
+};
+
+/**
+ *	creates a split view of 2 synchronised maplibre instances
+ */
+var MlLayerSwipe = function (props) {
+    var mapContext = useContext(MapContext);
+    var initializedRef = useRef(false);
+    var _a = useState(50), swipeX = _a[0], setSwipeX = _a[1];
+    var swipeXRef = useRef(0);
+    var syncCleanupFunctionRef = useRef(function () { });
+    var mapExists = useCallback(function () {
+        if (!props.map1Id || !props.map2Id) {
+            return false;
+        }
+        if (!mapContext.getMap(props.map1Id) || !mapContext.getMap(props.map2Id)) {
+            return false;
+        }
+        return true;
+    }, [mapContext, props.map1Id, props.map2Id]);
+    var cleanup = function () {
+        syncCleanupFunctionRef.current();
+    };
+    var onMove = useCallback(function (e) {
+        if (!mapExists())
+            return;
+        var bounds = mapContext.maps[props.map1Id]
+            .getCanvas()
+            .getBoundingClientRect();
+        var clientX = e.clientX ||
+            (typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+                ? e.touches[0].clientX
+                : 0);
+        clientX -= bounds.x;
+        var swipeX_tmp = parseFloat(((clientX / bounds.width) * 100).toFixed(2));
+        if (swipeXRef.current !== swipeX_tmp) {
+            setSwipeX(swipeX_tmp);
+            swipeXRef.current = swipeX_tmp;
+            var clipA = "rect(0, " +
+                (swipeXRef.current * bounds.width) / 100 +
+                "px, 999em, 0)";
+            mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
+        }
+    }, [mapContext, mapExists, props.map1Id, props.map2Id]);
+    useEffect(function () {
+        return cleanup;
+    }, []);
+    useEffect(function () {
+        if (!mapExists() || initializedRef.current)
+            return;
+        initializedRef.current = true;
+        syncCleanupFunctionRef.current = syncMove(mapContext.getMap(props.map1Id).map, mapContext.getMap(props.map2Id).map);
+        onMove({
+            clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
+        });
+    }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
+    var onDown = function (e) {
+        if (e.touches) {
+            document.addEventListener("touchmove", onMove);
+            document.addEventListener("touchend", onTouchEnd);
+        }
+        else {
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", onMouseUp);
+        }
+    };
+    var onTouchEnd = function () {
+        document.removeEventListener("touchmove", onMove);
+        document.removeEventListener("touchend", onTouchEnd);
+    };
+    var onMouseUp = function () {
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onMouseUp);
+    };
+    return (React__default.createElement("div", { style: {
+            position: "absolute",
+            left: swipeX + "%",
+            top: "50%",
+            borderRadius: "50%",
+            width: "100px",
+            height: "100px",
+            background: "#0066ff",
+            border: "3px solid #eaebf1",
+            cursor: "pointer",
+            zIndex: "110",
+            marginLeft: "-50px",
+            marginTop: "-50px",
+            textAlign: "center",
+            lineHeight: "91px",
+            fontSize: "2em",
+            color: "#fafafa",
+            userSelect: "none",
+        }, onTouchStart: onDown, onMouseDown: onDown }));
+};
 
 var _showNextTransitionSegment = function _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson) {
   var _arguments = arguments;
@@ -18840,6 +18953,182 @@ useWms.defaultProps = {
   }
 };
 
+function useSource(props) {
+    var _a;
+    var mapHook = useMap({
+        mapId: props.mapId,
+    });
+    var initializedRef = useRef(false);
+    var _b = useState(), source = _b[0], setSource = _b[1];
+    var sourceId = useRef(props.sourceId || (props.idPrefix ? props.idPrefix : "Source-") + mapHook.componentId);
+    var createSource = useCallback(function () {
+        var _a;
+        if (!mapHook.map)
+            return;
+        initializedRef.current = true;
+        if (mapHook.map.map.getSource(sourceId.current)) {
+            mapHook.cleanup();
+        }
+        (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.addSource(sourceId.current, __assign({}, props.source));
+        setSource(mapHook.map.map.getSource(sourceId.current));
+    }, [props, mapHook.map]);
+    useEffect(function () {
+        if (!mapHook.map || initializedRef.current)
+            return;
+        createSource();
+    }, [mapHook.map, props, createSource]);
+    useEffect(function () {
+        var _a, _b, _c, _d;
+        if (!initializedRef.current || !((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getSource(props.sourceId)))
+            return;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore setData only exists on GeoJsonSource
+        (_d = (_c = mapHook.map.map.getSource(props.sourceId)) === null || _c === void 0 ? void 0 : _c.setData) === null || _d === void 0 ? void 0 : _d.call(_c, props.source.data);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore data only exists on GeoJsonSource
+    }, [(_a = props.source) === null || _a === void 0 ? void 0 : _a.data]);
+    //cleanup
+    useEffect(function () {
+        return function () {
+            initializedRef.current = false;
+            if (mapHook.map) {
+                for (var _i = 0, _a = Object.entries(mapHook.map.map.style._layers); _i < _a.length; _i++) {
+                    var _b = _a[_i], layerId = _b[0], layer = _b[1];
+                    if (layer.source === sourceId.current) {
+                        mapHook.map.map.removeLayer(layerId);
+                    }
+                }
+                mapHook.map.map.removeSource(sourceId.current);
+            }
+        };
+    }, [mapHook.map]);
+    return {
+        map: mapHook.map,
+        source: source,
+        componentId: mapHook.componentId,
+        mapHook: mapHook,
+    };
+}
+
+var createExport = function (options) {
+    var width = options.width;
+    var height = options.height;
+    // Create map container
+    var hiddenContainer = document.createElement('div');
+    hiddenContainer.className = 'hidden-map';
+    document.body.appendChild(hiddenContainer);
+    var container = document.createElement('div');
+    container.style.width = width + 'px';
+    container.style.height = height + 'px';
+    hiddenContainer.appendChild(container);
+    var style = options.map.map.getStyle();
+    var _loop_1 = function (name_1) {
+        var src = style.sources[name_1];
+        Object.keys(src).forEach(function (key) {
+            // delete property if value is undefined.
+            // for instance, raster-dem might have undefined value in "url" and "bounds"
+            if (!src[key]) {
+                delete src[key];
+            }
+        });
+    };
+    // delete undefined source properties
+    for (var name_1 in style.sources) {
+        _loop_1(name_1);
+    }
+    // Create a new MapLibre-gl instance
+    var renderMap = new Map$2({
+        container: container,
+        center: options.map.map.getCenter(),
+        zoom: options.map.map.getZoom(),
+        bearing: 0,
+        pitch: 0,
+        interactive: false,
+        preserveDrawingBuffer: true,
+        fadeDuration: 0,
+        attributionControl: false,
+        style: style,
+    });
+    var _previewGeojson = turf.bboxPolygon([
+        options.bbox[0],
+        options.bbox[1],
+        options.bbox[2],
+        options.bbox[3],
+    ]);
+    _previewGeojson = turf.transformRotate(_previewGeojson, options.bearing);
+    // use original unrotated bbox and bearing 0 to calculate the correct zoom value as the function always adds a padding if used on the rotated feature coordinates
+    var bboxCamera = renderMap._cameraForBoxAndBearing([options.bboxUnrotated[0], options.bboxUnrotated[1]], [options.bboxUnrotated[2], options.bboxUnrotated[3]], 0);
+    var geometryCamera = renderMap._cameraForBoxAndBearing(_previewGeojson.geometry.coordinates[0][0], _previewGeojson.geometry.coordinates[0][2], options.bearing);
+    geometryCamera.zoom = bboxCamera.zoom;
+    renderMap._fitInternal(geometryCamera);
+    return new Promise(function (resolve) {
+        renderMap.once('idle', function () {
+            if (renderMap.getLayer('pdfPreviewGeojsonOutline')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojsonOutline', 'visibility', 'none');
+            }
+            if (renderMap.getLayer('pdfPreviewGeojson')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojson', 'visibility', 'none');
+            }
+            if (renderMap.getLayer('pdfPreviewGeojsonResizeHandle')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojsonResizeHandle', 'visibility', 'none');
+            }
+            if (renderMap.getLayer('pdfPreviewGeojsonRotationHandle')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojsonRotationHandle', 'visibility', 'none');
+            }
+            renderMap.once('idle', function () {
+                var params = __assign(__assign({}, options), { renderMap: renderMap, hiddenContainer: hiddenContainer, createPdf: function (_options) {
+                        return createJsPdf(__assign(__assign(__assign({}, options), { renderMap: renderMap, hiddenContainer: hiddenContainer }), _options));
+                    } });
+                resolve(params);
+            });
+        });
+    });
+};
+function createJsPdf(options) {
+    var pdf = new jsPDF({
+        orientation: (options === null || options === void 0 ? void 0 : options.orientation) === 'portrait' ? 'p' : 'l',
+        unit: 'mm',
+        compress: true,
+        format: options.format,
+    });
+    Object.defineProperty(window, 'devicePixelRatio', {
+        get: function () {
+            return 300 / 96;
+        },
+    });
+    return new Promise(function (resolve) {
+        var _a;
+        //Render map image
+        pdf.addImage(options.renderMap.getCanvas().toDataURL('image/png'), 'png', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), undefined, 'FAST');
+        // remove DOM Elements
+        options.renderMap.remove();
+        (_a = options.hiddenContainer.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(options.hiddenContainer);
+        var params = __assign(__assign({}, options), { pdf: pdf, downloadPdf: function (_options) { return downloadPdf(__assign(__assign({}, params), _options)); } });
+        resolve(params);
+    });
+}
+function downloadPdf(options) {
+    options.pdf.save('Map.pdf');
+    return new Promise(function (resolve) {
+        resolve(__assign({}, options));
+    });
+}
+
+function exportMap(props) {
+    var mapHook = useMap({ mapId: props.mapId });
+    var _createExport = useMemo(function () {
+        if (mapHook.map) {
+            return function (options) {
+                return createExport(__assign({ map: mapHook.map }, options));
+            };
+        }
+        return;
+    }, [mapHook.map]);
+    return {
+        createExport: _createExport,
+    };
+}
+
 var SimpleDataContext = /*#__PURE__*/React__default.createContext({});
 var SimpleDataContextProvider = SimpleDataContext.Provider;
 
@@ -18902,5 +19191,5 @@ SimpleDataProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlMeasureTool, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, useLayer, useMap, useMapState, useWms };
+export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlCreatePdfButton as MlCreatePdfForm, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlMeasureTool, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlScaleReference, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, exportMap as useExportMap, useLayer, useMap, useMapState, useSource, useWms };
 //# sourceMappingURL=index.esm.js.map

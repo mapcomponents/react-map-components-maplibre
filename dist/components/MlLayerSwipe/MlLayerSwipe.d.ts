@@ -10,7 +10,7 @@ interface MlLayerSwipeProps {
     map2Id: string;
 }
 /**
- *  creates a split view of 2 synchronised maplibre instances
+ *	creates a split view of 2 synchronised maplibre instances
  */
 declare const MlLayerSwipe: (props: MlLayerSwipeProps) => JSX.Element;
 export default MlLayerSwipe;

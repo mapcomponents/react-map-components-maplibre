@@ -4,7 +4,7 @@ declare type useMapType = {
     mapIsReady: boolean;
     componentId: string;
     layers: (LayerState | undefined)[];
-    cleanup: Function;
+    cleanup: () => void;
 };
 declare function useMap(props: {
     mapId?: string;

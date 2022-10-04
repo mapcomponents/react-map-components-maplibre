@@ -1,8 +1,8 @@
-import { useMapType } from "./useMap";
-import { LayerSpecification } from "maplibre-gl";
-import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-import { MapLayerMouseEvent } from "maplibre-gl";
-import { GeoJSONObject } from "@turf/turf";
+import { useMapType } from './useMap';
+import { SourceSpecification, LayerSpecification } from 'maplibre-gl';
+import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
+import { MapLayerMouseEvent } from 'maplibre-gl';
+import { GeoJSONObject } from '@turf/turf';
 declare type useLayerType = {
     map: MapLibreGlWrapper | undefined;
     layer: LayerSpecification;
@@ -17,6 +17,7 @@ interface useLayerProps {
     insertBeforeLayer?: string;
     insertBeforeFirstSymbolLayer?: boolean;
     geojson?: GeoJSONObject;
+    source?: SourceSpecification | string;
     options: Partial<LayerSpecification>;
     onHover?: MapLayerMouseEvent;
     onClick?: MapLayerMouseEvent;
