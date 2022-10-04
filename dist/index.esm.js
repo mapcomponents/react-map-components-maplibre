@@ -7,10 +7,10 @@ import { Map as Map$2, Popup } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import styled$3 from '@emotion/styled';
 import { keyframes } from '@emotion/react';
-import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import { Button as Button$2 } from '@mui/material';
 import * as turf from '@turf/turf';
 import { point, circle, lineArc, bbox, lineOffset, distance } from '@turf/turf';
+import { FormControl, InputLabel, Select, MenuItem, FormLabel, RadioGroup, FormControlLabel, Radio, Button as Button$2 } from '@mui/material';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { css } from '@emotion/css';
 import syncMove from '@mapbox/mapbox-gl-sync-move';
 import * as ReactDOM from 'react-dom';
@@ -9923,6 +9923,896 @@ MlCreatePdfButton.defaultProps = {
     mapId: undefined,
 };
 
+var legalLayerTypes = [
+    'fill',
+    'line',
+    'symbol',
+    'circle',
+    'heatmap',
+    'fill-extrusion',
+    'raster',
+    'hillshade',
+    'background',
+];
+function useLayer(props) {
+    var mapHook = useMap({
+        mapId: props.mapId,
+        waitForLayer: props.insertBeforeLayer,
+    });
+    var layerTypeRef = useRef('');
+    var layerPaintConfRef = useRef('');
+    var layerLayoutConfRef = useRef('');
+    var _a = useState(), layer = _a[0], setLayer = _a[1];
+    var initializedRef = useRef(false);
+    var layerId = useRef(props.layerId || (props.idPrefix ? props.idPrefix : 'Layer-') + mapHook.componentId);
+    var createLayer = useCallback(function () {
+        var _a, _b;
+        if (!mapHook.map)
+            return;
+        if (mapHook.map.map.getLayer(layerId.current)) {
+            mapHook.cleanup();
+        }
+        if (mapHook.map.map.getSource(layerId.current)) {
+            mapHook.map.map.removeSource(layerId.current);
+        }
+        if (typeof props.source === 'string') {
+            if (props.source === '' || !mapHook.map.map.getSource(props.source)) {
+                return;
+            }
+        }
+        initializedRef.current = true;
+        mapHook.map.addLayer(__assign(__assign(__assign(__assign({}, props.options), (props.geojson && !props.source
+            ? {
+                source: {
+                    type: 'geojson',
+                    data: props.geojson,
+                },
+            }
+            : {})), (props.source
+            ? {
+                source: props.source,
+            }
+            : {})), { id: layerId.current }), props.insertBeforeLayer
+            ? props.insertBeforeLayer
+            : props.insertBeforeFirstSymbolLayer
+                ? mapHook.map.firstSymbolLayer
+                : undefined, mapHook.componentId);
+        setLayer(mapHook.map.map.getLayer(layerId.current));
+        if (typeof props.onHover !== 'undefined') {
+            mapHook.map.on('mousemove', layerId.current, props.onHover, mapHook.componentId);
+        }
+        if (typeof props.onClick !== 'undefined') {
+            mapHook.map.on('click', layerId.current, props.onClick, mapHook.componentId);
+        }
+        if (typeof props.onLeave !== 'undefined') {
+            mapHook.map.on('mouseleave', layerId.current, props.onLeave, mapHook.componentId);
+        }
+        // recreate layer if style has changed
+        mapHook.map.on('styledata', function () {
+            var _a;
+            if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
+                console.log('Recreate Layer');
+                createLayer();
+            }
+        }, mapHook.componentId);
+        layerPaintConfRef.current = JSON.stringify((_a = props.options) === null || _a === void 0 ? void 0 : _a.paint);
+        layerLayoutConfRef.current = JSON.stringify((_b = props.options) === null || _b === void 0 ? void 0 : _b.layout);
+        layerTypeRef.current = props.options.type;
+    }, [props, mapHook.map]);
+    useEffect(function () {
+        if (!mapHook.map)
+            return;
+        if (initializedRef.current &&
+            (legalLayerTypes.indexOf(props.options.type) === -1 ||
+                (legalLayerTypes.indexOf(props.options.type) !== -1 &&
+                    props.options.type === layerTypeRef.current))) {
+            return;
+        }
+        createLayer();
+    }, [mapHook.map, props.options, createLayer]);
+    useEffect(function () {
+        var _a, _b, _c, _d;
+        if (!initializedRef.current || !((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getSource(layerId.current)))
+            return;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore setData only exists on GeoJsonSource
+        (_d = (_c = mapHook.map.map.getSource(layerId.current)) === null || _c === void 0 ? void 0 : _c.setData) === null || _d === void 0 ? void 0 : _d.call(_c, props.geojson);
+    }, [props.geojson, mapHook.map, props.options.type]);
+    useEffect(function () {
+        var _a, _b, _c, _d, _e;
+        if (!mapHook.map ||
+            !((_c = (_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getLayer) === null || _c === void 0 ? void 0 : _c.call(_b, layerId.current)) ||
+            !initializedRef.current ||
+            props.options.type !== layerTypeRef.current)
+            return;
+        var key;
+        var layoutString = JSON.stringify(props.options.layout);
+        if (props.options.layout && layoutString !== layerLayoutConfRef.current) {
+            var oldLayout = JSON.parse(layerLayoutConfRef.current);
+            for (key in props.options.layout) {
+                if (((_d = props.options.layout) === null || _d === void 0 ? void 0 : _d[key]) && props.options.layout[key] !== oldLayout[key]) {
+                    mapHook.map.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
+                }
+            }
+            layerLayoutConfRef.current = layoutString;
+        }
+        var paintString = JSON.stringify(props.options.paint);
+        if (paintString !== layerPaintConfRef.current) {
+            var oldPaint = JSON.parse(layerPaintConfRef.current);
+            for (key in props.options.paint) {
+                if (((_e = props.options.paint) === null || _e === void 0 ? void 0 : _e[key]) && props.options.paint[key] !== oldPaint[key]) {
+                    mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
+                }
+            }
+            layerPaintConfRef.current = paintString;
+        }
+    }, [props.options, mapHook.map]);
+    useEffect(function () {
+        return function () {
+            initializedRef.current = false;
+            mapHook.cleanup();
+        };
+    }, []);
+    return {
+        map: mapHook.map,
+        layer: layer,
+        layerId: layerId.current,
+        componentId: mapHook.componentId,
+        mapHook: mapHook,
+    };
+}
+
+var getDefaultPaintPropsByType = function (type, defaultPaintOverrides) {
+    switch (type) {
+        case "fill":
+            if (defaultPaintOverrides === null || defaultPaintOverrides === void 0 ? void 0 : defaultPaintOverrides.fill) {
+                return defaultPaintOverrides.fill;
+            }
+            return {
+                "fill-color": "rgba(10,240,256,0.6)",
+            };
+        case "line":
+            if (defaultPaintOverrides === null || defaultPaintOverrides === void 0 ? void 0 : defaultPaintOverrides.line) {
+                return defaultPaintOverrides.line;
+            }
+            return {
+                "line-color": "rgb(203,211,2)",
+                "line-width": 5,
+            };
+        case "circle":
+        default:
+            if (defaultPaintOverrides === null || defaultPaintOverrides === void 0 ? void 0 : defaultPaintOverrides.circle) {
+                return defaultPaintOverrides.circle;
+            }
+            return {
+                "circle-color": "rgba(10,240,256,0.8)",
+                "circle-stroke-color": "#fff",
+                "circle-stroke-width": 2,
+            };
+    }
+};
+
+var mapGeometryTypesToLayerTypes = {
+    Position: "circle",
+    Point: "circle",
+    MultiPoint: "circle",
+    LineString: "line",
+    MultiLineString: "line",
+    Polygon: "fill",
+    MultiPolygon: "fill",
+    GeometryCollection: "circle",
+};
+var getDefaulLayerTypeByGeometry = function (geojson) {
+    var _a;
+    if ((geojson === null || geojson === void 0 ? void 0 : geojson.type) === "Feature") {
+        return (mapGeometryTypesToLayerTypes === null || mapGeometryTypesToLayerTypes === void 0 ? void 0 : mapGeometryTypesToLayerTypes[(_a = geojson === null || geojson === void 0 ? void 0 : geojson.geometry) === null || _a === void 0 ? void 0 : _a.type])
+            ? mapGeometryTypesToLayerTypes[geojson.geometry.type]
+            : "circle";
+    }
+    if ((geojson === null || geojson === void 0 ? void 0 : geojson.type) === "FeatureCollection") {
+        if (geojson.features.length) {
+            return getDefaulLayerTypeByGeometry(geojson.features[0]);
+        }
+        return "circle";
+    }
+    return "fill";
+};
+
+/**
+ * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
+ *
+ * @component
+ */
+var MlGeoJsonLayer = function (props) {
+    var layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
+    // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+    useLayer({
+        mapId: props.mapId,
+        layerId: props.layerId || "MlGeoJsonLayer-" + v4(),
+        geojson: props.geojson,
+        options: __assign(__assign({ paint: props.paint ||
+                getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides), layout: props.layout || {} }, props.options), { type: layerType }),
+        insertBeforeLayer: props.insertBeforeLayer,
+        onHover: props.onHover,
+        onClick: props.onClick,
+        onLeave: props.onLeave,
+    });
+    return (React__default.createElement(React__default.Fragment, null));
+};
+
+var touchEquivalents = {
+  mousedown: 'touchstart',
+  mouseup: 'touchend',
+  mousemove: 'touchmove'
+};
+var touchEquivalentsKeys = Object.keys(touchEquivalents);
+
+function useLayerEvent(props) {
+  var mapState = useMapState({
+    mapId: props.mapId,
+    watch: {
+      layers: true
+    }
+  });
+  var mapHook = useMap({
+    mapId: props.mapId
+  });
+  useEffect(function () {
+    if (!mapHook.map) return true;
+    if (typeof props.condition !== 'undefined' && props.condition === false) return; //console.log('useLayerEvent');
+    //console.log(mapState);
+
+    if (mapHook.map.map.getLayer(props.layerId)) {
+      //console.log("layer avail");
+      var _event = props.event;
+      var _layerId = props.layerId;
+      var _eventHandler = props.eventHandler; //console.log(_event);
+
+      mapHook.map.on(_event, _layerId, _eventHandler, mapHook.componentId);
+
+      if ((props === null || props === void 0 ? void 0 : props.addTouchEvents) === true) {
+        if (touchEquivalentsKeys.indexOf(_event) !== -1) {
+          mapHook.map.on(touchEquivalents[_event], _layerId, _eventHandler, mapHook.componentId);
+        }
+      }
+
+      return function () {
+        mapHook.map.off(_event, _layerId, _eventHandler);
+
+        if ((props === null || props === void 0 ? void 0 : props.addTouchEvents) === true) {
+          if (touchEquivalentsKeys.indexOf(_event) !== -1) {
+            mapHook.map.off(touchEquivalents[_event], _layerId, _eventHandler, mapHook.componentId);
+          }
+        }
+      };
+    }
+  }, [props, mapState, mapHook.map]);
+  return {};
+}
+
+var PdfTemplates = {
+    A4: {
+        '300dpi': {
+            width: 2480,
+            height: 3508,
+        },
+        '150dpi': {
+            width: 1240,
+            height: 1754,
+        },
+        '72dpi': {
+            width: 595,
+            height: 842,
+        },
+    },
+    A3: {
+        '300dpi': {
+            width: 3505,
+            height: 4961,
+        },
+        '150dpi': {
+            width: 1754,
+            height: 2480,
+        },
+        '72dpi': {
+            width: 842,
+            height: 1191,
+        },
+    },
+    A2: {
+        '300dpi': {
+            width: 4961,
+            height: 7016,
+        },
+        '150dpi': {
+            width: 2480,
+            height: 3508,
+        },
+        '72dpi': {
+            width: 1191,
+            height: 1684,
+        },
+    },
+    A1: {
+        '300dpi': {
+            width: 7016,
+            height: 9933,
+        },
+        '150dpi': {
+            width: 3508,
+            height: 4967,
+        },
+        '72dpi': {
+            width: 1684,
+            height: 2384,
+        },
+    },
+    A0: {
+        '300dpi': {
+            width: 9933,
+            height: 14043,
+        },
+        '150dpi': {
+            width: 4967,
+            height: 7022,
+        },
+        '72dpi': {
+            width: 2384,
+            height: 3370,
+        },
+    },
+};
+
+var PdfContext = React__default.createContext({});
+var defaultTemplate = PdfTemplates['A4']['72dpi'];
+var PdfContextProvider = function (_a) {
+    var children = _a.children;
+    var _b = useState('A4'), format = _b[0], setFormat = _b[1];
+    var _c = useState('72dpi'), quality = _c[0], setQuality = _c[1];
+    var _d = useState('portrait'), orientation = _d[0], setOrientation = _d[1];
+    var geojsonRef = useRef();
+    var template = useMemo(function () {
+        if (typeof PdfTemplates[format][quality] !== 'undefined') {
+            return orientation === 'portrait'
+                ? PdfTemplates[format][quality]
+                : {
+                    width: PdfTemplates[format][quality].height,
+                    height: PdfTemplates[format][quality].width,
+                };
+        }
+        return defaultTemplate;
+    }, [format, quality, orientation]);
+    var value = {
+        format: format,
+        setFormat: setFormat,
+        quality: quality,
+        setQuality: setQuality,
+        orientation: orientation,
+        setOrientation: setOrientation,
+        geojsonRef: geojsonRef,
+        template: template,
+    };
+    return React__default.createElement(PdfContext.Provider, { value: value }, children);
+};
+
+var createPreviewGeojson = function (geojsonProps, orientation) {
+    var topLeftAngle = orientation === 'portrait' ? -35.3 : -54.7;
+    var bottomRightAngle = orientation === 'portrait' ? 144.7 : 125.3;
+    var topLeft = turf.destination([geojsonProps.center.lng, geojsonProps.center.lat], geojsonProps.distance, topLeftAngle);
+    var bottomRight = turf.destination([geojsonProps.center.lng, geojsonProps.center.lat], geojsonProps.distance, bottomRightAngle);
+    var bbox = [
+        topLeft.geometry.coordinates[0],
+        topLeft.geometry.coordinates[1],
+        bottomRight.geometry.coordinates[0],
+        bottomRight.geometry.coordinates[1],
+    ];
+    var _previewGeojson = turf.bboxPolygon(bbox);
+    _previewGeojson = turf.transformRotate(_previewGeojson, geojsonProps.bearing);
+    if (!(_previewGeojson === null || _previewGeojson === void 0 ? void 0 : _previewGeojson.properties)) {
+        _previewGeojson.properties = {};
+    }
+    _previewGeojson.properties.bearing = geojsonProps.bearing;
+    return _previewGeojson;
+};
+function PdfPreview(props) {
+    var _a;
+    var pdfContext = useContext(PdfContext);
+    var initializedRef = useRef(false);
+    var activeFeature = useRef();
+    var dragging = useRef(false);
+    var draggingResizeHandle = useRef(false);
+    var draggingRotationHandle = useRef(false);
+    var _b = useState({
+        center: { lng: 0, lat: 0 },
+        distance: 10,
+        bearing: 0,
+        geojson: undefined,
+    }), geojsonProps = _b[0], setGeojsonProps = _b[1];
+    var mapHook = useMap({
+        mapId: props.mapId,
+        waitForLayer: props.insertBeforeLayer,
+    });
+    useEffect(function () {
+        if (!mapHook.map ||
+            !pdfContext.geojsonRef ||
+            !pdfContext.orientation ||
+            !pdfContext.template ||
+            initializedRef.current)
+            return;
+        initializedRef.current = true;
+        var center = mapHook.map.map.getCenter();
+        var canvasHeight = mapHook.map.map._canvas.height;
+        var canvasWidth = mapHook.map.map._canvas.width;
+        var bboxPixelHeight = Math.ceil(canvasHeight / 2);
+        var bboxPixelWidth = Math.ceil((pdfContext.template.width / pdfContext.template.height) * bboxPixelHeight);
+        var topLeft = mapHook.map.map.unproject([
+            Math.floor(canvasWidth / 2 - bboxPixelWidth / 2),
+            Math.floor(canvasHeight / 2 - bboxPixelHeight / 2),
+        ]);
+        var distance = turf.distance([center.lng, center.lat], [topLeft.lng, topLeft.lat]);
+        var tmpGeojsonProps = {
+            center: center,
+            distance: distance,
+            bearing: 0,
+            geojson: createPreviewGeojson({ center: center, distance: distance, bearing: 0 }, pdfContext.orientation),
+        };
+        setGeojsonProps(tmpGeojsonProps);
+        pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
+    }, [mapHook.map]);
+    useEffect(function () {
+        if (!pdfContext.orientation || !pdfContext.geojsonRef)
+            return;
+        var tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
+        tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
+        setGeojsonProps(tmpGeojsonProps);
+        pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
+    }, [pdfContext.orientation]);
+    // Resize handle events
+    useLayerEvent({
+        event: 'mouseenter',
+        layerId: 'pdfPreviewGeojsonResizeHandle',
+        eventHandler: function () {
+            if (!mapHook.map)
+                return;
+            mapHook.map.map._canvas.style.cursor = 'nwse-resize';
+            mapHook.map.map.dragPan.disable();
+        },
+    });
+    useLayerEvent({
+        event: 'mouseleave',
+        layerId: 'pdfPreviewGeojsonResizeHandle',
+        eventHandler: function () {
+            if (!mapHook.map)
+                return;
+            mapHook.map.map._canvas.style.cursor = '';
+            mapHook.map.map.dragPan.enable();
+        },
+    });
+    useLayerEvent({
+        event: 'mousedown',
+        layerId: 'pdfPreviewGeojsonResizeHandle',
+        addTouchEvents: true,
+        eventHandler: function (e) {
+            e.preventDefault();
+            if (!mapHook.map)
+                return;
+            dragging.current = false;
+            draggingRotationHandle.current = false;
+            draggingResizeHandle.current = true;
+            mapHook.map.map._canvas.style.cursor = 'move';
+            function onMove(e) {
+                if (!pdfContext.geojsonRef || !draggingResizeHandle.current || !pdfContext.orientation)
+                    return;
+                var tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
+                var _distance = turf.distance([tmpGeojsonProps.center.lng, tmpGeojsonProps.center.lat], [e.lngLat.lng, e.lngLat.lat]);
+                // limit max diagonal distance of PDF area to 120km as larger area lead to distortions for northern and southern areas
+                if (_distance > 60) {
+                    _distance = 60;
+                }
+                tmpGeojsonProps.distance = _distance;
+                tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
+                pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
+                setGeojsonProps(tmpGeojsonProps);
+            }
+            function onUp() {
+                if (!draggingResizeHandle.current || !mapHook.map)
+                    return;
+                mapHook.map.map._canvas.style.cursor = '';
+                draggingResizeHandle.current = false;
+                mapHook.map.map.dragPan.enable();
+                // Unbind mouse events
+                mapHook.map.map.off('mousemove', onMove);
+                mapHook.map.map.off('touchmove', onMove);
+            }
+            // Mouse events
+            mapHook.map.map.on('mousemove', onMove);
+            mapHook.map.map.on('touchmove', onMove);
+            mapHook.map.map.once('mouseup', onUp);
+            mapHook.map.map.once('touchend', onUp);
+        },
+    });
+    // Rotation handle events
+    useLayerEvent({
+        event: 'mouseenter',
+        layerId: 'pdfPreviewGeojsonRotationHandle',
+        eventHandler: function () {
+            if (!mapHook.map)
+                return;
+            mapHook.map.map._canvas.style.cursor = 'nwse-resize';
+            mapHook.map.map.dragPan.disable();
+        },
+    });
+    useLayerEvent({
+        event: 'mouseleave',
+        layerId: 'pdfPreviewGeojsonRotationHandle',
+        eventHandler: function () {
+            if (!mapHook.map)
+                return;
+            mapHook.map.map._canvas.style.cursor = '';
+            mapHook.map.map.dragPan.enable();
+        },
+    });
+    useLayerEvent({
+        event: 'mousedown',
+        layerId: 'pdfPreviewGeojsonRotationHandle',
+        addTouchEvents: true,
+        eventHandler: function (e) {
+            e.preventDefault();
+            if (!mapHook.map || !pdfContext.orientation)
+                return;
+            dragging.current = false;
+            draggingResizeHandle.current = false;
+            draggingRotationHandle.current = true;
+            mapHook.map.map._canvas.style.cursor = 'move';
+            function onMove(e) {
+                e.preventDefault();
+                if (!draggingRotationHandle.current || !pdfContext.orientation || !pdfContext.geojsonRef)
+                    return;
+                var tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
+                var _bearing = turf.bearing([tmpGeojsonProps.center.lng, tmpGeojsonProps.center.lat], [e.lngLat.lng, e.lngLat.lat]);
+                tmpGeojsonProps.bearing = 144.7 + _bearing;
+                tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
+                pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
+                setGeojsonProps(tmpGeojsonProps);
+            }
+            function onUp() {
+                if (!draggingRotationHandle.current || !mapHook.map)
+                    return;
+                mapHook.map.map._canvas.style.cursor = '';
+                draggingRotationHandle.current = false;
+                mapHook.map.map.dragPan.enable();
+                // Unbind mouse events
+                mapHook.map.map.off('mousemove', onMove);
+                mapHook.map.map.off('touchmove', onMove);
+            }
+            // Mouse events
+            mapHook.map.map.on('mousemove', onMove);
+            mapHook.map.map.on('touchmove', onMove);
+            mapHook.map.map.once('mouseup', onUp);
+            mapHook.map.map.once('touchend', onUp);
+        },
+    });
+    // drag & drop events
+    useLayerEvent({
+        event: 'mouseenter',
+        layerId: 'pdfPreviewGeojson',
+        eventHandler: function (e) {
+            var _a;
+            if (!mapHook.map || !((_a = e === null || e === void 0 ? void 0 : e.features) === null || _a === void 0 ? void 0 : _a.length))
+                return;
+            mapHook.map.map._canvas.style.cursor = 'move';
+            activeFeature.current = e.features[0];
+        },
+    });
+    useLayerEvent({
+        event: 'mouseleave',
+        layerId: 'pdfPreviewGeojson',
+        eventHandler: function () {
+            if (!mapHook.map)
+                return;
+            mapHook.map.map._canvas.style.cursor = '';
+            mapHook.map.map.dragPan.enable();
+            activeFeature.current = undefined;
+        },
+    });
+    useLayerEvent({
+        event: 'mousedown',
+        addTouchEvents: true,
+        layerId: 'pdfPreviewGeojson',
+        eventHandler: function (e) {
+            e.preventDefault();
+            console.log('mousedown');
+            if (!mapHook.map)
+                return;
+            draggingResizeHandle.current = false;
+            draggingRotationHandle.current = false;
+            dragging.current = true;
+            mapHook.map.map._canvas.style.cursor = 'move';
+            function onMove(e) {
+                e.preventDefault();
+                if (!dragging.current || !pdfContext.geojsonRef || !pdfContext.orientation)
+                    return;
+                var tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
+                tmpGeojsonProps.center = e.lngLat;
+                tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
+                pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
+                setGeojsonProps(tmpGeojsonProps);
+            }
+            function onUp() {
+                if (!dragging.current || !mapHook.map)
+                    return;
+                mapHook.map.map._canvas.style.cursor = '';
+                dragging.current = false;
+                mapHook.map.map.dragPan.enable();
+                // Unbind mouse events
+                mapHook.map.map.off('mousemove', onMove);
+                mapHook.map.map.off('touchmove', onMove);
+            }
+            // Mouse events
+            mapHook.map.map.on('mousemove', onMove);
+            mapHook.map.map.on('touchmove', onMove);
+            mapHook.map.map.once('mouseup', onUp);
+            mapHook.map.map.once('touchend', onUp);
+        },
+    });
+    //map.on('mouseleave', 'point', function() {
+    //    map.setPaintProperty('point', 'circle-color', '#3887be');
+    //    canvas.style.cursor = '';
+    //    isCursorOverPoint = false;
+    //    map.dragPan.enable();
+    //});
+    return (React__default.createElement(React__default.Fragment, null, ((_a = geojsonProps === null || geojsonProps === void 0 ? void 0 : geojsonProps.geojson) === null || _a === void 0 ? void 0 : _a.bbox) && (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(MlGeoJsonLayer, { paint: { 'line-color': '#616161', 'line-width': 4 }, type: "line", layerId: "pdfPreviewGeojsonOutline", geojson: geojsonProps.geojson }),
+        React__default.createElement(MlGeoJsonLayer, { paint: { 'fill-opacity': 0 }, type: "fill", layerId: "pdfPreviewGeojson", geojson: geojsonProps.geojson }),
+        React__default.createElement(MlGeoJsonLayer, { layerId: "pdfPreviewGeojsonResizeHandle", paint: {
+                'circle-radius': 10,
+                'circle-color': '#1976d2',
+                'circle-stroke-width': 2,
+                'circle-stroke-color': '#ffffff',
+            }, geojson: {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    //coordinates: [geojsonProps.geojson.bbox[2], geojsonProps.geojson.bbox[3]],
+                    coordinates: geojsonProps.geojson.geometry.coordinates[0][2],
+                },
+                properties: {},
+            } }),
+        React__default.createElement(MlGeoJsonLayer, { layerId: "pdfPreviewGeojsonRotationHandle", paint: {
+                'circle-radius': 10,
+                'circle-color': '#86dd71',
+                'circle-stroke-width': 2,
+                'circle-stroke-color': '#ffffff',
+            }, geojson: {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    //coordinates: [geojsonProps.geojson.bbox[0], geojsonProps.geojson.bbox[3]],
+                    coordinates: geojsonProps.geojson.geometry.coordinates[0][3],
+                },
+                properties: {},
+            } })))));
+}
+
+var createExport = function (options) {
+    var width = options.width;
+    var height = options.height;
+    // Create map container
+    var hiddenContainer = document.createElement('div');
+    hiddenContainer.className = 'hidden-map';
+    document.body.appendChild(hiddenContainer);
+    var container = document.createElement('div');
+    container.style.width = width + 'px';
+    container.style.height = height + 'px';
+    hiddenContainer.appendChild(container);
+    var style = options.map.map.getStyle();
+    var _loop_1 = function (name_1) {
+        var src = style.sources[name_1];
+        Object.keys(src).forEach(function (key) {
+            // delete property if value is undefined.
+            // for instance, raster-dem might have undefined value in "url" and "bounds"
+            if (!src[key]) {
+                delete src[key];
+            }
+        });
+    };
+    // delete undefined source properties
+    for (var name_1 in style.sources) {
+        _loop_1(name_1);
+    }
+    // Create a new MapLibre-gl instance
+    var renderMap = new Map$2({
+        container: container,
+        center: options.map.map.getCenter(),
+        zoom: options.map.map.getZoom(),
+        bearing: 0,
+        pitch: 0,
+        interactive: false,
+        preserveDrawingBuffer: true,
+        fadeDuration: 0,
+        attributionControl: false,
+        style: style,
+    });
+    var _previewGeojson = turf.bboxPolygon([
+        options.bbox[0],
+        options.bbox[1],
+        options.bbox[2],
+        options.bbox[3],
+    ]);
+    _previewGeojson = turf.transformRotate(_previewGeojson, options.bearing);
+    // use original unrotated bbox and bearing 0 to calculate the correct zoom value as the function always adds a padding if used on the rotated feature coordinates
+    var bboxCamera = renderMap._cameraForBoxAndBearing([options.bboxUnrotated[0], options.bboxUnrotated[1]], [options.bboxUnrotated[2], options.bboxUnrotated[3]], 0);
+    var geometryCamera = renderMap._cameraForBoxAndBearing(_previewGeojson.geometry.coordinates[0][0], _previewGeojson.geometry.coordinates[0][2], options.bearing);
+    geometryCamera.zoom = bboxCamera.zoom;
+    renderMap._fitInternal(geometryCamera);
+    return new Promise(function (resolve) {
+        renderMap.once('idle', function () {
+            if (renderMap.getLayer('pdfPreviewGeojsonOutline')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojsonOutline', 'visibility', 'none');
+            }
+            if (renderMap.getLayer('pdfPreviewGeojson')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojson', 'visibility', 'none');
+            }
+            if (renderMap.getLayer('pdfPreviewGeojsonResizeHandle')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojsonResizeHandle', 'visibility', 'none');
+            }
+            if (renderMap.getLayer('pdfPreviewGeojsonRotationHandle')) {
+                renderMap.setLayoutProperty('pdfPreviewGeojsonRotationHandle', 'visibility', 'none');
+            }
+            renderMap.once('idle', function () {
+                var params = __assign(__assign({}, options), { renderMap: renderMap, hiddenContainer: hiddenContainer, createPdf: function (_options) {
+                        return createJsPdf(__assign(__assign(__assign({}, options), { renderMap: renderMap, hiddenContainer: hiddenContainer }), _options));
+                    } });
+                resolve(params);
+            });
+        });
+    });
+};
+function createJsPdf(options) {
+    var pdf = new jsPDF({
+        orientation: (options === null || options === void 0 ? void 0 : options.orientation) === 'portrait' ? 'p' : 'l',
+        unit: 'mm',
+        compress: true,
+        format: options.format,
+    });
+    Object.defineProperty(window, 'devicePixelRatio', {
+        get: function () {
+            return 300 / 96;
+        },
+    });
+    return new Promise(function (resolve) {
+        var _a;
+        //Render map image
+        pdf.addImage(options.renderMap.getCanvas().toDataURL('image/png'), 'png', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), undefined, 'FAST');
+        // remove DOM Elements
+        options.renderMap.remove();
+        (_a = options.hiddenContainer.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(options.hiddenContainer);
+        var params = __assign(__assign({}, options), { pdf: pdf, downloadPdf: function (_options) { return downloadPdf(__assign(__assign({}, params), _options)); } });
+        resolve(params);
+    });
+}
+function downloadPdf(options) {
+    options.pdf.save('Map.pdf');
+    return new Promise(function (resolve) {
+        resolve(__assign({}, options));
+    });
+}
+
+function exportMap(props) {
+    var mapHook = useMap({ mapId: props.mapId });
+    var _createExport = useMemo(function () {
+        if (mapHook.map) {
+            return function (options) {
+                return createExport(__assign({ map: mapHook.map }, options));
+            };
+        }
+        return;
+    }, [mapHook.map]);
+    return {
+        createExport: _createExport,
+    };
+}
+
+var qualityOptions = [
+    {
+        value: '72dpi',
+        label: 'Draft (72dpi)',
+    },
+    {
+        value: '150dpi',
+        label: 'Medium (150dpi)',
+    },
+    {
+        value: '300dpi',
+        label: 'High (300dpi)',
+    },
+];
+function PdfForm(props) {
+    var pdfContext = useContext(PdfContext);
+    var mapHook = useMap({
+        // eslint-disable-next-line react/prop-types
+        mapId: props.mapId,
+    });
+    var mapExporter = exportMap({ mapId: props.mapId });
+    var createPdfHandler = useCallback(function () {
+        var _a, _b, _c, _d, _e;
+        if (mapHook.map &&
+            mapExporter.createExport &&
+            pdfContext.template &&
+            pdfContext.format &&
+            pdfContext.orientation &&
+            ((_b = (_a = pdfContext.geojsonRef) === null || _a === void 0 ? void 0 : _a.current) === null || _b === void 0 ? void 0 : _b.bbox) &&
+            ((_c = pdfContext.geojsonRef) === null || _c === void 0 ? void 0 : _c.current)) {
+            var bbox = turf.bbox(pdfContext.geojsonRef.current);
+            mapExporter
+                .createExport({
+                width: pdfContext.template.width,
+                height: pdfContext.template.height,
+                bbox: bbox,
+                bboxUnrotated: pdfContext.geojsonRef.current.bbox,
+                bearing: ((_e = (_d = pdfContext.geojsonRef.current) === null || _d === void 0 ? void 0 : _d.properties) === null || _e === void 0 ? void 0 : _e.bearing) || 0,
+                format: pdfContext.format.toLowerCase(),
+                orientation: pdfContext.orientation,
+            })
+                .then(function (res) { return res.createPdf(); })
+                .then(function (res) {
+                if (typeof props.onCreatePdf === 'function') {
+                    props.onCreatePdf(res);
+                }
+                return res.downloadPdf();
+            })
+                .catch(function (error) {
+                console.log(error);
+            });
+        }
+    }, [mapHook.map, pdfContext]);
+    var formControlStyles = useMemo(function () {
+        return {
+            margin: '5px 0 15px 0 ',
+            //...props.formControlStyles,
+        };
+    }, [
+    /*props.formControlStyles*/
+    ]);
+    return (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(FormControl, { fullWidth: true, sx: formControlStyles },
+            React__default.createElement(InputLabel, { id: "format-select-label" }, "Format"),
+            React__default.createElement(Select, { labelId: "format-select-label", id: "format-select", label: "Format", value: pdfContext.format, onChange: function (event) {
+                    var _a;
+                    (_a = pdfContext.setFormat) === null || _a === void 0 ? void 0 : _a.call(pdfContext, event.target.value);
+                } }, Object.keys(PdfTemplates).map(function (el) { return (React__default.createElement(MenuItem, { key: el, value: el }, el)); }))),
+        React__default.createElement(FormControl, { fullWidth: true, sx: formControlStyles },
+            React__default.createElement(FormLabel, { id: "orientation-radio-buttons-group-label" }, "Orientation"),
+            React__default.createElement(RadioGroup, { row: true, "aria-labelledby": "orientation-radio-buttons-group-label", name: "orientation-radio-buttons-group", value: pdfContext.orientation, onChange: function (event) {
+                    var _a;
+                    (_a = pdfContext.setOrientation) === null || _a === void 0 ? void 0 : _a.call(pdfContext, event.target.value);
+                } },
+                React__default.createElement(FormControlLabel, { value: "portrait", control: React__default.createElement(Radio, null), label: "Portrait" }),
+                React__default.createElement(FormControlLabel, { value: "landscape", control: React__default.createElement(Radio, null), label: "Landscape" }))),
+        React__default.createElement(FormControl, { fullWidth: true, sx: formControlStyles },
+            React__default.createElement(InputLabel, { id: "quality-select-label" }, "Quality"),
+            React__default.createElement(Select, { labelId: "quality-select-label", id: "quality-select", label: "Qualit\u00E4t", value: pdfContext.quality, onChange: function (event) {
+                    var _a;
+                    (_a = pdfContext.setQuality) === null || _a === void 0 ? void 0 : _a.call(pdfContext, event.target.value);
+                } }, qualityOptions.map(function (el) { return (React__default.createElement(MenuItem, { key: el.value, value: el.value }, el.label)); }))),
+        React__default.createElement(FormControl, { fullWidth: true, sx: formControlStyles },
+            React__default.createElement(Button$2, { variant: "contained", onClick: createPdfHandler }, "PDF erstellen"))));
+}
+
+/**
+ * Create PDF Form Component
+ *
+ */
+var MlCreatePdfForm = function (props) {
+    return (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement(PdfContextProvider, null,
+            React__default.createElement(PdfForm, __assign({}, props)),
+            React__default.createElement(PdfPreview, null))));
+};
+MlCreatePdfForm.defaultProps = {
+    mapId: undefined,
+};
+
 /**
  * Code from https://github.com/mapbox/mapbox-gl-draw
  * and licensed under ISC
@@ -12267,145 +13157,6 @@ var MlFeatureEditor = function (props) {
     return React__default.createElement(React__default.Fragment, null);
 };
 
-var legalLayerTypes = [
-    'fill',
-    'line',
-    'symbol',
-    'circle',
-    'heatmap',
-    'fill-extrusion',
-    'raster',
-    'hillshade',
-    'background',
-];
-function useLayer(props) {
-    var mapHook = useMap({
-        mapId: props.mapId,
-        waitForLayer: props.insertBeforeLayer,
-    });
-    var layerTypeRef = useRef('');
-    var layerPaintConfRef = useRef('');
-    var layerLayoutConfRef = useRef('');
-    var _a = useState(), layer = _a[0], setLayer = _a[1];
-    var initializedRef = useRef(false);
-    var layerId = useRef(props.layerId || (props.idPrefix ? props.idPrefix : 'Layer-') + mapHook.componentId);
-    var createLayer = useCallback(function () {
-        var _a, _b;
-        if (!mapHook.map)
-            return;
-        if (mapHook.map.map.getLayer(layerId.current)) {
-            mapHook.cleanup();
-        }
-        if (mapHook.map.map.getSource(layerId.current)) {
-            mapHook.map.map.removeSource(layerId.current);
-        }
-        if (typeof props.source === 'string') {
-            if (props.source === '' || !mapHook.map.map.getSource(props.source)) {
-                return;
-            }
-        }
-        initializedRef.current = true;
-        mapHook.map.addLayer(__assign(__assign(__assign(__assign({}, props.options), (props.geojson && !props.source
-            ? {
-                source: {
-                    type: 'geojson',
-                    data: props.geojson,
-                },
-            }
-            : {})), (props.source
-            ? {
-                source: props.source,
-            }
-            : {})), { id: layerId.current }), props.insertBeforeLayer
-            ? props.insertBeforeLayer
-            : props.insertBeforeFirstSymbolLayer
-                ? mapHook.map.firstSymbolLayer
-                : undefined, mapHook.componentId);
-        setLayer(mapHook.map.map.getLayer(layerId.current));
-        if (typeof props.onHover !== 'undefined') {
-            mapHook.map.on('mousemove', layerId.current, props.onHover, mapHook.componentId);
-        }
-        if (typeof props.onClick !== 'undefined') {
-            mapHook.map.on('click', layerId.current, props.onClick, mapHook.componentId);
-        }
-        if (typeof props.onLeave !== 'undefined') {
-            mapHook.map.on('mouseleave', layerId.current, props.onLeave, mapHook.componentId);
-        }
-        // recreate layer if style has changed
-        mapHook.map.on('styledata', function () {
-            var _a;
-            if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
-                console.log('Recreate Layer');
-                createLayer();
-            }
-        }, mapHook.componentId);
-        layerPaintConfRef.current = JSON.stringify((_a = props.options) === null || _a === void 0 ? void 0 : _a.paint);
-        layerLayoutConfRef.current = JSON.stringify((_b = props.options) === null || _b === void 0 ? void 0 : _b.layout);
-        layerTypeRef.current = props.options.type;
-    }, [props, mapHook.map]);
-    useEffect(function () {
-        if (!mapHook.map)
-            return;
-        if (initializedRef.current &&
-            (legalLayerTypes.indexOf(props.options.type) === -1 ||
-                (legalLayerTypes.indexOf(props.options.type) !== -1 &&
-                    props.options.type === layerTypeRef.current))) {
-            return;
-        }
-        createLayer();
-    }, [mapHook.map, props.options, createLayer]);
-    useEffect(function () {
-        var _a, _b, _c, _d;
-        if (!initializedRef.current || !((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getSource(layerId.current)))
-            return;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore setData only exists on GeoJsonSource
-        (_d = (_c = mapHook.map.map.getSource(layerId.current)) === null || _c === void 0 ? void 0 : _c.setData) === null || _d === void 0 ? void 0 : _d.call(_c, props.geojson);
-    }, [props.geojson, mapHook.map, props.options.type]);
-    useEffect(function () {
-        var _a, _b, _c, _d, _e;
-        if (!mapHook.map ||
-            !((_c = (_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getLayer) === null || _c === void 0 ? void 0 : _c.call(_b, layerId.current)) ||
-            !initializedRef.current ||
-            props.options.type !== layerTypeRef.current)
-            return;
-        var key;
-        var layoutString = JSON.stringify(props.options.layout);
-        if (props.options.layout && layoutString !== layerLayoutConfRef.current) {
-            var oldLayout = JSON.parse(layerLayoutConfRef.current);
-            for (key in props.options.layout) {
-                if (((_d = props.options.layout) === null || _d === void 0 ? void 0 : _d[key]) && props.options.layout[key] !== oldLayout[key]) {
-                    mapHook.map.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
-                }
-            }
-            layerLayoutConfRef.current = layoutString;
-        }
-        var paintString = JSON.stringify(props.options.paint);
-        if (paintString !== layerPaintConfRef.current) {
-            var oldPaint = JSON.parse(layerPaintConfRef.current);
-            for (key in props.options.paint) {
-                if (((_e = props.options.paint) === null || _e === void 0 ? void 0 : _e[key]) && props.options.paint[key] !== oldPaint[key]) {
-                    mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
-                }
-            }
-            layerPaintConfRef.current = paintString;
-        }
-    }, [props.options, mapHook.map]);
-    useEffect(function () {
-        return function () {
-            initializedRef.current = false;
-            mapHook.cleanup();
-        };
-    }, []);
-    return {
-        map: mapHook.map,
-        layer: layer,
-        layerId: layerId.current,
-        componentId: mapHook.componentId,
-        mapHook: mapHook,
-    };
-}
-
 /**
  * Adds a fill extrusion layer to the MapLibre instance reference by props.mapId
  *
@@ -12440,84 +13191,6 @@ MlFillExtrusionLayer.defaultProps = {
         },
         "fill-extrusion-opacity": 1,
     },
-};
-
-var getDefaultPaintPropsByType = function (type, defaultPaintOverrides) {
-    switch (type) {
-        case "fill":
-            if (defaultPaintOverrides === null || defaultPaintOverrides === void 0 ? void 0 : defaultPaintOverrides.fill) {
-                return defaultPaintOverrides.fill;
-            }
-            return {
-                "fill-color": "rgba(10,240,256,0.6)",
-            };
-        case "line":
-            if (defaultPaintOverrides === null || defaultPaintOverrides === void 0 ? void 0 : defaultPaintOverrides.line) {
-                return defaultPaintOverrides.line;
-            }
-            return {
-                "line-color": "rgb(203,211,2)",
-                "line-width": 5,
-            };
-        case "circle":
-        default:
-            if (defaultPaintOverrides === null || defaultPaintOverrides === void 0 ? void 0 : defaultPaintOverrides.circle) {
-                return defaultPaintOverrides.circle;
-            }
-            return {
-                "circle-color": "rgba(10,240,256,0.8)",
-                "circle-stroke-color": "#fff",
-                "circle-stroke-width": 2,
-            };
-    }
-};
-
-var mapGeometryTypesToLayerTypes = {
-    Position: "circle",
-    Point: "circle",
-    MultiPoint: "circle",
-    LineString: "line",
-    MultiLineString: "line",
-    Polygon: "fill",
-    MultiPolygon: "fill",
-    GeometryCollection: "circle",
-};
-var getDefaulLayerTypeByGeometry = function (geojson) {
-    var _a;
-    if ((geojson === null || geojson === void 0 ? void 0 : geojson.type) === "Feature") {
-        return (mapGeometryTypesToLayerTypes === null || mapGeometryTypesToLayerTypes === void 0 ? void 0 : mapGeometryTypesToLayerTypes[(_a = geojson === null || geojson === void 0 ? void 0 : geojson.geometry) === null || _a === void 0 ? void 0 : _a.type])
-            ? mapGeometryTypesToLayerTypes[geojson.geometry.type]
-            : "circle";
-    }
-    if ((geojson === null || geojson === void 0 ? void 0 : geojson.type) === "FeatureCollection") {
-        if (geojson.features.length) {
-            return getDefaulLayerTypeByGeometry(geojson.features[0]);
-        }
-        return "circle";
-    }
-    return "fill";
-};
-
-/**
- * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
- *
- * @component
- */
-var MlGeoJsonLayer = function (props) {
-    var layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-    // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-    useLayer({
-        mapId: props.mapId,
-        layerId: props.layerId || "MlGeoJsonLayer-" + v4(),
-        geojson: props.geojson,
-        options: __assign(__assign({ paint: props.paint ||
-                getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides), layout: props.layout || {} }, props.options), { type: layerType }),
-        insertBeforeLayer: props.insertBeforeLayer,
-        onHover: props.onHover,
-        onClick: props.onClick,
-        onLeave: props.onLeave,
-    });
-    return (React__default.createElement(React__default.Fragment, null));
 };
 
 var GpsFixed = {};
@@ -19010,125 +19683,6 @@ function useSource(props) {
     };
 }
 
-var createExport = function (options) {
-    var width = options.width;
-    var height = options.height;
-    // Create map container
-    var hiddenContainer = document.createElement('div');
-    hiddenContainer.className = 'hidden-map';
-    document.body.appendChild(hiddenContainer);
-    var container = document.createElement('div');
-    container.style.width = width + 'px';
-    container.style.height = height + 'px';
-    hiddenContainer.appendChild(container);
-    var style = options.map.map.getStyle();
-    var _loop_1 = function (name_1) {
-        var src = style.sources[name_1];
-        Object.keys(src).forEach(function (key) {
-            // delete property if value is undefined.
-            // for instance, raster-dem might have undefined value in "url" and "bounds"
-            if (!src[key]) {
-                delete src[key];
-            }
-        });
-    };
-    // delete undefined source properties
-    for (var name_1 in style.sources) {
-        _loop_1(name_1);
-    }
-    // Create a new MapLibre-gl instance
-    var renderMap = new Map$2({
-        container: container,
-        center: options.map.map.getCenter(),
-        zoom: options.map.map.getZoom(),
-        bearing: 0,
-        pitch: 0,
-        interactive: false,
-        preserveDrawingBuffer: true,
-        fadeDuration: 0,
-        attributionControl: false,
-        style: style,
-    });
-    var _previewGeojson = turf.bboxPolygon([
-        options.bbox[0],
-        options.bbox[1],
-        options.bbox[2],
-        options.bbox[3],
-    ]);
-    _previewGeojson = turf.transformRotate(_previewGeojson, options.bearing);
-    // use original unrotated bbox and bearing 0 to calculate the correct zoom value as the function always adds a padding if used on the rotated feature coordinates
-    var bboxCamera = renderMap._cameraForBoxAndBearing([options.bboxUnrotated[0], options.bboxUnrotated[1]], [options.bboxUnrotated[2], options.bboxUnrotated[3]], 0);
-    var geometryCamera = renderMap._cameraForBoxAndBearing(_previewGeojson.geometry.coordinates[0][0], _previewGeojson.geometry.coordinates[0][2], options.bearing);
-    geometryCamera.zoom = bboxCamera.zoom;
-    renderMap._fitInternal(geometryCamera);
-    return new Promise(function (resolve) {
-        renderMap.once('idle', function () {
-            if (renderMap.getLayer('pdfPreviewGeojsonOutline')) {
-                renderMap.setLayoutProperty('pdfPreviewGeojsonOutline', 'visibility', 'none');
-            }
-            if (renderMap.getLayer('pdfPreviewGeojson')) {
-                renderMap.setLayoutProperty('pdfPreviewGeojson', 'visibility', 'none');
-            }
-            if (renderMap.getLayer('pdfPreviewGeojsonResizeHandle')) {
-                renderMap.setLayoutProperty('pdfPreviewGeojsonResizeHandle', 'visibility', 'none');
-            }
-            if (renderMap.getLayer('pdfPreviewGeojsonRotationHandle')) {
-                renderMap.setLayoutProperty('pdfPreviewGeojsonRotationHandle', 'visibility', 'none');
-            }
-            renderMap.once('idle', function () {
-                var params = __assign(__assign({}, options), { renderMap: renderMap, hiddenContainer: hiddenContainer, createPdf: function (_options) {
-                        return createJsPdf(__assign(__assign(__assign({}, options), { renderMap: renderMap, hiddenContainer: hiddenContainer }), _options));
-                    } });
-                resolve(params);
-            });
-        });
-    });
-};
-function createJsPdf(options) {
-    var pdf = new jsPDF({
-        orientation: (options === null || options === void 0 ? void 0 : options.orientation) === 'portrait' ? 'p' : 'l',
-        unit: 'mm',
-        compress: true,
-        format: options.format,
-    });
-    Object.defineProperty(window, 'devicePixelRatio', {
-        get: function () {
-            return 300 / 96;
-        },
-    });
-    return new Promise(function (resolve) {
-        var _a;
-        //Render map image
-        pdf.addImage(options.renderMap.getCanvas().toDataURL('image/png'), 'png', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight(), undefined, 'FAST');
-        // remove DOM Elements
-        options.renderMap.remove();
-        (_a = options.hiddenContainer.parentNode) === null || _a === void 0 ? void 0 : _a.removeChild(options.hiddenContainer);
-        var params = __assign(__assign({}, options), { pdf: pdf, downloadPdf: function (_options) { return downloadPdf(__assign(__assign({}, params), _options)); } });
-        resolve(params);
-    });
-}
-function downloadPdf(options) {
-    options.pdf.save('Map.pdf');
-    return new Promise(function (resolve) {
-        resolve(__assign({}, options));
-    });
-}
-
-function exportMap(props) {
-    var mapHook = useMap({ mapId: props.mapId });
-    var _createExport = useMemo(function () {
-        if (mapHook.map) {
-            return function (options) {
-                return createExport(__assign({ map: mapHook.map }, options));
-            };
-        }
-        return;
-    }, [mapHook.map]);
-    return {
-        createExport: _createExport,
-    };
-}
-
 var SimpleDataContext = /*#__PURE__*/React__default.createContext({});
 var SimpleDataContextProvider = SimpleDataContext.Provider;
 
@@ -19191,5 +19745,5 @@ SimpleDataProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlCreatePdfButton as MlCreatePdfForm, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlMeasureTool, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlScaleReference, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, exportMap as useExportMap, useLayer, useMap, useMapState, useSource, useWms };
+export { GeoJsonContext, GeoJsonProvider, MapComponentsProvider, MapContext, MapLibreMap, MlBasicComponent, MlComponentTemplate, MlCreatePdfButton, MlCreatePdfForm, MlFeatureEditor, MlFillExtrusionLayer, MlFollowGps, MlGPXViewer, MlGeoJsonLayer, MlImageMarkerLayer, MlLayer, MlLayerMagnify, MlLayerSwipe, MlMarker, MlMeasureTool, MlNavigationCompass, MlNavigationTools, MlOsmLayer, MlScaleReference, MlSpatialElevationProfile, MlTransitionGeoJsonLayer, MlVectorTileLayer, MlWmsLayer, SimpleDataContext, SimpleDataProvider, exportMap as useExportMap, useLayer, useMap, useMapState, useSource, useWms };
 //# sourceMappingURL=index.esm.js.map

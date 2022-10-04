@@ -1,7 +1,7 @@
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
 export { default as MlComponentTemplate } from "./components/MlComponentTemplate/MlComponentTemplate";
 export { default as MlCreatePdfButton } from "./components/MlCreatePdfButton/MlCreatePdfButton";
-export { default as MlCreatePdfForm } from "./components/MlCreatePdfButton/MlCreatePdfButton";
+export { default as MlCreatePdfForm } from "./components/MlCreatePdfForm/MlCreatePdfForm";
 export { default as MlFeatureEditor } from "./components/MlFeatureEditor/MlFeatureEditor";
 export { default as MlFillExtrusionLayer } from "./components/MlFillExtrusionLayer/MlFillExtrusionLayer";
 export { default as MlFollowGps } from "./components/MlFollowGps/MlFollowGps";
