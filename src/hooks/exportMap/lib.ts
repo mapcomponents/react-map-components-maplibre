@@ -83,15 +83,30 @@ const createExport = (options: createExportOptions) => {
 	renderMap._fitInternal(geometryCamera);
 	return new Promise<createExportResolverParams>((resolve) => {
 		renderMap.once('idle', function () {
-			const params: createExportResolverParams = {
-				...options,
-				renderMap,
-				hiddenContainer,
-				createPdf: (_options?: createJsPdfOptions) =>
-					createJsPdf({ ...options, renderMap, hiddenContainer, ..._options }),
-			};
+			if (renderMap.getLayer('pdfPreviewGeojsonOutline')) {
+				renderMap.setLayoutProperty('pdfPreviewGeojsonOutline', 'visibility', 'none');
+			}
+			if (renderMap.getLayer('pdfPreviewGeojson')) {
+				renderMap.setLayoutProperty('pdfPreviewGeojson', 'visibility', 'none');
+			}
+			if (renderMap.getLayer('pdfPreviewGeojsonResizeHandle')) {
+				renderMap.setLayoutProperty('pdfPreviewGeojsonResizeHandle', 'visibility', 'none');
+			}
+			if (renderMap.getLayer('pdfPreviewGeojsonRotationHandle')) {
+				renderMap.setLayoutProperty('pdfPreviewGeojsonRotationHandle', 'visibility', 'none');
+			}
 
-			resolve(params);
+			renderMap.once('idle', function () {
+				const params: createExportResolverParams = {
+					...options,
+					renderMap,
+					hiddenContainer,
+					createPdf: (_options?: createJsPdfOptions) =>
+						createJsPdf({ ...options, renderMap, hiddenContainer, ..._options }),
+				};
+
+				resolve(params);
+			});
 		});
 	});
 };
