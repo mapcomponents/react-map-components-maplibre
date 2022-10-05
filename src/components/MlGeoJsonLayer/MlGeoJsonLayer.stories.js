@@ -6,7 +6,6 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
 import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
 
-
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 
@@ -23,37 +22,36 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (props) => {
+
+
 	return (
 		<>
-			<MlGeoJsonLayer type="line" geojson={sample_geojson_2}  />
-			
+			<LineStyler {...props} />
 		</>
 	);
 };
 const PolygonTemplate = (props) => {
-
-	//const [color, setColor]= useState('');
-
 	return (
 		<>
-			<PolygonStyler {...props}/>
+			<PolygonStyler {...props} />
 		</>
 	);
 };
 
-
 export const Linestring = Template.bind({});
 Linestring.parameters = {};
 Linestring.args = {
-	paint:{
+	geojson: sample_geojson_2,
+	mapId: 'Map_1',
+	/*paint:{
 		"stroke-color": 'rgba(123,20,80)',
 		"fill-opacity": 0
-	},
-	type:'line'
+	},*/
+	type: 'line',
 };
 
-
 export const Polygon = PolygonTemplate.bind({});
+
 Polygon.args = {
 	geojson: sample_geojson_1,
 };

@@ -9,8 +9,6 @@ import getDefaultPaintPropsByType from './util/getDefaultPaintPropsByType';
 import getDefaulLayerTypeByGeometry from './util/getDefaultLayerTypeByGeometry';
 import { Feature, FeatureCollection } from '@turf/turf';
 
-
-
 import {
 	LineLayerSpecification,
 	CircleLayerSpecification,
@@ -18,7 +16,6 @@ import {
 	MapLayerMouseEvent,
 	LayerSpecification,
 } from 'maplibre-gl';
-
 
 type MlGeoJsonLayerProps = {
 	/**
@@ -100,8 +97,6 @@ type MlGeoJsonLayerProps = {
  * @component
  */
 
-
-
 const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 	const layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -138,11 +133,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		mapHook.map.map.setZoom(15);
 	}, [mapHook.map, props.mapId]);
 
-	return (
-		<>
-			 
-		</>
-	);
+	return <></>;
 };
 
 export default MlGeoJsonLayer;

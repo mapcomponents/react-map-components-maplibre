@@ -4,18 +4,21 @@ import { TextField, Select, Typography, Slider, Stack, MenuItem, FormControl } f
 import { ColorPicker } from 'mui-color';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 
+/*
 const FeatureNames = () => {
 	const names = ['Show all', 'Hofgarten', 'Stadtgarten', 'Opernplatz', 'Keiserplatz'];
 	return names.map((item) => {
-		console.log(item)
+		console.log(item);
 		return (
 			<>
-				<MenuItem key={item} value={item}>{item}</MenuItem>
+				<MenuItem key={item} value={`"${item}"`}>
+					{item}
+				</MenuItem>
 			</>
 		);
 	});
 };
-
+*/
 
 const marks = [
 	{
@@ -40,11 +43,27 @@ const marks = [
 	},
 ];
 
+const widthMarks = [
+	{
+		value: 0,
+		label: '0',
+	},
+	{
+		value: 5,
+		label: '5',
+	},
+	{
+		value: 10,
+		label: '10',
+	},
+];
+
 const PolygonStyler = (props) => {
 	const [color, setColor] = useState('#2485C1');
 	const [opacity, setOpacity] = useState(0.8);
 	const [featureToShow, setFeatureToShow] = useState('Show all');
 	const [geomType, setGeomType] = useState('fill');
+	const [lineWidth, setLineWidth] = useState(6);
 
 	const storyGeoJson = useMemo(() => {
 		if (featureToShow === 'Show all') {
@@ -86,7 +105,7 @@ const PolygonStyler = (props) => {
 					</FormControl>
 					<Typography>Feature to show:</Typography>
 					<FormControl>
-					<Select
+						<Select
 							value={featureToShow}
 							onChange={(e) => {
 								setFeatureToShow(e.target.value);
@@ -97,18 +116,17 @@ const PolygonStyler = (props) => {
 								Show all
 							</MenuItem>
 							<MenuItem value={'Hofgarten'} key={2}>
-							Hofgarten
+								Hofgarten
 							</MenuItem>
 							<MenuItem value={'Stadtgarten'} key={3}>
-							Stadtgarten
+								Stadtgarten
 							</MenuItem>
 							<MenuItem value={'Opernplatz'} key={4}>
-							Opernplatz
+								Opernplatz
 							</MenuItem>
 							<MenuItem value={'Keiserplatz'} key={5}>
-							Keiserplatz
+								Keiserplatz
 							</MenuItem>
-
 						</Select>
 					</FormControl>
 					<Typography>Display color:</Typography>
@@ -128,6 +146,19 @@ const PolygonStyler = (props) => {
 							console.log(e);
 						}}
 					/>
+					<Typography paddingTop={4}>Stroke:</Typography>
+					<Slider
+						value={lineWidth}
+						aria-label="Default"
+						max={10}
+						min={0}
+						step={1}
+						marks={widthMarks}
+						onChange={(e) => {
+							setLineWidth(e.target.value);
+						}}
+						disabled={geomType !== 'line'}
+					/>
 				</Stack>
 			</Sidebar>
 
@@ -145,6 +176,7 @@ const PolygonStyler = (props) => {
 					line: {
 						'line-color': color,
 						'line-opacity': opacity,
+						'line-width': lineWidth,
 					},
 				}}
 				type={geomType}
