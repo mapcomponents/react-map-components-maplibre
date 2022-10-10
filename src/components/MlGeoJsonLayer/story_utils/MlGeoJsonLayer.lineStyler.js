@@ -99,10 +99,7 @@ const LineStyler = (props) => {
 		};
 	}, [featuresToShow, props.geojson]);
 
-	const mapHook = useMap({
-		mapId: 'Map_1',
-		waitForLayer: 'Linestring',
-	});
+	const mapHook = useMap({ mapId: "map_1", waitForLayer: "Linestring" });
 
 	const handleChange = (event) => {
 		const {
@@ -120,10 +117,9 @@ const LineStyler = (props) => {
 	};
 
 	useEffect(() => {
-		if (!mapHook.map) return;
-		mapHook.map.map.setCenter([7.099301807798469, 50.734214410085684]);
-		mapHook.map.map.setZoom(22);
-	}, [mapHook.map, props.mapId]);
+		mapHook.map?.map.setCenter([7.099301807798469, 50.734214410085684]);
+		mapHook.map?.map.setZoom(16.5);
+	}, [mapHook.map]);
 
 	return (
 		<>
