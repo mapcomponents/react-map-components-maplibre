@@ -11,7 +11,7 @@ const decorators = [
 		<div className="fullscreen_map">
 			<ThemeWrapper>
 				<MapComponentsProvider>
-					{Story()}
+					<Story />
 					<MapLibreMap
 						options={{
 							zoom: 14.5,
