@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useRef, useState } from "react";
 
 import * as turf from "@turf/turf";
-import { useMap } from "@mapcomponents/react-maplibre/";
+import useMap from '../../hooks/useMap';
 
 const MlCameraFollowPath = (props) => {
   // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks

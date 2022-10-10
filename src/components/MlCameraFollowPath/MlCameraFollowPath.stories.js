@@ -3,7 +3,9 @@ import MlCameraFollowPath from "./MlCameraFollowPath";
 import TopToolbar from "../../ui_components/TopToolbar";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 import { Button, Slider, Typography } from "@mui/material";
-import { MlGeoJsonLayer, MlNavigationTools } from "@mapcomponents/react-maplibre";
+import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import MlNavigationTools from '../MlNavigationTools/MlNavigationTools';
+
 
 const storyoptions = {
   title: "MapComponents/MlCameraFollowPath",
