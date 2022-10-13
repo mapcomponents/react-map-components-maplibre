@@ -172,7 +172,9 @@ const Template = () => {
 					'line-color': 'blue',
 				}}
 			/>
-			<MlNavigationTools />
+			{/*
+      <MlNavigationTools />
+      */}
 		</>
 	);
 };
