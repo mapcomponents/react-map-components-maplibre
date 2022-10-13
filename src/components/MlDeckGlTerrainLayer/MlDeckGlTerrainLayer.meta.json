@@ -1,0 +1,15 @@
+{
+  "name": "MlDeckGlTerrainLayer",
+  "title": "3D topographical layer",
+  "description": "",
+  "i18n": {
+    "de": {
+      "title": "3D Topo Ebene",
+      "description": ""
+    }
+  },
+  "tags": ["Map add-on"],
+  "category": "add-ons",
+  "type": "component",
+  "price": 5000
+}
