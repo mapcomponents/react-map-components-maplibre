@@ -1,5 +1,32 @@
 {
     "type": "FeatureCollection",
+    "metadata": [
+        {
+            "title": "name",
+            "value": "Traumpfad Bergheidenweg",
+            "id": 1666090272565
+        },
+        {
+            "title": "author",
+            "value": "\n      Nicole Pfeifer - Rhein-Mosel-Eifel-Touristik\n    ",
+            "id": 1666090272571
+        },
+        {
+            "title": "link",
+            "value": "https://www.outdooractive.com/r/1386783",
+            "id": 1666090272575
+        },
+        {
+            "title": "time",
+            "value": "2021-04-08T13:53:11.658",
+            "id": 1666090272580
+        },
+        {
+            "title": "extensions",
+            "value": "\n      hikingTourTrail\n    ",
+            "id": 1666090272584
+        }
+    ],
     "features": [
         {
             "type": "Feature",

@@ -32,10 +32,6 @@ const Template = (props) => {
 		setDemoMode(!demoMode);
 	
 	};
-	useEffect(()=>{
-		mapHook.map?.map.setCenter([7.100175528281227, 50.73487992742369]);
-		mapHook.map?.map.setZoom(10);	
-	}, [mapHook.map])
 
 	return (
 		<>

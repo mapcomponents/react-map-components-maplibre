@@ -278,6 +278,9 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 
 		fileupload.current.click();
 	};
+
+	console.log(metaData);
+	
 	return (
 		<>
 			<div

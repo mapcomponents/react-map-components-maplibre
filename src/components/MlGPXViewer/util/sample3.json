@@ -1,5 +1,32 @@
 {
 	"type": "FeatureCollection",
+	"metadata": [
+		{
+			"title": "name",
+			"value": "Rundwanderung auf dem Wiedweg zwischen Seelbach und Oberlahr",
+			"id": 1666090544335
+		},
+		{
+			"title": "author",
+			"value": "\n      Cornelia Obenauer - Westerwald - Ganz nach deiner Natur!\n    ",
+			"id": 1666090544342
+		},
+		{
+			"title": "link",
+			"value": "https://www.outdooractive.com/r/65492086",
+			"id": 1666090544346
+		},
+		{
+			"title": "time",
+			"value": "2022-01-27T13:38:13.629",
+			"id": 1666090544349
+		},
+		{
+			"title": "extensions",
+			"value": "\n      hikingTourTrail\n    ",
+			"id": 1666090544352
+		}
+	],
 	"features": [
 		{
 			"type": "Feature",

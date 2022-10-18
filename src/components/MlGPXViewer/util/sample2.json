@@ -1,5 +1,32 @@
 {
     "type": "FeatureCollection",
+    "metadata":[
+        {
+            "title": "name",
+            "value": "Nordeifel: MTB-Tour Bachgeflüster (Freifahrt Eifel Runde W)",
+            "id": 1666090459332
+        },
+        {
+            "title": "author",
+            "value": "\n      Sandra Ehlen / Nordeifel Tourismus GmbH - Eifel Tourismus GmbH\n    ",
+            "id": 1666090459339
+        },
+        {
+            "title": "link",
+            "value": "https://www.outdooractive.com/r/55809611",
+            "id": 1666090459344
+        },
+        {
+            "title": "time",
+            "value": "2022-06-03T07:06:03.955",
+            "id": 1666090459348
+        },
+        {
+            "title": "extensions",
+            "value": "\n      mountainbiking\n    ",
+            "id": 1666090459352
+        }
+    ],
     "features": [
         {
             "type": "Feature",
