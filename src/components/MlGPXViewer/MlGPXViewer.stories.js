@@ -27,20 +27,45 @@ export default storyoptions;
 
 const Template = (props) => {
 	const [demoMode, setDemoMode] = useState(false);
+	const [guide, setGuide] = useState(false);
 	const mapHook = useMap({ mapId: 'map_1' });
-	const handleClick = () => {
+
+	const handleClick1 = () => {
 		setDemoMode(!demoMode);
-	
+		
 	};
+	const handleClick2 = ()=>{
+		setGuide(true);
+		setTimeout(()=>{
+			setGuide(false)
+		}, 9000);
+	}
+
+	const textColor = () =>{
+		if(demoMode){
+			return "white"
+		} else {
+			return "steelblue"
+		}
+	}
+
+	const textColor2 = () =>{
+		if(guide){
+			return "white"
+		} else {
+			return "steelblue"
+		}
+	}
 
 	return (
 		<>
 			<TopToolbar>
-				<MlGPXViewerInstructions />
-				<Button variant="contained" onClick={handleClick} color={demoMode ? "primary" : "inherit"}> 
+				<MlGPXViewerInstructions open={guide} />
+				<Button variant="contained" onClick={handleClick2}  color={guide ? "primary" : "inherit"} sx={{ color: textColor2 }}> Guide me through</Button>
+				<Button variant="contained" onClick={handleClick1} color={demoMode ? "primary" : "inherit"} sx={{ color: textColor }}> 
 					Demo Mode
 				</Button>
-			</TopToolbar>
+			</TopToolbar>""
 			<GeoJsonProvider>
 				<MlGPXDemoViewer enabled={demoMode} />
 				<MlGPXViewer ></MlGPXViewer>

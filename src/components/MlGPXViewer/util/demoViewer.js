@@ -40,8 +40,20 @@ const modalStyle = {
 	p: 4,
 };
 
+const mobileStyle = {
+	position: 'absolute',
+	top: '30%',
+	left: '20%',
+	width: 200,
+	height: 300,
+	bgcolor: 'background.paper',
+	border: '2px solid #000',
+	boxShadow: 24,
+	p: 4,
+};
+
 /**
- * MlGPXVDemoiewer returns a button to load a Demo GPX Track into the map.
+ * MlGPXVDemoViewer returns a button to load a Demo GPX Track into the map.
  */
 const MlGPXDemoViewer = (props) => {
 	const initializedRef = useRef(false);
@@ -71,6 +83,7 @@ const MlGPXDemoViewer = (props) => {
 
 	const handleClick = (e) => {
 		setOpenModal(true);
+		setIsOpen(false);
 	};
 
 	const handleSelect = (e) => {
@@ -173,7 +186,7 @@ const MlGPXDemoViewer = (props) => {
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
 			>
-				<Box sx={modalStyle}>
+				<Box sx={ mediaIsMobile ? mobileStyle : modalStyle} >
 					<Grid container>
 						<Grid xs={10}>
 							<Typography id="modal-modal-title" variant="h6">
