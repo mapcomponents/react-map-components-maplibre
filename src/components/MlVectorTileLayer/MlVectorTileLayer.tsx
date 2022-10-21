@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import useMap from "../../hooks/useMap";
 import PropTypes from "prop-types";
+import { LayerSpecification } from 'maplibre-gl';
 
 interface MlVectorTileLayerProps {
 	mapId?: string;
@@ -8,7 +9,7 @@ interface MlVectorTileLayerProps {
 	layerId?: string;
 	sourceOptions?: any;
 	url?: string;
-	layers?: any;
+	layers: [LayerSpecification];
 }
 
 /**
@@ -24,7 +25,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	});
 
 	const layerIdsRef = useRef({});
-	const layerId = useRef(props.layerId || "MlVectorTileLayer-" + mapHook.componentId);
+	const layerId = useRef(props.layerId || 'MlVectorTileLayer-' + mapHook.componentId);
 	const layerPaintConfsRef = useRef({});
 	const layerLayoutConfsRef = useRef({});
 	const initializedRef = useRef(false);
@@ -42,52 +43,50 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 		mapHook.map.addSource(
 			layerId.current,
 			{
-				type: "vector",
+				type: 'vector',
 				tiles: [props.url],
 				tileSize: 512,
-				attribution: "",
+				attribution: '',
 				...props.sourceOptions,
 			},
 			mapHook.componentId
 		);
 
-		for (let key in props.layers) {
-			let _layerId = layerId.current + "_" + key;
-			layerIdsRef.current[key] = _layerId;
+		props.layers?.map((layer) => {
+			let _layerId = layerId.current + '_' + layer.id;
+			layerIdsRef.current[layer.id] = _layerId;
 
-			mapHook.map.addLayer(
+			mapHook?.map?.addLayer(
 				{
-					id: _layerId,
 					source: layerId.current,
-					type: "line",
 					minzoom: 0,
 					maxzoom: 22,
 					layout: {},
 					paint: {
-						"line-opacity": 0.5,
-						"line-color": "rgb(80, 80, 80)",
-						"line-width": 2,
+						'line-opacity': 0.5,
+						'line-color': 'rgb(80, 80, 80)',
+						'line-width': 2,
 					},
-					...props.layers[key],
+					...layer,
 				},
 				props.insertBeforeLayer,
 				mapHook.componentId
 			);
-			layerPaintConfsRef.current[key] = JSON.stringify(props.layers[key].paint);
-			layerLayoutConfsRef.current[key] = JSON.stringify(props.layers[key].layout);
+			layerPaintConfsRef.current[layer.id] = JSON.stringify(layer.paint);
+			layerLayoutConfsRef.current[layer.id] = JSON.stringify(layer.layout);
 
 			// recreate layer if style has changed
-			mapHook.map.on(
-				"styledata",
+			mapHook?.map?.on(
+				'styledata',
 				() => {
 					if (initializedRef.current && !mapHook.map?.map.getSource(layerId.current)) {
-						console.log("Recreate Layer " + layerId.current);
+						console.log('Recreate Layer ' + layerId.current);
 						createLayer();
 					}
 				},
 				mapHook.componentId
 			);
-		}
+		});
 	}, [mapHook.map, props]);
 
 	useEffect(() => {
@@ -99,37 +98,38 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	useEffect(() => {
 		if (!mapHook.map || !initializedRef.current) return;
 		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
-		for (var key in props.layers) {
-			if (mapHook.map.map.getLayer(layerIdsRef.current[key])) {
-				// update changed paint property
-				let layerPaintConfString = JSON.stringify(props.layers[key].paint);
 
-				if (layerPaintConfString !== layerPaintConfsRef.current[key]) {
-					for (let paintKey in props.layers[key].paint) {
+		props.layers?.map((layer) => {
+			if (mapHook?.map?.map.getLayer(layerIdsRef.current[layer.id])) {
+				// update changed paint property
+				let layerPaintConfString = JSON.stringify(layer.paint);
+
+				if (layerPaintConfString !== layerPaintConfsRef.current[layer.id]) {
+					for (let paintKey in layer.paint) {
 						mapHook.map.map.setPaintProperty(
-							layerIdsRef.current[key],
+							layerIdsRef.current[layer.id],
 							paintKey,
-							props.layers[key].paint[paintKey]
+							layer.paint[paintKey]
 						);
 					}
 				}
-				layerPaintConfsRef.current[key] = layerPaintConfString;
+				layerPaintConfsRef.current[layer.id] = layerPaintConfString;
 
 				// update changed layout property
-				let layerLayoutConfString = JSON.stringify(props.layers[key].layout);
+				let layerLayoutConfString = JSON.stringify(layer.layout);
 
-				if (layerLayoutConfString !== layerLayoutConfsRef.current[key]) {
-					for (let layoutKey in props.layers[key].layout) {
+				if (layerLayoutConfString !== layerLayoutConfsRef.current[layer.id]) {
+					for (let layoutKey in layer.layout) {
 						mapHook.map.map.setLayoutProperty(
-							layerIdsRef.current[key],
+							layerIdsRef.current[layer.id],
 							layoutKey,
-							props.layers[key].layout[layoutKey]
+							layer.layout[layoutKey]
 						);
 					}
 				}
-				layerLayoutConfsRef.current[key] = layerLayoutConfString;
+				layerLayoutConfsRef.current[layer.id] = layerLayoutConfString;
 			}
-		}
+		});
 	}, [props.layers, mapHook.map]);
 
 	return <></>;

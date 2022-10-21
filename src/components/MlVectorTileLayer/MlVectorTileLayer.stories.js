@@ -28,8 +28,9 @@ ExampleConfig.args = {
 	mapId: "map_1",
 	url:
 		"https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf",
-	layers: {
-		landuseLine: {
+	layers: [
+		{
+			id: "landuse1",
 			"source-layer": "landuse",
 			layout: {
 				"line-cap": "round",
@@ -37,7 +38,16 @@ ExampleConfig.args = {
 			},
 			paint: { "line-width": 2, "line-color": "#ff0000" },
 		},
-	},
+		{
+			id: "landuse2",
+			"source-layer": "landuse",
+			layout: {
+				"line-cap": "round",
+				"line-join": "round",
+			},
+			paint: { "line-width": 1.5, "line-color": "green" },
+		},
+	],
 	sourceOptions: {
 		minzoom: 0,
 		maxzoom: 20,
