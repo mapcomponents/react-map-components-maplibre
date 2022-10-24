@@ -73,9 +73,24 @@ const Template = () => {
 		speed: state.speed,
 	});
 
+	const [showComponent, setShowComponent] = useState(false);
+
 	return (
 		<>
 			<TopToolbar>
+				<Button onClick={() => setShowComponent(!showComponent)}>
+					{showComponent ? 'Route ausblenden' : 'Route einblenden'}
+				</Button>
+				{showComponent ? (
+					<MlGeoJsonLayer
+						geojson={routeJson}
+						type="line"
+						paint={{
+							'line-width': 2,
+							'line-color': 'blue',
+						}}
+					/>
+				) : null}
 				<Button
 					disabled={!state.pause}
 					onClick={() =>
@@ -174,14 +189,14 @@ const Template = () => {
 					{state.pitch === 0 ? '3D' : '2D'}
 				</Button>
 			</TopToolbar>
-			<MlGeoJsonLayer
+			{/*<MlGeoJsonLayer
 				geojson={routeJson}
 				type="line"
 				paint={{
 					'line-width': 2,
 					'line-color': 'blue',
 				}}
-			/>
+			/>*/}
 			<MlNavigationTools />
 		</>
 	);
