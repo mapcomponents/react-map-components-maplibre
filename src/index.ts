@@ -30,12 +30,12 @@ export { default as MlSpatialElevationProfile } from "./components/MlSpatialElev
 export { default as MlOsmLayer } from "./components/MlOsmLayer/MlOsmLayer.js";
 export { default as MlBasicComponent } from "./components/MlBasicComponent.js";
 
-export { default as useLayer } from "./hooks/useLayer";
-export { default as useMapState } from "./hooks/useMapState";
-export { default as useMap } from "./hooks/useMap";
-export { default as useWms } from "./hooks/useWms.js";
-export { default as useSource } from "./hooks/useSource";
-export { default as useExportMap } from "./hooks/exportMap";
+export { default as useLayer } from './hooks/useLayer';
+export { default as useMapState } from './hooks/useMapState';
+export { default as useMap } from './hooks/useMap';
+export { default as useWms } from './hooks/useWms.js';
+export { default as useSource } from './hooks/useSource';
+export { default as useExportMap } from './hooks/exportMap';
 
 export { MapComponentsProvider } from "./contexts/MapContext";
 export { default as MapContext } from "./contexts/MapContext";
