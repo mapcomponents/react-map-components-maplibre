@@ -78,7 +78,7 @@ const Template = () => {
 	return (
 		<>
 			<TopToolbar>
-				<Button onClick={() => setShowComponent(!showComponent)}>
+			<Button onClick={() => setShowComponent(!showComponent)}>
 					{showComponent ? 'Route ausblenden' : 'Route einblenden'}
 				</Button>
 				{showComponent ? (
@@ -129,8 +129,8 @@ const Template = () => {
 				</Typography>
 				<Slider
 					value={state.zoom}
-					onChange={(ev, value) => {
-						setState((current) => {
+					onChange={(value) => {
+						setState((current: any) => {
 							return { ...current, zoom: value };
 						});
 					}}
@@ -156,8 +156,8 @@ const Template = () => {
 				</Typography>
 				<Slider
 					value={state.speed}
-					onChange={(ev, value) => {
-						setState((current) => {
+					onChange={(value) => {
+						setState((current: any) => {
 							return { ...current, speed: value };
 						});
 					}}
@@ -188,7 +188,7 @@ const Template = () => {
 				>
 					{state.pitch === 0 ? '3D' : '2D'}
 				</Button>
-			</TopToolbar>
+			</TopToolbar>	
 			{/*<MlNavigationTools />*/}
 		</>
 	);
