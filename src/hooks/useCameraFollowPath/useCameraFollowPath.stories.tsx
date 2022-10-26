@@ -4,7 +4,8 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { Button, Slider, Typography } from '@mui/material';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import MlNavigationTools from '../../components/MlNavigationTools/MlNavigationTools';
+//import MlNavigationTools from '../../components/MlNavigationTools/MlNavigationTools';
+import { Feature } from '@turf/turf';
 
 const storyoptions = {
 	title: 'Hooks/useCameraFollowPath',
@@ -14,7 +15,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const routeJson = {
+const routeJson: Feature = {
 	type: 'Feature',
 	properties: {},
 	geometry: {
@@ -129,12 +130,12 @@ const Template = () => {
 				</Typography>
 				<Slider
 					value={state.zoom}
-					onChange={(value) => {
-						setState((current: any) => {
-							return { ...current, zoom: value };
+					onChange={(ev,value) => {
+						setState((current) => {
+							return { ...current, zoom: Number(value) };
 						});
 					}}
-					getAriaValueText={(value) => value}
+					getAriaValueText={(value) => value.toString()}
 					aria-labelledby="discrete-slider"
 					//valueLabelDisplay="auto"
 					step={1}
@@ -156,12 +157,12 @@ const Template = () => {
 				</Typography>
 				<Slider
 					value={state.speed}
-					onChange={(value) => {
-						setState((current: any) => {
-							return { ...current, speed: value };
+					onChange={(ev,value) => {
+						setState((current) => {
+							return { ...current, speed: Number(value) };
 						});
 					}}
-					getAriaValueText={(value) => value}
+					getAriaValueText={(value) => value.toString()}
 					aria-labelledby="discrete-slider2"
 					//valueLabelDisplay="auto"
 					step={0.1}

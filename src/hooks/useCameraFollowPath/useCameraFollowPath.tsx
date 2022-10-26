@@ -2,16 +2,43 @@ import { useEffect, useCallback, useRef } from 'react';
 
 import * as turf from '@turf/turf';
 import useMap from '../useMap';
+import { LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
 
-const useCameraFollowPath = (props) => {
+interface useCameraFollowPathProps {
+	/**
+	 * Id of the target MapLibre instance in mapContext
+	 */
+	mapId?: string;
+	/**
+	 * Id of an existing layer in the mapLibre instance to help specify the layer order
+	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+	 */
+	insertBeforeLayer?: string;
+
+	pause?: boolean;
+	zoom?: number;
+	pitch?: number;
+	speed?: number;
+	kmPerStep?: number;
+	route?: any;
+	stepDuration?: number;
+	timeoutId?: number;
+}
+export type { useCameraFollowPathProps };
+
+/**
+ * Component template
+ *
+ */
+const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	// without the requirement of adding it to the dependency list (ignore the false eslint exhaustive deps warning)
 	const initializedRef = useRef(false);
-	const pause = useRef(true);
-	const zoom = useRef(60);
-	const pitch = useRef(60);
+	const pause = useRef<boolean | undefined>(props.pause);
+	const zoom = useRef<number | undefined>(props.zoom);
+	const pitch =useRef<number | undefined>(props.pitch);
 	const step = useRef(1);
-	const speed = useRef(1);
+	const speed = useRef<number | undefined>(props.speed);
 	const timeoutId = useRef();
 
 	var kmPerStep = props.kmPerStep || 0.01;
@@ -32,14 +59,14 @@ const useCameraFollowPath = (props) => {
 	useEffect(() => {
 		if (!mapHook.map) return;
 		zoom.current = props.zoom;
-		if (mapHook.map.map.getZoom() !== zoom.current) {
+		if (typeof zoom.current !== "undefined" && mapHook.map.map.getZoom() !== zoom.current ) {
 			mapHook.map.map.setZoom(zoom.current);
 		}
 	}, [mapHook.map, props.zoom]);
 	useEffect(() => {
 		if (!mapHook.map) return;
 		pitch.current = props.pitch;
-		if (pitch.current !== mapHook.map.map.getPitch()) {
+		if (typeof pitch.current !== "undefined" && pitch.current !== mapHook.map.map.getPitch()) {
 			mapHook.map.map.setPitch(pitch.current);
 		}
 	}, [mapHook.map, props.pitch]);
@@ -71,7 +98,7 @@ const useCameraFollowPath = (props) => {
 	function centerRoute() {
 		if (!mapHook.map || !props.route) return;
 		var bbox = turf.bbox(props.route);
-		var bounds;
+		var bounds: LngLatBoundsLike;
 		if (bbox && bbox.length > 3) {
 			bounds = [
 				[bbox[0], bbox[1]],
@@ -85,27 +112,32 @@ const useCameraFollowPath = (props) => {
 
 		if (!pause.current) {
 			disableInteractivity();
-
-			if (mapHook.map.map.getZoom() !== zoom.current) {
+			if (typeof zoom.current !== "undefined" && mapHook.map.map.getZoom() !== zoom.current) {
 				mapHook.map.map.setZoom(zoom.current);
 			}
 
-			var alongRoute = turf.along(props.route, step.current * kmPerStep).geometry.coordinates;
+			var alongRoutelati: number[] = turf.along(props.route, step.current * kmPerStep).geometry
+				.coordinates;
 
 			if (step.current * kmPerStep < routeDistance) {
-				mapHook.map.map.panTo(alongRoute, {
+				mapHook.map.map.easeTo({
+					center: alongRoutelati as LngLatLike,
 					bearing: turf.bearing(
 						turf.point([mapHook.map.map.getCenter().lng, mapHook.map.map.getCenter().lat]),
-						turf.point(alongRoute)
+						turf.point(alongRoutelati)
 					),
 					duration: stepDuration,
 					essential: true,
 				});
-				step.current = step.current + speed.current;
+				if (typeof speed.current !== "undefined"){
+					step.current = step.current + speed.current;
+				}else{
+					step.current++;
+				}
 				console.log('PAN MOVE');
-				timeoutId.current = setTimeout(() => {
+				setTimeout(() => {
 					play();
-				}, stepDuration);
+				}, 100);
 			} else {
 				mapHook.map.map.setPitch(0);
 				centerRoute();
@@ -143,6 +175,11 @@ const useCameraFollowPath = (props) => {
 		play: play,
 		reset: reset,
 	};
+};
+
+useCameraFollowPath.defaultProps = {
+	mapId: undefined,
+	zoom: 18,
 };
 
 export default useCameraFollowPath;
