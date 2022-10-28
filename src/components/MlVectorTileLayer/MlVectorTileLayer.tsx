@@ -85,18 +85,12 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 		});
 	}, [mapHook.map, props]);
 
-	useEffect(() => {
-		if (initializedRef.current) return;
-
-		createLayer();
-	}, [createLayer]);
-
-	useEffect(() => {
-		if (!mapHook.map || !initializedRef.current) return;
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
+	const updateLayers = useCallback(() => {
+		if (!initializedRef.current) return;
 
 		props.layers.forEach((layer) => {
-			if (mapHook?.map?.map.getLayer(layer.id)) {
+			if (!mapHook.map) return;
+			if (mapHook.map.map.getLayer(layer.id)) {
 				// update changed paint property
 				let layerPaintConfString = JSON.stringify(layer.paint);
 
@@ -118,10 +112,27 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 				layerLayoutConfsRef.current[layer.id] = layerLayoutConfString;
 			}
 		});
+	}, [mapHook.map, props.layers]);
+
+	// initial layer creation
+	useEffect(() => {
+		if (initializedRef.current) return;
+		createLayer();
+	}, [createLayer]);
+
+	// if layers get removed or added
+	useEffect(() => {
+		if (!mapHook.map || !initializedRef.current) return;
+		createLayer();
+	}, [props.layers.length, mapHook.map]);
+
+	// on layout/paint update
+	useEffect(() => {
+		if (!mapHook.map || !initializedRef.current) return;
+		updateLayers();
 	}, [props.layers, mapHook.map]);
 
 	return <></>;
 };
-
 
 export default MlVectorTileLayer;
