@@ -23,7 +23,6 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const layerIdsRef = useRef({});
 	const layerId = useRef(props.layerId || 'MlVectorTileLayer-' + mapHook.componentId);
 	const layerPaintConfsRef = useRef({});
 	const layerLayoutConfsRef = useRef({});
@@ -34,7 +33,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 
 		initializedRef.current = true;
 
-		if (mapHook.map.map.getLayer(layerId.current)) {
+		if (mapHook.map.map.getSource(layerId.current)) {
 			mapHook.cleanup();
 		}
 
@@ -51,11 +50,9 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 			mapHook.componentId
 		);
 
-		props.layers?.map((layer) => {
-			let _layerId = layerId.current + '_' + layer.id;
-			layerIdsRef.current[layer.id] = _layerId;
-
-			mapHook?.map?.addLayer(
+		props.layers.forEach((layer) => {
+			if (!mapHook.map) return;
+			mapHook.map.addLayer(
 				{
 					source: layerId.current,
 					minzoom: 0,
@@ -75,7 +72,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 			layerLayoutConfsRef.current[layer.id] = JSON.stringify(layer.layout);
 
 			// recreate layer if style has changed
-			mapHook?.map?.on(
+			mapHook.map.on(
 				'styledata',
 				() => {
 					if (initializedRef.current && !mapHook.map?.map.getSource(layerId.current)) {
@@ -98,18 +95,14 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 		if (!mapHook.map || !initializedRef.current) return;
 		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
 
-		props.layers?.map((layer) => {
-			if (mapHook?.map?.map.getLayer(layerIdsRef.current[layer.id])) {
+		props.layers.forEach((layer) => {
+			if (mapHook?.map?.map.getLayer(layer.id)) {
 				// update changed paint property
 				let layerPaintConfString = JSON.stringify(layer.paint);
 
 				if (layerPaintConfString !== layerPaintConfsRef.current[layer.id]) {
 					for (let paintKey in layer.paint) {
-						mapHook.map.map.setPaintProperty(
-							layerIdsRef.current[layer.id],
-							paintKey,
-							layer.paint[paintKey]
-						);
+						mapHook.map.map.setPaintProperty(layer.id, paintKey, layer.paint[paintKey]);
 					}
 				}
 				layerPaintConfsRef.current[layer.id] = layerPaintConfString;
@@ -119,11 +112,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 
 				if (layerLayoutConfString !== layerLayoutConfsRef.current[layer.id]) {
 					for (let layoutKey in layer.layout) {
-						mapHook.map.map.setLayoutProperty(
-							layerIdsRef.current[layer.id],
-							layoutKey,
-							layer.layout[layoutKey]
-						);
+						mapHook.map.map.setLayoutProperty(layer.id, layoutKey, layer.layout[layoutKey]);
 					}
 				}
 				layerLayoutConfsRef.current[layer.id] = layerLayoutConfString;
