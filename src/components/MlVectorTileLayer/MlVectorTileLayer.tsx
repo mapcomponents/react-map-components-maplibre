@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import useMap from "../../hooks/useMap";
-import PropTypes from "prop-types";
+import useMap from '../../hooks/useMap';
 import { LayerSpecification } from 'maplibre-gl';
 
 interface MlVectorTileLayerProps {
@@ -39,7 +38,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 			mapHook.cleanup();
 		}
 
-		// Add the new layer to the openlayers instance once it is available
+		// Add the new layer to the maplibre instance once it is available
 		mapHook.map.addSource(
 			layerId.current,
 			{
@@ -135,23 +134,5 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	return <></>;
 };
 
-MlVectorTileLayer.propTypes = {
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
-	mapId: PropTypes.string,
-	/**
-	 * Options object that will be used as first parameter on the MapLibreGl.addSource call see MapLibre source options documentation.
-	 */
-	sourceOptions: PropTypes.object,
-	/**
-	 * Object that hold layers
-	 */
-	layers: PropTypes.object,
-	/**
-	 * String of the URL of a wms layer
-	 */
-	url: PropTypes.string,
-};
 
 export default MlVectorTileLayer;

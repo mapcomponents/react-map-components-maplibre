@@ -31,6 +31,7 @@ ExampleConfig.args = {
 	layers: [
 		{
 			id: "landuse1",
+			type: "line",
 			"source-layer": "landuse",
 			layout: {
 				"line-cap": "round",
@@ -40,6 +41,7 @@ ExampleConfig.args = {
 		},
 		{
 			id: "landuse2",
+			type: "line",
 			"source-layer": "landuse",
 			layout: {
 				"line-cap": "round",
