@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import useMap from '../../hooks/useMap';
+import React, { useState, useCallback, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
@@ -7,6 +6,12 @@ import PentagonIcon from '@mui/icons-material/Pentagon';
 import { Box } from '@mui/system';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
+import List from '@mui/material/List';
+import { ListItem } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import ListItemText from '@mui/material/ListItemText';
+import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import useMap from '../../hooks/useMap';
 
 interface MlSketchToolProps {
 	/**
@@ -25,14 +30,13 @@ interface MlSketchToolProps {
  *
  */
 const MlSketchTool = (props: MlSketchToolProps) => {
-	const mapHook = useMap({
-		mapId: props.mapId,
-		waitForLayer: props.insertBeforeLayer,
-	});
+	const mapHook = useMap('map_1');
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [drawMode, setDrawMode] = useState('');
 	const [geometries, setGeometries] = useState([]);
 	const [activeGeometryIndex, setActiveGeometryIndex] = useState();
+	const [selectedGeoJson, setSelectedGeoJson] = useState();
+	const [hasFeatureSelected, setHasFeatureSelected] = useState(false);
 
 	const buttonStyle = {
 		minWidth: '20px',
@@ -56,12 +60,25 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		[drawMode]
 	);
 
+	const clickHandler = (e) => {
+		if (!mapHook.map.map.queryRenderedFeatures(e.point, { layers: [selectedGeoJson.id] })[0]) {
+			setDrawMode('');
+			setHasFeatureSelected(false);
+		}
+	};
+
+	useEffect(() => {
+		if (!geometries || !selectedGeoJson) return;
+		hasFeatureSelected
+			? mapHook.map.map.on('click', clickHandler)
+			: mapHook.map.map.off('click', clickHandler);
+	}, [selectedGeoJson, hasFeatureSelected]);
+
 	return (
 		<>
 			<Box
 				sx={{
 					zIndex: 104,
-					position: 'absolute',
 				}}
 			>
 				<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_point')}>
@@ -75,46 +92,54 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				</Button>
 			</Box>
 
-			{/*drawMode !== 'edit' && drawMode !== '' && (
-				<Box
-					sx={{
-						zIndex: 104,
-						height: '200px',
-						width: '400px',
-						position: 'absolute',
-						display: 'flex',
-						flexDirection: 'column',
-						backgroundColor: '#ececec',
-						left: '30%',
-					}}
-				>
-					Bearbeitungsmenu
-				</Box>
-			)*/}
-
-			{drawMode ? (
-				drawMode === 'edit' ? (
-					<MlFeatureEditor mode={'edit'} />
-				) : (
-					<MlFeatureEditor
-						mode={drawMode}
-						onChange={(feature: any) => {
-							let _geometries = [...geometries];
-							console.log(feature, _geometries);
+			{drawMode && (
+				<MlFeatureEditor
+					mode={
+						drawMode === 'edit'
+							? selectedGeoJson?.geometry?.type === 'LineString'
+								? 'simple_select'
+								: 'custom_select'
+							: drawMode
+					}
+					geojson={drawMode === 'edit' ? selectedGeoJson : undefined}
+					onChange={(feature: any) => {
+						let _geometries = [...geometries];
+						console.log(feature, _geometries, geometries);
+						if (drawMode === 'edit') {
+							_geometries[_geometries.indexOf(selectedGeoJson)] = feature[0];
+						} else {
 							if (!activeGeometryIndex) {
-								_geometries.push(feature);
+								_geometries.push(...feature);
 								setActiveGeometryIndex(_geometries.length - 1);
 							} else {
 								_geometries[activeGeometryIndex] = feature;
 							}
+						}
 
-							setGeometries(_geometries);
-						}}
-					/>
-				)
-			) : (
-				<MlFeatureEditor />
+						setGeometries(_geometries);
+					}}
+				/>
 			)}
+
+			<List sx={{ zIndex: 105 }}>
+				{geometries.map((el) => (
+					<>
+						<ListItem>
+							<IconButton
+								onClick={() => {
+									setSelectedGeoJson(el);
+									setHasFeatureSelected(true);
+									setDrawMode('edit');
+								}}
+							>
+								<ListItemText primary={el?.geometry.type} secondary={el.id} />
+							</IconButton>
+						</ListItem>
+						<MlGeoJsonLayer geojson={el} layerId={el.id} />
+					</>
+				))}
+			</List>
+			{drawMode === 'edit' && <Box>Edit {selectedGeoJson?.geometry?.type}</Box>}
 		</>
 	);
 };
