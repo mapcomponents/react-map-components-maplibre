@@ -8,10 +8,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import List from '@mui/material/List';
 import { ListItem } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
+import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface MlSketchToolProps {
 	/**
@@ -65,6 +66,14 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			setDrawMode('');
 			setHasFeatureSelected(false);
 		}
+	};
+
+	const removeGeoJson = (geoJson) => {
+		let tempGeometries = [...geometries];
+		tempGeometries.splice(tempGeometries.indexOf(geoJson), 1);
+		setGeometries(tempGeometries);
+		setActiveGeometryIndex(activeGeometryIndex - 1);
+		console.log(geometries, activeGeometryIndex);
 	};
 
 	useEffect(() => {
@@ -124,16 +133,32 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			<List sx={{ zIndex: 105 }}>
 				{geometries.map((el) => (
 					<>
-						<ListItem>
-							<IconButton
-								onClick={() => {
-									setSelectedGeoJson(el);
-									setHasFeatureSelected(true);
-									setDrawMode('edit');
-								}}
-							>
-								<ListItemText primary={el?.geometry.type} secondary={el.id} />
-							</IconButton>
+						<ListItem sx={{ display: 'flex', flexDirection: 'column' }}>
+							{el.id}
+							<br />
+							<Box flexDirection={'row'}>
+								<Button
+									sx={buttonStyle}
+									onClick={() => {
+										setSelectedGeoJson(el);
+										setHasFeatureSelected(true);
+										setDrawMode('edit');
+									}}
+								>
+									<EditIcon />
+								</Button>
+								<Button sx={buttonStyle} onClick={() => {}}>
+									<SettingsIcon />
+								</Button>
+								<Button
+									sx={buttonStyle}
+									onClick={() => {
+										removeGeoJson(el);
+									}}
+								>
+									<DeleteIcon />
+								</Button>
+							</Box>
 						</ListItem>
 						<MlGeoJsonLayer geojson={el} layerId={el.id} />
 					</>
