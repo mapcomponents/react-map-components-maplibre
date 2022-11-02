@@ -28,7 +28,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	const layerLayoutConfsRef = useRef({});
 	const initializedRef = useRef(false);
 
-	const createLayer = useCallback(() => {
+	const createLayers = useCallback(() => {
 		if (!mapHook.map) return;
 
 		initializedRef.current = true;
@@ -77,7 +77,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 				() => {
 					if (initializedRef.current && !mapHook.map?.map.getSource(layerId.current)) {
 						console.log('Recreate Layer ' + layerId.current);
-						createLayer();
+						createLayers();
 					}
 				},
 				mapHook.componentId
@@ -117,13 +117,13 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	// initial layer creation
 	useEffect(() => {
 		if (initializedRef.current) return;
-		createLayer();
-	}, [createLayer]);
+		createLayers();
+	}, [createLayers]);
 
 	// if layers get removed or added
 	useEffect(() => {
 		if (!mapHook.map || !initializedRef.current) return;
-		createLayer();
+		createLayers();
 	}, [props.layers.length, mapHook.map]);
 
 	// on layout/paint update
