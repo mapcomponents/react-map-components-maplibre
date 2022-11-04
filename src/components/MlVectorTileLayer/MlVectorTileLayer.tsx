@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import useMap from '../../hooks/useMap';
 import { LayerSpecification } from 'maplibre-gl';
+import { VectorTileSource } from 'maplibre-gl';
 
 interface MlVectorTileLayerProps {
 	mapId?: string;
 	insertBeforeLayer?: string;
 	layerId?: string;
-	sourceOptions?: any;
+	sourceOptions?: VectorTileSource;
 	url?: string;
 	layers: [LayerSpecification];
 }
@@ -92,20 +93,20 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 			if (!mapHook.map) return;
 			if (mapHook.map.map.getLayer(layer.id)) {
 				// update changed paint property
-				let layerPaintConfString = JSON.stringify(layer.paint);
+				const layerPaintConfString = JSON.stringify(layer.paint);
 
 				if (layerPaintConfString !== layerPaintConfsRef.current[layer.id]) {
-					for (let paintKey in layer.paint) {
+					for (const paintKey in layer.paint) {
 						mapHook.map.map.setPaintProperty(layer.id, paintKey, layer.paint[paintKey]);
 					}
 				}
 				layerPaintConfsRef.current[layer.id] = layerPaintConfString;
 
 				// update changed layout property
-				let layerLayoutConfString = JSON.stringify(layer.layout);
+				const layerLayoutConfString = JSON.stringify(layer.layout);
 
 				if (layerLayoutConfString !== layerLayoutConfsRef.current[layer.id]) {
-					for (let layoutKey in layer.layout) {
+					for (const layoutKey in layer.layout) {
 						mapHook.map.map.setLayoutProperty(layer.id, layoutKey, layer.layout[layoutKey]);
 					}
 				}
