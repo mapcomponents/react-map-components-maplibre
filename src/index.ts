@@ -35,7 +35,7 @@ export { default as useMapState } from "./hooks/useMapState";
 export { default as useMap } from "./hooks/useMap";
 export { default as useWms } from "./hooks/useWms.js";
 export { default as useSource } from "./hooks/useSource";
-export { default as useExportMap } from "./hooks/exportMap";
+export { default as useExportMap } from "./hooks/useExportMap";
 
 export { MapComponentsProvider } from "./contexts/MapContext";
 export { default as MapContext } from "./contexts/MapContext";

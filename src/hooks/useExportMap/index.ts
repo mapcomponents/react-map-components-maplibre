@@ -10,7 +10,7 @@ interface exportMapProps {
 	mapId?: string;
 }
 
-export default function exportMap(props: exportMapProps) {
+export default function useExportMap(props: exportMapProps) {
 	const mapHook = useMap({ mapId: props.mapId });
 
 	const _createExport = useMemo(() => {
