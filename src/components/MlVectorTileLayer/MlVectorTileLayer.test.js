@@ -1,5 +1,5 @@
 import { layerRemovalTest, sourceRemovalTest } from "../../util";
-
+import React from 'react'
 import MlVectorTileLayer from "./MlVectorTileLayer";
 import { uuid_regex } from "../../setupTests";
 
