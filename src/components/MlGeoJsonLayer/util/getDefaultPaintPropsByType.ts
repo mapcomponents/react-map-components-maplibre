@@ -14,6 +14,7 @@ const getDefaultPaintPropsByType:Function = (type:string, defaultPaintOverrides:
 			return {
 				"line-color": "rgb(203,211,2)",
 				"line-width": 5,
+				"line-blur": 0,
 			};
 		case "circle":
 		default:

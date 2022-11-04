@@ -17067,6 +17067,11 @@ ms@2.1.3, ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
+mui-color@^2.0.0-beta.2:
+  version "2.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/mui-color/-/mui-color-2.0.0-beta.2.tgz#0a3ea2aa436b3be6a24a8743eb451e662a986944"
+  integrity sha512-M6wM2t6lOKlQ8eVrF1wu4QSNq/V4jMhuD5wR9+imK8qr9fn953puXjCJNlvTXnU4N+ygxXwQZpunW4pQwWDLug==
+
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/multicast-dns-service-types/-/multicast-dns-service-types-1.1.0.tgz#899f11d9686e5e05cb91b35d5f0e63b773cfc901"
