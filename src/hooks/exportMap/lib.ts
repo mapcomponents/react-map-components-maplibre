@@ -1,4 +1,4 @@
-import { LngLatLike, Map } from 'maplibre-gl';
+import { LngLatLike, Map } from '!maplibre-gl';
 import jsPDF from 'jspdf';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
 
