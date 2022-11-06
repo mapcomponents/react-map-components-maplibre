@@ -13,6 +13,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ListIconButton from '@mui/material/ListItemButton';
+import * as turf from '@turf/turf';
 
 interface MlSketchToolProps {
 	/**
@@ -31,13 +33,15 @@ interface MlSketchToolProps {
  *
  */
 const MlSketchTool = (props: MlSketchToolProps) => {
-	const mapHook = useMap('map_1');
+	const mapHook = useMap({
+		mapId: props.mapId,
+		waitForLayer: props.insertBeforeLayer,
+	});
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [drawMode, setDrawMode] = useState('');
 	const [geometries, setGeometries] = useState([]);
 	const [activeGeometryIndex, setActiveGeometryIndex] = useState();
 	const [selectedGeoJson, setSelectedGeoJson] = useState();
-	const [hasFeatureSelected, setHasFeatureSelected] = useState(false);
 
 	const buttonStyle = {
 		minWidth: '20px',
@@ -62,14 +66,14 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	);
 
 	const clickHandler = (e) => {
-		if (!mapHook.map.map.queryRenderedFeatures(e.point, { layers: [selectedGeoJson.id] })[0]) {
+		if (!mapHook?.map?.map.queryRenderedFeatures(e.point, { layers: [selectedGeoJson.id] })[0]) {
 			setDrawMode('');
-			setHasFeatureSelected(false);
+			setSelectedGeoJson(undefined);
 		}
 	};
 
 	const removeGeoJson = (geoJson) => {
-		let tempGeometries = [...geometries];
+		const tempGeometries = [...geometries];
 		tempGeometries.splice(tempGeometries.indexOf(geoJson), 1);
 		setGeometries(tempGeometries);
 		setActiveGeometryIndex(activeGeometryIndex - 1);
@@ -78,10 +82,10 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 
 	useEffect(() => {
 		if (!geometries || !selectedGeoJson) return;
-		hasFeatureSelected
-			? mapHook.map.map.on('click', clickHandler)
-			: mapHook.map.map.off('click', clickHandler);
-	}, [selectedGeoJson, hasFeatureSelected]);
+		selectedGeoJson
+			? mapHook?.map?.map.on('click', clickHandler)
+			: mapHook?.map?.map.off('click', clickHandler);
+	}, [selectedGeoJson]);
 
 	return (
 		<>
@@ -112,19 +116,21 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					}
 					geojson={drawMode === 'edit' ? selectedGeoJson : undefined}
 					onChange={(feature: any) => {
-						let _geometries = [...geometries];
+						const _geometries = [...geometries];
 						console.log(feature, _geometries, geometries);
 						if (drawMode === 'edit') {
 							_geometries[_geometries.indexOf(selectedGeoJson)] = feature[0];
 						} else {
 							if (!activeGeometryIndex) {
-								_geometries.push(...feature);
+								const tempFeature = feature[0];
+								tempFeature.properties.id = tempFeature.id;
+
+								_geometries.push(tempFeature);
 								setActiveGeometryIndex(_geometries.length - 1);
 							} else {
 								_geometries[activeGeometryIndex] = feature;
 							}
 						}
-
 						setGeometries(_geometries);
 					}}
 				/>
@@ -134,20 +140,47 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				{geometries.map((el) => (
 					<>
 						<ListItem sx={{ display: 'flex', flexDirection: 'column' }}>
-							{el.id}
+							<ListIconButton
+								onMouseOver={() => {
+									mapHook?.map?.setFeatureState(
+										{ source: 'highlightBorder', id: el.properties.id },
+										{ hover: true }
+									);
+									console.log(el.id, 'in');
+									console.log(geometries, mapHook);
+								}}
+								onMouseLeave={() => {
+									mapHook?.map?.setFeatureState(
+										{ source: 'highlightBorder', id: el.properties.id },
+										{ hover: false }
+									);
+									console.log(el?.id, 'leave');
+								}}
+								onClick={() => {
+									const centerPoint =
+										el.geometry.type === 'Point' ? el.geometry.coordinates : turf.centerOfMass(el);
+									mapHook.map.map.setCenter(centerPoint.geometry.coordinates);
+								}}
+							>
+								{el.id}
+							</ListIconButton>
 							<br />
 							<Box flexDirection={'row'}>
 								<Button
 									sx={buttonStyle}
 									onClick={() => {
 										setSelectedGeoJson(el);
-										setHasFeatureSelected(true);
 										setDrawMode('edit');
 									}}
 								>
 									<EditIcon />
 								</Button>
-								<Button sx={buttonStyle} onClick={() => {}}>
+								<Button
+									sx={buttonStyle}
+									onClick={() => {
+										console.log(el);
+									}}
+								>
 									<SettingsIcon />
 								</Button>
 								<Button
@@ -160,15 +193,28 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 								</Button>
 							</Box>
 						</ListItem>
-						<MlGeoJsonLayer geojson={el} layerId={el.id} />
+						<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={el.id} />
 					</>
 				))}
+				{geometries?.[0] && (
+					<MlGeoJsonLayer
+						mapId={props.mapId}
+						geojson={{ type: 'FeatureCollection', features: geometries }}
+						type={'line'}
+						layerId={'highlightBorder'}
+						paint={{
+							'line-color': '#dd9900',
+							'line-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 1, 0.2],
+							'line-width': 10,
+						}}
+					/>
+				)}
 			</List>
 			{drawMode === 'edit' && <Box>Edit {selectedGeoJson?.geometry?.type}</Box>}
 		</>
 	);
 };
-
+//["case", ["boolean", ["feature-state", "hover"], false], 7
 MlSketchTool.defaultProps = {
 	mapId: undefined,
 };
