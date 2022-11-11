@@ -133,6 +133,9 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						}
 						setGeometries(_geometries);
 					}}
+					onFinish={() => {
+						setDrawMode('');
+					}}
 				/>
 			)}
 
