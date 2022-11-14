@@ -4,7 +4,6 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { Button, Slider, Typography } from '@mui/material';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-//import MlNavigationTools from '../../components/MlNavigationTools/MlNavigationTools';
 import { Feature } from '@turf/turf';
 
 const storyoptions = {
@@ -79,7 +78,7 @@ const Template = () => {
 	return (
 		<>
 			<TopToolbar>
-			<Button onClick={() => setShowComponent(!showComponent)}>
+				<Button onClick={() => setShowComponent(!showComponent)}>
 					{showComponent ? 'Route ausblenden' : 'Route einblenden'}
 				</Button>
 				{showComponent ? (
@@ -130,7 +129,7 @@ const Template = () => {
 				</Typography>
 				<Slider
 					value={state.zoom}
-					onChange={(ev,value) => {
+					onChange={(ev, value) => {
 						setState((current) => {
 							return { ...current, zoom: Number(value) };
 						});
@@ -157,7 +156,7 @@ const Template = () => {
 				</Typography>
 				<Slider
 					value={state.speed}
-					onChange={(ev,value) => {
+					onChange={(ev, value) => {
 						setState((current) => {
 							return { ...current, speed: Number(value) };
 						});
@@ -189,8 +188,7 @@ const Template = () => {
 				>
 					{state.pitch === 0 ? '3D' : '2D'}
 				</Button>
-			</TopToolbar>	
-			{/*<MlNavigationTools />*/}
+			</TopToolbar>
 		</>
 	);
 };
