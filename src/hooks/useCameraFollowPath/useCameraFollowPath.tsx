@@ -14,14 +14,21 @@ interface useCameraFollowPathProps {
 	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
 	 */
 	insertBeforeLayer?: string;
-
+	/* pause is an useRef const and is triggerd in the storie */
 	pause?: boolean;
+	/* zoom is an useRef const and is triggerd in the storie */
 	zoom?: number;
+	/* pitch is an useRef const and is triggerd in the storie */
 	pitch?: number;
+	/* speed is an useRef const and is triggerd in the storie */
 	speed?: number;
+	/* kmPerStep is an useRef const */
 	kmPerStep?: number;
+	/* route is a json file, which is defined loaded in the storie */
 	route?: any;
+	/* stepDuration is a let */
 	stepDuration?: number;
+	/* timeoutId is an useRef const */
 	timeoutId?: number;
 }
 export type { useCameraFollowPathProps };
@@ -36,14 +43,14 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	const initializedRef = useRef(false);
 	const pause = useRef<boolean | undefined>(props.pause);
 	const zoom = useRef<number | undefined>(props.zoom);
-	const pitch =useRef<number | undefined>(props.pitch);
+	const pitch = useRef<number | undefined>(props.pitch);
 	const step = useRef(1);
 	const speed = useRef<number | undefined>(props.speed);
 	const timeoutId = useRef();
 
-	var kmPerStep = props.kmPerStep || 0.01;
-	var routeDistance = turf.lineDistance(props.route);
-	var stepDuration = props.stepDuration || 70;
+	let kmPerStep = props.kmPerStep || 0.01;
+	let routeDistance = turf.lineDistance(props.route);
+	let stepDuration = props.stepDuration || 70;
 
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -59,14 +66,14 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	useEffect(() => {
 		if (!mapHook.map) return;
 		zoom.current = props.zoom;
-		if (typeof zoom.current !== "undefined" && mapHook.map.map.getZoom() !== zoom.current ) {
+		if (typeof zoom.current !== 'undefined' && mapHook.map.map.getZoom() !== zoom.current) {
 			mapHook.map.map.setZoom(zoom.current);
 		}
 	}, [mapHook.map, props.zoom]);
 	useEffect(() => {
 		if (!mapHook.map) return;
 		pitch.current = props.pitch;
-		if (typeof pitch.current !== "undefined" && pitch.current !== mapHook.map.map.getPitch()) {
+		if (typeof pitch.current !== 'undefined' && pitch.current !== mapHook.map.map.getPitch()) {
 			mapHook.map.map.setPitch(pitch.current);
 		}
 	}, [mapHook.map, props.pitch]);
@@ -97,8 +104,8 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 
 	function centerRoute() {
 		if (!mapHook.map || !props.route) return;
-		var bbox = turf.bbox(props.route);
-		var bounds: LngLatBoundsLike;
+		let bbox = turf.bbox(props.route);
+		let bounds: LngLatBoundsLike;
 		if (bbox && bbox.length > 3) {
 			bounds = [
 				[bbox[0], bbox[1]],
@@ -112,11 +119,11 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 
 		if (!pause.current) {
 			disableInteractivity();
-			if (typeof zoom.current !== "undefined" && mapHook.map.map.getZoom() !== zoom.current) {
+			if (typeof zoom.current !== 'undefined' && mapHook.map.map.getZoom() !== zoom.current) {
 				mapHook.map.map.setZoom(zoom.current);
 			}
 
-			var alongRoutelati: number[] = turf.along(props.route, step.current * kmPerStep).geometry
+			let alongRoutelati: number[] = turf.along(props.route, step.current * kmPerStep).geometry
 				.coordinates;
 
 			if (step.current * kmPerStep < routeDistance) {
@@ -129,9 +136,9 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 					duration: stepDuration,
 					essential: true,
 				});
-				if (typeof speed.current !== "undefined"){
+				if (typeof speed.current !== 'undefined') {
 					step.current = step.current + speed.current;
-				}else{
+				} else {
 					step.current++;
 				}
 				console.log('PAN MOVE');
