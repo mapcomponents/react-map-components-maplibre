@@ -59,54 +59,26 @@ const createExport = (options: createExportOptions) => {
 		style: style,
 	});
 
-	let _previewGeojson = turf.bboxPolygon([
-		options.bbox[0],
-		options.bbox[1],
-		options.bbox[2],
-		options.bbox[3],
-	]);
-	_previewGeojson = turf.transformRotate(_previewGeojson, options.bearing);
-
-	// use original unrotated bbox and bearing 0 to calculate the correct zoom value as the function always adds a padding if used on the rotated feature coordinates
 	const bboxCamera = renderMap._cameraForBoxAndBearing(
 		[options.bboxUnrotated[0], options.bboxUnrotated[1]],
 		[options.bboxUnrotated[2], options.bboxUnrotated[3]],
-		0
-	);
-	const geometryCamera = renderMap._cameraForBoxAndBearing(
-		_previewGeojson.geometry.coordinates[0][0] as LngLatLike,
-		_previewGeojson.geometry.coordinates[0][2] as LngLatLike,
 		options.bearing
 	);
-	geometryCamera.zoom = bboxCamera.zoom;
 
-	renderMap._fitInternal(geometryCamera);
+	renderMap._fitInternal(bboxCamera);
 	return new Promise<createExportResolverParams>((resolve) => {
+		console.log('before idle');
+
 		renderMap.once('idle', function () {
-			if (renderMap.getLayer('pdfPreviewGeojsonOutline')) {
-				renderMap.setLayoutProperty('pdfPreviewGeojsonOutline', 'visibility', 'none');
-			}
-			if (renderMap.getLayer('pdfPreviewGeojson')) {
-				renderMap.setLayoutProperty('pdfPreviewGeojson', 'visibility', 'none');
-			}
-			if (renderMap.getLayer('pdfPreviewGeojsonResizeHandle')) {
-				renderMap.setLayoutProperty('pdfPreviewGeojsonResizeHandle', 'visibility', 'none');
-			}
-			if (renderMap.getLayer('pdfPreviewGeojsonRotationHandle')) {
-				renderMap.setLayoutProperty('pdfPreviewGeojsonRotationHandle', 'visibility', 'none');
-			}
+			const params: createExportResolverParams = {
+				...options,
+				renderMap,
+				hiddenContainer,
+				createPdf: (_options?: createJsPdfOptions) =>
+					createJsPdf({ ...options, renderMap, hiddenContainer, ..._options }),
+			};
 
-			renderMap.once('idle', function () {
-				const params: createExportResolverParams = {
-					...options,
-					renderMap,
-					hiddenContainer,
-					createPdf: (_options?: createJsPdfOptions) =>
-						createJsPdf({ ...options, renderMap, hiddenContainer, ..._options }),
-				};
-
-				resolve(params);
-			});
+			resolve(params);
 		});
 	});
 };

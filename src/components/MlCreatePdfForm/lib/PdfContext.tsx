@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, MutableRefObject } from 'react';
 import templates from './pdf.templates';
-import {  Feature } from '@turf/turf';
+import {  AllGeoJSON } from '@turf/turf';
 
 interface PdfContextInterface {
 	format: string;
@@ -9,7 +9,7 @@ interface PdfContextInterface {
 	setQuality: (quality: string) => void;
 	orientation: string;
 	setOrientation: (orientation: string) => void;
-	geojsonRef: MutableRefObject<Feature | undefined>;
+	geojsonRef: MutableRefObject<AllGeoJSON | undefined>;
 	template: { width: number; height: number };
 }
 

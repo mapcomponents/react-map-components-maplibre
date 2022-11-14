@@ -7,9 +7,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
+import Moveable from 'react-moveable';
 
 import TopToolbar from '../../ui_components/TopToolbar';
 
+import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 const PaperComponent = (props: object) => {
 	return (
@@ -49,6 +51,8 @@ export default storyoptions;
 
 const Template = () => {
 	const [showCreatePdfForm, setShowCreatePdfForm] = useState(false);
+	const targetRef = React.useRef<HTMLDivElement>(null);
+	const containerRef = React.useRef<HTMLDivElement>(document.querySelector('.map_container'));
 
 	return (
 		<>

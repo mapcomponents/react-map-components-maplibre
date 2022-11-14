@@ -52,6 +52,11 @@ export default function PdfForm(props:PdfFormProps) {
 	const mapExporter = useExportMap({ mapId: props.mapId });
 
 	const createPdfHandler = useCallback(() => {
+		console.log(pdfContext.template ,
+			pdfContext.format ,
+			pdfContext.orientation ,
+			pdfContext.geojsonRef?.current?.bbox ,
+			pdfContext.geojsonRef?.current)
 		if (
 			mapHook.map &&
 			mapExporter.createExport &&
@@ -63,6 +68,8 @@ export default function PdfForm(props:PdfFormProps) {
 		) {
 			const bbox = turf.bbox(pdfContext.geojsonRef.current);
 
+			console.log('TEST');
+			
 			mapExporter
 				.createExport({
 					width: pdfContext.template.width,
