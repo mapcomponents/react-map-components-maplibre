@@ -26,7 +26,7 @@ interface useCameraFollowPathProps {
 	kmPerStep?: number;
 	/* route is a json file, which is defined loaded in the storie */
 	route?: any;
-	/* stepDuration is a let */
+	/* stepDuration is a const */
 	stepDuration?: number;
 	/* timeoutId is an useRef const */
 	timeoutId?: number;
@@ -48,9 +48,9 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	const speed = useRef<number | undefined>(props.speed);
 	const timeoutId = useRef();
 
-	let kmPerStep = props.kmPerStep || 0.01;
-	let routeDistance = turf.lineDistance(props.route);
-	let stepDuration = props.stepDuration || 70;
+	const kmPerStep = props.kmPerStep || 0.01;
+	const routeDistance = turf.lineDistance(props.route);
+	const stepDuration = props.stepDuration || 70;
 
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -104,7 +104,7 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 
 	function centerRoute() {
 		if (!mapHook.map || !props.route) return;
-		let bbox = turf.bbox(props.route);
+		const bbox = turf.bbox(props.route);
 		let bounds: LngLatBoundsLike;
 		if (bbox && bbox.length > 3) {
 			bounds = [
@@ -123,7 +123,7 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 				mapHook.map.map.setZoom(zoom.current);
 			}
 
-			let alongRoutelati: number[] = turf.along(props.route, step.current * kmPerStep).geometry
+			const alongRoutelati: number[] = turf.along(props.route, step.current * kmPerStep).geometry
 				.coordinates;
 
 			if (step.current * kmPerStep < routeDistance) {
