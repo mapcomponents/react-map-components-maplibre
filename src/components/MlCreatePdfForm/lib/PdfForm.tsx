@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 
 import useMap from '../../../hooks/useMap';
-import exportMap from '../../../hooks/exportMap';
-import { createPdfResolverParams } from '../../../hooks/exportMap/lib';
+import exportMap from '../../../hooks/useExportMap';
+import { createPdfResolverParams } from '../../../hooks/useExportMap/lib';
 
 import * as turf from '@turf/turf';
 
