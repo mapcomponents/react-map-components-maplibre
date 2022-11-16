@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext, useMemo } from 'react';
+import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import PdfContext from './PdfContext';
 import Moveable from 'react-moveable';
@@ -7,8 +7,15 @@ import { Polygon } from '@turf/turf';
 import { Feature } from 'maplibre-gl';
 import useMap from '../../../hooks/useMap';
 import useMapState from '../../../hooks/useMapState';
+import { Coordinate } from 'mapbox-gl';
 
-type Props = {};
+type Props = {
+	geojsonRef: any;
+	orientation: string;
+	width: number;
+	height: number;
+	topLeft: number[];
+};
 
 interface geojsonProps {
 	center: { lng: number; lat: number };
@@ -17,32 +24,36 @@ interface geojsonProps {
 	geojson: Feature<Polygon> | undefined;
 }
 
-function getRotationAngle(target) 
-{
-  const obj = window.getComputedStyle(target, null);
-  const matrix = obj.getPropertyValue('-webkit-transform') || 
-    obj.getPropertyValue('-moz-transform') ||
-    obj.getPropertyValue('-ms-transform') ||
-    obj.getPropertyValue('-o-transform') ||
-    obj.getPropertyValue('transform');
+function getRotationAngle(target) {
+	const obj = window.getComputedStyle(target, null);
+	const matrix =
+		obj.getPropertyValue('-webkit-transform') ||
+		obj.getPropertyValue('-moz-transform') ||
+		obj.getPropertyValue('-ms-transform') ||
+		obj.getPropertyValue('-o-transform') ||
+		obj.getPropertyValue('transform');
 
-  let angle = 0; 
+	let angle = 0;
 
-  if (matrix !== 'none') 
-  {
-    const values = matrix.split('(')[1].split(')')[0].split(',');
-    const a = values[0];
-    const b = values[1];
-    angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-  } 
+	if (matrix !== 'none') {
+		const values = matrix.split('(')[1].split(')')[0].split(',');
+		const a = values[0];
+		const b = values[1];
+		angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+	}
 
-  return (angle < 0) ? angle +=360 : angle;
+	return angle < 0 ? (angle += 360) : angle;
+}
+function getTransformOriginInPixels(elem) {
+	var style = getComputedStyle(elem);
+	return style.transformOrigin.split(' ').map(function (e) {
+		return +e.slice(0, -2);
+	});
 }
 
 function calcElemTransformedPoint(elem, point) {
 	var style = getComputedStyle(elem);
-	var transformOrigin = style.transformOrigin.split(' ').map(function (e) {
-		// Remove 'px' and cast to number
+	const transformOrigin = style.transformOrigin.split(' ').map(function (e) {
 		return +e.slice(0, -2);
 	});
 
@@ -56,36 +67,96 @@ function calcElemTransformedPoint(elem, point) {
 		p[0] * matrix.b + p[1] * matrix.d + matrix.f + transformOrigin[1],
 	];
 }
-const width = '210px';
-const height = '297px';
+function getTransformTranslate(transform: string) {
+	if (transform.indexOf('translate') === -1) return false;
 
+	let _transformParts = transform.split('translate(');
+	_transformParts = _transformParts[1].split('px)')[0].split('px, ');
+
+	return _transformParts;
+}
+function getTransformRotate(transform: string) {
+	if (transform.indexOf('rotate') === -1) return false;
+
+	let _transformParts = transform.split('rotate(');
+	_transformParts = _transformParts[1].split('deg)')[0];
+
+	return _transformParts;
+}
+function getTransformScale(transform: string) {
+	if (transform.indexOf('scale') === -1) return false;
+
+	let _transformParts = transform.split('scale(');
+	_transformParts = _transformParts[1].split(')')[0].split(', ');
+
+	return _transformParts;
+}
 export default function PdfPreview(props: Props) {
-	const mapState = useMapState({mapId: props.mapId, watch:{layers:false, viewport:true}})
+	const mapState = useMapState({ mapId: props.mapId, watch: { layers: false, viewport: true } });
 	const targetRef = useRef<HTMLDivElement>(null);
 	const moveableRef = useRef<HTMLDivElement>(null);
-	const [transform, setTransform] = useState('translate(452.111px, 15.6148px)');
+	//const [transform, setTransform] = useState('translate(452.111px, 15.6148px)');
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
 
+	const transformOrigin = useMemo(() => {
+		console.log('transformOrigin');
+
+		if (props.orientation === 'portrait') {
+			return [props.width / 2, props.height / 2];
+		} else {
+			return [props.height / 2, props.width / 2];
+		}
+	}, [props.orientation, props.width, props.height]);
+
+	const transform = useMemo(() => {
+		if (!mapHook.map) return 'none';
+
+		const topLeftInPixels = mapHook.map.map.project(props.topLeft);
+
+		//const scale = parseFloat(props.transformScale[0])*(mapState.viewport.zoom/14);
+		const y = mapHook.map._container.clientHeight / 2;
+		const left = mapHook.map.unproject([0, y]);
+		const right = mapHook.map.unproject([100, y]);
+		const maxMeters = left.distanceTo(right);
+		const scale = parseFloat(props.transformScale[0]) * (100 / maxMeters);
+		const transform = `translate(${topLeftInPixels.x - transformOrigin[0]}px,${
+			topLeftInPixels.y - transformOrigin[1]
+		}px) rotate(${props.transformRotate - mapState.viewport.bearing}deg) scale(${scale},${scale})`;
+		targetRef.current.style.transform = transform;
+
+		return transform;
+	}, [
+		mapHook.map,
+		props.transformScale,
+		props.transformRotate,
+		props.topLeft,
+		mapState.viewport,
+		transformOrigin,
+	]);
+
+	useEffect(() => {
+		moveableRef.current?.updateTarget();
+	}, [transform]);
+
 	const geojson = useMemo(() => {
 		if (targetRef.current && mapHook.map) {
+			console.log('geoJsonMemo', transformOrigin, transform);
 			// apply orientation
+			let _width = props.width;
+			let _height = props.height;
 			if (props.orientation === 'portrait') {
-				targetRef.current.style.width = width;
-				targetRef.current.style.height = height;
+				targetRef.current.style.width = props.width + 'px';
+				targetRef.current.style.height = props.height + 'px';
 			} else {
-				targetRef.current.style.width = height;
-				targetRef.current.style.height = width;
+				targetRef.current.style.width = props.height + 'px';
+				targetRef.current.style.height = props.width + 'px';
+				_width = props.height;
+				_height = props.width;
 			}
 			moveableRef.current?.updateTarget();
-			console.log(targetRef.current);
-
-			const style = window.getComputedStyle(targetRef.current);
-
-			const _width = parseInt(style.width.replace('px', ''));
-			const _height = parseInt(style.height.replace('px', ''));
 
 			let topLeft = mapHook.map.unproject(calcElemTransformedPoint(targetRef.current, [0, 0]));
 			let topRight = mapHook.map.unproject(
@@ -112,18 +183,22 @@ export default function PdfPreview(props: Props) {
 						],
 					],
 				},
-				properties: {bearing:getRotationAngle(targetRef.current)},
+				properties: { bearing: getRotationAngle(targetRef.current) },
 			};
 			props.geojsonRef.current = _geoJson;
 			return _geoJson;
 		}
 
 		return undefined;
-	}, [mapHook, transform, props.orientation, props.geojsonRef, mapState]);
+	}, [mapHook, transform, props.orientation, props.geojsonRef, mapState, targetRef.current]);
 
 	return ReactDOM.createPortal(
 		<>
-			<div className="target" ref={targetRef} style={{ transform: transform }}></div>
+			<div
+				className="target"
+				ref={targetRef}
+				style={{ transform: transform, transformOrigin: 'center center' }}
+			></div>
 			<Moveable
 				ref={moveableRef}
 				target={targetRef}
@@ -133,27 +208,68 @@ export default function PdfPreview(props: Props) {
 				/* draggable */
 				draggable={true}
 				onDrag={(e) => {
-					console.log(e.transform);
+					if (mapHook.map) {
+						//const matrix = new DOMMatrixReadOnly(e.transform);
+						//let _topLeft = mapHook.map?.map.unproject([matrix.m41, matrix.m42]);
+
+						let _transformParts = e.transform.split('translate(');
+						_transformParts = _transformParts[1].split('px)')[0].split('px, ');
+						let _topLeft = mapHook.map?.map.unproject([
+							parseInt(_transformParts[0]) + transformOrigin[0],
+							parseInt(_transformParts[1]) + transformOrigin[1],
+						]);
+						props.setTopLeft([_topLeft.lng, _topLeft.lat]);
+					}
 					//e.target.style.transform = e.transform;
-					setTransform(e.transform);
+					//setTransform(e.transform);
 				}}
 				/* Only one of resizable, scalable, warpable can be used. */
 				/* scalable */
 				/* Only one of resizable, scalable, warpable can be used. */
 				scalable={true}
 				onScale={(e) => {
-					console.log(e.drag.transform);
 					//e.target.style.transform = e.drag.transform;
-					setTransform(e.drag.transform);
+					//setTransformScale(e.drag.transform);
+					let _transformParts = e.drag.transform.split('scale(');
+					_transformParts = _transformParts[1].split(')')[0].split(', ');
+
+					const y = mapHook.map._container.clientHeight / 2;
+					const left = mapHook.map.unproject([0, y]);
+					const right = mapHook.map.unproject([100, y]);
+					const maxMeters = left.distanceTo(right);
+					const scale = parseFloat(_transformParts[0]) * (maxMeters / 100);
+
+					props.setTransformScale([scale, scale]);
 				}}
 				/* rotatable */
 				rotatable={true}
 				onRotate={(e) => {
-					console.log(e.drag.transform);
+					//const matrix = new DOMMatrixReadOnly(e.transform);
+					//console.log(matrix);
+
+					let _transformParts = e.drag.transform.split('rotate(');
+					_transformParts = _transformParts[1].split('deg)')[0];
+
 					//e.target.style.transform = e.drag.transform;
-					setTransform(e.drag.transform);
+					props.setTransformRotate(parseFloat(_transformParts) + mapState.viewport.bearing);
 				}}
 			/>
+			{props.topLeft && (
+				<MlGeoJsonLayer
+					//layerId="pdfPreviewGeojsonRotationHandle"
+					paint={{
+						'circle-radius': 10,
+						//'circle-opacity': 0,
+						'circle-color': '#ff2323',
+					}}
+					type="circle"
+					geojson={{
+						type: 'Feature',
+						geometry: { type: 'Point', coordinates: props.topLeft },
+						properties: {},
+					}}
+				/>
+			)}
 			{geojson && (
 				<MlGeoJsonLayer
 					//layerId="pdfPreviewGeojsonRotationHandle"

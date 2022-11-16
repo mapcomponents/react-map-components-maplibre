@@ -1,6 +1,6 @@
-import React, { useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo, useCallback, useState } from 'react';
 import PdfContext from './PdfContext';
-import PdfPreview from './PdfPreview'
+import PdfPreview from './PdfPreview';
 import {
 	FormControl,
 	MenuItem,
@@ -41,23 +41,28 @@ interface PdfFormProps {
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
-	onCreatePdf?: (options:createPdfResolverParams) => createPdfResolverParams;
+	onCreatePdf?: (options: createPdfResolverParams) => createPdfResolverParams;
 }
 
-export default function PdfForm(props:PdfFormProps) {
+export default function PdfForm(props: PdfFormProps) {
 	const pdfContext = useContext(PdfContext);
 	const mapHook = useMap({
 		// eslint-disable-next-line react/prop-types
 		mapId: props.mapId,
 	});
 	const mapExporter = useExportMap({ mapId: props.mapId });
+	const [topLeft, setTopLeft] = useState([7.07483959721597, 50.74128850750748]);
+	const [transformRotate, setTransformRotate] = useState(0);
+	const [transformScale, setTransformScale] = useState([1, 1]);
 
 	const createPdfHandler = useCallback(() => {
-		console.log(pdfContext.template ,
-			pdfContext.format ,
-			pdfContext.orientation ,
-			pdfContext.geojsonRef?.current?.bbox ,
-			pdfContext.geojsonRef?.current)
+		console.log(
+			pdfContext.template,
+			pdfContext.format,
+			pdfContext.orientation,
+			pdfContext.geojsonRef?.current?.bbox,
+			pdfContext.geojsonRef?.current
+		);
 		if (
 			mapHook.map &&
 			mapExporter.createExport &&
@@ -70,7 +75,7 @@ export default function PdfForm(props:PdfFormProps) {
 			const bbox = turf.bbox(pdfContext.geojsonRef.current);
 
 			console.log('TEST');
-			
+
 			mapExporter
 				.createExport({
 					width: pdfContext.template.width,
@@ -164,7 +169,18 @@ export default function PdfForm(props:PdfFormProps) {
 					PDF erstellen
 				</Button>
 			</FormControl>
-			<PdfPreview orientation={pdfContext.orientation} geojsonRef={pdfContext.geojsonRef} />
+			<PdfPreview
+				orientation={pdfContext.orientation}
+				setTopLeft={setTopLeft}
+				topLeft={topLeft}
+				setTransformRotate={setTransformRotate}
+				transformRotate={transformRotate}
+				setTransformScale={setTransformScale}
+				transformScale={transformScale}
+				geojsonRef={pdfContext.geojsonRef}
+				width={210}
+				height={297}
+			/>
 		</>
 	);
 }
