@@ -61,7 +61,6 @@ const height = '297px';
 
 export default function PdfPreview(props: Props) {
 	const mapState = useMapState({mapId: props.mapId, watch:{layers:false, viewport:true}})
-	const pdfContext = useContext(PdfContext);
 	const targetRef = useRef<HTMLDivElement>(null);
 	const moveableRef = useRef<HTMLDivElement>(null);
 	const [transform, setTransform] = useState('translate(452.111px, 15.6148px)');
@@ -73,7 +72,7 @@ export default function PdfPreview(props: Props) {
 	const geojson = useMemo(() => {
 		if (targetRef.current && mapHook.map) {
 			// apply orientation
-			if (pdfContext.orientation === 'portrait') {
+			if (props.orientation === 'portrait') {
 				targetRef.current.style.width = width;
 				targetRef.current.style.height = height;
 			} else {
@@ -115,12 +114,12 @@ export default function PdfPreview(props: Props) {
 				},
 				properties: {bearing:getRotationAngle(targetRef.current)},
 			};
-			pdfContext.geojsonRef.current = _geoJson;
+			props.geojsonRef.current = _geoJson;
 			return _geoJson;
 		}
 
 		return undefined;
-	}, [mapHook, transform, pdfContext.orientation, pdfContext.geojsonRef, mapState]);
+	}, [mapHook, transform, props.orientation, props.geojsonRef, mapState]);
 
 	return ReactDOM.createPortal(
 		<>

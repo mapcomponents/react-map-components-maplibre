@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, useCallback } from 'react';
 import PdfContext from './PdfContext';
+import PdfPreview from './PdfPreview'
 import {
 	FormControl,
 	MenuItem,
@@ -163,6 +164,7 @@ export default function PdfForm(props:PdfFormProps) {
 					PDF erstellen
 				</Button>
 			</FormControl>
+			<PdfPreview orientation={pdfContext.orientation} geojsonRef={pdfContext.geojsonRef} />
 		</>
 	);
 }
