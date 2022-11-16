@@ -1,6 +1,11 @@
 # Change Log
 
 
+## [v0.1.61] - 2022-11-16
+
+### Added
+- 63f11bc: add useCameraFollowPath
+
 ## [v0.1.60] - 2022-11-04
 
 ### Fixed
