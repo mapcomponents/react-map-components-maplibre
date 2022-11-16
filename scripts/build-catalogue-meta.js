@@ -4,7 +4,7 @@ const fs = require("fs");
 let options = {};
 let mc_meta = {};
 
-glob("src/components/**/*.meta.json", options, function (er, files) {
+glob("src/**/**/*.meta.json", options, function (er, files) {
   console.log(files);
 
   for (var i = 0, len = files.length; i < len; i++) {
