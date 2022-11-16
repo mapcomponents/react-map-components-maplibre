@@ -40,10 +40,10 @@ interface PdfFormProps {
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
-	onCreatePdf?: (options:createPdfResolverParams) => createPdfResolverParams;
+	onCreatePdf?: (options: createPdfResolverParams) => createPdfResolverParams;
 }
 
-export default function PdfForm(props:PdfFormProps) {
+export default function PdfForm(props: PdfFormProps) {
 	const pdfContext = useContext(PdfContext);
 	const mapHook = useMap({
 		// eslint-disable-next-line react/prop-types
