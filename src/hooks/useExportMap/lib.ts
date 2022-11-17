@@ -62,7 +62,7 @@ const createExport = (options: createExportOptions) => {
 	const bboxCamera = renderMap._cameraForBoxAndBearing(
 		[options.bboxUnrotated[0], options.bboxUnrotated[1]],
 		[options.bboxUnrotated[2], options.bboxUnrotated[3]],
-		options.bearing
+		options.bearing-options.map.map.getBearing()
 	);
 
 	renderMap._fitInternal(bboxCamera);

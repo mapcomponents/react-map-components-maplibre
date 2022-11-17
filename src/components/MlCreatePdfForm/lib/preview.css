@@ -106,3 +106,9 @@
   border-top-color: green!important;
   border-left-color: green!important;
 }
+.MuiDialog-root{
+  pointer-events: none;
+}
+.MuiDialog-root .react-draggable{
+  pointer-events: all;
+}

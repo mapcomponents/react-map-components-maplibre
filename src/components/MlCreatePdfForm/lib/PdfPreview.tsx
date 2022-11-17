@@ -44,19 +44,10 @@ function getRotationAngle(target) {
 
 	return angle < 0 ? (angle += 360) : angle;
 }
-function getTransformOriginInPixels(elem) {
-	var style = getComputedStyle(elem);
-	return style.transformOrigin.split(' ').map(function (e) {
-		return +e.slice(0, -2);
-	});
-}
 
-function calcElemTransformedPoint(elem, point) {
-	var style = getComputedStyle(elem);
-	const transformOrigin = style.transformOrigin.split(' ').map(function (e) {
-		return +e.slice(0, -2);
-	});
+function calcElemTransformedPoint(elem, point, transformOrigin) {
 
+	var style = getComputedStyle(elem);
 	var p = [point[0] - transformOrigin[0], point[1] - transformOrigin[1]];
 	// Matrix
 	const matrix = new DOMMatrixReadOnly(style.transform);
@@ -101,8 +92,18 @@ export default function PdfPreview(props: Props) {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
+	useEffect(() => {
+		if (!mapHook.map) return;
+
+		mapHook.map.map.setPitch(0);
+		let _maxPitch = mapHook.map.map.getMaxPitch();
+		mapHook.map.map.setMaxPitch(0);
+		return () => {
+		mapHook.map.map.setMaxPitch(_maxPitch);
+		}
+	}, [mapHook.map])
+
 	const transformOrigin = useMemo(() => {
-		console.log('transformOrigin');
 
 		if (props.orientation === 'portrait') {
 			return [props.width / 2, props.height / 2];
@@ -117,11 +118,12 @@ export default function PdfPreview(props: Props) {
 		const topLeftInPixels = mapHook.map.map.project(props.topLeft);
 
 		//const scale = parseFloat(props.transformScale[0])*(mapState.viewport.zoom/14);
-		const y = mapHook.map._container.clientHeight / 2;
-		const left = mapHook.map.unproject([0, y]);
-		const right = mapHook.map.unproject([100, y]);
+		const x = topLeftInPixels.x;
+		const y = topLeftInPixels.y;
+		const left = mapHook.map.unproject([x, y]);
+		const right = mapHook.map.unproject([x+transformOrigin[0], y]);
 		const maxMeters = left.distanceTo(right);
-		const scale = parseFloat(props.transformScale[0]) * (100 / maxMeters);
+		const scale = parseFloat(props.transformScale[0]) * (transformOrigin[0] / maxMeters);
 		const transform = `translate(${topLeftInPixels.x - transformOrigin[0]}px,${
 			topLeftInPixels.y - transformOrigin[1]
 		}px) rotate(${props.transformRotate - mapState.viewport.bearing}deg) scale(${scale},${scale})`;
@@ -143,7 +145,6 @@ export default function PdfPreview(props: Props) {
 
 	const geojson = useMemo(() => {
 		if (targetRef.current && mapHook.map) {
-			console.log('geoJsonMemo', transformOrigin, transform);
 			// apply orientation
 			let _width = props.width;
 			let _height = props.height;
@@ -158,15 +159,15 @@ export default function PdfPreview(props: Props) {
 			}
 			moveableRef.current?.updateTarget();
 
-			let topLeft = mapHook.map.unproject(calcElemTransformedPoint(targetRef.current, [0, 0]));
+			let topLeft = mapHook.map.unproject(calcElemTransformedPoint(targetRef.current, [0, 0], transformOrigin));
 			let topRight = mapHook.map.unproject(
-				calcElemTransformedPoint(targetRef.current, [_width, 0])
+				calcElemTransformedPoint(targetRef.current, [_width, 0], transformOrigin)
 			);
 			let bottomLeft = mapHook.map.unproject(
-				calcElemTransformedPoint(targetRef.current, [0, _height])
+				calcElemTransformedPoint(targetRef.current, [0, _height], transformOrigin)
 			);
 			let bottomRight = mapHook.map.unproject(
-				calcElemTransformedPoint(targetRef.current, [_width, _height])
+				calcElemTransformedPoint(targetRef.current, [_width, _height], transformOrigin)
 			);
 			const _geoJson = {
 				type: 'Feature',
@@ -190,7 +191,7 @@ export default function PdfPreview(props: Props) {
 		}
 
 		return undefined;
-	}, [mapHook, transform, props.orientation, props.geojsonRef, mapState, targetRef.current]);
+	}, [mapHook, transform, props.orientation, props.geojsonRef, mapState, targetRef.current, transformOrigin]);
 
 	return ReactDOM.createPortal(
 		<>
