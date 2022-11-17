@@ -1,16 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
-
+import React from 'react';
 import MlGeoJsonLayer from './MlGeoJsonLayer';
-
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
 import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
-
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
+import { GeoJSONObject } from '@turf/turf';
 
-
-console.log();
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
 	component: MlGeoJsonLayer,
@@ -21,16 +17,20 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
+interface TemplateProps {
+	geojson: GeoJSONObject;
+	mapId: string;
+	type: string;
+}
 
-
+const Template = (props: TemplateProps) => {
 	return (
 		<>
 			<LineStyler {...props} />
 		</>
 	);
 };
-const PolygonTemplate = (props) => {
+const PolygonTemplate = (props: TemplateProps) => {
 	return (
 		<>
 			<PolygonStyler {...props} />
