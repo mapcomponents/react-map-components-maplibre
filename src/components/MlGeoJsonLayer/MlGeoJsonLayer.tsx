@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import useLayer from '../../hooks/useLayer';
 import useMap from '../../hooks/useMap';
