@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import Button from '@mui/material/Button';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import PentagonIcon from '@mui/icons-material/Pentagon';
@@ -13,8 +12,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ListIconButton from '@mui/material/ListItemButton';
+import ListItemButton from '@mui/material/ListItemButton';
 import * as turf from '@turf/turf';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 interface MlSketchToolProps {
 	/**
@@ -42,9 +44,11 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	const [geometries, setGeometries] = useState([]);
 	const [activeGeometryIndex, setActiveGeometryIndex] = useState();
 	const [selectedGeoJson, setSelectedGeoJson] = useState();
+	const [hoveredGeometry, setHoveredGeometry] = useState();
+	//TODO: set States reduzieren, mehrere States als ein Object zusammenfassen um rerenders zu reduzieren
 
 	const buttonStyle = {
-		minWidth: '20px',
+		/*minWidth: '20px',
 		minHeight: '20px',
 		width: mediaIsMobile ? '50px' : '30px',
 		height: mediaIsMobile ? '50px' : '30px',
@@ -55,7 +59,8 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		':hover': {
 			backgroundColor: '#515151',
 		},
-		color: '#ececec',
+		color: '#ececec',*/
+		...props.buttonStyleOverride,
 	};
 
 	const buttonClickHandler = useCallback(
@@ -65,13 +70,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		[drawMode]
 	);
 
-	const clickHandler = (e) => {
-		if (!mapHook?.map?.map.queryRenderedFeatures(e.point, { layers: [selectedGeoJson.id] })[0]) {
-			setDrawMode('');
-			setSelectedGeoJson(undefined);
-		}
-	};
-
 	const removeGeoJson = (geoJson) => {
 		const tempGeometries = [...geometries];
 		tempGeometries.splice(tempGeometries.indexOf(geoJson), 1);
@@ -80,13 +78,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		console.log(geometries, activeGeometryIndex);
 	};
 
-	useEffect(() => {
-		if (!geometries || !selectedGeoJson) return;
-		selectedGeoJson
-			? mapHook?.map?.map.on('click', clickHandler)
-			: mapHook?.map?.map.off('click', clickHandler);
-	}, [selectedGeoJson]);
-
 	return (
 		<>
 			<Box
@@ -94,15 +85,23 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					zIndex: 104,
 				}}
 			>
-				<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_point')}>
-					<PanoramaFishEyeIcon />
-				</Button>
-				<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_line_string')}>
-					<ShowChartIcon />
-				</Button>
-				<Button sx={buttonStyle} onClick={() => buttonClickHandler('custom_polygon')}>
-					<PentagonIcon />
-				</Button>
+				<ButtonGroup>
+					<Tooltip title={'point'}>
+						<IconButton sx={buttonStyle} onClick={() => buttonClickHandler('draw_point')}>
+							<PanoramaFishEyeIcon />
+						</IconButton>
+					</Tooltip>
+					<Tooltip title={'Line'}>
+						<IconButton sx={buttonStyle} onClick={() => buttonClickHandler('draw_line_string')}>
+							<ShowChartIcon />
+						</IconButton>
+					</Tooltip>
+					<Tooltip title={'Polygon'}>
+						<IconButton sx={buttonStyle} onClick={() => buttonClickHandler('custom_polygon')}>
+							<PentagonIcon />
+						</IconButton>
+					</Tooltip>
+				</ButtonGroup>
 			</Box>
 
 			{drawMode && (
@@ -128,13 +127,17 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 								_geometries.push(tempFeature);
 								setActiveGeometryIndex(_geometries.length - 1);
 							} else {
-								_geometries[activeGeometryIndex] = feature;
+								console.log(feature);
+								_geometries[activeGeometryIndex] = feature[0];
 							}
 						}
 						setGeometries(_geometries);
 					}}
 					onFinish={() => {
 						setDrawMode('');
+						setActiveGeometryIndex(undefined);
+						setSelectedGeoJson(undefined);
+						console.log('finish');
 					}}
 				/>
 			)}
@@ -142,34 +145,28 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			<List sx={{ zIndex: 105 }}>
 				{geometries.map((el) => (
 					<>
-						<ListItem sx={{ display: 'flex', flexDirection: 'column' }}>
-							<ListIconButton
+						<ListItem key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
+							<ListItemButton
 								onMouseOver={() => {
-									mapHook?.map?.setFeatureState(
-										{ source: 'highlightBorder', id: el.properties.id },
-										{ hover: true }
-									);
-									console.log(el.id, 'in');
-									console.log(geometries, mapHook);
+									setHoveredGeometry(el);
+									console.log(el);
 								}}
 								onMouseLeave={() => {
-									mapHook?.map?.setFeatureState(
-										{ source: 'highlightBorder', id: el.properties.id },
-										{ hover: false }
-									);
-									console.log(el?.id, 'leave');
+									setHoveredGeometry(undefined);
 								}}
 								onClick={() => {
-									const centerPoint =
-										el.geometry.type === 'Point' ? el.geometry.coordinates : turf.centerOfMass(el);
-									mapHook.map.map.setCenter(centerPoint.geometry.coordinates);
+									mapHook?.map?.map.setCenter(
+										el.geometry.type === 'Point'
+											? el.geometry.coordinates
+											: turf.centerOfMass(el).geometry.coordinates
+									);
 								}}
 							>
 								{el.id}
-							</ListIconButton>
+							</ListItemButton>
 							<br />
 							<Box flexDirection={'row'}>
-								<Button
+								<IconButton
 									sx={buttonStyle}
 									onClick={() => {
 										setSelectedGeoJson(el);
@@ -177,37 +174,37 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									}}
 								>
 									<EditIcon />
-								</Button>
-								<Button
+								</IconButton>
+								<IconButton
 									sx={buttonStyle}
 									onClick={() => {
 										console.log(el);
 									}}
 								>
 									<SettingsIcon />
-								</Button>
-								<Button
+								</IconButton>
+								<IconButton
 									sx={buttonStyle}
 									onClick={() => {
 										removeGeoJson(el);
 									}}
 								>
 									<DeleteIcon />
-								</Button>
+								</IconButton>
 							</Box>
 						</ListItem>
 						<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={el.id} />
 					</>
 				))}
-				{geometries?.[0] && (
+				{hoveredGeometry && (
 					<MlGeoJsonLayer
 						mapId={props.mapId}
-						geojson={{ type: 'FeatureCollection', features: geometries }}
+						geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
 						type={'line'}
 						layerId={'highlightBorder'}
 						paint={{
 							'line-color': '#dd9900',
-							'line-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 1, 0.2],
+							'line-opacity': 0.4,
 							'line-width': 10,
 						}}
 					/>
@@ -220,5 +217,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 //["case", ["boolean", ["feature-state", "hover"], false], 7
 MlSketchTool.defaultProps = {
 	mapId: undefined,
+	buttonStyleOverride: {},
 };
 export default MlSketchTool;
