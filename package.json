@@ -1,6 +1,6 @@
 {
   "name": "@mapcomponents/react-maplibre",
-  "version": "0.1.59",
+  "version": "0.1.61",
   "main": "index.js",
   "license": "MIT",
   "module": "dist/index.esm.js",
@@ -29,6 +29,7 @@
     "@mui/styles": "^5.5.3",
     "@turf/turf": "^6.5.0",
     "d3": "^7.4.4",
+    "deck.gl": "^8.8.13",
     "jspdf": "^2.5.1",
     "maplibre-gl": "^2.1.7",
     "material-ui-color-picker": "^3.5.1",
