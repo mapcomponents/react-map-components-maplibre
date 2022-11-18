@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./MlFeatureEditor.css";
+import React, { useState, useEffect, useRef } from 'react';
+import './MlFeatureEditor.css';
 
-import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import CustomPolygonMode from "./custom-polygon-mode.js";
-import CustomSelectMode from "./custom-select-mode.js";
-import CustomDirectSelectMode from "./custom-direct-select-mode.js";
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import CustomPolygonMode from './custom-polygon-mode.js';
+import CustomSelectMode from './custom-select-mode.js';
+import CustomDirectSelectMode from './custom-direct-select-mode.js';
 
-import useMap from "../../hooks/useMap";
+import useMap from '../../hooks/useMap';
 
 interface MlFeatureEditorProps {
 	/**
@@ -28,6 +28,11 @@ interface MlFeatureEditorProps {
 	 * First parameter is the new GeoJson feature.
 	 */
 	onChange?: Function;
+	/**
+	 * Callback function that is called each time the GeoJson data within has been finished within MlFeatureEditor.
+	 * First parameter is the new GeoJson feature.
+	 */
+	onFinish?: Function;
 	/**
 	 * Feature editor mode:
 	 * - "custom_select" edit features
@@ -51,10 +56,15 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 	const drawToolsInitialized = useRef(false);
 	const [drawToolsReady, setDrawToolsReady] = useState(false);
 
-
 	const modeChangeHandler = (e: any) => {
-		console.log("MlFeatureEditor mode change to " + e.mode);
+		console.log('MlFeatureEditor mode change to ' + e.mode);
 		//setDrawMode(e.mode);
+		if (
+			typeof props.onFinish === 'function' &&
+			(e.mode === 'custom_select' || e.mode === 'simple_select')
+		) {
+			props.onFinish();
+		}
 	};
 
 	useEffect(() => {
@@ -63,7 +73,7 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 
 			if (
 				mapHook.map.map.style &&
-				mapHook.map.map.getSource("mapbox-gl-draw-cold") &&
+				mapHook.map.map.getSource('mapbox-gl-draw-cold') &&
 				draw.current
 			) {
 				// remove old Mapbox-gl-Draw from Mapbox instance when hot-reloading this component during development
@@ -73,7 +83,7 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 
 			draw.current = new MapboxDraw({
 				displayControlsDefault: false,
-				defaultMode: props.mode || "custom_select",
+				defaultMode: props.mode || 'custom_select',
 				// @ts-ignore
 				modes: Object.assign(
 					{
@@ -85,10 +95,9 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 				),
 			});
 
-			mapHook.map.addControl(draw.current, "top-left", mapHook.componentId);
+			mapHook.map.addControl(draw.current, 'top-left', mapHook.componentId);
 
-
-			mapHook.map.on("draw.modechange", modeChangeHandler, mapHook.componentId);
+			mapHook.map.on('draw.modechange', modeChangeHandler, mapHook.componentId);
 
 			setDrawToolsReady(true);
 		}
@@ -100,30 +109,29 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 		const changeHandler = () => {
 			if (draw.current) {
 				// update drawnFeatures state object
-				if (typeof props.onChange === "function") {
-					let currentFeatureCollection = draw.current.getAll?.();
+				if (typeof props.onChange === 'function') {
+					const currentFeatureCollection = draw.current.getAll?.();
 					props.onChange(currentFeatureCollection?.features);
 				}
 			}
 		};
 
-		mapHook.map.on("mouseup", changeHandler);
+		mapHook.map.on('mouseup', changeHandler);
 
-		mapHook.map.on("touchend", changeHandler);
+		mapHook.map.on('touchend', changeHandler);
 
 		return () => {
 			if (!mapHook.map) return;
 
-			mapHook.map.map.off("mouseup", changeHandler);
+			mapHook.map.map.off('mouseup', changeHandler);
 
-			mapHook.map.map.off("touchend", changeHandler);
-		}
-
-	}, [drawToolsReady, mapHook.map])
+			mapHook.map.map.off('touchend', changeHandler);
+		};
+	}, [drawToolsReady, mapHook.map]);
 
 	useEffect(() => {
 		if (draw.current && props.geojson?.geometry) {
-			draw.current.set({ type: "FeatureCollection", features: [props.geojson] });
+			draw.current.set({ type: 'FeatureCollection', features: [props.geojson] });
 		}
 	}, [props.geojson, drawToolsReady]);
 
