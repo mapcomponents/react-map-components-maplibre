@@ -51,9 +51,9 @@ export default function PdfForm(props: PdfFormProps) {
 		mapId: props.mapId,
 	});
 	const mapExporter = useExportMap({ mapId: props.mapId });
-	const [topLeft, setTopLeft] = useState([7.07483959721597, 50.74128850750748]);
+	const [center, setCenter] = useState(undefined);
 	const [transformRotate, setTransformRotate] = useState(0);
-	const [transformScale, setTransformScale] = useState([1, 1]);
+	const [transformScale, setTransformScale] = useState(undefined);
 
 	const createPdfHandler = useCallback(() => {
 		console.log(
@@ -171,13 +171,14 @@ export default function PdfForm(props: PdfFormProps) {
 			</FormControl>
 			<PdfPreview
 				orientation={pdfContext.orientation}
-				setTopLeft={setTopLeft}
-				topLeft={topLeft}
+				setCenter={setCenter}
+				center={center}
 				setTransformRotate={setTransformRotate}
 				transformRotate={transformRotate}
 				setTransformScale={setTransformScale}
 				transformScale={transformScale}
 				geojsonRef={pdfContext.geojsonRef}
+				zoomRef={pdfContext.zoomRef}
 				width={210}
 				height={297}
 			/>

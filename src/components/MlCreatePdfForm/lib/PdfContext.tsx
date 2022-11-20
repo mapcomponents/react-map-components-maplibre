@@ -22,6 +22,7 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const [orientation, setOrientation] = useState('portrait');
 
 	const geojsonRef = useRef();
+	const zoomRef = useRef();
 
 	const template = useMemo(() => {
 		if (typeof templates[format][quality] !== 'undefined') {
@@ -43,6 +44,7 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 		orientation,
 		setOrientation,
 		geojsonRef,
+		zoomRef,
 		template,
 	};
 

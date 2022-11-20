@@ -14,7 +14,7 @@ type Props = {
 	orientation: string;
 	width: number;
 	height: number;
-	topLeft: number[];
+	center: number[];
 };
 
 interface geojsonProps {
@@ -23,6 +23,8 @@ interface geojsonProps {
 	bearing: number;
 	geojson: Feature<Polygon> | undefined;
 }
+
+const scaleAnchorInPixels = 10;
 
 function getRotationAngle(target) {
 	const obj = window.getComputedStyle(target, null);
@@ -57,29 +59,12 @@ function calcElemTransformedPoint(elem, point, transformOrigin) {
 		p[0] * matrix.b + p[1] * matrix.d + matrix.f + transformOrigin[1],
 	];
 }
-function getTransformTranslate(transform: string) {
-	if (transform.indexOf('translate') === -1) return false;
 
-	let _transformParts = transform.split('translate(');
-	_transformParts = _transformParts[1].split('px)')[0].split('px, ');
-
-	return _transformParts;
-}
-function getTransformRotate(transform: string) {
-	if (transform.indexOf('rotate') === -1) return false;
-
-	let _transformParts = transform.split('rotate(');
-	_transformParts = _transformParts[1].split('deg)')[0];
-
-	return _transformParts;
-}
-function getTransformScale(transform: string) {
-	if (transform.indexOf('scale') === -1) return false;
-
-	let _transformParts = transform.split('scale(');
-	_transformParts = _transformParts[1].split(')')[0].split(', ');
-
-	return _transformParts;
+function getMapZoomScaleModifier(point, _map) {
+	const left = _map.unproject(point);
+	const right = _map.unproject([point[0] + scaleAnchorInPixels, point[1]]);
+	const maxMeters = left.distanceTo(right);
+	return scaleAnchorInPixels / maxMeters;
 }
 export default function PdfPreview(props: Props) {
 	const mapState = useMapState({ mapId: props.mapId, watch: { layers: false, viewport: true } });
@@ -92,6 +77,25 @@ export default function PdfPreview(props: Props) {
 		waitForLayer: props.insertBeforeLayer,
 	});
 	const [scalePoints, setScalePoints] = useState();
+
+	useEffect(() => {
+		if (!mapState?.viewport?.zoom || !mapHook.map) return;
+
+		//initialize props if not defined
+		const _centerX = Math.round(mapHook.map.map._container.clientWidth / 2);
+		const _centerY = Math.round(mapHook.map.map._container.clientHeight / 2);
+
+		if (!props.transformScale) {
+			//const scale = parseFloat(/(14/mapState.viewport.zoom));
+			const scale =  1/getMapZoomScaleModifier([_centerX, _centerY], mapHook.map);
+
+			props.setTransformScale([scale, scale]);
+		}
+		if (!props.center) {
+			const _center = mapHook.map.map.unproject([_centerX, _centerY]);
+			props.setCenter([_center.lng, _center.lat]);
+		}
+	}, [mapHook.map, mapState.viewport?.zoom]);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -112,39 +116,24 @@ export default function PdfPreview(props: Props) {
 		}
 	}, [props.orientation, props.width, props.height]);
 
-	useEffect(() => {
-		if (!mapHook.map || (mapHook.map && zoomRef.current === mapHook.map.getZoom())) return;
+	const transform = useMemo(() => {
+		if (!mapHook.map || !props.transformScale) return 'none';
 
-		zoomRef.current = mapHook.map.getZoom();
-
-		console.log('transform memo: ', props.transformScale[0]);
-
-		const topLeftInPixels = mapHook.map.map.project(props.topLeft);
+		const centerInPixels = mapHook.map.map.project(props.center);
 
 		//const scale = parseFloat(props.transformScale[0])*(mapState.viewport.zoom/14);
-		const x = topLeftInPixels.x;
-		const y = topLeftInPixels.y;
-		const left = mapHook.map.unproject([x, y]);
-		const right = mapHook.map.unproject([x + 10, y]);
-		setScalePoints([left, right]);
-		const maxMeters = left.distanceTo(right);
-		const scale = parseFloat(props.transformScale[0]) * (10 / maxMeters);
+		const x = centerInPixels.x;
+		const y = centerInPixels.y;
+		const scale =
+			parseFloat(props.transformScale[0]) * getMapZoomScaleModifier([x, y], mapHook.map);
 
-		//props.setTransformScale([scale,scale]);
-	}, [mapHook.map, props.transformScale, mapState.viewport, props.topLeft]);
+		//console.log('scale calculated', scale);
 
-	const transform = useMemo(() => {
-		if (!mapHook.map) return 'none';
-
-		const topLeftInPixels = mapHook.map.map.project(props.topLeft);
-
-		const _transform = `translate(${parseInt(topLeftInPixels.x - transformOrigin[0])}px,${parseInt(
-			topLeftInPixels.y - transformOrigin[1]
-		)}px) rotate(${props.transformRotate - mapState.viewport.bearing}deg) scale(${
-			props.transformScale[0]
-		},${props.transformScale[1]})`;
+		const _transform = `translate(${parseInt(centerInPixels.x - transformOrigin[0])}px,${parseInt(
+			centerInPixels.y - transformOrigin[1]
+		)}px) rotate(${props.transformRotate - mapState.viewport.bearing}deg) scale(${scale},${scale})`;
 		targetRef.current.style.transform = _transform;
-		console.log('transform memo: ', _transform);
+		//console.log('transform memo: ', _transform);
 
 		return _transform;
 	}, [
@@ -152,7 +141,7 @@ export default function PdfPreview(props: Props) {
 		mapState.viewport,
 		props.transformScale,
 		props.transformRotate,
-		props.topLeft,
+		props.center,
 		transformOrigin,
 	]);
 
@@ -242,11 +231,11 @@ export default function PdfPreview(props: Props) {
 
 						let _transformParts = e.transform.split('translate(');
 						_transformParts = _transformParts[1].split('px)')[0].split('px, ');
-						let _topLeft = mapHook.map?.map.unproject([
+						let _center = mapHook.map?.map.unproject([
 							parseInt(_transformParts[0]) + transformOrigin[0],
 							parseInt(_transformParts[1]) + transformOrigin[1],
 						]);
-						props.setTopLeft([_topLeft.lng, _topLeft.lat]);
+						props.setCenter([_center.lng, _center.lat]);
 					}
 					//e.target.style.transform = e.transform;
 					//setTransform(e.transform);
@@ -256,62 +245,33 @@ export default function PdfPreview(props: Props) {
 				/* Only one of resizable, scalable, warpable can be used. */
 				scalable={true}
 				onScale={(e) => {
-					e.target.style.transform = e.drag.transform;
-					//setTransformScale(e.drag.transform);
-					console.log(e.drag.transform);
 
 					let _transformParts = e.drag.transform.split('scale(');
 					_transformParts = _transformParts[1].split(')')[0].split(', ');
 
-					const topLeftInPixels = mapHook.map.map.project(props.topLeft);
+					const centerInPixels = mapHook.map.map.project(props.center);
 
-					const x = topLeftInPixels.x;
-					const y = topLeftInPixels.y;
-					const left = mapHook.map.unproject([x, y]);
-					const right = mapHook.map.unproject([x + 10, y]);
-					const maxMeters = left.distanceTo(right);
-					//const scale = parseFloat(_transformParts[0]) * (10 / maxMeters);
-					console.log(_transformParts[0], 10 / maxMeters);
-					//const scale = parseFloat(_transformParts[0])*(1/(10 / maxMeters)) ;
-					const scale = parseFloat(_transformParts[0]);
+					const x = centerInPixels.x;
+					const y = centerInPixels.y;
 
-					console.log(scale);
+					const scale =
+						parseFloat(_transformParts[0]) * (1 / getMapZoomScaleModifier([x, y], mapHook.map));
+
+					//console.log(scale);
 
 					props.setTransformScale([scale, scale]);
 				}}
 				/* rotatable */
 				rotatable={true}
 				onRotate={(e) => {
-					//const matrix = new DOMMatrixReadOnly(e.transform);
-					//console.log(matrix);
 
 					let _transformParts = e.drag.transform.split('rotate(');
 					_transformParts = _transformParts[1].split('deg)')[0];
 
-					//e.target.style.transform = e.drag.transform;
 					props.setTransformRotate(parseFloat(_transformParts) + mapState.viewport.bearing);
 				}}
 			/>
-			{scalePoints && (
-				<MlGeoJsonLayer
-					//layerId="pdfPreviewGeojsonRotationHandle"
-					paint={{
-						'circle-radius': 10,
-						//'circle-opacity': 0,
-						'circle-color': '#fff323',
-					}}
-					type="circle"
-					geojson={{
-						type: 'FeatureCollection',
-						features: scalePoints.map((el) => ({
-							type: 'Feature',
-							geometry: { type: 'Point', coordinates: [el.lng, el.lat] },
-							properties: {},
-						})),
-					}}
-				/>
-			)}
-			{props.topLeft && (
+			{props.center && (
 				<MlGeoJsonLayer
 					//layerId="pdfPreviewGeojsonRotationHandle"
 					paint={{
@@ -322,7 +282,7 @@ export default function PdfPreview(props: Props) {
 					type="circle"
 					geojson={{
 						type: 'Feature',
-						geometry: { type: 'Point', coordinates: props.topLeft },
+						geometry: { type: 'Point', coordinates: props.center },
 						properties: {},
 					}}
 				/>
