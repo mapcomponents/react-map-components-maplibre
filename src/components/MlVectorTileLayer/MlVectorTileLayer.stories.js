@@ -28,16 +28,22 @@ ExampleConfig.args = {
 	mapId: "map_1",
 	url:
 		"https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf",
-	layers: {
-		landuseLine: {
-			"source-layer": "landuse",
-			layout: {
-				"line-cap": "round",
-				"line-join": "round",
-			},
-			paint: { "line-width": 2, "line-color": "#ff0000" },
+	layers: [
+		{
+			id: "water",
+			type: "fill",
+			"source-layer": "water",
+			layout: {},
+			paint: { "fill-color": "#0905f5", "fill-opacity": 0.5 },
 		},
-	},
+		{
+			id: "buildings",
+			type: "fill",
+			"source-layer": "building",
+			layout: {},
+			paint: { "fill-color": "#717875" },
+		},
+	],
 	sourceOptions: {
 		minzoom: 0,
 		maxzoom: 20,

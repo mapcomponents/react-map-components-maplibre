@@ -1,0 +1,15 @@
+{
+	"name": "useCameraFollowPath",
+	"title": "Move camera along linestring",
+	"description": "",
+	"i18n": {
+		"de": {
+			"title": "Kamerafahrt entlang eines Linestrings",
+			"description": ""
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component",
+	"price": 1000
+}

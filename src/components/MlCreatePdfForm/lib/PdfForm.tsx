@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 
 import useMap from '../../../hooks/useMap';
-import exportMap from '../../../hooks/exportMap';
-import { createPdfResolverParams } from '../../../hooks/exportMap/lib';
+import useExportMap from '../../../hooks/useExportMap';
+import { createPdfResolverParams } from '../../../hooks/useExportMap/lib';
 
 import * as turf from '@turf/turf';
 
@@ -40,16 +40,16 @@ interface PdfFormProps {
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
-	onCreatePdf?: (options:createPdfResolverParams) => createPdfResolverParams;
+	onCreatePdf?: (options: createPdfResolverParams) => createPdfResolverParams;
 }
 
-export default function PdfForm(props:PdfFormProps) {
+export default function PdfForm(props: PdfFormProps) {
 	const pdfContext = useContext(PdfContext);
 	const mapHook = useMap({
 		// eslint-disable-next-line react/prop-types
 		mapId: props.mapId,
 	});
-	const mapExporter = exportMap({ mapId: props.mapId });
+	const mapExporter = useExportMap({ mapId: props.mapId });
 
 	const createPdfHandler = useCallback(() => {
 		if (

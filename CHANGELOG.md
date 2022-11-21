@@ -1,6 +1,20 @@
 # Change Log
 
 
+## [v0.1.61] - 2022-11-16
+
+### Added
+- 63f11bc: add useCameraFollowPath
+
+## [v0.1.60] - 2022-11-04
+
+### Fixed
+- bc71b1f: Fix/use export map hook (#39)
+
+### Changed
+
+- 7687eec: change MlVectorTileLayer layers prop type from object to array
+
 ## [v0.1.59] - 2022-10-04
 
 ### Fixed
@@ -9,6 +23,7 @@
 ## [v0.1.58] - 2022-10-04
 
 ### Added
+
 - 6be40b7: automatic eslint & prettier tests as GitHub action
 - 396b1b7: useSource hook
 - 67d88a0: add MlCreatePdfForm component & useExportMap hook providing more sophisticated control on the PDF creation process such as a preview of the PDF area with drag&drop, resize & rotation  functionality as well as controlls over the paper size, quality & orientation
