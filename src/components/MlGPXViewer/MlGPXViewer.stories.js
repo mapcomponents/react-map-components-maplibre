@@ -65,7 +65,7 @@ const Template = (props) => {
 				<Button variant="contained" onClick={handleClick1} color={demoMode ? "primary" : "inherit"} sx={{ color: textColor }}> 
 					Demo Mode
 				</Button>
-			</TopToolbar>""
+			</TopToolbar>
 			<GeoJsonProvider>
 				<MlGPXDemoViewer enabled={demoMode} />
 				<MlGPXViewer ></MlGPXViewer>
