@@ -20,7 +20,46 @@ import { createPdfResolverParams } from '../../../hooks/useExportMap/lib';
 import * as turf from '@turf/turf';
 
 import templates from './pdf.templates';
+import { PdfPreviewOptions } from './pdfContext';
 
+const scaleOptions = [
+	{
+		value: 0,
+		label: 'free scale',
+	},
+	{
+		value: 250,
+		label: '1/250',
+	},
+	{
+		value: 500,
+		label: '1/500',
+	},
+	{
+		value: 750,
+		label: '1/750',
+	},
+	{
+		value: 1000,
+		label: '1/1000',
+	},
+	{
+		value: 1500,
+		label: '1/1500',
+	},
+	{
+		value: 2000,
+		label: '1/2000',
+	},
+	{
+		value: 10000,
+		label: '1/10000',
+	},
+	{
+		value: 100000,
+		label: '1/100000',
+	},
+];
 const qualityOptions = [
 	{
 		value: '72dpi',
@@ -51,30 +90,18 @@ export default function PdfForm(props: PdfFormProps) {
 		mapId: props.mapId,
 	});
 	const mapExporter = useExportMap({ mapId: props.mapId });
-	const [center, setCenter] = useState(undefined);
-	const [transformRotate, setTransformRotate] = useState(0);
-	const [transformScale, setTransformScale] = useState(undefined);
 
 	const createPdfHandler = useCallback(() => {
-		console.log(
-			pdfContext.template,
-			pdfContext.format,
-			pdfContext.orientation,
-			pdfContext.geojsonRef?.current?.bbox,
-			pdfContext.geojsonRef?.current
-		);
 		if (
 			mapHook.map &&
 			mapExporter.createExport &&
 			pdfContext.template &&
 			pdfContext.format &&
-			pdfContext.orientation &&
+			pdfContext.options?.orientation &&
 			pdfContext.geojsonRef?.current?.bbox &&
 			pdfContext.geojsonRef?.current
 		) {
 			const bbox = turf.bbox(pdfContext.geojsonRef.current);
-
-			console.log('TEST');
 
 			mapExporter
 				.createExport({
@@ -82,9 +109,9 @@ export default function PdfForm(props: PdfFormProps) {
 					height: pdfContext.template.height,
 					bbox: bbox,
 					bboxUnrotated: pdfContext.geojsonRef.current.bbox,
-					bearing: pdfContext.geojsonRef.current?.properties?.bearing || 0,
+					bearing: (pdfContext.geojsonRef.current?.properties?.bearing as number) || 0,
 					format: pdfContext.format.toLowerCase(),
-					orientation: pdfContext.orientation,
+					orientation: pdfContext.options.orientation,
 				})
 				.then((res) => res.createPdf())
 				.then((res) => {
@@ -137,9 +164,14 @@ export default function PdfForm(props: PdfFormProps) {
 					row
 					aria-labelledby="orientation-radio-buttons-group-label"
 					name="orientation-radio-buttons-group"
-					value={pdfContext.orientation}
+					value={pdfContext.options?.orientation}
 					onChange={(event) => {
-						pdfContext.setOrientation?.(event.target.value);
+						if (!pdfContext.setOptions) return;
+
+						pdfContext.setOptions((val: PdfPreviewOptions) => ({
+							...val,
+							orientation: event.target.value as 'landscape' | 'portrait',
+						}));
 					}}
 				>
 					<FormControlLabel value="portrait" control={<Radio />} label="Portrait" />
@@ -165,23 +197,38 @@ export default function PdfForm(props: PdfFormProps) {
 				</Select>
 			</FormControl>
 			<FormControl fullWidth sx={formControlStyles}>
+				<InputLabel id="quality-select-label">Scale</InputLabel>
+				<Select
+					labelId="quality-select-label"
+					id="quality-select"
+					label="Qualität"
+					value={pdfContext?.options?.fixedScale}
+					onChange={(event) => {
+						pdfContext.setOptions?.((val) => ({
+							...val,
+							fixedScale: event.target.value as number,
+						}));
+					}}
+				>
+					{scaleOptions.map((el, idx) => (
+						<MenuItem key={idx} value={el.value}>
+							{el.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<FormControl fullWidth sx={formControlStyles}>
 				<Button variant="contained" onClick={createPdfHandler}>
 					PDF erstellen
 				</Button>
 			</FormControl>
-			<PdfPreview
-				orientation={pdfContext.orientation}
-				setCenter={setCenter}
-				center={center}
-				setTransformRotate={setTransformRotate}
-				transformRotate={transformRotate}
-				setTransformScale={setTransformScale}
-				transformScale={transformScale}
-				geojsonRef={pdfContext.geojsonRef}
-				zoomRef={pdfContext.zoomRef}
-				width={210}
-				height={297}
-			/>
+			{pdfContext.options && (
+				<PdfPreview
+					options={pdfContext.options}
+					setOptions={pdfContext.setOptions}
+					geojsonRef={pdfContext.geojsonRef}
+				/>
+			)}
 		</>
 	);
 }

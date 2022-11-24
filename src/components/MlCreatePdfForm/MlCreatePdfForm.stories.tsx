@@ -13,6 +13,7 @@ import TopToolbar from '../../ui_components/TopToolbar';
 
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
+import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 const PaperComponent = (props: object) => {
 	return (
 		<Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
@@ -54,6 +55,7 @@ const Template = () => {
 	const targetRef = React.useRef<HTMLDivElement>(null);
 	const containerRef = React.useRef<HTMLDivElement>(document.querySelector('.map_container'));
 
+	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	return (
 		<>
 			<TopToolbar>
