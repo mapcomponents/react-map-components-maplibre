@@ -158,11 +158,11 @@ ExampleConfig.parameters = {};
 ExampleConfig.args = {};
 
 
-const SidebarTemplate = function() {
-
-	return <>
-	</>;
-}
-export const SidebarExample = SidebarTemplate.bind({});
-SidebarExample.parameters = {};
-SidebarExample.args = {};
+//const SidebarTemplate = function() {
+//
+//	return <>
+//	</>;
+//}
+//export const SidebarExample = SidebarTemplate.bind({});
+//SidebarExample.parameters = {};
+//SidebarExample.args = {};
