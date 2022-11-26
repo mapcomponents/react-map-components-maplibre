@@ -1,6 +1,10 @@
 {
   "name": "@mapcomponents/react-maplibre",
+<<<<<<< HEAD
   "version": "0.1.61",
+=======
+  "version": "0.1.62",
+>>>>>>> main
   "main": "index.js",
   "license": "MIT",
   "module": "dist/index.esm.js",
@@ -34,6 +38,7 @@
     "maplibre-gl": "^2.1.7",
     "mui-color": "^2.0.0-beta.2",
     "react-i18next": "^11.14.3",
+    "react-moveable": "^0.41.1",
     "three": "^0.139.1",
     "uuid": "^8.3.2",
     "wms-capabilities": "^0.5.1",

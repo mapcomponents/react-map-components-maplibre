@@ -1,31 +1,29 @@
-import React, { useState, useRef, useMemo, MutableRefObject } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import templates from './pdf.templates';
-import {  Feature } from '@turf/turf';
+import { PdfContextInterface, PdfPreviewOptions } from './pdfContext';
 
-interface PdfContextInterface {
-	format: string;
-	setFormat: (format: string) => void;
-	quality: string;
-	setQuality: (quality: string) => void;
-	orientation: string;
-	setOrientation: (orientation: string) => void;
-	geojsonRef: MutableRefObject<Feature | undefined>;
-	template: { width: number; height: number };
-}
 
-const PdfContext = React.createContext<Partial<PdfContextInterface>>({});
+const PdfContext = React.createContext<PdfContextInterface>({} as PdfContextInterface);
 
 const defaultTemplate = templates['A4']['72dpi'];
 const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const [format, setFormat] = useState('A4');
 	const [quality, setQuality] = useState('72dpi');
-	const [orientation, setOrientation] = useState('portrait');
+	const [options, setOptions] = useState<PdfPreviewOptions>({
+		center: undefined,
+		scale: undefined,
+		rotate: 0,
+		width: 210,
+		height: 297,
+		orientation: 'portrait',
+		fixedScale: 0,
+	});
 
 	const geojsonRef = useRef();
 
 	const template = useMemo(() => {
 		if (typeof templates[format][quality] !== 'undefined') {
-			return orientation === 'portrait'
+			return options.orientation === 'portrait'
 				? templates[format][quality]
 				: {
 						width: templates[format][quality].height,
@@ -33,15 +31,15 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 				  };
 		}
 		return defaultTemplate;
-	}, [format, quality, orientation]);
+	}, [format, quality, options.orientation]);
 
 	const value = {
+		options,
+		setOptions,
 		format,
 		setFormat,
 		quality,
 		setQuality,
-		orientation,
-		setOrientation,
 		geojsonRef,
 		template,
 	};
