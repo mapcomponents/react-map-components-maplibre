@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 import useLayer from '../../hooks/useLayer';
-import useMap from '../../hooks/useMap';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -115,23 +114,6 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		onClick: props.onClick,
 		onLeave: props.onLeave,
 	});
-
-	const mapHook = useMap({
-		mapId: props.mapId,
-		waitForLayer: props.insertBeforeLayer,
-	});
-
-	const initializedRef = useRef(false);
-
-	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-		// the MapLibre-gl instance (mapHook.map) is accessible here
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
-		initializedRef.current = true;
-
-		mapHook.map.map.setCenter([7.100175528281227, 50.73487992742369]);
-		mapHook.map.map.setZoom(15);
-	}, [mapHook.map, props.mapId]);
 
 	return <></>;
 };
