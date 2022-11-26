@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback, useState } from 'react';
+import React, { useContext, useMemo, useCallback } from 'react';
 import PdfContext from './PdfContext';
 import PdfPreview from './PdfPreview';
 import {
@@ -222,7 +222,7 @@ export default function PdfForm(props: PdfFormProps) {
 					PDF erstellen
 				</Button>
 			</FormControl>
-			{pdfContext.options && (
+			{pdfContext.options && pdfContext.setOptions && (
 				<PdfPreview
 					options={pdfContext.options}
 					setOptions={pdfContext.setOptions}

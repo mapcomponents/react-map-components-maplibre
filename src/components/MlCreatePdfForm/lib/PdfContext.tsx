@@ -1,37 +1,15 @@
-import React, { useState, useRef, useMemo, MutableRefObject } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import templates from './pdf.templates';
-import { AllGeoJSON } from '@turf/turf';
-import { PdfPreviewOptions } from './pdfContext';
-import { GeoJSONFeature } from 'maplibre-gl';
+import { PdfContextInterface, PdfPreviewOptions } from './pdfContext';
 
-interface PdfContextInterface {
-	options: PdfPreviewOptions;
-	setOptions: (arg1: (val: PdfPreviewOptions) => PdfPreviewOptions) => void;
-	format: string;
-	setFormat: (format: string) => void;
-	quality: string;
-	setQuality: (quality: string) => void;
-	orientation: string;
-	setOrientation: (orientation: string) => void;
-	geojsonRef: MutableRefObject<
-		| {
-				type: 'Feature';
-				bbox: [number, number, number, number];
-				geometry: { type: 'Polygon'; coordinates: number[] };
-				properties: { bearing: number };
-		  }
-		| undefined
-	>;
-	template: { width: number; height: number };
-}
 
-const PdfContext = React.createContext<Partial<PdfContextInterface>>({});
+const PdfContext = React.createContext<PdfContextInterface>({} as PdfContextInterface);
 
 const defaultTemplate = templates['A4']['72dpi'];
 const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const [format, setFormat] = useState('A4');
 	const [quality, setQuality] = useState('72dpi');
-	const [options, setOptions] = useState({
+	const [options, setOptions] = useState<PdfPreviewOptions>({
 		center: undefined,
 		scale: undefined,
 		rotate: 0,
@@ -66,8 +44,6 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 		template,
 	};
 
-	// eslint-disable-next-line
-	// @ts-ignore:
 	return <PdfContext.Provider value={value}>{children}</PdfContext.Provider>;
 };
 

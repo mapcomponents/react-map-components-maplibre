@@ -1,23 +1,33 @@
-import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import Moveable from 'react-moveable';
-import MlGeoJsonLayer from '../../MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../../hooks/useMap';
 import useMapState from '../../../hooks/useMapState';
 import * as turf from '@turf/turf';
 import { PdfPreviewOptions } from './pdfContext';
-import MapLibreGlWrapper from '../../MapLibreMap/lib/MapLibreGlWrapper';
-import { LngLatLike, Map as MapType, PointLike } from 'maplibre-gl';
-import { Feature, Position, Units } from '@turf/turf';
+import {  LngLatLike, Map as MapType, PointLike } from 'maplibre-gl';
+import { Feature, Units } from '@turf/turf';
 
 type Props = {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
-	geojsonRef: any;
-	setOptions: any;
+	/**
+	 * Polygon GeoJson Feature representing the printing area
+	 */
+	geojsonRef: React.MutableRefObject<
+		| Feature
+		| undefined
+	>;
+	/**
+	 * a state variable containing the PDF previews current state
+	 */
 	options: PdfPreviewOptions;
+	/**
+	 * setter function to update the current PDF preview state
+	 */
+	setOptions: (arg1: (val: PdfPreviewOptions) => PdfPreviewOptions) => void;
 };
 
 function getTargetRotationAngle(target: HTMLDivElement) {
@@ -72,6 +82,7 @@ export default function PdfPreview(props: Props) {
 	const targetRef = useRef<HTMLDivElement>(null);
 	const fixedScaleRef = useRef<number | undefined>();
 	const moveableRef = useRef<Moveable>(null);
+	const mapContainerRef = useRef<HTMLDivElement>(document.querySelector('.mapContainer'));
 	//const [transform, setTransform] = useState('translate(452.111px, 15.6148px)');
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -124,12 +135,10 @@ export default function PdfPreview(props: Props) {
 
 		const centerInPixels = mapHook.map.map.project(props.options.center as LngLatLike);
 
-		//const scale = parseFloat(props.options.scale[0])*(mapState.viewport.zoom/14);
 		const x = centerInPixels.x;
 		const y = centerInPixels.y;
 		const scale = props.options.scale[0] * getMapZoomScaleModifier([x, y], mapHook.map.map);
 
-		//console.log('scale calculated', scale);
 		const viewportBearing = mapState?.viewport?.bearing ? mapState.viewport?.bearing : 0;
 
 		const _transform = `translate(${Math.floor(
@@ -184,7 +193,8 @@ export default function PdfPreview(props: Props) {
 		props.setOptions((val: PdfPreviewOptions) => ({ ...val, scale: [scaleFactor, scaleFactor] }));
 	}, [mapHook.map, props.options.width, props.options.center, props.options.fixedScale]);
 
-	const geojson = useMemo(() => {
+	// update props.geoJsonRef
+	useEffect(() => {
 		if (targetRef.current && mapHook.map) {
 			// apply orientation
 			let _width = props.options.width;
@@ -229,9 +239,8 @@ export default function PdfPreview(props: Props) {
 					],
 				},
 				properties: { bearing: getTargetRotationAngle(targetRef.current) },
-			};
+			} as Feature;
 			props.geojsonRef.current = _geoJson;
-			return _geoJson;
 		}
 
 		return undefined;
@@ -245,7 +254,7 @@ export default function PdfPreview(props: Props) {
 		transformOrigin,
 	]);
 
-	return ReactDOM.createPortal(
+	return mapContainerRef.current ? ReactDOM.createPortal(
 		<>
 			<div
 				className="target"
@@ -264,8 +273,6 @@ export default function PdfPreview(props: Props) {
 				draggable={true}
 				onDrag={(e) => {
 					if (mapHook.map) {
-						//const matrix = new DOMMatrixReadOnly(e.transform);
-						//let _topLeft = mapHook.map?.map.unproject([matrix.m41, matrix.m42]);
 
 						let _transformParts = e.transform.split('translate(');
 						_transformParts = _transformParts[1].split('px)')[0].split('px, ');
@@ -278,8 +285,6 @@ export default function PdfPreview(props: Props) {
 							center: [_center.lng, _center.lat],
 						}));
 					}
-					//e.target.style.transform = e.transform;
-					//setTransform(e.transform);
 				}}
 				/* scalable */
 				scalable={props.options.fixedScale ? false : true}
@@ -297,7 +302,6 @@ export default function PdfPreview(props: Props) {
 							parseFloat(_transformParts[0]) *
 							(1 / getMapZoomScaleModifier([x, y], mapHook.map.map));
 
-						//console.log(scale);
 
 						props.setOptions((val: PdfPreviewOptions) => ({ ...val, scale: [scale, scale] }));
 					}
@@ -318,8 +322,6 @@ export default function PdfPreview(props: Props) {
 				}}
 			/>
 		</>,
-		// eslint-disable-next-line
-		// @ts-ignore:
-		document.querySelector('.mapContainer')
-	);
+		mapContainerRef.current
+	):<></>;
 }
