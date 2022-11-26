@@ -7,13 +7,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
-import Moveable from 'react-moveable';
 
 import TopToolbar from '../../ui_components/TopToolbar';
 
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
+
 const PaperComponent = (props: object) => {
 	return (
 		<Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
