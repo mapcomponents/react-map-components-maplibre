@@ -1,8 +1,7 @@
-import { LngLatLike, Map } from '!maplibre-gl';
+import { Map } from '!maplibre-gl';
 import jsPDF from 'jspdf';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
 
-import * as turf from '@turf/turf';
 import { BBox } from '@turf/turf';
 
 interface createExportOptions {
