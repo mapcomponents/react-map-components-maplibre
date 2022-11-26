@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, {  useEffect, useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import {
-	TextField,
 	Select,
 	Typography,
 	Slider,
@@ -9,8 +8,6 @@ import {
 	FormControl,
 	MenuItem,
 	Checkbox,
-	InputLabel,
-	OutlinedInput,
 	ListItemText,
 } from '@mui/material';
 import { ColorPicker } from 'mui-color';
@@ -26,7 +23,6 @@ const streetNames = [
 	'Remiglustraße',
 	'Windeckstraße',
 ];
-const types = ['line', 'fill', 'circle'];
 const marks = [
 	{
 		value: 0,
@@ -80,8 +76,6 @@ const LineStyler = (props) => {
 	const [opacity, setOpacity] = useState(0.8);
 	const [featuresToShow, setFeaturesToShow] = useState(['Show all']);
 	const [lineWidth, setLineWidth] = useState(5);
-
-	var showIndex = featuresToShow.length;
 
 	const storyGeoJson = useMemo(() => {
 		if (featuresToShow[0] === 'Show all') {
