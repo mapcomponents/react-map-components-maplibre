@@ -58,7 +58,7 @@ const Template = () => {
 	return (
 		<>
 			<TopToolbar>
-				<Button variant="contained" onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}>
+				<Button variant="contained" className='pdfFormButton' onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}>
 					PDF
 				</Button>
 			</TopToolbar>
