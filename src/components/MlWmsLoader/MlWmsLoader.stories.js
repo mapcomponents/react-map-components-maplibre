@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
+
 import MlWmsLoader from './MlWmsLoader';
-import { Button, TextField } from '@mui/material';
+import useMap from '../../hooks/useMap';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
+import WMSLinks from './utils/WMSLinks';
+
+import { Button, TextField } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import MlWmsLoaderInstructions from './utils/MlWmsLoaderInstructions';
+
+
 
 const storyoptions = {
 	title: 'MapComponents/MlWmsLoader',
@@ -19,7 +25,6 @@ export default storyoptions;
 
 const Template = (props) => {
 	const [url, setUrl] = useState(props.url);
-
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
 	//const mapHook = useMap({ mapId: 'map_1' });
@@ -27,6 +32,7 @@ const Template = (props) => {
 	const handleClick1 = () => {
 		setDemoMode(!demoMode);
 	};
+	
 	const handleClick2 = () => {
 		setGuide(true);
 		setTimeout(() => {
@@ -50,6 +56,7 @@ const Template = (props) => {
 		}
 	};
 
+	
 	return (
 		<>
 			<MlWmsLoaderInstructions open={guide}/>
@@ -60,7 +67,6 @@ const Template = (props) => {
 					color={guide ? 'primary' : 'inherit'}
 					sx={{ color: textColor2 }}
 				>
-					{' '}
 					Guide me through
 				</Button>
 				<Button
@@ -81,6 +87,7 @@ const Template = (props) => {
 				/>
 				<MlWmsLoader {...props} url={url} />
 			</Sidebar>
+			<WMSLinks open={demoMode} callback={handleClick1} />
 		</>
 	);
 };
@@ -93,5 +100,5 @@ ExampleConfig.args = {
 	 * https://www.wms.nrw.de/wms/kitas
 	 * https://www.wms.nrw.de/geobasis/wms_nw_vdop
 	 */
-	url: '',
+	url: "",
 };

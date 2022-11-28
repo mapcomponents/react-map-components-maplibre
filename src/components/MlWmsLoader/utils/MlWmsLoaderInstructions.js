@@ -44,7 +44,7 @@ export default function MlWmsLoaderInstructions(props) {
 							zIndex: 500,
 							borderRadius: 360,
 							left: -50,
-							top: 150,
+							top: 140,
 							backgroundColor: 'steelblue',
 							opacity: 1,
 							alignItems: 'center',
@@ -57,7 +57,7 @@ export default function MlWmsLoaderInstructions(props) {
 								color: 'white',
 								fontSize: 80,
 								transform: 'rotate(90deg)',
-								marginTop: 3,
+								marginTop: 2,
 								marginLeft: 18,
 							}}
 						/>
