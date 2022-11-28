@@ -51,8 +51,6 @@ export default storyoptions;
 
 const Template = () => {
 	const [showCreatePdfForm, setShowCreatePdfForm] = useState(false);
-	const targetRef = React.useRef<HTMLDivElement>(null);
-	const containerRef = React.useRef<HTMLDivElement>(document.querySelector('.map_container'));
 
 	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	return (

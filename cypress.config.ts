@@ -1,7 +1,6 @@
 import { defineConfig } from 'cypress';
-import * as path from 'path';
 
-const isRunningInCI = process.env.CI === 'true';
+//const isRunningInCI = process.env.CI === 'true';
 
 export default defineConfig({
 	component: {
