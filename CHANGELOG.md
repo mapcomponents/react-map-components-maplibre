@@ -1,6 +1,11 @@
 # Change Log
 
 
+## [v0.1.62] - 2022-11-26
+
+### Added
+- ba36980: full rewrite of the PdfPreview component, fixing distortion issues in lower zoom levels, offering improved user experience when transforming, adding an option to set a fixed scale
+
 ## [v0.1.61] - 2022-11-16
 
 ### Added
