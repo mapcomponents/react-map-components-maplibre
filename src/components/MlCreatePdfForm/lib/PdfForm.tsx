@@ -218,7 +218,7 @@ export default function PdfForm(props: PdfFormProps) {
 				</Select>
 			</FormControl>
 			<FormControl fullWidth sx={formControlStyles}>
-				<Button variant="contained" onClick={createPdfHandler}>
+				<Button variant="contained" className='createPdfButton' onClick={createPdfHandler}>
 					PDF erstellen
 				</Button>
 			</FormControl>

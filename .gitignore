@@ -38,3 +38,7 @@ yarn-error.log*
 
 /js-docs
 !/js-docs/server.js
+
+cypress/videos
+cypress/screenshots
+cypress/downloads
