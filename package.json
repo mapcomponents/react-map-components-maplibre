@@ -40,7 +40,6 @@
     "wms-capabilities": "^0.5.1",
     "xmldom": "^0.6.0"
   },
-  "peerDependencies": {},
   "devDependencies": {
     "@babel/preset-react": "^7.16.7",
     "@rollup/plugin-alias": "^3.1.9",
