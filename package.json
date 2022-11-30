@@ -33,6 +33,7 @@
     "jspdf": "^2.5.1",
     "maplibre-gl": "^2.1.7",
     "mui-color": "^2.0.0-beta.2",
+    "react-draggable": "^4.4.5",
     "react-i18next": "^11.14.3",
     "react-moveable": "^0.41.1",
     "three": "^0.139.1",
