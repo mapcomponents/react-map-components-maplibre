@@ -15,7 +15,7 @@ export default storyoptions;
 
 const Template = (args) => (
 	<>
-		<Sidebar>
+		<Sidebar sx={{ maxWidth: '25vw' }}>
 			<MlSketchTool />
 		</Sidebar>
 	</>
