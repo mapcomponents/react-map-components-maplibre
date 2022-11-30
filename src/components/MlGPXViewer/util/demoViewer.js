@@ -10,7 +10,6 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import InfoIcon from '@mui/icons-material/Info';
 import FileCopy from '@mui/icons-material/FileCopy';
-import { Popup } from 'maplibre-gl';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -71,7 +70,6 @@ const MlGPXDemoLoader = (props) => {
 
 	const handleClick = () => {
 		setOpenModal(true);
-		setOpen(false);
 	};
 
 	const handleSelect = (e) => {

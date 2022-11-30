@@ -8,7 +8,6 @@ import { Button, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MlGPXDemoLoader from './util/demoViewer';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import useMap from '../../hooks/useMap';
 
 const storyoptions = {
 	title: 'MapComponents/MlGPXViewer',
