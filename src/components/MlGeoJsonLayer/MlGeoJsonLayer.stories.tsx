@@ -33,11 +33,9 @@ const Template = (props: TemplateProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
-		
-		initializedRef.current = true;
 
-		mapHook.map.map.setCenter([7.100175528281227, 50.73487992742369]);
-		mapHook.map.map.setZoom(15);
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 15 });
 	}, [mapHook.map]);
 
 	return (
@@ -47,7 +45,6 @@ const Template = (props: TemplateProps) => {
 	);
 };
 const PolygonTemplate = (props: TemplateProps) => {
-
 	const mapHook = useMap({
 		mapId: undefined,
 	});
@@ -56,13 +53,10 @@ const PolygonTemplate = (props: TemplateProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
-	
+
 		initializedRef.current = true;
-
-		mapHook.map.map.setCenter([7.100175528281227, 50.73487992742369]);
-		mapHook.map.map.setZoom(15);
+		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 15 });
 	}, [mapHook.map]);
-
 
 	return (
 		<>
