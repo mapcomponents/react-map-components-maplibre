@@ -1,18 +1,16 @@
 import React, { useContext, useRef, useEffect, useState, useCallback } from 'react';
-import turf, { bbox, center } from '@turf/turf';
+import { bbox } from '@turf/turf';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import InfoIcon from '@mui/icons-material/Info';
 import FileCopy from '@mui/icons-material/FileCopy';
-import { Popup, LngLatBoundsLike, GeoJSONSource } from 'maplibre-gl';
-import useLayerEvent from '../../../hooks/useLayerEvent';
+import { Popup } from 'maplibre-gl';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -20,13 +18,9 @@ import GeoJsonContext from './GeoJsonContext';
 import toGeoJSON from '../gpxConverter';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../../hooks/useMap';
-import MlGeoJsonLayer from '../../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import Grid from '@mui/material/Grid';
-import DemoBrowser from './DemoBrowser';
-import { ListItemButton, ListItemIcon } from '@mui/material';
-import MlSpatialElevationProfile from '../MlSpatialElevationProfile';
-import MlGPXViewer from '../../MlGPXViewer/MlGPXViewer';
-import GeoJsonProvider from './GeoJsonProvider';
+import { ListItemButton } from '@mui/material';
+
 
 const modalStyle = {
 	position: 'absolute',
@@ -54,19 +48,14 @@ const mobileStyle = {
  * MlSpatialElevationProfileDemoViewer returns a button to load a Demo GPX Track into the map.
  */
 const MlGPXDemoLoader = (props) => {
-	const initializedRef = useRef(false);
+	
 	const [openModal, setOpenModal] = useState(false);
-	const [open, setOpen] = useState(false);
-	const [infoOpen, setInfoOpen] = useState(false);
-	const [showLayers, setShowLayers] = useState(true);
-	const [metaData, setMetaData] = useState([]);
+		const [infoOpen, setInfoOpen] = useState(false);
+		const [metaData, setMetaData] = useState([]);
 	const [selectedSample, setSelectedSample] = useState();
 	const mapHook = useMap({ mapId: 'map_1' });
 	const dataSource = useContext(GeoJsonContext);
 	const sourceName = 'import-source';
-	const layerNameLines = 'importer-layer-lines';
-	const layerNamePoints = 'importer-layer-points';
-
 	const [file, setFile] = useState();
 	const reader = useRef(new FileReader());
 	reader.current.onload = (payload) => {
@@ -75,26 +64,18 @@ const MlGPXDemoLoader = (props) => {
 	};
 
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
-
-	const popup = useRef(
-		new Popup({
-			closeButton: false,
-			closeOnClick: true,
-		})
-	);
-
+	
 	const toogleDrawer = () => {
 		setInfoOpen(!infoOpen);
 	};
 
-	const handleClick = (e) => {
+	const handleClick = () => {
 		setOpenModal(true);
 		setOpen(false);
 	};
 
 	const handleSelect = (e) => {
-		setShowLayers(true);
-
+		
 		if (e.target.innerText === 'mountain_trail.gpx') {
 			setSelectedSample('assets/sample1.gpx');
 		} else if (e.target.innerText === 'bycycle_tour.gpx') {
@@ -140,7 +121,7 @@ const MlGPXDemoLoader = (props) => {
 				if (node.nodeName === 'link') {
 					value = node.getAttribute('href');
 				}
-				if (!!value?.trim().length) {
+				if (value?.trim().length) {
 					const metaDatEntry = {
 						title: title,
 						value: value,

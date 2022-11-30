@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Paper, Icon, Typography, Grid } from '@mui/material';
-import { color, fontSize } from '@mui/system';
+import { Grid } from '@mui/material';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
-import zIndex from '@mui/material/styles/zIndex';
-import MlGPXDemoViewer from '../util/demoViewer';
 import Fade from '@mui/material/Fade';
 
 const divStyle = {

@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import MlGPXViewer from './MlGPXViewer';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import GeoJsonProvider from './util/GeoJsonProvider';
-import LineStyler from '../MlGeoJsonLayer/story_utils/MlGeoJsonLayer.lineStyler';
 import MlGPXViewerInstructions from './util/MlGPXViewerInstructions';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Paper, Button, IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MlGPXDemoLoader from './util/demoViewer';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { RestaurantTwoTone } from '@mui/icons-material';
-import { Color } from 'maplibre-gl';
 import useMap from '../../hooks/useMap';
 
 const storyoptions = {
@@ -27,11 +24,10 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
+const Template = () => {
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
-	const mapHook = useMap({ mapId: 'map_1' });
 
 	const handleClick1 = () => {
 		setDemoMode(!demoMode);
