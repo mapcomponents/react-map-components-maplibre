@@ -20,7 +20,6 @@ import useMap from '../../../hooks/useMap';
 import Grid from '@mui/material/Grid';
 import { ListItemButton } from '@mui/material';
 
-
 const modalStyle = {
 	position: 'absolute',
 	top: '50%',
@@ -44,13 +43,12 @@ const mobileStyle = {
 };
 
 /**
- * MlSpatialElevationProfileDemoViewer returns a button to load a Demo GPX Track into the map.
+ * MlGPXDemoLoader returns a button to load a Demo GPX Track into the map.
  */
 const MlGPXDemoLoader = (props) => {
-	
 	const [openModal, setOpenModal] = useState(false);
-		const [infoOpen, setInfoOpen] = useState(false);
-		const [metaData, setMetaData] = useState([]);
+	const [infoOpen, setInfoOpen] = useState(false);
+	const [metaData, setMetaData] = useState([]);
 	const [selectedSample, setSelectedSample] = useState();
 	const mapHook = useMap({ mapId: 'map_1' });
 	const dataSource = useContext(GeoJsonContext);
@@ -63,7 +61,7 @@ const MlGPXDemoLoader = (props) => {
 	};
 
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
-	
+
 	const toogleDrawer = () => {
 		setInfoOpen(!infoOpen);
 	};
@@ -73,7 +71,6 @@ const MlGPXDemoLoader = (props) => {
 	};
 
 	const handleSelect = (e) => {
-		
 		if (e.target.innerText === 'mountain_trail.gpx') {
 			setSelectedSample('assets/sample1.gpx');
 		} else if (e.target.innerText === 'bycycle_tour.gpx') {
@@ -181,7 +178,7 @@ const MlGPXDemoLoader = (props) => {
 						</ListItem>
 						<Divider variant="inset" component="li" />
 					</List>
-					
+
 					<Grid>
 						<Button
 							variant="outlined"
@@ -198,8 +195,8 @@ const MlGPXDemoLoader = (props) => {
 				<Typography
 					variant="h6"
 					style={{
-						textAlign: "center",
-						padding: "1em",
+						textAlign: 'center',
+						padding: '1em',
 					}}
 					noWrap
 				>
