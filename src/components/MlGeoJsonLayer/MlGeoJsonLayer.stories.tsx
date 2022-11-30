@@ -33,8 +33,7 @@ const Template = (props: TemplateProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
-		// the MapLibre-gl instance (mapHook.map) is accessible here
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
+		
 		initializedRef.current = true;
 
 		mapHook.map.map.setCenter([7.100175528281227, 50.73487992742369]);
@@ -57,8 +56,7 @@ const PolygonTemplate = (props: TemplateProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
-		// the MapLibre-gl instance (mapHook.map) is accessible here
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
+	
 		initializedRef.current = true;
 
 		mapHook.map.map.setCenter([7.100175528281227, 50.73487992742369]);
