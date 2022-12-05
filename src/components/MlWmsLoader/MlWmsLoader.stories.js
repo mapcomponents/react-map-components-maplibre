@@ -5,6 +5,7 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import MlWmsLoaderInstructions from './utils/MlWmsLoaderInstructions';
+import WMSLinks from './utils/WMSLinks';
 
 const storyoptions = {
 	title: 'MapComponents/MlWmsLoader',
@@ -19,10 +20,11 @@ export default storyoptions;
 
 const Template = (props) => {
 	const [url, setUrl] = useState(props.url);
-
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
 	//const mapHook = useMap({ mapId: 'map_1' });
+
+	console.log(url);
 
 	const handleClick1 = () => {
 		setDemoMode(!demoMode);
@@ -32,6 +34,15 @@ const Template = (props) => {
 		setTimeout(() => {
 			setGuide(false);
 		}, 5500);
+	};
+
+	const closer = () => {
+		setDemoMode(false);
+	};
+
+	const loader = (str) => {
+		setUrl(str);
+		setDemoMode(false);
 	};
 
 	const textColor = () => {
@@ -52,8 +63,9 @@ const Template = (props) => {
 
 	return (
 		<>
-			<MlWmsLoaderInstructions open={guide}/>
-			<TopToolbar >
+			<MlWmsLoaderInstructions open={guide} />
+			<WMSLinks open={demoMode} close={closer} load={loader} />
+			<TopToolbar>
 				<Button
 					variant="contained"
 					onClick={handleClick2}
