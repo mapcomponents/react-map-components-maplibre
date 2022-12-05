@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import {
-	Modal,
-	Box,
-	Divider,
-	Grid,
-	Button,
-	List,
-	ListItem,
-	ListItemText,
-	ListItemButton,
-	Typography,
-} from '@mui/material';
+import { Modal, Box, Typography, Button, Divider, TextField, Grid, Fade, Zoom } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
 
 const modalStyle = {
 	position: 'absolute',
-	top: '20%',
-	left: '60%',
+	zIndex: 500,
+	top: '55%',
+	left: '80%',
+	transform: 'translate(-50%, -50%)',
 	width: 400,
-	height: 550,
-	bgcolor: 'background.paper',
-	boxShadow: 24,
-	p: 4,
-	zIndex: 200,
+	height: 600,
+	bgcolor: '#F1F1F1',
+	border: '2px solid #000',
+	boxShadow: 20,
+	alignItems: 'center',
+	p: 3,
+	opacity: 1,
+	transition: 'opacity 1s'
 };
 
 const mobileStyle = {
@@ -39,10 +34,54 @@ const mobileStyle = {
 	overflow: "scroll"
 };
 
+const wmsServices = [
+	{
+		id: '1',
+		title: 'HistOSM',
+		description: 'Historic objects stored in the OpenStreetMap database',
+		link: 'https://maps.heigit.org/histosm/wms',
+	},
+	{
+		id: '2',
+		title: 'MagOSM',
+		description:
+			'MagOSM is a project of the company Magellium which offers services related to thematic data from OpenStreetMap. Currently these services are provided at the scale of metropolitan France. The data of the different services are updated daily.',
+		link: 'https://magosm.magellium.com/geoserver/wms',
+	},
+	{
+		id: '3',
+		title: 'NRW_vdop',
+		description:
+			'The WMS NW vDOP Geobasis North Rhine-Westphalia provides intermediate results from the production process of the digital orthophotos (DOP).',
+		link: 'https://www.wms.nrw.de/geobasis/wms_nw_vdop',
+	},
+];
+
 export default function WMSLinks(props) {
+
 	const [openModal, setOpenModal] = useState(false);
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [selectedSample, setSelectedSample] = useState();
+
+	const Links = () => {
+		return wmsServices.map((el) => (
+			<>
+				<Grid sx={{ marginTop: 5 }}>
+					<Typography variant="h6">{el.title}</Typography>
+					<Typography variant="body2">{el.description}</Typography>
+					<TextField value={el.link} size='small' sx={{width:300}}></TextField>
+					<Button
+						variant="contained"
+						sx={{marginTop:0.2}}
+						onClick={() => {setSelectedSample(el.link)}}
+					>
+						<ContentCopyIcon/>
+					</Button>
+					<Divider sx={{marginTop:2}} />
+				</Grid>
+			</>
+		));
+	};
 
 	useEffect(() => {
 		if (selectedSample) {
@@ -50,29 +89,15 @@ export default function WMSLinks(props) {
 		}
 	}, [selectedSample]);
 
-	const handleClick = () => {
-		setOpenModal(true);
-	};
 
 	const handleClose = () => {
 		setOpenModal(false);
-	};
-	const handleLoad = (e) => {
-		if (e.target.innerText === 'HistOSM') {
-			setSelectedSample('https://maps.heigit.org/histosm/wms');
-		} else if (e.target.innerText === 'magOSM') {
-			setSelectedSample('https://magosm.magellium.com/geoserver/wms');
-		} else {
-			setSelectedSample('https://www.wms.nrw.de/geobasis/wms_nw_vdop');
-		}
-	};
-	const handleSelect = (e) => {
-		setSelectedSample(e.target.value);
 	};
 
 	return (
 		<>
 			{props.open && (
+				<Fade in={props.open} appear="false">
 				<Box sx={mediaIsMobile ? mobileStyle : modalStyle}>
 					<Grid container>
 						<Grid xs={10}>
@@ -88,51 +113,12 @@ export default function WMSLinks(props) {
 					</Grid>
 					<Divider />
 					<Box>
-						<List>
-							<ListItem>
-								<ListItemButton value="https://maps.heigit.org/histosm/wms" onClick={handleLoad}>
-									<ListItemText>HistOSM </ListItemText>
-								</ListItemButton>
-							</ListItem>
-							<Typography variant="body2" marginLeft={3}>							
-								HistOSM is a service to visually explore historic objects stored in the
-								OpenStreetMap database. The WMS serviceis runed by the University of Heidelberg
-								GIScience Research Group.
-							</Typography>
-							<Divider variant="middle" component="li" />
-							<ListItem>
-								<ListItemButton
-									value="https://magosm.magellium.com/geoserver/wms"
-									onClick={handleLoad}
-								>
-									<ListItemText>MagOSM </ListItemText>
-								</ListItemButton>
-							</ListItem>
-							<Typography variant="body2" marginLeft={3}>
-								Developed by Magellium, the magOSM project provides services related to thematic
-								data from OpenStreetMap. Currently these services are provided at the scale of
-								metropolitan France. The data of the different services are updated daily.
-							</Typography>
-							<Divider variant="middle" component="li" />
-							<ListItem>
-								<ListItemButton
-									value="https://www.wms.nrw.de/geobasis/wms_nw_vdop"
-									onClick={handleLoad}
-								>
-									<ListItemText>NRW vdop </ListItemText>
-								</ListItemButton>
-							</ListItem>
-							<Typography variant="body2" marginLeft={3}>
-								Orthophotos are high-resolution, undistorted, true-to-scale images of the earth's
-								surface. In this service, the German state of Nordreihn Westfallen provides users
-								with the intermediate results from the production process of digital orthophotos
-								(DOP).
-							</Typography>
-							<Divider variant="middle" component="li" />
-						</List>
+						<Links />
 					</Box>
 				</Box>
+				</Fade>
 			)}
+			
 		</>
 	);
 }

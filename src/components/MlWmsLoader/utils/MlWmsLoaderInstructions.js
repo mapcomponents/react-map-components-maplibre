@@ -18,7 +18,7 @@ export default function MlWmsLoaderInstructions(props) {
 				setStep2(true);
 				setStep1(false);
 			}, 2500);
-			
+
 			setTimeout(() => {
 				setStep2(false);
 			}, 5500);
@@ -36,15 +36,13 @@ export default function MlWmsLoaderInstructions(props) {
 							width: 350,
 							height: 350,
 							position: 'fixed',
-							left: '5px',
-							top: '25px',
 							display: 'block',
 							flexDirection: 'column',
 							gap: '5px',
 							zIndex: 500,
 							borderRadius: 360,
 							left: -50,
-							top: 150,
+							top: 140,
 							backgroundColor: 'steelblue',
 							opacity: 1,
 							alignItems: 'center',
