@@ -18,8 +18,8 @@ const modalStyle = {
 	position: 'absolute',
 	top: '20%',
 	left: '60%',
-	width: '25%',
-	height: '55%',
+	width: 400,
+	height: 550,
 	bgcolor: 'background.paper',
 	boxShadow: 24,
 	p: 4,
@@ -28,13 +28,15 @@ const modalStyle = {
 
 const mobileStyle = {
 	position: 'absolute',
-	top: '30%',
+	top: '10%',
 	left: '20%',
-	width: 200,
-	height: 300,
+	width: '60%',
+	height: '70%',
 	bgcolor: 'background.paper',
 	boxShadow: 24,
 	p: 4,
+	zIndex: 200,
+	overflow: "scroll"
 };
 
 export default function WMSLinks(props) {
@@ -92,7 +94,11 @@ export default function WMSLinks(props) {
 									<ListItemText>HistOSM </ListItemText>
 								</ListItemButton>
 							</ListItem>
-							<Typography variant="body2" marginLeft={3}> HistOSM is a service to visually explore historic objects stored in the OpenStreetMap database. The WMS serviceis runed by the University of Heidelberg GIScience Research Group. </Typography>
+							<Typography variant="body2" marginLeft={3}>							
+								HistOSM is a service to visually explore historic objects stored in the
+								OpenStreetMap database. The WMS serviceis runed by the University of Heidelberg
+								GIScience Research Group.
+							</Typography>
 							<Divider variant="middle" component="li" />
 							<ListItem>
 								<ListItemButton
@@ -101,9 +107,12 @@ export default function WMSLinks(props) {
 								>
 									<ListItemText>MagOSM </ListItemText>
 								</ListItemButton>
-								
 							</ListItem>
-                            <Typography variant="body2" marginLeft={3}> Developed by Magellium, the magOSM project provides services related to thematic data from OpenStreetMap. Currently these services are provided at the scale of metropolitan France. The data of the different services are updated daily.</Typography>
+							<Typography variant="body2" marginLeft={3}>
+								Developed by Magellium, the magOSM project provides services related to thematic
+								data from OpenStreetMap. Currently these services are provided at the scale of
+								metropolitan France. The data of the different services are updated daily.
+							</Typography>
 							<Divider variant="middle" component="li" />
 							<ListItem>
 								<ListItemButton
@@ -113,7 +122,12 @@ export default function WMSLinks(props) {
 									<ListItemText>NRW vdop </ListItemText>
 								</ListItemButton>
 							</ListItem>
-                            <Typography variant="body2" marginLeft={3}> Orthophotos are high-resolution, undistorted, true-to-scale images of the earth's surface. In this service, the German state of Nordreihn Westfallen provides users with the intermediate results from the production process of digital orthophotos (DOP).</Typography>
+							<Typography variant="body2" marginLeft={3}>
+								Orthophotos are high-resolution, undistorted, true-to-scale images of the earth's
+								surface. In this service, the German state of Nordreihn Westfallen provides users
+								with the intermediate results from the production process of digital orthophotos
+								(DOP).
+							</Typography>
 							<Divider variant="middle" component="li" />
 						</List>
 					</Box>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import MlWmsLoader from './MlWmsLoader';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, useMediaQuery } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import MlWmsLoaderInstructions from './utils/MlWmsLoaderInstructions';
 import WMSLinks from './utils/WMSLinks';
+
 
 const storyoptions = {
 	title: 'MapComponents/MlWmsLoader',
@@ -22,9 +23,8 @@ const Template = (props) => {
 	const [url, setUrl] = useState(props.url);
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
-	//const mapHook = useMap({ mapId: 'map_1' });
 
-	console.log(url);
+	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	const handleClick1 = () => {
 		setDemoMode(!demoMode);
@@ -84,7 +84,9 @@ const Template = (props) => {
 					Demo WMS
 				</Button>
 			</TopToolbar>
-			<Sidebar sx={{ wordBreak: 'break-word' }}>
+
+
+			{(!mediaIsMobile) || (mediaIsMobile && !demoMode)? (<Sidebar sx={{ wordBreak: 'break-word' }}>
 				<TextField
 					label="WMS Url"
 					variant="standard"
@@ -92,7 +94,7 @@ const Template = (props) => {
 					onChange={(ev) => setUrl(ev.target.value)}
 				/>
 				<MlWmsLoader {...props} url={url} />
-			</Sidebar>
+			</Sidebar>) : (<></>) }				
 		</>
 	);
 };
