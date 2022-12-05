@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, {  useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
-import { TextField, Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
+import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
 import { ColorPicker } from 'mui-color';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 

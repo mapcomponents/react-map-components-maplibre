@@ -1,399 +1,327 @@
-import React, { useContext, useRef, useState, useEffect } from 'react';
-import MlGeoJsonLayer from '../../MlGeoJsonLayer/MlGeoJsonLayer';
-import * as turf from '@turf/turf';
+import React, { useRef, useEffect, useMemo } from 'react';
+import ReactDOM from 'react-dom';
+import Moveable from 'react-moveable';
 import useMap from '../../../hooks/useMap';
-import useLayerEvent from '../../../hooks/useLayerEvent';
-import { BBox, Feature, Polygon } from '@turf/turf';
-import PdfContext from './PdfContext';
-import { MapMouseEvent, MapTouchEvent, MapLayerMouseEvent, LngLat } from 'maplibre-gl';
+import useMapState from '../../../hooks/useMapState';
+import * as turf from '@turf/turf';
+import { PdfPreviewOptions } from './pdfContext';
+import {  LngLatLike, Map as MapType, PointLike } from 'maplibre-gl';
+import { Feature, Units } from '@turf/turf';
 
-const createPreviewGeojson = (
-	geojsonProps: { center: LngLat; distance: number; bearing: number },
-	orientation: string
-) => {
-	const topLeftAngle = orientation === 'portrait' ? -35.3 : -54.7;
-	const bottomRightAngle = orientation === 'portrait' ? 144.7 : 125.3;
-	const topLeft = turf.destination(
-		[geojsonProps.center.lng, geojsonProps.center.lat],
-		geojsonProps.distance,
-		topLeftAngle
-	);
-	const bottomRight = turf.destination(
-		[geojsonProps.center.lng, geojsonProps.center.lat],
-		geojsonProps.distance,
-		bottomRightAngle
-	);
-	const bbox = [
-		topLeft.geometry.coordinates[0],
-		topLeft.geometry.coordinates[1],
-		bottomRight.geometry.coordinates[0],
-		bottomRight.geometry.coordinates[1],
-	];
-
-	let _previewGeojson = turf.bboxPolygon(bbox as BBox);
-	_previewGeojson = turf.transformRotate(_previewGeojson, geojsonProps.bearing);
-	if (!_previewGeojson?.properties) {
-		_previewGeojson.properties = {};
-	}
-	_previewGeojson.properties.bearing = geojsonProps.bearing;
-	return _previewGeojson;
-};
-
-interface PdfPreviewProps {
+type Props = {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
 	/**
-	 * Id of an existing layer in the mapLibre instance to help specify the layer order
-	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+	 * Polygon GeoJson Feature representing the printing area
 	 */
-	insertBeforeLayer?: string;
+	geojsonRef: React.MutableRefObject<
+		| Feature
+		| undefined
+	>;
+	/**
+	 * a state variable containing the PDF previews current state
+	 */
+	options: PdfPreviewOptions;
+	/**
+	 * setter function to update the current PDF preview state
+	 */
+	setOptions: (arg1: (val: PdfPreviewOptions) => PdfPreviewOptions) => void;
+};
+
+function getTargetRotationAngle(target: HTMLDivElement) {
+	const el_style = window.getComputedStyle(target, null);
+	const el_transform = el_style.getPropertyValue('transform');
+
+	let deg = 0;
+
+	if (el_transform !== 'none') {
+		const values = el_transform.split('(')[1].split(')')[0].split(',');
+		const a = parseFloat(values[0]);
+		const b = parseFloat(values[1]);
+		deg = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+	}
+
+	return deg < 0 ? deg + 360 : deg;
 }
 
-interface geojsonProps {
-	center: { lng: number; lat: number };
-	distance: number;
-	bearing: number;
-	geojson: Feature<Polygon> | undefined;
+function calcElemTransformedPoint(
+	el: HTMLDivElement,
+	point: [number, number],
+	transformOrigin: [number, number]
+): PointLike {
+	const style = getComputedStyle(el);
+	const p = [point[0] - transformOrigin[0], point[1] - transformOrigin[1]];
+
+	const matrix = new DOMMatrixReadOnly(style.transform);
+
+	// transform pixel coordinates according to the css transform state of "el" (target)
+	return [
+		p[0] * matrix.a + p[1] * matrix.c + matrix.e + transformOrigin[0],
+		p[0] * matrix.b + p[1] * matrix.d + matrix.f + transformOrigin[1],
+	];
 }
 
-export default function PdfPreview(props: PdfPreviewProps) {
-	const pdfContext = useContext(PdfContext);
-	const initializedRef = useRef(false);
-	const activeFeature = useRef();
+// measure distance in pixels that is used to determine the current css transform.scale relative to the maps viewport.zoom
+const scaleAnchorInPixels = 10;
 
-	const dragging = useRef(false);
+// used to determine the MapZoomScale modifier which is multiplied with props.options.scale to relate the scale to the current map viewport.zoom
+function getMapZoomScaleModifier(point: [number, number], _map: MapType) {
+	const left = _map.unproject(point);
+	const right = _map.unproject([point[0] + scaleAnchorInPixels, point[1]]);
+	const maxMeters = left.distanceTo(right);
+	return scaleAnchorInPixels / maxMeters;
+}
 
-	const draggingResizeHandle = useRef(false);
-
-	const draggingRotationHandle = useRef(false);
-
-	const [geojsonProps, setGeojsonProps] = useState<geojsonProps>({
-		center: { lng: 0, lat: 0 },
-		distance: 10,
-		bearing: 0,
-		geojson: undefined,
-	});
-
+/**
+ * PdfPreview component renders a transformable (drag, scale, rotate) preview of the desired export or print content
+ */
+export default function PdfPreview(props: Props) {
+	const mapState = useMapState({ mapId: props.mapId, watch: { layers: false, viewport: true } });
+	const targetRef = useRef<HTMLDivElement>(null);
+	const fixedScaleRef = useRef<number | undefined>();
+	const moveableRef = useRef<Moveable>(null);
+	const mapContainerRef = useRef<HTMLDivElement>(document.querySelector('.mapContainer'));
+	//const [transform, setTransform] = useState('translate(452.111px, 15.6148px)');
 	const mapHook = useMap({
 		mapId: props.mapId,
-		waitForLayer: props.insertBeforeLayer,
 	});
 
 	useEffect(() => {
+		if (!mapState?.viewport?.zoom || !mapHook.map) return;
+		// if the component was initialized with scale or center as undefined derive those values from the current map view state
+
+		//initialize props if not defined
+		const _centerX = Math.round(mapHook.map.map._container.clientWidth / 2);
+		const _centerY = Math.round(mapHook.map.map._container.clientHeight / 2);
+
+		if (!props.options.scale) {
+			//const scale = parseFloat(/(14/mapState.viewport.zoom));
+			const scale = 1 / getMapZoomScaleModifier([_centerX, _centerY], mapHook.map.map);
+
+			props.setOptions((val: PdfPreviewOptions) => ({ ...val, scale: [scale, scale] }));
+		}
+		if (!props.options.center) {
+			const _center = mapHook.map.map.unproject([_centerX, _centerY]);
+			props.setOptions((val: PdfPreviewOptions) => ({
+				...val,
+				center: [_center.lng, _center.lat],
+			}));
+		}
+	}, [mapHook.map, mapState.viewport?.zoom]);
+
+	useEffect(() => {
+		if (!mapHook.map) return;
+
+		mapHook.map.map.setPitch(0);
+		const _maxPitch = mapHook.map.map.getMaxPitch();
+		mapHook.map.map.setMaxPitch(0);
+		return () => {
+			mapHook.map?.map.setMaxPitch(_maxPitch);
+		};
+	}, [mapHook.map]);
+
+	const transformOrigin = useMemo<[number, number]>(() => {
+		if (props.options.orientation === 'portrait') {
+			return [props.options.width / 2, props.options.height / 2];
+		} else {
+			return [props.options.height / 2, props.options.width / 2];
+		}
+	}, [props.options.orientation, props.options.width, props.options.height]);
+
+	const transform = useMemo(() => {
+		if (!mapHook.map || !props.options.scale) return 'none';
+
+		const centerInPixels = mapHook.map.map.project(props.options.center as LngLatLike);
+
+		const x = centerInPixels.x;
+		const y = centerInPixels.y;
+		const scale = props.options.scale[0] * getMapZoomScaleModifier([x, y], mapHook.map.map);
+
+		const viewportBearing = mapState?.viewport?.bearing ? mapState.viewport?.bearing : 0;
+
+		const _transform = `translate(${Math.floor(
+			centerInPixels.x - transformOrigin[0]
+		)}px,${Math.floor(centerInPixels.y - transformOrigin[1])}px) rotate(${
+			props.options.rotate - viewportBearing
+		}deg) scale(${scale},${scale})`;
+
+		if (targetRef.current) targetRef.current.style.transform = _transform;
+
+		return _transform;
+	}, [
+		mapHook.map,
+		mapState.viewport,
+		props.options.scale,
+		props.options.rotate,
+		props.options.center,
+		transformOrigin,
+	]);
+
+	useEffect(() => {
+		moveableRef.current?.updateTarget();
+	}, [transform]);
+
+	useEffect(() => {
+		// update props.options.scale if fixedScale was changed
 		if (
 			!mapHook.map ||
-			!pdfContext.geojsonRef ||
-			!pdfContext.orientation ||
-			!pdfContext.template ||
-			initializedRef.current
+			!props.options.center ||
+			!props.options.fixedScale ||
+			(typeof props.options.fixedScale !== 'undefined' &&
+				fixedScaleRef.current === props.options.fixedScale)
 		)
 			return;
 
-		initializedRef.current = true;
+		fixedScaleRef.current = props.options.fixedScale;
+		const point = turf.point(props.options.center);
+		const distance = props.options.fixedScale * (props.options.width / 1000);
 
-		const center = mapHook.map.map.getCenter();
-		const canvasHeight = mapHook.map.map._canvas.height;
-		const canvasWidth = mapHook.map.map._canvas.width;
-		const bboxPixelHeight = Math.ceil(canvasHeight / 2);
-		const bboxPixelWidth = Math.ceil(
-			(pdfContext.template.width / pdfContext.template.height) * bboxPixelHeight
+		const bearing = 90;
+		const options = { units: 'meters' as Units };
+		const destination = turf.destination(point, distance, bearing, options);
+
+		const centerInPixels = mapHook.map.map.project(point.geometry.coordinates as LngLatLike);
+		const destinationInPixels = mapHook.map.map.project(
+			destination.geometry.coordinates as LngLatLike
 		);
 
-		const topLeft = mapHook.map.map.unproject([
-			Math.floor(canvasWidth / 2 - bboxPixelWidth / 2),
-			Math.floor(canvasHeight / 2 - bboxPixelHeight / 2),
-		]);
+		const scaleFactor =
+			(Math.round(destinationInPixels.x - centerInPixels.x) / props.options.width) *
+			(1 / getMapZoomScaleModifier([centerInPixels.x, centerInPixels.y], mapHook.map.map));
+		props.setOptions((val: PdfPreviewOptions) => ({ ...val, scale: [scaleFactor, scaleFactor] }));
+	}, [mapHook.map, props.options.width, props.options.center, props.options.fixedScale]);
 
-		const distance = turf.distance([center.lng, center.lat], [topLeft.lng, topLeft.lat]);
-
-		const tmpGeojsonProps = {
-			center,
-			distance,
-			bearing: 0,
-			geojson: createPreviewGeojson({ center, distance, bearing: 0 }, pdfContext.orientation),
-		};
-		setGeojsonProps(tmpGeojsonProps);
-		pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
-	}, [mapHook.map]);
-
+	// update props.geoJsonRef
 	useEffect(() => {
-		if (!pdfContext.orientation || !pdfContext.geojsonRef) return;
-
-		const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
-		tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
-		setGeojsonProps(tmpGeojsonProps);
-		pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
-	}, [pdfContext.orientation]);
-
-	// Resize handle events
-	useLayerEvent({
-		event: 'mouseenter',
-		layerId: 'pdfPreviewGeojsonResizeHandle',
-		eventHandler: function () {
-			if (!mapHook.map) return;
-
-			mapHook.map.map._canvas.style.cursor = 'nwse-resize';
-			mapHook.map.map.dragPan.disable();
-		},
-	});
-	useLayerEvent({
-		event: 'mouseleave',
-		layerId: 'pdfPreviewGeojsonResizeHandle',
-		eventHandler: function () {
-			if (!mapHook.map) return;
-
-			mapHook.map.map._canvas.style.cursor = '';
-			mapHook.map.map.dragPan.enable();
-		},
-	});
-	useLayerEvent({
-		event: 'mousedown',
-		layerId: 'pdfPreviewGeojsonResizeHandle',
-		addTouchEvents: true,
-		eventHandler: function (e: MapMouseEvent | MapTouchEvent) {
-			e.preventDefault();
-			if (!mapHook.map) return;
-
-			dragging.current = false;
-			draggingRotationHandle.current = false;
-			draggingResizeHandle.current = true;
-			mapHook.map.map._canvas.style.cursor = 'move';
-
-			function onMove(e: MapMouseEvent | MapTouchEvent) {
-				if (!pdfContext.geojsonRef || !draggingResizeHandle.current || !pdfContext.orientation)
-					return;
-
-				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
-				let _distance = turf.distance(
-					[tmpGeojsonProps.center.lng, tmpGeojsonProps.center.lat],
-					[e.lngLat.lng, e.lngLat.lat]
-				);
-				// limit max diagonal distance of PDF area to 120km as larger area lead to distortions for northern and southern areas
-				if (_distance > 60) {
-					_distance = 60;
-				}
-				tmpGeojsonProps.distance = _distance;
-				tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
-				pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
-				setGeojsonProps(tmpGeojsonProps);
+		if (targetRef.current && mapHook.map) {
+			// apply orientation
+			let _width = props.options.width;
+			let _height = props.options.height;
+			if (props.options.orientation === 'portrait') {
+				targetRef.current.style.width = props.options.width + 'px';
+				targetRef.current.style.height = props.options.height + 'px';
+			} else {
+				targetRef.current.style.width = props.options.height + 'px';
+				targetRef.current.style.height = props.options.width + 'px';
+				_width = props.options.height;
+				_height = props.options.width;
 			}
-			function onUp() {
-				if (!draggingResizeHandle.current || !mapHook.map) return;
+			moveableRef.current?.updateTarget();
 
-				mapHook.map.map._canvas.style.cursor = '';
-				draggingResizeHandle.current = false;
+			const topLeft = mapHook.map.map.unproject(
+				calcElemTransformedPoint(targetRef.current, [0, 0], transformOrigin)
+			);
+			const topRight = mapHook.map.map.unproject(
+				calcElemTransformedPoint(targetRef.current, [_width, 0], transformOrigin)
+			);
+			const bottomLeft = mapHook.map.map.unproject(
+				calcElemTransformedPoint(targetRef.current, [0, _height], transformOrigin)
+			);
+			const bottomRight = mapHook.map.map.unproject(
+				calcElemTransformedPoint(targetRef.current, [_width, _height], transformOrigin)
+			);
 
-				mapHook.map.map.dragPan.enable();
-				// Unbind mouse events
-				mapHook.map.map.off('mousemove', onMove);
-				mapHook.map.map.off('touchmove', onMove);
-			}
+			const _geoJson = {
+				type: 'Feature',
+				bbox: [topLeft.lng, topLeft.lat, bottomRight.lng, bottomRight.lat],
+				geometry: {
+					type: 'Polygon',
+					coordinates: [
+						[
+							[topLeft.lng, topLeft.lat],
+							[topRight.lng, topRight.lat],
+							[bottomRight.lng, bottomRight.lat],
+							[bottomLeft.lng, bottomLeft.lat],
+							[topLeft.lng, topLeft.lat],
+						],
+					],
+				},
+				properties: { bearing: getTargetRotationAngle(targetRef.current) },
+			} as Feature;
+			props.geojsonRef.current = _geoJson;
+		}
 
-			// Mouse events
-			mapHook.map.map.on('mousemove', onMove);
-			mapHook.map.map.on('touchmove', onMove);
-			mapHook.map.map.once('mouseup', onUp);
-			mapHook.map.map.once('touchend', onUp);
-		},
-	});
+		return undefined;
+	}, [
+		mapHook,
+		transform,
+		props.options.orientation,
+		props.geojsonRef,
+		mapState,
+		targetRef.current,
+		transformOrigin,
+	]);
 
-	// Rotation handle events
-	useLayerEvent({
-		event: 'mouseenter',
-		layerId: 'pdfPreviewGeojsonRotationHandle',
-		eventHandler: function () {
-			if (!mapHook.map) return;
-
-			mapHook.map.map._canvas.style.cursor = 'nwse-resize';
-			mapHook.map.map.dragPan.disable();
-		},
-	});
-	useLayerEvent({
-		event: 'mouseleave',
-		layerId: 'pdfPreviewGeojsonRotationHandle',
-		eventHandler: function () {
-			if (!mapHook.map) return;
-
-			mapHook.map.map._canvas.style.cursor = '';
-			mapHook.map.map.dragPan.enable();
-		},
-	});
-	useLayerEvent({
-		event: 'mousedown',
-		layerId: 'pdfPreviewGeojsonRotationHandle',
-		addTouchEvents: true,
-		eventHandler: function (e: MapMouseEvent | MapTouchEvent) {
-			e.preventDefault();
-			if (!mapHook.map || !pdfContext.orientation) return;
-
-			dragging.current = false;
-			draggingResizeHandle.current = false;
-			draggingRotationHandle.current = true;
-			mapHook.map.map._canvas.style.cursor = 'move';
-
-			function onMove(e: MapMouseEvent | MapTouchEvent) {
-				e.preventDefault();
-				if (!draggingRotationHandle.current || !pdfContext.orientation || !pdfContext.geojsonRef)
-					return;
-
-				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
-				const _bearing = turf.bearing(
-					[tmpGeojsonProps.center.lng, tmpGeojsonProps.center.lat],
-					[e.lngLat.lng, e.lngLat.lat]
-				);
-				tmpGeojsonProps.bearing = 144.7 + _bearing;
-				tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
-				pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
-				setGeojsonProps(tmpGeojsonProps);
-			}
-			function onUp() {
-				if (!draggingRotationHandle.current || !mapHook.map) return;
-
-				mapHook.map.map._canvas.style.cursor = '';
-				draggingRotationHandle.current = false;
-
-				mapHook.map.map.dragPan.enable();
-				// Unbind mouse events
-				mapHook.map.map.off('mousemove', onMove);
-				mapHook.map.map.off('touchmove', onMove);
-			}
-
-			// Mouse events
-			mapHook.map.map.on('mousemove', onMove);
-			mapHook.map.map.on('touchmove', onMove);
-			mapHook.map.map.once('mouseup', onUp);
-			mapHook.map.map.once('touchend', onUp);
-		},
-	});
-
-	// drag & drop events
-	useLayerEvent({
-		event: 'mouseenter',
-		layerId: 'pdfPreviewGeojson',
-		eventHandler: function (e: MapLayerMouseEvent) {
-			if (!mapHook.map || !e?.features?.length) return;
-			mapHook.map.map._canvas.style.cursor = 'move';
-			activeFeature.current = e.features[0];
-		},
-	});
-	useLayerEvent({
-		event: 'mouseleave',
-		layerId: 'pdfPreviewGeojson',
-		eventHandler: function () {
-			if (!mapHook.map) return;
-
-			mapHook.map.map._canvas.style.cursor = '';
-			mapHook.map.map.dragPan.enable();
-			activeFeature.current = undefined;
-		},
-	});
-	useLayerEvent({
-		event: 'mousedown',
-		addTouchEvents: true,
-		layerId: 'pdfPreviewGeojson',
-		eventHandler: function (e: MapMouseEvent | MapTouchEvent) {
-			e.preventDefault();
-			console.log('mousedown');
-			if (!mapHook.map) return;
-
-			draggingResizeHandle.current = false;
-			draggingRotationHandle.current = false;
-			dragging.current = true;
-			mapHook.map.map._canvas.style.cursor = 'move';
-
-			function onMove(e: MapMouseEvent | MapTouchEvent) {
-				e.preventDefault();
-				if (!dragging.current || !pdfContext.geojsonRef || !pdfContext.orientation) return;
-
-				const tmpGeojsonProps = JSON.parse(JSON.stringify(geojsonProps));
-				tmpGeojsonProps.center = e.lngLat;
-				tmpGeojsonProps.geojson = createPreviewGeojson(tmpGeojsonProps, pdfContext.orientation);
-				pdfContext.geojsonRef.current = tmpGeojsonProps.geojson;
-				setGeojsonProps(tmpGeojsonProps);
-			}
-			function onUp() {
-				if (!dragging.current || !mapHook.map) return;
-
-				mapHook.map.map._canvas.style.cursor = '';
-				dragging.current = false;
-
-				mapHook.map.map.dragPan.enable();
-				// Unbind mouse events
-				mapHook.map.map.off('mousemove', onMove);
-				mapHook.map.map.off('touchmove', onMove);
-			}
-
-			// Mouse events
-			mapHook.map.map.on('mousemove', onMove);
-			mapHook.map.map.on('touchmove', onMove);
-			mapHook.map.map.once('mouseup', onUp);
-			mapHook.map.map.once('touchend', onUp);
-		},
-	});
-
-	//map.on('mouseleave', 'point', function() {
-	//    map.setPaintProperty('point', 'circle-color', '#3887be');
-	//    canvas.style.cursor = '';
-	//    isCursorOverPoint = false;
-	//    map.dragPan.enable();
-	//});
-
-	return (
+	return mapContainerRef.current ? ReactDOM.createPortal(
 		<>
-			{geojsonProps?.geojson?.bbox && (
-				<>
-					<MlGeoJsonLayer
-						paint={{ 'line-color': '#616161', 'line-width': 4 }}
-						type="line"
-						layerId="pdfPreviewGeojsonOutline"
-						geojson={geojsonProps.geojson}
-					/>
-					<MlGeoJsonLayer
-						paint={{ 'fill-opacity': 0 }}
-						type="fill"
-						layerId="pdfPreviewGeojson"
-						geojson={geojsonProps.geojson}
-					/>
-					<MlGeoJsonLayer
-						layerId="pdfPreviewGeojsonResizeHandle"
-						paint={{
-							'circle-radius': 10,
-							'circle-color': '#1976d2',
-							'circle-stroke-width': 2,
-							'circle-stroke-color': '#ffffff',
-						}}
-						geojson={{
-							type: 'Feature',
-							geometry: {
-								type: 'Point',
-								//coordinates: [geojsonProps.geojson.bbox[2], geojsonProps.geojson.bbox[3]],
-								coordinates: geojsonProps.geojson.geometry.coordinates[0][2],
-							},
-							properties: {},
-						}}
-					/>
-					<MlGeoJsonLayer
-						layerId="pdfPreviewGeojsonRotationHandle"
-						paint={{
-							'circle-radius': 10,
-							'circle-color': '#86dd71',
-							'circle-stroke-width': 2,
-							'circle-stroke-color': '#ffffff',
-						}}
-						geojson={{
-							type: 'Feature',
-							geometry: {
-								type: 'Point',
-								//coordinates: [geojsonProps.geojson.bbox[0], geojsonProps.geojson.bbox[3]],
-								coordinates: geojsonProps.geojson.geometry.coordinates[0][3],
-							},
-							properties: {},
-						}}
-					/>
-				</>
-			)}
-		</>
-	);
+			<div
+				className="target"
+				ref={targetRef}
+				style={{ transform: transform, transformOrigin: 'center center' }}
+			></div>
+			<Moveable
+				// eslint-disable-next-line
+				// @ts-ignore:
+				ref={moveableRef}
+				target={targetRef}
+				container={null}
+				origin={true}
+				keepRatio={true}
+				/* draggable */
+				draggable={true}
+				onDrag={(e) => {
+					if (mapHook.map) {
+
+						let _transformParts = e.transform.split('translate(');
+						_transformParts = _transformParts[1].split('px)')[0].split('px, ');
+						const _center = mapHook.map?.map.unproject([
+							parseInt(_transformParts[0]) + transformOrigin[0],
+							parseInt(_transformParts[1]) + transformOrigin[1],
+						]);
+						props.setOptions((val: PdfPreviewOptions) => ({
+							...val,
+							center: [_center.lng, _center.lat],
+						}));
+					}
+				}}
+				/* scalable */
+				scalable={props.options.fixedScale ? false : true}
+				onScale={(e) => {
+					if (mapHook.map) {
+						let _transformParts = e.drag.transform.split('scale(');
+						_transformParts = _transformParts[1].split(')')[0].split(', ');
+
+						const centerInPixels = mapHook.map.map.project(props.options.center as LngLatLike);
+
+						const x = centerInPixels.x;
+						const y = centerInPixels.y;
+
+						const scale =
+							parseFloat(_transformParts[0]) *
+							(1 / getMapZoomScaleModifier([x, y], mapHook.map.map));
+
+
+						props.setOptions((val: PdfPreviewOptions) => ({ ...val, scale: [scale, scale] }));
+					}
+				}}
+				/* rotatable */
+				rotatable={true}
+				onRotate={(e) => {
+					if (mapHook.map && mapState.viewport) {
+						const _transformParts = e.drag.transform.split('rotate(');
+						const _transformPartString = _transformParts[1].split('deg)')[0];
+						const viewportBearing = mapState?.viewport?.bearing ? mapState.viewport.bearing : 0;
+
+						props.setOptions((val: PdfPreviewOptions) => ({
+							...val,
+							rotate: parseFloat(_transformPartString) + viewportBearing,
+						}));
+					}
+				}}
+			/>
+		</>,
+		mapContainerRef.current
+	):<></>;
 }

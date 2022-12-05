@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import MlGeoJsonLayer from './MlGeoJsonLayer';
+import useMap from '../../hooks/useMap';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
 import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
@@ -24,6 +25,19 @@ interface TemplateProps {
 }
 
 const Template = (props: TemplateProps) => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 15 });
+	}, [mapHook.map]);
+
 	return (
 		<>
 			<LineStyler {...props} />
@@ -31,6 +45,19 @@ const Template = (props: TemplateProps) => {
 	);
 };
 const PolygonTemplate = (props: TemplateProps) => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 15 });
+	}, [mapHook.map]);
+
 	return (
 		<>
 			<PolygonStyler {...props} />

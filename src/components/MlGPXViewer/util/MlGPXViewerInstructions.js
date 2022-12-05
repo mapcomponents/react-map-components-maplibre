@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Paper, Icon, Typography, Grid } from '@mui/material';
-import { color, fontSize } from '@mui/system';
+import { Grid } from '@mui/material';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
-import zIndex from '@mui/material/styles/zIndex';
-import MlGPXDemoViewer from '../util/demoViewer';
 import Fade from '@mui/material/Fade';
 
 const divStyle = {
 	width: 450,
 	height: 450,
 	position: 'fixed',
-	right: '5px',
-	bottom: '25px',
+	//right: '5px',
+	//bottom: '25px',
 	display: 'block',
 	flexDirection: 'column',
 	gap: '5px',
@@ -106,8 +103,8 @@ export default function MlGPXViewerInstructions(props) {
 						width: 450,
 						height: 450,
 						position: 'fixed',
-						left: '5px',
-						top: '25px',
+						//left: '5px',
+						//top: '25px',
 						display: 'block',
 						flexDirection: 'column',
 						gap: '5px',

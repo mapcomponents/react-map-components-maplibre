@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, {  useEffect, useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import {
 	Select,
@@ -76,7 +76,6 @@ const LineStyler = (props) => {
 	const [opacity, setOpacity] = useState(0.8);
 	const [featuresToShow, setFeaturesToShow] = useState(['Show all']);
 	const [lineWidth, setLineWidth] = useState(5);
-
 
 	const storyGeoJson = useMemo(() => {
 		if (featuresToShow[0] === 'Show all') {
