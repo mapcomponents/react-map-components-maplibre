@@ -35,18 +35,20 @@ interface MlSketchToolProps {
  * Component template
  *
  */
+
 const MlSketchTool = (props: MlSketchToolProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
-	const [drawMode, setDrawMode] = useState('');
-	const [geometries, setGeometries] = useState([]);
-	const [activeGeometryIndex, setActiveGeometryIndex] = useState();
-	const [selectedGeoJson, setSelectedGeoJson] = useState();
 	const [hoveredGeometry, setHoveredGeometry] = useState();
-	//TODO: set States reduzieren, mehrere States als ein Object zusammenfassen um rerenders zu reduzieren
+	const [sketchState, setSketchState] = useState({
+		activeGeometryIndex: undefined,
+		selectedGeoJson: undefined,
+		geometries: [],
+		drawMode: '',
+	});
 
 	const buttonStyle = {
 		/*minWidth: '20px',
@@ -66,16 +68,36 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 
 	const buttonClickHandler = useCallback(
 		(buttonDrawMode: string) => {
-			drawMode !== buttonDrawMode ? setDrawMode(buttonDrawMode) : setDrawMode('');
+			console.log(buttonDrawMode);
+			sketchState.drawMode !== buttonDrawMode
+				? setSketchState((_sketchTool) => ({
+						drawMode: buttonDrawMode,
+						geometries: _sketchTool.geometries,
+						activeGeometryIndex: undefined,
+						selectedGeoJson: undefined,
+				  }))
+				: setSketchState((_sketchTool) => ({
+						drawMode: '',
+						geometries: _sketchTool.geometries,
+						activeGeometryIndex: undefined,
+						selectedGeoJson: undefined,
+				  }));
 		},
-		[drawMode]
+		[sketchState]
 	);
+	//TODO: drawMode ActiveGeometry und das andere zusammen packen und hier alles null oder so
 
-	const removeGeoJson = (geoJson) => {
-		const tempGeometries = [...geometries];
-		tempGeometries.splice(tempGeometries.indexOf(geoJson), 1);
-		setGeometries(tempGeometries);
-		setActiveGeometryIndex(activeGeometryIndex - 1);
+	const removeGeoJson = (geoJson: object): void => {
+		setSketchState((_sketchState) => {
+			const tempGeometries = [...sketchState.geometries];
+			tempGeometries.splice(tempGeometries.indexOf(geoJson), 1);
+
+			return {
+				..._sketchState,
+				geometries: tempGeometries,
+				activeGeometryIndex: _sketchState.activeGeometryIndex - 1,
+			};
+		});
 	};
 
 	return (
@@ -104,48 +126,60 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				</ButtonGroup>
 			</Box>
 
-			{drawMode && (
+			{sketchState.drawMode && (
 				<MlFeatureEditor
 					mode={
-						drawMode === 'edit'
-							? selectedGeoJson?.geometry?.type === 'LineString'
+						sketchState.drawMode === 'edit'
+							? sketchState.selectedGeoJson?.geometry?.type === 'LineString'
 								? 'simple_select'
 								: 'custom_select'
-							: drawMode
+							: sketchState.drawMode
 					}
-					geojson={drawMode === 'edit' ? selectedGeoJson : undefined}
-					onChange={(feature: any) => {
-						const _geometries = [...geometries];
-						if (drawMode === 'edit') {
-							_geometries[_geometries.indexOf(selectedGeoJson)] = feature[0];
-						} else {
-							if (!activeGeometryIndex) {
-								const tempFeature = feature[0];
-								tempFeature.properties.id = tempFeature.id;
-
-								_geometries.push(tempFeature);
-								if (feature[0].geometry.type !== 'Point')
-									setActiveGeometryIndex(_geometries.length - 1);
+					geojson={sketchState.drawMode === 'edit' ? sketchState.selectedGeoJson : undefined}
+					onChange={(feature: object) => {
+						setSketchState((_sketchState: any): void => {
+							const _geometries = [...sketchState.geometries];
+							if (sketchState.drawMode === 'edit') {
+								_geometries[_geometries.indexOf(sketchState.selectedGeoJson)] = feature[0];
 							} else {
-								_geometries[activeGeometryIndex] = feature[0];
+								if (!sketchState.activeGeometryIndex) {
+									const tempFeature = feature[0];
+									tempFeature.properties.id = tempFeature.id;
+
+									_geometries.push(tempFeature);
+								} else {
+									_geometries[sketchState.activeGeometryIndex] = feature[0];
+								}
 							}
-						}
-						setGeometries(_geometries);
+							return {
+								..._sketchState,
+								activeGeometryIndex:
+									_sketchState.drawMode !== 'edit' && feature[0].geometry.type !== 'Point'
+										? _geometries.length - 1
+										: _sketchState.activeGeometryIndex,
+								geometries: _geometries,
+							};
+						});
 					}}
 					onFinish={() => {
-						setDrawMode('');
-						if (drawMode !== 'draw_point') {
-							setActiveGeometryIndex(undefined);
-							setSelectedGeoJson(undefined);
-						}
+						setSketchState((_sketchState) => ({
+							..._sketchState,
+							drawMode: '',
+							activeGeometryIndex:
+								_sketchState.drawMode !== 'draw_point'
+									? undefined
+									: _sketchState.activeGeometryIndex,
+							selectedGeoJson:
+								_sketchState.drawMode !== 'draw_point' ? undefined : _sketchState.selectedGeoJson,
+						}));
 					}}
 				/>
 			)}
 
 			<List sx={{ zIndex: 105 }}>
-				{geometries.map((el) => (
+				{sketchState.geometries.map((el) => (
 					<>
-						<ListItem key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
+						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
 							<br />
 							<Box
 								flexDirection={'row'}
@@ -188,8 +222,11 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 								<IconButton
 									sx={buttonStyle}
 									onClick={() => {
-										setSelectedGeoJson(el);
-										setDrawMode('edit');
+										setSketchState((_sketchState) => ({
+											..._sketchState,
+											selectedGeoJson: el,
+											drawMode: 'edit',
+										}));
 									}}
 								>
 									<EditIcon />
@@ -203,7 +240,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									<DeleteIcon />
 								</IconButton>
 							</Box>
-						</ListItem>
+						</Box>
 					</>
 				))}
 				{hoveredGeometry && (
@@ -220,7 +257,9 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					/>
 				)}
 			</List>
-			{drawMode === 'edit' && <Box>Edit {selectedGeoJson?.geometry?.type}</Box>}
+			{sketchState.drawMode === 'edit' && (
+				<Box>Edit {sketchState.selectedGeoJson?.geometry?.type}</Box>
+			)}
 		</>
 	);
 };
