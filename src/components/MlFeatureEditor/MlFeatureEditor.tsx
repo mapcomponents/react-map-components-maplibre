@@ -8,6 +8,7 @@ import CustomSelectMode from './custom-select-mode.js';
 import CustomDirectSelectMode from './custom-direct-select-mode.js';
 
 import useMap from '../../hooks/useMap';
+import { GeoJSONObject, Feature } from '@turf/turf';
 
 interface MlFeatureEditorProps {
 	/**
@@ -22,17 +23,17 @@ interface MlFeatureEditorProps {
 	/**
 	 * Input GeoJson data at initialization
 	 */
-	geojson?: any;
+	geojson?: Feature;
 	/**
 	 * Callback function that is called each time the GeoJson data within has changed within MlFeatureEditor.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onChange?: Function;
+	onChange?: (para: GeoJSONObject[]) => void;
 	/**
 	 * Callback function that is called each time the GeoJson data within has been finished within MlFeatureEditor.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onFinish?: Function;
+	onFinish?: () => void;
 	/**
 	 * Feature editor mode:
 	 * - "custom_select" edit features
@@ -77,6 +78,7 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 				draw.current
 			) {
 				// remove old Mapbox-gl-Draw from Mapbox instance when hot-reloading this component during development
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				draw.current?.remove();
 			}
@@ -84,6 +86,7 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 			draw.current = new MapboxDraw({
 				displayControlsDefault: false,
 				defaultMode: props.mode || 'custom_select',
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				modes: Object.assign(
 					{
@@ -124,19 +127,19 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 			if (!mapHook.map) return;
 
 			mapHook.map.map.off('mouseup', changeHandler);
-
 			mapHook.map.map.off('touchend', changeHandler);
 		};
 	}, [drawToolsReady, mapHook.map]);
 
 	useEffect(() => {
 		if (draw.current && props.geojson?.geometry) {
-			draw.current.set({ type: 'FeatureCollection', features: [props.geojson] });
+			draw.current.set({ type: 'FeatureCollection', features: [props.geojson as any] });
 		}
 	}, [props.geojson, drawToolsReady]);
 
 	useEffect(() => {
 		if (props.mode && draw.current) {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			draw.current.changeMode(props.mode);
 		}
