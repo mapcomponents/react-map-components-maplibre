@@ -10,9 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
-import MlSpatialElevationProfileInstructions from './util/MlSpatialElevationProfileInstructions';
+import MlGPXViewerInstructions from '../../components/MlGPXViewer/util/MlGPXViewerInstructions';
 import { Button } from '@mui/material';
-import MlSpatialElevationProfileDemoViewer from '../MlGPXViewer/util/MlGPXDemoLoader';
+import MlGPXDemoLoader from '../MlGPXViewer/util/MlGPXDemoLoader';
 
 const storyoptions = {
 	title: 'MapComponents/MlSpatialElevationProfile',
@@ -71,7 +71,7 @@ const Template = (args) => {
 	return (
 		<>
 			<TopToolbar>
-				<MlSpatialElevationProfileInstructions open={guide} />
+				<MlGPXViewerInstructions open={guide} />
 				<Button
 					variant="contained"
 					onClick={handleClick2}
@@ -105,7 +105,7 @@ const Template = (args) => {
 				<FileDownloadIcon />
 			</IconButton>
 			<GeoJsonProvider>
-				<MlSpatialElevationProfileDemoViewer enabled={demoMode} />
+				<MlGPXDemoLoader enabled={demoMode} />
 				<MlGPXViewer />
 				<MlSpatialElevationProfile />
 			</GeoJsonProvider>

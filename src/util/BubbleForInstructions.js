@@ -6,7 +6,7 @@ import zIndex from '@mui/material/styles/zIndex';
 import MlGPXDemoViewer from './demoViewer';
 import Fade from '@mui/material/Fade';
 
-function BubbleStyle(props) {
+function BubbleForInstruction(props) {
 	return (
 		<>
 			<div
@@ -37,6 +37,7 @@ function BubbleStyle(props) {
 					style={{
 						color: 'white',
 						fontSize: '80px',
+						position: 'absolute',
 						transform: props.iconTransform,
 						marginTop: props.iconMarginTop,
 						marginLeft: props.iconMarginLeft,
@@ -46,4 +47,4 @@ function BubbleStyle(props) {
 		</>
 	);
 }
-export default BubbleStyle;
+export default BubbleForInstruction;
