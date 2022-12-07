@@ -69,7 +69,7 @@ export default function WMSLinks(props) {
 				<Grid sx={{ marginTop: 5 }}>
 					<Typography variant="h6">{el.title}</Typography>
 					<Typography variant="body2">{el.description}</Typography>
-					<TextField value={el.link} size='small' sx={{width:300}}></TextField>
+					<TextField value={el.link} size='small' sx={props.isMobile ? {width:150} : {width:300}}></TextField>
 					<Button
 						variant="contained"
 						sx={{marginTop:0.2}}

@@ -64,7 +64,7 @@ const Template = (props) => {
 	return (
 		<>
 			<MlWmsLoaderInstructions open={guide} />
-			<WMSLinks open={demoMode} close={closer} load={loader} />
+			<WMSLinks open={demoMode} close={closer} load={loader} isMobile={mediaIsMobile}  />
 			<TopToolbar>
 				<Button
 					variant="contained"
