@@ -66,7 +66,7 @@ export default function MlGPXViewerInstructions(props) {
 			{step2 && (
 				<Fade in={step2} timeout={150}>
 					<div>
-						<BubbleBottomRight iconMarginTop="-38px">
+						<BubbleBottomRight iconMarginTop="68px">
 							You can see more <br /> information about <br />
 							the track <br />
 							here
@@ -78,7 +78,7 @@ export default function MlGPXViewerInstructions(props) {
 			{step3 && (
 				<Fade in={step3} timeout={150}>
 					<div>
-						<BubbleBottomRight iconMarginTop="68">
+						<BubbleBottomRight iconMarginTop="-38px">
 							You can download <br /> a sample track as a <br />
 							GPX file <br />
 							here
