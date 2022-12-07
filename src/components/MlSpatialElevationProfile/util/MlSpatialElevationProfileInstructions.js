@@ -5,23 +5,23 @@ import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import zIndex from '@mui/material/styles/zIndex';
 import MlGPXDemoViewer from './demoViewer';
 import Fade from '@mui/material/Fade';
+import BubbleStyle from '../../../util/BubbleForInstructions';
 
-const divStyle = {
-	width: 475,
-	height: 475,
-	position: 'fixed',
-	right: '5px',
-	bottom: '25px',
-	display: 'block',
-	flexDirection: 'column',
-	gap: '5px',
-	zIndex: 900,
-	borderRadius: 360,
-	right: -120,
-	bottom: -120,
-	backgroundColor: 'steelblue',
-	alignItems: 'center',
-};
+function BubbleBottomRight(props) {
+	return (
+		<BubbleStyle
+			bubbleRight="-120px"
+			bubbleBottom="-120px"
+			textMarginTop="70px"
+			textMarginLeft="120px"
+			iconTransform="rotate(180deg)"
+			iconMarginTop={props.iconMarginTop}
+			iconMarginLeft="200px"
+		>
+			{props.children}
+		</BubbleStyle>
+	);
+}
 
 export default function MlSpatialElevationProfileInstructions(props) {
 	const [step1, setStep1] = useState(false);
@@ -58,116 +58,52 @@ export default function MlSpatialElevationProfileInstructions(props) {
 		<>
 			{step1 && (
 				<Fade in={step1} timeout={150}>
-					<div style={divStyle}>
-						<h2 style={{ marginTop: 70, marginLeft: 120, color: 'white', textAlign: 'left' }}>
+					<div>
+						<BubbleBottomRight iconMarginTop="-9px">
 							You can load your <br />
 							own GPX file <br /> here
-						</h2>
-						<ReplyAllIcon
-							sx={{
-								color: 'white',
-								fontSize: 80,
-								transform: 'rotate(180deg)',
-								marginTop: 5,
-								marginLeft: 22,
-							}}
-						/>
+						</BubbleBottomRight>
 					</div>
 				</Fade>
 			)}
-
 			{step2 && (
 				<Fade in={step2} timeout={150}>
-					<div style={divStyle}>
-						<Grid>
-							<h2 style={{ marginTop: 70, marginLeft: 120, color: 'white', textAlign: 'left' }}>
-								You can see more <br /> information about <br />
-								the track <br />
-								here
-							</h2>
-						</Grid>
-
-						<Grid>
-							<ReplyAllIcon
-								sx={{
-									color: 'white',
-									fontSize: 80,
-									transform: 'rotate(180deg)',
-									marginTop: 8,
-									marginLeft: 22,
-								}}
-							/>
-						</Grid>
+					<div>
+						<BubbleBottomRight iconMarginTop="15">
+							You can see more <br /> information about <br />
+							the track <br />
+							here
+						</BubbleBottomRight>
 					</div>
 				</Fade>
 			)}
 
 			{step3 && (
 				<Fade in={step3} timeout={150}>
-					<div style={divStyle}>
-						<Grid>
-							<h2 style={{ marginTop: 70, marginLeft: 120, color: 'white', textAlign: 'left' }}>
-								You can download <br /> a sample track as a <br />
-								GPX file <br />
-								here
-							</h2>
-						</Grid>
-
-						<Grid>
-							<ReplyAllIcon
-								sx={{
-									color: 'white',
-									fontSize: 80,
-									transform: 'rotate(180deg)',
-									marginTop: -5,
-									marginLeft: 22,
-								}}
-							/>
-						</Grid>
+					<div>
+						<BubbleBottomRight iconMarginTop="70">
+							You can download <br /> a sample track as a <br />
+							GPX file <br />
+							here
+						</BubbleBottomRight>
 					</div>
 				</Fade>
 			)}
 
 			{step4 && (
 				<Fade in={step4} timeout={1500}>
-					<div
-						style={{
-							width: 450,
-							height: 450,
-							position: 'fixed',
-							left: '5px',
-							top: '25px',
-							display: 'block',
-							flexDirection: 'column',
-							gap: '5px',
-							//zIndex: 500,
-							borderRadius: 360,
-							left: -40,
-							top: -150,
-							backgroundColor: 'steelblue',
-							opacity: 1,
-							alignItems: 'center',
-							transition: 'ease-in',
-							transitionProperty: 'opacity',
-						}}
-					>
-						<Grid>
-							<h2 style={{ marginTop: 230, marginRight: 190, color: 'white', textAlign: 'right' }}>
-								In demo mode we <br /> provide you some <br /> GPX tracks <br /> to load.
-							</h2>
-						</Grid>
-						<Grid>
-							<ReplyAllIcon
-								sx={{
-									color: 'white',
-									fontSize: 80,
-									position: 'absolute',
-									transform: 'rotate(90deg)',
-									marginTop: -18,
-									marginLeft: 35,
-								}}
-							/>
-						</Grid>
+					<div>
+						<BubbleStyle
+							bubbleLeft="-40px"
+							bubbleTop="-150px"
+							textMarginTop="230px"
+							textMarginLeft="75px"
+							iconTransform="rotate(90deg)"
+							iconMarginTop="-100px"
+							iconMarginLeft="300px"
+						>
+							In demo mode we <br /> provide you some <br /> GPX tracks <br /> to load.
+						</BubbleStyle>
 					</div>
 				</Fade>
 			)}
