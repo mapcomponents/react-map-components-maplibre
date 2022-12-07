@@ -8,7 +8,7 @@ declare namespace storyoptions {
     export const title: string;
     export { useMapState as component };
     export const argTypes: {};
-    export { mapContextDecorator as decorators };
+    export { mapContextDecoratorHooks as decorators };
 }
 import useMapState from "./useMapState";
-import mapContextDecorator from "../decorators/MapContextDecorator";
+import mapContextDecoratorHooks from "../decorators/MapContextDecoratorHooks";

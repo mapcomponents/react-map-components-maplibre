@@ -233,7 +233,7 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 				if (node.nodeName === "link") {
 					value = node.getAttribute("href");
 				}
-				if (!!value?.trim().length) {
+				if (value?.trim().length) {
 					const metaDatEntry = {
 						title: title,
 						value: value,
@@ -278,6 +278,8 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 
 		fileupload.current.click();
 	};
+
+		
 	return (
 		<>
 			<div
