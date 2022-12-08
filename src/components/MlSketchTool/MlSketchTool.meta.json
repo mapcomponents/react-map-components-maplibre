@@ -1,0 +1,15 @@
+{
+  "name": "MlSketchTool",
+  "title": "Sketch Tool",
+  "description": "Enables creation and editing of Points LineStrings and Polygons.",
+  "i18n": {
+    "de": {
+      "title": "Zeichenwerkzeug",
+      "description": "Erzeugen und bearbeiten von Geometrien."
+    }
+  },
+  "tags": [],
+  "category": "",
+  "type": "component",
+  "price": 0
+}
