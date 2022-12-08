@@ -129,8 +129,6 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
 		initializedRef.current = true;
 
-		mapHook.map.map.setCenter([7.100175528281227, 50.73487992742369]);
-		mapHook.map.map.setZoom(15);
 	}, [mapHook.map, props.mapId]);
 
 	return <></>;
