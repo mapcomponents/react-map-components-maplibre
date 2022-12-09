@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+
 
 export default function paintPicker(
-	timeField,
-	currentVal,
-    minVal,
-    isPlaying,
-	fadeIn,
-	fadeOut,
-	step,
-	featuresColor,
-    accumulate,
-	userPaint
+	timeField: String,
+	currentVal: number,
+    minVal: number,
+    isPlaying: boolean,
+	fadeIn: number,
+	fadeOut: number,
+	step: number,
+	featuresColor: String,
+    accumulate: boolean,
+	userPaint: any
 ) {
 	const noShow = { 'circle-color': 'rgba(0,0,0,0)' };
 	const defaultPaint = {

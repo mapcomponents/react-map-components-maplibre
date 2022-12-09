@@ -3,19 +3,10 @@ import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 
 import { FeatureCollection, bbox } from '@turf/turf';
-import { Slider, AppBar, Box, Typography, Drawer, Button, Grid } from '@mui/material';
-
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
-import StopIcon from '@mui/icons-material/Stop';
-import FastForwardIcon from '@mui/icons-material/FastForward';
-import FastRewindIcon from '@mui/icons-material/FastRewind';
-
 import {
 	LineLayerSpecification,
 	CircleLayerSpecification,
 	FillLayerSpecification,
-	SymbolLayerSpecification,
 	SymbolLayoutProps,
 	SymbolPaintProps,
 	MapLayerMouseEvent,
@@ -24,6 +15,7 @@ import {
 
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
+import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
 
 interface MlTemporalControllerProps {
 	/**
@@ -85,10 +77,6 @@ interface MlTemporalControllerProps {
 	 * Boolean value that toogles the controlls drawer visibility.
 	 */
 	open?: boolean;
-	/**
-	 * Boolean value that toogles the current value display visibility.
-	 */
-	display?: boolean;
 	/**
 	 * Paint property object for the features layer.
 	 * Possible props depend on the layer type.
@@ -205,14 +193,12 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		return getMaxVal(props.geojson, props.timeField);
 	}, [props.maxVal, props.geojson, props.timeField]);
 
-	const range = maxVal - minVal;
-
 	const [step, setStep] = useState(props.step || 1);
 	const [fadeIn, setFadeIn] = useState(props.fadeIn || 5);
 	const [fadeOut, setFedeOut] = useState(props.fadeOut || 5);
 
-	const [featuresColor, setFeatureColor] = useState(props.featuresColor || '#eb4034');
-	//const [labels, setLabels] = useState(true);
+	const [featuresColor, setFeatureColor] = useState(props.featuresColor || '#1976D2');
+	const [labels, setLabels] = useState(props.label || true);
 	const [labelColor, setlabelColor] = useState(props.labelColor || '#000');
 	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn || 5);
 	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut || 5);
@@ -239,8 +225,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
-		// the MapLibre-gl instance (mapHook.map) is accessible here
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
 		initializedRef.current = true;
 	}, [mapHook.map, props.mapId]);
 
@@ -252,20 +236,20 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		};
 	}, []);
 
-	//use callback function from props, if it exists
+	//use callback function from props, if exists
 	useEffect(() => {
 		if (props.callback) {
 			props.callback(currentVal);
 		}
 	}, [props.callback, currentVal]);
 
-	//get minimun und maximal time value
+	//get min and max time value
 	useEffect(() => {
 		const neuMin = getMinVal(props.geojson, props.timeField);
 		setCurrentVal(neuMin > minVal ? neuMin : minVal);
 	}, [minVal, props.geojson, props.timeField]);
 
-	// Data filter
+	// filter geojson 
 	useEffect(() => {
 		if (props.geojson !== undefined && mapHook.map && minVal && maxVal) {
 			props.geojson.features = props.geojson.features.filter((e) => {
@@ -285,80 +269,8 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		}
 	}, [filteredData]);
 
-	// Player
-
-	const play = React.useCallback(() => {
-		let counter = currentVal - minVal;
-		if (intervalRef.current) {
-			clearInterval(intervalRef.current);
-		}
-
-		intervalRef.current = setInterval(function () {
-			if (counter >= maxVal - minVal) {
-				clearInterval(intervalRef.current);
-				setIsPlaying(false);
-			} else {
-				setCurrentVal((val: number) => val + step);
-			}
-			counter = counter + step;
-		}, 200);
-	}, [step, maxVal, currentVal]);
-
-	const handlePlay = () => {
-		setIsPlaying(true);
-		play();
-	};
-	const handlePause = () => {
-		setIsPlaying(!isPlaying);
-		if (isPlaying) {
-			clearInterval(intervalRef.current);
-		} else if (!isPlaying) {
-			play();
-		}
-	};
-
-	const handleStop = () => {
-		clearInterval(intervalRef.current);
-		setCurrentVal(minVal);
-		setIsPlaying(false);
-	};
-
-	const handleFastRewind = () => {
-		if (isPlaying) {
-			clearInterval(intervalRef.current);
-			setCurrentVal(currentVal - range / 10);
-			play();
-		} else {
-			setCurrentVal(currentVal - range / 10);
-		}
-	};
-	const handleFastForward = () => {
-		if (isPlaying) {
-			clearInterval(intervalRef.current);
-			setCurrentVal(currentVal + range / 10);
-			play();
-		} else {
-			setCurrentVal(currentVal + range / 10);
-		}
-	};
-
-	//Slider
-
-	const handleChange = (e: any) => {
-		//var element = e.target as HTMLInputElement;
-		if (!isPlaying) {
-			setCurrentVal(e.target.value);
-		} else {
-			clearInterval(intervalRef.current);
-			setCurrentVal(e.target.value);
-			play();
-		}
-	};
-
 	return (
 		<>
-			<AppBar position="fixed" sx={{ backgroundColor: 'white', width: '90%' }}></AppBar>
-
 			{filteredData && (
 				<MlGeoJsonLayer
 					type="circle"
@@ -375,7 +287,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				/>
 			)}
 
-			{props.label && (
+			{labels && (
 				<MlTemporalControllerLabels
 					data={filteredData}
 					currentVal={currentVal}
@@ -390,70 +302,16 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 					isPlaying={isPlaying}
 				/>
 			)}
-
-			{props.display && (
-				<Box
-					sx={{
-						position: 'absolute',
-						zIndex: 500,
-						top: '15%',
-						left: '5%',
-						width: 140,
-						height: 60,
-					}}
-				>
-					<Typography variant="h3">{Math.floor(currentVal)}</Typography>
-				</Box>
-			)}
-
-			<Drawer
-				anchor="bottom"
-				open={props.open || true}
-				variant="persistent"
-				sx={{
-					flexShrink: 0,
-
-					'& .MuiDrawer-paper': {
-						width: 'auto',
-						height: 90,
-						alignItems: 'center',
-					},
-				}}
-			>
-				<Grid>
-					<Button onClick={handleFastRewind}>
-						<FastRewindIcon />
-					</Button>
-					<Button onClick={handleStop}>
-						<StopIcon />
-					</Button>
-					<Button onClick={handlePlay} disabled={isPlaying}>
-						<PlayArrowIcon />
-					</Button>
-					<Button onClick={handlePause}>
-						<PauseIcon />
-					</Button>
-					<Button onClick={handleFastForward}>
-						<FastForwardIcon />
-					</Button>
-				</Grid>
-
-				<Slider
-					sx={{
-						position: 'flex',
-						width: '95%',
-						paddingTop: '10px',
-						alignSelf: 'center',
-					}}
-					aria-label="Custom marks"
-					defaultValue={props.initialVal || minVal}
-					value={currentVal}
-					step={step}
-					onChange={handleChange}
-					min={minVal}
-					max={maxVal}
-				/>
-			</Drawer>
+			<TemporalControllerPlayer
+				currentVal={currentVal}
+				isPlaying={isPlaying}
+				step={step}
+				minVal={minVal}
+				maxVal={maxVal}
+				returnCurrent={setCurrentVal}
+				returnPlaying={setIsPlaying}
+				open
+			/>
 		</>
 	);
 };

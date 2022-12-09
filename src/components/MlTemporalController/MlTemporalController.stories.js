@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import MlTemporalController from './MlTemporalController';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import {Box, Typography} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
@@ -34,30 +34,29 @@ const Template = (args) => {
 					geojson={data}
 					mapId={'map_1'}
 					fitBounds={true}
-					minVal={1970}
+					minVal={1940}
 					timeField={'Year'}
-					label={true}
 					labelField={'Location Name'}
 					callback={setCurrent}
-					steps={0.5}					
+					steps={0.5}
 				/>
-
-				
 			)}
-			{typeof current === "number" && (<Box
+			{typeof current === 'number' && (
+				<Box
 					sx={{
 						position: 'absolute',
 						zIndex: 500,
 						top: '15%',
 						left: '5%',
 						width: 120,
-						height: 60,	
+						height: 60,
 						backgroundColor: 'white',
-						alignContent: 'center'					
+						alignContent: 'center',
 					}}
 				>
 					<Typography variant="h3">{Math.floor(current)}</Typography>
-				</Box>) }
+				</Box>
+			)}
 		</>
 	);
 };
