@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import MlLayer from '../MlLayer/MlLayer';
+
 import { FeatureCollection, bbox } from '@turf/turf';
 import { Slider, AppBar, Box, Typography, Drawer, Button, Grid } from '@mui/material';
 
@@ -17,11 +17,13 @@ import {
 	FillLayerSpecification,
 	SymbolLayerSpecification,
 	SymbolLayoutProps,
-	//SymbolLayoutArray,
+	SymbolPaintProps,
 	MapLayerMouseEvent,
 	LngLatBoundsLike,
-	
 } from 'maplibre-gl';
+
+import usePaintPicker from './utils/paintPicker';
+import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 
 interface MlTemporalControllerProps {
 	/**
@@ -29,7 +31,7 @@ interface MlTemporalControllerProps {
 	 */
 	mapId?: string;
 	/**
-	 * Id of an existing layer in the mapLibre instance to help specify the layer order
+	 * Id of an existing layer in the mapLibre instance to help specify the layer order.
 	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
 	 */
 	insertBeforeLayer?: string;
@@ -103,6 +105,21 @@ interface MlTemporalControllerProps {
 	 */
 	featuresColor?: string;
 	/**
+	 * How many units the timeline runs through at each step.
+	 * By default it is set to 1.
+	 */
+	step?: number;
+	/**
+	 * A numeric value that sets how many steps before the feature starts to appear.
+	 * By default it is set to 5 steps.
+	 */
+	fadeIn?: number;
+	/**
+	 * A numeric value that sets how many steps the feature fades out after it proper time value.
+	 * By default it is set to 5 steps.
+	 */
+	fadeOut?: number;
+	/**
 	 * Sets the color of the features rendered by this component.
 	 */
 	labelColor?: string;
@@ -117,10 +134,20 @@ interface MlTemporalControllerProps {
 	 * Paint property object for the features layer.
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
 	 */
-	labelPaint?: SymbolLayerSpecification;
+	labelPaint?: SymbolPaintProps;
 	/**
 	 * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
 	 */
+	/**
+	 * A numeric value that sets how many steps before the labels start to appear.
+	 * By default it is set to 5 steps.
+	 */
+	labelFadeIn?: number;
+	/**
+	 * A numeric value that sets how many steps the labels fade out after their proper time value.
+	 * By default it is set to 5 steps.
+	 */
+	labelFadeOut?: number;
 	onHover?: MapLayerMouseEvent;
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is clicked.
@@ -132,12 +159,10 @@ interface MlTemporalControllerProps {
 	 */
 	onLeave?: MapLayerMouseEvent;
 	/**
-	 * Callback function defined by the user to recive the current value in the parent component. 
+	 * Callback function defined by the user to recive the current value in the parent component.
 	 */
-	callback?: any;  
-		
-	}
-
+	callback?: any;
+}
 
 /**
  * Select a GeoJSON object to be displayed in a temporal line.
@@ -179,16 +204,18 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		}
 		return getMaxVal(props.geojson, props.timeField);
 	}, [props.maxVal, props.geojson, props.timeField]);
+
 	const range = maxVal - minVal;
 
-	const [step, setStep] = useState(1);
-	const [fadeIn, setFadeIn] = useState(5);
-	const [fadeOut, setFedeOut] = useState(5);
+	const [step, setStep] = useState(props.step || 1);
+	const [fadeIn, setFadeIn] = useState(props.fadeIn || 5);
+	const [fadeOut, setFedeOut] = useState(props.fadeOut || 5);
+
 	const [featuresColor, setFeatureColor] = useState(props.featuresColor || '#eb4034');
-	const [labels, setLabels] = useState(true);
+	//const [labels, setLabels] = useState(true);
 	const [labelColor, setlabelColor] = useState(props.labelColor || '#000');
-	const [labelFadeIn, setLabelFadein] = useState(5);
-	const [labelFadeOut, setLabelFadeOut] = useState(5);
+	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn || 5);
+	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut || 5);
 
 	const [currentVal, setCurrentVal] = useState(props.initialVal || minVal);
 	const [isPlaying, setIsPlaying] = useState(false);
@@ -197,76 +224,18 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	const intervalRef: any = useRef();
 
-	const noShow = { 'circle-color': 'rgba(0,0,0,0)' };
-	const defaultPaint = {
-		'circle-color': [
-			'interpolate',
-			['linear'],
-			['get', props.timeField],
-			currentVal - fadeIn * step,
-			'rgba(255, 0, 0, 0)',
-			currentVal,
-			featuresColor,
-			currentVal + fadeIn * step,
-			'rgba(255, 0, 0, 0)',
-		],
-
-		'circle-radius': [
-			'interpolate',
-			['linear'],
-			['get', props.timeField],
-			currentVal - fadeIn * step,
-			1,
-			currentVal,
-			20,
-			currentVal + fadeOut * step,
-			1,
-		],
-
-		'circle-opacity': [
-			'interpolate',
-			['linear'],
-			['get', props.timeField],
-			currentVal - fadeIn * step,
-			0,
-			currentVal,
-			1,
-			currentVal + fadeOut * step,
-			0,
-		],
-	};
-
-	const accumulatePaint = {
-		'circle-color': [
-			'interpolate',
-			['linear'],
-			['get', props.timeField],
-			currentVal,
-			featuresColor,
-			currentVal + fadeIn * step,
-			'rgba(255, 0, 0, 0)',
-		],
-
-		'circle-radius': [
-			'interpolate',
-			['linear'],
-			['get', props.timeField],
-			currentVal,
-			20,
-			currentVal + fadeOut * step,
-			1,
-		],
-
-		'circle-opacity': [
-			'interpolate',
-			['linear'],
-			['get', props.timeField],
-			currentVal,
-			1,
-			currentVal + fadeOut * step,
-			0,
-		],
-	};
+	const paint = usePaintPicker(
+		props.timeField,
+		currentVal,
+		minVal,
+		isPlaying,
+		fadeIn,
+		fadeOut,
+		step,
+		featuresColor,
+		accumulate,
+		props.paint
+	);
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
@@ -274,17 +243,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
 		initializedRef.current = true;
 	}, [mapHook.map, props.mapId]);
-
-	function paintPicker() {
-		if (currentVal === minVal && !isPlaying) {
-			return noShow;
-		}
-		if (accumulate && isPlaying) {
-			return accumulatePaint;
-		} else {
-			return defaultPaint;
-		}
-	}
 
 	useEffect(() => {
 		return () => {
@@ -295,13 +253,11 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	}, []);
 
 	//use callback function from props, if it exists
-	useEffect(()=>{
-		if(props.callback){
-			props.callback(currentVal)
+	useEffect(() => {
+		if (props.callback) {
+			props.callback(currentVal);
 		}
-	}, [props.callback, currentVal])
-
-
+	}, [props.callback, currentVal]);
 
 	//get minimun und maximal time value
 	useEffect(() => {
@@ -401,7 +357,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	return (
 		<>
-			<AppBar position="fixed" sx={{ backgroundColor:'white', width: '90%' }}></AppBar>
+			<AppBar position="fixed" sx={{ backgroundColor: 'white', width: '90%' }}></AppBar>
 
 			{filteredData && (
 				<MlGeoJsonLayer
@@ -411,7 +367,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 					geojson={filteredData}
 					paint={
 						props.paint ||
-						(paintPicker() as
+						(paint as
 							| CircleLayerSpecification['paint']
 							| FillLayerSpecification['paint']
 							| LineLayerSpecification['paint'])
@@ -420,29 +376,18 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 			)}
 
 			{props.label && (
-				<MlLayer
-					options={{
-						type: 'symbol',
-						source: 'timeController',
-						layout: props.labelLayout || {
-							'text-field': ['get', props.labelField],
-							'text-font': ['Metropolis Regular'],
-						},
-						paint: {
-							'text-color': [
-								'interpolate',
-								['linear'],
-								['get', props.timeField],
-								currentVal - fadeIn * step,
-								'rgba(255, 0, 0, 0)',
-								currentVal,
-								labelColor,
-								currentVal + fadeIn * step,
-								'rgba(255, 0, 0, 0)',
-							],
-						},
-					}}
-					geojson={filteredData}
+				<MlTemporalControllerLabels
+					data={filteredData}
+					currentVal={currentVal}
+					fadeIn={labelFadeIn}
+					fadeOut={labelFadeOut}
+					step={step}
+					labelField={labelField}
+					labelColor={labelColor}
+					timeField={props.timeField}
+					minVal={minVal}
+					accumulate={accumulate}
+					isPlaying={isPlaying}
 				/>
 			)}
 
@@ -454,7 +399,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 						top: '15%',
 						left: '5%',
 						width: 140,
-						height: 60,						
+						height: 60,
 					}}
 				>
 					<Typography variant="h3">{Math.floor(currentVal)}</Typography>

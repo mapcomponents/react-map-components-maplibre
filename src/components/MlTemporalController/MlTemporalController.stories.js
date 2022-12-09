@@ -27,8 +27,6 @@ const Template = (args) => {
 			});
 	}, []);
 
-	console.log(typeof current)
-
 	return (
 		<>
 			{data && (
@@ -39,8 +37,9 @@ const Template = (args) => {
 					minVal={1970}
 					timeField={'Year'}
 					label={true}
-					labelField={'Mag'}
+					labelField={'Location Name'}
 					callback={setCurrent}
+					steps={0.5}					
 				/>
 
 				
