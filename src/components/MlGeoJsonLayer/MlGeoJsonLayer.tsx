@@ -16,7 +16,7 @@ import {
 	LayerSpecification,
 } from 'maplibre-gl';
 
-type MlGeoJsonLayerProps = {
+export type MlGeoJsonLayerProps = {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -38,9 +38,8 @@ type MlGeoJsonLayerProps = {
 	geojson: Feature | FeatureCollection | undefined;
 	/**
 	 * Type of the layer that will be added to the MapLibre instance.
-	 * Possible values: "line", "circle", "fill"
 	 */
-	type?: 'fill' | 'line' | 'circle';
+	type?: LayerSpecification['type'];
 	/**
 	 * Paint property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
@@ -91,7 +90,7 @@ type MlGeoJsonLayerProps = {
 };
 
 /**
- * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
+ * Adds source and layer to display GeoJSON data on the map.
  *
  * @component
  */

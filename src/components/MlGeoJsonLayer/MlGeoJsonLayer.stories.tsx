@@ -4,9 +4,12 @@ import useMap from '../../hooks/useMap';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
 import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
+import HeatMapStyler from './story_utils/MlGeojsonLayerHeatMapStyler';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
+import earthquakes from './assets/earthquake.json';
 import { GeoJSONObject } from '@turf/turf';
+import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -65,6 +68,23 @@ const PolygonTemplate = (props: TemplateProps) => {
 	);
 };
 
+const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [-150.4048, 63.1224], zoom: 3 });
+	}, [mapHook.map]);
+
+	return <HeatMapStyler {...props} />;
+};
+
 export const Linestring = Template.bind({});
 Linestring.parameters = {};
 Linestring.args = {
@@ -99,4 +119,14 @@ DefaultPaintOverrides.args = {
 	},
 	geojson: sample_geojson_1,
 	type: '',
+};
+
+export const HeatMap = HeatmapTemplate.bind({});
+HeatMap.parameters = {};
+HeatMap.args = {
+	geojson: earthquakes,
+	options: {
+		paint: {},
+	},
+	type: 'heatmap',
 };
