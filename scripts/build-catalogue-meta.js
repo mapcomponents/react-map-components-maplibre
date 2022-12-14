@@ -33,7 +33,7 @@ glob('src/**/**/*.meta.json', options, function (er, files) {
 		.then((schema) => {
 			const validate = ajv.compile(schema);
 			const valid = validate(mc_meta);
-			if (!valid) throw new Error(validate.errors);
+			if (!valid) throw new Error(JSON.stringify(validate.errors));
 			//if (!valid) console.log(validate.errors);
 
 			let data = JSON.stringify(mc_meta);
