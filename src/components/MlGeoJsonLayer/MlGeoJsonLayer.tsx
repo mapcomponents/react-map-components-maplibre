@@ -14,6 +14,7 @@ import {
 	FillLayerSpecification,
 	MapLayerMouseEvent,
 	LayerSpecification,
+	RasterLayerSpecification,
 } from 'maplibre-gl';
 
 export type MlGeoJsonLayerProps = {
@@ -38,34 +39,41 @@ export type MlGeoJsonLayerProps = {
 	geojson: Feature | FeatureCollection | undefined;
 	/**
 	 * Type of the layer that will be added to the MapLibre instance.
+	 * All types from LayerSpecification union type are supported except the type from
+	 * RasterLayerSpecification
 	 */
-	type?: LayerSpecification['type'];
+	type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
 	/**
 	 * Paint property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
+	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+	 * Some examples are:
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+	 * All paint types from LayerSpecification union type are supported except the paint type from
+	 * RasterLayerSpecification
 	 */
-	paint?:
-		| CircleLayerSpecification['paint']
-		| FillLayerSpecification['paint']
-		| LineLayerSpecification['paint'];
+
+	paint?: Exclude<LayerSpecification['paint'], RasterLayerSpecification['paint']>;
 	/**
 	 * Layout property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
+	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+	 * Some examples are:
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+	 * All layout types from LayerSpecification union type are supported except the layout type from 
+	 * RasterLayerSpecification
+
 	 */
-	layout?:
-		| CircleLayerSpecification['layout']
-		| FillLayerSpecification['layout']
-		| LineLayerSpecification['layout'];
+	layout?: Exclude<LayerSpecification['layout'], RasterLayerSpecification['layout']>;
+
 	/**
 	 * Javascript object that is spread into the addLayer commands first parameter.
 	 */
-	options?: CircleLayerSpecification | FillLayerSpecification | LineLayerSpecification;
+	options?: LayerSpecification;
 	/**
 	 * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
 	 */
