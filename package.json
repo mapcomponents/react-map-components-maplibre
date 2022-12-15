@@ -37,7 +37,7 @@
     "react-i18next": "^11.14.3",
     "react-moveable": "^0.41.1",
     "three": "^0.139.1",
-    "uuid": "^8.3.2",
+    "uuid": "^9.0.0",
     "wms-capabilities": "^0.5.1",
     "xmldom": "^0.6.0"
   },
