@@ -1,8 +1,8 @@
-import React from "react";
-import { css } from "@emotion/css";
-import { Box } from "@mui/system";
-import ImageLoader from "../../../ui_components/ImageLoader";
-import useMapState from "../../../hooks/useMapState";
+import React from 'react';
+import { css } from '@emotion/css';
+import { Box } from '@mui/system';
+import ImageLoader from '../../../ui_components/ImageLoader';
+import useMapState from '../../../hooks/useMapState';
 
 /**
  * @component
@@ -20,7 +20,7 @@ const LayerBox = (props) => {
 			matchLayerIds: props.layerId,
 		},
 	});
-	const width = "40px";
+	const width = '40px';
 
 	const defaultClass = css`
 		& img:hover {
@@ -34,22 +34,25 @@ const LayerBox = (props) => {
 				className={defaultClass}
 				sx={{
 					width,
-					height: "53px",
-					justifyContent: "center",
+					height: '53px',
+					justifyContent: 'center',
 					py: 0.25,
-					px: "1rem",
-					cursor: "pointer",
+					px: '1rem',
+					cursor: 'pointer',
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'stretch',
 				}}
 				onClick={() => {
 					props?.handleLayerBoxClick?.(props.layerId);
 				}}
 			>
 				<ImageLoader
-					style={{
-						border: "2px solid " + (layers?.[0]?.visible ? "#64c864" : "#fd720f"),
-						borderRadius: "8px",
-						height: "40px",
-						width: "40px",
+					sx={{
+						border: '2px solid ' + (layers?.[0]?.visible ? '#64c864' : '#fd720f'),
+						borderRadius: '8px',
+						height: '40px',
+						width: '40px',
 					}}
 					src={props.thumbnail}
 				/>
@@ -57,11 +60,11 @@ const LayerBox = (props) => {
 				<div
 					className="mllayerswitcher-layer-text"
 					style={{
-						textAlign: "center",
-						color: "rgb(112, 117, 122)",
-						fontFamily: "Roboto, Arial",
+						textAlign: 'center',
+						color: 'rgb(112, 117, 122)',
+						fontFamily: 'Roboto, Arial',
 						width,
-						fontSize: "0.60rem",
+						fontSize: '0.60rem',
 					}}
 				>
 					{props.label}
