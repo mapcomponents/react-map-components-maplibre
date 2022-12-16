@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import PropTypes from "prop-types";
-import { MapContext } from "../index";
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { MapContext } from '../index';
+import { JsxChildren } from 'typedoc/dist/lib/utils/jsx.elements';
 
 const LoadingOverlayContext = React.createContext({});
 const LoadingOverlayContextProvider = LoadingOverlayContext.Provider;
 
-const LoadingOverlayProvider = ({ children }) => {
+const LoadingOverlayProvider = (children: JsxChildren) => {
 	const mapContext = useContext(MapContext);
 
 	const [controlled, setControlled] = useState(false);
@@ -15,7 +16,7 @@ const LoadingOverlayProvider = ({ children }) => {
 	const mapJobsRef = useRef({});
 	const [checkIdleTrigger, setCheckIdleTrigger] = useState(0);
 
-	const createOnMapIdleFunction = (mapId) => () => {
+	const createOnMapIdleFunction = (mapId: string) => () => {
 		mapJobsRef.current[mapId] = true;
 		setCheckIdleTrigger(Math.random());
 	};
@@ -33,7 +34,7 @@ const LoadingOverlayProvider = ({ children }) => {
 	useEffect(() => {
 		if (!mapContext.map || controlled) return;
 
-		for (var key in mapJobsRef.current) {
+		for (const key in mapJobsRef.current) {
 			if (!mapJobsRef.current[key]) return;
 		}
 
@@ -41,14 +42,14 @@ const LoadingOverlayProvider = ({ children }) => {
 	}, [checkIdleTrigger, controlled, mapContext]);
 
 	useEffect(() => {
-		for (var i = 0, len = mapContext.mapIds.length; i < len; i++) {
-			if (Object.keys(mapJobsRef.current).indexOf(mapContext.mapIds[i]) === -1) {
-				let mapId = mapContext.mapIds[i] + "";
+		for (let i = 0, len = mapContext.mapIds.length; i < len; i++) {
+			if (Object.keys(mapJobsRef.current).indexOf(mapContext.mapIds[i] as string) === -1) {
+				const mapId = mapContext.mapIds[i] + '';
 
 				if (mapContext.getMap(mapId)) {
 					mapJobsRef.current[mapId] = false;
 
-					mapContext.getMap(mapId).on("idle", createOnMapIdleFunction(mapId));
+					mapContext.getMap(mapId).on('idle', createOnMapIdleFunction(mapId));
 				}
 			}
 		}
@@ -68,11 +69,7 @@ const LoadingOverlayProvider = ({ children }) => {
 		setLoadingDone,
 	};
 
-	return (
-		<LoadingOverlayContextProvider value={value}>
-			{children}
-		</LoadingOverlayContextProvider>
-	);
+	return <LoadingOverlayContextProvider value={value}>{children}</LoadingOverlayContextProvider>;
 };
 
 LoadingOverlayProvider.propTypes = {
