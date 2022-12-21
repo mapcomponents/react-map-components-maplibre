@@ -43,8 +43,7 @@ export default function MlGPXViewerInstructions(props) {
 				setStep4(true);
 			}, 9000);
 			setTimeout(() => {
-				setStep4(false);
-				props.callback(false);
+				setStep4(false);				
 			}, 12000);
 		} else {
 			return;
@@ -88,7 +87,7 @@ export default function MlGPXViewerInstructions(props) {
 			)}
 
 			{step4 && (
-				<Fade in={step4} timeout={1500}>
+				<Fade in={step4}  timeout={3000}>
 					<div>
 						<BubbleStyle
 							bubbleLeft="-40px"

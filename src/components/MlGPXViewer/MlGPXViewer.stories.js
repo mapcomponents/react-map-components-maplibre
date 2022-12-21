@@ -36,7 +36,7 @@ const Template = () => {
 		setGuide(true);
 		setTimeout(()=>{
 			setGuide(false)
-		}, 9000);
+		}, 12000);
 	}
 
 	const textColor = () =>{

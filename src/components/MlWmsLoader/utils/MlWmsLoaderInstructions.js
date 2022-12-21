@@ -7,25 +7,9 @@ import MlGPXDemoViewer from '../util/demoViewer';
 import Fade from '@mui/material/Fade';
 import BubbleStyle from '../../../util/BubbleForInstructions';
 
-function BubbleMidLeft(props) {
-	return (
-		<BubbleStyle
-		bubbleTop= '140px'
-			bubbleLeft="-100px"
-			textMarginTop="150px"
-			textMarginLeft="130px"
-			iconTransform="rotate(90deg)"
-			iconMarginTop={props.iconMarginTop}
-			iconMarginLeft="130px"
-			zIndex
-		>
-			{props.children}
-		</BubbleStyle>
-	);
-}
 
 export default function MlWmsLoaderInstructions(props) {
-	const [step1, setStep1] = useState(true);
+	const [step1, setStep1] = useState(false);
 	const [step2, setStep2] = useState(false);
 
 	useEffect(() => {
@@ -50,24 +34,32 @@ export default function MlWmsLoaderInstructions(props) {
 			{step1 && (
 				<Fade in={step1} timeout={300}>
 					<div>
-						<BubbleMidLeft iconMarginTop="-200px">
+						<BubbleStyle
+							bubbleTop="140px"
+							bubbleLeft="-180px"
+							textMarginTop="190px"
+							textMarginLeft="200px"
+							iconTransform="rotate(90deg)"
+							iconMarginTop="-230px"
+							iconMarginLeft="200px"
+						>
 							Introduce an <br />
-							WMS Service <br />  URL here
-						</BubbleMidLeft>
+							WMS Service <br /> URL here
+						</BubbleStyle>
 					</div>
 				</Fade>
 			)}
 
 			{step2 && (
-				<Fade in={step2} timeout={300}>
+				<Fade in={step2} timeout={600}>
 					<div>
 						<BubbleStyle
 							bubbleLeft="-40px"
 							bubbleTop="-150px"
-							textMarginTop="230px"
+							textMarginTop="240px"
 							textMarginLeft="75px"
 							iconTransform="rotate(90deg)"
-							iconMarginTop="-135px"
+							iconMarginTop="-125px"
 							iconMarginLeft="280px"
 						>
 							In demo mode we <br /> provide you some <br /> WMS links <br /> to copy and use.
