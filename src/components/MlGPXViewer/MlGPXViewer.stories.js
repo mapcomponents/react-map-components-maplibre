@@ -6,7 +6,7 @@ import MlGPXViewerInstructions from './util/MlGPXViewerInstructions';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { Button, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import MlGPXDemoLoader from './util/demoViewer';
+import MlGPXDemoLoader from './util/MlGPXDemoLoader';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 const storyoptions = {
