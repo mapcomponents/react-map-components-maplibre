@@ -1,6 +1,24 @@
 # Change Log
 
 
+## [v0.1.63] - 2022-12-16
+
+### Fixed
+- b5d6636: update mui dependencies to fix export 'experimental_sx' (reexported as 'experimental_sx') was not found in '@mui/system'
+
+### Added
+- f6af0fd: merge feature/cypress test setup (#48)
+- a1c1f1c: add MlSketchTool demo to catalog (#51) …
+
+
+### Changed
+- 4e6ad8e: merge feature/ml geojson demo optimization (#45) 
+- 36f3ee8: merge feature/ml gpx viewer demo optimization (#46) 
+- e2af70a: refactor TopToolBar component
+- f820006: refactor Sidebar component
+- 4038777: update d3 & maplibre-gl dependencies
+
+
 ## [v0.1.62] - 2022-11-26
 
 ### Added

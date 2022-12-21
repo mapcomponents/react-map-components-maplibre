@@ -1,6 +1,6 @@
 {
   "name": "MlFeatureEditor",
-  "title": "Sketch tools",
+  "title": "Feature editor",
   "description": "Enables the editing of Point, Linestring and Polygon GeoJSON Files.",
   "i18n": {
     "de": {
