@@ -5,9 +5,27 @@ import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import zIndex from '@mui/material/styles/zIndex';
 import MlGPXDemoViewer from '../util/demoViewer';
 import Fade from '@mui/material/Fade';
+import BubbleStyle from '../../../util/BubbleForInstructions';
+
+function BubbleMidLeft(props) {
+	return (
+		<BubbleStyle
+		bubbleTop= '140px'
+			bubbleLeft="-100px"
+			textMarginTop="150px"
+			textMarginLeft="130px"
+			iconTransform="rotate(90deg)"
+			iconMarginTop={props.iconMarginTop}
+			iconMarginLeft="130px"
+			zIndex
+		>
+			{props.children}
+		</BubbleStyle>
+	);
+}
 
 export default function MlWmsLoaderInstructions(props) {
-	const [step1, setStep1] = useState(false);
+	const [step1, setStep1] = useState(true);
 	const [step2, setStep2] = useState(false);
 
 	useEffect(() => {
@@ -31,78 +49,29 @@ export default function MlWmsLoaderInstructions(props) {
 		<>
 			{step1 && (
 				<Fade in={step1} timeout={300}>
-					<div
-						style={{
-							width: 350,
-							height: 350,
-							position: 'fixed',
-							display: 'block',
-							flexDirection: 'column',
-							gap: '5px',
-							zIndex: 500,
-							borderRadius: 360,
-							left: -50,
-							top: 140,
-							backgroundColor: 'steelblue',
-							opacity: 1,
-							alignItems: 'center',
-							transition: 'ease-in',
-							transitionProperty: 'opacity',
-						}}
-					>
-						<ReplyAllIcon
-							sx={{
-								color: 'white',
-								fontSize: 80,
-								transform: 'rotate(90deg)',
-								marginTop: 3,
-								marginLeft: 18,
-							}}
-						/>
-						<h2 style={{ marginTop: 50, marginLeft: 70, color: 'white', textAlign: 'left' }}>
+					<div>
+						<BubbleMidLeft iconMarginTop="-200px">
 							Introduce an <br />
-							WMS Service URL <br /> here
-						</h2>
+							WMS Service <br />  URL here
+						</BubbleMidLeft>
 					</div>
 				</Fade>
 			)}
 
 			{step2 && (
 				<Fade in={step2} timeout={300}>
-					<div
-						style={{
-							width: 350,
-							height: 350,
-							position: 'fixed',
-							left: '5px',
-							top: '25px',
-							display: 'block',
-							flexDirection: 'column',
-							gap: '5px',
-							zIndex: 500,
-							borderRadius: 360,
-							left: -50,
-							top: 70,
-							backgroundColor: 'steelblue',
-							opacity: 1,
-							alignItems: 'center',
-							transition: 'ease-in',
-							transitionProperty: 'opacity',
-						}}
-					>
-						<ReplyAllIcon
-							sx={{
-								color: 'white',
-								fontSize: 80,
-								transform: 'rotate(150deg)',
-								marginTop: 4,
-								marginLeft: 22,
-							}}
-						/>
-
-						<h2 style={{ marginTop: 30, marginLeft: 70, color: 'white', textAlign: 'left' }}>
+					<div>
+						<BubbleStyle
+							bubbleLeft="-40px"
+							bubbleTop="-150px"
+							textMarginTop="230px"
+							textMarginLeft="75px"
+							iconTransform="rotate(90deg)"
+							iconMarginTop="-135px"
+							iconMarginLeft="280px"
+						>
 							In demo mode we <br /> provide you some <br /> WMS links <br /> to copy and use.
-						</h2>
+						</BubbleStyle>
 					</div>
 				</Fade>
 			)}

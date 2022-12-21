@@ -7,7 +7,7 @@ export default function TopToolbar(props) {
 		<div
 			style={{
 				flexGrow: 1,
-				zIndex: 120,
+				zIndex: 200,
 				position: "absolute",
 				top: 0,
 				left: 0,

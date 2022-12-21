@@ -11,6 +11,7 @@ function BubbleForInstruction(props) {
 		<>
 			<div
 				style={{
+					zIndex: 110,
 					width: '475px',
 					height: '475px',
 					position: 'fixed',
@@ -20,7 +21,7 @@ function BubbleForInstruction(props) {
 					right: props.bubbleRight,
 					bottom: props.bubbleBottom,
 					left: props.bubbleLeft,
-					top: props.bubbleTop,
+					top: props.bubbleTop
 				}}
 			>
 				<h2
