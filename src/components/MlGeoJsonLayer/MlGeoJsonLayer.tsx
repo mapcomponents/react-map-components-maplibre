@@ -64,7 +64,7 @@ export type MlGeoJsonLayerProps = {
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
-	 * All layout types from LayerSpecification union type are supported except the layout type from 
+	 * All layout types from LayerSpecification union type are supported except the layout type from
 	 * RasterLayerSpecification
 
 	 */
