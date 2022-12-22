@@ -15,6 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
 import useGpx from '../../hooks/useGpx/useGpx';
 import Dropzone from '../../ui_components/Dropzone';
+import useLayerHoverPopup from '../../hooks/useLayerHoverPopup/useLayerHoverPopup';
 
 interface MlGPXViewerProps {
 	/**
@@ -59,12 +60,7 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 	const fileupload = useRef<HTMLInputElement>(null);
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
-	const popup = useRef(
-		new Popup({
-			closeButton: false,
-			closeOnClick: true,
-		})
-	);
+	useLayerHoverPopup({layerId:layerNamePoints, getPopupContent:(feature => feature?.properties?.name )})
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
@@ -112,47 +108,6 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 
 			mapHook.map.map.setLayoutProperty(layerName, 'visibility', 'visible');
 		});
-		mapHook.map.on(
-			'mouseenter',
-			layerNamePoints,
-			(
-				e: MapMouseEvent & {
-					features?: GeoJSONFeature[] | undefined;
-				}
-			) => {
-				if (!mapHook.map) return;
-				// Change the cursor style as a UI indicator.
-
-				const coordinates = e?.features?.[0].geometry.coordinates.slice();
-				//const description = e.features[0].properties.desc;
-				const name = e?.features?.[0].properties.name;
-
-				// Ensure that if the map is zoomed out such that multiple
-				// copies of the feature are visible, the popup appears
-				// over the copy being pointed to.
-				while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-					coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-				}
-
-				// Populate the popup and set its coordinates
-
-				// based on the feature found.
-				popup.current.setLngLat(coordinates).setHTML(name).addTo(mapHook.map.map);
-			},
-			mapHook.componentId
-		);
-
-		mapHook.map.on(
-			'mouseleave',
-			'places',
-			function () {
-				if (!mapHook.map) return;
-
-				mapHook.map.map.getCanvas().style.cursor = '';
-				popup.current.remove();
-			},
-			mapHook.componentId
-		);
 
 		mapHook.map.map.setZoom(10);
 	}, [mapHook.map]);
