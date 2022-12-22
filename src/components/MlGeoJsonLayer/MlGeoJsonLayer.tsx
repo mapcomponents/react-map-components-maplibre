@@ -73,7 +73,7 @@ export type MlGeoJsonLayerProps = {
 	/**
 	 * Javascript object that is spread into the addLayer commands first parameter.
 	 */
-	options?: LayerSpecification;
+	options?: Exclude<LayerSpecification, RasterLayerSpecification>;
 	/**
 	 * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
 	 */
