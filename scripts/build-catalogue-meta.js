@@ -16,7 +16,7 @@ glob('src/**/**/*.meta.json', options, function (er, files) {
 		mc_meta[metaObj.name] = metaObj;
 	}
 
-	fetch('http://localhost:3000/schema/metadata.schema.json', {
+	fetch('https://catalogue.mapcomponents.org/schema/metadata.schema.json', {
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',
