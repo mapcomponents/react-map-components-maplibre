@@ -14,6 +14,7 @@ import GeoJsonContext from './util/GeoJsonContext';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
 import useGpx from '../../hooks/useGpx/useGpx';
+import Dropzone from '../../ui_components/Dropzone';
 
 interface MlGPXViewerProps {
 	/**
@@ -35,6 +36,11 @@ interface MlGPXViewerProps {
 	visible?: boolean;
 }
 
+interface MetadataType {
+ title: string; 
+ value: string; 
+ id: number;
+}
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
@@ -50,9 +56,6 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 	const layerNamePoints = 'importer-layer-points';
 
 	const [open, setIsOpen] = useState(false);
-	const dropZone = useRef<HTMLDivElement>(null);
-	const [zIndex, setZIndex] = useState(0);
-	const [metaData, setMetaData] = useState<{ title: string; value: string; id: number }[]>([]);
 	const fileupload = useRef<HTMLInputElement>(null);
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
@@ -154,39 +157,7 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 		mapHook.map.map.setZoom(10);
 	}, [mapHook.map]);
 
-	useEffect(() => {
-		const _dropZone = dropZone.current;
-		const raiseDropZoneAndStopDefault = (event: DragEvent) => {
-			setZIndex(1000);
-			stopDefault(event);
-		};
-		const lowerDropZone = () => {
-			setZIndex(0);
-		};
-		const lowerDropZoneAndStopDefault = (event: DragEvent) => {
-			setZIndex(0);
-			stopDefault(event);
-		};
 
-		window.addEventListener('dragenter', raiseDropZoneAndStopDefault);
-		window.addEventListener('dragover', stopDefault);
-
-		_dropZone?.addEventListener('dragleave', lowerDropZone);
-
-		window.addEventListener('drop', lowerDropZoneAndStopDefault);
-
-		return () => {
-			window.removeEventListener('dragenter', raiseDropZoneAndStopDefault);
-			window.removeEventListener('dragover', stopDefault);
-			_dropZone?.removeEventListener('dragleave', lowerDropZone);
-			window.removeEventListener('drop', lowerDropZoneAndStopDefault);
-		};
-	});
-
-	const stopDefault = (event: any) => {
-		event.preventDefault();
-		event.stopPropagation();
-	};
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -200,29 +171,6 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 		});
 	}, [props.visible]);
 
-	const dropHandler = (event: any) => {
-		event.preventDefault();
-
-		if (event.dataTransfer.items) {
-			if (event.dataTransfer.items.length > 1) {
-				return false;
-			}
-			// If dropped items aren't files, reject them
-			if (event.dataTransfer.items[0].kind === 'file') {
-				const reader = new FileReader();
-				reader.onload = (payload: any) => {
-					if (!payload?.currentTarget?.result) return;
-
-					setGpxdata(payload.currentTarget.result);
-				};
-				const file = event.dataTransfer.items[0].getAsFile();
-				reader.readAsText(file);
-			}
-		} else {
-			// Use DataTransfer interface to access the file(s)
-		}
-		return;
-	};
 
 	useEffect(() => {
 		if (!mapHook.map || !dataSource.setData) return;
@@ -313,40 +261,14 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 				</Typography>
 				<Divider />
 				<List>
-					{metaData.map((item) => (
+					{metadata.map((item) => (
 						<ListItem key={`item--${item.id}`}>
 							<ListItemText primary={item.value} />
 						</ListItem>
 					))}
 				</List>
 			</Drawer>
-			<div
-				onDrop={dropHandler}
-				ref={dropZone}
-				style={{
-					position: 'absolute',
-					left: '0',
-					top: '0',
-					backgroundColor: 'rgba(255,255,255,0.5)',
-					width: '100%',
-					height: '100%',
-					zIndex: zIndex,
-				}}
-			>
-				<Typography
-					variant="h6"
-					style={{
-						top: '50%',
-						position: 'absolute',
-						left: '50%',
-						msTransform: 'translate(-50%, -50%)',
-						transform: ' translate(-50%, -50%)',
-					}}
-					noWrap
-				>
-					Gpx-Datei ablegen
-				</Typography>
-			</div>
+			<Dropzone setData={(data) => setGpxdata(data)} />
 		</>
 	);
 };
