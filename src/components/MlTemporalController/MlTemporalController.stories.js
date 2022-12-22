@@ -5,6 +5,7 @@ import MlTemporalController from './MlTemporalController';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { Box, Typography } from '@mui/material';
 
+
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
 	component: MlTemporalController,
@@ -18,7 +19,7 @@ const Template = (args) => {
 	const [current, setCurrent] = useState();
 
 	useEffect(() => {
-		fetch('assets/earthq_5plus.json')
+		fetch('assets/african_independency.json')
 			.then(function (response) {
 				return response.json();
 			})
@@ -27,18 +28,20 @@ const Template = (args) => {
 			});
 	}, []);
 
+
 	return (
 		<>
+	
 			{data && (
 				<MlTemporalController
 					geojson={data}
 					mapId={'map_1'}
+					type={'fill'}
 					fitBounds={true}
-					minVal={1940}
-					timeField={'Year'}
-					labelField={'Location Name'}
+					timeField={'africa_independency_year'}
+					labelField={'africa_independency_year'}
 					callback={setCurrent}
-					steps={0.5}
+					steps={1}
 				/>
 			)}
 			{typeof current === 'number' && (

@@ -193,6 +193,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		return getMaxVal(props.geojson, props.timeField);
 	}, [props.maxVal, props.geojson, props.timeField]);
 
+	const [type, setType] = useState(props.type || 'circle');
 	const [step, setStep] = useState(props.step || 1);
 	const [fadeIn, setFadeIn] = useState(props.fadeIn || 5);
 	const [fadeOut, setFedeOut] = useState(props.fadeOut || 5);
@@ -211,6 +212,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const intervalRef: any = useRef();
 
 	const paint = usePaintPicker(
+		type,
 		props.timeField,
 		currentVal,
 		minVal,
@@ -273,7 +275,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		<>
 			{filteredData && (
 				<MlGeoJsonLayer
-					type="circle"
+					type={props.type}
 					mapId={props.mapId}
 					layerId="timeController"
 					geojson={filteredData}
