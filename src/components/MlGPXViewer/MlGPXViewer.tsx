@@ -1,58 +1,60 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext, useRef, useEffect, useState } from 'react';
 import { bbox } from '@turf/turf';
-import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import InfoIcon from "@mui/icons-material/Info";
-import FileCopy from "@mui/icons-material/FileCopy";
-import { Popup, LngLatBoundsLike, GeoJSONSource } from "maplibre-gl";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import GeoJsonContext from "./util/GeoJsonContext";
-import toGeoJSON from "./gpxConverter";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import useMap from "../../hooks/useMap";
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import FileCopy from '@mui/icons-material/FileCopy';
+import { Popup, LngLatBoundsLike, GeoJSONSource, MapMouseEvent, GeoJSONFeature } from 'maplibre-gl';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import GeoJsonContext from './util/GeoJsonContext';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import useMap from '../../hooks/useMap';
+import useGpx from '../../hooks/useGpx/useGpx';
 
 interface MlGPXViewerProps {
-
 	/**
 	 * Id of the target MapLibre instance in mapHook
 	 */
-	mapId?: string,
+	mapId?: string;
 	/**
 	 * The layerId of an existing layer this layer should be rendered visually beneath
 	 * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
 	 */
-	insertBeforeLayer?: string,
+	insertBeforeLayer?: string;
 	/**
 	 * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
 	 */
-	idPrefix?: string,
+	idPrefix?: string;
 	/**
 	 * Sets the layers layout-property "visibility" to "none" if false or "visible" if true
 	 */
-	visible?: boolean,
+	visible?: boolean;
 }
 
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
-const MlGPXViewer = (props:MlGPXViewerProps) => {
+const MlGPXViewer = (props: MlGPXViewerProps) => {
+	const [gpxData, setGpxdata] = useState();
+	const { geojson, metadata } = useGpx({ data: gpxData });
+
 	const dataSource = useContext(GeoJsonContext);
 	const initializedRef = useRef(false);
 	const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
-	const sourceName = "import-source";
-	const layerNameLines = "importer-layer-lines";
-	const layerNamePoints = "importer-layer-points";
+	const sourceName = 'import-source';
+	const layerNameLines = 'importer-layer-lines';
+	const layerNamePoints = 'importer-layer-points';
 
 	const [open, setIsOpen] = useState(false);
 	const dropZone = useRef<HTMLDivElement>(null);
 	const [zIndex, setZIndex] = useState(0);
-	const [metaData, setMetaData] = useState<{ title: string; value: string; id: number; }[]>([]);
+	const [metaData, setMetaData] = useState<{ title: string; value: string; id: number }[]>([]);
 	const fileupload = useRef<HTMLInputElement>(null);
-	const mediaIsMobile = useMediaQuery("(max-width:900px)");
+	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	const popup = useRef(
 		new Popup({
@@ -69,7 +71,7 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 		mapHook.map.addSource(
 			sourceName,
 			{
-				type: "geojson",
+				type: 'geojson',
 				data: dataSource.data,
 			},
 			mapHook.componentId
@@ -78,10 +80,10 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 			{
 				id: layerNameLines,
 				source: sourceName,
-				type: "line",
+				type: 'line',
 				paint: {
-					"line-width": 4,
-					"line-color": "rgba(212, 55, 23,0.5)",
+					'line-width': 4,
+					'line-color': 'rgba(212, 55, 23,0.5)',
 				},
 			},
 			props.insertBeforeLayer,
@@ -91,32 +93,36 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 			{
 				id: layerNamePoints,
 				source: sourceName,
-				type: "circle",
+				type: 'circle',
 				paint: {
-					"circle-color": "rgba(72, 77, 99,0.5)",
-					"circle-radius": 7,
+					'circle-color': 'rgba(72, 77, 99,0.5)',
+					'circle-radius': 7,
 				},
-				filter: ["==", "$type", "Point"],
+				filter: ['==', '$type', 'Point'],
 			},
 			props.insertBeforeLayer,
 			mapHook.componentId
 		);
 
 		[layerNameLines, layerNamePoints].forEach((layerName) => {
-			if(!mapHook.map)return;
+			if (!mapHook.map) return;
 
-			mapHook.map.map.setLayoutProperty(layerName, "visibility", "visible");
+			mapHook.map.map.setLayoutProperty(layerName, 'visibility', 'visible');
 		});
 		mapHook.map.on(
-			"mouseenter",
+			'mouseenter',
 			layerNamePoints,
-			(e:any) => {
-				if(!mapHook.map)return;
+			(
+				e: MapMouseEvent & {
+					features?: GeoJSONFeature[] | undefined;
+				}
+			) => {
+				if (!mapHook.map) return;
 				// Change the cursor style as a UI indicator.
 
-				const coordinates = e.features[0].geometry.coordinates.slice();
+				const coordinates = e?.features?.[0].geometry.coordinates.slice();
 				//const description = e.features[0].properties.desc;
-				const name = e.features[0].properties.name;
+				const name = e?.features?.[0].properties.name;
 
 				// Ensure that if the map is zoomed out such that multiple
 				// copies of the feature are visible, the popup appears
@@ -134,12 +140,12 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 		);
 
 		mapHook.map.on(
-			"mouseleave",
-			"places",
+			'mouseleave',
+			'places',
 			function () {
-				if(!mapHook.map)return;
+				if (!mapHook.map) return;
 
-				mapHook.map.map.getCanvas().style.cursor = "";
+				mapHook.map.map.getCanvas().style.cursor = '';
 				popup.current.remove();
 			},
 			mapHook.componentId
@@ -150,34 +156,34 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 
 	useEffect(() => {
 		const _dropZone = dropZone.current;
-		const raiseDropZoneAndStopDefault = (event:any) => {
+		const raiseDropZoneAndStopDefault = (event: DragEvent) => {
 			setZIndex(1000);
 			stopDefault(event);
 		};
 		const lowerDropZone = () => {
 			setZIndex(0);
 		};
-		const lowerDropZoneAndStopDefault = (event:any) => {
+		const lowerDropZoneAndStopDefault = (event: DragEvent) => {
 			setZIndex(0);
 			stopDefault(event);
 		};
 
-		window.addEventListener("dragenter", raiseDropZoneAndStopDefault);
-		window.addEventListener("dragover", stopDefault);
+		window.addEventListener('dragenter', raiseDropZoneAndStopDefault);
+		window.addEventListener('dragover', stopDefault);
 
-		_dropZone?.addEventListener("dragleave", lowerDropZone);
+		_dropZone?.addEventListener('dragleave', lowerDropZone);
 
-		window.addEventListener("drop", lowerDropZoneAndStopDefault);
+		window.addEventListener('drop', lowerDropZoneAndStopDefault);
 
 		return () => {
-			window.removeEventListener("dragenter", raiseDropZoneAndStopDefault);
-			window.removeEventListener("dragover", stopDefault);
-			_dropZone?.removeEventListener("dragleave", lowerDropZone);
-			window.removeEventListener("drop", lowerDropZoneAndStopDefault);
+			window.removeEventListener('dragenter', raiseDropZoneAndStopDefault);
+			window.removeEventListener('dragover', stopDefault);
+			_dropZone?.removeEventListener('dragleave', lowerDropZone);
+			window.removeEventListener('drop', lowerDropZoneAndStopDefault);
 		};
 	});
 
-	const stopDefault = (event:any) => {
+	const stopDefault = (event: any) => {
 		event.preventDefault();
 		event.stopPropagation();
 	};
@@ -185,16 +191,16 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 	useEffect(() => {
 		if (!mapHook.map) return;
 
-		const visibility = props.visible ? "visible" : "none";
+		const visibility = props.visible ? 'visible' : 'none';
 
 		[layerNameLines, layerNamePoints].forEach((layerName) => {
-			if(!mapHook.map)return;
+			if (!mapHook.map) return;
 
-			mapHook.map.map.setLayoutProperty(layerName, "visibility", visibility);
+			mapHook.map.map.setLayoutProperty(layerName, 'visibility', visibility);
 		});
 	}, [props.visible]);
 
-	const dropHandler = (event:any) => {
+	const dropHandler = (event: any) => {
 		event.preventDefault();
 
 		if (event.dataTransfer.items) {
@@ -202,12 +208,12 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 				return false;
 			}
 			// If dropped items aren't files, reject them
-			if (event.dataTransfer.items[0].kind === "file") {
+			if (event.dataTransfer.items[0].kind === 'file') {
 				const reader = new FileReader();
-				reader.onload = (payload:any) => {
-					if(!payload?.currentTarget?.result)return;
+				reader.onload = (payload: any) => {
+					if (!payload?.currentTarget?.result) return;
 
-					addGPXToMap(payload.currentTarget.result);
+					setGpxdata(payload.currentTarget.result);
 				};
 				const file = event.dataTransfer.items[0].getAsFile();
 				reader.readAsText(file);
@@ -218,54 +224,29 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 		return;
 	};
 
-	const addGPXToMap = (gpxAsString:string) => {
+	useEffect(() => {
 		if (!mapHook.map || !dataSource.setData) return;
 
-		try {
-			setMetaData([]);
-			const domParser = new DOMParser();
-			const gpxDoc = domParser.parseFromString(gpxAsString, "application/xml");
-			const metadata = gpxDoc.querySelector("metadata");
-			metadata?.childNodes.forEach((node:Element) => {
-				let value = node.textContent;
-				const title = node.nodeName;
-
-				if (node.nodeName === "link") {
-					value = node.getAttribute("href");
-				}
-				if (value?.trim().length) {
-					const metaDatEntry = {
-						title: title,
-						value: value,
-						id: new Date().getTime(),
-					};
-					setMetaData((prevState) => [...prevState, metaDatEntry]);
-				}
-			});
-			const data = toGeoJSON.gpx(gpxDoc);
-			dataSource.setData(data);
-			(mapHook.map.map.getSource(sourceName) as GeoJSONSource).setData(data as GeoJSON);
-			const bounds = bbox(data);
-			mapHook.map.map.fitBounds(bounds as LngLatBoundsLike);
-		} catch (e) {
-			console.log(e);
-		}
-	};
+		dataSource.setData(geojson);
+		(mapHook.map.map.getSource(sourceName) as GeoJSONSource).setData(geojson as GeoJSON);
+		const bounds = bbox(geojson);
+		mapHook.map.map.fitBounds(bounds as LngLatBoundsLike);
+	}, [geojson]);
 
 	const toogleDrawer = () => {
 		setIsOpen((prevState) => !prevState);
 	};
 
 	const fileUploadOnChange = () => {
-		if(!fileupload.current)return false;
+		if (!fileupload.current) return false;
 
 		const file = fileupload.current?.files?.[0];
 		if (!file) return false;
 		const reader = new FileReader();
-		reader.onload = (payload:any) => {
-			if(!payload)return;
+		reader.onload = (payload: any) => {
+			if (!payload) return;
 
-			addGPXToMap(payload.currentTarget.result);
+			setGpxdata(payload.currentTarget.result);
 		};
 
 		reader.readAsText(file);
@@ -274,29 +255,28 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 	};
 
 	const manualUpload = () => {
-		if(!fileupload.current)return;
+		if (!fileupload.current) return;
 
 		fileupload.current.click();
 	};
 
-		
 	return (
 		<>
 			<div
 				style={{
-					position: "fixed",
-					right: "5px",
-					bottom: mediaIsMobile ? "40px" : "25px",
-					display: "flex",
-					flexDirection: "column",
-					gap: "5px",
+					position: 'fixed',
+					right: '5px',
+					bottom: mediaIsMobile ? '40px' : '25px',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '5px',
 					zIndex: 1000,
 				}}
 			>
 				<IconButton
 					onClick={manualUpload}
 					style={{
-						backgroundColor: "rgba(255,255,255,1)",
+						backgroundColor: 'rgba(255,255,255,1)',
 					}}
 					size="large"
 				>
@@ -306,14 +286,14 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 						type="file"
 						id="input"
 						multiple
-						style={{ display: "none" }}
+						style={{ display: 'none' }}
 					></input>
 					<FileCopy />
 				</IconButton>
 				<IconButton
 					onClick={toogleDrawer}
 					style={{
-						backgroundColor: "rgba(255,255,255,1)",
+						backgroundColor: 'rgba(255,255,255,1)',
 					}}
 					size="large"
 				>
@@ -324,8 +304,8 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 				<Typography
 					variant="h6"
 					style={{
-						textAlign: "center",
-						padding: "1em",
+						textAlign: 'center',
+						padding: '1em',
 					}}
 					noWrap
 				>
@@ -344,23 +324,23 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 				onDrop={dropHandler}
 				ref={dropZone}
 				style={{
-					position: "absolute",
-					left: "0",
-					top: "0",
-					backgroundColor: "rgba(255,255,255,0.5)",
-					width: "100%",
-					height: "100%",
+					position: 'absolute',
+					left: '0',
+					top: '0',
+					backgroundColor: 'rgba(255,255,255,0.5)',
+					width: '100%',
+					height: '100%',
 					zIndex: zIndex,
 				}}
 			>
 				<Typography
 					variant="h6"
 					style={{
-						top: "50%",
-						position: "absolute",
-						left: "50%",
-						msTransform: "translate(-50%, -50%)",
-						transform: " translate(-50%, -50%)",
+						top: '50%',
+						position: 'absolute',
+						left: '50%',
+						msTransform: 'translate(-50%, -50%)',
+						transform: ' translate(-50%, -50%)',
 					}}
 					noWrap
 				>
@@ -374,6 +354,5 @@ const MlGPXViewer = (props:MlGPXViewerProps) => {
 MlGPXViewer.defaultProps = {
 	visible: true,
 };
-
 
 export default MlGPXViewer;
