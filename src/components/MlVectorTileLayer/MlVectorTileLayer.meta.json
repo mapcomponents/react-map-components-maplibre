@@ -10,6 +10,5 @@
   },
   "tags": ["Map layer"],
   "category": "layer",
-  "type": "component",
-  "price": 5000
+  "type": "component"
 }
