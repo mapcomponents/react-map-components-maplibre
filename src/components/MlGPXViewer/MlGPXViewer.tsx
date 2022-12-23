@@ -1,19 +1,12 @@
-import React, { useContext,  useEffect, useState } from 'react';
-import { bbox } from '@turf/turf';
-import IconButton from '@mui/material/IconButton';
-import FileCopy from '@mui/icons-material/FileCopy';
-import InfoIcon from '@mui/icons-material/Info';
+import React, { useContext, useEffect } from 'react';
+import { bbox, FeatureCollection } from '@turf/turf';
 import { LngLatBoundsLike } from 'maplibre-gl';
 import GeoJsonContext from './util/GeoJsonContext';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
-import useGpx from '../../hooks/useGpx/useGpx';
-import Dropzone from '../../ui_components/Dropzone';
+import useGpx, { MetadataType } from '../../hooks/useGpx/useGpx';
 import useLayerHoverPopup from '../../hooks/useLayerHoverPopup/useLayerHoverPopup';
 import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
-import UploadButton from '../../ui_components/UploadButton';
-import MetadataDrawer from './util/MetadataDrawer';
 
 interface MlGPXViewerProps {
 	/**
@@ -29,23 +22,23 @@ interface MlGPXViewerProps {
 	 * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
 	 */
 	idPrefix?: string;
+	gpxData: string | undefined;
+	onParseGpxData: (arg0: {
+		geojson: FeatureCollection | undefined;
+		metadata: MetadataType[];
+	}) => void;
 }
 
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
 const MlGPXViewer = (props: MlGPXViewerProps) => {
-	const [gpxData, setGpxData] = useState();
-	const { geojson, metadata } = useGpx({ data: gpxData });
-
+	const parsedGpx = useGpx({ data: props.gpxData });
 	const dataSource = useContext(GeoJsonContext);
 	const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 	const sourceName = 'import-source';
 	const layerNameLines = 'importer-layer-lines';
 	const layerNamePoints = 'importer-layer-points';
-
-	const [metadataDrawerOpen, setMetadataDrawerOpen] = useState(false);
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	useLayerHoverPopup({
 		layerId: layerNamePoints,
@@ -89,57 +82,19 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 	});
 
 	useEffect(() => {
-		if (!mapHook.map || !dataSource.setData) return;
+		if (!mapHook.map || !dataSource.setData || !parsedGpx.geojson) return;
 
-		dataSource.setData(geojson);
+		dataSource.setData(parsedGpx.geojson);
 
+		if (typeof props.onParseGpxData === 'function') {
+			props.onParseGpxData(parsedGpx);
+		}
 		// fit map view to GeoJSON bbox
-		const bounds = bbox(geojson);
+		const bounds = bbox(parsedGpx.geojson);
 		mapHook.map.map.fitBounds(bounds as LngLatBoundsLike);
-	}, [geojson]);
+	}, [parsedGpx]);
 
-	return (
-		<>
-			<div
-				style={{
-					position: 'fixed',
-					right: '5px',
-					bottom: mediaIsMobile ? '40px' : '25px',
-					display: 'flex',
-					flexDirection: 'column',
-					gap: '5px',
-					zIndex: 1000,
-				}}
-			>
-				<UploadButton
-					setData={setGpxData}
-					buttonComponent={
-						<IconButton
-							style={{
-								backgroundColor: 'rgba(255,255,255,1)',
-							}}
-							size="large"
-						>
-							<FileCopy />
-						</IconButton>
-					}
-				/>
-				<IconButton
-					onClick={() => {
-						setMetadataDrawerOpen((prevState) => !prevState);
-					}}
-					style={{
-						backgroundColor: 'rgba(255,255,255,1)',
-					}}
-					size="large"
-				>
-					<InfoIcon />
-				</IconButton>
-			</div>
-			<MetadataDrawer metadata={metadata} open={metadataDrawerOpen} />
-			<Dropzone setData={(data) => setGpxData(data)} />
-		</>
-	);
+	return <></>;
 };
 
 MlGPXViewer.defaultProps = {};

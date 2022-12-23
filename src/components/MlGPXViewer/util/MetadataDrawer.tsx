@@ -5,16 +5,11 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import { MetadataType } from '../../../hooks/useGpx/useGpx';
 
 type Props = {
   metadata: MetadataType[];
   open: boolean;
-}
-
-export interface MetadataType {
-	title: string;
-	value: string;
-	id: number;
 }
 
 export default function MetadataDrawer(props: Props) {
@@ -32,8 +27,8 @@ export default function MetadataDrawer(props: Props) {
 				</Typography>
 				<Divider />
 				<List>
-					{props.metadata?.length && props.metadata.map((item) => (
-						<ListItem key={`item--${item.id}`}>
+					{props.metadata?.length && props.metadata.map((item, idx) => (
+						<ListItem key={`item--${idx}`}>
 							<ListItemText primary={item.value} />
 						</ListItem>
 					))}

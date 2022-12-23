@@ -8,6 +8,11 @@ import { Button, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MlGPXDemoLoader from './util/MlGPXDemoLoader';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileCopy from '@mui/icons-material/FileCopy';
+import InfoIcon from '@mui/icons-material/Info';
+import Dropzone from '../../ui_components/Dropzone';
+import UploadButton from '../../ui_components/UploadButton';
+import MetadataDrawer from './util/MetadataDrawer';
 
 const storyoptions = {
 	title: 'MapComponents/MlGPXViewer',
@@ -24,43 +29,58 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = () => {
+	const [gpxData, setGpxData] = useState();
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
+	const [metadataDrawerOpen, setMetadataDrawerOpen] = useState(false);
+	const [metadata, setMetadata] = useState([]);
 
 	const handleClick1 = () => {
 		setDemoMode(!demoMode);
-		
 	};
-	const handleClick2 = ()=>{
+	const handleClick2 = () => {
 		setGuide(true);
-		setTimeout(()=>{
-			setGuide(false)
+		setTimeout(() => {
+			setGuide(false);
 		}, 9000);
-	}
+	};
 
-	const textColor = () =>{
-		if(demoMode){
-			return "white"
+	const textColor = () => {
+		if (demoMode) {
+			return 'white';
 		} else {
-			return "steelblue"
+			return 'steelblue';
 		}
-	}
+	};
 
-	const textColor2 = () =>{
-		if(guide){
-			return "white"
+	const textColor2 = () => {
+		if (guide) {
+			return 'white';
 		} else {
-			return "steelblue"
+			return 'steelblue';
 		}
-	}
+	};
 
 	return (
 		<>
 			<TopToolbar>
 				<MlGPXViewerInstructions open={guide} />
-				<Button variant="contained" onClick={handleClick2}  color={guide ? "primary" : "inherit"} sx={{ color: textColor2, marginRight: '10px' }}> Guide me through</Button>
-				<Button variant="contained" onClick={handleClick1} color={demoMode ? "primary" : "inherit"} sx={{ color: textColor }}> 
+				<Button
+					variant="contained"
+					onClick={handleClick2}
+					color={guide ? 'primary' : 'inherit'}
+					sx={{ color: textColor2, marginRight: '10px' }}
+				>
+					{' '}
+					Guide me through
+				</Button>
+				<Button
+					variant="contained"
+					onClick={handleClick1}
+					color={demoMode ? 'primary' : 'inherit'}
+					sx={{ color: textColor }}
+				>
 					Demo Mode
 				</Button>
 			</TopToolbar>
@@ -81,7 +101,49 @@ const Template = () => {
 			</IconButton>
 			<GeoJsonProvider>
 				<MlGPXDemoLoader enabled={demoMode} />
-				<MlGPXViewer />
+
+				<div
+					style={{
+						position: 'fixed',
+						right: '5px',
+						bottom: mediaIsMobile ? '40px' : '25px',
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '5px',
+						zIndex: 1000,
+					}}
+				>
+					<UploadButton
+						setData={setGpxData}
+						buttonComponent={
+							<IconButton
+								style={{
+									backgroundColor: 'rgba(255,255,255,1)',
+								}}
+								size="large"
+							>
+								<FileCopy />
+							</IconButton>
+						}
+					/>
+					<IconButton
+						onClick={() => {
+							setMetadataDrawerOpen((prevState) => !prevState);
+						}}
+						style={{
+							backgroundColor: 'rgba(255,255,255,1)',
+						}}
+						size="large"
+					>
+						<InfoIcon />
+					</IconButton>
+				</div>
+				<MetadataDrawer metadata={metadata} open={metadataDrawerOpen} />
+				<Dropzone setData={(data) => setGpxData(data)} />
+				<MlGPXViewer
+					gpxData={gpxData}
+					onParseGpxData={(parsedGpx) => setMetadata(parsedGpx.metadata ? parsedGpx.metadata : [])}
+				/>
 			</GeoJsonProvider>
 		</>
 	);

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import toGeoJSON from './lib/gpxConverter';
+import { FeatureCollection } from '@turf/turf';
 
 interface useGpxProps {
 	/**
@@ -8,13 +9,19 @@ interface useGpxProps {
 	data?: string;
 }
 
+export interface MetadataType {
+	title: string;
+	value: string;
+	id: number;
+}
+
 /**
  * useGpx hook converts GPX data to GeoJSON
  *
  */
 const useGpx = (props: useGpxProps) => {
-	const [geojson,setGeojson] = useState()
-	const [metadata,setMetadata] = useState([])
+	const [geojson, setGeojson] = useState<FeatureCollection | undefined>();
+	const [metadata, setMetadata] = useState<MetadataType[]>([]);
 
 	const parseGpx = (gpxAsString: string) => {
 		try {
@@ -39,21 +46,21 @@ const useGpx = (props: useGpxProps) => {
 				}
 			});
 			const data = toGeoJSON.gpx(gpxDoc);
-			setGeojson(data);
+			setGeojson(data as FeatureCollection);
 		} catch (e) {
 			console.log(e);
 		}
 	};
 
 	useEffect(() => {
-		if(!props.data)return;
+		if (!props.data) return;
 
-		parseGpx(props.data)
+		parseGpx(props.data);
 	}, [props.data]);
 
 	return {
 		geojson,
-		metadata
+		metadata,
 	};
 };
 
