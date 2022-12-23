@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import MlGPXViewer from './MlGPXViewer';
+import MlGpxViewer from './MlGpxViewer';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import MlGPXViewerInstructions from './util/MlGPXViewerInstructions';
+import MlGpxViewerInstructions from './util/MlGpxViewerInstructions';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { Button, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import MlGPXDemoLoader from './util/MlGPXDemoLoader';
+import MlGpxDemoLoader from './util/MlGpxDemoLoader';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileCopy from '@mui/icons-material/FileCopy';
 import InfoIcon from '@mui/icons-material/Info';
@@ -14,8 +14,8 @@ import UploadButton from '../../ui_components/UploadButton';
 import MetadataDrawer from './util/MetadataDrawer';
 
 const storyoptions = {
-	title: 'MapComponents/MlGPXViewer',
-	component: MlGPXViewer,
+	title: 'MapComponents/MlGpxViewer',
+	component: MlGpxViewer,
 	argTypes: {
 		options: {
 			control: {
@@ -64,7 +64,7 @@ const Template = () => {
 	return (
 		<>
 			<TopToolbar>
-				<MlGPXViewerInstructions open={guide} />
+				<MlGpxViewerInstructions open={guide} />
 				<Button
 					variant="contained"
 					onClick={handleClick2}
@@ -98,7 +98,7 @@ const Template = () => {
 			>
 				<FileDownloadIcon />
 			</IconButton>
-				<MlGPXDemoLoader enabled={demoMode} />
+				<MlGpxDemoLoader enabled={demoMode} />
 
 				<div
 					style={{
@@ -138,7 +138,7 @@ const Template = () => {
 				</div>
 				<MetadataDrawer metadata={metadata} open={metadataDrawerOpen} />
 				<Dropzone setData={(data) => setGpxData(data)} />
-				<MlGPXViewer
+				<MlGpxViewer
 					gpxData={gpxData}
 					onParseGpxData={(parsedGpx) => setMetadata(parsedGpx.metadata ? parsedGpx.metadata : [])}
 				/>

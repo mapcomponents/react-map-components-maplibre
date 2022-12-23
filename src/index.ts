@@ -22,9 +22,9 @@ export { default as MlLayerSwipe } from "./components/MlLayerSwipe/MlLayerSwipe"
 export { default as MlTransitionGeoJsonLayer } from "./components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer";
 export { default as MlMarker } from "./components/MlMarker/MlMarker";
 
-export { default as MlGPXViewer } from "./components/MlGPXViewer/MlGPXViewer";
-export { default as GeoJsonProvider } from "./components/MlGPXViewer/util/GeoJsonProvider";
-export { default as GeoJsonContext } from "./components/MlGPXViewer/util/GeoJsonContext";
+export { default as MlGpxViewer } from "./components/MlGpxViewer/MlGpxViewer";
+export { default as GeoJsonProvider } from "./components/MlGpxViewer/util/GeoJsonProvider";
+export { default as GeoJsonContext } from "./components/MlGpxViewer/util/GeoJsonContext";
 
 export { default as MlSpatialElevationProfile } from "./components/MlSpatialElevationProfile/MlSpatialElevationProfile.js";
 

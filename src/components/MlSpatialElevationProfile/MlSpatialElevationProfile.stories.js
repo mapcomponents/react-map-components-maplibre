@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
 import MlSpatialElevationProfile from './MlSpatialElevationProfile';
-import MlGPXViewer from '../MlGPXViewer/MlGPXViewer';
+import MlGpxViewer from '../MlGpxViewer/MlGpxViewer';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import GeoJsonProvider from '../../components/MlGPXViewer/util/GeoJsonProvider';
+import GeoJsonProvider from '../../components/MlGpxViewer/util/GeoJsonProvider';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
-import MlGPXViewerInstructions from '../../components/MlGPXViewer/util/MlGPXViewerInstructions';
+import MlGpxViewerInstructions from '../../components/MlGpxViewer/util/MlGpxViewerInstructions';
 import { Button } from '@mui/material';
-import MlGPXDemoLoader from '../MlGPXViewer/util/MlGPXDemoLoader';
+import MlGpxDemoLoader from '../MlGpxViewer/util/MlGpxDemoLoader';
 
 const storyoptions = {
 	title: 'MapComponents/MlSpatialElevationProfile',
@@ -71,7 +71,7 @@ const Template = (args) => {
 	return (
 		<>
 			<TopToolbar>
-				<MlGPXViewerInstructions open={guide} />
+				<MlGpxViewerInstructions open={guide} />
 				<Button
 					variant="contained"
 					onClick={handleClick2}
@@ -105,8 +105,8 @@ const Template = (args) => {
 				<FileDownloadIcon />
 			</IconButton>
 			<GeoJsonProvider>
-				<MlGPXDemoLoader enabled={demoMode} />
-				<MlGPXViewer />
+				<MlGpxDemoLoader enabled={demoMode} />
+				<MlGpxViewer />
 				<MlSpatialElevationProfile />
 			</GeoJsonProvider>
 		</>

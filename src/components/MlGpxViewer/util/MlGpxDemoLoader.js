@@ -43,9 +43,9 @@ const mobileStyle = {
 };
 
 /**
- * MlGPXDemoLoader returns a button to load a Demo GPX Track into the map.
+ * MlGpxDemoLoader returns a button to load a Demo GPX Track into the map.
  */
-const MlGPXDemoLoader = (props) => {
+const MlGpxDemoLoader = (props) => {
 	const [openModal, setOpenModal] = useState(false);
 	const [infoOpen, setInfoOpen] = useState(false);
 	const [metaData, setMetaData] = useState([]);
@@ -248,4 +248,4 @@ const MlGPXDemoLoader = (props) => {
 	);
 };
 
-export default MlGPXDemoLoader;
+export default MlGpxDemoLoader;

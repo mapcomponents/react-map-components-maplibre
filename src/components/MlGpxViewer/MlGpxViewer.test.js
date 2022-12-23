@@ -1,23 +1,23 @@
 import { layerRemovalTest, sourceRemovalTest } from "../../util";
 
-import MlGPXViewer from "./MlGPXViewer";
+import MlGpxViewer from "./MlGpxViewer";
 
-const testComponent = <MlGPXViewer />;
+const testComponent = <MlGpxViewer />;
 
 let sourceTestParams = [
-	"<MlGPXViewer />",
+	"<MlGpxViewer />",
 	testComponent,
 	/^.*\"import\-source\".*$/,
 	"import-source",
 ];
 let layer1TestParams = [
-	"<MlGPXViewer />",
+	"<MlGpxViewer />",
 	testComponent,
 	/^.*\"importer\-layer\-lines\".*$/,
 	"importer-layer-lines",
 ];
 let layer2TestParams = [
-	"<MlGPXViewer />",
+	"<MlGpxViewer />",
 	testComponent,
 	/^.*\"importer\-layer\-points\".*$/,
 	"importer-layer-points",

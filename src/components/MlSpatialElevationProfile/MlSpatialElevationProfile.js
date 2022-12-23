@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useContext, useEffect } from "react";
 import MapContext from "../../contexts/MapContext";
-import GeoJsonContext from "../../components/MlGPXViewer/util/GeoJsonContext";
+import GeoJsonContext from "../../components/MlGpxViewer/util/GeoJsonContext";
 import { polygon, lineString } from "@turf/helpers";
 import { distance, lineOffset } from "@turf/turf";
 import { v4 as uuidv4 } from "uuid";

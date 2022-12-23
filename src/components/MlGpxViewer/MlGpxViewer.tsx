@@ -8,7 +8,7 @@ import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
 import { v4 as uuidv4 } from 'uuid';
 
-interface MlGPXViewerProps {
+interface MlGpxViewerProps {
 	/**
 	 * Id of the target MapLibre instance in mapHook
 	 */
@@ -30,9 +30,9 @@ interface MlGPXViewerProps {
 }
 
 /**
- * MlGPXViewer visualizes a given GPX Track on the map
+ * MlGpxViewer visualizes a given GPX Track on the map
  */
-const MlGPXViewer = (props: MlGPXViewerProps) => {
+const MlGpxViewer = (props: MlGpxViewerProps) => {
 	const parsedGpx = useGpx({ data: props.gpxData });
 	const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
 	const sourceName = useRef('gpx-viewer-source-' + uuidv4());
@@ -94,6 +94,6 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 	return <></>;
 };
 
-MlGPXViewer.defaultProps = {};
+MlGpxViewer.defaultProps = {};
 
-export default MlGPXViewer;
+export default MlGpxViewer;
