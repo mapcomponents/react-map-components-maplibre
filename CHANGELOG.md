@@ -1,6 +1,43 @@
 # Change Log
 
 
+## [v0.1.63] - 2022-12-16
+
+### Fixed
+- b5d6636: update mui dependencies to fix export 'experimental_sx' (reexported as 'experimental_sx') was not found in '@mui/system'
+
+### Added
+- f6af0fd: merge feature/cypress test setup (#48)
+- a1c1f1c: add MlSketchTool demo to catalog (#51) …
+
+
+### Changed
+- 4e6ad8e: merge feature/ml geojson demo optimization (#45) 
+- 36f3ee8: merge feature/ml gpx viewer demo optimization (#46) 
+- e2af70a: refactor TopToolBar component
+- f820006: refactor Sidebar component
+- 4038777: update d3 & maplibre-gl dependencies
+
+
+## [v0.1.62] - 2022-11-26
+
+### Added
+- ba36980: full rewrite of the PdfPreview component, fixing distortion issues in lower zoom levels, offering improved user experience when transforming, adding an option to set a fixed scale
+
+## [v0.1.61] - 2022-11-16
+
+### Added
+- 63f11bc: add useCameraFollowPath
+
+## [v0.1.60] - 2022-11-04
+
+### Fixed
+- bc71b1f: Fix/use export map hook (#39)
+
+### Changed
+
+- 7687eec: change MlVectorTileLayer layers prop type from object to array
+
 ## [v0.1.59] - 2022-10-04
 
 ### Fixed
@@ -9,6 +46,7 @@
 ## [v0.1.58] - 2022-10-04
 
 ### Added
+
 - 6be40b7: automatic eslint & prettier tests as GitHub action
 - 396b1b7: useSource hook
 - 67d88a0: add MlCreatePdfForm component & useExportMap hook providing more sophisticated control on the PDF creation process such as a preview of the PDF area with drag&drop, resize & rotation  functionality as well as controlls over the paper size, quality & orientation

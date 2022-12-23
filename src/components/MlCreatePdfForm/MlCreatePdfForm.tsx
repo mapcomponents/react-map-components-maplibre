@@ -1,8 +1,7 @@
 import React from 'react';
-import PdfPreview from './lib/PdfPreview';
 import PdfForm from './lib/PdfForm';
 import { PdfContextProvider } from './lib/PdfContext';
-import { createPdfResolverParams } from '../../hooks/exportMap/lib';
+import { createPdfResolverParams } from '../../hooks/useExportMap/lib';
 import { SxProps } from '@mui/material';
 
 interface MlCreatePdfFormProps {
@@ -27,7 +26,6 @@ const MlCreatePdfForm = (props: MlCreatePdfFormProps) => {
 		<>
 			<PdfContextProvider>
 				<PdfForm {...props} />
-				<PdfPreview />
 			</PdfContextProvider>
 		</>
 	);

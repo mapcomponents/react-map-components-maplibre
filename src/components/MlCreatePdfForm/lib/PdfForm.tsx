@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, useCallback } from 'react';
 import PdfContext from './PdfContext';
+import PdfPreview from './PdfPreview';
 import {
 	FormControl,
 	MenuItem,
@@ -13,13 +14,52 @@ import {
 } from '@mui/material';
 
 import useMap from '../../../hooks/useMap';
-import exportMap from '../../../hooks/exportMap';
-import { createPdfResolverParams } from '../../../hooks/exportMap/lib';
+import useExportMap from '../../../hooks/useExportMap';
+import { createPdfResolverParams } from '../../../hooks/useExportMap/lib';
 
 import * as turf from '@turf/turf';
 
 import templates from './pdf.templates';
+import { PdfPreviewOptions } from './pdfContext';
 
+const scaleOptions = [
+	{
+		value: 0,
+		label: 'free scale',
+	},
+	{
+		value: 250,
+		label: '1/250',
+	},
+	{
+		value: 500,
+		label: '1/500',
+	},
+	{
+		value: 750,
+		label: '1/750',
+	},
+	{
+		value: 1000,
+		label: '1/1000',
+	},
+	{
+		value: 1500,
+		label: '1/1500',
+	},
+	{
+		value: 2000,
+		label: '1/2000',
+	},
+	{
+		value: 10000,
+		label: '1/10000',
+	},
+	{
+		value: 100000,
+		label: '1/100000',
+	},
+];
 const qualityOptions = [
 	{
 		value: '72dpi',
@@ -40,16 +80,16 @@ interface PdfFormProps {
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
-	onCreatePdf?: (options:createPdfResolverParams) => createPdfResolverParams;
+	onCreatePdf?: (options: createPdfResolverParams) => createPdfResolverParams;
 }
 
-export default function PdfForm(props:PdfFormProps) {
+export default function PdfForm(props: PdfFormProps) {
 	const pdfContext = useContext(PdfContext);
 	const mapHook = useMap({
 		// eslint-disable-next-line react/prop-types
 		mapId: props.mapId,
 	});
-	const mapExporter = exportMap({ mapId: props.mapId });
+	const mapExporter = useExportMap({ mapId: props.mapId });
 
 	const createPdfHandler = useCallback(() => {
 		if (
@@ -57,7 +97,7 @@ export default function PdfForm(props:PdfFormProps) {
 			mapExporter.createExport &&
 			pdfContext.template &&
 			pdfContext.format &&
-			pdfContext.orientation &&
+			pdfContext.options?.orientation &&
 			pdfContext.geojsonRef?.current?.bbox &&
 			pdfContext.geojsonRef?.current
 		) {
@@ -69,9 +109,9 @@ export default function PdfForm(props:PdfFormProps) {
 					height: pdfContext.template.height,
 					bbox: bbox,
 					bboxUnrotated: pdfContext.geojsonRef.current.bbox,
-					bearing: pdfContext.geojsonRef.current?.properties?.bearing || 0,
+					bearing: (pdfContext.geojsonRef.current?.properties?.bearing as number) || 0,
 					format: pdfContext.format.toLowerCase(),
-					orientation: pdfContext.orientation,
+					orientation: pdfContext.options.orientation,
 				})
 				.then((res) => res.createPdf())
 				.then((res) => {
@@ -124,9 +164,14 @@ export default function PdfForm(props:PdfFormProps) {
 					row
 					aria-labelledby="orientation-radio-buttons-group-label"
 					name="orientation-radio-buttons-group"
-					value={pdfContext.orientation}
+					value={pdfContext.options?.orientation}
 					onChange={(event) => {
-						pdfContext.setOrientation?.(event.target.value);
+						if (!pdfContext.setOptions) return;
+
+						pdfContext.setOptions((val: PdfPreviewOptions) => ({
+							...val,
+							orientation: event.target.value as 'landscape' | 'portrait',
+						}));
 					}}
 				>
 					<FormControlLabel value="portrait" control={<Radio />} label="Portrait" />
@@ -152,10 +197,38 @@ export default function PdfForm(props:PdfFormProps) {
 				</Select>
 			</FormControl>
 			<FormControl fullWidth sx={formControlStyles}>
-				<Button variant="contained" onClick={createPdfHandler}>
+				<InputLabel id="quality-select-label">Scale</InputLabel>
+				<Select
+					labelId="quality-select-label"
+					id="quality-select"
+					label="Qualität"
+					value={pdfContext?.options?.fixedScale}
+					onChange={(event) => {
+						pdfContext.setOptions?.((val) => ({
+							...val,
+							fixedScale: event.target.value as number,
+						}));
+					}}
+				>
+					{scaleOptions.map((el, idx) => (
+						<MenuItem key={idx} value={el.value}>
+							{el.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<FormControl fullWidth sx={formControlStyles}>
+				<Button variant="contained" className='createPdfButton' onClick={createPdfHandler}>
 					PDF erstellen
 				</Button>
 			</FormControl>
+			{pdfContext.options && pdfContext.setOptions && (
+				<PdfPreview
+					options={pdfContext.options}
+					setOptions={pdfContext.setOptions}
+					geojsonRef={pdfContext.geojsonRef}
+				/>
+			)}
 		</>
 	);
 }
