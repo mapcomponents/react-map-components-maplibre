@@ -1,15 +1,9 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
+import React, { useContext,  useEffect, useState } from 'react';
 import { bbox } from '@turf/turf';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import FileCopy from '@mui/icons-material/FileCopy';
 import InfoIcon from '@mui/icons-material/Info';
 import { LngLatBoundsLike } from 'maplibre-gl';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import GeoJsonContext from './util/GeoJsonContext';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
@@ -19,6 +13,7 @@ import useLayerHoverPopup from '../../hooks/useLayerHoverPopup/useLayerHoverPopu
 import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
 import UploadButton from '../../ui_components/UploadButton';
+import MetadataDrawer from './util/MetadataDrawer';
 
 interface MlGPXViewerProps {
 	/**
@@ -36,11 +31,6 @@ interface MlGPXViewerProps {
 	idPrefix?: string;
 }
 
-interface MetadataType {
-	title: string;
-	value: string;
-	id: number;
-}
 /**
  * MlGPXViewer returns a dropzone and a button to load a GPX Track into the map.
  */
@@ -54,7 +44,7 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 	const layerNameLines = 'importer-layer-lines';
 	const layerNamePoints = 'importer-layer-points';
 
-	const [open, setIsOpen] = useState(false);
+	const [metadataDrawerOpen, setMetadataDrawerOpen] = useState(false);
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	useLayerHoverPopup({
@@ -136,7 +126,7 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 				/>
 				<IconButton
 					onClick={() => {
-						setIsOpen((prevState) => !prevState);
+						setMetadataDrawerOpen((prevState) => !prevState);
 					}}
 					style={{
 						backgroundColor: 'rgba(255,255,255,1)',
@@ -146,26 +136,7 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 					<InfoIcon />
 				</IconButton>
 			</div>
-			<Drawer variant="persistent" anchor="left" open={open}>
-				<Typography
-					variant="h6"
-					style={{
-						textAlign: 'center',
-						padding: '1em',
-					}}
-					noWrap
-				>
-					Informationen zur Route
-				</Typography>
-				<Divider />
-				<List>
-					{metadata.map((item) => (
-						<ListItem key={`item--${item.id}`}>
-							<ListItemText primary={item.value} />
-						</ListItem>
-					))}
-				</List>
-			</Drawer>
+			<MetadataDrawer metadata={metadata} open={metadataDrawerOpen} />
 			<Dropzone setData={(data) => setGpxData(data)} />
 		</>
 	);
