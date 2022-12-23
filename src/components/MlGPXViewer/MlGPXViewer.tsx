@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { bbox, featureCollection, FeatureCollection } from '@turf/turf';
 import { LngLatBoundsLike } from 'maplibre-gl';
 import useMap from '../../hooks/useMap';
@@ -6,6 +6,7 @@ import useGpx, { MetadataType } from '../../hooks/useGpx/useGpx';
 import useLayerHoverPopup from '../../hooks/useLayerHoverPopup/useLayerHoverPopup';
 import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
+import { v4 as uuidv4 } from 'uuid';
 
 interface MlGPXViewerProps {
 	/**
@@ -34,18 +35,18 @@ interface MlGPXViewerProps {
 const MlGPXViewer = (props: MlGPXViewerProps) => {
 	const parsedGpx = useGpx({ data: props.gpxData });
 	const mapHook = useMap({ mapId: props.mapId, waitForLayer: props.insertBeforeLayer });
-	const sourceName = 'import-source';
-	const layerNameLines = 'importer-layer-lines';
-	const layerNamePoints = 'importer-layer-points';
+	const sourceName = useRef('gpx-viewer-source-' + uuidv4());
+	const layerNameLines = useRef('importer-layer-lines-' + uuidv4());
+	const layerNamePoints = useRef('importer-layer-points-' + uuidv4());
 
 	useLayerHoverPopup({
-		layerId: layerNamePoints,
+		layerId: layerNamePoints.current,
 		getPopupContent: (feature) => feature?.properties?.name,
 	});
 
 	useSource({
 		mapId: props.mapId,
-		sourceId: sourceName,
+		sourceId: sourceName.current,
 		source: {
 			type: 'geojson',
 			data: parsedGpx.geojson || featureCollection([]),
@@ -53,8 +54,8 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 	});
 
 	useLayer({
-		layerId: layerNameLines,
-		source: sourceName,
+		layerId: layerNameLines.current,
+		source: sourceName.current,
 		options: {
 			type: 'line',
 			paint: {
@@ -66,8 +67,8 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 	});
 
 	useLayer({
-		layerId: layerNamePoints,
-		source: sourceName,
+		layerId: layerNamePoints.current,
+		source: sourceName.current,
 		options: {
 			type: 'circle',
 			paint: {
@@ -81,7 +82,6 @@ const MlGPXViewer = (props: MlGPXViewerProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || !parsedGpx.geojson) return;
-
 
 		if (typeof props.onParseGpxData === 'function') {
 			props.onParseGpxData(parsedGpx);
