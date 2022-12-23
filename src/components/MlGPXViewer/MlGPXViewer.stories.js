@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import MlGPXViewer from './MlGPXViewer';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import GeoJsonProvider from './util/GeoJsonProvider';
 import MlGPXViewerInstructions from './util/MlGPXViewerInstructions';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { Button, IconButton } from '@mui/material';
@@ -99,7 +98,6 @@ const Template = () => {
 			>
 				<FileDownloadIcon />
 			</IconButton>
-			<GeoJsonProvider>
 				<MlGPXDemoLoader enabled={demoMode} />
 
 				<div
@@ -144,7 +142,6 @@ const Template = () => {
 					gpxData={gpxData}
 					onParseGpxData={(parsedGpx) => setMetadata(parsedGpx.metadata ? parsedGpx.metadata : [])}
 				/>
-			</GeoJsonProvider>
 		</>
 	);
 };
