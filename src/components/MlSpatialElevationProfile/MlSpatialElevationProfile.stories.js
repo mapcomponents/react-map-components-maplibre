@@ -3,8 +3,13 @@ import React, { useEffect, useState } from 'react';
 import MlSpatialElevationProfile from './MlSpatialElevationProfile';
 import MlGpxViewer from '../MlGpxViewer/MlGpxViewer';
 
+import InfoIcon from '@mui/icons-material/Info';
+import useGpx from '../../hooks/useGpx/useGpx';
+import FileCopy from '@mui/icons-material/FileCopy';
+import Dropzone from '../../ui_components/Dropzone';
+import UploadButton from '../../ui_components/UploadButton';
+import MetadataDrawer from '../MlGpxViewer/util/MetadataDrawer';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import GeoJsonProvider from '../../components/MlGpxViewer/util/GeoJsonProvider';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -28,15 +33,18 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => {
+const Template = () => {
+	const [gpxData, setGpxData] = useState();
+	const parsedGpx = useGpx({ data: gpxData });
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
-
-	const [demoMode, setDemoMode] = useState(false);
+	const [demoLoaderOpen, setDemoLoaderOpen] = useState(false);
 	const [guide, setGuide] = useState(false);
+	const [metadataDrawerOpen, setMetadataDrawerOpen] = useState(false);
+	const [metadata, setMetadata] = useState([]);
 	const mapHook = useMap({ mapId: 'map_1' });
 
 	const handleClick1 = () => {
-		setDemoMode(!demoMode);
+		setDemoLoaderOpen(!demoLoaderOpen);
 	};
 	const handleClick2 = () => {
 		setGuide(true);
@@ -46,7 +54,7 @@ const Template = (args) => {
 	};
 
 	const textColor = () => {
-		if (demoMode) {
+		if (demoLoaderOpen) {
 			return 'white';
 		} else {
 			return 'steelblue';
@@ -78,12 +86,13 @@ const Template = (args) => {
 					color={guide ? 'primary' : 'inherit'}
 					sx={{ color: textColor2, marginRight: '10px' }}
 				>
+					{' '}
 					Guide me through
 				</Button>
 				<Button
 					variant="contained"
 					onClick={handleClick1}
-					color={demoMode ? 'primary' : 'inherit'}
+					color={demoLoaderOpen ? 'primary' : 'inherit'}
 					sx={{ color: textColor }}
 				>
 					Demo Mode
@@ -104,11 +113,51 @@ const Template = (args) => {
 			>
 				<FileDownloadIcon />
 			</IconButton>
-			<GeoJsonProvider>
-				<MlGpxDemoLoader enabled={demoMode} />
-				<MlGpxViewer />
-				<MlSpatialElevationProfile />
-			</GeoJsonProvider>
+			<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
+
+			<div
+				style={{
+					position: 'fixed',
+					right: '5px',
+					bottom: mediaIsMobile ? '40px' : '25px',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '5px',
+					zIndex: 1000,
+				}}
+			>
+				<UploadButton
+					setData={setGpxData}
+					buttonComponent={
+						<IconButton
+							style={{
+								backgroundColor: 'rgba(255,255,255,1)',
+							}}
+							size="large"
+						>
+							<FileCopy />
+						</IconButton>
+					}
+				/>
+				<IconButton
+					onClick={() => {
+						setMetadataDrawerOpen((prevState) => !prevState);
+					}}
+					style={{
+						backgroundColor: 'rgba(255,255,255,1)',
+					}}
+					size="large"
+				>
+					<InfoIcon />
+				</IconButton>
+			</div>
+			<MetadataDrawer metadata={metadata} open={metadataDrawerOpen} />
+			<Dropzone setData={(data) => setGpxData(data)} />
+			<MlGpxViewer
+				gpxData={gpxData}
+				onParseGpxData={(parsedGpx) => setMetadata(parsedGpx.metadata ? parsedGpx.metadata : [])}
+			/>
+			<MlSpatialElevationProfile geojson={parsedGpx.geojson} />
 		</>
 	);
 };

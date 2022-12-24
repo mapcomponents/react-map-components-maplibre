@@ -36,24 +36,24 @@ const mobileStyle = {
 
 interface MlGpxDemoLoaderProps {
 	open: boolean;
-	setOpen: (open:boolean) => void;
+	setOpen: (open: boolean) => void;
 	setGpx: (gpx: string | ArrayBuffer) => void;
 }
 
 const samples = [
 	{
-		name: "mountain_trail.gpx",
-		path: "assets/sample1.gpx"
+		name: 'mountain_trail.gpx',
+		path: 'assets/sample1.gpx',
 	},
 	{
-		name: "bycycle_tour.gpx",
-		path: "assets/sample2.gpx"
+		name: 'bycycle_tour.gpx',
+		path: 'assets/sample2.gpx',
 	},
 	{
-		name: "treckking.gpx",
-		path: "assets/sample2.gpx"
+		name: 'treckking.gpx',
+		path: 'assets/sample2.gpx',
 	},
-]
+];
 /**
  * MlGpxDemoLoader returns a button to load a Demo GPX Track into the map.
  */
@@ -67,7 +67,7 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
-	const loadSample = (samplePath:string) => {
+	const loadSample = (samplePath: string) => {
 		fetch(samplePath)
 			.then(function (response) {
 				return response.blob();
@@ -92,12 +92,12 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 			>
 				<Box sx={mediaIsMobile ? mobileStyle : modalStyle}>
 					<Grid container>
-						<Grid xs={10}>
+						<Grid item xs={10}>
 							<Typography id="modal-modal-title" variant="h6">
 								GPX demo files
 							</Typography>
 						</Grid>
-						<Grid xs={2}>
+						<Grid item xs={2}>
 							<Button onClick={handleClose}>
 								<CloseIcon sx={{ color: 'black' }} />
 							</Button>
@@ -106,18 +106,19 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 					<Divider />
 
 					<List>
-						{samples.map(el => <>
-						<ListItem>
-							<ListItemButton onClick={() => loadSample(el.path)}>
-								<ListItemText>{el.name}</ListItemText>
-							</ListItemButton>
-						</ListItem>
-						<Divider variant="inset" component="li" />
-						</>)}
+						{samples.map((el, idx) => (
+							<>
+								<ListItem key={idx}>
+									<ListItemButton onClick={() => loadSample(el.path)}>
+										<ListItemText>{el.name}</ListItemText>
+									</ListItemButton>
+								</ListItem>
+								<Divider key={'div' + idx} variant="inset" component="li" />
+							</>
+						))}
 					</List>
 				</Box>
 			</Modal>
-
 		</>
 	);
 };

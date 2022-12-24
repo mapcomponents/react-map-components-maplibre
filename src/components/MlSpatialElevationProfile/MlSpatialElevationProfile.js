@@ -1,10 +1,9 @@
-import React, { useCallback, useRef, useContext, useEffect } from "react";
-import MapContext from "../../contexts/MapContext";
-import GeoJsonContext from "../../components/MlGpxViewer/util/GeoJsonContext";
-import { polygon, lineString } from "@turf/helpers";
-import { distance, lineOffset } from "@turf/turf";
-import { v4 as uuidv4 } from "uuid";
-import PropTypes from "prop-types";
+import React, { useCallback, useRef, useContext, useEffect } from 'react';
+import MapContext from '../../contexts/MapContext';
+import { polygon, lineString, featureCollection } from '@turf/helpers';
+import { distance, lineOffset } from '@turf/turf';
+import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
 
 /**
  * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
@@ -15,14 +14,13 @@ const MlSpatialElevationProfile = (props) => {
 	const mapContext = useContext(MapContext);
 
 	const componentId = useRef(
-		(props.idPrefix ? props.idPrefix : "MlSpatialElevationProfile-") + uuidv4()
+		(props.idPrefix ? props.idPrefix : 'MlSpatialElevationProfile-') + uuidv4()
 	);
 	const mapRef = useRef(null);
 	const initializedRef = useRef(false);
 
-	const dataSource = useContext(GeoJsonContext);
-	const sourceName = useRef("elevationprofile-" + uuidv4());
-	const layerName = useRef("elevationprofile-layer-" + uuidv4());
+	const sourceName = useRef('elevationprofile-' + uuidv4());
+	const layerName = useRef('elevationprofile-layer-' + uuidv4());
 
 	const createStep = useCallback(
 		(x, y, z, x2, y2) => {
@@ -31,7 +29,7 @@ const MlSpatialElevationProfile = (props) => {
 				[x, y],
 				[x2, y2],
 			]);
-			const offsetLine = lineOffset(line, 5, { units: "meters" });
+			const offsetLine = lineOffset(line, 5, { units: 'meters' });
 			const x3 = offsetLine.geometry.coordinates[0][0];
 			const y3 = offsetLine.geometry.coordinates[0][1];
 			const x4 = offsetLine.geometry.coordinates[1][0];
@@ -67,7 +65,9 @@ const MlSpatialElevationProfile = (props) => {
 	}, []);
 
 	useEffect(() => {
-		if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+		console.log(props.geojson);
+		if (!mapContext.mapExists(props.mapId) || !props?.geojson?.features || initializedRef.current)
+			return;
 
 		initializedRef.current = true;
 		mapRef.current = mapContext.getMap(props.mapId);
@@ -75,8 +75,8 @@ const MlSpatialElevationProfile = (props) => {
 		mapRef.current.addSource(
 			sourceName.current,
 			{
-				type: "geojson",
-				data: dataSource.data,
+				type: 'geojson',
+				data: props.geojson,
 			},
 			componentId.current
 		);
@@ -84,44 +84,44 @@ const MlSpatialElevationProfile = (props) => {
 			{
 				id: layerName.current,
 				source: sourceName.current,
-				type: "fill-extrusion",
+				type: 'fill-extrusion',
 				paint: {
-					"fill-extrusion-height": ["get", "height"],
-					"fill-extrusion-opacity": 0.9,
-					"fill-extrusion-color": [
-						"interpolate",
-						["linear"],
-						["get", "height"],
+					'fill-extrusion-height': ['get', 'height'],
+					'fill-extrusion-opacity': 0.9,
+					'fill-extrusion-color': [
+						'interpolate',
+						['linear'],
+						['get', 'height'],
 						0,
-						"rgba(0, 0, 255, 0)",
+						'rgba(0, 0, 255, 0)',
 						0.1,
-						"royalblue",
+						'royalblue',
 						0.3,
-						"cyan",
+						'cyan',
 						0.5,
-						"lime",
+						'lime',
 						0.7,
-						"yellow",
+						'yellow',
 						1,
-						"yellow",
+						'yellow',
 					],
 				},
 			},
 			props.insertBeforeLayer,
 			componentId.current
 		);
-	}, [mapContext.mapIds, props.insertBeforeLayer, props.mapId, dataSource, mapContext]);
+	}, [mapContext.mapIds, props.insertBeforeLayer, props.mapId, props.geojson, mapContext]);
 
 	useEffect(() => {
 		if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
-		const { data } = dataSource;
-		if (!data || !data.features) return;
+		if (!props.geojson?.features) return;
 
-		const line = data.features.find((element) => {
-			return element.geometry.type === "LineString";
+		console.log('hallo vom Effekt');
+		const line = props.geojson.features.find((element) => {
+			return element.geometry.type === 'LineString';
 		});
 		if (!line || !line.geometry) return;
-		const heights = line.geometry.coordinates.map((coordinate, index) => {
+		const heights = line.geometry.coordinates.map((coordinate) => {
 			return coordinate[2];
 		});
 
@@ -131,14 +131,14 @@ const MlSpatialElevationProfile = (props) => {
 
 		max = max === 0 ? 1 : max;
 
-		mapRef.current.setPaintProperty(layerName.current, "fill-extrusion-color", [
-			"interpolate",
-			["linear"],
-			["get", "height"],
+		mapRef.current.setPaintProperty(layerName.current, 'fill-extrusion-color', [
+			'interpolate',
+			['linear'],
+			['get', 'height'],
 			0,
-			"rgb(0,255,55)",
+			'rgb(0,255,55)',
 			max * props.elevationFactor,
-			"rgb(255,0,0)",
+			'rgb(255,0,0)',
 		]);
 		const lerp = (x, y, a) => x * (1 - a) + y * a;
 		const points = [];
@@ -150,7 +150,7 @@ const MlSpatialElevationProfile = (props) => {
 				const wayLength = distance(
 					[coordinate[0], coordinate[1]],
 					[line.geometry.coordinates[index + 1][0], line.geometry.coordinates[index + 1][1]],
-					{ units: "kilometers" }
+					{ units: 'kilometers' }
 				);
 				let listLength = ~~((wayLength * 1000) / 10);
 				listLength = listLength < 1 ? 1 : listLength;
@@ -188,11 +188,9 @@ const MlSpatialElevationProfile = (props) => {
 			}
 		});
 
-		const newData = dataSource.getEmptyFeatureCollection();
-		newData.features = points;
-
+		const newData = featureCollection(points);
 		mapRef.current.getSource(sourceName.current)?.setData(newData);
-	}, [dataSource.data, createStep, dataSource, props.elevationFactor, mapContext]);
+	}, [props.geojson, createStep, props.elevationFactor, mapContext]);
 
 	return <></>;
 };

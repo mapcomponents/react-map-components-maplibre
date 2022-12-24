@@ -44,7 +44,9 @@ export default function MlGpxViewerInstructions(props) {
 			}, 9000);
 			setTimeout(() => {
 				setStep4(false);
-				props.callback(false);
+				if (typeof props.callback === 'function') {
+					props.callback(false);
+				}
 			}, 12000);
 		} else {
 			return;
