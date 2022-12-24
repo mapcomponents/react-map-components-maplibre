@@ -30,13 +30,13 @@ export default storyoptions;
 const Template = () => {
 	const [gpxData, setGpxData] = useState();
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
-	const [demoMode, setDemoMode] = useState(false);
+	const [demoLoaderOpen, setDemoLoaderOpen] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [metadataDrawerOpen, setMetadataDrawerOpen] = useState(false);
 	const [metadata, setMetadata] = useState([]);
 
 	const handleClick1 = () => {
-		setDemoMode(!demoMode);
+		setDemoLoaderOpen(!demoLoaderOpen);
 	};
 	const handleClick2 = () => {
 		setGuide(true);
@@ -46,7 +46,7 @@ const Template = () => {
 	};
 
 	const textColor = () => {
-		if (demoMode) {
+		if (demoLoaderOpen) {
 			return 'white';
 		} else {
 			return 'steelblue';
@@ -77,7 +77,7 @@ const Template = () => {
 				<Button
 					variant="contained"
 					onClick={handleClick1}
-					color={demoMode ? 'primary' : 'inherit'}
+					color={demoLoaderOpen ? 'primary' : 'inherit'}
 					sx={{ color: textColor }}
 				>
 					Demo Mode
@@ -98,7 +98,7 @@ const Template = () => {
 			>
 				<FileDownloadIcon />
 			</IconButton>
-				<MlGpxDemoLoader enabled={demoMode} />
+				<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
 
 				<div
 					style={{
