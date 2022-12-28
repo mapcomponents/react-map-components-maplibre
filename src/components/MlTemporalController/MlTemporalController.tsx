@@ -280,9 +280,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		}
 	}, [filteredData]);
 
-	//User controlls
 
-	
 	return (
 		<>
 			{filteredData && (
@@ -343,6 +341,8 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				setLabelFadein={setLabelFadein}
 				labelFadeOut={labelFadeOut}
 				setLabelFadeOut={setLabelFadeOut}
+				accumulate={accumulate}
+				setAccumulate={setAccumulate}
 
 			/>
 

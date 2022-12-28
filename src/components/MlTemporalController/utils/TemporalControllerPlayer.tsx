@@ -10,7 +10,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { Slider, Drawer, Button, Grid, ToggleButton } from '@mui/material';
 import UserControls from './userControls';
 
-interface TemporalControllerPlayerProps {
+export interface TemporalControllerPlayerProps {
 	currentVal: number;
 	isPlaying: boolean;
 	step: number;
@@ -35,6 +35,8 @@ interface TemporalControllerPlayerProps {
 	setLabelFadein: Function;
 	labelFadeOut: number;
 	setLabelFadeOut: Function;
+	accumulate: boolean;
+	setAccumulate: Function;
 }
 
 export default function TemporalControllerPlayer(props: TemporalControllerPlayerProps) {
@@ -182,7 +184,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 						position: 'flex',
 						width: '95%',
 						paddingTop: '10px',
-						//alignSelf: 'center',
+						alignSelf: 'center',
 					}}
 					aria-label="Custom marks"
 					defaultValue={props.minVal}
