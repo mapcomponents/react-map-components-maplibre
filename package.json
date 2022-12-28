@@ -34,6 +34,7 @@
     "maplibre-gl": "^2.1.7",
     "material-ui-color-picker": "^3.5.1",
     "mui-color": "^2.0.0-beta.2",
+    "react-draggable": "^4.4.5",
     "react-i18next": "^11.14.3",
     "three": "^0.139.1",
     "uuid": "^8.3.2",

@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 
-import { FeatureCollection, bbox } from '@turf/turf';
+import { featureCollection, FeatureCollection, bbox } from '@turf/turf';
 import {
 	LineLayerSpecification,
 	CircleLayerSpecification,
@@ -16,6 +16,8 @@ import {
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
+import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
+
 
 interface MlTemporalControllerProps {
 	/**
@@ -74,9 +76,9 @@ interface MlTemporalControllerProps {
 	 */
 	fitBounds?: boolean;
 	/**
-	 * Boolean value that toogles the controlls drawer visibility.
+	 * Boolean value that disables and enables the controls drawer.
 	 */
-	open?: boolean;
+	showControls?: boolean;
 	/**
 	 * Paint property object for the features layer.
 	 * Possible props depend on the layer type.
@@ -149,7 +151,7 @@ interface MlTemporalControllerProps {
 	/**
 	 * Callback function defined by the user to recive the current value in the parent component.
 	 */
-	callback?: any;
+	onStateChange?: any;
 }
 
 /**
@@ -157,18 +159,22 @@ interface MlTemporalControllerProps {
  *@component
  */
 
-function getMinVal(geojson: FeatureCollection, timeField: string) {
-	if (geojson.features) {
+function getMinVal(geojson: FeatureCollection | undefined, timeField: string) {
+	if (geojson?.features) {
 		let tempFeatures = [...(geojson.features ? geojson.features : [])];
-		tempFeatures.sort((a, b) => (a[timeField] < b[timeField] ? 1 : -1));
+		tempFeatures.sort((a, b) => (a.properties?.[timeField] < b.properties?.[timeField] ? 1 : -1));
 		return tempFeatures[tempFeatures.length - 1]?.properties?.[timeField] || 0;
 	}
+	return 0;
 }
 
-function getMaxVal(geojson: FeatureCollection, timeField: string) {
-	let tempFeatures = [...(geojson?.features ? geojson.features : [])];
-	tempFeatures.sort((a, b) => (a[timeField] < b[timeField] ? -1 : 1));
-	return tempFeatures[tempFeatures.length - 1]?.properties?.[timeField] || 0;
+function getMaxVal(geojson: FeatureCollection | undefined, timeField: string) {
+	if (geojson?.features) {
+		let tempFeatures = [...(geojson?.features ? geojson.features : [])];
+		tempFeatures.sort((a, b) => (a.properties?.[timeField] < b.properties?.[timeField] ? -1 : 1));
+		return tempFeatures[tempFeatures.length - 1]?.properties?.[timeField] || 0;
+	}
+	return 0;
 }
 
 const MlTemporalController = (props: MlTemporalControllerProps) => {
@@ -193,6 +199,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		return getMaxVal(props.geojson, props.timeField);
 	}, [props.maxVal, props.geojson, props.timeField]);
 
+	
 	const [type, setType] = useState(props.type || 'circle');
 	const [step, setStep] = useState(props.step || 1);
 	const [fadeIn, setFadeIn] = useState(props.fadeIn || 5);
@@ -207,7 +214,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const [currentVal, setCurrentVal] = useState(props.initialVal || minVal);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [accumulate, setAccumulate] = useState(props.accumulate || false);
-	const [filteredData, setFilteredData] = useState<FeatureCollection>();
 
 	const intervalRef: any = useRef();
 
@@ -238,12 +244,13 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		};
 	}, []);
 
+	
 	//use callback function from props, if exists
 	useEffect(() => {
-		if (props.callback) {
-			props.callback(currentVal);
+		if (typeof props.onStateChange === 'function') {
+			props.onStateChange(currentVal);
 		}
-	}, [props.callback, currentVal]);
+	}, [props.onStateChange, currentVal]);
 
 	//get min and max time value
 	useEffect(() => {
@@ -251,26 +258,31 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		setCurrentVal(neuMin > minVal ? neuMin : minVal);
 	}, [minVal, props.geojson, props.timeField]);
 
-	// filter geojson 
-	useEffect(() => {
+	// filter geojson
+	const filteredData = useMemo<FeatureCollection | undefined>(() => {
 		if (props.geojson !== undefined && mapHook.map && minVal && maxVal) {
-			props.geojson.features = props.geojson.features.filter((e) => {
-				return (
-					e.properties?.[props.timeField] >= minVal && e.properties?.[props.timeField] <= maxVal
-				);
-			});
-			setFilteredData(props.geojson);
+			return featureCollection(
+				props.geojson.features.filter((e) => {
+					return (
+						e.properties?.[props.timeField] >= minVal && e.properties?.[props.timeField] <= maxVal
+					);
+				})
+			);
 		}
+		return;
 	}, [props.geojson, mapHook.map, minVal, maxVal]);
 
 	// Fit map to bbox
 	useEffect(() => {
-		if (props.fitBounds && filteredData !== undefined) {
+		if (props.fitBounds && typeof filteredData !== 'undefined') {
 			let geojsonBbox = bbox(filteredData);
 			mapHook.map?.map.fitBounds(geojsonBbox as LngLatBoundsLike);
 		}
 	}, [filteredData]);
 
+	//User controlls
+
+	
 	return (
 		<>
 			{filteredData && (
@@ -278,6 +290,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 					type={props.type}
 					mapId={props.mapId}
 					layerId="timeController"
+					insertBeforeLayer={props.insertBeforeLayer || 'timeControllerLabels'}
 					geojson={filteredData}
 					paint={
 						props.paint ||
@@ -304,6 +317,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 					isPlaying={isPlaying}
 				/>
 			)}
+
 			<TemporalControllerPlayer
 				currentVal={currentVal}
 				isPlaying={isPlaying}
@@ -312,8 +326,27 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				maxVal={maxVal}
 				returnCurrent={setCurrentVal}
 				returnPlaying={setIsPlaying}
-				open
+				showControls={props.showControls ? props.showControls : false}
+				open={false}
+				fadeIn={fadeIn}
+				setFadeIn={setFadeIn}
+				fadeOut={fadeOut}
+				setFadeOut={setFedeOut}
+				setStep={setStep}
+				featuresColor={featuresColor}
+				setFeatureColor={setFeatureColor}
+				labels={labels}
+				setLabels={setLabels}
+				labelColor={labelColor}
+				setlabelColor={setlabelColor}
+				labelFadeIn={labelFadeIn}
+				setLabelFadein={setLabelFadein}
+				labelFadeOut={labelFadeOut}
+				setLabelFadeOut={setLabelFadeOut}
+
 			/>
+
+			
 		</>
 	);
 };

@@ -5,8 +5,10 @@ import PauseIcon from '@mui/icons-material/Pause';
 import StopIcon from '@mui/icons-material/Stop';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
+import TuneIcon from '@mui/icons-material/Tune';
 
-import { Slider, Drawer, Button, Grid } from '@mui/material';
+import { Slider, Drawer, Button, Grid, ToggleButton } from '@mui/material';
+import UserControls from './userControls';
 
 interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -16,14 +18,30 @@ interface TemporalControllerPlayerProps {
 	maxVal: number;
 	returnCurrent: any;
 	returnPlaying: any;
+	showControls: boolean;
+	fadeIn: number;
 	open: boolean;
+	setFadeIn: Function;
+	fadeOut: number;
+	setFadeOut: Function;
+	setStep: Function;
+	featuresColor: string;
+	setFeatureColor: Function;
+	labels: boolean;
+	setLabels: Function;
+	labelColor: string;
+	setlabelColor: Function;
+	labelFadeIn: number ;
+	setLabelFadein: Function;
+	labelFadeOut: number;
+	setLabelFadeOut: Function;
 }
 
 export default function TemporalControllerPlayer(props: TemporalControllerPlayerProps) {
 	const [currentVal, setCurrentVal] = useState(props.currentVal);
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
+	const [toggleControls, setToggleControls] = useState(false);
 	const range = props.maxVal - props.minVal;
-
 	const intervalRef: any = useRef();
 
 	useEffect(() => {
@@ -55,6 +73,8 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 			counter = counter + props.step;
 		}, 200);
 	}, [props.step, props.maxVal, currentVal]);
+
+	// Player buttons
 
 	const handlePlay = () => {
 		setIsPlaying(true);
@@ -108,6 +128,8 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 	return (
 		<>
+			<UserControls showOptions={toggleControls} {...props} />
+
 			<Drawer
 				anchor="bottom"
 				open={props.open || true}
@@ -122,22 +144,37 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 					},
 				}}
 			>
-				<Grid>
-					<Button onClick={handleFastRewind}>
-						<FastRewindIcon />
-					</Button>
-					<Button onClick={handleStop}>
-						<StopIcon />
-					</Button>
-					<Button onClick={handlePlay} disabled={isPlaying}>
-						<PlayArrowIcon />
-					</Button>
-					<Button onClick={handlePause}>
-						<PauseIcon />
-					</Button>
-					<Button onClick={handleFastForward}>
-						<FastForwardIcon />
-					</Button>
+				<Grid container>
+					{props.showControls && (
+						<Grid item sm={4}>
+							<ToggleButton
+								value={toggleControls}
+								selected={toggleControls}
+								onChange={() => setToggleControls(!toggleControls)}
+								color={'primary'}
+							>
+								<TuneIcon />
+							</ToggleButton>
+						</Grid>
+					)}
+
+					<Grid item sm={6}>
+						<Button onClick={handleFastRewind}>
+							<FastRewindIcon />
+						</Button>
+						<Button onClick={handleStop}>
+							<StopIcon />
+						</Button>
+						<Button onClick={handlePlay} disabled={isPlaying}>
+							<PlayArrowIcon />
+						</Button>
+						<Button onClick={handlePause}>
+							<PauseIcon />
+						</Button>
+						<Button onClick={handleFastForward}>
+							<FastForwardIcon />
+						</Button>
+					</Grid>
 				</Grid>
 
 				<Slider
@@ -145,7 +182,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 						position: 'flex',
 						width: '95%',
 						paddingTop: '10px',
-						alignSelf: 'center',
+						//alignSelf: 'center',
 					}}
 					aria-label="Custom marks"
 					defaultValue={props.minVal}

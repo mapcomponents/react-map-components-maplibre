@@ -64,7 +64,7 @@ const defaultPaint: any = {
 		if (props.currentVal === props.minVal && !props.isPlaying) {
 			return noShow;
 		}
-		if (props.accumulate && props.isPlaying) {
+		if (props.accumulate) {
 			return accumulatePaint;
 		} else {
 			return defaultPaint;
@@ -87,6 +87,7 @@ const defaultPaint: any = {
 				paint: props.labelPaint || currentPaint(),
 			}}
 			geojson={props.data}
+			layerId={'timeControllerLabels'}
 		/>
 	);
 }

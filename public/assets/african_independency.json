@@ -146,7 +146,7 @@
         "NAME_DE": "Westsahara",
         "FCLASS_PT": null,
         "FCLASS_GR": null,
-        "africa_independency_year": null
+        "africa_independency_year": 1956
       },
       "geometry": {
         "type": "MultiPolygon",
