@@ -1,6 +1,11 @@
-import React from 'react';
-import { Drawer, Slider, Typography, TextField, List, ListItem, Checkbox } from '@mui/material';
-import { ColorPicker } from 'mui-color';
+import React, {useState} from 'react';
+import { Drawer, Typography, List, ListItem } from '@mui/material';
+
+import useCreateWidget from './createWidget';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface userControlsProps {
 	showOptions: boolean;
@@ -28,7 +33,7 @@ interface userControlsProps {
 }
 
 export default function UserControls(props: userControlsProps) {
-	const optionsList = [
+	const featuresOptionsList = [
 		{ id: 1, targetProp: 'fadeIn', type: 'slider', setter: props.setFadeIn, max: 15 },
 		{ id: 2, targetProp: 'fadeOut', type: 'slider', setter: props.setFadeOut, max: 15 },
 		{
@@ -38,97 +43,74 @@ export default function UserControls(props: userControlsProps) {
 			setter: props.setFeatureColor,
 			max: 0,
 		},
-		{ id: 4, targetProp: 'labelColor', type: 'colorpicker', setter: props.setlabelColor, max: 0 },
-		{ id: 5, targetProp: 'labelFadeIn', type: 'slider', setter: props.setLabelFadein, max: 15 },
-		{ id: 6, targetProp: 'labelFadeOut', type: 'slider', setter: props.setLabelFadeOut, max: 15 },
-		{ id: 7, targetProp: 'step', type: 'numberfield', setter: props.setStep, max: 0 },
-		{ id: 8, targetProp: 'accumulate', type: 'boolean', setter: props.setAccumulate, max: 0 },
-		{ id: 9, targetProp: 'labels', type: 'boolean', setter: props.setLabels, max: 0 },
 	];
 
-	const createWidget = (key: string, targetProp: string, setter: Function, max: number) => {
-		if (key === 'slider' || 'numberfield' || 'colorpicker' || 'boolean') {
-			const label = (
-				<Typography id={targetProp + '_label'} gutterBottom>
-					{targetProp}
-				</Typography>
-			);
+	const labelsOptionsList = [
+		{ id: 4, targetProp: 'labels', type: 'boolean', setter: props.setLabels, max: 0 },
+		{ id: 5, targetProp: 'labelColor', type: 'colorpicker', setter: props.setlabelColor, max: 0 },
+		{ id: 6, targetProp: 'labelFadeIn', type: 'slider', setter: props.setLabelFadein, max: 15 },
+		{ id: 7, targetProp: 'labelFadeOut', type: 'slider', setter: props.setLabelFadeOut, max: 15 },
+	];
 
-			switch (key) {
-				case 'slider':
-					return (
-						<>
-							{label}
-							<Slider
-								{...props[targetProp]}
-								size={'small'}
-								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-								value={props[targetProp]}
-								max={max}
-								onChange={(ev: any) => {
-									setter(ev.target?.value);
-								}}
-							/>
-							<Typography> {props[targetProp]} </Typography>
-						</>
-					);
-					break;
+	const playerOptionsList = [
+		{ id: 8, targetProp: 'accumulate', type: 'boolean', setter: props.setAccumulate, max: 0 },
+		{ id: 9, targetProp: 'step', type: 'numberfield', setter: props.setStep, max: 0 },
+	];
 
-				case 'numberfield':
-					return (
-						<>
-							{label}
-							<TextField
-								id={targetProp + '_numberfield'}
-								inputMode={'numeric'}
-								defaultValue={props[targetProp]}
-								onChange={(ev: any) => {
-									if (ev?.target?.value) {
-										setter(parseFloat(ev.target.value));
-									}
-								}}
-							/>
-						</>
-					);
-					break;
-				case 'colorpicker':
-					return (
-						<>
-							{label}
-							<ColorPicker
-								key={targetProp + '_colorpicker'}
-								value={props[targetProp]}
-								hideTextfield
-								onChange={(ev: any) => {
-									setter('#' + ev.hex);
-								}}
-							/>
-						</>
-					);
-					break;
-				case 'boolean':
-					return (
-						<>
-							{label}
-							{props[targetProp] !== undefined && (
-								<Checkbox
-									value={props[targetProp]}
-									checked={props[targetProp]}
-									onChange={() => {
-										if (props[targetProp] !== undefined) {
-											setter(!props[targetProp]);
-										}
-									}}
-								/>
-							)}
-						</>
-					);
-					break;
-			}
-		}
+	const accordions = [
+		{ key: 'Features', list: featuresOptionsList },
+		{ key: 'Labels', list: labelsOptionsList },
+		{ key: 'Player', list: playerOptionsList },
 
-		return null;
-	};
+
+	];const [expanded, setExpanded] = useState('panel1');
+
+	/*
+	const handleChange = (panel: string) => (event, newExpanded) => {
+		setExpanded(newExpanded ? panel : false);
+	  };
+*/
+	function Sublists(): JSX.Element {
+		return (
+			<>
+				{accordions.map((el, index) => {
+
+
+					return (
+						<>
+							<Accordion key={index}
+							 //expanded={expanded === 'panel1'} onChange={handleChange('panel'+ (index+1))}
+								sx={{width: '100%'}} 
+								onClick={(ev)=>ev.preventDefault() }>
+								<AccordionSummary key={index} 
+								 expandIcon={<ExpandMoreIcon />}
+								>
+									<Typography> {el.key} </Typography>
+								</AccordionSummary>
+								<AccordionDetails>
+									<List>
+										{el.list.map((el) => {
+											return (
+												<ListItem
+													key={el.id}
+													sx={{
+														boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
+														borderRadius: '5px',
+													}}
+												>
+													{useCreateWidget(el.type, el.targetProp, el.setter, el.max, props)}
+												</ListItem>
+											);
+										})}
+									</List>
+								</AccordionDetails>
+							</Accordion>
+						</>
+					);
+				})}
+			</>
+		);
+	}
 
 	return (
 		<Drawer
@@ -139,37 +121,17 @@ export default function UserControls(props: userControlsProps) {
 				flexShrink: 0,
 
 				'& .MuiDrawer-paper': {
-					width: '20%',
+					width: '25%',
 					height: 'auto',
 					alignItems: 'center',
 					marginLeft: '4%',
-					padding: 5,
+					marginBottom: '80px',
+					
 				},
 			}}
 		>
-			<List>
-				{optionsList.map((el) => {
-					return (
-						<ListItem
-							sx={{ boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)', borderRadius: '5px' }}
-							key={el.id}
-						>
-							{createWidget(el.type, el.targetProp, el.setter, el.max)}
-						</ListItem>
-					);
-				})}
-			</List>
+			<Sublists />
 		</Drawer>
 	);
 }
 
-/*
-<Typography id={'fadeIn_setter'}>Fade In</Typography>
-<Slider
-				value={props.fadeIn}
-				size={'small'}
-				defaultValue={props.fadeIn}
-				max={15}
-				onChange={(e: any) => props.setFadeIn(e.target.value)}
-			/>
-			*/
