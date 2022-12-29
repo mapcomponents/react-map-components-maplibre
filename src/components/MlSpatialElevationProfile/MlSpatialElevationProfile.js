@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
+import getElevationData from './util/getElevationData';
 
 /**
  * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
@@ -67,37 +68,35 @@ useLayer({
 	},
 );
 
+const createStep = useCallback(
+	(x, y, z, x2, y2) => {
+		//const summand = 0.0002;
+		const line = lineString([
+			[x, y],
+			[x2, y2],
+		]);
+		const offsetLine = lineOffset(line, 5, { units: 'meters' });
+		const x3 = offsetLine.geometry.coordinates[0][0];
+		const y3 = offsetLine.geometry.coordinates[0][1];
+		const x4 = offsetLine.geometry.coordinates[1][0];
+		const y4 = offsetLine.geometry.coordinates[1][1];
 
-
-	const createStep = useCallback(
-		(x, y, z, x2, y2) => {
-			//const summand = 0.0002;
-			const line = lineString([
-				[x, y],
-				[x2, y2],
-			]);
-			const offsetLine = lineOffset(line, 5, { units: 'meters' });
-			const x3 = offsetLine.geometry.coordinates[0][0];
-			const y3 = offsetLine.geometry.coordinates[0][1];
-			const x4 = offsetLine.geometry.coordinates[1][0];
-			const y4 = offsetLine.geometry.coordinates[1][1];
-
-			return polygon(
+		return polygon(
+			[
 				[
-					[
-						[x, y],
-						[x2, y2],
+					[x, y],
+					[x2, y2],
 
-						[x4, y4],
-						[x3, y3],
-						[x, y],
-					],
+					[x4, y4],
+					[x3, y3],
+					[x, y],
 				],
-				{ height: z * props.elevationFactor }
-			);
-		},
-		[props.elevationFactor]
-	);
+			],
+			{ height: z * props.elevationFactor }
+		);
+	},
+	[props.elevationFactor]
+);
 
 	useEffect(() => {
 		let _componentId = componentId.current;
@@ -124,81 +123,16 @@ useLayer({
 	useEffect(() => {
 		if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
 		if (!props.geojson?.features) return;
+		
 
-			const line = props.geojson.features.find((element) => {
+		const line = props.geojson.features.find((element) => {
 			return element.geometry.type === 'LineString';
 		});
+
 		if (!line || !line.geometry) return;
-		const heights = line.geometry.coordinates.map((coordinate) => {
-			return coordinate[2];
-		});
-
-		const min = Math.min(...heights);
-
-		let max = Math.max(...heights) - min;
-
-		max = max === 0 ? 1 : max;
-
-		mapRef.current.setPaintProperty(layerName.current, 'fill-extrusion-color', [
-			'interpolate',
-			['linear'],
-			['get', 'height'],
-			0,
-			'rgb(0,255,55)',
-			max * props.elevationFactor,
-			'rgb(255,0,0)',
-		]);
-		const lerp = (x, y, a) => x * (1 - a) + y * a;
-		const points = [];
-
-		line.geometry.coordinates.forEach((coordinate, index) => {
-			//const point = createPoint(coordinate[0],coordinate[1],coordinate[2]-min);
-			//points.push(point);
-			if (line.geometry.coordinates[index + 1]) {
-				const wayLength = distance(
-					[coordinate[0], coordinate[1]],
-					[line.geometry.coordinates[index + 1][0], line.geometry.coordinates[index + 1][1]],
-					{ units: 'kilometers' }
-				);
-				let listLength = ~~((wayLength * 1000) / 10);
-				listLength = listLength < 1 ? 1 : listLength;
-				for (let i = 0; i < listLength; i++) {
-					const x = lerp(
-						line.geometry.coordinates[index][0],
-						line.geometry.coordinates[index + 1][0],
-						i / listLength
-					);
-					const y = lerp(
-						line.geometry.coordinates[index][1],
-						line.geometry.coordinates[index + 1][1],
-						i / listLength
-					);
-					const z = lerp(
-						line.geometry.coordinates[index][2] - min,
-						line.geometry.coordinates[index + 1][2] - min,
-						i / listLength
-					);
-
-					const x2 = lerp(
-						line.geometry.coordinates[index][0],
-						line.geometry.coordinates[index + 1][0],
-						(i + 1) / listLength
-					);
-					const y2 = lerp(
-						line.geometry.coordinates[index][1],
-						line.geometry.coordinates[index + 1][1],
-						(i + 1) / listLength
-					);
-
-					const point = createStep(x, y, z, x2, y2);
-					points.push(point);
-				}
-			}
-		});
-
-		const newData = featureCollection(points);
-		mapRef.current.getSource(sourceName.current)?.setData(newData);
-	}, [props.geojson, createStep, props.elevationFactor, mapContext]);
+		
+		mapRef.current.getSource(sourceName.current)?.setData(getElevationData(line, mapRef.current, layerName.current, props.elevationFactor, createStep));
+	}, [props.geojson, props.elevationFactor, mapContext]);
 
 	return <></>;
 };
