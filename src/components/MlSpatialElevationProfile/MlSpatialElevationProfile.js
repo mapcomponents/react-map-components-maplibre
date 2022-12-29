@@ -1,5 +1,4 @@
-import React, { useCallback, useRef, useContext, useEffect } from 'react';
-import MapContext from '../../contexts/MapContext';
+import React, { useCallback, useRef, useMemo } from 'react';
 import { polygon, lineString, featureCollection } from '@turf/helpers';
 import { distance, lineOffset } from '@turf/turf';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,102 +7,100 @@ import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
 import getElevationData from './util/getElevationData';
 
+const defaultFillExtrusionColor = [
+	'interpolate',
+	['linear'],
+	['get', 'height'],
+	0,
+	'rgba(0, 0, 255, 0)',
+	0.1,
+	'royalblue',
+	0.3,
+	'cyan',
+	0.5,
+	'lime',
+	0.7,
+	'yellow',
+	1,
+	'yellow',
+];
 /**
  * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  *
  * @component
  */
 const MlSpatialElevationProfile = (props) => {
-
-	const mapContext = useContext(MapContext);
-
-	const componentId = useRef(
-		(props.idPrefix ? props.idPrefix : 'MlSpatialElevationProfile-') + uuidv4()
-	);
-	const mapRef = useRef(null);
-	const initializedRef = useRef(false);
-
 	const sourceName = useRef('elevationprofile-' + uuidv4());
 	const layerName = useRef('elevationprofile-layer-' + uuidv4());
 
-useSource({
-		mapId: props.mapId,
-		sourceId: sourceName.current,
-		source: {
-			type: 'geojson',
-			data: props.geojson || featureCollection([]),
-		},
-	});
-	
-useLayer({
-		layerId: layerName.current,
-		source: sourceName.current,
-		
-		options: {
-			type: 'fill-extrusion',
-			paint: {
-			'fill-extrusion-height': ['get', 'height'],
-			'fill-extrusion-opacity': 0.9,
-			'fill-extrusion-color': [
-				'interpolate',
-				['linear'],
-				['get', 'height'],
-				0,
-				'rgba(0, 0, 255, 0)',
-				0.1,
-				'royalblue',
-				0.3,
-				'cyan',
-				0.5,
-				'lime',
-				0.7,
-				'yellow',
-				1,
-				'yellow',
-			],
-		},
-		},
-		insertBeforeLayer: props.insertBeforeLayer,
-		
-	},
-);
-
-
-	useEffect(() => {
-		let _componentId = componentId.current;
-		return () => {
-			// This is the cleanup function, it is called when this react component is removed from react-dom
-			if (mapRef.current) {
-				mapRef.current.cleanup(_componentId);
-
-				mapRef.current = null;
-			}
-		};
-	}, []);
-
-	useEffect(() => {
-		
-		if (!mapContext.mapExists(props.mapId) || !props?.geojson?.features || initializedRef.current)
-			return;
-
-		initializedRef.current = true;
-		mapRef.current = mapContext.getMap(props.mapId);
-
-	}, [mapContext.mapIds, props.insertBeforeLayer, props.mapId, props.geojson, mapContext]);
-
-	useEffect(() => {
-		if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
+	const _geojsonInfo = useMemo(() => {
 		if (!props.geojson?.features) return;
-		
-
 		const line = props.geojson.features.find((element) => {
 			return element.geometry.type === 'LineString';
 		});
 
 		if (!line || !line.geometry) return;
+
+			
+		const heights = line.geometry.coordinates.map((coordinate) => {
+			return coordinate[2];
+		});
+
+		const min = Math.min(...heights);
+
+		let max = Math.max(...heights) - min;
+
+		max = max === 0 ? 1 : max;
+
+		return { max, min, line };
+	}, [props.geojson]);
+
+	const _fillExtrusionColor = useMemo(() => {
+		if (!_geojsonInfo) return defaultFillExtrusionColor;
+
+		return [
+			'interpolate',
+			['linear'],
+			['get', 'height'],
+			0,
+			'rgb(0,255,55)',
+			_geojsonInfo.max * props.elevationFactor,
+			'rgb(255,0,0)',
+		];
+	}, [_geojsonInfo, props.elevationFactor]);
+	
+	const _geojson = useMemo(() => {
+		if (!props.geojson?.features || !_geojsonInfo) return;
 		
-		mapRef.current.getSource(sourceName.current)?.setData(getElevationData(line, mapRef.current, layerName.current, props.elevationFactor));
-	}, [props.geojson, props.elevationFactor, mapContext]);
+		const newData = getElevationData(_geojsonInfo, props.elevationFactor);
+		return newData;
+
+
+	}, [_geojsonInfo, props.elevationFactor]);
+
+	useSource({
+		mapId: props.mapId,
+		sourceId: sourceName.current,
+		source: {
+			type: 'geojson',
+			data: _geojson || featureCollection([]),
+		},
+	});
+
+	useLayer({
+		layerId: layerName.current,
+		source: sourceName.current,
+
+		options: {
+			type: 'fill-extrusion',
+			paint: {
+				'fill-extrusion-height': ['get', 'height'],
+				'fill-extrusion-opacity': 0.9,
+				'fill-extrusion-color': _fillExtrusionColor || defaultFillExtrusionColor,
+			},
+		},
+		insertBeforeLayer: props.insertBeforeLayer,
+	});
 
 	return <></>;
 };
