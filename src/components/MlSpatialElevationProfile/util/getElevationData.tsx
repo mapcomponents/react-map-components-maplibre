@@ -4,12 +4,12 @@ import { polygon, lineString, featureCollection} from '@turf/helpers';
 interface geometry{
 coordinates: Array<number>
 }
-
 interface line {
 geometry: geometry
 }
 interface _geojsonInfo {
-line: line 
+line: line, 
+min: number
 }
 
 

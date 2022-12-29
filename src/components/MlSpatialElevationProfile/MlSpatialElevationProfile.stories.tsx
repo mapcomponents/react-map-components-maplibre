@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Feature, FeatureCollection } from "@turf/turf";
 import MlSpatialElevationProfile from './MlSpatialElevationProfile';
 import MlGpxViewer from '../MlGpxViewer/MlGpxViewer';
-
 import InfoIcon from '@mui/icons-material/Info';
 import useGpx, { MetadataType } from '../../hooks/useGpx/useGpx';
 import FileCopy from '@mui/icons-material/FileCopy';
