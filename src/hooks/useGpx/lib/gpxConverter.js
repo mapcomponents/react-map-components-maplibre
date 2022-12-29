@@ -123,6 +123,7 @@ var toGeoJSON = (function () {
 		var isNodeEnv = typeof process === "object" && !process.browser;
 		var isTitaniumEnv = typeof Titanium === "object";
 		if (typeof exports === "object" && (isNodeEnv || isTitaniumEnv)) {
+			// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
 			serializer = new (require("xmldom").XMLSerializer)();
 		} else {
 			throw new Error("Unable to initialize serializer");
