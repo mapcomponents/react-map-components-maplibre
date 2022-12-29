@@ -13,6 +13,7 @@ import useLayer from '../../hooks/useLayer';
  * @component
  */
 const MlSpatialElevationProfile = (props) => {
+
 	const mapContext = useContext(MapContext);
 
 	const componentId = useRef(
@@ -23,6 +24,50 @@ const MlSpatialElevationProfile = (props) => {
 
 	const sourceName = useRef('elevationprofile-' + uuidv4());
 	const layerName = useRef('elevationprofile-layer-' + uuidv4());
+
+useSource({
+		mapId: props.mapId,
+		sourceId: sourceName.current,
+		source: {
+			type: 'geojson',
+			data: props.geojson || featureCollection([]),
+		},
+	});
+	
+useLayer({
+		layerId: layerName.current,
+		source: sourceName.current,
+		
+		options: {
+			type: 'fill-extrusion',
+			paint: {
+			'fill-extrusion-height': ['get', 'height'],
+			'fill-extrusion-opacity': 0.9,
+			'fill-extrusion-color': [
+				'interpolate',
+				['linear'],
+				['get', 'height'],
+				0,
+				'rgba(0, 0, 255, 0)',
+				0.1,
+				'royalblue',
+				0.3,
+				'cyan',
+				0.5,
+				'lime',
+				0.7,
+				'yellow',
+				1,
+				'yellow',
+			],
+		},
+		},
+		insertBeforeLayer: props.insertBeforeLayer,
+		
+	},
+);
+
+
 
 	const createStep = useCallback(
 		(x, y, z, x2, y2) => {
@@ -67,71 +112,20 @@ const MlSpatialElevationProfile = (props) => {
 	}, []);
 
 	useEffect(() => {
-		console.log(props.geojson);
+		
 		if (!mapContext.mapExists(props.mapId) || !props?.geojson?.features || initializedRef.current)
 			return;
 
 		initializedRef.current = true;
 		mapRef.current = mapContext.getMap(props.mapId);
-/*
-useSource({
-	mapId: props.mapId,
-	sourceId: sourceName.current,
-	source: {
-		type: 'geojson',
-		data: props.geojson,
-	},
 
-});*/
-	
-mapRef.current.addSource(
-			sourceName.current,
-			{
-				type: 'geojson',
-				data: props.geojson,
-			},
-			componentId.current
-		);
-		
-
-		mapRef.current.addLayer(
-			{
-				id: layerName.current,
-				source: sourceName.current,
-				type: 'fill-extrusion',
-				paint: {
-					'fill-extrusion-height': ['get', 'height'],
-					'fill-extrusion-opacity': 0.9,
-					'fill-extrusion-color': [
-						'interpolate',
-						['linear'],
-						['get', 'height'],
-						0,
-						'rgba(0, 0, 255, 0)',
-						0.1,
-						'royalblue',
-						0.3,
-						'cyan',
-						0.5,
-						'lime',
-						0.7,
-						'yellow',
-						1,
-						'yellow',
-					],
-				},
-			},
-			props.insertBeforeLayer,
-			componentId.current
-		);
 	}, [mapContext.mapIds, props.insertBeforeLayer, props.mapId, props.geojson, mapContext]);
 
 	useEffect(() => {
 		if (!mapRef.current || !mapRef.current.getLayer(layerName.current)) return;
 		if (!props.geojson?.features) return;
 
-		console.log('hallo vom Effekt');
-		const line = props.geojson.features.find((element) => {
+			const line = props.geojson.features.find((element) => {
 			return element.geometry.type === 'LineString';
 		});
 		if (!line || !line.geometry) return;
