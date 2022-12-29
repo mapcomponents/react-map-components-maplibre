@@ -8,6 +8,7 @@ type Props = {
 };
 
 export default function UploadButton(props: Props) {
+
 	const fileupload = useRef<HTMLInputElement>(null);
 	const fileUploadOnChange = () => {
 		if (!fileupload.current) return false;
@@ -19,7 +20,7 @@ export default function UploadButton(props: Props) {
 			if (!payload) return;
 
 			if (typeof props.setData === 'function') {
-				props.setData(payload);
+				props.setData(payload.currentTarget?.result);
 			}
 		};
 

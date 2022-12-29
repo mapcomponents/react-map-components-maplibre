@@ -4,6 +4,8 @@ import { polygon, lineString, featureCollection } from '@turf/helpers';
 import { distance, lineOffset } from '@turf/turf';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
+import useSource from '../../hooks/useSource';
+import useLayer from '../../hooks/useLayer';
 
 /**
  * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
@@ -71,8 +73,18 @@ const MlSpatialElevationProfile = (props) => {
 
 		initializedRef.current = true;
 		mapRef.current = mapContext.getMap(props.mapId);
+/*
+useSource({
+	mapId: props.mapId,
+	sourceId: sourceName.current,
+	source: {
+		type: 'geojson',
+		data: props.geojson,
+	},
 
-		mapRef.current.addSource(
+});*/
+	
+mapRef.current.addSource(
 			sourceName.current,
 			{
 				type: 'geojson',
@@ -80,6 +92,8 @@ const MlSpatialElevationProfile = (props) => {
 			},
 			componentId.current
 		);
+		
+
 		mapRef.current.addLayer(
 			{
 				id: layerName.current,

@@ -81,14 +81,18 @@ const MlGpxViewer = (props: MlGpxViewerProps) => {
 	});
 
 	useEffect(() => {
-		if (!mapHook.map || !parsedGpx.geojson) return;
+
+	    if (!mapHook.map || !parsedGpx.geojson) return;
 
 		if (typeof props.onParseGpxData === 'function') {
 			props.onParseGpxData(parsedGpx);
 		}
+		
 		// fit map view to GeoJSON bbox
+		
 		const bounds = bbox(parsedGpx.geojson);
 		mapHook.map.map.fitBounds(bounds as LngLatBoundsLike);
+				
 	}, [parsedGpx]);
 
 	return <></>;
