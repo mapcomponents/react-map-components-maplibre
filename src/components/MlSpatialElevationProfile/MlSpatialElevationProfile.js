@@ -68,35 +68,6 @@ useLayer({
 	},
 );
 
-const createStep = useCallback(
-	(x, y, z, x2, y2) => {
-		//const summand = 0.0002;
-		const line = lineString([
-			[x, y],
-			[x2, y2],
-		]);
-		const offsetLine = lineOffset(line, 5, { units: 'meters' });
-		const x3 = offsetLine.geometry.coordinates[0][0];
-		const y3 = offsetLine.geometry.coordinates[0][1];
-		const x4 = offsetLine.geometry.coordinates[1][0];
-		const y4 = offsetLine.geometry.coordinates[1][1];
-
-		return polygon(
-			[
-				[
-					[x, y],
-					[x2, y2],
-
-					[x4, y4],
-					[x3, y3],
-					[x, y],
-				],
-			],
-			{ height: z * props.elevationFactor }
-		);
-	},
-	[props.elevationFactor]
-);
 
 	useEffect(() => {
 		let _componentId = componentId.current;
@@ -131,7 +102,7 @@ const createStep = useCallback(
 
 		if (!line || !line.geometry) return;
 		
-		mapRef.current.getSource(sourceName.current)?.setData(getElevationData(line, mapRef.current, layerName.current, props.elevationFactor, createStep));
+		mapRef.current.getSource(sourceName.current)?.setData(getElevationData(line, mapRef.current, layerName.current, props.elevationFactor));
 	}, [props.geojson, props.elevationFactor, mapContext]);
 
 	return <></>;
