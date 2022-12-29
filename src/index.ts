@@ -26,7 +26,7 @@ export { default as MlGpxViewer } from "./components/MlGpxViewer/MlGpxViewer";
 export { default as GeoJsonProvider } from "./components/MlGpxViewer/util/GeoJsonProvider";
 export { default as GeoJsonContext } from "./components/MlGpxViewer/util/GeoJsonContext";
 
-export { default as MlSpatialElevationProfile } from "./components/MlSpatialElevationProfile/MlSpatialElevationProfile.js";
+export { default as MlSpatialElevationProfile } from "./components/MlSpatialElevationProfile/MlSpatialElevationProfile";
 
 export { default as MlOsmLayer } from "./components/MlOsmLayer/MlOsmLayer.js";
 export { default as MlBasicComponent } from "./components/MlBasicComponent.js";

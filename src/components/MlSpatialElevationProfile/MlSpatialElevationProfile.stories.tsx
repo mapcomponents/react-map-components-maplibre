@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-
+import { Feature, FeatureCollection } from "@turf/turf";
 import MlSpatialElevationProfile from './MlSpatialElevationProfile';
 import MlGpxViewer from '../MlGpxViewer/MlGpxViewer';
 
 import InfoIcon from '@mui/icons-material/Info';
-import useGpx from '../../hooks/useGpx/useGpx';
+import useGpx, { MetadataType } from '../../hooks/useGpx/useGpx';
 import FileCopy from '@mui/icons-material/FileCopy';
 import Dropzone from '../../ui_components/Dropzone';
 import UploadButton from '../../ui_components/UploadButton';
@@ -13,13 +13,14 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import TopToolbar from '../../ui_components/TopToolbar';
+import TopToolbar  from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
-import MlGpxViewerInstructions from '../../components/MlGpxViewer/util/MlGpxViewerInstructions';
+import MlGpxViewerInstructions from '../MlGpxViewer/util/MlGpxViewerInstructions';
 import { Button } from '@mui/material';
 import MlGpxDemoLoader from '../MlGpxViewer/util/MlGpxDemoLoader';
 
-const storyoptions = {
+
+const storyoptions= {
 	title: 'MapComponents/MlSpatialElevationProfile',
 	component: MlSpatialElevationProfile,
 	argTypes: {
@@ -40,7 +41,7 @@ const Template = () => {
 	const [demoLoaderOpen, setDemoLoaderOpen] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [metadataDrawerOpen, setMetadataDrawerOpen] = useState(false);
-	const [metadata, setMetadata] = useState([]);
+	const [metadata, setMetadata] = useState<MetadataType[]>([]);
 	const mapHook = useMap({ mapId: 'map_1' });
 
 	const handleClick1 = () => {
@@ -76,8 +77,10 @@ const Template = () => {
 		}
 	}, [mapHook.map]);
 
+
+
 	return (
-		<>
+		<> 
 			<TopToolbar>
 				<MlGpxViewerInstructions open={guide} />
 				<Button

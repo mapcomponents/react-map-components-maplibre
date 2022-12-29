@@ -1,10 +1,22 @@
-import { useCallback } from 'react';
 import { distance, lineOffset } from '@turf/turf';
-import { polygon, lineString, featureCollection } from '@turf/helpers';
+import { polygon, lineString, featureCollection} from '@turf/helpers';
 
-export default function getElevationData(_geojsonInfo, elevationFactor) {
+interface geometry{
+coordinates: Array<number>
+}
 
-    const createStep =  (x, y, z, x2, y2) => {
+interface line {
+geometry: geometry
+}
+interface _geojsonInfo {
+line: line 
+}
+
+
+
+export default function getElevationData(_geojsonInfo: _geojsonInfo, elevationFactor: number) {
+
+    const createStep =  (x: number, y: number, z: number, x2: number, y2: number) => {
             //const summand = 0.0002;
             const line = lineString([
                 [x, y],
@@ -31,10 +43,10 @@ export default function getElevationData(_geojsonInfo, elevationFactor) {
             );
         };
     
-        const lerp = (x, y, a) => x * (1 - a) + y * a;
-		const points = [];
+        const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
+		const points: any = [];
 
-		_geojsonInfo.line.geometry.coordinates.forEach((coordinate, index) => {
+		_geojsonInfo.line.geometry.coordinates.forEach((coordinate: number, index: number) => {
 			//const point = createPoint(coordinate[0],coordinate[1],coordinate[2]-min);
 			//points.push(point);
 			if (_geojsonInfo.line.geometry.coordinates[index + 1]) {
