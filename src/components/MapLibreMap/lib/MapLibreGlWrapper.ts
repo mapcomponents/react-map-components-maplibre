@@ -69,11 +69,7 @@ class MapLibreGlWrapper {
 			options?: object | string,
 			componentId?: string
 		) => void;
-		off: (
-			type: keyof MapLayerEventType | keyof MapEventType,
-			layer: string,
-			listener: (ev: (MapLayerTouchEvent | MapLayerMouseEvent) & unknown) => void
-		) => void;
+		off: (type: string, layer: string, listener: (ev: unknown) => void) => void;
 		fire: (eventName: string, context?: unknown) => void;
 		layerState: LayerState[];
 		layerStateString: string;
@@ -103,9 +99,9 @@ class MapLibreGlWrapper {
 	addControl: AddParameters<MapType['addControl'], [componentId?: string]>;
 	addImage: AddParameters<MapType['addImage'], [componentId?: string]>;
 	on: (
-		type: keyof MapLayerEventType | keyof MapEventType,
+		type: keyof MapLayerEventType | keyof MapEventType | string,
 		layerId: string | ((ev: unknown) => void),
-		handler: ((ev: MapEventType & unknown) => Map | void) | string,
+		handler?: ((ev: MapEventType & unknown) => Map | void) | string,
 		componentId?: string
 	) => Map;
 	cleanup: (componentId: string) => void;
