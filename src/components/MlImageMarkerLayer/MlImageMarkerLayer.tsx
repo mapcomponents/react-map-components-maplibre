@@ -1,11 +1,13 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
 
 import useLayer from '../../hooks/useLayer';
 import useMap from '../../hooks/useMap';
+import { SymbolLayerSpecification } from 'maplibre-gl';
+import { Feature, FeatureCollection } from '@turf/turf';
 
-interface MlImageMarkerLayerProps {
+export interface MlImageMarkerLayerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -30,7 +32,11 @@ interface MlImageMarkerLayerProps {
 	/**
 	 * Javascript object that is passed the addLayer command as first parameter.
 	 */
-	options?: any;
+	options?: {
+		source?: { type?: string | undefined; data: Feature | FeatureCollection | undefined };
+		layout?: SymbolLayerSpecification['layout'];
+		paint?: SymbolLayerSpecification['paint'];
+	};
 }
 
 const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
@@ -39,29 +45,26 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
+	const [imageId, setImageId] = useState<string>();
 	const imageIdRef = useRef(props.imageId || 'img_' + uuidv4());
 	const layerId = useRef(props.layerId || 'MlImageMarkerLayer-' + mapHook.componentId);
 
 	useLayer({
-		geojson: props.options.source.data,
+		geojson: props.options?.source?.data,
 		layerId: layerId.current,
 		options: {
 			type: 'symbol',
 			layout: {
-				...props.options.layout,
-				'icon-image': imageIdRef.current,
+				...props.options?.layout,
+				'icon-image': imageId || imageIdRef.current,
 			},
 			paint: {
-				...props.options.paint,
+				...props.options?.paint,
 			},
 		},
 	});
 
-	const createImage = (
-		mapHook: ReturnType<typeof useMap>,
-		props: MlImageMarkerLayerProps,
-		callback?: () => void
-	) => {
+	const createImage = (mapHook: ReturnType<typeof useMap>, props: MlImageMarkerLayerProps) => {
 		if (!mapHook.map) {
 			return;
 		}
@@ -78,19 +81,13 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
 					mapHook.componentId
 				);
 
-				if (typeof callback === 'function') {
-					callback();
-				}
+				setImageId(imageIdRef.current);
 			});
-		} else {
-			if (typeof callback === 'function') {
-				callback();
-			}
 		}
 	};
 
 	useEffect(() => {
-		if (!mapHook.map || mapHook.map?.map.getLayer(layerId.current)) return;
+		if (!mapHook.map) return;
 
 		if (props.imgSrc) {
 			createImage(mapHook, props);
