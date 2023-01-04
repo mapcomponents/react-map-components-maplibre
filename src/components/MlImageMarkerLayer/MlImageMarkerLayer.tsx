@@ -44,8 +44,8 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
 
 	useLayer({
 		geojson: props.options.source.data,
+		layerId: layerId.current,
 		options: {
-			id: layerId.current,
 			type: 'symbol',
 			layout: {
 				...props.options.layout,
@@ -72,7 +72,11 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
 
 				if (!mapHook.map || mapHook.map.map.hasImage(imageIdRef.current)) return;
 
-				mapHook.map.addImage(imageIdRef.current, image as unknown as ImageData, mapHook.componentId);
+				mapHook.map.addImage(
+					imageIdRef.current,
+					image as unknown as ImageData,
+					mapHook.componentId
+				);
 
 				if (typeof callback === 'function') {
 					callback();
