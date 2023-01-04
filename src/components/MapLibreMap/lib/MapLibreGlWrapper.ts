@@ -4,8 +4,7 @@ import {
 	MapOptions as MapOptionsType,
 	MapEventType,
 	MapLayerEventType,
-	MapLayerTouchEvent,
-	MapLayerMouseEvent,
+	StyleImageInterface,
 } from '!maplibre-gl';
 import { Map as MapType, Style } from 'maplibre-gl';
 
@@ -97,7 +96,20 @@ class MapLibreGlWrapper {
 	addLayer: AddParameters<MapType['addLayer'], [componentId?: string]>;
 	addSource: AddParameters<MapType['addSource'], [componentId?: string]>;
 	addControl: AddParameters<MapType['addControl'], [componentId?: string]>;
-	addImage: AddParameters<MapType['addImage'], [componentId?: string]>;
+	addImage: (
+		id: string,
+		image:
+			| HTMLImageElement
+			| ImageBitmap
+			| ImageData
+			| {
+					width: number;
+					height: number;
+					data: Uint8Array | Uint8ClampedArray;
+			  }
+			| StyleImageInterface,
+		componentId: string
+	) => void;
 	on: (
 		type: keyof MapLayerEventType | keyof MapEventType | string,
 		layerId: string | ((ev: unknown) => void),
@@ -397,19 +409,16 @@ class MapLibreGlWrapper {
 		 * @param {string} componentId
 		 * @returns {undefined}
 		 */
-		this.addImage = (id, image, ref, componentId) => {
+		this.addImage = (id, image, componentId) => {
 			if (!self.map.style) {
 				return;
-			}
-			if (typeof ref === 'string' && typeof componentId === 'undefined') {
-				return self.addImage.call(self, id, image, undefined, ref);
 			}
 			if (componentId && typeof componentId === 'string' && typeof id !== 'undefined') {
 				self.initRegisteredElements(componentId);
 				self.registeredElements[componentId].images.push(id);
 			}
 
-			self.map.addImage(id, image, ref);
+			self.map.addImage(id, image);
 		};
 
 		/**
@@ -442,7 +451,7 @@ class MapLibreGlWrapper {
 
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			self.map.on( ..._arguments );
+			self.map.on(..._arguments);
 			return self.map;
 		};
 
