@@ -440,7 +440,9 @@ class MapLibreGlWrapper {
 				self.registeredElements[componentId].events.push(_arguments);
 			}
 
-			self.map.on.apply(null, _arguments);
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			self.map.on( ..._arguments );
 			return self.map;
 		};
 
