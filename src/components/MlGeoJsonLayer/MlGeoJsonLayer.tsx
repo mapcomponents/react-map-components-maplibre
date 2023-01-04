@@ -7,12 +7,12 @@ import { v4 as uuidv4 } from 'uuid';
 import getDefaultPaintPropsByType from './util/getDefaultPaintPropsByType';
 import getDefaulLayerTypeByGeometry from './util/getDefaultLayerTypeByGeometry';
 import { Feature, FeatureCollection } from '@turf/turf';
+import { useLayerProps } from '../../hooks/useLayer';
 
 import {
 	LineLayerSpecification,
 	CircleLayerSpecification,
 	FillLayerSpecification,
-	MapLayerMouseEvent,
 	LayerSpecification,
 	RasterLayerSpecification,
 } from 'maplibre-gl';
@@ -85,16 +85,16 @@ export type MlGeoJsonLayerProps = {
 	/**
 	 * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
 	 */
-	onHover?: MapLayerMouseEvent;
+	onHover?: useLayerProps['onHover'];
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is clicked.
 	 */
-	onClick?: MapLayerMouseEvent;
+	onClick?: useLayerProps['onClick'];
 	/**
 	 * Leave event handler that is executed whenever a geometry rendered by this component is
 	 * left/unhovered.
 	 */
-	onLeave?: MapLayerMouseEvent;
+	onLeave?: useLayerProps['onLeave'];
 };
 
 /**
