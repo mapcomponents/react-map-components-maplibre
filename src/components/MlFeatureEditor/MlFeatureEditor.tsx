@@ -98,8 +98,6 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 				),
 			});
 
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			mapHook.map.addControl(draw.current, 'top-left', mapHook.componentId);
 			mapHook.map.on('draw.modechange', modeChangeHandler, mapHook.componentId);
 
