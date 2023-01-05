@@ -1,9 +1,13 @@
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useEffect, useState } from 'react';
 
-import { GeoJSONSource } from "maplibre-gl";
-import useMap, { useMapType } from "../../hooks/useMap";
+import { v4 as uuidv4 } from 'uuid';
 
-interface MlImageMarkerLayerProps {
+import useLayer from '../../hooks/useLayer';
+import useMap from '../../hooks/useMap';
+import { SymbolLayerSpecification } from 'maplibre-gl';
+import { Feature, FeatureCollection } from '@turf/turf';
+
+export interface MlImageMarkerLayerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -28,7 +32,11 @@ interface MlImageMarkerLayerProps {
 	/**
 	 * Javascript object that is passed the addLayer command as first parameter.
 	 */
-	options?: any;
+	options?: {
+		source?: { type?: string | undefined; data: Feature | FeatureCollection | undefined };
+		layout?: SymbolLayerSpecification['layout'];
+		paint?: SymbolLayerSpecification['paint'];
+	};
 }
 
 const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
@@ -37,38 +45,27 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const initializedRef = useRef(false);
-	const recreationInProgress = useRef(false);
-	const imageIdRef = useRef(props.imageId || "img_" + new Date().getTime());
-	const layerId = useRef(props.layerId || "MlImageMarkerLayer-" + mapHook.componentId);
+	const [imageId, setImageId] = useState<string>();
+	const imageIdRef = useRef(props.imageId || 'img_' + uuidv4());
+	const layerId = useRef(props.layerId || 'MlImageMarkerLayer-' + mapHook.componentId);
 
-	// effect to sync Layer paint & layout properties
-	useEffect(() => {
-		if (
-			!mapHook.map ||
-			(mapHook.map && !mapHook.map.map.getLayer(layerId.current)) ||
-			!props.options
-		)
-			return;
+	useLayer({
+		geojson: props.options?.source?.data,
+		layerId: layerId.current,
+		options: {
+			type: 'symbol',
+			layout: {
+				...props.options?.layout,
+				'icon-image': imageId || imageIdRef.current,
+			},
+			paint: {
+				...props.options?.paint,
+			},
+		},
+	});
 
-		var key;
-
-		if (props.options.layout) {
-			for (key in props.options.layout) {
-				mapHook.map.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
-			}
-		}
-		if (props.options.paint) {
-			for (key in props.options.paint) {
-				mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
-			}
-		}
-	}, [props.options, layerId.current, props.mapId]);
-
-	const createImage = (mapHook: useMapType, props: MlImageMarkerLayerProps, callback: Function) => {
+	const createImage = (mapHook: ReturnType<typeof useMap>, props: MlImageMarkerLayerProps) => {
 		if (!mapHook.map) {
-			initializedRef.current = false;
-
 			return;
 		}
 
@@ -78,95 +75,24 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
 
 				if (!mapHook.map || mapHook.map.map.hasImage(imageIdRef.current)) return;
 
-				mapHook.map.addImage(imageIdRef.current, image, mapHook.componentId);
+				mapHook.map.addImage(
+					imageIdRef.current,
+					image as unknown as ImageData,
+					mapHook.componentId
+				);
 
-				if (typeof callback === "function") {
-					callback();
-				}
+				setImageId(imageIdRef.current);
 			});
-		} else {
-			if (typeof callback === "function") {
-				callback();
-			}
 		}
 	};
 
-	const createLayer = (
-		mapHook: useMapType,
-		props: MlImageMarkerLayerProps,
-		createMapLibreElements: Function
-	) => {
-		if (!props.options || !mapHook.map || mapHook.map?.map.getLayer(layerId.current)) return;
-
-		let tmpOptions = {
-			id: layerId.current,
-			layout: {},
-			...props.options,
-		};
-		tmpOptions.layout["icon-image"] = imageIdRef.current;
-		mapHook.map.addLayer(tmpOptions, props.insertBeforeLayer, mapHook.componentId);
-
-		// recreate layer if map style.json has changed
-		mapHook.map.on(
-			"styledata",
-			() => {
-				if (
-					initializedRef.current &&
-					!mapHook.map?.map.getLayer(layerId.current) &&
-					!recreationInProgress.current
-				) {
-					initializedRef.current = false;
-					recreationInProgress.current = true;
-					console.log("Recreate Layer " + layerId.current);
-					createMapLibreElements();
-				}
-			},
-			mapHook.componentId
-		);
-
-		if (recreationInProgress.current) {
-			recreationInProgress.current = false;
-		}
-	};
-
-	const createMapLibreElements = useCallback(() => {
-		if (!mapHook.map || initializedRef.current || mapHook.map?.map.getLayer(layerId.current))
-			return;
-
-		initializedRef.current = true;
-
-		if (recreationInProgress.current) {
-			mapHook.cleanup();
-		}
+	useEffect(() => {
+		if (!mapHook.map) return;
 
 		if (props.imgSrc) {
-			createImage(mapHook, props, () => {
-				createLayer(mapHook, props, createMapLibreElements);
-			});
-		} else {
-			createLayer(mapHook, props, createMapLibreElements);
+			createImage(mapHook, props);
 		}
 	}, [props, mapHook]);
-
-	useEffect(() => {
-		if (initializedRef.current) return;
-
-		createMapLibreElements();
-	}, [createMapLibreElements]);
-
-	useEffect(() => {
-		if (
-			!mapHook.map ||
-			(mapHook.map && !mapHook.map.map.getLayer(layerId.current)) ||
-			!props.options
-		) {
-			return;
-		}
-
-		(mapHook.map.map.getSource(layerId.current) as GeoJSONSource).setData(
-			props.options.source.data
-		);
-	}, [props.options.source.data, props]);
 
 	return <></>;
 };

@@ -43,8 +43,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 			layerId.current,
 			{
 				type: 'vector',
-				tiles: [props.url],
-				tileSize: 512,
+				tiles: [props.url || ""],
 				attribution: '',
 				...props.sourceOptions,
 			},
@@ -60,6 +59,8 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 					maxzoom: 22,
 					layout: {},
 					paint: {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 						'line-opacity': 0.5,
 						'line-color': 'rgb(80, 80, 80)',
 						'line-width': 2,
