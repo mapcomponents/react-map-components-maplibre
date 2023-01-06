@@ -18,6 +18,10 @@ export interface MlLayerMagnifyProps {
 	 * Size of the "magnifier"-circle
 	 */
 	magnifierRadius?: number;
+	/**
+	 * object (React.CSSProperties) that is added to the magnifier default style
+	 */
+	magnifierStyle: React.CSSProperties | undefined;
 }
 
 /**
@@ -149,9 +153,8 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 		});
 	}, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const onDown = (e: any) => {
-		if (e.touches) {
+	const onDown = (e: React.MouseEvent | React.TouchEvent) => {
+		if (e.nativeEvent instanceof TouchEvent) {
 			document.addEventListener('touchmove', onMove);
 			document.addEventListener('touchend', onTouchEnd);
 		} else {
@@ -170,9 +173,8 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 		document.removeEventListener('mouseup', onMouseUp);
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const onWheel = (e: any) => {
-		const evCopy = new WheelEvent(e.type, e);
+	const onWheel = (e: React.WheelEvent) => {
+		const evCopy = new WheelEvent(e.type, e as unknown as WheelEventInit);
 		mapContext.map.getCanvas().dispatchEvent(evCopy);
 	};
 
@@ -183,8 +185,8 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 				left: swipeX + '%',
 				top: swipeY + '%',
 				borderRadius: '50%',
-				width: magnifierRadius * 2 + 1 + 'px',
-				height: magnifierRadius * 2 + 1 + 'px',
+				width: magnifierRadius * 2 - 2 + 'px',
+				height: magnifierRadius * 2 - 2 + 'px',
 				background: 'rgba(0,0,0,0)',
 				border: '2px solid #fafafa',
 				boxShadow: '1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)',
@@ -197,6 +199,7 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 				fontSize: '2em',
 				color: '#fafafa',
 				userSelect: 'none',
+				...props.magnifierStyle,
 			}}
 			onTouchStart={onDown}
 			onMouseDown={onDown}
@@ -207,6 +210,7 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 
 MlLayerMagnify.defaultProps = {
 	magnifierRadius: 200,
+	magnifierStyle: {},
 };
 
 export default MlLayerMagnify;

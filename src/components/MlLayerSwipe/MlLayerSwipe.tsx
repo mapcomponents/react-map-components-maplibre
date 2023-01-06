@@ -14,6 +14,10 @@ export interface MlLayerSwipeProps {
 	 * Id of the second MapLibre instance.
 	 */
 	map2Id: string;
+	/**
+	 * object (React.CSSProperties) that is added to the button default style
+	 */
+	buttonStyle: React.CSSProperties | undefined;
 }
 
 /**
@@ -86,9 +90,8 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 		});
 	}, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const onDown = (e: any) => {
-		if (e.touches) {
+	const onDown = (e: React.MouseEvent | React.TouchEvent) => {
+		if (e.nativeEvent instanceof TouchEvent) {
 			document.addEventListener('touchmove', onMove);
 			document.addEventListener('touchend', onTouchEnd);
 		} else {
@@ -127,11 +130,16 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 				fontSize: '2em',
 				color: '#fafafa',
 				userSelect: 'none',
+				...props.buttonStyle,
 			}}
 			onTouchStart={onDown}
 			onMouseDown={onDown}
 		></div>
 	);
+};
+
+MlLayerSwipe.defaultProps = {
+	buttonStyle: {},
 };
 
 export default MlLayerSwipe;

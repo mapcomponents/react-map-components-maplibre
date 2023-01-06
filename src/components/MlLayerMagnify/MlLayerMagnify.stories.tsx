@@ -30,8 +30,9 @@ const Template = (args: TemplateProps) => (
 				maxzoom: 20,
 			}}
 			mapId={args.wmsLayerMapId}
+			
 		/>
-		<MlLayerMagnify map1Id="map_1" map2Id="map_2" magnifierRadius={args.magnifierRadius} />
+		<MlLayerMagnify map1Id="map_1" map2Id="map_2" magnifierStyle={{border:'2px solid grey'}} magnifierRadius={args.magnifierRadius} />
 	</>
 );
 
