@@ -2176,7 +2176,7 @@
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
 
-"@scena/dragscroll@^1.2.0":
+"@scena/dragscroll@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@scena/dragscroll/-/dragscroll-1.3.0.tgz#3a9f30a4153eeb2d25df22004ddf602db6d55583"
   integrity sha512-UlK/g9IX8fJ8+YczqfUT7WDjx/5KKQMU2/uZLYLXV8FWuzWS2WWpt2u1G6KCIF65380oCnCYOs7nOrYpedsOaQ==
@@ -9178,7 +9178,7 @@ geojson-vt@^3.2.1:
   resolved "https://registry.yarnpkg.com/geojson-vt/-/geojson-vt-3.2.1.tgz#f8adb614d2c1d3f6ee7c4265cad4bbf3ad60c8b7"
   integrity sha512-EvGQQi/zPrDA6zr6BnJD/YhwAkBP8nnJ9emh3EnHQKVMfg/MRVtPbMYdgVy/IaEmn4UfagD2a6fafPDL5hbtwg==
 
-gesto@^1.13.3:
+gesto@^1.14.0:
   version "1.14.0"
   resolved "https://registry.yarnpkg.com/gesto/-/gesto-1.14.0.tgz#cb50213f80bf5a1ce5af1dd2bba7c3bb5338dfbc"
   integrity sha512-b89RyxAQb65t0HVJHPWi1+Ren66QoMaXpV5do3k7LRJAwunESYlJr520/4pNrMQGUkqopLMZjEceUE2uBqcgeQ==
@@ -14042,21 +14042,21 @@ react-is@^16.12.0, react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-moveable@^0.41.1:
-  version "0.41.1"
-  resolved "https://registry.yarnpkg.com/react-moveable/-/react-moveable-0.41.1.tgz#b1176f3c053f9855c6b8fbf5973cf81ce3b77f2e"
-  integrity sha512-YPKQlR52KXLPSQeYNc0Jo9t6vljYt3Dg0B9s/KFUPa3/PqeqSR/E4GEjKoyjM3KjXFF8DQC8htavbZkHlidU3w==
+react-moveable@^0.45.1:
+  version "0.45.1"
+  resolved "https://registry.yarnpkg.com/react-moveable/-/react-moveable-0.45.1.tgz#228155ba7d4d578200a1f5ebec28457228694cd4"
+  integrity sha512-3ktIdg7spM4hTJFMJFcUab5i5XCGUuNG/V7A0pZFHs8jAwAyVXHKnjhOKasgHmYF9Z4/3YAdA9u25cSlACZHjw==
   dependencies:
     "@daybrush/utils" "^1.10.0"
     "@egjs/agent" "^2.2.1"
     "@egjs/children-differ" "^1.0.1"
     "@egjs/list-differ" "^1.0.0"
-    "@scena/dragscroll" "^1.2.0"
+    "@scena/dragscroll" "^1.3.0"
     "@scena/event-emitter" "^1.0.5"
     "@scena/matrix" "^1.1.1"
     css-to-mat "^1.0.3"
     framework-utils "^1.1.0"
-    gesto "^1.13.3"
+    gesto "^1.14.0"
     overlap-area "^1.1.0"
     react-css-styled "^1.0.4"
 

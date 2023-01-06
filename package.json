@@ -35,7 +35,7 @@
 		"mui-color": "^2.0.0-beta.2",
 		"react-draggable": "^4.4.5",
 		"react-i18next": "^11.14.3",
-		"react-moveable": "^0.41.1",
+		"react-moveable": "^0.45.1",
 		"three": "^0.147.0",
 		"uuid": "^9.0.0",
 		"wms-capabilities": "^0.6.0",
