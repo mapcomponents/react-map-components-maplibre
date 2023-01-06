@@ -2,26 +2,27 @@ import React, { useRef, useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 
 type Props = {
-	setData: (data: any) => void;
+	setData: (data: string) => void;
 };
 
-const stopDefault = (event: any) => {
+const stopDefault = (event: DragEvent) => {
 	event.preventDefault();
 	event.stopPropagation();
 };
 export default function Dropzone(props: Props) {
 	const [zIndex, setZIndex] = useState(0);
 	const dropZone = useRef<HTMLDivElement>(null);
-	const dropHandler = (event: any) => {
+	const dropHandler = (event: DragEvent) => {
 		event.preventDefault();
 
-		if (event.dataTransfer.items) {
+		if (event?.dataTransfer?.items) {
 			if (event.dataTransfer.items.length > 1) {
 				return false;
 			}
 			// If dropped items aren't files, reject them
 			if (event.dataTransfer.items[0].kind === 'file') {
 				const reader = new FileReader();
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				reader.onload = (payload: any) => {
 					if (!payload?.currentTarget?.result) return;
 
@@ -30,7 +31,9 @@ export default function Dropzone(props: Props) {
 					}
 				};
 				const file = event.dataTransfer.items[0].getAsFile();
-				reader.readAsText(file);
+				if (file) {
+					reader.readAsText(file);
+				}
 			}
 		} else {
 			// Use DataTransfer interface to access the file(s)
@@ -69,6 +72,8 @@ export default function Dropzone(props: Props) {
 
 	return (
 		<div
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			onDrop={dropHandler}
 			ref={dropZone}
 			style={{

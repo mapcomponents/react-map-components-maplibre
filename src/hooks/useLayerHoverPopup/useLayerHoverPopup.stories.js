@@ -13,7 +13,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <useLayerHoverPopup />;
+const Template = () => <useLayerHoverPopup />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};

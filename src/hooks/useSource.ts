@@ -1,11 +1,11 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import useMap, { useMapType } from "./useMap";
 import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-import { SourceSpecification } from "maplibre-gl";
+import { Source, SourceSpecification } from "maplibre-gl";
 
 type useSourceType = {
 	map: MapLibreGlWrapper | undefined;
-	source: SourceSpecification;
+	source: Source | undefined;
 	componentId: string;
 	mapHook: useMapType;
 };
@@ -22,7 +22,7 @@ function useSource(props: useSourceProps): useSourceType {
 	});
 
 	const initializedRef = useRef<boolean>(false);
-	const [source, setSource] = useState<any>();
+	const [source, setSource] = useState<Source>();
 	const sourceId = useRef(
 		props.sourceId || (props.idPrefix ? props.idPrefix : "Source-") + mapHook.componentId
 	);

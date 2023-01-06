@@ -1,14 +1,14 @@
-import React, { ReactComponentElement, useRef } from 'react';
+import React, { useRef } from 'react';
 import FileCopy from '@mui/icons-material/FileCopy';
 import { Button } from '@mui/material';
 
 type Props = {
-	setData: (data: any) => void;
+	setData: (data: string) => void;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	buttonComponent: any;
 };
 
 export default function UploadButton(props: Props) {
-
 	const fileupload = useRef<HTMLInputElement>(null);
 	const fileUploadOnChange = () => {
 		if (!fileupload.current) return false;
@@ -16,6 +16,7 @@ export default function UploadButton(props: Props) {
 		const file = fileupload.current?.files?.[0];
 		if (!file) return false;
 		const reader = new FileReader();
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		reader.onload = (payload: any) => {
 			if (!payload) return;
 

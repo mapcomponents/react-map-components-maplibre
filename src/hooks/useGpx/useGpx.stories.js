@@ -13,7 +13,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <useGpx />;
+const Template = () => <useGpx />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};

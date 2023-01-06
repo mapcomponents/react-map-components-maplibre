@@ -103,7 +103,7 @@ const Template = () => {
 			<MetadataDrawer metadata={metadata} open={metadataDrawerOpen} />
 			<Dropzone setData={(data) => setGpxData(data)} />
 			<MlGpxViewer
-				gpxData={gpxData as (string | undefined)}
+				gpxData={gpxData as string | undefined}
 				onParseGpxData={(parsedGpx) => setMetadata(parsedGpx.metadata ? parsedGpx.metadata : [])}
 			/>
 		</>

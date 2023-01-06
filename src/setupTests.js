@@ -35,6 +35,7 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 			this.sources = [];
 
 			let styleFunctions = {
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				addSource: (id, source) => {
 					if (typeof id.id !== 'undefined') {
 						self.sources.push(id);
