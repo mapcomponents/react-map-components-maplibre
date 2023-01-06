@@ -37,7 +37,7 @@ const mobileStyle = {
 interface MlGpxDemoLoaderProps {
 	open: boolean;
 	setOpen: (open: boolean) => void;
-	setGpx: (gpx: string | ArrayBuffer) => void;
+	setGpx: (gpx: string | ArrayBuffer | undefined) => void;
 }
 
 const samples = [

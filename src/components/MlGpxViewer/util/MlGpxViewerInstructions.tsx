@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Grid } from '@mui/material';
-import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import Fade from '@mui/material/Fade';
 import BubbleStyle from '../../../util/BubbleForInstructions';
 
-function BubbleBottomRight(props) {
+function BubbleBottomRight(props: { iconMarginTop: string; children: unknown }) {
 	return (
 		<BubbleStyle
 			bubbleRight="-120px"
@@ -20,10 +18,9 @@ function BubbleBottomRight(props) {
 	);
 }
 
-export default function MlGpxViewerInstructions(props) {
+export default function MlGpxViewerInstructions(props: { open: boolean; callback: () => void }) {
 	const [step1, setStep1] = useState(false);
 	const [step2, setStep2] = useState(false);
-	const [step3, setStep3] = useState(false);
 	const [step4, setStep4] = useState(false);
 
 	useEffect(() => {
@@ -36,18 +33,14 @@ export default function MlGpxViewerInstructions(props) {
 			}, 3000);
 			setTimeout(() => {
 				setStep2(false);
-				setStep3(true);
-			}, 6000);
-			setTimeout(() => {
-				setStep3(false);
 				setStep4(true);
-			}, 9000);
+			}, 6000);
 			setTimeout(() => {
 				setStep4(false);
 				if (typeof props.callback === 'function') {
-					props.callback(false);
+					props.callback();
 				}
-			}, 12000);
+			}, 9000);
 		} else {
 			return;
 		}
@@ -71,18 +64,6 @@ export default function MlGpxViewerInstructions(props) {
 						<BubbleBottomRight iconMarginTop="68px">
 							You can see more <br /> information about <br />
 							the track <br />
-							here
-						</BubbleBottomRight>
-					</div>
-				</Fade>
-			)}
-
-			{step3 && (
-				<Fade in={step3} timeout={150}>
-					<div>
-						<BubbleBottomRight iconMarginTop="-38px">
-							You can download <br /> a sample track as a <br />
-							GPX file <br />
 							here
 						</BubbleBottomRight>
 					</div>

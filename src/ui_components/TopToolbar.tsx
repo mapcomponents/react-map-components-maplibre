@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import { Toolbar, AppBarProps, ToolbarProps } from '@mui/material';
 
 interface TopToolbarProps extends AppBarProps {
-	toolbarProps: ToolbarProps;
+	toolbarProps?: ToolbarProps;
 }
 export default function TopToolbar({ toolbarProps, ...props }: TopToolbarProps) {
 	return (

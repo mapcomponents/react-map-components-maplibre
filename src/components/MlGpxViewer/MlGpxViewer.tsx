@@ -8,7 +8,7 @@ import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
 import { v4 as uuidv4 } from 'uuid';
 
-interface MlGpxViewerProps {
+export interface MlGpxViewerProps {
 	/**
 	 * Id of the target MapLibre instance in mapHook
 	 */
