@@ -1,26 +1,24 @@
-import React from "react";
+import React from 'react';
 
-import MlLayerSwipe from "./MlLayerSwipe";
-import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
+import MlLayerSwipe from './MlLayerSwipe';
+import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 
-import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
+import multiMapContextDecorator from '../../decorators/MultiMapContextDecorator';
 
 const storyoptions = {
-	title: "MapComponents/MlLayerSwipe",
-	name: "MlLayerSwipe",
+	title: 'MapComponents/MlLayerSwipe',
 	component: MlLayerSwipe,
-	argTypes: {
-	},
+	argTypes: {},
 	decorators: multiMapContextDecorator,
 };
-export default storyoptions;
 
-const Template = (args) => (
+export default storyoptions;
+const Template = () => (
 	<>
 		<MlWmsLayer
 			url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
 			urlParameters={{
-				layers: "nw_uraufnahme_rw",
+				layers: 'nw_uraufnahme_rw',
 			}}
 			sourceOptions={{
 				minzoom: 13,

@@ -1,17 +1,18 @@
-import MlLayerMagnify from "./MlLayerMagnify";
+import MlLayerMagnify from './MlLayerMagnify';
 
-import React, { useContext, useState } from "react";
-import { mount } from "enzyme";
-import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
-import MapLibreMap from "./../MapLibreMap/MapLibreMap";
-import syncMove from "@mapbox/mapbox-gl-sync-move";
+import React, { useContext, useState } from 'react';
+import { mount } from 'enzyme';
+import MapContext, { MapComponentsProvider } from '../../contexts/MapContext';
+import MapLibreMap from './../MapLibreMap/MapLibreMap';
+// we need to import this explicitly, because otherwise it gets mixed up with cypress expect
+import { expect } from '@jest/globals';
 // Mapbox sync-move mockup
-var mockSyncMoveMethods = {
+const mockSyncMoveMethods = {
 	cleanup: jest.fn(),
 };
 
-jest.mock("@mapbox/mapbox-gl-sync-move", () => {
-	const originalModule = jest.requireActual("@mapbox/mapbox-gl-sync-move");
+jest.mock('@mapbox/mapbox-gl-sync-move', () => {
+	const originalModule = jest.requireActual('@mapbox/mapbox-gl-sync-move');
 	return {
 		__esModule: true,
 		...originalModule,
@@ -19,11 +20,7 @@ jest.mock("@mapbox/mapbox-gl-sync-move", () => {
 	};
 });
 
-const syncMoveObj = {
-	syncMove: syncMove,
-};
-
-const TestComponent = (props) => {
+const TestComponent = () => {
 	const [layerVisible, setLayerVisible] = useState(true);
 	const [refreshTrigger, setRefreshTrigger] = useState(0);
 	const mapContext = useContext(MapContext);
@@ -65,7 +62,7 @@ const createWrapper = () =>
 		</MapComponentsProvider>
 	);
 
-describe("<MlLayerMagnify/>", () => {
+describe('<MlLayerMagnify/>', () => {
 	//it("should add a MlLayerMagnify Component to that calls syncMaps with both available MapLibre instances once", async () => {
 	//	const spy = jest.spyOn(syncMoveObj, "syncMove");
 	//	const wrapper = createWrapper(TestComponent);
@@ -73,12 +70,12 @@ describe("<MlLayerMagnify/>", () => {
 	//	expect(spy).toHaveBeenCalledTimes(1);
 	//});
 
-	it("should call the syncMaps cleanup function once when it is removed from reactDOM", async () => {
-		const wrapper = createWrapper(TestComponent);
+	it('should call the syncMaps cleanup function once when it is removed from reactDOM', async () => {
+		const wrapper = createWrapper();
 
 		//expect(syncMove).toHaveBeenCalledTimes(1);
 
-		wrapper.find(".toggle_layer_visible").simulate("click");
+		wrapper.find('.toggle_layer_visible').simulate('click');
 
 		//TODO: Fix cleanup test
 		expect(mockSyncMoveMethods.cleanup).toHaveBeenCalledTimes(1);
