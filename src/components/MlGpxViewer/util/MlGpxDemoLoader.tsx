@@ -37,7 +37,7 @@ const mobileStyle = {
 interface MlGpxDemoLoaderProps {
 	open: boolean;
 	setOpen: (open: boolean) => void;
-	setGpx: (gpx: string | ArrayBuffer | undefined) => void;
+	setGpx: (gpx: string | undefined) => void;
 }
 
 const samples = [
@@ -61,7 +61,9 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 	const reader = useRef(new FileReader());
 	reader.current.onload = () => {
 		if (!reader?.current?.result) return;
-		props.setGpx(reader.current.result);
+		if (typeof reader.current.result === 'string') {
+			props.setGpx(reader.current.result);
+		}
 		handleClose();
 	};
 
