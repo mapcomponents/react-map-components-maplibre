@@ -37,7 +37,7 @@ function useSource(props: useSourceProps): useSourceType {
 
 		mapHook.map?.addSource(sourceId.current, {
 			...props.source,
-		});
+		}, mapHook.componentId);
 
 		setSource(mapHook.map.map.getSource(sourceId.current));
 	}, [props, mapHook.map]);

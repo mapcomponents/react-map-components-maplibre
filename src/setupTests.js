@@ -13,6 +13,7 @@ var mockMapLibreMethods = {
 	off: jest.fn(),
 	addControl: jest.fn(),
 	removeControl: jest.fn(),
+	fitBounds: jest.fn(),
 	hasControl: jest.fn(() => true),
 	getCanvas: () => document.createElement("canvas"),
 	getContainer: () => ({
