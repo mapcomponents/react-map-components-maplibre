@@ -1,25 +1,29 @@
-import React from "react";
+import React from 'react';
 
-import MlLayerMagnify from "./MlLayerMagnify";
-import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
+import MlLayerMagnify from './MlLayerMagnify';
+import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 
-import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
+import multiMapContextDecorator from '../../decorators/MultiMapContextDecorator';
 
 const storyoptions = {
-	title: "MapComponents/MlLayerMagnify",
+	title: 'MapComponents/MlLayerMagnify',
 	component: MlLayerMagnify,
-	argTypes: {
-	},
+	argTypes: {},
 	decorators: multiMapContextDecorator,
 };
 export default storyoptions;
 
-const Template = (args) => (
+interface TemplateProps {
+	wmsLayerMapId: string;
+	magnifierRadius: number;
+}
+
+const Template = (args: TemplateProps) => (
 	<>
 		<MlWmsLayer
 			url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
 			urlParameters={{
-				layers: "nw_uraufnahme_rw",
+				layers: 'nw_uraufnahme_rw',
 			}}
 			sourceOptions={{
 				minzoom: 13,
@@ -32,10 +36,8 @@ const Template = (args) => (
 );
 
 export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {
-
-};
+ExampleConfig.parameters = {};
 ExampleConfig.args = {
-	wmsLayerMapId: "map_2",
+	wmsLayerMapId: 'map_2',
 	magnifierRadius: 200,
 };

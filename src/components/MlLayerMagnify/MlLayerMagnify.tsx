@@ -1,17 +1,11 @@
-import React, {
-	useContext,
-	useCallback,
-	useRef,
-	useEffect,
-	useState,
-	useMemo
-} from "react";
+import React, { useContext, useCallback, useRef, useEffect, useState, useMemo } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import syncMove from "@mapbox/mapbox-gl-sync-move";
-import "./style.css";
-import	MapContext	from "../../contexts/MapContext";
+import syncMove from '@mapbox/mapbox-gl-sync-move';
+import './style.css';
+import MapContext from '../../contexts/MapContext';
 
-interface MlLayerMagnifyProps {
+export interface MlLayerMagnifyProps {
 	/**
 	 * Id of the first MapLibre instance
 	 */
@@ -32,7 +26,7 @@ interface MlLayerMagnifyProps {
  * the map and can be dragged around on top of the MapLibreMap referenced by props.map1Id
  */
 const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
-	const mapContext:MapContextType = useContext(MapContext);
+	const mapContext: MapContextType = useContext(MapContext);
 	const syncMoveInitializedRef = useRef(false);
 	const syncCleanupFunctionRef = useRef(() => {});
 
@@ -43,7 +37,7 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 
 	const magnifierRadius = useMemo(() => {
 		return props.magnifierRadius || 200;
-	},[props.magnifierRadius]);
+	}, [props.magnifierRadius]);
 
 	const mapExists = useCallback(() => {
 		if (!props.map1Id || !props.map2Id) {
@@ -66,11 +60,11 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 	});
 
 	useEffect(() => {
-		window.addEventListener("resize", onResize.current);
-		let _onResize = onResize.current;
+		window.addEventListener('resize', onResize.current);
+		const _onResize = onResize.current;
 
 		return () => {
-			window.removeEventListener("resize", _onResize);
+			window.removeEventListener('resize', _onResize);
 			syncCleanupFunctionRef.current();
 		};
 	}, []);
@@ -79,29 +73,24 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 		(e) => {
 			if (!mapExists()) return;
 
-			let bounds = mapContext.maps[props.map1Id]
-				.getCanvas()
-				.getBoundingClientRect();
+			const bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
 			let clientX =
 				e.clientX ||
-				(typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+				(typeof e.touches !== 'undefined' && typeof e.touches[0] !== 'undefined'
 					? e.touches[0].clientX
 					: 0);
 			let clientY =
 				e.clientY ||
-				(typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+				(typeof e.touches !== 'undefined' && typeof e.touches[0] !== 'undefined'
 					? e.touches[0].clientY
 					: 0);
 
 			clientX -= bounds.x;
 			clientY -= bounds.y;
-			let swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
-			let swipeY_tmp = ((clientY / bounds.height) * 100).toFixed(2);
+			const swipeX_tmp = ((clientX / bounds.width) * 100).toFixed(2);
+			const swipeY_tmp = ((clientY / bounds.height) * 100).toFixed(2);
 
-			if (
-				swipeXRef.current !== swipeX_tmp ||
-				swipeYRef.current !== swipeY_tmp
-			) {
+			if (swipeXRef.current !== swipeX_tmp || swipeYRef.current !== swipeY_tmp) {
 				setSwipeX(swipeX_tmp);
 				swipeXRef.current = swipeX_tmp;
 				setSwipeY(swipeY_tmp);
@@ -110,9 +99,9 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 				mapContext.maps[props.map2Id].getContainer().style.clipPath =
 					`circle(${magnifierRadius}px at ` +
 					(parseFloat(swipeXRef.current) * bounds.width) / 100 +
-					"px " +
+					'px ' +
 					(parseFloat(swipeYRef.current) * bounds.height) / 100 +
-					"px)";
+					'px)';
 			}
 		},
 		[mapContext, mapExists, props, magnifierRadius]
@@ -160,53 +149,54 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 		});
 	}, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
 
-	const onDown = (e:any) => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const onDown = (e: any) => {
 		if (e.touches) {
-			document.addEventListener("touchmove", onMove);
-			document.addEventListener("touchend", onTouchEnd);
+			document.addEventListener('touchmove', onMove);
+			document.addEventListener('touchend', onTouchEnd);
 		} else {
-			document.addEventListener("mousemove", onMove);
-			document.addEventListener("mouseup", onMouseUp);
+			document.addEventListener('mousemove', onMove);
+			document.addEventListener('mouseup', onMouseUp);
 		}
 	};
 
 	const onTouchEnd = () => {
-		document.removeEventListener("touchmove", onMove);
-		document.removeEventListener("touchend", onTouchEnd);
+		document.removeEventListener('touchmove', onMove);
+		document.removeEventListener('touchend', onTouchEnd);
 	};
 
 	const onMouseUp = () => {
-		document.removeEventListener("mousemove", onMove);
-		document.removeEventListener("mouseup", onMouseUp);
+		document.removeEventListener('mousemove', onMove);
+		document.removeEventListener('mouseup', onMouseUp);
 	};
 
-	const onWheel = (e:any) => {
-		let evCopy = new WheelEvent(e.type, e);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const onWheel = (e: any) => {
+		const evCopy = new WheelEvent(e.type, e);
 		mapContext.map.getCanvas().dispatchEvent(evCopy);
 	};
 
 	return (
 		<div
 			style={{
-				position: "absolute",
-				left: swipeX + "%",
-				top: swipeY + "%",
-				borderRadius: "50%",
-				width: magnifierRadius * 2 + 1 + "px",
-				height: magnifierRadius * 2 + 1 + "px",
-				background: "rgba(0,0,0,0)",
-				border: "2px solid #fafafa",
-				boxShadow:
-					"1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)",
-				cursor: "pointer",
-				zIndex: "110",
-				marginLeft: magnifierRadius * -1 - 1 + "px",
-				marginTop: magnifierRadius * -1 - 1 + "px",
-				textAlign: "center",
-				lineHeight: "91px",
-				fontSize: "2em",
-				color: "#fafafa",
-				userSelect: "none",
+				position: 'absolute',
+				left: swipeX + '%',
+				top: swipeY + '%',
+				borderRadius: '50%',
+				width: magnifierRadius * 2 + 1 + 'px',
+				height: magnifierRadius * 2 + 1 + 'px',
+				background: 'rgba(0,0,0,0)',
+				border: '2px solid #fafafa',
+				boxShadow: '1px 2px 2px rgba(19, 19, 19, .5), inset 1px 1px 1px rgba(19, 19, 19, .2)',
+				cursor: 'pointer',
+				zIndex: '110',
+				marginLeft: magnifierRadius * -1 - 1 + 'px',
+				marginTop: magnifierRadius * -1 - 1 + 'px',
+				textAlign: 'center',
+				lineHeight: '91px',
+				fontSize: '2em',
+				color: '#fafafa',
+				userSelect: 'none',
 			}}
 			onTouchStart={onDown}
 			onMouseDown={onDown}
