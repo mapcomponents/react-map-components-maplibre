@@ -1,6 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import useMap from '../../hooks/useMap';
-import { GeoJSONFeature, MapMouseEvent, Popup } from 'maplibre-gl';
+import {
+	GeoJSONFeature,
+	Popup,
+	MapEventType,
+} from 'maplibre-gl';
 
 interface useLayerHoverPopupProps {
 	/**
@@ -32,13 +36,13 @@ const useLayerHoverPopup = (props: useLayerHoverPopupProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || !props.layerId) return;
-
 		mapHook.map.on(
 			'mouseenter',
 			props.layerId,
 			(
-				e: MapMouseEvent & {
+				e: MapEventType & {
 					features?: GeoJSONFeature[] | undefined;
+					lngLat: { lng: number; lat: number };
 				}
 			) => {
 				if (!mapHook.map) return;

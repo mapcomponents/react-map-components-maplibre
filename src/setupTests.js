@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
-import "jest-enzyme";
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
+/* eslint-disable no-undef */
+import 'jest-enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 
-import { mount, configure } from "enzyme";
+import { configure } from 'enzyme';
 
-var uuid_regex = "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}";
+var uuid_regex = '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
 export { uuid_regex };
 
 // MapLibre-gl mockup
@@ -15,29 +15,30 @@ var mockMapLibreMethods = {
 	removeControl: jest.fn(),
 	fitBounds: jest.fn(),
 	hasControl: jest.fn(() => true),
-	getCanvas: () => document.createElement("canvas"),
+	getCanvas: () => document.createElement('canvas'),
 	getContainer: () => ({
 		style: {},
 	}),
 };
 export { mockMapLibreMethods };
 
-jest.mock("maplibre-gl/dist/maplibre-gl", () => {
-	const originalModule = jest.requireActual("maplibre-gl/dist/maplibre-gl");
+jest.mock('maplibre-gl/dist/maplibre-gl', () => {
+	const originalModule = jest.requireActual('maplibre-gl/dist/maplibre-gl');
 
 	return {
 		...originalModule,
 		GeolocateControl: jest.fn(),
 		Map: function () {
+			// eslint-disable-next-line @typescript-eslint/no-this-alias
 			var self = this;
 			this.layers = [];
 			this.sources = [];
 
 			let styleFunctions = {
 				addSource: (id, source) => {
-					if (typeof id.id !== "undefined") {
+					if (typeof id.id !== 'undefined') {
 						self.sources.push(id);
-					} else if (typeof id !== "undefined") {
+					} else if (typeof id !== 'undefined') {
 						self.sources.push(id);
 					}
 				},
@@ -54,12 +55,9 @@ jest.mock("maplibre-gl/dist/maplibre-gl", () => {
 					}
 				},
 				addLayer: (layer) => {
-					if (typeof layer.id !== "undefined") {
+					if (typeof layer.id !== 'undefined') {
 						self.layers.push(layer.id);
-						if (
-							typeof layer.source !== "undefined" &&
-							typeof layer.source === "object"
-						) {
+						if (typeof layer.source !== 'undefined' && typeof layer.source === 'object') {
 							self.sources.push(layer.id);
 						}
 					}
