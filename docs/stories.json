@@ -348,7 +348,7 @@
         "fileName": 1150,
         "framework": "react",
         "__id": "mapcomponents-mllayerswipe--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mllayerswitcher--example-config": {
