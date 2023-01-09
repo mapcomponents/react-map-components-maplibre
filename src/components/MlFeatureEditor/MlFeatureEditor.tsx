@@ -99,7 +99,6 @@ const MlFeatureEditor = (props: MlFeatureEditorProps) => {
 			});
 
 			mapHook.map.addControl(draw.current, 'top-left', mapHook.componentId);
-
 			mapHook.map.on('draw.modechange', modeChangeHandler, mapHook.componentId);
 
 			setDrawToolsReady(true);

@@ -8,7 +8,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": false,
-		"types": ["node", "jest", "geojson", "cypress", "./support"],
+		"types": ["node", "jest", "geojson", "cypress"],
 		"outDir": "build/esm",
 		"module": "esnext",
 		"target": "es5",

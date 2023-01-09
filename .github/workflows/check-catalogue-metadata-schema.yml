@@ -1,0 +1,19 @@
+name: catalogue-meta-schema-check
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+jobs:
+  check-catalogue-meta-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+        with:
+          persist-credentials: false
+      - name: Install and build 🔧
+        run: | # Install packages and build the catalogue meta.json file for schema checks only
+          yarn
+          yarn build-catalogue-meta
