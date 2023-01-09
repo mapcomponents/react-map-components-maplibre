@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Modal, Box, Typography, Button, Divider, TextField, Grid, Fade, Zoom } from '@mui/material';
+import { Box, Typography, Button, Divider, TextField, Grid, Fade} from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -59,7 +59,7 @@ const wmsServices = [
 
 export default function WMSLinks(props) {
 
-	const [openModal, setOpenModal] = useState(false);
+	//const [openModal, setOpenModal] = useState(false);
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [selectedSample, setSelectedSample] = useState();
 
@@ -89,11 +89,11 @@ export default function WMSLinks(props) {
 		}
 	}, [selectedSample]);
 
-
+/*
 	const handleClose = () => {
 		setOpenModal(false);
 	};
-
+*/
 	return (
 		<>
 			{props.open && (
