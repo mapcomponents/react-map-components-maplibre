@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Fade from '@mui/material/Fade';
-import BubbleStyle from '../../../util/BubbleForInstructions';
+import React from 'react';
+import Instructions from '../../../util/Instructions';
 
 const bubbleBottomRightStyle = {
 	bubbleRight: '-120px',
@@ -11,10 +10,7 @@ const bubbleBottomRightStyle = {
 	iconMarginLeft: '200px',
 };
 
-export default function MlGpxViewerInstructions(props: { open: boolean; callback: () => void }) {
-	const [activeStep, setActiveStep] = useState<number>();
-	const initializedRef = useRef(false);
-	const steps = [
+const steps = [
 		{
 			duration: 3000,
 			props: {
@@ -55,48 +51,16 @@ export default function MlGpxViewerInstructions(props: { open: boolean; callback
 			},
 			content: (
 				<>
-					You can load your <br />
-					own GPX file <br /> here
+					In demo mode we <br /> provide you some <br /> GPX tracks <br /> to load.
 				</>
 			),
 		},
 	];
-
-	const activateStep = (stepId?: number | undefined) => {
-			let _nextStep: number | undefined = typeof stepId === 'undefined' ? 0 : stepId + 1;
-			if (typeof _nextStep !== 'undefined') {
-				if (_nextStep > steps.length + 1) {
-					_nextStep = undefined;
-				} else {
-					setTimeout(() => {
-						activateStep(_nextStep);
-					}, steps[_nextStep].duration);
-				}
-			}
-			setActiveStep(_nextStep);
-		}
-	;
-
-	useEffect(() => {
-		if (props.open && !initializedRef.current) {
-			initializedRef.current = true;
-			activateStep();
-		}
-		if (!props.open) {
-			initializedRef.current = false;
-			setActiveStep(undefined);
-		}
-	}, [props.open]);
-
+export default function MlGpxViewerInstructions(props: { open: boolean}) {
+	
 	return (
 		<>
-			{typeof activeStep !== 'undefined' && (
-				<Fade in={true} timeout={150}>
-					<div>
-						<BubbleStyle {...steps[activeStep].props}>{steps[activeStep].content}</BubbleStyle>
-					</div>
-				</Fade>
-			)}
+			<Instructions steps={steps} open={props.open} />
 		</>
 	);
 }

@@ -71,15 +71,14 @@ const Template = (props) => {
 					onClick={handleClick2}
 					color={guide ? 'primary' : 'inherit'}
 					sx={{ color: textColor2 }}
-				>
-					{' '}
+				>					
 					Guide me through
 				</Button>
 				<Button
 					variant="contained"
 					onClick={handleClick1}
 					color={demoMode ? 'primary' : 'inherit'}
-					sx={{ color: textColor }}
+					sx={{ color: textColor}}
 				>
 					Demo WMS
 				</Button>

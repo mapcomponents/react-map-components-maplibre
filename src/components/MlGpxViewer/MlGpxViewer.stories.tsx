@@ -49,10 +49,7 @@ const Template = () => {
 		<>
 			<TopToolbar>
 				<MlGpxViewerInstructions
-					open={guide}
-					callback={() => {
-						setGuide(false);
-					}}
+					open={guide}				
 				/>
 				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
 					{' '}
