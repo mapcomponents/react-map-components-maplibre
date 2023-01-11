@@ -85,7 +85,8 @@ const Template = (props) => {
 			</TopToolbar>
 
 
-			{(!mediaIsMobile) || (mediaIsMobile && !demoMode)? (<Sidebar sx={{ wordBreak: 'break-word' }}>
+			{(!mediaIsMobile) || (mediaIsMobile && !demoMode)? (<Sidebar drawerPaperProps={{sx:{top: '65px', maxWidth: '20%',
+						padding: '40px'	}}} drawerButtonStyle={{top: '65px'}} sx={{ wordBreak: 'break-word'}}>
 				<TextField
 					label="WMS Url"
 					variant="standard"

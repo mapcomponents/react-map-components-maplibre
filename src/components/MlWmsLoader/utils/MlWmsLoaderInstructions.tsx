@@ -12,7 +12,7 @@ const steps = [
 			iconTransform: 'rotate(90deg)',
 			iconMarginTop: '-230px',
 			iconMarginLeft: '200px',
-			zIndex: 150
+			zIndex: 1210
 		},
 		content: (
 			<>
