@@ -31,7 +31,7 @@ const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, deci
 	return [x, y];
 };
 
-interface MlWmsLoaderProps {
+export interface MlWmsLoaderProps {
 	/**
 	 * WMS URL
 	 */
@@ -43,17 +43,17 @@ interface MlWmsLoaderProps {
 	/**
 	 * URL parameters that will be used in the getCapabilities request
 	 */
-	urlParameters: object;
+	urlParameters?: object;
 	/**
 	 * URL parameters that will be added when requesting WMS capabilities
 	 */
-	wmsUrlParameters: object;
+	wmsUrlParameters?: object;
 	/**
 	 * URL parameters that will be added when requesting tiles
 	 */
-	layerUrlParameters: object;
-	lngLat: LngLat;
-	idPrefix: string;
+	layerUrlParameters?: object;
+	lngLat?: LngLat;
+	idPrefix?: string;
 }
 
 /**
