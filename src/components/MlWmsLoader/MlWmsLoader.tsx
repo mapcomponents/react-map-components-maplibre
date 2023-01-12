@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
 import MlMarker from "../MlMarker/MlMarker";
 import MlLayer from "../MlLayer/MlLayer";
-import useWms from "../../hooks/useWms";
+import useWms, { useWmsProps } from "../../hooks/useWms";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -16,6 +16,8 @@ import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 import { LngLat } from "maplibre-gl";
 import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
+import { Layer2 } from "wms-capabilities";
+import { useWmsReturnType } from '../../hooks/useWms';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
@@ -43,19 +45,19 @@ export interface MlWmsLoaderProps {
 	/**
 	 * URL parameters that will be used in the getCapabilities request
 	 */
-	urlParameters?: object;
+	urlParameters?: useWmsProps['urlParameters'];
 	/**
 	 * URL parameters that will be added when requesting WMS capabilities
 	 */
-	wmsUrlParameters?: object;
-	/**
-	 * URL parameters that will be added when requesting tiles
-	 */
-	layerUrlParameters?: object;
+	wmsUrlParameters?: {[key: string]: string};
 	lngLat?: LngLat;
 	idPrefix?: string;
 }
 
+	export type LayerType = {
+		visible: boolean;
+		Name: string;
+	} & Layer2;
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
@@ -67,24 +69,14 @@ export interface MlWmsLoaderProps {
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	const mapContext: MapContextType = useContext(MapContext);
-	const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl }: any = useWms({
-		url: undefined,
+	const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl }:useWmsReturnType = useWms({
 		urlParameters: props.urlParameters,
 	});
-	let layerType: {
-		visible: boolean;
-		queryable: boolean;
-		Name: string;
-		Title: string;
-		LatLonBoundingBox: Array<number>;
-		EX_GeographicBoundingBox: Array<number>;
-		Abstract: any;
-	};
 
 	const initializedRef = useRef(false);
 	const mapRef = useRef<MapLibreGlWrapper>();
 	const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsLoader-") + uuidv4());
-	const [layers, setLayers] = useState<Array<typeof layerType>>([]);
+	const [layers, setLayers] = useState<Array<LayerType>>([]);
 
 	const [featureInfoLngLat, setFeatureInfoLngLat] = useState<{lng:number,lat:number} | undefined>();
 	const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
@@ -133,13 +125,13 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						: "text/plain",
 				FEATURE_COUNT: "10",
 				LAYERS: layers
-					.map((layer: typeof layerType) =>
-						layer.visible && layer.queryable ? layer.Name : undefined
+					.map((layer: LayerType ) =>
+						layer.visible && layer.queryable ? layer.Title : undefined
 					)
 					.filter((n) => n),
 				QUERY_LAYERS: layers
-					.map((layer: typeof layerType) =>
-						layer.visible && layer.queryable ? layer.Name : undefined
+					.map((layer: LayerType) =>
+						layer.visible && layer.queryable ? layer.Title : undefined
 					)
 					.filter((n) => n),
 				WIDTH: mapRef.current?.map._container.clientWidth,
@@ -168,7 +160,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			};
 			// create URLSearchParams object to assemble the URL Parameters
 			// "as any" can be removed once the URLSearchParams ts spec is fixed
-			const urlParams = new URLSearchParams(urlParamsObj as any);
+			const urlParams = new URLSearchParams(urlParamsObj as unknown as Record<string, string>);
 
 			fetch(props.url + "?" + urlParams.toString())
 				.then((res) => {
@@ -200,7 +192,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	useEffect(() => {
 		if (!capabilities?.Service) return;
 
-		if (capabilities?.Capability?.Layer?.SRS?.indexOf?.("EPSG:3857") === -1) {
+		if (capabilities?.Capability?.Layer?.CRS?.indexOf?.("EPSG:3857") === -1) {
 			console.log(
 				"MlWmsLoader (" + capabilities.Service.Title + "): No WGS 84/Pseudo-Mercator support"
 			);
@@ -211,15 +203,14 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 			let _LatLonBoundingBox: Array<number> = [];
 			setLayers(
-				capabilities?.Capability?.Layer?.Layer.map((layer: typeof layerType, idx: number) => {
+				capabilities?.Capability?.Layer?.Layer.map((layer: Layer2 & {Name:string}, idx: number) => {
 					if (idx === 0) {
-						_LatLonBoundingBox = layer.LatLonBoundingBox;
-						if (!_LatLonBoundingBox) {
-							_LatLonBoundingBox = layer.EX_GeographicBoundingBox;
-						}
+						_LatLonBoundingBox = layer.EX_GeographicBoundingBox;
 					}
-					layer.visible = capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true;
-					return layer;
+					return {
+						visible: capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true,
+						...layer
+					};
 				})
 			);
 
@@ -248,7 +239,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			{error && <p>{error}</p>}
 			<h3 key="title">{capabilities?.Service?.Title}</h3>
 			{console.log(componentId.current)}
-			{capabilities?.Capability?.Layer?.Layer.map((layer: any, idx: number) => (
+			{capabilities?.Capability?.Layer?.Layer.map((_layer: LayerType, idx: number) => (
 				<MlLayer
 					layerId={"Order-" + componentId.current + "-" + idx}
 					key={componentId.current + "-" + idx}
@@ -261,7 +252,9 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			))}
 			<List dense key="layers">
 				{wmsUrl &&
-					layers?.map?.((layer: typeof layerType, idx) => {
+					layers?.map?.((layer, idx) => {
+						console.log(layer);
+						
 						return layer?.Name ? (
 							<ListItem
 								key={layer.Name + idx}
@@ -270,7 +263,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 										edge="end"
 										aria-label="toggle visibility"
 										onClick={() => {
-											const _layers: Array<typeof layerType> = [...layers];
+											const _layers: Array<LayerType> = [...layers];
 											_layers[idx].visible = !_layers[idx].visible;
 											setLayers([..._layers]);
 										}}
@@ -294,7 +287,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 					})}
 			</List>
 			<p key="description" style={{ fontSize: ".7em" }}>
-				{capabilities?.Capability?.Layer?.Abstract}
+				{capabilities?.Capability?.Layer?.['Abstract']}
 			</p>
 
 			{featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}

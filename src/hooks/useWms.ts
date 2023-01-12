@@ -2,16 +2,24 @@ import { useState, useEffect } from "react";
 import WMSCapabilities, { WMSCapabilitiesJSON } from "wms-capabilities";
 
 export interface useWmsProps{
-	url:string;
+	url?:string;
 	urlParameters?:{[key: string]: string};
 }
 
-function useWms(props:useWmsProps) {
+export interface useWmsReturnType{
+		capabilities:WMSCapabilitiesJSON | null | undefined;
+		getFeatureInfoUrl:string | undefined;
+		wmsUrl:string | undefined;
+		error:string | undefined;
+		setUrl:(value:string|undefined) => void;
+}
+
+function useWms(props:useWmsProps):useWmsReturnType {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	const [getFeatureInfoUrl, setGetFeatureInfoUrl] = useState<string>();
 	const [url, setUrl] = useState(props.url);
 	const [wmsUrl, setWmsUrl] = useState("");
-	const [capabilities, setCapabilities] = useState<WMSCapabilitiesJSON | null>();
+	const [capabilities, setCapabilities] = useState<WMSCapabilitiesJSON | null | undefined>();
 	const [error, setError] = useState();
 
 	const clearState = () => {

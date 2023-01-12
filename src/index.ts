@@ -34,7 +34,7 @@ export { default as MlBasicComponent } from "./components/MlBasicComponent.js";
 export { default as useLayer } from "./hooks/useLayer";
 export { default as useMapState } from "./hooks/useMapState";
 export { default as useMap } from "./hooks/useMap";
-export { default as useWms } from "./hooks/useWms.js";
+export { default as useWms } from "./hooks/useWms";
 export { default as useSource } from "./hooks/useSource";
 export { default as useExportMap } from "./hooks/useExportMap";
 export { default as useCameraFollowPath } from "./hooks/useCameraFollowPath/useCameraFollowPath";
