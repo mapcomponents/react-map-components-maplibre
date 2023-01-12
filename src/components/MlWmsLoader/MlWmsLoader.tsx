@@ -19,8 +19,8 @@ import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
-	let lng = lnglat.lng;
-	let lat = lnglat.lat;
+	const lng = lnglat.lng;
+	const lat = lnglat.lat;
 	let x = (lng * originShift) / 180.0;
 	let y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360.0)) / (Math.PI / 180.0);
 	y = (y * originShift) / 180.0;
