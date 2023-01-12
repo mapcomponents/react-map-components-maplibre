@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import useMap from "../../hooks/useMap";
-import { Button } from "@mui/material";
+import { Button, SxProps, Theme } from "@mui/material";
 import	GpsFixedIcon	from "@mui/icons-material/GpsFixed";
 
-interface MlCenterPositionProps {
+export interface MlCenterPositionProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -24,7 +24,7 @@ interface MlCenterPositionProps {
 	/**
 	 * CSS style object that is applied to the button component
 	 */
-	style?: any;
+	style?: SxProps<Theme> | undefined;
 }
 
 /**
@@ -58,7 +58,7 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 					...props.style,
 				}}
 			 onClick={centerCurrentLocation} disabled={locationAccessDenied}>
-				<GpsFixedIcon sx={{ ...(props.style?.fontSize?{fontSize: props.style?.fontSize}:{}) }} />{" "}
+				<GpsFixedIcon sx={{ ...(props.style?.['fontSize']?{fontSize: props.style?.['fontSize']}:{}) }} />{" "}
 			</Button>
 	</>;
 
