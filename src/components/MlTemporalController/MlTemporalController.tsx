@@ -254,9 +254,14 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	//get min and max time value
 	useEffect(() => {
-		const neuMin = getMinVal(props.geojson, props.timeField);
+		if (!props.initialVal){
+			const neuMin = getMinVal(props.geojson, props.timeField);
 		setCurrentVal(neuMin > minVal ? neuMin : minVal);
-	}, [minVal, props.geojson, props.timeField]);
+		} else {
+			setCurrentVal(props.initialVal)
+		}
+		
+	}, [minVal, props.geojson, props.timeField, props.initialVal]);
 
 	// filter geojson
 	const filteredData = useMemo<FeatureCollection | undefined>(() => {

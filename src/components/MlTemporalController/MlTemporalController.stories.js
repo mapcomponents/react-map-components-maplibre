@@ -63,8 +63,6 @@ const Template = () => {
 
 	};
 
-
-
 	return (
 		<>
 			<TopToolbar>
@@ -85,6 +83,7 @@ const Template = () => {
 					fitBounds={true}
 					timeField={'africa_independency_year'}
 					labelField={'africa_independency_year'}
+					initialVal={1909}
 					onStateChange={setCurrent}
 					steps={5}
 					showControls={true}
