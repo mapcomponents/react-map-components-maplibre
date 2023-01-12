@@ -40,7 +40,7 @@
         "fileName": 1124,
         "framework": "react",
         "__id": "mapcomponents-mlcenterposition--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlcomponenttemplate--example-config": {
@@ -54,7 +54,7 @@
         "fileName": 1145,
         "framework": "react",
         "__id": "mapcomponents-mlcomponenttemplate--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlcreatepdfbutton--example-config": {
