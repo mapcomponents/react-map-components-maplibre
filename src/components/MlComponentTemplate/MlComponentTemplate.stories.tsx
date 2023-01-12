@@ -13,7 +13,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <MlComponentTemplate />;
+const Template = () => <MlComponentTemplate />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};

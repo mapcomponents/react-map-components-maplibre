@@ -3,7 +3,7 @@ import useMap from "../../hooks/useMap";
 import { Button } from "@mui/material";
 import	GpsFixedIcon	from "@mui/icons-material/GpsFixed";
 
-interface MlCenterPositionProps {
+export interface MlCenterPositionProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
