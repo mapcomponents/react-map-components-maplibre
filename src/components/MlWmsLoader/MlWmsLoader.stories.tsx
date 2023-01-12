@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState} from 'react';
 import MlWmsLoader from './MlWmsLoader';
 import { Button, TextField, useMediaQuery } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';

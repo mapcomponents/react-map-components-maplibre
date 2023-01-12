@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Box, Typography, Button, Divider, TextField, Grid, Fade, Paper } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
