@@ -17,12 +17,12 @@ import IconButton from "@mui/material/IconButton";
 import { LngLat } from "maplibre-gl";
 import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
 
-var originShift = (2 * Math.PI * 6378137) / 2.0;
+const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
-	var lng = lnglat.lng;
-	var lat = lnglat.lat;
-	var x = (lng * originShift) / 180.0;
-	var y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360.0)) / (Math.PI / 180.0);
+	let lng = lnglat.lng;
+	let lat = lnglat.lat;
+	let x = (lng * originShift) / 180.0;
+	let y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360.0)) / (Math.PI / 180.0);
 	y = (y * originShift) / 180.0;
 	if (accuracy.enable) {
 		x = Number(x.toFixed(accuracy.decimal));
@@ -90,7 +90,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
-		let _componentId = componentId.current;
+		const _componentId = componentId.current;
 
 		return () => {
 			// This is the cleanup function, it is called when this react component is removed from react-dom
@@ -118,11 +118,11 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			if (!mapRef.current) return;
 			setFeatureInfoLngLat(undefined);
 			setFeatureInfoContent(undefined);
-			let _bounds = mapRef.current.map.getBounds();
-			let _sw = lngLatToMeters(_bounds._sw);
-			let _ne = lngLatToMeters(_bounds._ne);
-			let bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
-			let _getFeatureInfoUrlParams = {
+			const _bounds = mapRef.current.map.getBounds();
+			const _sw = lngLatToMeters(_bounds._sw);
+			const _ne = lngLatToMeters(_bounds._ne);
+			const bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
+			const _getFeatureInfoUrlParams = {
 				REQUEST: "GetFeatureInfo",
 
 				BBOX: bbox.join(","),
@@ -160,15 +160,15 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				_gfiUrlParts = props.url.split("?");
 				_gfiUrl = _gfiUrlParts[0];
 			}
-			let _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
+			const _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
 
-			let urlParamsObj = {
+			const urlParamsObj = {
 				...Object.fromEntries(_urlParamsFromUrl),
 				..._getFeatureInfoUrlParams,
 			};
 			// create URLSearchParams object to assemble the URL Parameters
 			// "as any" can be removed once the URLSearchParams ts spec is fixed
-			let urlParams = new URLSearchParams(urlParamsObj as any);
+			const urlParams = new URLSearchParams(urlParamsObj as any);
 
 			fetch(props.url + "?" + urlParams.toString())
 				.then((res) => {
@@ -270,7 +270,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 										edge="end"
 										aria-label="toggle visibility"
 										onClick={() => {
-											let _layers: Array<typeof layerType> = [...layers];
+											const _layers: Array<typeof layerType> = [...layers];
 											_layers[idx].visible = !_layers[idx].visible;
 											setLayers([..._layers]);
 										}}
