@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Fade from '@mui/material/Fade';
+import {Fade, SxProps} from '@mui/material';
 import BubbleStyle from './BubbleForInstructions';
 
 interface StepObject {
 	duration: number;
-	props: any;
-	content: any;
+	props: SxProps;
+	content: JSX.Element;
 }
 
 interface InstructionProps {
