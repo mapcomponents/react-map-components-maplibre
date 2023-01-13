@@ -8,6 +8,7 @@ const bubbleBottomRightStyle = {
 	textMarginLeft: '120px',
 	iconTransform: 'rotate(180deg)',
 	iconMarginLeft: '200px',
+	zIndex: 200
 };
 
 const steps = [
@@ -16,7 +17,7 @@ const steps = [
 			props: {
 				...bubbleBottomRightStyle,
 				iconMarginTop: '43px',
-			},
+							},
 			content: (
 				<>
 					You can load your <br />
@@ -48,6 +49,7 @@ const steps = [
 				iconTransform: 'rotate(90deg)',
 				iconMarginTop: '-135px',
 				iconMarginLeft: '280px',
+				zIndex: 400
 			},
 			content: (
 				<>

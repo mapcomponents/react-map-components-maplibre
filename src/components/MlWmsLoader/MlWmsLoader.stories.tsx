@@ -49,16 +49,14 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 				<Button
 					variant="contained"
 					onClick={openGuide}
-					color={guide ? 'primary' : 'inherit'}
-					sx={{ color: guide ? 'white' : 'steelblue' }}
+					sx={{ marginRight: '10px' }}
 				>
 					Guide me through
 				</Button>
 				<Button
 					variant="contained"
 					onClick={() => setDemoMode(!demoMode)}
-					color={demoMode ? 'primary' : 'inherit'}
-					sx={{ color: demoMode ? 'white' : 'steelblue' }}
+					
 				>
 					Demo WMS
 				</Button>
