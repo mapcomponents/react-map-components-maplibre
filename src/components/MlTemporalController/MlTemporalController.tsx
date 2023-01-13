@@ -16,7 +16,7 @@ import {
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
-import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
+
 
 
 interface MlTemporalControllerProps {

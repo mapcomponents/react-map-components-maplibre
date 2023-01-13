@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import { Drawer, Typography, List, ListItem } from '@mui/material';
+import React, { useState } from 'react';
+import { Drawer, Typography, List, ListItem, Collapse, IconButton, Grid, Box } from '@mui/material';
 
 import useCreateWidget from './createWidget';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ExpandMore, ExpandLess } from '@mui/icons-material';
 
-interface userControlsProps {
+export interface userControlsProps {
 	showOptions: boolean;
 	step: number;
 	minVal: number;
@@ -30,6 +30,14 @@ interface userControlsProps {
 	setLabelFadeOut: Function;
 	accumulate: boolean;
 	setAccumulate: Function;
+}
+
+interface optionsList {
+	id: number;
+	targetProp: string;
+	type: string;
+	setter: () => void;
+	max: number;
 }
 
 export default function UserControls(props: userControlsProps) {
@@ -57,13 +65,20 @@ export default function UserControls(props: userControlsProps) {
 		{ id: 9, targetProp: 'step', type: 'numberfield', setter: props.setStep, max: 0 },
 	];
 
-	const accordions = [
+	const sections = [
 		{ key: 'Features', list: featuresOptionsList },
 		{ key: 'Labels', list: labelsOptionsList },
 		{ key: 'Player', list: playerOptionsList },
+	];
+	const [expanded, setExpanded] = useState('');
 
-
-	];const [expanded, setExpanded] = useState('panel1');
+	const handleExpander = (str: string) => {
+		if (str === expanded) {
+			setExpanded('');
+		} else {
+			setExpanded(str);
+		}
+	};
 
 	/*
 	const handleChange = (panel: string) => (event, newExpanded) => {
@@ -73,38 +88,46 @@ export default function UserControls(props: userControlsProps) {
 	function Sublists(): JSX.Element {
 		return (
 			<>
-				{accordions.map((el, index) => {
-
-
+				{sections.map((el) => {
 					return (
 						<>
-							<Accordion key={index}
-							 //expanded={expanded === 'panel1'} onChange={handleChange('panel'+ (index+1))}
-								sx={{width: '100%'}} 
-								onClick={(ev)=>ev.preventDefault() }>
-								<AccordionSummary key={index} 
-								 expandIcon={<ExpandMoreIcon />}
-								>
-									<Typography> {el.key} </Typography>
-								</AccordionSummary>
-								<AccordionDetails>
-									<List>
-										{el.list.map((el) => {
-											return (
-												<ListItem
-													key={el.id}
-													sx={{
-														boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
-														borderRadius: '5px',
-													}}
-												>
-													{useCreateWidget(el.type, el.targetProp, el.setter, el.max, props)}
-												</ListItem>
-											);
-										})}
-									</List>
-								</AccordionDetails>
-							</Accordion>
+						
+								<Grid container sx={{padding: '20px'}}>
+									<Grid item xs={10}>
+										<Typography> {el.key} </Typography>
+									</Grid>
+									<Grid item xs={2}>
+										<IconButton onClick={() => handleExpander(el.key)}>
+											{expanded === el.key ? <ExpandLess /> : <ExpandMore />}
+										</IconButton>
+									</Grid>
+									<Grid item xs={12}>
+										<List>
+											{el.list.map((element: optionsList) => {
+												return (
+													<Collapse in={expanded === el.key}>
+														<ListItem
+															key={element.id}
+															sx={{
+																boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
+																borderRadius: '5px',
+															}}
+														>
+															{useCreateWidget(
+																element.type,
+																element.targetProp,
+																element.setter,
+																element.max,
+																props
+															)}
+														</ListItem>
+													</Collapse>
+												);
+											})}
+										</List>
+									</Grid>
+								</Grid>
+						
 						</>
 					);
 				})}
@@ -126,7 +149,6 @@ export default function UserControls(props: userControlsProps) {
 					alignItems: 'center',
 					marginLeft: '4%',
 					marginBottom: '80px',
-					
 				},
 			}}
 		>
@@ -134,4 +156,3 @@ export default function UserControls(props: userControlsProps) {
 		</Drawer>
 	);
 }
-

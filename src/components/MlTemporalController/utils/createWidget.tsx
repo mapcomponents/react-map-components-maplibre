@@ -1,5 +1,5 @@
 import React from 'react';
-import { Slider, Typography, TextField, Checkbox } from '@mui/material';
+import { Slider, Typography, TextField, Checkbox, Grid } from '@mui/material';
 import { ColorPicker } from 'mui-color';
 
 export default function useCreateWidget(
@@ -20,18 +20,23 @@ export default function useCreateWidget(
 			case 'slider':
 				return (
 					<>
-						{label}
-						<Slider
-							{...props[targetProp]}
-							size={'small'}
-							inputMode={'decimal'}
-							value={props[targetProp]}
-							max={max}
-							onChange={(ev: any) => {
-								setter(ev.target?.value);
-							}}
-						/>
-						<Typography> {props[targetProp]} </Typography>
+						<Grid container spacing={1}>
+							<Grid item md={3}>{label}</Grid>
+							<Grid item md={7}>
+								<Slider
+									size={'small'}
+									inputMode={'decimal'}
+									value={props[targetProp]}
+									max={max}
+									onChange={(ev: any) => {
+										setter(ev.target?.value);
+									}}
+								/>
+							</Grid>
+							<Grid item md={2} >
+								<Typography> {props[targetProp]} </Typography>
+							</Grid>
+						</Grid>
 					</>
 				);
 				break;
