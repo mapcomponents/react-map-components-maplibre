@@ -43,10 +43,13 @@ const Template = () => {
 	const handleClick1 = () => {
 		setDemoLoaderOpen(!demoLoaderOpen);
 	};
+
 	const handleClick2 = () => {
 		setGuide(true);
+		setTimeout(() => {
+			setGuide(false);
+		}, 9000);
 	};
-
 	useEffect(() => {
 		if (!mapHook.map) return;
 		if (mapHook.map.map.getPitch() != 60) {
@@ -57,14 +60,8 @@ const Template = () => {
 	return (
 		<>
 			<TopToolbar>
-				<MlGpxViewerInstructions
-					open={guide}
-					callback={() => {
-						setGuide(false);
-					}}
-				/>
+				<MlGpxViewerInstructions open={guide} />
 				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
-					{' '}
 					Guide me through
 				</Button>
 				<Button variant="contained" onClick={handleClick1}>

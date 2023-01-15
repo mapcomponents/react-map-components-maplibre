@@ -21,7 +21,7 @@ const decorators = [
 						mapId="map_1"
 					/>
 					<MlNavgiationTools
-						sx={{ top: "10px", right: "5px" }}
+						sx={{ bottom: "25px", right: 0 }}
 						showZoomButtons={false}
 						mapId="map_1"
 					/>

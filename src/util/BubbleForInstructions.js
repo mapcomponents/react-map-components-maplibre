@@ -16,6 +16,7 @@ function BubbleForInstruction(props) {
 					bottom: props.bubbleBottom,
 					left: props.bubbleLeft,
 					top: props.bubbleTop,
+					zIndex: props.zIndex
 				}}
 			>
 				<h2

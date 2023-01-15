@@ -47,23 +47,18 @@ const Template = () => {
 
 	return (
 		<>
-			<TopToolbar>
-				<MlGpxViewerInstructions
-					open={guide}
-					callback={() => {
-						setGuide(false);
-					}}
-				/>
+		<MlGpxViewerInstructions open={guide} />
+		<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
+			<TopToolbar appBarStyle={{ zIndex: 500 }}>
 				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
-					{' '}
 					Guide me through
 				</Button>
 				<Button variant="contained" onClick={handleClick1}>
 					Demo Mode
 				</Button>
 			</TopToolbar>
-			<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
-
+			
+			
 			<div
 				style={{
 					position: 'fixed',

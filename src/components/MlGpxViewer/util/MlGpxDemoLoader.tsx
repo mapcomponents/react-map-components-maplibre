@@ -51,7 +51,7 @@ const samples = [
 	},
 	{
 		name: 'treckking.gpx',
-		path: 'assets/sample2.gpx',
+		path: 'assets/sample3.gpx',
 	},
 ];
 /**

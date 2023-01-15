@@ -1,13 +1,26 @@
 import { useState, useEffect } from "react";
-import WMSCapabilities from "wms-capabilities";
+import WMSCapabilities, { WMSCapabilitiesJSON } from "wms-capabilities";
 
-function useWms(props) {
+export interface useWmsProps{
+	url?:string;
+	urlParameters?:{[key: string]: string};
+}
+
+export interface useWmsReturnType{
+		capabilities:WMSCapabilitiesJSON | null | undefined;
+		getFeatureInfoUrl:string | undefined;
+		wmsUrl:string | undefined;
+		error:string | undefined;
+		setUrl:(value:string|undefined) => void;
+}
+
+function useWms(props:useWmsProps):useWmsReturnType {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-	const [getFeatureInfoUrl, setGetFeatureInfoUrl] = useState(undefined);
+	const [getFeatureInfoUrl, setGetFeatureInfoUrl] = useState<string>();
 	const [url, setUrl] = useState(props.url);
 	const [wmsUrl, setWmsUrl] = useState("");
-	const [capabilities, setCapabilities] = useState(undefined);
-	const [error, setError] = useState(undefined);
+	const [capabilities, setCapabilities] = useState<WMSCapabilitiesJSON | null | undefined>();
+	const [error, setError] = useState();
 
 	const clearState = () => {
 		setGetFeatureInfoUrl(undefined);
@@ -29,16 +42,16 @@ function useWms(props) {
 			_propsUrlParams = url.split("?");
 			_wmsUrl = _propsUrlParams[0];
 		}
-		let _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
+		const _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
 
-		let urlParamsObj = {
+		const urlParamsObj = {
 			...Object.fromEntries(_urlParamsFromUrl),
 			...props.urlParameters,
 		};
 		// create URLSearchParams object to assemble the URL Parameters
-		let urlParams = new URLSearchParams(urlParamsObj);
+		const urlParams = new URLSearchParams(urlParamsObj);
 
-		let urlParamsStr =
+		const urlParamsStr =
 			decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
 
 		fetch(_wmsUrl + "?" + urlParamsStr)
@@ -49,8 +62,8 @@ function useWms(props) {
 					return res.text();
 				}
 			})
-			.then((data) => {
-				setCapabilities(new WMSCapabilities(data).toJSON());
+			.then((data:string) => {
+				setCapabilities(new WMSCapabilities(data, window.DOMParser).toJSON());
 			})
 			.catch((error) => {
 				//reset local state

@@ -33,12 +33,14 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 			var self = this;
 			this.layers = [];
 			this.sources = [];
+			this.style = { sourceCaches: {} };
 
 			let styleFunctions = {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				addSource: (id, source) => {
 					if (typeof id.id !== 'undefined') {
 						self.sources.push(id);
+						self.style.sourceCaches[id] = {};
 					} else if (typeof id !== 'undefined') {
 						self.sources.push(id);
 					}
@@ -53,6 +55,7 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 					const sourcePosition = self.sources.indexOf(id);
 					if (sourcePosition !== -1) {
 						self.sources.splice(sourcePosition, 1);
+						delete self.style.sourceCaches[id];
 					}
 				},
 				addLayer: (layer) => {
