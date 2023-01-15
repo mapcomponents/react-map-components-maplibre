@@ -212,7 +212,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 			// collect aueriable Layer2 layers
 			let _layers: LayerType[] = capabilities?.Capability?.Layer?.Layer.filter(
-				(el) => el.queryable
+				(el) => el.CRS.length
 			).map((layer: Layer2 & { Name: string }, idx: number) => {
 				if (idx === 0) {
 					_LatLonBoundingBox = layer.EX_GeographicBoundingBox;
@@ -226,7 +226,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 			// collect aueriable Layer3 layers
 			capabilities?.Capability?.Layer?.Layer.forEach((el) => {
-				const tmpLayers = el?.Layer?.filter((el) => el.queryable).map(
+				const tmpLayers = el?.Layer?.filter((el) => el.CRS.length).map(
 					(layer: Layer3, idx: number) => {
 						if (idx === 0) {
 							_LatLonBoundingBox = layer.EX_GeographicBoundingBox;
@@ -306,6 +306,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						layers: layers
 							?.filter?.((layer) => layer.visible)
 							.map((el) => el.Name)
+							.reverse()
 							.join(','),
 					}}
 				/>
