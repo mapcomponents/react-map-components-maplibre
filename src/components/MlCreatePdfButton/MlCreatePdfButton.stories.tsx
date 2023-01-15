@@ -15,7 +15,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => (
+const Template = () => (
 	<TopToolbar>
 		<MlCreatePdfButton />
 	</TopToolbar>
