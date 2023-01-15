@@ -1,6 +1,31 @@
 # Change Log
 
 
+## [v0.1.64] - 2023-01-15
+
+### Fixed
+- eb4f4ef: Improve MapLibreGlWrapper, MlGeoJsonLayer, useLayer typescript definitions
+- e4bf4a7: fix mui themes in storybook
+- 5c3cd9a: make MlWmsLayer urlParameters property dynamic 
+- 5c3cd9a: make MlWmsLoader WMS utilization more efficient by using a single MlWmsLayer component to render all visible WMS layers
+
+### Added
+- 5b9f424: add catalogue metadata json schema check github action
+- ae0aa98: add missing geojson layer types (support all 'type' types for MlGeojsonLayer)
+- ae0aa98: add circle & Heatmap stories for MlGeoJsonLayer
+- 20fa873: Feature/optimize ml spatial elevation profile (#49) …
+- 20fa873: add useGpx hook
+- 20fa873: add Dropzone Component
+- 20fa873: add useLayerHoverPopup hook
+
+### Changed
+- fff236b: migrate MlLayermagnify MlLayerSwipe stories & tests to typescript
+- 20fa873: refactor MlSpatialElevationProfile & MlGpxViewer
+- 20fa873: optimize MlSpatialElevationProfile story
+- 3e30778: migrate MlCenterPos & MlComponentTemplate to typescript
+- 80f777d: add loading spinner to MlCreatePdfForm
+- 5c3cd9a: optimize MlWmsLoader story 
+
 ## [v0.1.63] - 2022-12-16
 
 ### Fixed
@@ -12,8 +37,8 @@
 
 
 ### Changed
-- 4e6ad8e: merge feature/ml geojson demo optimization (#45) 
-- 36f3ee8: merge feature/ml gpx viewer demo optimization (#46) 
+- 4e6ad8e: MlGeojsonLayer story optimization (#45) 
+- 36f3ee8: MlGpxViewer story optimization (#46) 
 - e2af70a: refactor TopToolBar component
 - f820006: refactor Sidebar component
 - 4038777: update d3 & maplibre-gl dependencies
