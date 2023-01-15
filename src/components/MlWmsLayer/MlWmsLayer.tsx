@@ -140,7 +140,7 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 	}, [createLayer]);
 
 	useEffect(() => {
-		if (!mapHook.map || !initializedRef.current) return;
+		if (!mapHook.map || !mapHook.map?.map?.style?.sourceCaches?.[layerId.current] || !initializedRef.current) return;
 
 		const source = mapHook.map.map.getSource(layerId.current) as RasterSourceSpecification;
 		source.tiles = [tileUrl];
