@@ -212,7 +212,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 			// collect aueriable Layer2 layers
 			let _layers: LayerType[] = capabilities?.Capability?.Layer?.Layer.filter(
-				(el) => el.CRS.length
+				(el) => !el.Layer?.length
 			).map((layer: Layer2 & { Name: string }, idx: number) => {
 				if (idx === 0) {
 					_LatLonBoundingBox = layer.EX_GeographicBoundingBox;

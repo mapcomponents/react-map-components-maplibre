@@ -59,8 +59,8 @@ const Template = () => {
 
 	return (
 		<>
-			<TopToolbar>
 				<MlGpxViewerInstructions open={guide} />
+			<TopToolbar appBarStyle={{ zIndex: 500 }}>
 				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
 					Guide me through
 				</Button>
@@ -73,8 +73,8 @@ const Template = () => {
 			<div
 				style={{
 					position: 'fixed',
-					right: '5px',
-					bottom: mediaIsMobile ? '40px' : '25px',
+					right: '11px',
+					bottom: mediaIsMobile ? '230px' : '145px',
 					display: 'flex',
 					flexDirection: 'column',
 					gap: '5px',

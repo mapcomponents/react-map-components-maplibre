@@ -62,8 +62,8 @@ const Template = () => {
 			<div
 				style={{
 					position: 'fixed',
-					right: '5px',
-					bottom: mediaIsMobile ? '40px' : '25px',
+					right: '11px',
+					bottom: mediaIsMobile ? '230px' : '145px',
 					display: 'flex',
 					flexDirection: 'column',
 					gap: '5px',
