@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-
 import MlTemporalController from './MlTemporalController';
-
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { Box, Typography, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
+import african_independency from './assets/african_independency.json';
+import earthq_5plus from './assets/earthq_5plus.json';
+import jakobsweg from './assets/jakobsweg.json';
 
 const sampleCircle = {
 	path: 'earthq_5plus.json',
@@ -42,78 +43,120 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = () => {
-	const [data, setData] = useState();
-	const [current, setCurrent] = useState();
-	const [selected, setSelected] = useState("african_independency");
-
-
-	useEffect(() => {
-		fetch('assets/african_independency.json')
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (json) {
-				setData(json);
-			});
-	}, []);
-
-	const handleChange = (e) => {
-		setSelected(e.target.value);
-
-	};
-
-	return (
-		<>
-			<TopToolbar>
-				<Select id="demo-select" value={selected} label="Selct demo: " onChange={handleChange}>
-					<MenuItem value={'earthq_5plus'}>Ten</MenuItem>
-					<MenuItem value={"african_independency"}>Twenty</MenuItem>
-					<MenuItem value={"linestring"}>Thirty</MenuItem>
-				</Select>
-			</TopToolbar>
-			
-			
-			{ data && (
-				<MlTemporalController
-					geojson={data}
-					mapId={'map_1'}
-					accumulate={true}
-					type={'fill'}
-					fitBounds={true}
-					timeField={'africa_independency_year'}
-					labelField={'africa_independency_year'}
-					initialVal={1909}
-					onStateChange={setCurrent}
-					steps={5}
-					showControls={true}
-				/>
-			)}
-			
-			{typeof current === 'number' && (
+const TimeDisplay = (props) => {
+	if (typeof props.value === 'number') {
+		return (
+			<>
 				<Box
 					sx={{
 						position: 'absolute',
 						zIndex: 500,
-						top: '15%',
-						left: '5%',
-						width: 120,
-						height: 60,
+						top: '20%',
+						width: '120px',
+						height: '60px',
 						backgroundColor: 'white',
 						alignContent: 'center',
 					}}
 				>
-					<Typography variant="h3">{Math.floor(current)}</Typography>
+					<Typography variant="h3">{Math.floor(props.value)}</Typography>
 				</Box>
-			)}
+			</>
+		);
+	} else {
+		return <></>;
+	}
+};
+
+const FillTemplate = (props) => {
+	const [current, setCurrent] = useState();
+
+	return (
+		<>
+		<TopToolbar>
+				<Typography variant="h6" color={'ButtonText'}>
+				African countries by independecy year.
+			</Typography>
+			</TopToolbar>
+			<MlTemporalController {...props} onStateChange={setCurrent} />
+			<TimeDisplay value={current} />
 		</>
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+const CircleTemplate = (props) => {
+	const [current, setCurrent] = useState();
 
-/*
+	return (
+		<>
+			<TopToolbar>
+				<Typography variant="h6" color={'ButtonText'}>
+				Earthquakes with 5 or more magnitude in the mediterranean area.
+			</Typography>
+			</TopToolbar>
+			
+			<MlTemporalController {...props} onStateChange={setCurrent} />
+			<TimeDisplay value={current} />
+		</>
+	);
+};
 
-*/
+const LineTemplate = (props) => {
+	const [current, setCurrent] = useState();
+
+	return (
+		<>
+		<TopToolbar>
+				<Typography variant="h6" color={'ButtonText'}>
+				The French Way of Saint James by stage number.
+			</Typography>
+			</TopToolbar>
+			<MlTemporalController {...props} onStateChange={setCurrent} />
+			<TimeDisplay value={current} />
+		</>
+	);
+};
+
+export const FillConfig = FillTemplate.bind({});
+FillConfig.parameters = {};
+FillConfig.args = {
+	geojson: african_independency,
+
+	path: 'african_independency.json',
+	timeField: 'africa_independency_year',
+	type: 'fill',
+	labelField: 'africa_independency_year',
+	accumulate: true,
+	steps: 1,
+	initialVal: 1904,
+	fitBounds: true,
+	showControls: true,
+};
+
+export const CircleConfig = CircleTemplate.bind({});
+CircleConfig.parameters = {};
+CircleConfig.args = {
+	geojson: earthq_5plus,
+	mapId: 'map_1',
+	timeField: 'Year',
+	type: 'circle',
+	labelField: 'LocationName',
+	accumulate: false,
+	steps: 1,
+	minVal: 1900,
+	fitBounds: true,
+	showControls: true,
+};
+
+export const LineConfig = LineTemplate.bind({});
+LineConfig.parameters = {};
+LineConfig.args = {
+	geojson: jakobsweg,
+	mapId: 'map_1',
+	timeField: 'stage',
+	type: 'line',
+	labelField: 'name',
+	accumulate: true,	
+	steps: 1,
+	fitBounds: true,
+	showControls: true	
+};
