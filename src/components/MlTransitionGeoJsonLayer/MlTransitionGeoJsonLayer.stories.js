@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import MlTransitionGeoJsonLayer from "./MlTransitionGeoJsonLayer";
 
@@ -7,9 +7,8 @@ import useMap from "../../hooks/useMap";
 
 import sample_geojson_1 from "./assets/sample_1.json";
 import sample_geojson_2 from "./assets/sample_2.json";
-import sample_polygon_geojson_1 from "./assets/sample_polygon_1.json";
 
-console.log(sample_polygon_geojson_1);
+
 const storyoptions = {
 	title: "MapComponents/MlTransitionGeoJsonLayer",
 	component: MlTransitionGeoJsonLayer,

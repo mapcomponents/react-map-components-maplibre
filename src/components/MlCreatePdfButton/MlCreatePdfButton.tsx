@@ -6,7 +6,7 @@ import createPdf from "./lib/createPdf";
 import PrinterIcon from "@mui/icons-material/Print";
 import Button from "@mui/material/Button";
 
-interface MlCreatePdfButtonProps {
+export interface MlCreatePdfButtonProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */

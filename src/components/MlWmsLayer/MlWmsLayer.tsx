@@ -1,22 +1,23 @@
-import React, { useRef, useEffect, useCallback } from "react";
-import useMap from "../../hooks/useMap";
+import React, { useMemo, useRef, useEffect, useCallback } from 'react';
+import useMap from '../../hooks/useMap';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import { RasterLayerSpecification, RasterSourceSpecification } from 'maplibre-gl';
 
 const defaultProps = {
 	visible: true,
 	urlParameters: {
-		bbox: "{bbox-epsg-3857}",
-		format: "image/png",
-		service: "WMS",
-		version: "1.1.1",
-		request: "GetMap",
-		srs: "EPSG:3857",
+		bbox: '{bbox-epsg-3857}',
+		format: 'image/png',
+		service: 'WMS',
+		version: '1.1.1',
+		request: 'GetMap',
+		srs: 'EPSG:3857',
 		width: 256,
 		height: 256,
-		styles: "",
+		styles: '',
 	},
-	attribution: "",
+	attribution: '',
 	sourceOptions: {
 		minZoom: 0,
 		maxZoom: 20,
@@ -28,13 +29,13 @@ const defaultProps = {
 };
 
 interface MlWmsLayerProps {
-	urlParameters?: any;
+	urlParameters?: { [key: string]: string };
 	url: string;
 	visible?: boolean;
 	attribution?: string;
 	mapId?: string;
-	sourceOptions?: any;
-	layerOptions?: any;
+	sourceOptions?: RasterSourceSpecification;
+	layerOptions?: RasterLayerSpecification;
 	insertBeforeLayer?: string;
 	layerId?: string;
 }
@@ -61,7 +62,28 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 	});
 
 	const initializedRef = useRef(false);
-	const layerId = useRef(props.layerId || "MlWmsLayer-" + mapHook.componentId);
+	const layerId = useRef(props.layerId || 'MlWmsLayer-' + mapHook.componentId);
+
+	const tileUrl = useMemo(() => {
+		let _propsUrlParams;
+		let _wmsUrl = props.url;
+		if (props.url.indexOf('?') !== -1) {
+			_propsUrlParams = props.url.split('?');
+			_wmsUrl = _propsUrlParams[0];
+		}
+		const _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
+		// first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
+		const urlParamsObj = {
+			...defaultProps.urlParameters,
+			...Object.fromEntries(_urlParamsFromUrl),
+			...props.urlParameters,
+		};
+		const urlParams = new URLSearchParams(urlParamsObj as unknown as Record<string, string>);
+		const urlParamsStr =
+			decodeURIComponent(urlParams.toString()) + ''.replace(/%2F/g, '/').replace(/%3A/g, ':');
+
+		return _wmsUrl + '?' + urlParamsStr;
+	}, [props.urlParameters, props.url]);
 
 	const createLayer = useCallback(() => {
 		if (!mapHook.map) return;
@@ -72,29 +94,12 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 			mapHook.cleanup();
 		}
 
-		let _propsUrlParams;
-		let _wmsUrl = props.url;
-		if (props.url.indexOf("?") !== -1) {
-			_propsUrlParams = props.url.split("?");
-			_wmsUrl = _propsUrlParams[0];
-		}
-		let _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
-		// first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
-		let urlParamsObj = {
-			...defaultProps.urlParameters,
-			...Object.fromEntries(_urlParamsFromUrl),
-			...props.urlParameters,
-		};
-		let urlParams = new URLSearchParams(urlParamsObj);
-		let urlParamsStr =
-			decodeURIComponent(urlParams.toString()) + "".replace(/%2F/g, "/").replace(/%3A/g, ":");
-
 		mapHook.map.addSource(
 			layerId.current,
 			{
-				type: "raster",
-				tiles: [_wmsUrl + "?" + urlParamsStr],
-				tileSize: urlParamsObj.width,
+				type: 'raster',
+				tiles: [tileUrl],
+				tileSize: 256,
 				attribution: props.attribution,
 				...props.sourceOptions,
 			},
@@ -104,7 +109,7 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 		mapHook.map.addLayer(
 			{
 				id: layerId.current,
-				type: "raster",
+				type: 'raster',
 				source: layerId.current,
 				...props.layerOptions,
 			},
@@ -114,19 +119,19 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 
 		// recreate layer if map style.json has changed
 		mapHook.map.on(
-			"styledata",
+			'styledata',
 			() => {
 				if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
-					console.log("Recreate Layer " + layerId.current);
+					console.log('Recreate Layer ' + layerId.current);
 					createLayer();
 				}
 			},
 			mapHook.componentId
 		);
 		if (!props.visible) {
-			mapHook.map.map.setLayoutProperty(layerId.current, "visibility", "none");
+			mapHook.map.map.setLayoutProperty(layerId.current, 'visibility', 'none');
 		}
-	}, [mapHook.map, props]);
+	}, [mapHook.map, props, tileUrl]);
 
 	useEffect(() => {
 		if (initializedRef.current) return;
@@ -135,13 +140,26 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 	}, [createLayer]);
 
 	useEffect(() => {
+		if (!mapHook.map || !mapHook.map?.map?.style?.sourceCaches?.[layerId.current] || !initializedRef.current) return;
+
+		const source = mapHook.map.map.getSource(layerId.current) as RasterSourceSpecification;
+		source.tiles = [tileUrl];
+
+		mapHook.map.map.style.sourceCaches[layerId.current].clearTiles();
+
+		mapHook.map.map.style.sourceCaches[layerId.current].update(mapHook.map.map.transform);
+
+		mapHook.map.map.triggerRepaint();
+	}, [mapHook.map, tileUrl]);
+
+	useEffect(() => {
 		if (!mapHook.map || !initializedRef.current) return;
 
 		// toggle layer visibility by changing the layout object's visibility property
 		if (props.visible) {
-			mapHook.map.map.setLayoutProperty(layerId.current, "visibility", "visible");
+			mapHook.map.map.setLayoutProperty(layerId.current, 'visibility', 'visible');
 		} else {
-			mapHook.map.map.setLayoutProperty(layerId.current, "visibility", "none");
+			mapHook.map.map.setLayoutProperty(layerId.current, 'visibility', 'none');
 		}
 	}, [props.visible, mapHook.map]);
 

@@ -1,23 +1,23 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 
 import useLayer from '../../hooks/useLayer';
-import useMap from '../../hooks/useMap';
 
 import { v4 as uuidv4 } from 'uuid';
 
 import getDefaultPaintPropsByType from './util/getDefaultPaintPropsByType';
 import getDefaulLayerTypeByGeometry from './util/getDefaultLayerTypeByGeometry';
 import { Feature, FeatureCollection } from '@turf/turf';
+import { useLayerProps } from '../../hooks/useLayer';
 
 import {
 	LineLayerSpecification,
 	CircleLayerSpecification,
 	FillLayerSpecification,
-	MapLayerMouseEvent,
 	LayerSpecification,
+	RasterLayerSpecification,
 } from 'maplibre-gl';
 
-type MlGeoJsonLayerProps = {
+export type MlGeoJsonLayerProps = {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -39,35 +39,41 @@ type MlGeoJsonLayerProps = {
 	geojson: Feature | FeatureCollection | undefined;
 	/**
 	 * Type of the layer that will be added to the MapLibre instance.
-	 * Possible values: "line", "circle", "fill"
+	 * All types from LayerSpecification union type are supported except the type from
+	 * RasterLayerSpecification
 	 */
-	type?: 'fill' | 'line' | 'circle';
+	type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
 	/**
 	 * Paint property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
+	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+	 * Some examples are:
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+	 * All paint types from LayerSpecification union type are supported except the paint type from
+	 * RasterLayerSpecification
 	 */
-	paint?:
-		| CircleLayerSpecification['paint']
-		| FillLayerSpecification['paint']
-		| LineLayerSpecification['paint'];
+
+	paint?: Exclude<LayerSpecification['paint'], RasterLayerSpecification['paint']>;
 	/**
 	 * Layout property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
+	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+	 * Some examples are:
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+	 * All layout types from LayerSpecification union type are supported except the layout type from
+	 * RasterLayerSpecification
+
 	 */
-	layout?:
-		| CircleLayerSpecification['layout']
-		| FillLayerSpecification['layout']
-		| LineLayerSpecification['layout'];
+	layout?: Exclude<LayerSpecification['layout'], RasterLayerSpecification['layout']>;
+
 	/**
 	 * Javascript object that is spread into the addLayer commands first parameter.
 	 */
-	options?: CircleLayerSpecification | FillLayerSpecification | LineLayerSpecification;
+	options?: Exclude<LayerSpecification, RasterLayerSpecification>;
 	/**
 	 * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
 	 */
@@ -79,20 +85,20 @@ type MlGeoJsonLayerProps = {
 	/**
 	 * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
 	 */
-	onHover?: MapLayerMouseEvent;
+	onHover?: useLayerProps['onHover'];
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is clicked.
 	 */
-	onClick?: MapLayerMouseEvent;
+	onClick?: useLayerProps['onClick'];
 	/**
 	 * Leave event handler that is executed whenever a geometry rendered by this component is
 	 * left/unhovered.
 	 */
-	onLeave?: MapLayerMouseEvent;
+	onLeave?: useLayerProps['onLeave'];
 };
 
 /**
- * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
+ * Adds source and layer to display GeoJSON data on the map.
  *
  * @component
  */
@@ -115,21 +121,6 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		onClick: props.onClick,
 		onLeave: props.onLeave,
 	});
-
-	const mapHook = useMap({
-		mapId: props.mapId,
-		waitForLayer: props.insertBeforeLayer,
-	});
-
-	const initializedRef = useRef(false);
-
-	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-		// the MapLibre-gl instance (mapHook.map) is accessible here
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
-		initializedRef.current = true;
-
-	}, [mapHook.map, props.mapId]);
 
 	return <></>;
 };

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import useMap from "../../hooks/useMap";
 
-interface MlComponentTemplateProps {
+export interface MlComponentTemplateProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */

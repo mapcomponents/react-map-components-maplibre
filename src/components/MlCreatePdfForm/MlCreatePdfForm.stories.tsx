@@ -10,7 +10,9 @@ import Draggable from 'react-draggable';
 
 import TopToolbar from '../../ui_components/TopToolbar';
 
+import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
+
 const PaperComponent = (props: object) => {
 	return (
 		<Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
@@ -50,10 +52,11 @@ export default storyoptions;
 const Template = () => {
 	const [showCreatePdfForm, setShowCreatePdfForm] = useState(false);
 
+	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	return (
 		<>
 			<TopToolbar>
-				<Button variant="contained" onClick={() => setShowCreatePdfForm(true)}>
+				<Button variant="contained" className='pdfFormButton' onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}>
 					PDF
 				</Button>
 			</TopToolbar>
@@ -150,3 +153,13 @@ const Template = () => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {};
+
+
+//const SidebarTemplate = function() {
+//
+//	return <>
+//	</>;
+//}
+//export const SidebarExample = SidebarTemplate.bind({});
+//SidebarExample.parameters = {};
+//SidebarExample.args = {};

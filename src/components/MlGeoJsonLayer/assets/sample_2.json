@@ -4,7 +4,7 @@
 		{
 			"id": "af85dc8aa961efd66cfcf74213b7ef57",
 			"type": "Feature",
-			"properties": { "name": "Mauspfad", "time": 1987 },
+			"properties": { "name": "Mauspfad" },
 			"geometry": {
 				"coordinates": [
 					[7.100862609363844, 50.7344404792787],
@@ -23,7 +23,7 @@
 		{
 			"id": "7498f72ced719c8385232abc8e5c5df8",
 			"type": "Feature",
-			"properties": { "name": "Windeckstraße", "time": 1988 },
+			"properties": { "name": "Windeckstraße" },
 			"geometry": {
 				"coordinates": [
 					[7.0985272716624195, 50.73420515798543],
@@ -50,7 +50,7 @@
 		{
 			"id": "1f6aead42b46810c75898899823be3b2",
 			"type": "Feature",
-			"properties": { "name": "Poststraße", "time": 1989 },
+			"properties": { "name": "Poststraße" },
 			"geometry": {
 				"coordinates": [
 					[7.098527916107116, 50.73420653271353],
@@ -65,7 +65,7 @@
 		{
 			"id": "5cf9f0c4a8faf5abe1ddb87e1a6ffb39",
 			"type": "Feature",
-			"properties": { "name": "Münsterplatz", "time": 1990 },
+			"properties": { "name": "Münsterplatz" },
 			"geometry": {
 				"coordinates": [
 					[7.099941299919607, 50.73368573357055],
@@ -85,7 +85,7 @@
 		{
 			"id": "d3317ba30229f1abd8bfb1b91264a366",
 			"type": "Feature",
-			"properties": { "name": "In der Sürst", "time": 1991 },
+			"properties": { "name": "In der Sürst" },
 			"geometry": {
 				"coordinates": [
 					[7.099398298122509, 50.7338345667178],
@@ -103,7 +103,7 @@
 		{
 			"id": "b493531ab87539db3b5b70b397a9391f",
 			"type": "Feature",
-			"properties": { "name": "Remiglustraße", "time": 1992 },
+			"properties": { "name": "Remiglustraße" },
 			"geometry": {
 				"coordinates": [
 					[7.101445198112543, 50.735019714263245],
@@ -119,7 +119,7 @@
 		{
 			"id": "52212dad7a1cc396e34cb6d89c40bdd8",
 			"type": "Feature",
-			"properties": { "name": "Münsterplatz", "time": 1993 },
+			"properties": { "name": "Münsterplatz" },
 			"geometry": {
 				"coordinates": [
 					[7.100582376610475, 50.73329792502423],

@@ -31,9 +31,14 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.yarnrc.yml
 
 *.swp
 *.swo
 
 /js-docs
 !/js-docs/server.js
+
+cypress/videos
+cypress/screenshots
+cypress/downloads

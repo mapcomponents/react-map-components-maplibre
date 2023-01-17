@@ -1,6 +1,7 @@
 module.exports = {
 	env: {
 		browser: true,
+		node: true,
 		es2021: true,
 	},
 	extends: [
@@ -16,5 +17,14 @@ module.exports = {
 		sourceType: 'module',
 	},
 	plugins: ['react', '@typescript-eslint'],
-	rules: {},
+	rules: {
+		'react/prop-types': 'off',
+		// empty functions can sometimes be set intentionally. e.g. with useRef/useState, if we want an empty function first
+		'@typescript-eslint/no-empty-function': 'off',
+	},
+	settings: {
+		react: {
+			version: 'detect',
+		},
+	},
 };
