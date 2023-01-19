@@ -1,35 +1,24 @@
-import React, { useState } from 'react';
-import { Drawer, Typography, List, ListItem, Collapse, IconButton, Grid, Box } from '@mui/material';
-
+import React, { useState,  } from 'react';
+import { Drawer, Typography, List, ListItem, Collapse, IconButton, Grid } from '@mui/material';
 import useCreateWidget from './createWidget';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
+
 
 export interface userControlsProps {
 	showOptions: boolean;
 	step: number;
 	minVal: number;
 	maxVal: number;
-	fadeIn: number;
-	open: boolean;
-	setFadeIn: Function;
-	fadeOut: number;
-	setFadeOut: Function;
-	setStep: Function;
-	featuresColor: string;
-	setFeatureColor: Function;
-	labels: boolean;
-	setLabels: Function;
-	labelColor: string;
-	setlabelColor: Function;
-	labelFadeIn: number;
-	setLabelFadein: Function;
-	labelFadeOut: number;
-	setLabelFadeOut: Function;
-	accumulate: boolean;
-	setAccumulate: Function;
+	sections: {
+		key: string;
+		list: {
+			id: number;
+			targetProp: string;
+			type: string;
+			setter: Function;
+			max: number;
+		}[];
+	}[]
 }
 
 interface optionsList {
@@ -42,37 +31,10 @@ interface optionsList {
 
 export default function UserControls(props: userControlsProps) {
 
-	const featuresOptionsList = [
-		{ id: 1, targetProp: 'fadeIn', type: 'slider', setter: props.setFadeIn, max: 15 },
-		{ id: 2, targetProp: 'fadeOut', type: 'slider', setter: props.setFadeOut, max: 15 },
-		{
-			id: 3,
-			targetProp: 'featuresColor',
-			type: 'colorpicker',
-			setter: props.setFeatureColor,
-			max: 0,
-		},
-	];
-
-	const labelsOptionsList = [
-		{ id: 4, targetProp: 'labels', type: 'boolean', setter: props.setLabels, max: 0 },
-		{ id: 5, targetProp: 'labelColor', type: 'colorpicker', setter: props.setlabelColor, max: 0 },
-		{ id: 6, targetProp: 'labelFadeIn', type: 'slider', setter: props.setLabelFadein, max: 15 },
-		{ id: 7, targetProp: 'labelFadeOut', type: 'slider', setter: props.setLabelFadeOut, max: 15 },
-	];
-
-	const playerOptionsList = [
-		{ id: 8, targetProp: 'accumulate', type: 'boolean', setter: props.setAccumulate, max: 0 },
-		{ id: 9, targetProp: 'step', type: 'numberfield', setter: props.setStep, max: 0 },
-	];
-
-	const sections = [
-		{ key: 'Features', list: featuresOptionsList },
-		{ key: 'Labels', list: labelsOptionsList },
-		{ key: 'Player', list: playerOptionsList },
-	];
+	
 	const [expanded, setExpanded] = useState('');
 
+		
 	const handleExpander = (str: string) => {
 		if (str === expanded) {
 			setExpanded('');
@@ -84,7 +46,7 @@ export default function UserControls(props: userControlsProps) {
 	function Sublists(): JSX.Element {
 		return (
 			<>
-				{sections.map((el) => {
+				{props.sections?.map((el) => {
 					return (								
 								<Grid container sx={{padding: '20px'}} key={el.key}>
 									<Grid item xs={10}>
@@ -97,7 +59,7 @@ export default function UserControls(props: userControlsProps) {
 									</Grid>
 									<Grid item xs={12}>
 										<List >
-											{el.list.map((element: optionsList, index) => {
+											{el.list?.map((element: optionsList, index) => {
 												return (
 													<Collapse in={expanded === el.key} key={el.key + "_collapse" + index}>
 														<ListItem

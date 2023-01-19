@@ -39,12 +39,44 @@ export interface TemporalControllerPlayerProps {
 	setAccumulate: Function;
 }
 
+
 export default function TemporalControllerPlayer(props: TemporalControllerPlayerProps) {
+
+
+const featuresOptionsList = [
+		{ id: 1, targetProp: 'fadeIn', type: 'slider', setter: props.setFadeIn, max: 15 },
+		{ id: 2, targetProp: 'fadeOut', type: 'slider', setter: props.setFadeOut, max: 15 },
+		{ id: 3, targetProp: 'featuresColor', type:'colorpicker', setter: props.setFeatureColor, max: 0	},
+	];
+
+	const labelsOptionsList = [
+		{ id: 4, targetProp: 'labels', type: 'boolean', setter: props.setLabels, max: 0 },
+		{ id: 5, targetProp: 'labelColor', type: 'colorpicker', setter: props.setlabelColor, max: 0 },
+		{ id: 6, targetProp: 'labelFadeIn', type: 'slider', setter: props.setLabelFadein, max: 15 },
+		{ id: 7, targetProp: 'labelFadeOut', type: 'slider', setter: props.setLabelFadeOut, max: 15 },
+	];
+
+	const playerOptionsList = [
+		{ id: 8, targetProp: 'accumulate', type: 'boolean', setter: props.setAccumulate, max: 0 },
+		{ id: 9, targetProp: 'step', type: 'numberfield', setter: props.setStep, max: 0 },
+	];
+
+	const sections = [
+		{ key: 'Features', list: featuresOptionsList },
+		{ key: 'Labels', list: labelsOptionsList },
+		{ key: 'Player', list: playerOptionsList },
+	];
+
+
+
+
 	const [currentVal, setCurrentVal] = useState(props.currentVal);
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 	const [toggleControls, setToggleControls] = useState(false);
 	const range = props.maxVal - props.minVal;
-	const intervalRef: any = useRef();
+	const intervalRef = useRef< ReturnType<typeof setInterval>| undefined>();
+
+	console.log(intervalRef.current)
 
 	useEffect(() => {
 		return () => {
@@ -130,7 +162,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 	return (
 		<>
-			<UserControls showOptions={toggleControls} {...props} />
+			<UserControls showOptions={toggleControls} sections={sections} {...props} />
 
 			<Drawer
 				anchor="bottom"

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import { Slider, Typography, TextField, Checkbox, Grid } from '@mui/material';
 import { ColorPicker } from 'mui-color';
+import  {userControlsProps} from './userControls';
+
 
 export default function useCreateWidget(
 	key: string,
@@ -9,6 +11,10 @@ export default function useCreateWidget(
 	max: number,
 	props: any
 ) {
+
+//	const ref = useRef<userControlsProps | undefined>();
+
+
 	if (key === 'slider' || 'numberfield' || 'colorpicker' || 'boolean') {
 		const label = (
 			<Typography id={targetProp + '_label'} gutterBottom>
@@ -39,8 +45,7 @@ export default function useCreateWidget(
 						</Grid>
 					</>
 				);
-				break;
-
+				
 			case 'numberfield':
 				return (
 					<>
@@ -57,7 +62,7 @@ export default function useCreateWidget(
 						/>
 					</>
 				);
-				break;
+				
 			case 'colorpicker':
 				return (
 					<>
@@ -73,7 +78,7 @@ export default function useCreateWidget(
 						/>
 					</>
 				);
-				break;
+			
 			case 'boolean':
 				return (
 					<>
@@ -92,7 +97,7 @@ export default function useCreateWidget(
 						)}
 					</>
 				);
-				break;
+			
 			default:
 				return <></>;
 		}
