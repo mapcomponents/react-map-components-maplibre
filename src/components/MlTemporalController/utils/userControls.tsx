@@ -41,6 +41,7 @@ interface optionsList {
 }
 
 export default function UserControls(props: userControlsProps) {
+
 	const featuresOptionsList = [
 		{ id: 1, targetProp: 'fadeIn', type: 'slider', setter: props.setFadeIn, max: 15 },
 		{ id: 2, targetProp: 'fadeOut', type: 'slider', setter: props.setFadeOut, max: 15 },
@@ -80,32 +81,25 @@ export default function UserControls(props: userControlsProps) {
 		}
 	};
 
-	/*
-	const handleChange = (panel: string) => (event, newExpanded) => {
-		setExpanded(newExpanded ? panel : false);
-	  };
-*/
 	function Sublists(): JSX.Element {
 		return (
 			<>
 				{sections.map((el) => {
-					return (
-						<>
-						
-								<Grid container sx={{padding: '20px'}}>
+					return (								
+								<Grid container sx={{padding: '20px'}} key={el.key}>
 									<Grid item xs={10}>
 										<Typography> {el.key} </Typography>
 									</Grid>
 									<Grid item xs={2}>
-										<IconButton onClick={() => handleExpander(el.key)}>
-											{expanded === el.key ? <ExpandLess /> : <ExpandMore />}
+										<IconButton  onClick={() => handleExpander(el.key)}>
+											{expanded === el.key ? <ExpandMore /> : <ExpandLess />}
 										</IconButton>
 									</Grid>
 									<Grid item xs={12}>
-										<List>
-											{el.list.map((element: optionsList) => {
+										<List >
+											{el.list.map((element: optionsList, index) => {
 												return (
-													<Collapse in={expanded === el.key}>
+													<Collapse in={expanded === el.key} key={el.key + "_collapse" + index}>
 														<ListItem
 															key={element.id}
 															sx={{
@@ -128,7 +122,7 @@ export default function UserControls(props: userControlsProps) {
 									</Grid>
 								</Grid>
 						
-						</>
+				
 					);
 				})}
 			</>

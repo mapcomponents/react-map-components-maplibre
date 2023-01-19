@@ -1,40 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import MlTemporalController from './MlTemporalController';
+import React, { useState } from 'react';
+import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { Box, Typography, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jakobsweg.json';
 
-const sampleCircle = {
-	path: 'earthq_5plus.json',
-	timeField: 'Year',
-	type: 'circle',
-	labelField: 'LocationName',
-	accumulate: false,
-	steps: 1,
-	minVal: 1900,
-};
-const sampleFill = {
-	path: 'african_independency.json',
-	timeField: 'africa_independency_year',
-	type: 'fill',
-	labelField: 'africa_independency_year',
-	accumulate: true,
-	steps: 0.5,
-	minVal: 1847,
-};
-const sampleLine = {
-	path: 'linestring.json',
-	timeField: 'time',
-	type: 'line',
-	labelField: 'time',
-	accumulate: true,
-	steps: 0.3,
-	minVal: 1989,
-};
 
+interface TimeDisplayProps {
+value: number | undefined
+}
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
 	component: MlTemporalController,
@@ -43,7 +19,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const TimeDisplay = (props) => {
+const TimeDisplay = (props: TimeDisplayProps) => {
 	if (typeof props.value === 'number') {
 		return (
 			<>
@@ -67,8 +43,8 @@ const TimeDisplay = (props) => {
 	}
 };
 
-const FillTemplate = (props) => {
-	const [current, setCurrent] = useState();
+const FillTemplate = (props: MlTemporalControllerProps) => {
+	const [current, setCurrent] = useState<number>();
 
 	return (
 		<>
@@ -83,7 +59,7 @@ const FillTemplate = (props) => {
 	);
 };
 
-const CircleTemplate = (props) => {
+const CircleTemplate = (props: MlTemporalControllerProps) => {
 	const [current, setCurrent] = useState();
 
 	return (
@@ -100,7 +76,7 @@ const CircleTemplate = (props) => {
 	);
 };
 
-const LineTemplate = (props) => {
+const LineTemplate = (props: MlTemporalControllerProps) => {
 	const [current, setCurrent] = useState();
 
 	return (
@@ -157,6 +133,7 @@ LineConfig.args = {
 	labelField: 'name',
 	accumulate: true,	
 	steps: 1,
+	featuresColor: '#1731F1',
 	fitBounds: true,
 	showControls: true	
 };

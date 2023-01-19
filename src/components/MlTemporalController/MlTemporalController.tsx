@@ -19,7 +19,7 @@ import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
 
 
 
-interface MlTemporalControllerProps {
+export interface MlTemporalControllerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -151,7 +151,7 @@ interface MlTemporalControllerProps {
 	/**
 	 * Callback function defined by the user to recive the current value in the parent component.
 	 */
-	onStateChange?: any;
+	onStateChange?: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 /**
@@ -211,7 +211,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn || 5);
 	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut || 5);
 
-	const [currentVal, setCurrentVal] = useState(props.initialVal || minVal);
+	const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [accumulate, setAccumulate] = useState(props.accumulate || false);
 
