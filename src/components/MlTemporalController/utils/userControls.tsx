@@ -1,11 +1,13 @@
 import React, { useState,  } from 'react';
-import { Drawer, Typography, List, ListItem, Collapse, IconButton, Grid } from '@mui/material';
+import { Drawer, Typography, List, ListItem, Collapse, IconButton, Grid, useMediaQuery } from '@mui/material';
 import useCreateWidget from './createWidget';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
+import { ClickAwayListener } from '@mui/base';
 
 
 export interface userControlsProps {
 	showOptions: boolean;
+	onClose: React.Dispatch<React.SetStateAction<boolean>>;
 	step: number;
 	minVal: number;
 	maxVal: number;
@@ -33,8 +35,9 @@ export default function UserControls(props: userControlsProps) {
 
 	
 	const [expanded, setExpanded] = useState('');
+	const mediaIsMobile = useMediaQuery("(max-width:900px)");
 
-		
+			
 	const handleExpander = (str: string) => {
 		if (str === expanded) {
 			setExpanded('');
@@ -92,15 +95,21 @@ export default function UserControls(props: userControlsProps) {
 	}
 
 	return (
+		<>
+		<ClickAwayListener
+        mouseEvent="onMouseDown"
+        touchEvent="onTouchStart"
+        onClickAway={() => props.showOptions && props.onClose(false)}
+      >
 		<Drawer
 			anchor="bottom"
 			open={props.showOptions}
-			variant="persistent"
+			variant="persistent"			
 			sx={{
 				flexShrink: 0,
 
 				'& .MuiDrawer-paper': {
-					width: '25%',
+					width: mediaIsMobile? '70%': '25%',
 					height: 'auto',
 					alignItems: 'center',
 					marginLeft: '4%',
@@ -110,5 +119,7 @@ export default function UserControls(props: userControlsProps) {
 		>
 			<Sublists />
 		</Drawer>
+		</ClickAwayListener>
+		</>
 	);
 }

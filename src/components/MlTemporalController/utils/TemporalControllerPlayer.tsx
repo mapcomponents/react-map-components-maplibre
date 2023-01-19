@@ -69,14 +69,12 @@ const featuresOptionsList = [
 
 
 
-
 	const [currentVal, setCurrentVal] = useState(props.currentVal);
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 	const [toggleControls, setToggleControls] = useState(false);
 	const range = props.maxVal - props.minVal;
 	const intervalRef = useRef< ReturnType<typeof setInterval>| undefined>();
 
-	console.log(intervalRef.current)
 
 	useEffect(() => {
 		return () => {
@@ -162,7 +160,7 @@ const featuresOptionsList = [
 
 	return (
 		<>
-			<UserControls showOptions={toggleControls} sections={sections} {...props} />
+			<UserControls showOptions={toggleControls} onClose={setToggleControls} sections={sections} {...props} />
 
 			<Drawer
 				anchor="bottom"
@@ -179,7 +177,7 @@ const featuresOptionsList = [
 				}}
 			>
 				<Grid container>
-					{props.showControls && (
+					{props.showControls ? (
 						<Grid item sm={4}>
 							<ToggleButton
 								value={toggleControls}
@@ -190,7 +188,7 @@ const featuresOptionsList = [
 								<TuneIcon />
 							</ToggleButton>
 						</Grid>
-					)}
+					): (<Grid item sm={4} />)}
 
 					<Grid item sm={6}>
 						<Button onClick={handleFastRewind}>

@@ -285,7 +285,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		}
 	}, [filteredData]);
 
-
+	
 	return (
 		<>
 			{filteredData && (

@@ -1,7 +1,7 @@
-import React, {useRef, useEffect} from 'react';
+import React from 'react';
 import { Slider, Typography, TextField, Checkbox, Grid } from '@mui/material';
 import { ColorPicker } from 'mui-color';
-import  {userControlsProps} from './userControls';
+
 
 
 export default function useCreateWidget(
