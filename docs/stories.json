@@ -586,7 +586,7 @@
         "fileName": 1189,
         "framework": "react",
         "__id": "mapcomponents-mlsketchtool--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlspatialelevationprofile--example-config": {
@@ -614,7 +614,7 @@
         "fileName": 1194,
         "framework": "react",
         "__id": "mapcomponents-mlthreejslayer--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mltransitiongeojsonlayer--linestring": {
@@ -670,7 +670,7 @@
         "fileName": 1200,
         "framework": "react",
         "__id": "mapcomponents-mlwmsfeatureinfopopup--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlwmslayer--example-config": {
