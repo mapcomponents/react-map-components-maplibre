@@ -17,8 +17,6 @@ import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
 
-
-
 export interface MlTemporalControllerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
@@ -199,7 +197,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		return getMaxVal(props.geojson, props.timeField);
 	}, [props.maxVal, props.geojson, props.timeField]);
 
-	
 	const [type, setType] = useState(props.type || 'circle');
 	const [step, setStep] = useState(props.step || 1);
 	const [fadeIn, setFadeIn] = useState(props.fadeIn || 5);
@@ -217,19 +214,21 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	const intervalRef: any = useRef();
 
-	const paint = usePaintPicker(
-		type,
-		props.timeField,
-		currentVal,
-		minVal,
-		isPlaying,
-		fadeIn,
-		fadeOut,
-		step,
-		featuresColor,
-		accumulate,
-		props.paint
-	);
+	const paintPicker = {
+		type: type,
+		timeField: props.timeField,
+		currentVal: currentVal,
+		minVal: minVal,
+		isPlaying: isPlaying,
+		fadeIn: fadeIn,
+		fadeOut: fadeOut,
+		step: step,
+		featuresColor: featuresColor,
+		accumulate: accumulate,
+		userPaint: props.paint,
+	};
+
+	const paint = usePaintPicker(paintPicker);
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
@@ -244,7 +243,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		};
 	}, []);
 
-	
 	//use callback function from props, if exists
 	useEffect(() => {
 		if (typeof props.onStateChange === 'function') {
@@ -254,13 +252,12 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	//get min and max time value
 	useEffect(() => {
-		if (!props.initialVal){
+		if (!props.initialVal) {
 			const neuMin = getMinVal(props.geojson, props.timeField);
-		setCurrentVal(neuMin > minVal ? neuMin : minVal);
+			setCurrentVal(neuMin > minVal ? neuMin : minVal);
 		} else {
-			setCurrentVal(props.initialVal)
+			setCurrentVal(props.initialVal);
 		}
-		
 	}, [minVal, props.geojson, props.timeField, props.initialVal]);
 
 	// filter geojson
@@ -285,7 +282,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		}
 	}, [filteredData]);
 
-	
 	return (
 		<>
 			{filteredData && (
@@ -348,10 +344,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				setLabelFadeOut={setLabelFadeOut}
 				accumulate={accumulate}
 				setAccumulate={setAccumulate}
-
 			/>
-
-			
 		</>
 	);
 };

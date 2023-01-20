@@ -2,45 +2,45 @@ import React from 'react';
 import { Slider, Typography, TextField, Checkbox, Grid } from '@mui/material';
 import { ColorPicker } from 'mui-color';
 
-
-
-export default function useCreateWidget(
-	key: string,
-	targetProp: string,
-	setter: Function,
-	max: number,
-	props: any
-) {
+interface createWidgetProps {
+	type: string;
+	targetProp: string;
+	setter: Function;
+	max: number, 
+	value: string | number | boolean
+}
+export default function CreateWidget(props: createWidgetProps) {
+	
 
 //	const ref = useRef<userControlsProps | undefined>();
 
 
-	if (key === 'slider' || 'numberfield' || 'colorpicker' || 'boolean') {
+	if (props.type === 'slider' || 'numberfield' || 'colorpicker' || 'boolean') {
 		const label = (
-			<Typography id={targetProp + '_label'} gutterBottom>
-				{targetProp}
+			<Typography id={props.targetProp + '_label'} gutterBottom>
+				{props.targetProp}
 			</Typography>
 		);
 
-		switch (key) {
+		switch (props.type) {
 			case 'slider':
 				return (
 					<>
 						<Grid container spacing={1}>
-							<Grid item md={3}>{label}</Grid>
+							<Grid item md={4}>{label}</Grid>
 							<Grid item md={7}>
 								<Slider
 									size={'small'}
 									inputMode={'decimal'}
-									value={props[targetProp]}
-									max={max}
+									value={props.value as number}
+									max={props.max}
 									onChange={(ev: any) => {
-										setter(ev.target?.value);
+										props.setter(ev.target?.value);
 									}}
 								/>
 							</Grid>
-							<Grid item md={2} >
-								<Typography> {props[targetProp]} </Typography>
+							<Grid item md={1} >
+								<Typography> {props.value} </Typography>
 							</Grid>
 						</Grid>
 					</>
@@ -51,12 +51,12 @@ export default function useCreateWidget(
 					<>
 						{label}
 						<TextField
-							id={targetProp + '_numberfield'}
+							id={props.targetProp + '_numberfield'}
 							inputMode={'numeric'}
-							defaultValue={props[targetProp]}
+							defaultValue={props.value}
 							onChange={(ev: any) => {
 								if (ev?.target?.value) {
-									setter(parseFloat(ev.target.value));
+									props.setter(parseFloat(ev.target.value));
 								}
 							}}
 						/>
@@ -68,12 +68,12 @@ export default function useCreateWidget(
 					<>
 						{label}
 						<ColorPicker
-							key={targetProp + '_colorpicker'}
-							value={props[targetProp]}
+							key={props.targetProp + '_colorpicker'}
+							value={props.value as string}
 							hideTextfield
 							disableAlpha
 							onChange={(ev: any) => {
-								setter('#' + ev.hex);
+								props.setter('#' + ev.hex);
 							}}
 						/>
 					</>
@@ -83,14 +83,14 @@ export default function useCreateWidget(
 				return (
 					<>
 						{label}
-						{props[targetProp] !== undefined && (
+						{props.value !== undefined && (
 							<Checkbox
-								id={props[targetProp + '_check']}
-								value={props[targetProp]}
-								checked={props[targetProp]}
+								id={props.value + '_check'}
+								value={props.value}
+								checked={props.value ? true : false}
 								onChange={() => {
-									if (props[targetProp] !== undefined) {
-										setter(!props[targetProp]);
+									if (props.value !== undefined) {
+										props.setter(!props.value);
 									}
 								}}
 							/>

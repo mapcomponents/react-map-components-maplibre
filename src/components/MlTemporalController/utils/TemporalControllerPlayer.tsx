@@ -68,7 +68,6 @@ const featuresOptionsList = [
 	];
 
 
-
 	const [currentVal, setCurrentVal] = useState(props.currentVal);
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 	const [toggleControls, setToggleControls] = useState(false);
@@ -148,12 +147,13 @@ const featuresOptionsList = [
 
 	//Slider
 
-	const handleChange = (e: any) => {
+	const handleChange = (e: Event, newValue: number | number[]) => {
+	
 		if (!isPlaying) {
-			setCurrentVal(e.target.value);
+			setCurrentVal(newValue as number);
 		} else {
 			clearInterval(intervalRef.current);
-			setCurrentVal(e.target.value);
+			setCurrentVal(newValue as number);
 			play();
 		}
 	};

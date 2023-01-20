@@ -1,9 +1,17 @@
-import React, { useState,  } from 'react';
-import { Drawer, Typography, List, ListItem, Collapse, IconButton, Grid, useMediaQuery } from '@mui/material';
-import useCreateWidget from './createWidget';
+import React, { useState } from 'react';
+import {
+	Drawer,
+	Typography,
+	List,
+	ListItem,
+	Collapse,
+	IconButton,
+	Grid,
+	useMediaQuery,
+} from '@mui/material';
+import CreateWidget from './createWidget';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { ClickAwayListener } from '@mui/base';
-
 
 export interface userControlsProps {
 	showOptions: boolean;
@@ -20,7 +28,7 @@ export interface userControlsProps {
 			setter: Function;
 			max: number;
 		}[];
-	}[]
+	}[];
 }
 
 interface optionsList {
@@ -32,12 +40,9 @@ interface optionsList {
 }
 
 export default function UserControls(props: userControlsProps) {
-
-	
 	const [expanded, setExpanded] = useState('');
-	const mediaIsMobile = useMediaQuery("(max-width:900px)");
+	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
-			
 	const handleExpander = (str: string) => {
 		if (str === expanded) {
 			setExpanded('');
@@ -50,44 +55,43 @@ export default function UserControls(props: userControlsProps) {
 		return (
 			<>
 				{props.sections?.map((el) => {
-					return (								
-								<Grid container sx={{padding: '20px'}} key={el.key}>
-									<Grid item xs={10}>
-										<Typography> {el.key} </Typography>
-									</Grid>
-									<Grid item xs={2}>
-										<IconButton  onClick={() => handleExpander(el.key)}>
-											{expanded === el.key ? <ExpandMore /> : <ExpandLess />}
-										</IconButton>
-									</Grid>
-									<Grid item xs={12}>
-										<List >
-											{el.list?.map((element: optionsList, index) => {
-												return (
-													<Collapse in={expanded === el.key} key={el.key + "_collapse" + index}>
-														<ListItem
-															key={element.id}
-															sx={{
-																boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
-																borderRadius: '5px',
-															}}
-														>
-															{useCreateWidget(
-																element.type,
-																element.targetProp,
-																element.setter,
-																element.max,
-																props
-															)}
-														</ListItem>
-													</Collapse>
-												);
-											})}
-										</List>
-									</Grid>
-								</Grid>
-						
-				
+					
+					return (
+						<Grid container sx={{ padding: '20px' }} key={el.key}>
+							<Grid item xs={10}>
+								<Typography> {el.key} </Typography>
+							</Grid>
+							<Grid item xs={2}>
+								<IconButton onClick={() => handleExpander(el.key)}>
+									{expanded === el.key ? <ExpandMore /> : <ExpandLess />}
+								</IconButton>
+							</Grid>
+							<Grid item xs={12}>
+								<List>
+									{el.list?.map((element: optionsList, index) => {
+										return (
+											<Collapse in={expanded === el.key} key={el.key + '_collapse' + index}>
+												<ListItem
+													key={element.id}
+													sx={{
+														boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
+														borderRadius: '5px',
+													}}
+												>
+													<CreateWidget
+														type={element.type}
+														targetProp={element.targetProp}
+														setter={element.setter}
+														max={element.max}
+														value={props[element.targetProp]}
+													/>
+												</ListItem>
+											</Collapse>
+										);
+									})}
+								</List>
+							</Grid>
+						</Grid>
 					);
 				})}
 			</>
@@ -96,30 +100,30 @@ export default function UserControls(props: userControlsProps) {
 
 	return (
 		<>
-		<ClickAwayListener
-        mouseEvent="onMouseDown"
-        touchEvent="onTouchStart"
-        onClickAway={() => props.showOptions && props.onClose(false)}
-      >
-		<Drawer
-			anchor="bottom"
-			open={props.showOptions}
-			variant="persistent"			
-			sx={{
-				flexShrink: 0,
+			<ClickAwayListener
+				mouseEvent="onMouseDown"
+				touchEvent="onTouchStart"
+				onClickAway={() => props.showOptions && props.onClose(false)}
+			>
+				<Drawer
+					anchor="bottom"
+					open={props.showOptions}
+					variant="persistent"
+					sx={{
+						flexShrink: 0,
 
-				'& .MuiDrawer-paper': {
-					width: mediaIsMobile? '70%': '25%',
-					height: 'auto',
-					alignItems: 'center',
-					marginLeft: '4%',
-					marginBottom: '80px',
-				},
-			}}
-		>
-			<Sublists />
-		</Drawer>
-		</ClickAwayListener>
+						'& .MuiDrawer-paper': {
+							width: mediaIsMobile ? '70%' : '25%',
+							height: 'auto',
+							alignItems: 'center',
+							marginLeft: '4%',
+							marginBottom: '80px',
+						},
+					}}
+				>
+					<Sublists />
+				</Drawer>
+			</ClickAwayListener>
 		</>
 	);
 }

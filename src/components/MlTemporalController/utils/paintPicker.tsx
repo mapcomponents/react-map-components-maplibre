@@ -1,5 +1,6 @@
 
-export default function paintPicker(
+
+interface paintPickerProps {
 	type: 'fill' | 'line' | 'circle',
 	timeField: String,
 	currentVal: number,
@@ -11,7 +12,9 @@ export default function paintPicker(
 	featuresColor: String,
 	accumulate: boolean,
 	userPaint: any
-) {
+}
+
+export default function paintPicker(props: paintPickerProps) {
 	const circleNoShow = { 'circle-color': 'rgba(0,0,0,0)' };
 	const fillNoShow = { 'fill-color': 'rgba(0,0,0,0)', 'fill-outline-color':'rgba(0,0,0,0)' };
 	const lineNoShow = {'line-color': 'rgba(0,0,0,0)'}
@@ -19,44 +22,44 @@ export default function paintPicker(
 	const colorInterpolate = [
 		'interpolate',
 		['linear'],
-		['get', timeField],
-		currentVal - fadeIn * step,
+		['get', props.timeField],
+		props.currentVal - props.fadeIn * props.step,
 		'rgba(255, 0, 0, 0)',
-		currentVal,
-		featuresColor,
-		currentVal + fadeIn * step,
+		props.currentVal,
+		props.featuresColor,
+		props.currentVal + props.fadeIn * props.step,
 		'rgba(255, 0, 0, 0)',
 	];
 
 	const opacityInterpolate = [
 		'interpolate',
 		['linear'],
-		['get', timeField],
-		currentVal - fadeIn * step,
+		['get', props.timeField],
+		props.currentVal - props.fadeIn * props.step,
 		0,
-		currentVal,
+		props.currentVal,
 		1,
-		currentVal + fadeOut * step,
+		props.currentVal + props.fadeOut * props.step,
 		0,
 	];
 
 	const accumulatedColorInterpolate = [
 		'interpolate',
 		['linear'],
-		['get', timeField],
-		currentVal,
-		featuresColor,
-		currentVal + fadeIn * step,
+		['get',props.timeField],
+		props.currentVal,
+		props.featuresColor,
+		props.currentVal + props.fadeIn * props.step,
 		'rgba(255, 0, 0, 0)',
 	];
 
 	const accumulatedOpacityInterpolate = [
 		'interpolate',
 		['linear'],
-		['get', timeField],
-		currentVal,
+		['get', props.timeField],
+		props.currentVal,
 		1,
-		currentVal + fadeOut * step,
+		props.currentVal + props.fadeOut * props.step,
 		0,
 	];
 
@@ -66,12 +69,12 @@ export default function paintPicker(
 		'fill-outline-color': [
 			'interpolate',
 			['linear'],
-			['get', timeField],
-			currentVal - fadeIn * step,
+			['get', props.timeField],
+			props.currentVal - props.fadeIn * props.step,
 			'rgba(255, 0, 0, 0)',
-			currentVal,
+			props.currentVal,
 			'rgb(0,0,0)',
-			currentVal + fadeIn * step,
+			props.currentVal + props.fadeIn * props.step,
 			'rgba(255, 0, 0, 0)',
 		],
 	};
@@ -81,12 +84,12 @@ export default function paintPicker(
 		'circle-radius': [
 			'interpolate',
 			['linear'],
-			['get', timeField],
-			currentVal - fadeIn * step,
+			['get', props.timeField],
+			props.currentVal - props.fadeIn * props.step,
 			1,
-			currentVal,
+			props.currentVal,
 			20,
-			currentVal + fadeOut * step,
+			props.currentVal + props.fadeOut * props.step,
 			1,
 		],
 		'circle-opacity': opacityInterpolate,
@@ -103,10 +106,10 @@ export default function paintPicker(
 		'circle-radius': [
 			'interpolate',
 			['linear'],
-			['get', timeField],
-			currentVal,
+			['get', props.timeField],
+			props.currentVal,
 			20,
-			currentVal + fadeOut * step,
+			props.currentVal + props.fadeOut * props.step,
 			1,
 		],
 
@@ -119,10 +122,10 @@ export default function paintPicker(
 		'fill-outline-color': [
 			'interpolate',
 			['linear'],
-			['get', timeField],
-			currentVal,
+			['get', props.timeField],
+			props.currentVal,
 			'rgb(0,0,0)',
-			currentVal + fadeIn * step,
+			props.currentVal + props.fadeIn * props.step,
 			'rgba(255, 0, 0, 0)',
 		],
 	};
@@ -132,32 +135,32 @@ export default function paintPicker(
 		'line-opacity': accumulatedOpacityInterpolate
 	};
 
-	if (userPaint !== undefined) {
-		return userPaint;
+	if (props.userPaint !== undefined) {
+		return props.userPaint;
 	} else {
-		switch (type) {
+		switch (props.type) {
 			case 'circle':
-				if (currentVal === minVal && !isPlaying) {
+				if (props.currentVal === props.minVal && !props.isPlaying) {
 					return circleNoShow;
-				} else if (accumulate ) {
+				} else if (props.accumulate ) {
 					return circleAccumulatePaint;
 				} else {
 					return defaultCirclePaint;
 				}
 				
 			case 'fill':
-				if (currentVal === minVal && !isPlaying) {
+				if (props.currentVal === props.minVal && !props.isPlaying) {
 					return fillNoShow;
-				} else if (accumulate ) {
+				} else if (props.accumulate ) {
 					return fillAccumulatePaint;
 				} else {
 					return defaultFillPaint;
 				}
 
 				case 'line':
-					if (currentVal === minVal && !isPlaying) {
+					if (props.currentVal === props.minVal && !props.isPlaying) {
 						return lineNoShow;
-					} else if (accumulate ) {
+					} else if (props.accumulate ) {
 						return lineAccumulatePaint;
 					} else {
 						return defaultLinePaint;
