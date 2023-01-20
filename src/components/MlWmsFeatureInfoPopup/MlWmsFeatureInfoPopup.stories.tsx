@@ -1,25 +1,21 @@
 import React from 'react';
 
-import MlSketchTool from './MlSketchTool';
+import MlWmsFeatureInfoPopup from './MlWmsFeatureInfoPopup';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import Sidebar from '../../ui_components/Sidebar';
 
 const storyoptions = {
-	title: 'MapComponents/MlSketchTool',
-	component: MlSketchTool,
-	argTypes: {},
+	title: 'MapComponents/MlWmsFeatureInfoPopup',
+	component: MlWmsFeatureInfoPopup,
+	argTypes: {
+		url: {},
+		layer: {},
+	},
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
 
-const Template = (args) => (
-	<>
-		<Sidebar sx={{ maxWidth: '25vw' }}>
-			<MlSketchTool />
-		</Sidebar>
-	</>
-);
+const Template = () => <MlWmsFeatureInfoPopup />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
