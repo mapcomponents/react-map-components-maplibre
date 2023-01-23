@@ -715,6 +715,20 @@
         "__isArgsStory": false
       }
     },
+    "hooks-uselayerfilter--example-config": {
+      "id": "hooks-uselayerfilter--example-config",
+      "name": "Example Config",
+      "title": "hooks/useLayerFilter",
+      "importPath": 1199,
+      "kind": "hooks/useLayerFilter",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 1199,
+        "framework": "react",
+        "__id": "hooks-uselayerfilter--example-config",
+        "__isArgsStory": true
+      }
+    },
     "mapcomponents-uselayerhoverpopup--example-config": {
       "id": "mapcomponents-uselayerhoverpopup--example-config",
       "name": "Example Config",
