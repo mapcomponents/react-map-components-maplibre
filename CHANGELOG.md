@@ -1,6 +1,11 @@
 # Change Log
 
 
+## [v0.1.66] - 2023-01-23
+
+### Added
+- add missing useLayerFilter export
+
 ## [v0.1.65] - 2023-01-23
 
 ### Fixed

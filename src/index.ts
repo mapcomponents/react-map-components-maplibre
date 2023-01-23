@@ -38,6 +38,7 @@ export { default as useWms } from "./hooks/useWms";
 export { default as useSource } from "./hooks/useSource";
 export { default as useExportMap } from "./hooks/useExportMap";
 export { default as useCameraFollowPath } from "./hooks/useCameraFollowPath/useCameraFollowPath";
+export { default as useLayerFilter } from "./hooks/useLayerFilter/useLayerFilter";
 
 export { MapComponentsProvider } from "./contexts/MapContext";
 export { default as MapContext } from "./contexts/MapContext";
