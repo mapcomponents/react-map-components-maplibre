@@ -6,7 +6,19 @@ import { v4 as uuidv4 } from 'uuid';
 import useMapState from '../../hooks/useMapState';
 import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 
-const getCurrentUrlParameters = () => {
+export interface MapState {
+	lat?: number;
+	lng?: number;
+	zoom?: number;
+	bearing?: number;
+	pitch?: number;
+	layers?: {
+		visible: boolean;
+		id: string;
+	}[];
+}
+
+const getCurrentUrlParameters = (): MapState => {
 	const currentParams = Object.fromEntries(new URLSearchParams(window.location.search));
 	currentParams.layers = JSON.parse(currentParams?.layers ? currentParams.layers : '[]');
 
@@ -31,6 +43,11 @@ export interface MlShareMapStateProps {
 	active?: boolean;
 }
 
+export interface LayerStatesInterface {
+	//
+	[key: string]: boolean;
+}
+
 const MlShareMapState = (props: MlShareMapStateProps) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	const mapContext = useContext(MapContext);
@@ -51,7 +68,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 	});
 
 	const allStatesRestoredRef = useRef(false);
-	const layerStatesRestored = useRef(undefined);
+	const layerStatesRestored = useRef<LayerStatesInterface>();
 	const restoredStatesRef = useRef({
 		viewport: {
 			center: false,
@@ -65,7 +82,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 	});
 
 	// initial URL-Params
-	const mapStateRef = useRef({});
+	const mapStateRef = useRef<MapState>({});
 
 	const refreshUrlParameters = useCallback(() => {
 		if (!props.active) return;
@@ -80,8 +97,8 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		}
 		refreshMapState();
 		const urlParams = new URLSearchParams({
-			...getCurrentUrlParameters(),
-			...mapStateRef.current,
+			...(getCurrentUrlParameters() as Record<string, string>),
+			...(mapStateRef.current as Record<string, string>),
 			layers: JSON.stringify(mapLayers),
 		});
 		JSON.parse(Object.fromEntries(urlParams).layers).forEach((el: { id: number }) => {
@@ -90,7 +107,6 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		});
 
 		const currentParams = new URLSearchParams(window.location.search);
-		checkRestorationStates(mapState.layers);
 		if (urlParams.toString() !== currentParams.toString()) {
 			window.history.pushState(
 				{ ...mapStateRef.current },
@@ -113,7 +129,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 			// check for the existence of map.style before calling getLayer or getSource
 
 			if (mapRef.current) {
-				mapRef.current.cleanup(_componentId); //Vergleich z.39
+				mapRef.current.cleanup(_componentId);
 				mapRef.current = undefined;
 			}
 			initializedRef.current = false;
@@ -134,7 +150,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		mapRef.current.on('moveend', _refreshUrlParameters, componentId.current);
 
 		return () => {
-			mapRef.current?.wrapper.off('moveend', _refreshUrlParameters); // welches "off" aus MapLibreGLWrapper ist das richtige?
+			mapRef.current?.map.off('moveend', _refreshUrlParameters);
 		};
 	}, [refreshUrlParameters, map]);
 
@@ -146,7 +162,6 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		mapRef.current = mapContext.getMap(props.mapId);
 		setMap(mapRef.current);
 		if (mapStateRef.current.lat && mapStateRef.current.lng) {
-			// Keine Ahnung (?)
 			restoreViewportState();
 		}
 	}, [mapContext.mapIds, mapContext, props.mapId, props.active]);
@@ -155,13 +170,15 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		if (!mapState?.layers?.length) return;
 
 		if (typeof layerStatesRestored.current === 'undefined') {
-			layerStatesRestored.current = {};
-			initialUrlParams?.layers.forEach((layer) => {
-				layerStatesRestored.current[layer.id] = false;
+			layerStatesRestored.current = undefined;
+			initialUrlParams?.layers?.forEach((layer: { id: string }) => {
+				if (layerStatesRestored.current?.[layer.id]) {
+					layerStatesRestored.current[layer.id] = false;
+				}
 			});
 		}
 
-		for (let key in layerStatesRestored.current) {
+		for (const key in layerStatesRestored.current) {
 			let _allDone = true;
 			if (layerStatesRestored.current[key] === false) {
 				_allDone = false;
@@ -173,9 +190,12 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 
 		if (initialUrlParams.layers) {
 			initialUrlParams.layers.forEach((layer) => {
-				if (mapRef.current?.getLayer(layer.id) && layerStatesRestored.current[layer.id] === false) {
+				if (
+					mapRef.current?.map.getLayer(layer.id) && //number oder str?
+					layerStatesRestored.current?.[layer.id] === false
+				) {
 					layerStatesRestored.current[layer.id] = true;
-					mapRef.current
+					mapRef.current.map
 						?.getLayer(layer.id)
 						?.setLayoutProperty('visibility', layer.visible ? 'visible' : 'none');
 				}
@@ -192,28 +212,32 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		}
 	}, [props.active, map, mapState.layers]);
 
-	const refreshMapState = () => {
-		mapStateRef.current.lat = mapRef.current.getCenter().lat;
-		mapStateRef.current.lng = mapRef.current.getCenter().lng;
-		mapStateRef.current.zoom = mapRef.current.getZoom();
-		mapStateRef.current.bearing = mapRef.current.getBearing();
-		mapStateRef.current.pitch = mapRef.current.getPitch();
-	};
+	//ist .current?.map. richtig?
 
-	const checkRestorationStates = (stateArray) => {
-		let tempArray = {};
-		stateArray.forEach((el, i, arr) => {
-			if (!arr[el.key]) tempArray[el.key] = true;
-		});
+	const refreshMapState = () => {
+		mapStateRef.current.lat = mapRef.current?.map.getCenter().lat;
+		mapStateRef.current.lng = mapRef.current?.map.getCenter().lng;
+		mapStateRef.current.zoom = mapRef.current?.map.getZoom();
+		mapStateRef.current.bearing = mapRef.current?.map.getBearing();
+		mapStateRef.current.pitch = mapRef.current?.map.getPitch();
 	};
 
 	const restoreViewportState = () => {
 		if (!restoredStatesRef.current.viewport.center) {
 			restoredStatesRef.current.viewport.center = true;
-			mapRef.current.setCenter([mapStateRef.current.lng, mapStateRef.current.lat]);
-			mapRef.current.setZoom(mapStateRef.current.zoom);
-			mapRef.current.setBearing(mapStateRef.current.bearing);
-			mapRef.current.setPitch(mapStateRef.current.pitch);
+
+			if (mapStateRef.current.lng && mapStateRef.current.lat) {
+				mapRef.current?.map.setCenter([mapStateRef.current.lng, mapStateRef.current.lat]);
+			}
+			if (mapStateRef.current.zoom) {
+				mapRef.current?.map.setZoom(mapStateRef.current.zoom);
+			}
+			if (mapStateRef.current.bearing) {
+				mapRef.current?.map.setBearing(mapStateRef.current.bearing);
+			}
+			if (mapStateRef.current.pitch) {
+				mapRef.current?.map.setPitch(mapStateRef.current.pitch);
+			}
 		}
 
 		allStatesRestoredRef.current = true;
@@ -221,7 +245,8 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 
 	window.onpopstate = (event) => {
 		if (event.state && event.state.lng && event.state.lat && event.state.zoom) {
-			mapRef.current.easeTo({
+			mapRef.current?.map.easeTo({
+				// so möglich?
 				zoom: event.state.zoom,
 				center: [event.state.lng, event.state.lat],
 			});
@@ -229,7 +254,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 	};
 
 	return <></>;
-};
+};;
 
 MlShareMapState.defaultProps = {
 	mapId: undefined,
