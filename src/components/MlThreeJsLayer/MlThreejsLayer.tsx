@@ -6,6 +6,7 @@ import maplibregl, { CustomLayerInterface, LngLatLike, Map } from 'maplibre-gl';
 import * as THREE from 'three';
 import GLTFLoader from './lib/GLTFLoader';
 import PropTypes from 'prop-types';
+import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 
 /**
  * Renders obj or gltf 3D Models on the MapLibreMap referenced by props.mapId
@@ -14,7 +15,7 @@ import PropTypes from 'prop-types';
  */
 
 export interface MlThreeJsLayerProps {
-	mapId?: number;
+	mapId?: string;
 	init?: object;
 	onDone?: () => void;
 }
@@ -26,7 +27,7 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 	const [showLayer, setShowLayer] = useState(true);
 	const showLayerRef = useRef(true);
 	const initializedRef = useRef(false);
-	const mapRef = useRef<Map>();
+	const mapRef = useRef<MapLibreGlWrapper>();
 	const initFuncRef = useRef(props.init);
 
 	const cleanup = () => {

@@ -11,6 +11,8 @@ export const parameters = {
     inlineStories: false,
   },
   actions: { argTypesRegex: "^on[A-Z].*" },
+
+  sourceLinkPrefix: 'https://github.com/mapcomponents/react-map-components-maplibre/blob/main/src/'
 };
 
 export const globalTypes = {

@@ -675,7 +675,6 @@ class MapLibreGlWrapper {
 		initializeMapLibre();
 	}
 }
-
 export default MapLibreGlWrapper;
 
 export type { LayerState, ViewportState };

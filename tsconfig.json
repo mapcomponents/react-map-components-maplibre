@@ -9,6 +9,7 @@
 		"sourceMap": true,
 		"strict": false,
 		"types": ["node", "jest", "geojson", "cypress"],
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
 		"outDir": "build/esm",
 		"module": "esnext",
 		"target": "es5",
