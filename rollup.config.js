@@ -38,6 +38,7 @@ const config = {
     del({ targets: ["build/*"] }),
   ],
   external: [
+    "!maplibre-gl",
     "prop-types",
     "d3",
     "@emotion/react",
