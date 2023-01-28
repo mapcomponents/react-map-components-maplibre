@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import useMap from '../../hooks/useMap';
+import { GeoJSONFeature } from 'maplibre-gl';
 import {
-	GeoJSONFeature,
+	LngLatLike,
 	Popup,
 	MapEventType,
 } from 'maplibre-gl';
@@ -41,7 +42,7 @@ const useLayerHoverPopup = (props: useLayerHoverPopupProps) => {
 			props.layerId,
 			(
 				e: MapEventType & {
-					features?: GeoJSONFeature[] | undefined;
+					features?: ({[key:string]:string} & { geometry:{coordinates:[number,number]}})[] | undefined;
 					lngLat: { lng: number; lat: number };
 				}
 			) => {
@@ -52,7 +53,7 @@ const useLayerHoverPopup = (props: useLayerHoverPopupProps) => {
 				//const description = e.features[0].properties.desc;
 				let content = '';
 				if (e?.features?.[0] && typeof props.getPopupContent === 'function') {
-					content = props.getPopupContent(e.features[0]);
+					content = props.getPopupContent(e.features[0] as unknown as GeoJSONFeature);
 				}
 
 				if (coordinates?.[0]) {
@@ -66,7 +67,7 @@ const useLayerHoverPopup = (props: useLayerHoverPopupProps) => {
 					// Populate the popup and set its coordinates
 
 					// based on the feature found.
-					popup.current.setLngLat(coordinates).setHTML(content).addTo(mapHook.map.map);
+					popup.current.setLngLat(coordinates as LngLatLike).setHTML(content).addTo(mapHook.map.map);
 				}
 			},
 			mapHook.componentId

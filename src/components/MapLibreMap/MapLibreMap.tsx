@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, FC,	RefObject } from "react";
 
-import MapContext from "../../contexts/MapContext";
+import MapContext, { MapContextType } from "../../contexts/MapContext";
 import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
 
 import { MapOptions as MapOptionsType } from "maplibre-gl";
@@ -59,35 +59,38 @@ const defaultProps: MapLibreMapProps = {
  * @category Map components
  */
 const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
-	const map: any = useRef<MapLibreGlWrapper>(null);
+	const map = useRef<MapLibreGlWrapper>();
 	const mapContainer = useRef<HTMLDivElement>();
 
-	const mapContext: any = useContext<MapContextType>(MapContext);
+	const mapContext = useContext<MapContextType>(MapContext);
 
 	const mapIdRef = useRef(props.mapId);
 	const initializedRef = useRef(false);
 	const currentStyle = useRef(props.options?.style);
 
 	useEffect(() => {
-		let mapId = mapIdRef.current;
+		const mapId = mapIdRef.current;
 
 		return () => {
 			mapContext.removeMap(mapId);
-			map.current?.remove?.();
-			map.current = null;
+			map.current?.map?.remove?.();
+			map.current = undefined;
 		};
 	}, []);
 
 	useEffect(() => {
 		if (initializedRef.current) return;
 
+		console.log(mapContainer.current);
+		
 		if (mapContainer.current) {
 			initializedRef.current = true;
 			map.current = new MapLibreGlWrapper({
 				mapOptions: {
 					style: '',
-					container: mapContainer.current,
 					...props.options,
+					...(props?.options?.style?{}:{style:defaultProps?.options?.style}),
+					container: mapContainer.current,
 				},
 				onReady: (map: any, wrapper: any) => {
 					map.once("load", () => {
@@ -108,8 +111,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 			currentStyle.current = props.options.style;
 			map.current.map.setStyle(props.options.style);
 		}
-		// @ts-ignore: props.options is either passed or populated with default values
-	}, [props.options.style])
+	}, [props?.options?.style])
 
 	return <div ref={mapContainer as RefObject<HTMLDivElement>} className="mapContainer" style={props.style} />;
 };

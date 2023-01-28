@@ -1,7 +1,7 @@
 import { useContext, useCallback, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
-import MapContext from "../contexts/MapContext";
+import MapContext, { MapContextType } from "../contexts/MapContext";
 import MapLibreGlWrapper, {
 	LayerState,
 	ViewportState,
@@ -10,13 +10,6 @@ import MapLibreGlWrapper, {
 type useMapStateType = {
 	layers: (LayerState | undefined)[];
 	viewport: ViewportState | undefined;
-};
-type MapContext = {
-	mapIds: [string?];
-	mapExists: Function;
-	maps: [];
-	getMap: Function;
-	setMap: Function;
 };
 
 /**
@@ -58,8 +51,8 @@ function useMapState(props: {
 	 * @param {object} layer
 	 */
 	const layerIdFilter = useCallback(
-		(layer) => {
-			if (!props?.filter?.includeBaseLayers && layer.baseLayer) {
+		(layer:LayerState) => {
+			if (!props?.filter?.includeBaseLayers && layer?.baseLayer) {
 				return false;
 			}
 
@@ -79,8 +72,8 @@ function useMapState(props: {
 	const refreshLayerState = useCallback(() => {
 		if (!mapRef.current) return;
 
-		let _layerState = mapRef.current.wrapper.layerState.filter(layerIdFilter);
-		let _layerStateString = JSON.stringify(_layerState);
+		const _layerState = mapRef.current.wrapper.layerState.filter(layerIdFilter);
+		const _layerStateString = JSON.stringify(_layerState);
 		if (layersRef.current !== _layerStateString) {
 			layersRef.current = _layerStateString;
 			setLayers(_layerState);
@@ -88,7 +81,7 @@ function useMapState(props: {
 	}, [layerIdFilter]);
 
 	useEffect(() => {
-		let _componentId = componentId.current;
+		const _componentId = componentId.current;
 
 		return () => {
 			// cleanup all event listeners

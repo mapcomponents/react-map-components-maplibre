@@ -3,7 +3,7 @@ import React, { useContext, useCallback, useRef, useEffect, useState } from 'rea
 // @ts-ignore
 import syncMove from '@mapbox/mapbox-gl-sync-move';
 import './style.css';
-import MapContext from '../../contexts/MapContext';
+import MapContext, { MapContextType } from '../../contexts/MapContext';
 
 export interface MlLayerSwipeProps {
 	/**
@@ -48,7 +48,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	};
 
 	const onMove = useCallback(
-		(e) => {
+		(e:(TouchEvent & MouseEvent)) => {
 			if (!mapExists()) return;
 
 			const bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
@@ -87,7 +87,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 		);
 		onMove({
 			clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
-		});
+		} as (TouchEvent & MouseEvent));
 	}, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
 	const onDown = (e: React.MouseEvent | React.TouchEvent) => {
