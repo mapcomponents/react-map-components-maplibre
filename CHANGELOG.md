@@ -1,6 +1,21 @@
 # Change Log
 
 
+## [v0.1.66] - 2023-01-23
+
+### Added
+- add missing useLayerFilter export
+
+## [v0.1.65] - 2023-01-23
+
+### Fixed
+- 516a9ce: mlwmsloader capabilities layer parsing 
+- 516a9ce: mlwmsloader improve performance by rendering all selected layers using a single MlWmsLayer component
+- 516a9ce: mlwmsloader capabilities layer parsing 
+
+### Added
+- a6f347f: add useLayerFilter hook
+
 ## [v0.1.64] - 2023-01-15
 
 ### Fixed

@@ -309,29 +309,15 @@
         "__isArgsStory": false
       }
     },
-    "mapcomponents-mllayer--example-config": {
-      "id": "mapcomponents-mllayer--example-config",
-      "name": "Example Config",
-      "title": "MapComponents/MlLayer",
-      "importPath": 1157,
-      "kind": "MapComponents/MlLayer",
-      "story": "Example Config",
-      "parameters": {
-        "fileName": 1157,
-        "framework": "react",
-        "__id": "mapcomponents-mllayer--example-config",
-        "__isArgsStory": true
-      }
-    },
     "mapcomponents-mllayermagnify--example-config": {
       "id": "mapcomponents-mllayermagnify--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlLayerMagnify",
-      "importPath": 1158,
+      "importPath": 1157,
       "kind": "MapComponents/MlLayerMagnify",
       "story": "Example Config",
       "parameters": {
-        "fileName": 1158,
+        "fileName": 1157,
         "framework": "react",
         "__id": "mapcomponents-mllayermagnify--example-config",
         "__isArgsStory": true
@@ -341,11 +327,11 @@
       "id": "mapcomponents-mllayerswipe--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlLayerSwipe",
-      "importPath": 1159,
+      "importPath": 1158,
       "kind": "MapComponents/MlLayerSwipe",
       "story": "Example Config",
       "parameters": {
-        "fileName": 1159,
+        "fileName": 1158,
         "framework": "react",
         "__id": "mapcomponents-mllayerswipe--example-config",
         "__isArgsStory": false
@@ -369,11 +355,11 @@
       "id": "mapcomponents-mlmarker--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlMarker",
-      "importPath": 1168,
+      "importPath": 1167,
       "kind": "MapComponents/MlMarker",
       "story": "Example Config",
       "parameters": {
-        "fileName": 1168,
+        "fileName": 1167,
         "framework": "react",
         "__id": "mapcomponents-mlmarker--example-config",
         "__isArgsStory": true
@@ -383,11 +369,11 @@
       "id": "mapcomponents-mlmeasuretool--measure-line",
       "name": "Measure Line",
       "title": "MapComponents/MlMeasureTool",
-      "importPath": 1169,
+      "importPath": 1168,
       "kind": "MapComponents/MlMeasureTool",
       "story": "Measure Line",
       "parameters": {
-        "fileName": 1169,
+        "fileName": 1168,
         "framework": "react",
         "__id": "mapcomponents-mlmeasuretool--measure-line",
         "__isArgsStory": true
@@ -397,11 +383,11 @@
       "id": "mapcomponents-mlmeasuretool--measure-polygon",
       "name": "Measure Polygon",
       "title": "MapComponents/MlMeasureTool",
-      "importPath": 1169,
+      "importPath": 1168,
       "kind": "MapComponents/MlMeasureTool",
       "story": "Measure Polygon",
       "parameters": {
-        "fileName": 1169,
+        "fileName": 1168,
         "framework": "react",
         "__id": "mapcomponents-mlmeasuretool--measure-polygon",
         "__isArgsStory": true
@@ -411,11 +397,11 @@
       "id": "mapcomponents-mlnavigationcompass--standard",
       "name": "Standard",
       "title": "MapComponents/MlNavigationCompass",
-      "importPath": 1170,
+      "importPath": 1169,
       "kind": "MapComponents/MlNavigationCompass",
       "story": "Standard",
       "parameters": {
-        "fileName": 1170,
+        "fileName": 1169,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationcompass--standard",
         "__isArgsStory": true
@@ -425,11 +411,11 @@
       "id": "mapcomponents-mlnavigationcompass--style-example",
       "name": "Style Example",
       "title": "MapComponents/MlNavigationCompass",
-      "importPath": 1170,
+      "importPath": 1169,
       "kind": "MapComponents/MlNavigationCompass",
       "story": "Style Example",
       "parameters": {
-        "fileName": 1170,
+        "fileName": 1169,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationcompass--style-example",
         "__isArgsStory": true
@@ -537,11 +523,11 @@
       "id": "mapcomponents-mlscalereference--toolbar",
       "name": "Toolbar",
       "title": "MapComponents/MlScaleReference",
-      "importPath": 1171,
+      "importPath": 1170,
       "kind": "MapComponents/MlScaleReference",
       "story": "Toolbar",
       "parameters": {
-        "fileName": 1171,
+        "fileName": 1170,
         "framework": "react",
         "__id": "mapcomponents-mlscalereference--toolbar",
         "__isArgsStory": true
@@ -551,11 +537,11 @@
       "id": "mapcomponents-mlscalereference--overlay",
       "name": "Overlay",
       "title": "MapComponents/MlScaleReference",
-      "importPath": 1171,
+      "importPath": 1170,
       "kind": "MapComponents/MlScaleReference",
       "story": "Overlay",
       "parameters": {
-        "fileName": 1171,
+        "fileName": 1170,
         "framework": "react",
         "__id": "mapcomponents-mlscalereference--overlay",
         "__isArgsStory": true
@@ -586,18 +572,18 @@
         "fileName": 1189,
         "framework": "react",
         "__id": "mapcomponents-mlsketchtool--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlspatialelevationprofile--example-config": {
       "id": "mapcomponents-mlspatialelevationprofile--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlSpatialElevationProfile",
-      "importPath": 1172,
+      "importPath": 1171,
       "kind": "MapComponents/MlSpatialElevationProfile",
       "story": "Example Config",
       "parameters": {
-        "fileName": 1172,
+        "fileName": 1171,
         "framework": "react",
         "__id": "mapcomponents-mlspatialelevationprofile--example-config",
         "__isArgsStory": false
@@ -614,18 +600,18 @@
         "fileName": 1194,
         "framework": "react",
         "__id": "mapcomponents-mlthreejslayer--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mltransitiongeojsonlayer--linestring": {
       "id": "mapcomponents-mltransitiongeojsonlayer--linestring",
       "name": "Linestring",
       "title": "MapComponents/MlTransitionGeoJsonLayer",
-      "importPath": 1173,
+      "importPath": 1172,
       "kind": "MapComponents/MlTransitionGeoJsonLayer",
       "story": "Linestring",
       "parameters": {
-        "fileName": 1173,
+        "fileName": 1172,
         "framework": "react",
         "__id": "mapcomponents-mltransitiongeojsonlayer--linestring",
         "__isArgsStory": true
@@ -649,11 +635,11 @@
       "id": "mapcomponents-mlvectortilelayer--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlVectorTileLayer",
-      "importPath": 1174,
+      "importPath": 1173,
       "kind": "MapComponents/MlVectorTileLayer",
       "story": "Example Config",
       "parameters": {
-        "fileName": 1174,
+        "fileName": 1173,
         "framework": "react",
         "__id": "mapcomponents-mlvectortilelayer--example-config",
         "__isArgsStory": true
@@ -670,18 +656,18 @@
         "fileName": 1200,
         "framework": "react",
         "__id": "mapcomponents-mlwmsfeatureinfopopup--example-config",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlwmslayer--example-config": {
       "id": "mapcomponents-mlwmslayer--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlWmsLayer",
-      "importPath": 1175,
+      "importPath": 1174,
       "kind": "MapComponents/MlWmsLayer",
       "story": "Example Config",
       "parameters": {
-        "fileName": 1175,
+        "fileName": 1174,
         "framework": "react",
         "__id": "mapcomponents-mlwmslayer--example-config",
         "__isArgsStory": true
@@ -705,11 +691,11 @@
       "id": "hooks-usecamerafollowpath--example-config",
       "name": "Example Config",
       "title": "Hooks/useCameraFollowPath",
-      "importPath": 1178,
+      "importPath": 1177,
       "kind": "Hooks/useCameraFollowPath",
       "story": "Example Config",
       "parameters": {
-        "fileName": 1178,
+        "fileName": 1177,
         "framework": "react",
         "__id": "hooks-usecamerafollowpath--example-config",
         "__isArgsStory": false
@@ -719,14 +705,28 @@
       "id": "mapcomponents-usegpx--example-config",
       "name": "Example Config",
       "title": "MapComponents/useGpx",
-      "importPath": 1179,
+      "importPath": 1178,
       "kind": "MapComponents/useGpx",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 1178,
+        "framework": "react",
+        "__id": "mapcomponents-usegpx--example-config",
+        "__isArgsStory": false
+      }
+    },
+    "hooks-uselayerfilter--example-config": {
+      "id": "hooks-uselayerfilter--example-config",
+      "name": "Example Config",
+      "title": "hooks/useLayerFilter",
+      "importPath": 1179,
+      "kind": "hooks/useLayerFilter",
       "story": "Example Config",
       "parameters": {
         "fileName": 1179,
         "framework": "react",
-        "__id": "mapcomponents-usegpx--example-config",
-        "__isArgsStory": false
+        "__id": "hooks-uselayerfilter--example-config",
+        "__isArgsStory": true
       }
     },
     "mapcomponents-uselayerhoverpopup--example-config": {
