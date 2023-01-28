@@ -6,7 +6,6 @@
 	"module": "dist/index.esm.js",
 	"source": "src/index.ts",
 	"types": "dist/index.d.ts",
-	"type": "module",
 	"scripts": {
 		"build": "rollup -c",
 		"start": "start-storybook -p 6006 -s public",
