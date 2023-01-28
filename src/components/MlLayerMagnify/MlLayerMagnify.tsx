@@ -120,6 +120,10 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 			mapContext.getMap(props.map2Id).map
 		);
 
+		onMove({
+			clientX: swipeXRef.current,
+			clientY: swipeYRef.current,
+		} as (TouchEvent & MouseEvent));
 		/*
 		automatically adjust radius for small screens
 		if (
