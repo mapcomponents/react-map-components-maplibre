@@ -3,8 +3,6 @@ import MapContext from '../../contexts/MapContext';
 
 import Button from '@mui/material/Button';
 import maplibregl, { CustomLayerInterface, LngLatLike, Map } from 'maplibre-gl';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import * as THREE from 'three';
 import GLTFLoader from './lib/GLTFLoader';
 import PropTypes from 'prop-types';
@@ -89,10 +87,10 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const customLayer: CustomLayerInterface & {
-			camera: typeof THREE.Camera;
-			scene: typeof THREE.Scene;
+			camera: THREE.Camera | undefined;
+			scene: THREE.Scene | undefined;
 			map: Map;
-			renderer: typeof THREE.WebGLRenderer;
+			renderer: THREE.WebGLRenderer;
 		} = {
 			id: '3d-model',
 			type: 'custom',
@@ -119,8 +117,8 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 				loader.load(
 					'assets/3D/godzilla_simple.glb',
 					//"https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf",
-					function (gltf: { scene: typeof THREE.scene }) {
-						self.scene.add(gltf.scene);
+					function (gltf: { scene: THREE.Scene }) {
+						self.scene?.add(gltf.scene);
 						if (typeof props.onDone === 'function') {
 							props.onDone();
 						}
@@ -165,10 +163,12 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 					.multiply(rotationY)
 					.multiply(rotationZ);
 
-				this.camera.projectionMatrix = m.multiply(l);
-				this.renderer.resetState();
-				this.renderer.render(this.scene, this.camera);
-				this.map.triggerRepaint();
+				if (this.camera && this.scene) {
+					this.camera.projectionMatrix = m.multiply(l);
+					this.renderer.resetState();
+					this.renderer.render(this.scene, this.camera);
+					this.map.triggerRepaint();
+				}
 			},
 		};
 
