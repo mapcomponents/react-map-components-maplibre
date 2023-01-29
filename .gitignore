@@ -19,6 +19,7 @@
 /src/__image_snapshots__
 
 
+/.vscode
 /.idea
 # misc
 .DS_Store

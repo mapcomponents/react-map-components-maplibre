@@ -1,16 +1,25 @@
-import React from 'react';
+import React, {  useMemo } from 'react';
 
 import { MapComponentsProvider } from '../index';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import './style.css';
 import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools';
-import ThemeWrapper from './ThemeWrapper';
+import { ThemeProvider as MUIThemeProvider, createTheme } from '@mui/material/styles';
 
 const decorators = [
 	(Story, context) => {
+		const theme = useMemo(
+			() =>
+				createTheme({
+					palette: {
+						mode: context?.globals?.theme ? context?.globals?.theme : 'light',
+					},
+				}),
+			[context?.globals?.theme]
+		);
 		return (
 			<div className="fullscreen_map">
-				<ThemeWrapper context={context}>
+				<MUIThemeProvider theme={theme}>
 					<MapComponentsProvider>
 						<Story />
 						<MapLibreMap
@@ -27,7 +36,7 @@ const decorators = [
 							mapId="map_1"
 						/>
 					</MapComponentsProvider>
-				</ThemeWrapper>
+				</MUIThemeProvider>
 			</div>
 		);
 	},
