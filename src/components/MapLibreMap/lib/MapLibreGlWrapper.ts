@@ -424,8 +424,8 @@ class MapLibreGlWrapper {
 			if (!self.map.style) {
 				return this;
 			}
-			if(typeof meta === 'string' && typeof componentId === 'undefined'){
-			  return self.addImage(id, image, undefined, componentId);
+			if (typeof meta === 'string' && typeof componentId === 'undefined') {
+				return self.addImage(id, image, undefined, meta);
 			}
 			if (componentId && typeof componentId === 'string' && typeof id !== 'undefined') {
 				self.initRegisteredElements(componentId);
