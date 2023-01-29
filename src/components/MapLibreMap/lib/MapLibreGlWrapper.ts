@@ -53,7 +53,7 @@ interface MapLibreGlWrapper extends MapType {
 					data: Uint8Array | Uint8ClampedArray;
 			  }
 			| StyleImageInterface,
-		key?: Partial<StyleImageMetadata>,
+		key?: Partial<StyleImageMetadata> | string | undefined,
 		componentId?: string | undefined
 	) => this;
 	addLayer: (
@@ -432,7 +432,7 @@ class MapLibreGlWrapper {
 				self.registeredElements[componentId].images.push(id);
 			}
 
-			self.map.addImage(id, image, meta);
+			self.map.addImage(id, image, meta as Partial<StyleImageMetadata> | undefined);
 			return this;
 		};
 
