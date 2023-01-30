@@ -21,7 +21,6 @@ let theme = createTheme({
 	},
 
 	/*
-
 	palette: {
 		primary: {
 			main: '#121212',
