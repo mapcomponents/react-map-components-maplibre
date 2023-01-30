@@ -59,7 +59,7 @@ const Template = () => {
 
 	return (
 		<>
-				<MlGpxViewerInstructions open={guide} />
+			<MlGpxViewerInstructions open={guide} />
 			<TopToolbar appBarStyle={{ zIndex: 500 }}>
 				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
 					Guide me through
@@ -84,12 +84,7 @@ const Template = () => {
 				<UploadButton
 					setData={setGpxData}
 					buttonComponent={
-						<IconButton
-							style={{
-								backgroundColor: 'rgba(255,255,255,1)',
-							}}
-							size="large"
-						>
+						<IconButton size="large">
 							<FileCopy />
 						</IconButton>
 					}
@@ -97,9 +92,6 @@ const Template = () => {
 				<IconButton
 					onClick={() => {
 						setMetadataDrawerOpen((prevState) => !prevState);
-					}}
-					style={{
-						backgroundColor: 'rgba(255,255,255,1)',
 					}}
 					size="large"
 				>

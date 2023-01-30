@@ -121,10 +121,7 @@ const Template = () => {
 				>
 					Reset
 				</Button>
-				<Typography
-					id="discrete-slider"
-					style={{ color: '#121212', marginLeft: '10px', marginRight: '10px' }}
-				>
+				<Typography id="discrete-slider" style={{ marginLeft: '10px', marginRight: '10px' }}>
 					Zoom:
 				</Typography>
 				<Slider
@@ -148,10 +145,7 @@ const Template = () => {
 						maxWidth: '200px',
 					}}
 				/>
-				<Typography
-					id="discrete-slider2"
-					style={{ color: '#121212', marginLeft: '10px', marginRight: '10px' }}
-				>
+				<Typography id="discrete-slider2" style={{ marginLeft: '10px', marginRight: '10px' }}>
 					Speed:
 				</Typography>
 				<Slider

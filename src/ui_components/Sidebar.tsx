@@ -40,8 +40,8 @@ export default function Sidebar({ drawerPaperProps, drawerHeaderProps, drawerBut
 					zIndex: 101,
 					position: 'relative',
 					padding: '20px',
-					...drawerButtonStyle
-				}}				
+					...drawerButtonStyle,
+				}}
 			>
 				<MenuIcon />
 			</IconButton>
@@ -53,7 +53,7 @@ export default function Sidebar({ drawerPaperProps, drawerHeaderProps, drawerBut
 				PaperProps={{
 					sx: {
 						maxWidth: '20%',
-						padding: '40px'						
+						padding: '40px',
 					},
 					...drawerPaperProps,
 				}}
@@ -62,7 +62,6 @@ export default function Sidebar({ drawerPaperProps, drawerHeaderProps, drawerBut
 					zIndex: 105,
 					position: 'absolute',
 					top: 0,
-					backgroundColor: '#fafafa',
 					display: 'flex',
 					flexDirection: 'column',
 					maxWidth: mediaIsMobile ? '90vw' : '20vw',
