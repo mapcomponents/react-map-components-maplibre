@@ -1,8 +1,17 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, ReactNode } from 'react';
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 
+export interface MapContextType {
+	mapIds: string[];
+	mapExists: (map_id: string | undefined) => boolean;
+	maps: MapLibreGlWrapper[];
+	map: MapLibreGlWrapper | undefined;
+	getMap: (map_id: string | undefined) => MapLibreGlWrapper;
+	setMap: (map: MapLibreGlWrapper) => void;
+	removeMap: (map_id: string | undefined) => void;
+	registerMap: (map_id: string | undefined, map: MapLibreGlWrapper) => void;
+}
 const MapContext = React.createContext({} as MapContextType);
-
 
 /**
  * MapComponentsProvider must be imported and wrapped around component where at least one of its child nodes requires access to a MapLibre-gl or openlayers instance that is registered in this mapContext.
@@ -11,19 +20,18 @@ MapComponentsProvider must be used one level higher than the first use of MapCon
  * MapComponentsProvider requires at least one use of the MapLibreMap component somewhere down the component tree that will create the MapLibre-gl object and set the reference at MapContext.map. For MapLibre maps it is a good idea to provide a mapId attribute to the MapLibreMap Component even if you are only using a single map instance at start. It will make a later transition to using multiple instances within the same project much easier.
  */
 
-const MapComponentsProvider = ({ children }:{children:any}) => {
-	const [map, setMap] = useState<(MapLibreGlWrapper | undefined)>(undefined);
+const MapComponentsProvider = ({ children }: { children: ReactNode }) => {
+	const [map, setMap] = useState<MapLibreGlWrapper | undefined>(undefined);
 	const [mapIds, setMapIds] = useState<[...string[]]>([]);
-	let mapIds_raw = useRef<[...string[]]>([]);
-	let maps = useRef<any>({});
+	const mapIds_raw = useRef<[...string[]]>([]);
+	const maps = useRef<{ [key: string]: MapLibreGlWrapper }>({});
 
-
-	const removeMap = (mapId:string) => {
+	const removeMap = (mapId: string) => {
 		if (mapId) {
-			if (typeof maps.current[mapId] !== "undefined") {
+			if (typeof maps.current[mapId] !== 'undefined') {
 				delete maps.current[mapId];
 			}
-			let mapIdIndex = mapIds_raw.current.indexOf(mapId);
+			const mapIdIndex = mapIds_raw.current.indexOf(mapId);
 			if (mapIdIndex > -1) {
 				mapIds_raw.current.splice(mapIdIndex, 1);
 			}
@@ -34,15 +42,15 @@ const MapComponentsProvider = ({ children }:{children:any}) => {
 			}
 		} else {
 			setMap(undefined);
-			removeMap("anonymous_map");
+			removeMap('anonymous_map');
 		}
 	};
 
-	const setMapHandler = (mapInstance:MapLibreGlWrapper) => {
+	const setMapHandler = (mapInstance: MapLibreGlWrapper) => {
 		setMap(mapInstance);
 
 		if (mapIds.length === 0) {
-			let mapId = "anonymous_map";
+			const mapId = 'anonymous_map';
 			setMapIds([...mapIds, mapId]);
 			maps.current[mapId] = mapInstance;
 		}
@@ -53,7 +61,7 @@ const MapComponentsProvider = ({ children }:{children:any}) => {
 		setMap: setMapHandler,
 		maps: maps.current,
 		mapIds: mapIds,
-		registerMap: (mapId:string, mapInstance:MapLibreGlWrapper) => {
+		registerMap: (mapId: string, mapInstance: MapLibreGlWrapper) => {
 			if (mapId && mapInstance) {
 				maps.current[mapId] = mapInstance;
 				mapIds_raw.current.push(mapId);
@@ -65,7 +73,7 @@ const MapComponentsProvider = ({ children }:{children:any}) => {
 			}
 		},
 		removeMap,
-		mapExists: (mapId:string) => {
+		mapExists: (mapId: string) => {
 			if (mapId && Object.keys(maps.current).indexOf(mapId) === -1) {
 				return false;
 			} else if (!mapId && !map) {
@@ -73,7 +81,7 @@ const MapComponentsProvider = ({ children }:{children:any}) => {
 			}
 			return true;
 		},
-		getMap: (mapId:string):(MapLibreGlWrapper | null) => {
+		getMap: (mapId: string): MapLibreGlWrapper | null => {
 			if (mapId && mapIds.indexOf(mapId) !== -1) {
 				return maps.current[mapId];
 			} else if (!mapId && map) {
@@ -82,9 +90,8 @@ const MapComponentsProvider = ({ children }:{children:any}) => {
 
 			return null;
 		},
-	};
+	} as unknown as MapContextType;
 
-	//@ts-ignore
 	return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
 };
 

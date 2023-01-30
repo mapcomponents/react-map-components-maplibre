@@ -9,6 +9,7 @@ import {
 	CustomLayerInterface,
 	SourceSpecification,
 	ControlPosition,
+	StyleImageMetadata,
 } from '!maplibre-gl';
 import { Map as MapType, Style } from 'maplibre-gl';
 
@@ -39,6 +40,34 @@ type ViewportState = {
  * @class
  */
 
+interface MapLibreGlWrapper extends MapType {
+	addImage: (
+		id: string,
+		image:
+			| HTMLImageElement
+			| ImageBitmap
+			| ImageData
+			| {
+					width: number;
+					height: number;
+					data: Uint8Array | Uint8ClampedArray;
+			  }
+			| StyleImageInterface,
+		key?: Partial<StyleImageMetadata> | string | undefined,
+		componentId?: string | undefined
+	) => this;
+	addLayer: (
+		layer:
+			| (LayerSpecification & {
+					source?: string | SourceSpecification | undefined;
+			  })
+			| (CustomLayerInterface & {
+					source?: string | SourceSpecification | undefined;
+			  }),
+		beforeId?: string | undefined,
+		componentId?: string | undefined
+	) => this;
+}
 class MapLibreGlWrapper {
 	registeredElements: {
 		[key: string]: {
@@ -90,42 +119,21 @@ class MapLibreGlWrapper {
 	initRegisteredElements: (componentId: string, force?: boolean | undefined) => void;
 	addNativeMaplibreFunctionsAndProps: () => void;
 	map: MapType;
-	style: object;
+	style: Style;
 
 	styleJson: object;
-	addLayer: (
-		layer:
-			| (LayerSpecification & {
-					source?: string | SourceSpecification | undefined;
-			  })
-			| (CustomLayerInterface & {
-					source?: string | SourceSpecification | undefined;
-			  }),
-		beforeId?: string | undefined,
+	addSource: (id: string, source: SourceSpecification, componentId?: string | undefined) => this;
+	addControl: (
+		control: IControl | unknown,
+		position?: ControlPosition | undefined,
 		componentId?: string | undefined
-	) => Map | undefined;
-	addSource: (id: string, source: SourceSpecification,componentId?: string | undefined) => Map | undefined;
-	addControl: (control: IControl | unknown, position?: ControlPosition | undefined,componentId?: string | undefined) => Map | undefined;
-	addImage: (
-		id: string,
-		image:
-			| HTMLImageElement
-			| ImageBitmap
-			| ImageData
-			| {
-					width: number;
-					height: number;
-					data: Uint8Array | Uint8ClampedArray;
-			  }
-			| StyleImageInterface,
-		componentId?: string | undefined
-	) => void;
+	) => this;
 	on: (
 		type: keyof MapLayerEventType | keyof MapEventType | string,
 		layerId: string | ((ev: unknown) => void),
 		handler?: ((ev: MapEventType & unknown) => Map | void) | string,
 		componentId?: string | undefined
-	) => Map | undefined;
+	) => this;
 	cleanup: (componentId: string) => void;
 
 	constructor(props: {
@@ -367,7 +375,7 @@ class MapLibreGlWrapper {
 		 */
 		this.addLayer = (layer, beforeId, componentId) => {
 			if (!self.map.style) {
-				return;
+				return this;
 			}
 			if (componentId && typeof componentId === 'string' && typeof layer.id !== 'undefined') {
 				self.initRegisteredElements(componentId);
@@ -379,7 +387,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map.addLayer(layer, beforeId);
-			return self.map;
+			return this;
 		};
 
 		/**
@@ -393,7 +401,7 @@ class MapLibreGlWrapper {
 		 */
 		this.addSource = (sourceId, source, componentId) => {
 			if (!self.map.style) {
-				return;
+				return this;
 			}
 			if (componentId && typeof componentId === 'string' && typeof sourceId !== 'undefined') {
 				self.initRegisteredElements(componentId);
@@ -401,7 +409,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map.addSource(sourceId, source);
-			return self.map;
+			return this;
 		};
 
 		/**
@@ -411,18 +419,21 @@ class MapLibreGlWrapper {
 		 * @param {*} image
 		 * @param {*} ref
 		 * @param {string} componentId
-		 * @returns {undefined}
 		 */
-		this.addImage = (id, image, componentId) => {
+		this.addImage = (id, image, meta, componentId) => {
 			if (!self.map.style) {
-				return;
+				return this;
+			}
+			if (typeof meta === 'string' && typeof componentId === 'undefined') {
+				return self.addImage(id, image, undefined, meta);
 			}
 			if (componentId && typeof componentId === 'string' && typeof id !== 'undefined') {
 				self.initRegisteredElements(componentId);
 				self.registeredElements[componentId].images.push(id);
 			}
 
-			self.map.addImage(id, image);
+			self.map.addImage(id, image, meta as Partial<StyleImageMetadata> | undefined);
+			return this;
 		};
 
 		/**
@@ -456,7 +467,7 @@ class MapLibreGlWrapper {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			self.map.on(..._arguments);
-			return self.map;
+			return this;
 		};
 
 		/**
@@ -473,7 +484,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map.addControl(control as IControl, position);
-			return self.map;
+			return this;
 		};
 
 		/**
@@ -675,7 +686,6 @@ class MapLibreGlWrapper {
 		initializeMapLibre();
 	}
 }
-
 export default MapLibreGlWrapper;
 
 export type { LayerState, ViewportState };

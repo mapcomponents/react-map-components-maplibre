@@ -42,7 +42,7 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 		navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
 	};
 
-	const getLocationSuccess = useCallback((location) => {
+	const getLocationSuccess = useCallback((location:GeolocationPosition) => {
 		mapHook.map?.map.setCenter?.([location.coords.longitude, location.coords.latitude]);
 	}, [mapHook.map]);
 

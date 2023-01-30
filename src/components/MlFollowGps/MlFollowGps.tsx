@@ -93,7 +93,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 	const initiallyCentered = useRef(false);
 
 	const getLocationSuccess = useCallback(
-		(pos) => {
+		(pos:GeolocationPosition) => {
 			if (!mapHook.map) return;
 
 			if ((!props.centerUserPosition && !initiallyCentered.current) || props.centerUserPosition) {
@@ -127,12 +127,12 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 		if (!userLocationGeoJson) {
 			return undefined;
 		}
-		let radius = 0.02;
-		let bearing1 = deviceOrientation - 15;
-		let bearing2 = deviceOrientation + 15;
+		const radius = 0.02;
+		const bearing1 = deviceOrientation - 15;
+		const bearing2 = deviceOrientation + 15;
 		const options = { steps: 65 };
-		let arc = lineArc(userLocationGeoJson, radius, bearing1, bearing2, options);
-		let copy = arc;
+		const arc = lineArc(userLocationGeoJson, radius, bearing1, bearing2, options);
+		const copy = arc;
 		copy.geometry.coordinates.push(userLocationGeoJson.geometry.coordinates);
 		copy.geometry.coordinates.slice(0, 0);
 		return copy;
@@ -144,7 +144,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 
 	useEffect(() => {
 		if (isFollowed) {
-			let _handleOrientation = handleOrientation;
+			const _handleOrientation = handleOrientation;
 			window.addEventListener("deviceorientation", _handleOrientation);
 			return () => {
 				window.removeEventListener("deviceorientation", _handleOrientation);
@@ -159,7 +159,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 		if (!mapHook.map) return;
 
 		if (isFollowed) {
-			let _watchId = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
+			const _watchId = navigator.geolocation.watchPosition(getLocationSuccess, getLocationError);
 
 			return () => {
 				navigator.geolocation.clearWatch(_watchId);

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, useCallback, useState, useMemo } from 'react';
 
-import MapContext from '../../contexts/MapContext';
+import MapContext, { MapContextType } from '../../contexts/MapContext';
 import { v4 as uuidv4 } from 'uuid';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
@@ -13,7 +13,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import { LngLat } from 'maplibre-gl';
+import { LngLat,  MapMouseEvent } from 'maplibre-gl';
 import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
@@ -117,7 +117,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	}, [layers]);
 
 	const getFeatureInfo = useCallback(
-		(ev) => {
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		(ev:(MapMouseEvent & Object)) => {
 			if (!mapRef.current) return;
 			setFeatureInfoLngLat(undefined);
 			setFeatureInfoContent(undefined);
@@ -190,7 +191,9 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 		const _getFeatureInfo = getFeatureInfo;
 
-		mapRef.current.on('click', _getFeatureInfo, componentId.current);
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore: ts appears not to consider overloads
+		mapRef.current.map.on('click', _getFeatureInfo, componentId.current);
 		return () => {
 			mapRef.current?.map.off?.('click', _getFeatureInfo);
 		};

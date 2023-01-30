@@ -11,7 +11,7 @@ export default function TopToolbar({ toolbarProps, appBarStyle, ...props }: TopT
 		<AppBar
 			sx={{
 				minHeight: '62px',
-				backgroundColor: '#f1f1f1',
+				backgroundColor: 'background.default',
 				position: 'absolute',
 				zIndex: 120,
 				...appBarStyle

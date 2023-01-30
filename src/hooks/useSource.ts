@@ -61,7 +61,7 @@ function useSource(props: useSourceProps): useSourceType {
 	useEffect(() => {
 		return () => {
 			initializedRef.current = false;
-			if (mapHook.map) {
+			if (mapHook.map && mapHook.map?.map?.style?._layers) {
 				for (const [layerId, layer] of Object.entries(mapHook.map.map.style._layers)) {
 					if (layer.source === sourceId.current) {
 						mapHook.map.map.removeLayer(layerId);
