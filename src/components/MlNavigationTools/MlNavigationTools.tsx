@@ -143,18 +143,10 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				{props.showZoomButtons && (
 					<>
 						<Button variant="navtools" onClick={zoomIn}>
-							<ControlPointIcon
-								sx={{
-									fontSize: mediaIsMobile ? '1.4em' : '1em',
-								}}
-							/>
+							<ControlPointIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 						<Button variant="navtools" onClick={zoomOut}>
-							<RemoveCircleOutlineIcon
-								sx={{
-									fontSize: mediaIsMobile ? '1.4em' : '1em',
-								}}
-							/>
+							<RemoveCircleOutlineIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 					</>
 				)}

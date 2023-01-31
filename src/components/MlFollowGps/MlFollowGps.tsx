@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useCallback, useMemo } from "react"
 import useMap from "../../hooks/useMap";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 
-import { Button, SxProps, useMediaQuery } from '@mui/material';
+import { Button } from '@mui/material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
 import { point, circle, lineArc, Feature, Point } from '@turf/turf';
@@ -80,7 +80,6 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	const [isFollowed, setIsFollowed] = useState(false);
 	const [userLocationGeoJson, setUserLocationGeoJson] = useState<Feature<Point>>();
@@ -220,11 +219,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 					setIsFollowed(!isFollowed);
 				}}
 			>
-				<GpsFixedIcon
-					sx={{
-						fontSize: mediaIsMobile ? '1.4em' : '1em',
-					}}
-				/>
+				<GpsFixedIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 			</Button>
 		</>
 	);

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import useMap from "../../hooks/useMap";
-import { Button, SxProps, Theme, useMediaQuery } from '@mui/material';
+import { Button, SxProps, Theme } from '@mui/material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
 export interface MlCenterPositionProps {
@@ -36,7 +36,6 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	const [locationAccessDenied, setLocationAccessDenied] = useState(false);
 
@@ -66,11 +65,7 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 				onClick={centerCurrentLocation}
 				disabled={locationAccessDenied}
 			>
-				<GpsFixedIcon
-					sx={{
-						fontSize: mediaIsMobile ? '1.4em' : '1em',
-					}}
-				/>
+				<GpsFixedIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 			</Button>
 		</>
 	);
