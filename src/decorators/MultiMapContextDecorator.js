@@ -1,25 +1,15 @@
 import React, { useMemo } from 'react';
-
 import { MapComponentsProvider } from '../index';
-
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
-
 import './style.css';
 import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools';
-
 import { ThemeProvider as MUIThemeProvider, createTheme } from '@mui/material/styles';
+import getTheme from '../ui_components/MapcomponentsTheme';
 
 const decorators = [
 	(Story, context) => {
-		const theme = useMemo(
-			() =>
-				createTheme({
-					palette: {
-						mode: context?.globals?.theme ? context?.globals?.theme : 'light',
-					},
-				}),
-			[context?.globals?.theme]
-		);
+		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
+
 		return (
 			<div className="fullscreen_map">
 				<MUIThemeProvider theme={theme}>
