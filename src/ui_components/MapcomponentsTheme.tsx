@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import { Theme } from '@mui/system';
 
 declare module '@mui/material/Button' {
 	interface ButtonPropsVariantOverrides {
@@ -17,7 +18,7 @@ const darkDefault = createTheme({
 	},
 });
 
-const getDesignTokens = (mode?: string) => ({
+const getDesignTokens = (mode: 'light' | 'dark') => ({
 	...(mode === 'light' ? lightDefault : darkDefault),
 	palette: {
 		mode,
@@ -29,7 +30,8 @@ const getDesignTokens = (mode?: string) => ({
 
 					background: {
 						default: '#fff',
-						paper: '#bdbdbd',
+						paper: '#eeeeee',
+						icon: '#bdbdbd',
 					},
 					text: {
 						primary: '#000',
@@ -43,14 +45,16 @@ const getDesignTokens = (mode?: string) => ({
 					background: {
 						default: '#000',
 						paper: '#424242',
+						icon: '#424242',
 					},
 					text: { secondary: '#fff' },
 			  }),
 	},
 });
-const theme = (mode?: string) => {
-	const theme: any = getDesignTokens(mode);
+const theme = (mode: 'light' | 'dark') => {
+	const theme: Theme = getDesignTokens(mode);
 
+	// @ts-ignore
 	return createTheme(theme, {
 		components: {
 			MuiAppBar: {
@@ -64,9 +68,9 @@ const theme = (mode?: string) => {
 				styleOverrides: {
 					root: {
 						color: theme.palette.text.primary,
-						backgroundColor: theme.palette.background.paper,
+						backgroundColor: theme.palette.background.icon,
 						':hover': {
-							backgroundColor: theme.palette.background.paper,
+							backgroundColor: theme.palette.background.icon,
 							color: theme.palette.primary.main,
 						},
 					},
@@ -96,7 +100,7 @@ const theme = (mode?: string) => {
 								height: '30px',
 								fontSize: '1.2em',
 							},
-							backgroundColor: theme.palette.background.paper,
+							backgroundColor: theme.palette.background.icon,
 							borderRadius: '23%',
 							//border: "1px solid #bbb",
 							//boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
@@ -104,7 +108,7 @@ const theme = (mode?: string) => {
 							marginTop: '4px',
 							':hover': {
 								color: theme.palette.primary.main,
-								backgroundColor: theme.palette.background.paper,
+								backgroundColor: theme.palette.background.icon,
 							},
 							color: theme.palette.text.secondary,
 						},
