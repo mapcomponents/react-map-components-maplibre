@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import useMap from "../../hooks/useMap";
-import { Button, SxProps, Theme } from "@mui/material";
-import	GpsFixedIcon	from "@mui/icons-material/GpsFixed";
+import { Button, SxProps, Theme, useMediaQuery } from '@mui/material';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
 export interface MlCenterPositionProps {
 	/**
@@ -36,51 +36,49 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
+	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+
 	const [locationAccessDenied, setLocationAccessDenied] = useState(false);
 
 	const centerCurrentLocation = () => {
 		navigator.geolocation.getCurrentPosition(getLocationSuccess, getLocationError);
 	};
 
-	const getLocationSuccess = useCallback((location:GeolocationPosition) => {
-		mapHook.map?.map.setCenter?.([location.coords.longitude, location.coords.latitude]);
-	}, [mapHook.map]);
+	const getLocationSuccess = useCallback(
+		(location: GeolocationPosition) => {
+			mapHook.map?.map.setCenter?.([location.coords.longitude, location.coords.latitude]);
+		},
+		[mapHook.map]
+	);
 
 	const getLocationError = () => {
-		console.log("Access of user location denied");
+		console.log('Access of user location denied');
 		setLocationAccessDenied(true);
 	};
-	return <>
-			<Button 
+	return (
+		<>
+			<Button
+				variant="navtools"
 				sx={{
 					zIndex: 1002,
 					color: !locationAccessDenied ? props.onColor : props.offColor,
-					...props.style,
 				}}
-			 onClick={centerCurrentLocation} disabled={locationAccessDenied}>
-				<GpsFixedIcon sx={{ ...(props.style?.['fontSize']?{fontSize: props.style?.['fontSize']}:{}) }} />{" "}
+				onClick={centerCurrentLocation}
+				disabled={locationAccessDenied}
+			>
+				<GpsFixedIcon
+					sx={{
+						fontSize: mediaIsMobile ? '1.4em' : '1em',
+					}}
+				/>
 			</Button>
-	</>;
-
+		</>
+	);
 };
 
 MlCenterPosition.defaultProps = {
 	mapId: undefined,
-	style: {
-		minWidth: "30px",
-		minHeight: "30px",
-		width: "30px",
-		height: "30px",
-		backgroundColor: "#414141",
-		borderRadius: "23%",
-		margin: 0.15,
-		fontSize: "1.3em",
-		":hover": {
-			backgroundColor: "#515151",
-			color: "#ececec",
-		},
-	},
-	onColor: "#ececec",
-	offColor: "#666",
+	onColor: '#ececec',
+	offColor: '#666',
 };
 export default MlCenterPosition;
