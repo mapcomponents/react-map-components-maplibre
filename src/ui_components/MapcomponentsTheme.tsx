@@ -1,5 +1,11 @@
 import { createTheme } from '@mui/material/styles';
-//import getDesignTokens from 'MapcomponentsThemeColor';
+
+declare module '@mui/material/Button' {
+	interface ButtonPropsVariantOverrides {
+		navtools: true;
+	}
+}
+
 const lightDefault = createTheme({
 	palette: {
 		mode: 'light',
@@ -11,7 +17,7 @@ const darkDefault = createTheme({
 	},
 });
 
-const getDesignTokens = (mode) => ({
+const getDesignTokens = (mode?: string) => ({
 	...(mode === 'light' ? lightDefault : darkDefault),
 	palette: {
 		mode,
@@ -42,8 +48,8 @@ const getDesignTokens = (mode) => ({
 			  }),
 	},
 });
-const theme = (mode) => {
-	const theme = getDesignTokens(mode);
+const theme = (mode?: string) => {
+	const theme: any = getDesignTokens(mode);
 
 	return createTheme(theme, {
 		components: {

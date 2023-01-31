@@ -46,11 +46,16 @@ interface MlNavigationToolsProps {
 	 * Style attribute for NavigationTools container
 	 */
 	sx?: SxProps;
+	/**
+	 * Style attribute for NavigationTools container
+	 */
+	mediaIsMobile?: boolean;
 }
 
 /**
  * @component
  */
+
 const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
