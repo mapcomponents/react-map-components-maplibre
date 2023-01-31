@@ -47,8 +47,8 @@ const Template = () => {
 
 	return (
 		<>
-		<MlGpxViewerInstructions open={guide} />
-		<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
+			<MlGpxViewerInstructions open={guide} />
+			<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
 			<TopToolbar appBarStyle={{ zIndex: 500 }}>
 				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
 					Guide me through
@@ -57,8 +57,7 @@ const Template = () => {
 					Demo Mode
 				</Button>
 			</TopToolbar>
-			
-			
+
 			<div
 				style={{
 					position: 'fixed',
@@ -73,12 +72,7 @@ const Template = () => {
 				<UploadButton
 					setData={setGpxData}
 					buttonComponent={
-						<IconButton
-							style={{
-								backgroundColor: 'rgba(255,255,255,1)',
-							}}
-							size="large"
-						>
+						<IconButton size="large">
 							<FileCopy />
 						</IconButton>
 					}
@@ -86,9 +80,6 @@ const Template = () => {
 				<IconButton
 					onClick={() => {
 						setMetadataDrawerOpen((prevState) => !prevState);
-					}}
-					style={{
-						backgroundColor: 'rgba(255,255,255,1)',
 					}}
 					size="large"
 				>

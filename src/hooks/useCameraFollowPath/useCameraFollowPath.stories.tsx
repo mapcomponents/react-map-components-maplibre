@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useCameraFollowPath from './useCameraFollowPath';
 import TopToolbar from '../../ui_components/TopToolbar';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { Button, Slider, Typography } from '@mui/material';
+import { MenuItem, Slider, Typography } from '@mui/material';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from '@turf/turf';
 
@@ -78,9 +78,9 @@ const Template = () => {
 	return (
 		<>
 			<TopToolbar>
-				<Button onClick={() => setShowComponent(!showComponent)}>
+				<MenuItem onClick={() => setShowComponent(!showComponent)}>
 					{showComponent ? 'Route ausblenden' : 'Route einblenden'}
-				</Button>
+				</MenuItem>
 				{showComponent ? (
 					<MlGeoJsonLayer
 						geojson={routeJson}
@@ -91,7 +91,7 @@ const Template = () => {
 						}}
 					/>
 				) : null}
-				<Button
+				<MenuItem
 					disabled={!state.pause}
 					onClick={() =>
 						setState((current) => {
@@ -100,8 +100,8 @@ const Template = () => {
 					}
 				>
 					Start
-				</Button>
-				<Button
+				</MenuItem>
+				<MenuItem
 					disabled={state.pause}
 					onClick={() =>
 						setState((current) => {
@@ -110,8 +110,8 @@ const Template = () => {
 					}
 				>
 					Pause
-				</Button>
-				<Button
+				</MenuItem>
+				<MenuItem
 					onClick={() => {
 						CameraFollowPath.reset();
 						setState((current) => {
@@ -120,11 +120,8 @@ const Template = () => {
 					}}
 				>
 					Reset
-				</Button>
-				<Typography
-					id="discrete-slider"
-					style={{ color: '#121212', marginLeft: '10px', marginRight: '10px' }}
-				>
+				</MenuItem>
+				<Typography id="discrete-slider" style={{ marginLeft: '10px', marginRight: '10px' }}>
 					Zoom:
 				</Typography>
 				<Slider
@@ -148,10 +145,7 @@ const Template = () => {
 						maxWidth: '200px',
 					}}
 				/>
-				<Typography
-					id="discrete-slider2"
-					style={{ color: '#121212', marginLeft: '10px', marginRight: '10px' }}
-				>
+				<Typography id="discrete-slider2" style={{ marginLeft: '10px', marginRight: '10px' }}>
 					Speed:
 				</Typography>
 				<Slider
@@ -173,7 +167,7 @@ const Template = () => {
 						maxWidth: '200px',
 					}}
 				/>
-				<Button
+				<MenuItem
 					onClick={() => {
 						if (state.pitch === 0) {
 							setState((current) => {
@@ -187,7 +181,7 @@ const Template = () => {
 					}}
 				>
 					{state.pitch === 0 ? '3D' : '2D'}
-				</Button>
+				</MenuItem>
 			</TopToolbar>
 		</>
 	);
