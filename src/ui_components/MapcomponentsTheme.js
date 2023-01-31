@@ -23,10 +23,11 @@ const getDesignTokens = (mode) => ({
 
 					background: {
 						default: '#fff',
-						paper: '#fff',
+						paper: '#bdbdbd',
 					},
 					text: {
 						primary: '#000',
+						secondary: '#000',
 					},
 			  }
 			: {
@@ -37,7 +38,7 @@ const getDesignTokens = (mode) => ({
 						default: '#000',
 						paper: '#424242',
 					},
-					text: {},
+					text: { secondary: '#fff' },
 			  }),
 	},
 });
@@ -59,7 +60,8 @@ const theme = (mode) => {
 						color: theme.palette.text.primary,
 						backgroundColor: theme.palette.background.paper,
 						':hover': {
-							backgroundColor: theme.palette.primary.main,
+							backgroundColor: theme.palette.background.paper,
+							color: theme.palette.primary.main,
 						},
 					},
 				},
@@ -77,6 +79,7 @@ const theme = (mode) => {
 						style: {
 							minWidth: '20px',
 							minHeight: '20px',
+							fontWeight: 600,
 							[theme.breakpoints.down('md')]: {
 								width: '50px',
 								height: '50px',
@@ -87,17 +90,17 @@ const theme = (mode) => {
 								height: '30px',
 								fontSize: '1.2em',
 							},
-							backgroundColor: '#424242',
+							backgroundColor: theme.palette.background.paper,
 							borderRadius: '23%',
 							//border: "1px solid #bbb",
 							//boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
 							margin: '0.15px',
 							marginTop: '4px',
 							':hover': {
-								backgroundColor: '#424242',
 								color: theme.palette.primary.main,
+								backgroundColor: theme.palette.background.paper,
 							},
-							color: '#fff',
+							color: theme.palette.text.secondary,
 						},
 					},
 				],
