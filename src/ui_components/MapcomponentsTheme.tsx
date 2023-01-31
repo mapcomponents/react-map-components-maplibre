@@ -54,6 +54,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 const theme = (mode: 'light' | 'dark') => {
 	const theme: Theme = getDesignTokens(mode);
 
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	return createTheme(theme, {
 		components: {
