@@ -44,7 +44,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					},
 					background: {
 						default: '#000',
-						paper: '#424242',
+						paper: '#303030',
 						icon: '#424242',
 					},
 					text: { secondary: '#fff' },
