@@ -425,11 +425,11 @@
       "id": "mapcomponents-mlnavigationtools--default-config",
       "name": "Default Config",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 96518,
+      "importPath": 5138,
       "kind": "MapComponents/MlNavigationTools",
       "story": "Default Config",
       "parameters": {
-        "fileName": 96518,
+        "fileName": 5138,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--default-config",
         "__isArgsStory": true
@@ -439,11 +439,11 @@
       "id": "mapcomponents-mlnavigationtools--no-3-d-button",
       "name": "No 3 D Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 96518,
+      "importPath": 5138,
       "kind": "MapComponents/MlNavigationTools",
       "story": "No 3 D Button",
       "parameters": {
-        "fileName": 96518,
+        "fileName": 5138,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--no-3-d-button",
         "__isArgsStory": true
@@ -453,11 +453,11 @@
       "id": "mapcomponents-mlnavigationtools--show-center-location-button",
       "name": "Show Center Location Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 96518,
+      "importPath": 5138,
       "kind": "MapComponents/MlNavigationTools",
       "story": "Show Center Location Button",
       "parameters": {
-        "fileName": 96518,
+        "fileName": 5138,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--show-center-location-button",
         "__isArgsStory": true
@@ -467,11 +467,11 @@
       "id": "mapcomponents-mlnavigationtools--alter-tool-position",
       "name": "Alter Tool Position",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 96518,
+      "importPath": 5138,
       "kind": "MapComponents/MlNavigationTools",
       "story": "Alter Tool Position",
       "parameters": {
-        "fileName": 96518,
+        "fileName": 5138,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--alter-tool-position",
         "__isArgsStory": true
@@ -481,11 +481,11 @@
       "id": "mapcomponents-mlnavigationtools--no-zoom-buttons",
       "name": "No Zoom Buttons",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 96518,
+      "importPath": 5138,
       "kind": "MapComponents/MlNavigationTools",
       "story": "No Zoom Buttons",
       "parameters": {
-        "fileName": 96518,
+        "fileName": 5138,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--no-zoom-buttons",
         "__isArgsStory": true
@@ -495,11 +495,11 @@
       "id": "mapcomponents-mlnavigationtools--no-follow-gps-button",
       "name": "No Follow Gps Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 96518,
+      "importPath": 5138,
       "kind": "MapComponents/MlNavigationTools",
       "story": "No Follow Gps Button",
       "parameters": {
-        "fileName": 96518,
+        "fileName": 5138,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--no-follow-gps-button",
         "__isArgsStory": true
@@ -509,11 +509,11 @@
       "id": "mapcomponents-mlnavigationtools--custom-button",
       "name": "Custom Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 96518,
+      "importPath": 5138,
       "kind": "MapComponents/MlNavigationTools",
       "story": "Custom Button",
       "parameters": {
-        "fileName": 96518,
+        "fileName": 5138,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--custom-button",
         "__isArgsStory": true
