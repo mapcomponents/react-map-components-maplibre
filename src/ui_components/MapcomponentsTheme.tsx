@@ -22,8 +22,19 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 	...(mode === 'light' ? lightDefault : darkDefault),
 	palette: {
 		mode,
-		...(mode === 'light'
+		...(mode === 'dark'
 			? {
+					primary: {
+						main: '#009FE3',
+					},
+					background: {
+						default: '#000',
+						paper: '#303030',
+						icon: '#424242',
+					},
+					text: { secondary: '#fff' },
+			  }
+			: {
 					primary: {
 						main: '#009FE3',
 					},
@@ -37,17 +48,6 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						primary: '#000',
 						secondary: '#000',
 					},
-			  }
-			: {
-					primary: {
-						main: '#009FE3',
-					},
-					background: {
-						default: '#000',
-						paper: '#303030',
-						icon: '#424242',
-					},
-					text: { secondary: '#fff' },
 			  }),
 	},
 });
