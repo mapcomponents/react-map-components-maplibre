@@ -111,7 +111,7 @@ export default function WMSLinks(props: wmsLinksProps) {
 								</Grid>
 								<Grid item xs={2}>
 									<Button onClick={props.close}>
-										<CloseIcon sx={{ color: 'black' }} />
+										<CloseIcon sx={{ color: 'text.primary' }} />
 									</Button>
 								</Grid>
 							</Grid>

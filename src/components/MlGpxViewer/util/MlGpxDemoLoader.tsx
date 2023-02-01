@@ -19,6 +19,7 @@ const modalStyle = {
 	width: 350,
 	height: 280,
 	bgcolor: 'background.paper',
+	color: 'text.primary',
 	boxShadow: 24,
 	p: 4,
 };
@@ -30,6 +31,7 @@ const mobileStyle = {
 	width: 200,
 	height: 300,
 	bgcolor: 'background.paper',
+	color: 'text.primary',
 	boxShadow: 24,
 	p: 4,
 };
@@ -101,7 +103,7 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 						</Grid>
 						<Grid item xs={2}>
 							<Button onClick={handleClose}>
-								<CloseIcon sx={{ color: 'black' }} />
+								<CloseIcon sx={{ color: 'text.primary' }} />
 							</Button>
 						</Grid>
 					</Grid>
