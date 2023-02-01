@@ -12,8 +12,8 @@ const decorators = [
 
 		return (
 			<div className="fullscreen_map">
-				<MUIThemeProvider theme={theme}>
-					<MapComponentsProvider>
+				<MapComponentsProvider>
+					<MUIThemeProvider theme={theme}>
 						<div
 							style={{
 								overflow: 'hidden',
@@ -70,8 +70,8 @@ const decorators = [
 								/>
 							</div>
 						</div>
-					</MapComponentsProvider>
-				</MUIThemeProvider>
+					</MUIThemeProvider>
+				</MapComponentsProvider>
 			</div>
 		);
 	},

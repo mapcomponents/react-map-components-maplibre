@@ -13,8 +13,8 @@ const decorators = [
 
 		return (
 			<div className="fullscreen_map">
-				<MUIThemeProvider theme={theme}>
-					<MapComponentsProvider>
+				<MapComponentsProvider>
+					<MUIThemeProvider theme={theme}>
 						<Story />
 						<MapLibreMap
 							options={{
@@ -29,8 +29,8 @@ const decorators = [
 							showZoomButtons={false}
 							mapId="map_1"
 						/>
-					</MapComponentsProvider>
-				</MUIThemeProvider>
+					</MUIThemeProvider>
+				</MapComponentsProvider>
 			</div>
 		);
 	},
