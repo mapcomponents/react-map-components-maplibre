@@ -5,14 +5,14 @@ const steps = [
 	{
 		duration: 2500,
 		props: {
-			bubbleTop: '200px',
+			bubbleTop: '-50px',
 			bubbleLeft: '-180px',
-			textMarginTop: '150px',
+			textMarginTop: '250px',
 			textMarginLeft: '200px',
 			iconTransform: 'rotate(90deg)',
-			iconMarginTop: '-210px',
-			iconMarginLeft: '200px',
-			zIndex: 1210
+			iconMarginTop: '-200px',
+			iconMarginLeft: '250px',
+			zIndex: 1210,
 		},
 		content: (
 			<>
@@ -31,7 +31,7 @@ const steps = [
 			iconTransform: 'rotate(90deg)',
 			iconMarginTop: '-125px',
 			iconMarginLeft: '280px',
-			zIndex: 1210
+			zIndex: 1210,
 		},
 		content: (
 			<>
