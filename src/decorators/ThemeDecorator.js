@@ -2,8 +2,7 @@ import React, { useMemo } from 'react';
 
 import { MapComponentsProvider } from '../index';
 import './style.css';
-import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools';
-import { ThemeProvider as MUIThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
 
 const decorators = [

@@ -134,8 +134,10 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 		return copy;
 	}, [deviceOrientation, userLocationGeoJson]);
 
-	const handleOrientation = (event: any) => {
-		setDeviceOrientation(-event.alpha);
+	const handleOrientation = (event: DeviceOrientationEvent) => {
+		if (event?.alpha) {
+			setDeviceOrientation(-event.alpha);
+		}
 	};
 
 	useEffect(() => {
