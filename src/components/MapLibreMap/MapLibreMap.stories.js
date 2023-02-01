@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 
-import MapLibreMap from "./MapLibreMap";
-import { MapComponentsProvider } from "../../contexts/MapContext";
-import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
-import { Button } from "@mui/material";
-import TopToolbar from "../../ui_components/TopToolbar";
-import sample_geojson_1 from "../MlGeoJsonLayer/assets/sample_1.json";
+import MapLibreMap from './MapLibreMap';
+import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import { Button } from '@mui/material';
+import TopToolbar from '../../ui_components/TopToolbar';
+import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 
-import mapContextDecorator from '../../decorators/MapContextDecorator';
+import themeDecorator from '../../decorators/ThemeDecorator';
 
 const storyoptions = {
 	title: 'Core/MapLibreMap',
@@ -19,7 +18,7 @@ const storyoptions = {
 			},
 		},
 	},
-	decorators: mapContextDecorator,
+	decorators: themeDecorator,
 	parameters: {
 		sourceLink: 'components/MapLibreMap/MapLibreMap.tsx',
 	},
