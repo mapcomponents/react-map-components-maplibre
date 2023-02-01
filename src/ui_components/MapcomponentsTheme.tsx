@@ -32,7 +32,10 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						paper: '#303030',
 						icon: '#424242',
 					},
-					text: { secondary: '#fff' },
+					text: {
+						secondary: '#fff',
+						contrast: '#000',
+					},
 			  }
 			: {
 					primary: {
@@ -47,6 +50,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					text: {
 						primary: '#000',
 						secondary: '#000',
+						contrast: '#fff',
 					},
 			  }),
 	},
