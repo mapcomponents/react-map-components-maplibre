@@ -68,4 +68,4 @@ export { default as MapContext } from "./contexts/MapContext";
 export { default as SimpleDataProvider } from "./contexts/SimpleDataProvider";
 export { default as SimpleDataContext } from "./contexts/SimpleDataContext";
 
-import { default as getTheme } from './ui_components/MapcomponentsTheme';
+export { default as getTheme } from './ui_components/MapcomponentsTheme';
