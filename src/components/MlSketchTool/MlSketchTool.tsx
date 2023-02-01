@@ -21,7 +21,7 @@ import { Feature } from '@turf/turf';
 import { LngLatLike } from '!maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 
-interface MlSketchToolProps {
+export interface MlSketchToolProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */

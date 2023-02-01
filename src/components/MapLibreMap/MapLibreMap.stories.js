@@ -17,6 +17,10 @@ const storyoptions = {
 			},
 		},
 	},
+
+  parameters: {
+    sourceLink: 'components/MapLibreMap/MapLibreMap.tsx'
+	}
 };
 export default storyoptions;
 
@@ -24,7 +28,7 @@ const Template = (args) => {
 	return (
 		<MapComponentsProvider>
 			<MapLibreMap
-				options={args.options}
+				options={{ ...args.options }}
 				style={{
 					position: "absolute",
 					height: "100vh",
@@ -61,6 +65,8 @@ const StyleChangeTemplate = (args) => {
 					onClick={() =>
 						setActiveStyle("https://wms.wheregroup.com/tileserver/style/osm-bright.json")
 					}
+					variant="contained"
+					sx={{marginRight:'5px'}}
 				>
 					OSM-Bright
 				</Button>
@@ -68,6 +74,7 @@ const StyleChangeTemplate = (args) => {
 					onClick={() =>
 						setActiveStyle("https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json")
 					}
+					variant="contained"
 				>
 					OSM-Fiord-Color
 				</Button>

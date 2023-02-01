@@ -3,7 +3,7 @@ import useMap from "../../hooks/useMap";
 import useLayer from "../../hooks/useLayer";
 import useSource from "../../hooks/useSource";
 
-interface MlGeojsonLayerWithSourceProps {
+export interface MlGeojsonLayerWithSourceProps {
   /**
    * Id of the target MapLibre instance in mapContext
    */
