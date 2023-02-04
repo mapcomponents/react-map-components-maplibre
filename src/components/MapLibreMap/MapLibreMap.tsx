@@ -81,7 +81,6 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 	useEffect(() => {
 		if (initializedRef.current) return;
 
-		console.log(mapContainer.current);
 		
 		if (mapContainer.current) {
 			initializedRef.current = true;

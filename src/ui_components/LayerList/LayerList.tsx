@@ -2,7 +2,7 @@ import { List } from '@mui/material';
 import React from 'react';
 
 type Props = {
-	children: JSX.Element;
+	children: JSX.Element | JSX.Element[];
 };
 
 function LayerList({ children }: Props) {

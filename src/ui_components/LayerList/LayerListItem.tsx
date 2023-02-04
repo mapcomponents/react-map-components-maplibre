@@ -4,6 +4,10 @@ import React, { useMemo, useState } from 'react';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import LayerPropertyForm from './util/LayerPropertyForm';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
+import LayerListFolder from './LayerListFolder';
+import { LayerSpecification } from 'maplibre-gl';
+import LayerListItemVectorLayer from './util/LayerListItemVectorLayer';
+import {useEffect} from 'react';
 
 type Props = {
 	layerComponent: JSX.Element;
@@ -20,7 +24,7 @@ function LayerListItem({
 	type = 'layer',
 	name,
 	description,
-  configurable
+	configurable,
 }: Props) {
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
@@ -30,6 +34,7 @@ function LayerListItem({
 				layerComponent?.props?.type || getDefaulLayerTypeByGeometry(layerComponent.props.geojson)
 			)
 	);
+	const [layers, setLayers] = useState(layerComponent?.props?.layers);
 
 	const _visible = useMemo(() => {
 		if (!visible) {
@@ -38,20 +43,32 @@ function LayerListItem({
 		return localVisible;
 	}, [visible, localVisible]);
 
+useEffect(() => {
+	console.log('layers changed', layers);
+	
+}, [layers])
+
 	const _layerComponent = useMemo(() => {
-		if (type === 'layer') {
-			return React.cloneElement(layerComponent, {
-				layout: {
-					visibility: _visible ? 'visible' : 'none',
-				},
-				paint: paintProps,
-			});
+				console.log(layers);
+		if (layerComponent && type === 'layer') {
+			if (layerComponent?.props?.layers) {
+				console.log(layers);
+				
+				return React.cloneElement(layerComponent, {layers:layers});
+			} else {
+				return React.cloneElement(layerComponent, {
+					layout: {
+						visibility: _visible ? 'visible' : 'none',
+					},
+					paint: paintProps,
+				});
+			}
 		}
 		return <></>;
-	}, [type, layerComponent, paintProps, _visible]);
+	}, [type, layerComponent, paintProps, layers, _visible]);
 
 	const layerType = useMemo(() => {
-		if (type === 'layer') {
+		if (layerComponent && type === 'layer') {
 			if (layerComponent.props.type) {
 				return layerComponent.props.type;
 			}
@@ -66,22 +83,23 @@ function LayerListItem({
 	return (
 		<>
 			<ListItem
-			sx={{
-				paddingRight:configurable?'56px':0
-
-			}}
-				secondaryAction={configurable ?
-					<IconButton
-						edge="end"
-						aria-label="comments"
-						onClick={() => {
-							setPaintPropsFormVisible((current) => {
-								return !current;
-							});
-						}}
-					>
-						<TuneIcon />
-					</IconButton> : undefined
+				sx={{
+					paddingRight: configurable ? '56px' : 0,
+				}}
+				secondaryAction={
+					configurable ? (
+						<IconButton
+							edge="end"
+							aria-label="comments"
+							onClick={() => {
+								setPaintPropsFormVisible((current) => {
+									return !current;
+								});
+							}}
+						>
+							<TuneIcon />
+						</IconButton>
+					) : undefined
 				}
 			>
 				<ListItemIcon>
@@ -102,6 +120,16 @@ function LayerListItem({
 					setPaintProps={setPaintProps}
 					layerType={layerType}
 				/>
+			)}
+
+			{layers && (
+				<LayerListFolder visible={true}>
+					{layers?.map((el: LayerSpecification, idx:number) => (
+						<>
+								<LayerListItemVectorLayer layers={layers} setLayers={setLayers} id={'' + idx} key={'' + idx} />
+						</>
+					))}
+				</LayerListFolder>
 			)}
 		</>
 	);

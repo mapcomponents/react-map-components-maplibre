@@ -27,17 +27,23 @@ export default function LayerListFolder({ visible = true, children }: Props) {
 	}, [visible, localVisible]);
 
 	const _children = useMemo(() => {
-		if (Array.isArray(children)) {
-			return children.map((element) => {
-				return React.cloneElement(element, {
-					visible: _visible,
+		console.log(children);
+		
+		if (children) {
+			if (Array.isArray(children)) {
+				console.log('is array');
+
+				return children.map((element) => {
+					return React.cloneElement(element, {
+						visible: _visible,
+					});
 				});
+			}
+			return React.cloneElement(children, {
+				visible: _visible,
 			});
 		}
-
-		return React.cloneElement(children, {
-			visible: _visible,
-		});
+		return <></>;
 	}, [_visible]);
 
 	return (
@@ -58,10 +64,10 @@ export default function LayerListFolder({ visible = true, children }: Props) {
 						}}
 					/>
 				</ListItemIcon>
-				<ListItemText primary="Inbox" />
+				<ListItemText primary="Layers" />
 			</ListItem>
 			<Collapse in={open} timeout="auto">
-				<List component="div" disablePadding sx={{pl:4}}>
+				<List component="div" disablePadding sx={{ pl: 4 }}>
 					{_children}
 				</List>
 			</Collapse>

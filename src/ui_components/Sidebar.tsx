@@ -54,11 +54,12 @@ export default function Sidebar({
 				anchor="left"
 				open={drawerOpen}
 				PaperProps={{
+					...drawerPaperProps,
 					sx: {
 						maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
 						padding: { lg: '20px', md: '20px', sm: '20px', xs: '10px' },
+						...drawerPaperProps?.sx,
 					},
-					...drawerPaperProps,
 				}}
 				sx={{
 					flexGrow: 1,
