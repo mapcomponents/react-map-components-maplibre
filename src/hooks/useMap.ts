@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import MapContext from "../contexts/MapContext";
+import MapContext, { MapContextType } from "../contexts/MapContext";
 import useMapState from "./useMapState";
 import MapLibreGlWrapper, { LayerState } from "../components/MapLibreMap/lib/MapLibreGlWrapper";
 
@@ -12,16 +12,16 @@ type useMapType = {
 	cleanup: () => void;
 };
 
-function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
+function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	const mapContext: MapContextType = useContext(MapContext);
 	const [map, setMap] = useState<MapLibreGlWrapper>();
 
 	const mapState = useMapState({
-		mapId: props.mapId,
+		mapId: props?.mapId,
 		watch: {
 			viewport: false,
-			layers: props.waitForLayer ? true : false,
+			layers: props?.waitForLayer ? true : false,
 			sources: false,
 		},
 		filter: {
@@ -53,15 +53,15 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 	}, []);
 
 	useEffect(() => {
-		if (!mapContext.mapExists(props.mapId) || initializedRef.current) return;
+		if (!mapContext.mapExists(props?.mapId) || initializedRef.current) return;
 
 		// check if waitForLayer (string, layer id of the layer this hook is supposed to wait for)
 		// exists as layer in the MapLibre instance
-		if (props.waitForLayer) {
+		if (props?.waitForLayer) {
 			let layerFound = false;
 
 			mapState?.layers?.forEach((layer: any) => {
-				if (layer.id === props.waitForLayer) {
+				if (layer.id === props?.waitForLayer) {
 					layerFound = true;
 				}
 			});
@@ -72,10 +72,10 @@ function useMap(props: { mapId?: string; waitForLayer?: string }): useMapType {
 		// the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
 		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
 		initializedRef.current = true;
-		mapRef.current = mapContext.getMap(props.mapId);
+		mapRef.current = mapContext.getMap(props?.mapId);
 		setMap(mapRef.current);
 		setMapIsReady(true);
-	}, [mapContext.mapIds, mapState.layers, mapContext, props.waitForLayer, props.mapId]);
+	}, [mapContext.mapIds, mapState.layers, mapContext, props]);
 
 	return {
 		map: map,

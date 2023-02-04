@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo, useCallback, useState } from 'react';
 import PdfContext from './PdfContext';
 import PdfPreview from './PdfPreview';
 import {
@@ -11,6 +11,7 @@ import {
 	FormControlLabel,
 	Radio,
 	RadioGroup,
+	CircularProgress,
 } from '@mui/material';
 
 import useMap from '../../../hooks/useMap';
@@ -84,6 +85,7 @@ interface PdfFormProps {
 }
 
 export default function PdfForm(props: PdfFormProps) {
+	const [loading, setLoading] = useState(false);
 	const pdfContext = useContext(PdfContext);
 	const mapHook = useMap({
 		// eslint-disable-next-line react/prop-types
@@ -101,6 +103,7 @@ export default function PdfForm(props: PdfFormProps) {
 			pdfContext.geojsonRef?.current?.bbox &&
 			pdfContext.geojsonRef?.current
 		) {
+			setLoading(true);
 			const bbox = turf.bbox(pdfContext.geojsonRef.current);
 
 			mapExporter
@@ -118,10 +121,12 @@ export default function PdfForm(props: PdfFormProps) {
 					if (typeof props.onCreatePdf === 'function') {
 						props.onCreatePdf(res);
 					}
+					setLoading(false);
 					return res.downloadPdf();
 				})
 				.catch((error) => {
 					console.log(error);
+					setLoading(false);
 				});
 		}
 	}, [mapHook.map, pdfContext]);
@@ -218,9 +223,27 @@ export default function PdfForm(props: PdfFormProps) {
 				</Select>
 			</FormControl>
 			<FormControl fullWidth sx={formControlStyles}>
-				<Button variant="contained" className='createPdfButton' onClick={createPdfHandler}>
+				<Button
+					variant="contained"
+					className="createPdfButton"
+					onClick={createPdfHandler}
+					disabled={loading}
+				>
 					PDF erstellen
 				</Button>
+				{loading && (
+          <CircularProgress
+            size={24}
+            sx={{
+              color: 'primary.main',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              marginTop: '-12px',
+              marginLeft: '-12px',
+            }}
+          />
+        )}
 			</FormControl>
 			{pdfContext.options && pdfContext.setOptions && (
 				<PdfPreview

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import useMap, { useMapType } from "./useMap";
 import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-import { SourceSpecification } from "maplibre-gl";
+import { Source, SourceSpecification } from "maplibre-gl";
 
 type useSourceType = {
 	map: MapLibreGlWrapper | undefined;
-	source: SourceSpecification;
+	source: Source | undefined;
 	componentId: string;
 	mapHook: useMapType;
 };
@@ -22,7 +22,7 @@ function useSource(props: useSourceProps): useSourceType {
 	});
 
 	const initializedRef = useRef<boolean>(false);
-	const [source, setSource] = useState<any>();
+	const [source, setSource] = useState<Source>();
 	const sourceId = useRef(
 		props.sourceId || (props.idPrefix ? props.idPrefix : "Source-") + mapHook.componentId
 	);
@@ -37,7 +37,7 @@ function useSource(props: useSourceProps): useSourceType {
 
 		mapHook.map?.addSource(sourceId.current, {
 			...props.source,
-		});
+		}, mapHook.componentId);
 
 		setSource(mapHook.map.map.getSource(sourceId.current));
 	}, [props, mapHook.map]);
@@ -61,7 +61,7 @@ function useSource(props: useSourceProps): useSourceType {
 	useEffect(() => {
 		return () => {
 			initializedRef.current = false;
-			if (mapHook.map) {
+			if (mapHook.map && mapHook.map?.map?.style?._layers) {
 				for (const [layerId, layer] of Object.entries(mapHook.map.map.style._layers)) {
 					if (layer.source === sourceId.current) {
 						mapHook.map.map.removeLayer(layerId);

@@ -7,7 +7,7 @@ import BuildIcon from "@mui/icons-material/Build";
 import Button from "@mui/material/Button";
 
 const storyoptions = {
-	title: "MapComponents/MlNavigationTools",
+	title: 'MapComponents/MlNavigationTools',
 	component: MlNavigationTools,
 	argTypes: {
 		url: {},
@@ -18,7 +18,6 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (args) => <MlNavigationTools {...args} />;
-
 export const DefaultConfig = Template.bind({});
 DefaultConfig.parameters = {};
 DefaultConfig.args = {};
@@ -39,7 +38,7 @@ ShowCenterLocationButton.args = {
 export const AlterToolPosition = Template.bind({});
 AlterToolPosition.parameters = {};
 AlterToolPosition.args = {
-	sx: { top: "10px", right: "5px" },
+	sx: { top: '10px', right: '5px' },
 };
 
 export const NoZoomButtons = Template.bind({});
@@ -58,8 +57,8 @@ export const CustomButton = Template.bind({});
 CustomButton.parameters = {};
 CustomButton.args = {
 	children: (
-		<Button onClick={() => {}}>
-			<BuildIcon sx={{ fontSize: "1em" }} />
+		<Button variant="navtools" onClick={() => {}}>
+			<BuildIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 		</Button>
 	),
 };

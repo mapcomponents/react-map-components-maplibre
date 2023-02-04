@@ -1,16 +1,11 @@
-import React, {
-	useContext,
-	useCallback,
-	useRef,
-	useEffect,
-	useState,
-} from "react";
+import React, { useContext, useCallback, useRef, useEffect, useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import syncMove from "@mapbox/mapbox-gl-sync-move";
-import "./style.css";
-import MapContext from "../../contexts/MapContext";
+import syncMove from '@mapbox/mapbox-gl-sync-move';
+import './style.css';
+import MapContext, { MapContextType } from '../../contexts/MapContext';
 
-interface MlLayerSwipeProps {
+export interface MlLayerSwipeProps {
 	/**
 	 * Id of the first MapLibre instance.
 	 */
@@ -19,6 +14,10 @@ interface MlLayerSwipeProps {
 	 * Id of the second MapLibre instance.
 	 */
 	map2Id: string;
+	/**
+	 * object (React.CSSProperties) that is added to the button default style
+	 */
+	buttonStyle: React.CSSProperties | undefined;
 }
 
 /**
@@ -45,33 +44,28 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	}, [mapContext, props.map1Id, props.map2Id]);
 
 	const cleanup = () => {
-			syncCleanupFunctionRef.current();
+		syncCleanupFunctionRef.current();
 	};
 
 	const onMove = useCallback(
-		(e) => {
+		(e:(TouchEvent & MouseEvent)) => {
 			if (!mapExists()) return;
 
-			let bounds = mapContext.maps[props.map1Id]
-				.getCanvas()
-				.getBoundingClientRect();
+			const bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
 			let clientX =
 				e.clientX ||
-				(typeof e.touches !== "undefined" && typeof e.touches[0] !== "undefined"
+				(typeof e.touches !== 'undefined' && typeof e.touches[0] !== 'undefined'
 					? e.touches[0].clientX
 					: 0);
 
 			clientX -= bounds.x;
-			let swipeX_tmp = parseFloat(((clientX / bounds.width) * 100).toFixed(2));
+			const swipeX_tmp = parseFloat(((clientX / bounds.width) * 100).toFixed(2));
 
 			if (swipeXRef.current !== swipeX_tmp) {
 				setSwipeX(swipeX_tmp);
 				swipeXRef.current = swipeX_tmp;
 
-				var clipA =
-					"rect(0, " +
-					(swipeXRef.current * bounds.width) / 100 +
-					"px, 999em, 0)";
+				const clipA = 'rect(0, ' + (swipeXRef.current * bounds.width) / 100 + 'px, 999em, 0)';
 
 				mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
 			}
@@ -93,54 +87,59 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 		);
 		onMove({
 			clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
-		});
+		} as (TouchEvent & MouseEvent));
 	}, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
-	const onDown = (e: any) => {
-		if (e.touches) {
-			document.addEventListener("touchmove", onMove);
-			document.addEventListener("touchend", onTouchEnd);
+	const onDown = (e: React.MouseEvent | React.TouchEvent) => {
+		if (e.nativeEvent instanceof TouchEvent) {
+			document.addEventListener('touchmove', onMove);
+			document.addEventListener('touchend', onTouchEnd);
 		} else {
-			document.addEventListener("mousemove", onMove);
-			document.addEventListener("mouseup", onMouseUp);
+			document.addEventListener('mousemove', onMove);
+			document.addEventListener('mouseup', onMouseUp);
 		}
 	};
 
 	const onTouchEnd = () => {
-		document.removeEventListener("touchmove", onMove);
-		document.removeEventListener("touchend", onTouchEnd);
+		document.removeEventListener('touchmove', onMove);
+		document.removeEventListener('touchend', onTouchEnd);
 	};
 
 	const onMouseUp = () => {
-		document.removeEventListener("mousemove", onMove);
-		document.removeEventListener("mouseup", onMouseUp);
+		document.removeEventListener('mousemove', onMove);
+		document.removeEventListener('mouseup', onMouseUp);
 	};
 
 	return (
 		<div
 			style={{
-				position: "absolute",
-				left: swipeX + "%",
-				top: "50%",
-				borderRadius: "50%",
-				width: "100px",
-				height: "100px",
-				background: "#0066ff",
-				border: "3px solid #eaebf1",
-				cursor: "pointer",
-				zIndex: "110",
-				marginLeft: "-50px",
-				marginTop: "-50px",
-				textAlign: "center",
-				lineHeight: "91px",
-				fontSize: "2em",
-				color: "#fafafa",
-				userSelect: "none",
+				position: 'absolute',
+				left: swipeX + '%',
+				top: '50%',
+				borderRadius: '50%',
+				width: '100px',
+				height: '100px',
+				background: '#0066ff',
+				border: '3px solid #eaebf1',
+				cursor: 'pointer',
+				zIndex: '110',
+				marginLeft: '-50px',
+				marginTop: '-50px',
+				textAlign: 'center',
+				lineHeight: '91px',
+				fontSize: '2em',
+				color: '#fafafa',
+				userSelect: 'none',
+				...props.buttonStyle,
 			}}
 			onTouchStart={onDown}
 			onMouseDown={onDown}
 		></div>
 	);
+};
+
+MlLayerSwipe.defaultProps = {
+	buttonStyle: {},
 };
 
 export default MlLayerSwipe;

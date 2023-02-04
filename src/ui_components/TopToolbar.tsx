@@ -1,20 +1,20 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
-import { Toolbar, AppBarProps, ToolbarProps } from '@mui/material';
+import { Toolbar, AppBarProps, ToolbarProps, SxProps } from '@mui/material';
 
 interface TopToolbarProps extends AppBarProps {
-	toolbarProps: ToolbarProps;
+	toolbarProps?: ToolbarProps;
+	appBarStyle?: SxProps
 }
-export default function TopToolbar({ toolbarProps, ...props }: TopToolbarProps) {
+export default function TopToolbar({ toolbarProps, appBarStyle, ...props }: TopToolbarProps) {
 	return (
 		<AppBar
 			sx={{
 				minHeight: '62px',
-				backgroundColor: '#f1f1f1',
 				position: 'absolute',
 				zIndex: 120,
+				...appBarStyle,
 			}}
-			color="primary"
 			position="static"
 			{...props}
 		>

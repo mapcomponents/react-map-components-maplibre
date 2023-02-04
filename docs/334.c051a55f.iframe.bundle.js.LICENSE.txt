@@ -1,0 +1,6 @@
+/**
+ * wms-capabilities @0.6.0
+ * @description WMS service Capabilities > JSON, based on openlayers 
+ * @license BSD-2-Clause
+ * @preserve
+ */

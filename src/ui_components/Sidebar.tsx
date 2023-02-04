@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import Drawer from '@mui/material/Drawer';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu';
-import { IconButton, PaperProps } from '@mui/material';
+import { Drawer, IconButton, PaperProps, SxProps, DrawerProps} from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
-import { JsxChildren } from 'typedoc/dist/lib/utils/jsx.elements';
+
+
 
 const DrawerHeader = styled('div')(() => ({
 	display: 'flex',
@@ -14,12 +14,13 @@ const DrawerHeader = styled('div')(() => ({
 }));
 
 interface SidebarProps {
-	drawerPaperProps: PaperProps;
-	drawerHeaderProps: Headers;
-	children: JsxChildren;
+	drawerPaperProps?: PaperProps;
+	drawerHeaderProps?: Headers;
+	drawerButtonStyle?: SxProps | undefined;
+	children?: React.ReactNode;
 }
 
-export default function Sidebar({ drawerPaperProps, drawerHeaderProps, ...props }: SidebarProps) {
+export default function Sidebar({ drawerPaperProps, drawerHeaderProps, drawerButtonStyle, ...props }: SidebarProps & DrawerProps) {
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	const [drawerOpen, setDrawerOpen] = useState(true);
@@ -35,11 +36,12 @@ export default function Sidebar({ drawerPaperProps, drawerHeaderProps, ...props 
 		<>
 			<IconButton
 				onClick={handleDrawerOpen}
-				style={{
+				sx={{
 					zIndex: 101,
 					position: 'relative',
 					padding: '20px',
-				}}
+					...drawerButtonStyle
+				}}				
 			>
 				<MenuIcon />
 			</IconButton>
@@ -51,7 +53,7 @@ export default function Sidebar({ drawerPaperProps, drawerHeaderProps, ...props 
 				PaperProps={{
 					sx: {
 						maxWidth: '20%',
-						padding: '40px',
+						padding: '40px'						
 					},
 					...drawerPaperProps,
 				}}
