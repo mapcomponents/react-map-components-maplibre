@@ -66,6 +66,10 @@ function LayerListItem({
 	return (
 		<>
 			<ListItem
+			sx={{
+				paddingRight:configurable?'56px':0
+
+			}}
 				secondaryAction={configurable ?
 					<IconButton
 						edge="end"

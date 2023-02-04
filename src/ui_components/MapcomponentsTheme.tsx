@@ -28,13 +28,13 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						main: '#009FE3',
 					},
 					background: {
-						default: '#000',
-						paper: '#303030',
-						icon: '#424242',
+						default: '#121212',
+						paper: '#323232',
+						icon: '#525252',
 					},
 					text: {
 						secondary: '#fff',
-						contrast: '#000',
+						contrast: '#121212',
 					},
 			  }
 			: {
@@ -44,12 +44,12 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 
 					background: {
 						default: '#fff',
-						paper: '#eeeeee',
+						paper: '#fdfdfd',
 						icon: '#bdbdbd',
 					},
 					text: {
-						primary: '#000',
-						secondary: '#000',
+						primary: '#111',
+						secondary: '#121212',
 						contrast: '#fff',
 					},
 			  }),

@@ -5,8 +5,7 @@ import {
 } from 'maplibre-gl';
 import React, { useRef } from 'react';
 import ColorPicker from './input/ColorPicker';
-import { ListItem, Slider, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
 
 export type paintPropsType =
 	| CircleLayerSpecification['paint']
@@ -111,13 +110,17 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 
 	return (
 		<>
-			<ListItem
-				sx={{ boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)', borderRadius: '5px' }}
-				key={key + '_paintPropForm'}
-			>
-				<Box>
+			<ListItem key={key + '_paintPropForm'}>
+				<Paper
+					sx={{
+						padding: '15px',
+						boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
+						borderRadius: '5px',
+						width: '100%',
+					}}
+				>
 					{Object.keys(paintProps).map((el: string) => getFormInputByType(el, paintProps[el]))}
-				</Box>
+				</Paper>
 			</ListItem>
 		</>
 	);

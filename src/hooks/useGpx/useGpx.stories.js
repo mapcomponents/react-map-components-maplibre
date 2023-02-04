@@ -5,7 +5,7 @@ import useGpx from "./useGpx";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-	title: "MapComponents/useGpx",
+	title: "Hooks/useGpx",
 	component: useGpx,
 	argTypes: {
 	},

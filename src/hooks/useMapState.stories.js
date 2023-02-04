@@ -5,7 +5,7 @@ import useMapState from "./useMapState";
 import mapContextDecoratorHooks from "../decorators/MapContextDecoratorHooks";
 
 const storyoptions = {
-	title: "Hooks/UseMapState",
+	title: "Hooks/useMapState",
 	component: useMapState,
 	argTypes: {},
 	decorators: mapContextDecoratorHooks,
