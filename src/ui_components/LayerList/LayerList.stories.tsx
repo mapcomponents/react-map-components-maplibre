@@ -24,7 +24,8 @@ const storyoptions = {
 export default storyoptions;
 
 const sidebarSx = {
-	width: {xs:'80%', sm: '60%', md: '350px', lg:'350px'}
+	width: {xs:'80%', sm: '60%', md: '350px', lg:'350px'},
+	boxSizing: "border-box"
 }
 
 const Template = () => {

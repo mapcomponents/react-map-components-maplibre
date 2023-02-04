@@ -66,6 +66,7 @@ export default function Sidebar({
 					zIndex: 105,
 					position: 'absolute',
 					top: 0,
+					bottom: 0,
 					backgroundColor: '#fafafa',
 					display: 'flex',
 					flexDirection: 'column',
