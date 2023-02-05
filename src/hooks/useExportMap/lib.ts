@@ -1,4 +1,4 @@
-import { Map } from '!maplibre-gl';
+import { Map } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
 

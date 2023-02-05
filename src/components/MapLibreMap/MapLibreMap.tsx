@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext, FC,	RefObject } from "react";
+import  { useRef, useEffect, useContext, FC,	RefObject } from "react";
 
 import MapContext, { MapContextType } from "../../contexts/MapContext";
 import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";

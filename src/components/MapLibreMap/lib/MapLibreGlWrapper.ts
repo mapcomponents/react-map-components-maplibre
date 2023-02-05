@@ -10,7 +10,7 @@ import {
 	SourceSpecification,
 	ControlPosition,
 	StyleImageMetadata,
-} from '!maplibre-gl';
+} from 'maplibre-gl';
 import { Map as MapType, Style } from 'maplibre-gl';
 
 type WrapperEventArgArray = [string, (arg0: unknown) => void];
