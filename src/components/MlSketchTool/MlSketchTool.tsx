@@ -18,7 +18,7 @@ import Tooltip from '@mui/material/Tooltip';
 import LayerListItem from './LayerList/LayerListItem';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature } from '@turf/turf';
-import { LngLatLike } from '!maplibre-gl';
+import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 
 export interface MlSketchToolProps {
