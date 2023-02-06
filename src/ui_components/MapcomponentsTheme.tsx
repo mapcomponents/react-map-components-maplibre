@@ -62,6 +62,12 @@ const getTheme = (mode: 'light' | 'dark') => {
 	// @ts-ignore
 	return createTheme(theme, {
 		components: {
+			MuiTypography: {
+				styleOverrides: {
+					root: {
+					},
+				},
+			},
 			MuiAppBar: {
 				styleOverrides: {
 					root: {

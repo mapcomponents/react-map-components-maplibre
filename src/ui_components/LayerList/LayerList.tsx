@@ -6,7 +6,7 @@ type Props = {
 };
 
 function LayerList({ children }: Props) {
-	return <List>{children}</List>;
+	return <List sx={{marginTop:'15px'}}>{children}</List>;
 }
 
 export default LayerList;

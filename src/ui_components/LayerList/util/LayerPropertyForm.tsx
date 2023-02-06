@@ -5,7 +5,7 @@ import {
 } from 'maplibre-gl';
 import React, { useRef } from 'react';
 import ColorPicker from './input/ColorPicker';
-import { ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
+import { Box, ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
 
 export type paintPropsType =
 	| CircleLayerSpecification['paint']
@@ -20,11 +20,6 @@ type Props = {
 	layerType: string;
 };
 
-const mapLayerTypeToPaintProps = {
-	circle: ['circle-color'],
-	line: ['line-color', 'line-width', 'line-blur'],
-	fill: ['fill-color'],
-};
 const mapPropKeyToFormInputType = {
 	'fill-color': 'colorpicker',
 	'line-color': 'colorpicker',
@@ -95,12 +90,14 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 					return (
 						<>
 							{label}
-							<ColorPicker
-								key={key}
-								value={paintProps[key]}
-								propKey={key}
-								setPaintProps={setPaintProps}
-							/>
+							<Box sx={{ '& > div': { width: 'initial !important' } }}>
+								<ColorPicker
+									key={key}
+									value={paintProps[key]}
+									propKey={key}
+									setPaintProps={setPaintProps}
+								/>
+							</Box>
 						</>
 					);
 					break;
@@ -117,7 +114,6 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 						padding: '15px',
 						boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
 						borderRadius: '5px',
-						width: '100%',
 					}}
 				>
 					{Object.keys(paintProps).map((el: string) => getFormInputByType(el, paintProps[el]))}
