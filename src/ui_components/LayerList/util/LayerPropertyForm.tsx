@@ -6,6 +6,7 @@ import {
 import React, { useRef } from 'react';
 import ColorPicker from './input/ColorPicker';
 import { Box, ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
+import {useCallback} from 'react';
 
 export type paintPropsType =
 	| CircleLayerSpecification['paint']
@@ -45,7 +46,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 	const key = useRef(Math.round(Math.random() * 10000000000));
 	//const onChange = (event) => {};
 
-	const getFormInputByType = (key: string, value: any) => {
+	const getFormInputByType = useCallback((key: string) => {
 		if (mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1) {
 			const label = (
 				<Typography id={key + '_label'} gutterBottom>
@@ -61,7 +62,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 								{...inputPropsByPropKey[key]}
 								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
 								value={paintProps[key]}
-								onChange={(ev: Event, value: number, activeThumb) => {
+								onChange={(_ev: Event, value: number) => {
 									if (value) {
 										setPaintProps((current) => ({ ...current, [key]: value }));
 									}
@@ -104,7 +105,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 			}
 		}
 		return null;
-	};
+	},[paintProps]);
 
 	return (
 		<>
@@ -116,7 +117,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 						borderRadius: '5px',
 					}}
 				>
-					{Object.keys(paintProps).map((el: string) => getFormInputByType(el, paintProps[el]))}
+					{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
 				</Paper>
 			</ListItem>
 		</>

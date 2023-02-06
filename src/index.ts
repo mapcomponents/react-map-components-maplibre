@@ -1,3 +1,4 @@
+import LayerListItemVectorLayer from '../dist/ui_components/LayerList/util/LayerListItemVectorLayer';
 export { default as MapLibreGlWrapper} from './components/MapLibreMap/lib/MapLibreGlWrapper';
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
 
@@ -69,3 +70,10 @@ export { default as SimpleDataProvider } from "./contexts/SimpleDataProvider";
 export { default as SimpleDataContext } from "./contexts/SimpleDataContext";
 
 export { default as getTheme } from './ui_components/MapcomponentsTheme';
+
+export { default as LayerList } from './ui_components/LayerList/LayerList';
+export { default as LayerListItem } from './ui_components/LayerList/LayerListItem';
+export { default as LayerListFolder } from './ui_components/LayerList/LayerListFolder';
+export { default as LayerPropertyForm } from './ui_components/LayerList/util/LayerPropertyForm';
+export { default as LayerListItemVectorLayer } from './ui_components/LayerList/util/LayerListItemVectorLayer';
+export { default as ColorPicker } from './ui_components/LayerList/util/input/ColorPicker';

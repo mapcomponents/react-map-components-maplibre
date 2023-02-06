@@ -1,4 +1,4 @@
-import { ColorPicker, ColorValue } from 'mui-color';
+import { ColorObject, ColorPicker, ColorValue } from 'mui-color';
 import React from 'react'
 import { paintPropsType } from '../LayerPropertyForm';
 
@@ -16,7 +16,7 @@ export default function PaintPropsColorPicker({propKey, value, setPaintProps}: P
   return (
 						<ColorPicker
 							value={value}
-							onChange={(value:any) => {
+							onChange={(value: (ColorObject & ColorValue)) => {
 								setPaintProps((current: paintPropsType): paintPropsType => {
                   if(!value?.rgb?.[0]){
                     return current;

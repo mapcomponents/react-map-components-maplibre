@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useContext, FC, RefObject } from 'react';
 import MapContext, { MapContextType } from '../../contexts/MapContext';
 import MapLibreGlWrapper from './lib/MapLibreGlWrapper';
 
-import { MapOptions as MapOptionsType } from 'maplibre-gl';
+import { MapOptions as MapOptionsType, Map } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 type MapLibreMapProps = {
@@ -92,7 +92,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 					...(props?.options?.style ? {} : { style: defaultProps?.options?.style }),
 					container: mapContainer.current,
 				},
-				onReady: (map: any, wrapper: any) => {
+				onReady: (map: Map, wrapper: MapLibreGlWrapper) => {
 					map.once('load', () => {
 						if (props.mapId) {
 							mapContext.registerMap(props.mapId, wrapper);

@@ -2,7 +2,6 @@ import { ListItem, IconButton, ListItemIcon, Checkbox, ListItemText } from '@mui
 import React, { useEffect, useState } from 'react';
 import LayerPropertyForm from './LayerPropertyForm';
 import TuneIcon from '@mui/icons-material/Tune';
-import { LayerSpecification } from 'maplibre-gl';
 import { MlVectorTileLayerProps } from '../../../components/MlVectorTileLayer/MlVectorTileLayer';
 
 type Props = {
@@ -20,7 +19,6 @@ export default function LayerListItemVectorLayer({ configurable, vtProps, setVtP
 	useEffect(() => {
 		if (!setVtProps) return;
 
-		const _paintProps = { ...paintProps };
 		const _layers = [...vtProps.layers];
 		if (!_layers[id].layout) {
 			_layers[id].layout = { visibility: visible ? 'visible' : 'none' };

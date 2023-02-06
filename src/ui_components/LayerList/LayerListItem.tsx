@@ -38,8 +38,6 @@ function LayerListItem({
 				layerComponent?.props?.type || getDefaulLayerTypeByGeometry(layerComponent.props.geojson)
 			)
 	);
-	// this state variable is only used for MlVectoTileLayer components
-	const [layers, setLayers] = useState(layerComponent?.props?.layers);
 
 	const _visible = useMemo(() => {
 		if (!visible) {
@@ -49,9 +47,9 @@ function LayerListItem({
 	}, [visible, localVisible]);
 
 	useEffect(() => {
-		if (!setLayerState || !layers) return;
+		if (!setLayerState || !layerComponent?.props?.layers) return;
 		const state = { ...layerComponent?.props };
-		state.layers = layers.map((el: LayerSpecification) => {
+		state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
 			if (el.layout) {
 				el.layout['visibility'] = _visible ? 'visible' : 'none';
 			} else {
@@ -60,7 +58,7 @@ function LayerListItem({
 			return el;
 		});
 		setLayerState(state);
-	}, [_visible, setLayerState, layers]);
+	}, [_visible, setLayerState, layerComponent?.props?.layers]);
 
 	useEffect(() => {
 		if (!setLayerState || !paintProps) return;
@@ -86,7 +84,7 @@ function LayerListItem({
 			}
 		}
 		return <></>;
-	}, [type, layerComponent, paintProps, layers, _visible, layerComponent?.props?.layers]);
+	}, [type, layerComponent, paintProps, _visible, layerComponent?.props?.layers]);
 
 	const layerType = useMemo(() => {
 		if (layerComponent && type === 'layer') {
@@ -103,7 +101,7 @@ function LayerListItem({
 
 	return (
 		<>
-			{!layers && (
+			{!layerComponent?.props?.layers && (
 				<ListItem
 					sx={{
 						paddingRight: configurable ? '56px' : 0,
@@ -147,7 +145,7 @@ function LayerListItem({
 				</ListItem>
 			)}
 			{_layerComponent}
-			{!layers && configurable && paintPropsFormVisible && (
+			{!layerComponent?.props?.layers && configurable && paintPropsFormVisible && (
 				<LayerPropertyForm
 					paintProps={paintProps}
 					setPaintProps={setPaintProps}
@@ -157,7 +155,7 @@ function LayerListItem({
 
 			{layerComponent?.props?.layers && (
 				<LayerListFolder visible={localVisible} setVisible={setLocalVisible} name={name}>
-					{layerComponent?.props?.layers?.map?.((el: LayerSpecification, idx: number) => (
+					{layerComponent?.props?.layers?.map?.((_el: LayerSpecification, idx: number) => (
 						<LayerListItemVectorLayer
 							vtProps={layerComponent?.props}
 							setVtProps={setLayerState}
