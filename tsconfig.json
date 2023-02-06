@@ -9,7 +9,7 @@
 		"sourceMap": true,
 		"strict": false,
 		"types": ["node", "jest", "geojson", "cypress"],
-    "typeRoots": ["./src/@types", "./node_modules/@types"],
+		"typeRoots": ["./src/@types", "./node_modules/@types"],
 		"outDir": "build/esm",
 		"module": "esnext",
 		"target": "es5",
@@ -27,15 +27,8 @@
 		"suppressImplicitAnyIndexErrors": true,
 		"allowSyntheticDefaultImports": true,
 		"allowJs": true,
-		"baseUrl": ".",
-		"paths": {
-			"!maplibre-gl": ["node_modules/maplibre-gl"] // This mapping is relative to "baseUrl"
-		}
+		"baseUrl": "."
 	},
 	"include": ["src", "src/custom.d.tsx"],
-	"exclude": ["node_modules", "lib"],
-	"typedocOptions": {
-		"entryPoints": ["src/index.ts"],
-		"out": "docs"
-	}
+	"exclude": ["node_modules", "lib"]
 }

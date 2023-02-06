@@ -1,4 +1,4 @@
-import  { useRef, useEffect, useContext, FC,	RefObject } from "react";
+import React, { useRef, useEffect, useContext, FC,	RefObject } from "react";
 
 import MapContext, { MapContextType } from "../../contexts/MapContext";
 import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
@@ -81,8 +81,6 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 	useEffect(() => {
 		if (initializedRef.current) return;
 
-		console.log(mapContainer.current);
-		
 		if (mapContainer.current) {
 			initializedRef.current = true;
 			map.current = new MapLibreGlWrapper({
