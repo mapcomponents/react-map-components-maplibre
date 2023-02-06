@@ -5,7 +5,7 @@ import useLayerHoverPopup from "./useLayerHoverPopup";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-	title: "MapComponents/useLayerHoverPopup",
+	title: "Hooks/useLayerHoverPopup",
 	component: useLayerHoverPopup,
 	argTypes: {
 	},
