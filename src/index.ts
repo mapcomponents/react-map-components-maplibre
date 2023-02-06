@@ -1,4 +1,3 @@
-import LayerListItemVectorLayer from '../dist/ui_components/LayerList/util/LayerListItemVectorLayer';
 export { default as MapLibreGlWrapper} from './components/MapLibreMap/lib/MapLibreGlWrapper';
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
 
