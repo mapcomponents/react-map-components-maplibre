@@ -4,9 +4,9 @@ import {
 	LineLayerSpecification,
 } from 'maplibre-gl';
 import React, { useRef } from 'react';
-import ColorPicker from './ColorPicker';
-import { ListItem, Slider, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import ColorPicker from './input/ColorPicker';
+import { Box, ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
+import {useCallback} from 'react';
 
 export type paintPropsType =
 	| CircleLayerSpecification['paint']
@@ -21,17 +21,11 @@ type Props = {
 	layerType: string;
 };
 
-const mapLayerTypeToPaintProps = {
-	circle: ['circle-color'],
-	line: ['line-color', 'line-width', 'line-blur'],
-	fill: ['fill-color'],
-};
 const mapPropKeyToFormInputType = {
+	'fill-color': 'colorpicker',
 	'line-color': 'colorpicker',
 	'line-width': 'slider',
 	'line-blur': 'slider',
-	'fill-color': 'colorpicker',
-	'circle-color': 'colorpicker',
 };
 const mapPropKeyToFormInputTypeKeys = Object.keys(mapPropKeyToFormInputType);
 
@@ -52,7 +46,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 	const key = useRef(Math.round(Math.random() * 10000000000));
 	//const onChange = (event) => {};
 
-	const getFormInputByType = (key: string, value: any) => {
+	const getFormInputByType = useCallback((key: string) => {
 		if (mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1) {
 			const label = (
 				<Typography id={key + '_label'} gutterBottom>
@@ -68,7 +62,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 								{...inputPropsByPropKey[key]}
 								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
 								value={paintProps[key]}
-								onChange={(ev: Event, value: number, activeThumb) => {
+								onChange={(_ev: Event, value: number) => {
 									if (value) {
 										setPaintProps((current) => ({ ...current, [key]: value }));
 									}
@@ -97,29 +91,34 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 					return (
 						<>
 							{label}
-							<ColorPicker
-								key={key}
-								value={paintProps[key]}
-								propKey={key}
-								setPaintProps={setPaintProps}
-							/>
+							<Box sx={{ '& > div': { width: 'initial !important' } }}>
+								<ColorPicker
+									key={key}
+									value={paintProps[key]}
+									propKey={key}
+									setPaintProps={setPaintProps}
+								/>
+							</Box>
 						</>
 					);
 					break;
 			}
 		}
 		return null;
-	};
+	},[paintProps]);
 
 	return (
 		<>
-			<ListItem
-				sx={{ boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)', borderRadius: '5px' }}
-				key={key + '_paintPropForm'}
-			>
-				<Box>
-					{Object.keys(paintProps).map((el: string) => getFormInputByType(el, paintProps[el]))}
-				</Box>
+			<ListItem key={key + '_paintPropForm'}>
+				<Paper
+					sx={{
+						padding: '15px',
+						boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
+						borderRadius: '5px',
+					}}
+				>
+					{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
+				</Paper>
 			</ListItem>
 		</>
 	);

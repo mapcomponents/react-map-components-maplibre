@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from 'react';
 import useMap from '../../hooks/useMap';
 import { LayerSpecification } from 'maplibre-gl';
 import { VectorSourceSpecification } from 'maplibre-gl';
 
-interface MlVectorTileLayerProps {
+export type MlVectorTileLayerProps = {
 	mapId?: string;
 	insertBeforeLayer?: string;
 	layerId?: string;
@@ -29,6 +29,8 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	const layerLayoutConfsRef = useRef({});
 	const initializedRef = useRef(false);
 
+	console.log('render vt')
+	console.log(props.layers)
 	const createLayers = useCallback(() => {
 		if (!mapHook.map) return;
 
@@ -43,8 +45,10 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 			layerId.current,
 			{
 				type: 'vector',
-				tiles: [props.url || ""],
+				tiles: [props.url || ''],
 				attribution: '',
+				minzoom: 0,
+				maxzoom: 14,
 				...props.sourceOptions,
 			},
 			mapHook.componentId

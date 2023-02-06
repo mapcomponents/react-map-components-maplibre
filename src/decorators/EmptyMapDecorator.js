@@ -17,12 +17,11 @@ const decorators = [
 					<MUIThemeProvider theme={theme}>
 						<Story />
 						<MapLibreMap
+							mapId="map_1"
 							options={{
-								zoom: 14.5,
-								style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
+								zoom: 12.5,
 								center: [7.0851268, 50.73884],
 							}}
-							mapId="map_1"
 						/>
 						<MlNavgiationTools
 							sx={{ bottom: '25px', right: '5px' }}

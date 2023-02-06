@@ -13,7 +13,7 @@ const vectorUrl =
 	'https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf';
 
 const storyoptions = {
-	title: 'Hooks/UseSource',
+	title: 'Hooks/useSource',
 	component: useSource,
 	argTypes: {},
 	decorators: mapContextDecoratorHooks,
