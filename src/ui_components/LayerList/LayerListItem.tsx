@@ -1,6 +1,6 @@
 import { Checkbox, IconButton, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import LayerPropertyForm from './util/LayerPropertyForm';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
@@ -30,6 +30,7 @@ function LayerListItem({
 }: Props) {
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
+	const visibleRef = useRef<boolean>(visible);
 
 	// this state variable is used for layer components that provide a paint attribute
 	const [paintProps, setPaintProps] = useState(
@@ -47,7 +48,10 @@ function LayerListItem({
 	}, [visible, localVisible]);
 
 	useEffect(() => {
-		if (!setLayerState || !layerComponent?.props?.layers) return;
+		if (!setLayerState || !layerComponent?.props?.layers || _visible === visibleRef.current) return;
+
+		visibleRef.current = _visible;
+
 		const state = { ...layerComponent?.props };
 		state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
 			if (el.layout) {
@@ -69,7 +73,6 @@ function LayerListItem({
 	const _layerComponent = useMemo(() => {
 		if (layerComponent && type === 'layer') {
 			if (layerComponent?.props?.layers) {
-
 				return React.cloneElement(layerComponent, {
 					...layerComponent?.props,
 					layers: layerComponent?.props?.layers,
