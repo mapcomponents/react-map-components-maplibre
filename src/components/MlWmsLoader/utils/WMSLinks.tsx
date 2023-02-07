@@ -8,8 +8,8 @@ import CloseIcon from '@mui/icons-material/Close';
 const modalStyle = {
 	position: 'absolute',
 	zIndex: 500,
-	top: '55%',
-	left: '80%',
+	top: '50%',
+	left: '50%',
 	transform: 'translate(-50%, -50%)',
 	width: '400px',
 	height: '600px',
