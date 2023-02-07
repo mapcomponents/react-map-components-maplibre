@@ -27,16 +27,14 @@ function TopToolbar(props: any) {
 			return (
 				<img
 					src="../../assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg"
-					width="250px"
-					style={{ color: 'black' }}
+					style={{ width: '100%', maxWidth: '250px' }}
 				/>
 			);
 		} else {
 			return (
 				<img
 					src="../../assets/WG-MapComponents-Logo_rgb.svg"
-					width="250px"
-					style={{ color: 'white' }}
+					style={{ width: '100%', maxWidth: '250px' }}
 				/>
 			);
 		}
@@ -117,12 +115,10 @@ function TopToolbar(props: any) {
 								display: { xs: 'block', sm: 'none' },
 							}}
 						>
-							{props.pages}
+							<Box sx={{ paddingLeft: '10px', paddingRight: '10px' }}>{props.buttons}</Box>
 						</Menu>
 					</Box>
-
-					<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>{props.pages}</Box>
-					{props.buttons}
+					<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>{props.buttons}</Box>
 				</Toolbar>
 			</Container>
 		</AppBar>
