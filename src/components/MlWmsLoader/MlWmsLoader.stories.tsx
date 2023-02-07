@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
 import MlWmsLoader from './MlWmsLoader';
-import { Button, TextField, useMediaQuery } from '@mui/material';
+import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -23,11 +23,10 @@ interface MlWmsLoaderStoryProps {
 }
 
 const Template = (props: MlWmsLoaderStoryProps) => {
-	const [url, setUrl] = useState(props.url || "");
+	const [url, setUrl] = useState(props.url || '');
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
-
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const [openWmsLoader, setOpenWmsLoader] = useState(true);
 
 	const openGuide = () => {
 		setGuide(true);
@@ -45,33 +44,55 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 		<>
 			<MlWmsLoaderInstructions open={guide} />
 			<WMSLinks open={demoMode} close={() => setDemoMode(false)} load={loader} />
-			<TopToolbar appBarStyle={{ zIndex: 1220 }}>
-				<Button variant="contained" onClick={openGuide} sx={{ marginRight: '10px' }}>
-					Guide me through
-				</Button>
-				<Button variant="contained" onClick={() => setDemoMode(!demoMode)}>
-					Demo WMS
-				</Button>
-			</TopToolbar>
+			<TopToolbar
+				pages={
+					<>
+						<MenuItem>
+							<Typography textAlign="center" onClick={() => setOpenWmsLoader(!openWmsLoader)}>
+								WMS Loader
+							</Typography>
+						</MenuItem>
+						<MenuItem>
+							<Typography
+								textAlign="center"
+								onClick={() => {
+									setDemoMode(!demoMode);
+									setOpenWmsLoader(true);
+								}}
+							>
+								Demo WMS
+							</Typography>
+						</MenuItem>
+					</>
+				}
+				buttons={
+					<Button
+						variant="contained"
+						onClick={openGuide}
+						sx={{ display: { xs: 'none', sm: 'flex' } }}
+					>
+						Guide me through
+					</Button>
+				}
+			></TopToolbar>
 
-			{!mediaIsMobile || (mediaIsMobile && !demoMode) ? (
-				<Sidebar
-					drawerPaperProps={{ sx: { top: '64px', maxWidth: '20%', padding: '40px' } }}
-					drawerButtonStyle={{ top: '65px' }}
-					sx={{ wordBreak: 'break-word' }}
-				>
-					<TextField
-						id="wms_text_field"
-						label="WMS Url"
-						variant="standard"
-						value={url}
-						onChange={(ev) => setUrl(ev.target.value)}
-					/>
-					<MlWmsLoader mapId={'map_1'} url={url} />
-				</Sidebar>
-			) : (
-				<></>
-			)}
+			<Sidebar
+				drawerPaperProps={{ sx: { top: '64px', maxWidth: '20%', padding: '40px' } }}
+				drawerButtonStyle={{ top: '65px' }}
+				sx={{ wordBreak: 'break-word' }}
+				open={openWmsLoader}
+				setOpen={setOpenWmsLoader}
+				name={'WMS Loader'}
+			>
+				<TextField
+					id="wms_text_field"
+					label="WMS Url"
+					variant="standard"
+					value={url}
+					onChange={(ev) => setUrl(ev.target.value)}
+				/>
+				<MlWmsLoader mapId={'map_1'} url={url} />
+			</Sidebar>
 		</>
 	);
 };
