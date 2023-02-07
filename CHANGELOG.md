@@ -1,6 +1,15 @@
 # Change Log
 
 
+## [v0.1.68] - 2023-02-07
+
+### Added
+- 3a2d4a0: add experimental LayerList component and stories
+- a0a01ff: add MUI theme & export getTheme function
+  
+### Changed
+- 3a7b87b: fix maplibre-gl imports remove ! in front of the module name (webpack exclude) to improve compatibility with dev environments using rollup
+
 ## [v0.1.67] - 2023-01-30
 
 ### Changed
