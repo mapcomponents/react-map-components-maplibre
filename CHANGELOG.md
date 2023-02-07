@@ -1,6 +1,11 @@
 # Change Log
 
 
+## [v0.1.69] - 2023-02-07
+
+### Changed
+- readd dependencies to package.dependencies
+
 ## [v0.1.68] - 2023-02-07
 
 ### Added
