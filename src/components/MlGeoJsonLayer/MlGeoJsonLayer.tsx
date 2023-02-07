@@ -115,7 +115,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 			layout: props.layout || {},
 			...props.options,
 			type: layerType as LayerSpecification['type'],
-		},
+		} as Partial<LayerSpecification>,
 		insertBeforeLayer: props.insertBeforeLayer,
 		onHover: props.onHover,
 		onClick: props.onClick,

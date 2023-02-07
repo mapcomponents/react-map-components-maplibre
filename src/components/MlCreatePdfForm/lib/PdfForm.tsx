@@ -188,7 +188,7 @@ export default function PdfForm(props: PdfFormProps) {
 				<Select
 					labelId="quality-select-label"
 					id="quality-select"
-					label="Qualität"
+					label="Quality"
 					value={pdfContext.quality}
 					onChange={(event) => {
 						pdfContext.setQuality?.(event.target.value);
@@ -202,11 +202,11 @@ export default function PdfForm(props: PdfFormProps) {
 				</Select>
 			</FormControl>
 			<FormControl fullWidth sx={formControlStyles}>
-				<InputLabel id="quality-select-label">Scale</InputLabel>
+				<InputLabel id="scale-select-label">Scale</InputLabel>
 				<Select
-					labelId="quality-select-label"
-					id="quality-select"
-					label="Qualität"
+					labelId="scale-select-label"
+					id="scale-select"
+					label="Scale"
 					value={pdfContext?.options?.fixedScale}
 					onChange={(event) => {
 						pdfContext.setOptions?.((val) => ({
@@ -229,7 +229,7 @@ export default function PdfForm(props: PdfFormProps) {
 					onClick={createPdfHandler}
 					disabled={loading}
 				>
-					PDF erstellen
+					create PDF
 				</Button>
 				{loading && (
           <CircularProgress

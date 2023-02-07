@@ -1,5 +1,4 @@
-export interface GeoJSON {
-	type: string,
-	features?: any
-	geometry?: any
-}
+import { GeoJSONFeature } from "maplibre-gl";
+import { GeoJSONObject } from '@turf/turf';
+
+export type GeoJSON = (GeoJSONFeature & GeoJSONObject);
