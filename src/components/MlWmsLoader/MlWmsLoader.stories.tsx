@@ -6,6 +6,7 @@ import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import MlWmsLoaderInstructions from './utils/MlWmsLoaderInstructions';
 import WMSLinks from './utils/WMSLinks';
+import { Box } from '@mui/system';
 
 const storyoptions = {
 	title: 'MapComponents/MlWmsLoader',
@@ -21,6 +22,16 @@ export default storyoptions;
 interface MlWmsLoaderStoryProps {
 	url: string;
 }
+const sidebarSx = {
+	width: {
+		top: '64px',
+		xs: '80%',
+		sm: '60%',
+		md: '350px',
+		lg: '350px',
+	},
+	boxSizing: 'border-box',
+};
 
 const Template = (props: MlWmsLoaderStoryProps) => {
 	const [url, setUrl] = useState(props.url || '');
@@ -45,41 +56,28 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 			<MlWmsLoaderInstructions open={guide} />
 			<WMSLinks open={demoMode} close={() => setDemoMode(false)} load={loader} />
 			<TopToolbar
-				pages={
+				buttons={
 					<>
-						<MenuItem>
-							<Typography textAlign="center" onClick={() => setOpenWmsLoader(!openWmsLoader)}>
-								WMS Loader
-							</Typography>
+						<MenuItem onClick={() => setOpenWmsLoader(!openWmsLoader)}>
+							<Typography textAlign="center">WMS Loader</Typography>
 						</MenuItem>
-						<MenuItem>
-							<Typography
-								textAlign="center"
-								onClick={() => {
-									setDemoMode(!demoMode);
-									setOpenWmsLoader(true);
-								}}
-							>
-								Demo WMS
-							</Typography>
+						<MenuItem
+							onClick={() => {
+								setDemoMode(!demoMode);
+								setOpenWmsLoader(true);
+							}}
+						>
+							<Typography textAlign="center">Demo WMS</Typography>
 						</MenuItem>
+						<Button variant="contained" onClick={openGuide}>
+							Guide me through
+						</Button>
 					</>
 				}
-				buttons={
-					<Button
-						variant="contained"
-						onClick={openGuide}
-						sx={{ display: { xs: 'none', sm: 'flex' } }}
-					>
-						Guide me through
-					</Button>
-				}
-			></TopToolbar>
+			/>
 
 			<Sidebar
-				drawerPaperProps={{ sx: { top: '64px', maxWidth: '20%', padding: '40px' } }}
-				drawerButtonStyle={{ top: '65px' }}
-				sx={{ wordBreak: 'break-word' }}
+				drawerPaperProps={{ sx: sidebarSx }}
 				open={openWmsLoader}
 				setOpen={setOpenWmsLoader}
 				name={'WMS Loader'}

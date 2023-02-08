@@ -3,7 +3,7 @@ import MlGpxViewer from './MlGpxViewer';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlGpxViewerInstructions from './util/MlGpxViewerInstructions';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, MenuItem, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MlGpxDemoLoader from './util/MlGpxDemoLoader';
 import FileCopy from '@mui/icons-material/FileCopy';
@@ -49,14 +49,25 @@ const Template = () => {
 		<>
 			<MlGpxViewerInstructions open={guide} />
 			<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
-			<TopToolbar appBarStyle={{ zIndex: 500 }}>
-				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
-					Guide me through
-				</Button>
-				<Button variant="contained" onClick={handleClick1}>
-					Demo Mode
-				</Button>
-			</TopToolbar>
+			<TopToolbar
+				buttons={
+					<>
+						<MenuItem>
+							<Typography textAlign="center" onClick={handleClick1}>
+								Demo Mode
+							</Typography>
+						</MenuItem>
+
+						<Button
+							variant="contained"
+							onClick={handleClick2}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Guide me through
+						</Button>
+					</>
+				}
+			/>
 
 			<div
 				style={{

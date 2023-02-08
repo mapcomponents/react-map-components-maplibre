@@ -14,6 +14,8 @@ import style from './assets/style.json';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
 import { Feature } from '@turf/turf';
+import { MenuItem, Typography } from '@mui/material';
+import TopToolbar from '../TopToolbar';
 
 const storyoptions = {
 	title: 'UiComponents/LayerList',
@@ -24,13 +26,20 @@ const storyoptions = {
 export default storyoptions;
 
 const sidebarSx = {
-	width: { xs: '80%', sm: '60%', md: '350px', lg: '350px' },
+	width: {
+		top: '64px',
+		xs: '80%',
+		sm: '60%',
+		md: '350px',
+		lg: '350px',
+	},
 	boxSizing: 'border-box',
 };
 
 const Template = () => {
 	const [layerOneState, setLayerOneState] = useState({ geojson: sample_geojson_1 as Feature });
 	const [layerTwoState, setLayerTwoState] = useState({ geojson: sample_geojson_2 as Feature });
+	const [openSidebar, setOpenSidebar] = useState(true);
 
 	useEffect(() => {
 		console.log(layerOneState, layerTwoState);
@@ -38,7 +47,22 @@ const Template = () => {
 
 	return (
 		<>
-			<Sidebar sx={sidebarSx} drawerPaperProps={{ sx: sidebarSx }}>
+			<TopToolbar
+				buttons={
+					<MenuItem>
+						<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
+							GeoJSON Layer
+						</Typography>
+					</MenuItem>
+				}
+			/>
+			<Sidebar
+				sx={sidebarSx}
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'GeoJSON Layer'}
+			>
 				<LayerList>
 					<LayerListItem
 						layerComponent={<MlGeoJsonLayer {...layerOneState} />}
@@ -68,9 +92,26 @@ ExampleConfig.parameters = {};
 ExampleConfig.args = {};
 
 const FolderTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+
 	return (
 		<>
-			<Sidebar sx={sidebarSx} drawerPaperProps={{ sx: sidebarSx }}>
+			<TopToolbar
+				buttons={
+					<MenuItem>
+						<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
+							GeoJSON Layer
+						</Typography>
+					</MenuItem>
+				}
+			/>
+			<Sidebar
+				sx={sidebarSx}
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'GeoJSON Layer'}
+			>
 				<LayerList>
 					<LayerListFolder visible={true} name={'GeoJSON Layers'}>
 						<LayerListItem
@@ -100,6 +141,8 @@ FolderExample.parameters = {};
 FolderExample.args = {};
 
 const VectortileTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+
 	const [layerState, setLayerState] = useState({
 		layerId: 'openmaptiles',
 		sourceOptions: {
@@ -111,11 +154,26 @@ const VectortileTemplate = () => {
 
 	useEffect(() => {
 		console.log(layerState);
-	},[layerState])
+	}, [layerState]);
 
 	return (
 		<>
-			<Sidebar sx={sidebarSx} drawerPaperProps={{ sx: sidebarSx }}>
+			<TopToolbar
+				buttons={
+					<MenuItem>
+						<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
+							GeoJSON Layer
+						</Typography>
+					</MenuItem>
+				}
+			/>
+			<Sidebar
+				sx={sidebarSx}
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'Vector Tile Layer'}
+			>
 				<LayerList>
 					<LayerListItem
 						layerComponent={<MlVectorTileLayer {...layerState} />}

@@ -13,7 +13,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
 import MlGpxViewerInstructions from '../MlGpxViewer/util/MlGpxViewerInstructions';
-import { Button } from '@mui/material';
+import { Button, MenuItem, Typography } from '@mui/material';
 import MlGpxDemoLoader from '../MlGpxViewer/util/MlGpxDemoLoader';
 
 const storyoptions = {
@@ -59,15 +59,21 @@ const Template = () => {
 
 	return (
 		<>
-				<MlGpxViewerInstructions open={guide} />
-			<TopToolbar appBarStyle={{ zIndex: 500 }}>
-				<Button variant="contained" onClick={handleClick2} sx={{ marginRight: '10px' }}>
-					Guide me through
-				</Button>
-				<Button variant="contained" onClick={handleClick1}>
-					Demo Mode
-				</Button>
-			</TopToolbar>
+			<MlGpxViewerInstructions open={guide} />
+			<TopToolbar
+				buttons={
+					<>
+						<MenuItem>
+							<Typography textAlign="center" onClick={handleClick1}>
+								Demo Mode
+							</Typography>
+						</MenuItem>
+						<Button variant="contained" onClick={handleClick2}>
+							Guide me through
+						</Button>
+					</>
+				}
+			/>
 			<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
 
 			<div
@@ -84,12 +90,7 @@ const Template = () => {
 				<UploadButton
 					setData={setGpxData}
 					buttonComponent={
-						<IconButton
-							style={{
-								backgroundColor: 'rgba(255,255,255,1)',
-							}}
-							size="large"
-						>
+						<IconButton size="large">
 							<FileCopy />
 						</IconButton>
 					}
@@ -97,9 +98,6 @@ const Template = () => {
 				<IconButton
 					onClick={() => {
 						setMetadataDrawerOpen((prevState) => !prevState);
-					}}
-					style={{
-						backgroundColor: 'rgba(255,255,255,1)',
 					}}
 					size="large"
 				>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import MapLibreMap from './MapLibreMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import { Button } from '@mui/material';
+import { Button, Stack, Item } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 
@@ -59,25 +59,31 @@ const StyleChangeTemplate = (args) => {
 
 	return (
 		<>
-			<TopToolbar>
-				<Button
-					onClick={() =>
-						setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json')
-					}
-					variant="contained"
-					sx={{ marginRight: '5px' }}
-				>
-					OSM-Bright
-				</Button>
-				<Button
-					onClick={() =>
-						setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json')
-					}
-					variant="contained"
-				>
-					OSM-Fiord-Color
-				</Button>
-			</TopToolbar>
+			<TopToolbar
+				buttons={
+					<>
+						<Button
+							onClick={() =>
+								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json')
+							}
+							variant="contained"
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							OSM-Bright
+						</Button>
+						<br />
+						<br />
+						<Button
+							onClick={() =>
+								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json')
+							}
+							variant="contained"
+						>
+							OSM-Fiord-Color
+						</Button>
+					</>
+				}
+			/>
 			<MapLibreMap
 				options={{ ...args.options, style: activeStyle }}
 				style={{
