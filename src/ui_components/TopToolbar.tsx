@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -39,6 +39,7 @@ function TopToolbar(props: any) {
 			);
 		}
 	}
+
 	return (
 		<AppBar
 			sx={{
@@ -54,70 +55,60 @@ function TopToolbar(props: any) {
 						component="a"
 						href="/"
 						sx={{
-							display: { xs: 'flex', sm: 'none', md: 'flex' },
-							flexGrow: { xs: '500', sm: 'none', md: '30' },
-							color: 'white',
-							textDecoration: 'none',
+							display: { xs: 'none', md: 'flex' },
+							flexGrow: { md: '30' },
 						}}
 					>
 						<WhichLogo />
 					</Box>
-
 					<Box
 						component="a"
 						href="/"
 						sx={{
-							display: { xs: 'none', sm: 'flex', md: 'none' },
-							flexGrow: { sm: 30 },
+							display: { xs: 'flex', sm: 'flex', md: 'none' },
+							flexGrow: { xs: '500' },
 							mr: { sm: '0px' },
 						}}
 					>
 						<img src="static/media/.storybook/mapcomponents_logo.png" width="50px" height="50px" />
 					</Box>
-					<Box sx={{ flexGrow: 22, display: { xs: 'flex', sm: 'none' } }}>
-						<IconButton onClick={handleOpenNavMenu}>
-							<MenuIcon />
-						</IconButton>
-						<Menu
-							id="menu-appbar"
-							anchorEl={anchorElNav}
-							anchorOrigin={{
-								vertical: 'bottom',
-								horizontal: 'left',
-							}}
-							keepMounted
-							transformOrigin={{
-								vertical: 'top',
-								horizontal: 'left',
-							}}
-							open={Boolean(anchorElNav)}
-							onClose={handleCloseNavMenu}
-							PaperProps={{
-								elevation: 24,
-								sx: {
-									overflow: 'visible',
-									mt: '15px',
-
-									'&:before': {
-										content: '""',
-										display: 'block',
-										position: 'absolute',
-										top: '0px',
-										right: '22px',
-										width: '10px',
-										height: '10px',
-										bgcolor: 'background.paper',
-										transform: 'translateY(-50%) rotate(45deg)',
+					<Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>{props.unmovableButtons}</Box>
+					{props.buttons ? (
+						<Box sx={{ flexGrow: 22, display: { xs: 'flex', sm: 'none' } }}>
+							<IconButton onClick={handleOpenNavMenu}>
+								<MenuIcon />
+							</IconButton>
+							<Menu
+								id="menu-appbar"
+								anchorEl={anchorElNav}
+								anchorOrigin={{
+									vertical: 'bottom',
+									horizontal: 'left',
+								}}
+								keepMounted
+								transformOrigin={{
+									vertical: 'top',
+									horizontal: 'left',
+								}}
+								open={Boolean(anchorElNav)}
+								onClose={handleCloseNavMenu}
+								PaperProps={{
+									elevation: 24,
+									sx: {
+										overflow: 'visible',
+										mt: '15px',
 									},
-								},
-							}}
-							sx={{
-								display: { xs: 'block', sm: 'none' },
-							}}
-						>
-							<Box sx={{ paddingLeft: '10px', paddingRight: '10px' }}>{props.buttons}</Box>
-						</Menu>
-					</Box>
+								}}
+								sx={{
+									display: { xs: 'block', sm: 'none' },
+								}}
+							>
+								<Box sx={{ paddingLeft: '10px', paddingRight: '10px' }}>{props.buttons}</Box>
+							</Menu>
+						</Box>
+					) : (
+						''
+					)}
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>{props.buttons}</Box>
 				</Toolbar>
 			</Container>
