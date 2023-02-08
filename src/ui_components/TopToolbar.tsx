@@ -8,6 +8,7 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
+import { Link } from '@mui/material';
 
 function TopToolbar(props: any) {
 	const theme = useTheme();
@@ -52,14 +53,14 @@ function TopToolbar(props: any) {
 			<Container maxWidth="lg">
 				<Toolbar disableGutters>
 					<Box
-						component="a"
-						href="/"
 						sx={{
 							display: { xs: 'none', md: 'flex' },
 							flexGrow: { md: '30' },
 						}}
 					>
-						<WhichLogo />
+						<Link href="/">
+							<WhichLogo />
+						</Link>
 					</Box>
 					<Box
 						component="a"
