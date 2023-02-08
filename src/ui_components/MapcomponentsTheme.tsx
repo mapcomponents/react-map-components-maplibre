@@ -28,8 +28,8 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						main: '#009FE3',
 					},
 					background: {
-						default: '#121212',
-						paper: '#323232',
+						default: '#222222',
+						paper: '#414141',
 						icon: '#525252',
 					},
 					text: {

@@ -40,7 +40,7 @@ export default function Sidebar({
 	drawerButtonStyle,
 	...props
 }: SidebarProps & DrawerProps) {
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery('(max-width:600px)');
 
 	const [drawerOpen, setDrawerOpen] = useState(false);
 
