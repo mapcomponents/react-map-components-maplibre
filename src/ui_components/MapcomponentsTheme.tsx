@@ -88,7 +88,7 @@ const getTheme = (mode: 'light' | 'dark') => {
 			},
 			MuiButton: {
 				styleOverrides: {
-					root: {
+					contained: {
 						color: '#fff',
 					},
 				},
