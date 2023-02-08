@@ -5,6 +5,7 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { MenuItem, Slider, Typography } from '@mui/material';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from '@turf/turf';
+import Sidebar from '../../ui_components/Sidebar';
 
 const storyoptions = {
 	title: 'Hooks/useCameraFollowPath',
@@ -62,6 +63,17 @@ const marks = [
 	},
 ];
 
+const sidebarSx = {
+	width: {
+		top: '64px',
+		xs: '80%',
+		sm: '60%',
+		md: '350px',
+		lg: '350px',
+	},
+	boxSizing: 'border-box',
+};
+
 const Template = () => {
 	const [state, setState] = useState({ pause: true, zoom: 18, speed: 1, pitch: 60 });
 
@@ -73,15 +85,28 @@ const Template = () => {
 		speed: state.speed,
 	});
 
-	const [showComponent, setShowComponent] = useState(true);
+	const [showRoute, setShowRoute] = useState(true);
+	const [openSidebar, setOpenSidebar] = useState(true);
 
 	return (
 		<>
-			<TopToolbar>
-				<MenuItem onClick={() => setShowComponent(!showComponent)}>
-					{showComponent ? 'Route ausblenden' : 'Route einblenden'}
+			<TopToolbar
+				buttons={
+					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
+						<Typography textAlign="center">Camera Settings</Typography>
+					</MenuItem>
+				}
+			/>
+			<Sidebar
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'Camera Settings'}
+			>
+				<MenuItem onClick={() => setShowRoute(!showRoute)}>
+					<Typography>{showRoute ? 'Route ausblenden' : 'Route einblenden'}</Typography>
 				</MenuItem>
-				{showComponent ? (
+				{showRoute ? (
 					<MlGeoJsonLayer
 						geojson={routeJson}
 						type="line"
@@ -99,7 +124,7 @@ const Template = () => {
 						})
 					}
 				>
-					Start
+					<Typography>Start</Typography>
 				</MenuItem>
 				<MenuItem
 					disabled={state.pause}
@@ -109,7 +134,7 @@ const Template = () => {
 						})
 					}
 				>
-					Pause
+					<Typography>Pause</Typography>
 				</MenuItem>
 				<MenuItem
 					onClick={() => {
@@ -119,54 +144,60 @@ const Template = () => {
 						});
 					}}
 				>
-					Reset
+					<Typography>Reset</Typography>
 				</MenuItem>
-				<Typography id="discrete-slider" style={{ marginLeft: '10px', marginRight: '10px' }}>
-					Zoom:
-				</Typography>
-				<Slider
-					value={state.zoom}
-					onChange={(ev, value) => {
-						setState((current) => {
-							return { ...current, zoom: Number(value) };
-						});
-					}}
-					getAriaValueText={(value) => value.toString()}
-					aria-labelledby="discrete-slider"
-					//valueLabelDisplay="auto"
-					step={1}
-					marks={marks}
-					min={15}
-					max={20}
-					sx={{
-						marginTop: '20px',
-						paddingBottom: '20px',
-						marginRight: '10px',
-						maxWidth: '200px',
-					}}
-				/>
-				<Typography id="discrete-slider2" style={{ marginLeft: '10px', marginRight: '10px' }}>
-					Speed:
-				</Typography>
-				<Slider
-					value={state.speed}
-					onChange={(ev, value) => {
-						setState((current) => {
-							return { ...current, speed: Number(value) };
-						});
-					}}
-					getAriaValueText={(value) => value.toString()}
-					aria-labelledby="discrete-slider2"
-					//valueLabelDisplay="auto"
-					step={0.1}
-					marks
-					min={0.1}
-					max={2}
-					sx={{
-						marginRight: '10px',
-						maxWidth: '200px',
-					}}
-				/>
+				<MenuItem>
+					<Typography id="discrete-slider" style={{ marginLeft: '10px', marginRight: '10px' }}>
+						<Typography>Zoom:</Typography>
+					</Typography>
+					<Slider
+						value={state.zoom}
+						onChange={(ev, value) => {
+							setState((current) => {
+								return { ...current, zoom: Number(value) };
+							});
+						}}
+						getAriaValueText={(value) => value.toString()}
+						aria-labelledby="discrete-slider"
+						//valueLabelDisplay="auto"
+						step={1}
+						marks={marks}
+						min={15}
+						max={20}
+						sx={{
+							marginTop: '20px',
+							paddingBottom: '20px',
+							marginRight: '10px',
+							maxWidth: '200px',
+							minWidth: '150px',
+						}}
+					/>
+				</MenuItem>
+				<MenuItem>
+					<Typography id="discrete-slider2" style={{ marginLeft: '10px', marginRight: '10px' }}>
+						Speed:
+					</Typography>
+					<Slider
+						value={state.speed}
+						onChange={(ev, value) => {
+							setState((current) => {
+								return { ...current, speed: Number(value) };
+							});
+						}}
+						getAriaValueText={(value) => value.toString()}
+						aria-labelledby="discrete-slider2"
+						//valueLabelDisplay="auto"
+						step={0.1}
+						marks
+						min={0.1}
+						max={2}
+						sx={{
+							marginRight: '10px',
+							maxWidth: '200px',
+							minWidth: '150px',
+						}}
+					/>
+				</MenuItem>
 				<MenuItem
 					onClick={() => {
 						if (state.pitch === 0) {
@@ -180,9 +211,9 @@ const Template = () => {
 						}
 					}}
 				>
-					{state.pitch === 0 ? '3D' : '2D'}
+					<Typography>{state.pitch === 0 ? '3D' : '2D'}</Typography>
 				</MenuItem>
-			</TopToolbar>
+			</Sidebar>
 		</>
 	);
 };
