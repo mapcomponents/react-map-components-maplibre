@@ -58,7 +58,7 @@ const Template = () => {
 			<TopToolbar
 				unmovableButtons={
 					<Button
-						variant="contained"
+						variant={showCreatePdfForm ? 'contained' : 'outlined'}
 						className="pdfFormButton"
 						onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}
 					>

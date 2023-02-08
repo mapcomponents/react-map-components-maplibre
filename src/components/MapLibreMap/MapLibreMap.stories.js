@@ -56,6 +56,7 @@ const StyleChangeTemplate = (args) => {
 	const [activeStyle, setActiveStyle] = useState(
 		'https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json'
 	);
+	const [showOsmFiord, setShowOsmFiord] = useState(true);
 
 	return (
 		<>
@@ -63,10 +64,11 @@ const StyleChangeTemplate = (args) => {
 				buttons={
 					<>
 						<Button
-							onClick={() =>
-								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json')
-							}
-							variant="contained"
+							variant={showOsmFiord ? 'outlined' : 'contained'}
+							onClick={() => {
+								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json');
+								setShowOsmFiord(false);
+							}}
 							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 						>
 							OSM-Bright
@@ -74,10 +76,11 @@ const StyleChangeTemplate = (args) => {
 						<br />
 						<br />
 						<Button
-							onClick={() =>
-								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json')
-							}
-							variant="contained"
+							variant={showOsmFiord ? 'contained' : 'outlined'}
+							onClick={() => {
+								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json');
+								setShowOsmFiord(true);
+							}}
 						>
 							OSM-Fiord-Color
 						</Button>
