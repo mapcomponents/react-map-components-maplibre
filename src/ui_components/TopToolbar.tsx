@@ -10,7 +10,13 @@ import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
 import { Link } from '@mui/material';
 
-function TopToolbar(props: JSX.Element) {
+export interface TopToolbarProps {
+	children?: React.ReactNode;
+	unmovableButtons?: React.ReactNode;
+	buttons?: React.ReactNode;
+}
+
+function TopToolbar(props: TopToolbarProps) {
 	const theme = useTheme();
 
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
