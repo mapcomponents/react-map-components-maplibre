@@ -7,9 +7,10 @@ import Button from "@mui/material/Button";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 import "../../App.css";
+import { MenuItem } from '@mui/material';
 
 const storyoptions = {
-	title: "MapComponents/MlWmsLayer",
+	title: 'MapComponents/MlWmsLayer',
 	component: MlWmsLayer,
 	argTypes: {
 		url: {},
@@ -24,15 +25,17 @@ const Template = (props) => {
 
 	return (
 		<>
-			<TopToolbar>
-				<Button
-					color="primary"
-					variant={showLayer ? "contained" : "outlined"}
-					onClick={() => setShowLayer(!showLayer)}
-				>
-					WMS
-				</Button>
-			</TopToolbar>
+			<TopToolbar
+				unmovableButtons={
+					<Button
+						color="primary"
+						variant={showLayer ? 'contained' : 'outlined'}
+						onClick={() => setShowLayer(!showLayer)}
+					>
+						WMS
+					</Button>
+				}
+			/>
 			<MlWmsLayer visible={showLayer} {...props} />
 		</>
 	);
