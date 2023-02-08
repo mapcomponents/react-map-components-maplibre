@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-import { Paper, Drawer, IconButton, PaperProps, SxProps, DrawerProps } from '@mui/material';
+import { Paper, Drawer, IconButton, PaperProps, DrawerProps } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import { Global } from '@emotion/react';
@@ -15,7 +15,6 @@ const DrawerHeader = styled('div')(() => ({
 interface SidebarProps {
 	drawerPaperProps?: PaperProps;
 	drawerHeaderProps?: Headers;
-	drawerButtonStyle?: SxProps | undefined;
 	children?: React.ReactNode;
 	open?: boolean;
 	setOpen?: (val: boolean) => void;
@@ -37,7 +36,6 @@ const Puller = styled(Box)(({ theme }) => ({
 export default function Sidebar({
 	drawerPaperProps,
 	drawerHeaderProps,
-	drawerButtonStyle,
 	...props
 }: SidebarProps & DrawerProps) {
 	const mediaIsMobile = useMediaQuery('(max-width:600px)');

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useRef, useMemo } from 'react';
+import { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
 import { Link } from '@mui/material';
 
-function TopToolbar(props: any) {
+function TopToolbar(props: JSX.Element) {
 	const theme = useTheme();
 
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);

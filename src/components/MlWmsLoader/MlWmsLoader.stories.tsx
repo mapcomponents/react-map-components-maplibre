@@ -6,7 +6,6 @@ import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import MlWmsLoaderInstructions from './utils/MlWmsLoaderInstructions';
 import WMSLinks from './utils/WMSLinks';
-import { Box } from '@mui/system';
 
 const storyoptions = {
 	title: 'MapComponents/MlWmsLoader',

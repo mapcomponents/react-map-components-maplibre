@@ -6,8 +6,7 @@ import Button from "@mui/material/Button";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
-import "../../App.css";
-import { MenuItem } from '@mui/material';
+import '../../App.css';
 
 const storyoptions = {
 	title: 'MapComponents/MlWmsLayer',

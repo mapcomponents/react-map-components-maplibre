@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import MapLibreMap from './MapLibreMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import { Button, Stack, Item } from '@mui/material';
+import { Button } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 
