@@ -64,8 +64,7 @@ const getTheme = (mode: 'light' | 'dark') => {
 		components: {
 			MuiTypography: {
 				styleOverrides: {
-					root: {
-					},
+					root: {},
 				},
 			},
 			MuiAppBar: {
@@ -89,9 +88,8 @@ const getTheme = (mode: 'light' | 'dark') => {
 			},
 			MuiButton: {
 				styleOverrides: {
-					backgroundColor: theme.palette.background.paper,
-					':hover': {
-						backgroundColor: theme.palette.primary.main,
+					root: {
+						color: '#fff',
 					},
 				},
 				variants: [
