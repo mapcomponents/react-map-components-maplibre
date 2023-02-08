@@ -14,9 +14,10 @@ import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 import sample_geojson_2 from '../MlGeoJsonLayer/assets/sample_2.json';
 import List from '@mui/material/List';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import { ToggleButton } from '@mui/material';
+import { MenuItem, ToggleButton, Typography } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import TopToolbar from '../../ui_components/TopToolbar';
 
 const storyoptions = {
 	title: 'MapComponents/MlShareMapState',
@@ -25,6 +26,17 @@ const storyoptions = {
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
+
+const sidebarSx = {
+	width: {
+		top: '64px',
+		xs: '80%',
+		sm: '60%',
+		md: '350px',
+		lg: '350px',
+	},
+	boxSizing: 'border-box',
+};
 
 const Template = () => {
 	const geoJsonArray = [sample_geojson_1, sample_geojson_2];
@@ -41,14 +53,27 @@ const Template = () => {
 			includeBaseLayers: false,
 		},
 	});
+	const [openSidebar, setOpenSidebar] = useState(true);
 
 	return (
 		<>
+			<TopToolbar
+				buttons={
+					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
+						<Typography textAlign="center">Share Map State</Typography>
+					</MenuItem>
+				}
+			/>
 			<MlShareMapState active={watchState} />
 			{geoJsonArray.map((el, i) => (
 				<MlGeoJsonLayer layerId={'GeoJson_' + i} type="line" geojson={el} key={'GeoJson_' + i} />
 			))}
-			<Sidebar sx={{ wordBreak: 'break-word' }}>
+			<Sidebar
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'Share Map State'}
+			>
 				<ToggleButton
 					size="small"
 					selected={watchState}

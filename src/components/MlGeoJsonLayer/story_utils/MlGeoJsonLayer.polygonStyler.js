@@ -3,6 +3,7 @@ import Sidebar from '../../../ui_components/Sidebar';
 import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
 import { ColorPicker } from 'mui-color';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
+import TopToolbar from '../../../ui_components/TopToolbar';
 
 /*
 const FeatureNames = () => {
@@ -58,6 +59,17 @@ const widthMarks = [
 	},
 ];
 
+const sidebarSx = {
+	width: {
+		top: '64px',
+		xs: '80%',
+		sm: '60%',
+		md: '350px',
+		lg: '350px',
+	},
+	boxSizing: 'border-box',
+};
+
 const PolygonStyler = (props) => {
 	const [color, setColor] = useState('#2485C1');
 	const [opacity, setOpacity] = useState(0.8);
@@ -78,11 +90,24 @@ const PolygonStyler = (props) => {
 	const handleColorChange = (e) => {
 		setColor(`#${e.hex}`);
 	};
+	const [openSidebar, setOpenSidebar] = useState(true);
 
 	return (
 		<>
-			<Sidebar>
-				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 1 }} alignItems="left">
+			<TopToolbar
+				buttons={
+					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
+						<Typography textAlign="center">GeoJson Layer Polygon</Typography>
+					</MenuItem>
+				}
+			/>
+			<Sidebar
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'GeoJson Layer Polygon'}
+			>
+				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 15 }} alignItems="left">
 					<FormControl>
 						<Typography>Geometry type:</Typography>
 						<Select

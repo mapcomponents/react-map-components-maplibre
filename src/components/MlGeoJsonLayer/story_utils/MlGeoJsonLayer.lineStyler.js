@@ -13,6 +13,7 @@ import {
 import { ColorPicker } from 'mui-color';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import useMap from '../../../hooks/useMap';
+import TopToolbar from '../../../ui_components/TopToolbar';
 
 const streetNames = [
 	'Show all',
@@ -71,6 +72,17 @@ const MenuProps = {
 	},
 };
 
+const sidebarSx = {
+	width: {
+		top: '64px',
+		xs: '80%',
+		sm: '60%',
+		md: '350px',
+		lg: '350px',
+	},
+	boxSizing: 'border-box',
+};
+
 const LineStyler = (props) => {
 	const [color, setColor] = useState('#2485C1');
 	const [opacity, setOpacity] = useState(0.8);
@@ -93,7 +105,7 @@ const LineStyler = (props) => {
 		};
 	}, [featuresToShow, props.geojson]);
 
-	const mapHook = useMap({ mapId: "map_1", waitForLayer: "Linestring" });
+	const mapHook = useMap({ mapId: 'map_1', waitForLayer: 'Linestring' });
 
 	const handleChange = (event) => {
 		const {
@@ -109,6 +121,7 @@ const LineStyler = (props) => {
 	const handleColorChange = (e) => {
 		setColor(`#${e.hex}`);
 	};
+	const [openSidebar, setOpenSidebar] = useState(true);
 
 	useEffect(() => {
 		mapHook.map?.map.setCenter([7.099301807798469, 50.734214410085684]);
@@ -117,8 +130,20 @@ const LineStyler = (props) => {
 
 	return (
 		<>
-			<Sidebar>
-				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 1 }} alignItems="left">
+			<TopToolbar
+				buttons={
+					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
+						<Typography textAlign="center">GeoJson Layer</Typography>
+					</MenuItem>
+				}
+			/>
+			<Sidebar
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'GeoJson Layer'}
+			>
+				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 15 }} alignItems="left">
 					<Typography>Feature to show:</Typography>
 
 					<FormControl>
