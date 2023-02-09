@@ -6,7 +6,6 @@ import Dropzone from '../../ui_components/Dropzone';
 import UploadButton from '../../ui_components/UploadButton';
 import Metadata from '../MlGpxViewer/util/Metadata';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
 import MlGpxViewerInstructions from '../MlGpxViewer/util/MlGpxViewerInstructions';
