@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import MlSpatialElevationProfile from './MlSpatialElevationProfile';
 import MlGpxViewer from '../MlGpxViewer/MlGpxViewer';
-import InfoIcon from '@mui/icons-material/Info';
 import useGpx, { MetadataType } from '../../hooks/useGpx/useGpx';
-import FileCopy from '@mui/icons-material/FileCopy';
 import Dropzone from '../../ui_components/Dropzone';
 import UploadButton from '../../ui_components/UploadButton';
 import Metadata from '../MlGpxViewer/util/Metadata';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
@@ -45,7 +42,6 @@ const sidebarSx = {
 const Template = () => {
 	const [gpxData, setGpxData] = useState<string | undefined>();
 	const parsedGpx = useGpx({ data: gpxData });
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [demoLoaderOpen, setDemoLoaderOpen] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [metadata, setMetadata] = useState<MetadataType[]>([]);

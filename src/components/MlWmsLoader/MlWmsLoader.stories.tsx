@@ -39,7 +39,6 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 
 	const openGuide = () => {
-		setOpenSidebar(true);
 		setGuide(true);
 		setTimeout(() => {
 			setGuide(false);

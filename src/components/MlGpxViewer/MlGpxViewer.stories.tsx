@@ -48,7 +48,6 @@ const Template = () => {
 		setOpenSidebar(true);
 	};
 	const handleClick2 = () => {
-		setOpenSidebar(true);
 		setGuide(true);
 		setTimeout(() => {
 			setGuide(false);
