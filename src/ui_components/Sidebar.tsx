@@ -109,9 +109,25 @@ export default function Sidebar({
 					/>
 					<SwipeableDrawer
 						anchor="bottom"
-						open={open}
-						onClose={() => setOpen(false)}
-						onOpen={() => setOpen(true)}
+						open={typeof props.open === 'undefined' ? drawerOpen : props.open}
+						onClose={
+							props.setOpen
+								? () => {
+										props.setOpen?.(false);
+								  }
+								: () => {
+										setDrawerOpen(false);
+								  }
+						}
+						onOpen={
+							props.setOpen
+								? () => {
+										props.setOpen?.(true);
+								  }
+								: () => {
+										setDrawerOpen(true);
+								  }
+						}
 						swipeAreaWidth={drawerBleeding}
 						disableSwipeToOpen={false}
 						hideBackdrop={true}
