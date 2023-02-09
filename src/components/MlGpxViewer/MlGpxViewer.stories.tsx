@@ -85,11 +85,7 @@ const Template = () => {
 						</Button>
 						<br />
 						<br />
-						<Button
-							variant="contained"
-							onClick={handleClick2}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
+						<Button variant="contained" onClick={handleClick2} sx={{ display: 'none' }}>
 							Guide me through
 						</Button>
 					</>

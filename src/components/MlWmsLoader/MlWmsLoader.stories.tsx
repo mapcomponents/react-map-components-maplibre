@@ -68,7 +68,7 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 						>
 							<Typography textAlign="center">Demo WMS</Typography>
 						</MenuItem>
-						<Button variant="contained" onClick={openGuide}>
+						<Button variant="contained" onClick={openGuide} sx={{ display: 'none' }}>
 							Guide me through
 						</Button>
 					</>
