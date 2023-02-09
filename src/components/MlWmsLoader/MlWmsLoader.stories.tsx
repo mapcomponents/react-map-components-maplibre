@@ -36,9 +36,10 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 	const [url, setUrl] = useState(props.url || '');
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
-	const [openWmsLoader, setOpenWmsLoader] = useState(true);
+	const [openSidebar, setOpenSidebar] = useState(true);
 
 	const openGuide = () => {
+		setOpenSidebar(true);
 		setGuide(true);
 		setTimeout(() => {
 			setGuide(false);
@@ -57,13 +58,13 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 			<TopToolbar
 				buttons={
 					<>
-						<MenuItem onClick={() => setOpenWmsLoader(!openWmsLoader)}>
+						<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
 							<Typography textAlign="center">WMS Loader</Typography>
 						</MenuItem>
 						<MenuItem
 							onClick={() => {
 								setDemoMode(!demoMode);
-								setOpenWmsLoader(true);
+								setOpenSidebar(true);
 							}}
 						>
 							<Typography textAlign="center">Demo WMS</Typography>
@@ -77,8 +78,8 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 
 			<Sidebar
 				drawerPaperProps={{ sx: sidebarSx }}
-				open={openWmsLoader}
-				setOpen={setOpenWmsLoader}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
 				name={'WMS Loader'}
 			>
 				<TextField
