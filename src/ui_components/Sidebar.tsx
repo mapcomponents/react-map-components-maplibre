@@ -42,8 +42,6 @@ export default function Sidebar({
 
 	const [drawerOpen, setDrawerOpen] = useState(false);
 
-	const [open, setOpen] = useState(false);
-
 	return (
 		<>
 			{!mediaIsMobile ? (
