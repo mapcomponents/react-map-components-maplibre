@@ -74,6 +74,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 		const mapId = mapIdRef.current;
 
 		return () => {
+			initializedRef.current = false;
 			mapContext.removeMap(mapId);
 			map.current?.map?.remove?.();
 			map.current = undefined;
