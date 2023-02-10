@@ -12,6 +12,7 @@ import {
 	StyleImageMetadata,
 } from 'maplibre-gl';
 import { Map as MapType, Style } from 'maplibre-gl';
+import { MapboxLayer } from '@deck.gl/mapbox/typed';
 
 type WrapperEventArgArray = [string, (arg0: unknown) => void];
 type EventArgArray = [
@@ -62,6 +63,9 @@ interface MapLibreGlWrapper extends MapType {
 					source?: string | SourceSpecification | undefined;
 			  })
 			| (CustomLayerInterface & {
+					source?: string | SourceSpecification | undefined;
+			  })
+			| (MapboxLayer<any> & {
 					source?: string | SourceSpecification | undefined;
 			  }),
 		beforeId?: string | undefined,
@@ -386,6 +390,8 @@ class MapLibreGlWrapper {
 				}
 			}
 
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			self.map.addLayer(layer, beforeId);
 			return this;
 		};

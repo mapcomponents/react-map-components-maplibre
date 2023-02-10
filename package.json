@@ -20,6 +20,10 @@
 		"create-component": "./scripts/create-map-component.sh"
 	},
 	"dependencies": {
+		"@deck.gl/aggregation-layers": "^8.8.23",
+		"@deck.gl/core": "^8.8.23",
+		"@deck.gl/layers": "^8.8.23",
+		"@deck.gl/mapbox": "^8.8.23",
 		"@emotion/css": "^11.10.5",
 		"@emotion/react": "^11.10.5",
 		"@emotion/styled": "^11.10.5",
