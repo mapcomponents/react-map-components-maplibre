@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import MlWmsLoader from './MlWmsLoader';
 import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
@@ -22,8 +22,8 @@ interface MlWmsLoaderStoryProps {
 	url: string;
 }
 const sidebarSx = {
+	top: '64px',
 	width: {
-		top: '64px',
 		xs: '80%',
 		sm: '60%',
 		md: '350px',

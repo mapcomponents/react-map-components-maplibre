@@ -1,4 +1,4 @@
-import React, {  useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import {
 	Select,
@@ -73,8 +73,8 @@ const MenuProps = {
 };
 
 const sidebarSx = {
+	top: '64px',
 	width: {
-		top: '64px',
 		xs: '80%',
 		sm: '60%',
 		md: '350px',

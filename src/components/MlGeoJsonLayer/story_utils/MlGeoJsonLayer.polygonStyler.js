@@ -1,4 +1,4 @@
-import React, {  useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
 import { ColorPicker } from 'mui-color';
@@ -60,8 +60,8 @@ const widthMarks = [
 ];
 
 const sidebarSx = {
+	top: '64px',
 	width: {
-		top: '64px',
 		xs: '80%',
 		sm: '60%',
 		md: '350px',
