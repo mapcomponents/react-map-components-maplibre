@@ -11,7 +11,7 @@ type Props = {
 export default function Metadata(props: Props) {
 	return (
 		<List>
-			{props.metadata?.length &&
+			{props.metadata?.length > 0 &&
 				props.metadata.map((item, idx) => (
 					<ListItem key={`item--${idx}`}>
 						<ListItemText primary={item.value} />
