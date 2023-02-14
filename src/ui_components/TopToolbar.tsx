@@ -64,9 +64,7 @@ function TopToolbar(props: TopToolbarProps) {
 							flexGrow: { md: '30' },
 						}}
 					>
-						<Link href="/">
-							<WhichLogo />
-						</Link>
+						<WhichLogo />
 					</Box>
 					<Box
 						component="a"
