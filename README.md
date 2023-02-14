@@ -31,7 +31,8 @@ Run the following commands in the terminal:
 
 1. `npx create-react-app {your-app-name} --template @mapcomponents/cra-template`
 2. `cd {your-app-name}`
-3. `yarn start`
+3. `yarn`
+4. `yarn start`
 
 This will start a development server that serves the mapcomponents app on port 3000 of your local machine as well as a browser tab with live reload enabled. This reloads the affected parts of the application if changes are detected to the corresponding files in the filesystem. Open the project folder in the IDE of your choice and start building your map client.
 
@@ -39,7 +40,7 @@ This will start a development server that serves the mapcomponents app on port 3
 
 In this case, navigate to your project folder in a terminal and execute the following steps:
 
-1. Add @mapcomponents/react-maplibre as a dependency to your project using `yarn add @mapcomponents/react-maplibre` or `npm i @mapcomponents/react-maplibre` depending on which package manager you prefer.
+1. Add @mapcomponents/react-maplibre as a dependency to your project using `yarn add @mapcomponents/react-maplibre`.
 2. Add the MapComponentsProvider (named export of this module) to your applications react-DOM where it makes sense. Only children of this component will be able to render a map canvas or interact with a maplibre-gl instance. Place it in the index.js entrypoint if your application is a dedicated map app and all components have a high probability to interact with the maplibre-gl instance. Place it somewhere higher in the JSX tree if the map constitutes only a small portion of your app and components outside of the MapComponentsProvider have no need to interact with the map instance.
 3. Add a MapLibreMap component to the react-DOM wherever the map canvas is supposed to be placed.
 
