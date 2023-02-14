@@ -141,7 +141,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				sx={{
 					width: '50px',
 					border: 'none',
-					Button: { minWidth: '20px !important', border: 'none', padding: 0 },
+					Button: { minWidth: '20px !important'},
 					'Button:hover': { border: 'none' },
 				}}
 			>
