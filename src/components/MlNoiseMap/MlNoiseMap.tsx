@@ -54,8 +54,9 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 			!mapHook.map ||
 			!deckGlContext.deckGl ||
 			(deckGlContext.deckGl && mapHook.map && initializedRef.current)
-		)
+		) {
 			return;
+		}
 
 		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
 		initializedRef.current = true;

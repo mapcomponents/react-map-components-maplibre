@@ -30,7 +30,7 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 			deck: deck,
 		});
 
-		mapHook.map.addLayer(layerRef.current, 'poi_label');
+		mapHook.map.addLayer(layerRef.current);
 
 		setDeckGl(deck);
 	}, [mapHook.map]);
