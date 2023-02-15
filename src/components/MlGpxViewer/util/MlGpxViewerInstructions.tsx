@@ -3,34 +3,21 @@ import Instructions from '../../../util/Instructions';
 import { useMediaQuery } from '@mui/material';
 
 const bubbleBottomRightStyle = {
-	bubbleRight: '-120px',
-	textMarginTop: '70px',
-	textMarginLeft: '120px',
-	iconTransform: 'rotate(180deg)',
-	iconMarginLeft: '200px',
-	zIndex: 200,
+	bubbleTop: '-150px',
+	textMarginTop: '230px',
+	textMarginLeft: '75px',
+	iconTransform: 'rotate(90deg)',
+	iconMarginLeft: '280px',
+	zIndex: 400,
 };
 
-const getSteps = (mediaIsMobile:boolean) => [
+const getSteps = (mediaIsMobile: boolean) => [
 	{
 		duration: 3000,
 		props: {
 			...bubbleBottomRightStyle,
-			iconMarginTop: '43px',
-			bubbleBottom: mediaIsMobile ? '90px' : 0,
-		},
-		content: (
-			<>
-				You can load your <br />
-				own GPX file <br /> here
-			</>
-		),
-	},
-	{
-		duration: 3000,
-		props: {
-			...bubbleBottomRightStyle,
-			iconMarginTop: '68px',
+			bubbleLeft: '595px',
+			iconMarginTop: '-130px',
 			bubbleBottom: mediaIsMobile ? '90px' : 0,
 		},
 		content: (
@@ -44,14 +31,26 @@ const getSteps = (mediaIsMobile:boolean) => [
 	{
 		duration: 3000,
 		props: {
-			bubbleLeft: '-40px',
-			bubbleTop: '-150px',
-			textMarginTop: '230px',
-			textMarginLeft: '75px',
-			iconTransform: 'rotate(90deg)',
-			iconMarginTop: '-135px',
-			iconMarginLeft: '280px',
-			zIndex: 400,
+			...bubbleBottomRightStyle,
+			bubbleLeft: '705px',
+			iconMarginTop: '-100px',
+			bubbleBottom: mediaIsMobile ? '90px' : 0,
+		},
+		content: (
+			<>
+				You can load your <br />
+				own GPX file <br /> here
+			</>
+		),
+	},
+
+	{
+		duration: 3000,
+		props: {
+			...bubbleBottomRightStyle,
+			bubbleLeft: '820px',
+			iconMarginTop: '-130px',
+			bubbleBottom: mediaIsMobile ? '90px' : 0,
 		},
 		content: (
 			<>

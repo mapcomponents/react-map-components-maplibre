@@ -8,7 +8,6 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
-import { Link } from '@mui/material';
 
 export interface TopToolbarProps {
 	children?: React.ReactNode;
@@ -33,14 +32,14 @@ function TopToolbar(props: TopToolbarProps) {
 		if (theme.palette.mode === 'dark') {
 			return (
 				<img
-					src="../../assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg"
+					src="assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg"
 					style={{ width: '100%', maxWidth: '250px' }}
 				/>
 			);
 		} else {
 			return (
 				<img
-					src="../../assets/WG-MapComponents-Logo_rgb.svg"
+					src="assets/WG-MapComponents-Logo_rgb.svg"
 					style={{ width: '100%', maxWidth: '250px' }}
 				/>
 			);
@@ -75,7 +74,7 @@ function TopToolbar(props: TopToolbarProps) {
 							mr: { sm: '0px' },
 						}}
 					>
-						<img src="static/media/.storybook/mapcomponents_logo.png" width="50px" height="50px" />
+						<img src="assets/mapcomponents_logo.png" width="50px" height="50px" />
 					</Box>
 					<Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>{props.unmovableButtons}</Box>
 					{props.buttons ? (
