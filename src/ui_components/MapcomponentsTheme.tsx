@@ -28,8 +28,8 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						main: '#009FE3',
 					},
 					background: {
-						default: '#121212',
-						paper: '#323232',
+						default: '#222222',
+						paper: '#414141',
 						icon: '#525252',
 					},
 					text: {
@@ -64,8 +64,7 @@ const getTheme = (mode: 'light' | 'dark') => {
 		components: {
 			MuiTypography: {
 				styleOverrides: {
-					root: {
-					},
+					root: {},
 				},
 			},
 			MuiAppBar: {
@@ -89,9 +88,8 @@ const getTheme = (mode: 'light' | 'dark') => {
 			},
 			MuiButton: {
 				styleOverrides: {
-					backgroundColor: theme.palette.background.paper,
-					':hover': {
-						backgroundColor: theme.palette.primary.main,
+					contained: {
+						color: '#fff',
 					},
 				},
 				variants: [

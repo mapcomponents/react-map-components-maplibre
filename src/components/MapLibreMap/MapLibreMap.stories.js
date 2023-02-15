@@ -56,28 +56,37 @@ const StyleChangeTemplate = (args) => {
 	const [activeStyle, setActiveStyle] = useState(
 		'https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json'
 	);
+	const [showOsmFiord, setShowOsmFiord] = useState(true);
 
 	return (
 		<>
-			<TopToolbar>
-				<Button
-					onClick={() =>
-						setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json')
-					}
-					variant="contained"
-					sx={{ marginRight: '5px' }}
-				>
-					OSM-Bright
-				</Button>
-				<Button
-					onClick={() =>
-						setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json')
-					}
-					variant="contained"
-				>
-					OSM-Fiord-Color
-				</Button>
-			</TopToolbar>
+			<TopToolbar
+				buttons={
+					<>
+						<Button
+							variant={showOsmFiord ? 'outlined' : 'contained'}
+							onClick={() => {
+								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json');
+								setShowOsmFiord(false);
+							}}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							OSM-Bright
+						</Button>
+						<br />
+						<br />
+						<Button
+							variant={showOsmFiord ? 'contained' : 'outlined'}
+							onClick={() => {
+								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json');
+								setShowOsmFiord(true);
+							}}
+						>
+							OSM-Fiord-Color
+						</Button>
+					</>
+				}
+			/>
 			<MapLibreMap
 				options={{ ...args.options, style: activeStyle }}
 				style={{
