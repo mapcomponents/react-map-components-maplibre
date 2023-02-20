@@ -197,7 +197,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		return getMaxVal(props.geojson, props.timeField);
 	}, [props.maxVal, props.geojson, props.timeField]);
 
-	const [type, setType] = useState(props.type || 'circle');
+	const [type, setType] = useState(props.type);
 	const [step, setStep] = useState(props.step || 1);
 	const [fadeIn, setFadeIn] = useState(props.fadeIn || 5);
 	const [fadeOut, setFedeOut] = useState(props.fadeOut || 5);
@@ -351,5 +351,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 MlTemporalController.defaultProps = {
 	mapId: undefined,
+	type: "circle"
 };
 export default MlTemporalController;

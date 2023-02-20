@@ -16,8 +16,13 @@ const storyoptions = {
 	component: MlTemporalController,
 	argTypes: {},
 	decorators: mapContextDecorator,
+	parameters: {
+    sourceLink: 'components/MlTemporalController/MlTemporalController.tsx'
+	}
 };
 export default storyoptions;
+
+
 
 const TimeDisplay = (props: TimeDisplayProps) => {
 	if (typeof props.value === 'number') {

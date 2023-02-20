@@ -1,7 +1,7 @@
 
 
 interface paintPickerProps {
-	type: 'fill' | 'line' | 'circle',
+	type: 'fill' | 'line' | 'circle' | undefined,
 	timeField: String,
 	currentVal: number,
 	minVal: number,
