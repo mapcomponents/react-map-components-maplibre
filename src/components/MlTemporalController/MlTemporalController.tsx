@@ -198,19 +198,21 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	}, [props.maxVal, props.geojson, props.timeField]);
 
 	const [type, setType] = useState(props.type);
-	const [step, setStep] = useState(props.step || 1);
-	const [fadeIn, setFadeIn] = useState(props.fadeIn || 5);
-	const [fadeOut, setFedeOut] = useState(props.fadeOut || 5);
 
-	const [featuresColor, setFeatureColor] = useState(props.featuresColor || '#1976D2');
+	const [step, setStep] = useState(props.step);
+	const [fadeIn, setFadeIn] = useState(props.fadeIn);
+	const [fadeOut, setFedeOut] = useState(props.fadeOut);
+
+	const [featuresColor, setFeatureColor] = useState(props.featuresColor);
 	const [labels, setLabels] = useState(props.label || true);
-	const [labelColor, setlabelColor] = useState(props.labelColor || '#000');
-	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn || 5);
-	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut || 5);
+	const [labelColor, setlabelColor] = useState(props.labelColor);
+	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn);
+	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut);
 
 	const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
 	const [isPlaying, setIsPlaying] = useState(false);
-	const [accumulate, setAccumulate] = useState(props.accumulate || false);
+
+	const [accumulate, setAccumulate] = useState(props.accumulate);
 
 	const intervalRef: any = useRef();
 
@@ -272,7 +274,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 			);
 		}
 		return;
-	}, [props.geojson, mapHook.map, minVal, maxVal]);
+	}, [props.geojson, mapHook.map, minVal, maxVal, props.timeField]);
 
 	// Fit map to bbox
 	useEffect(() => {
@@ -351,6 +353,15 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 MlTemporalController.defaultProps = {
 	mapId: undefined,
-	type: "circle"
+	type: 'circle',
+
+	step: 1,
+	fadeIn: 5,
+	fadeOut: 5,
+	featuresColor: '#1976D2',
+	labelColor: '#000',
+	labelFadeIn: 5,
+	labelFadeOut: 5,
+	accumulate: false,
 };
 export default MlTemporalController;

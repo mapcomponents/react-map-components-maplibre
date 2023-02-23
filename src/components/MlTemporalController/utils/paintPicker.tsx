@@ -6,7 +6,7 @@ interface paintPickerProps {
 	currentVal: number,
 	minVal: number,
 	isPlaying: boolean,
-	fadeIn: number,
+	fadeIn: number ,
 	fadeOut: number,
 	step: number,
 	featuresColor: String,
@@ -19,17 +19,6 @@ export default function paintPicker(props: paintPickerProps) {
 	const fillNoShow = { 'fill-color': 'rgba(0,0,0,0)', 'fill-outline-color':'rgba(0,0,0,0)' };
 	const lineNoShow = {'line-color': 'rgba(0,0,0,0)'}
 
-	const colorInterpolate = [
-		'interpolate',
-		['linear'],
-		['get', props.timeField],
-		props.currentVal - props.fadeIn * props.step,
-		'rgba(255, 0, 0, 0)',
-		props.currentVal,
-		props.featuresColor,
-		props.currentVal + props.fadeIn * props.step,
-		'rgba(255, 0, 0, 0)',
-	];
 
 	const opacityInterpolate = [
 		'interpolate',
@@ -43,16 +32,6 @@ export default function paintPicker(props: paintPickerProps) {
 		0,
 	];
 
-	const accumulatedColorInterpolate = [
-		'interpolate',
-		['linear'],
-		['get',props.timeField],
-		props.currentVal,
-		props.featuresColor,
-		props.currentVal + props.fadeIn * props.step,
-		'rgba(255, 0, 0, 0)',
-	];
-
 	const accumulatedOpacityInterpolate = [
 		'interpolate',
 		['linear'],
@@ -64,7 +43,7 @@ export default function paintPicker(props: paintPickerProps) {
 	];
 
 	const defaultFillPaint = {
-		'fill-color': colorInterpolate,
+		'fill-color': props.featuresColor,
 		'fill-opacity': opacityInterpolate,
 		'fill-outline-color': [
 			'interpolate',
@@ -80,7 +59,7 @@ export default function paintPicker(props: paintPickerProps) {
 	};
 
 	const defaultCirclePaint = {
-		'circle-color': colorInterpolate,
+		'circle-color': props.featuresColor,
 		'circle-radius': [
 			'interpolate',
 			['linear'],
@@ -95,13 +74,13 @@ export default function paintPicker(props: paintPickerProps) {
 		'circle-opacity': opacityInterpolate,
 	};
 	const defaultLinePaint = {
-'line-color': colorInterpolate,
+'line-color': props.featuresColor,
 'line-opacity': opacityInterpolate 
 
 	};
 
 	const circleAccumulatePaint = {
-		'circle-color': accumulatedColorInterpolate,
+		'circle-color': props.featuresColor,
 
 		'circle-radius': [
 			'interpolate',
@@ -117,7 +96,7 @@ export default function paintPicker(props: paintPickerProps) {
 	};
 
 	const fillAccumulatePaint = {
-		'fill-color': accumulatedColorInterpolate,
+		'fill-color': props.featuresColor,
 		'fill-opacity': accumulatedOpacityInterpolate,
 		'fill-outline-color': [
 			'interpolate',
@@ -131,7 +110,7 @@ export default function paintPicker(props: paintPickerProps) {
 	};
 
 	const lineAccumulatePaint = {
-		'line-color': accumulatedColorInterpolate,
+		'line-color': props.featuresColor,
 		'line-opacity': accumulatedOpacityInterpolate
 	};
 
