@@ -25,13 +25,26 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 		};
 	}
 	const simpleDataContext = useContext(SimpleDataContext) as DataType;
+	const layerOpacity = 0.8;
+	const getColorRange = (layerOpacity) => [
+		[1, 152, 189, Math.round(80 * layerOpacity)],
+		[73, 227, 206, Math.round(90 * layerOpacity)],
+		[216, 254, 181, Math.round(100 * layerOpacity)],
+		[254, 237, 177, Math.round(110 * layerOpacity)],
+		[254, 173, 84, Math.round(120 * layerOpacity)],
+		[209, 55, 78, Math.round(150 * layerOpacity)],
+	];
+
 	const deckGlLayerProps = useMemo(() => {
 		return {
-			id: props.mapId,
+			id: 'deckgl-layer',
 
 			data: simpleDataContext.data ? simpleDataContext.data.features : [],
 			type: HexagonLayer,
-			elevationScale: 0.3,
+			colorRange: getColorRange(layerOpacity),
+			coverage: 0.9,
+			elevationRange: [30, 75],
+			elevationScale: 10,
 			extruded: true,
 			autoHighlight: true,
 			getPosition: (d: any) => {
@@ -49,6 +62,22 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 			transitions: {
 				elevationScale: 1500,
 			},
+			getColorValue: (points: any) => {
+				const elVal = points.reduce((acc, point) => {
+					if (!point.properties && point.source.properties)
+						return acc < point.source.properties.dba ? point.source.properties.dba : acc;
+					return acc < point.properties.dba ? point.properties.dba : acc;
+				}, -Infinity);
+				return Math.round(elVal);
+			},
+			getElevationValue: (points: any) => {
+				const elVal = points.reduce((acc, point) => {
+					if (!point.properties && point.source.properties)
+						return acc < point.source.properties.dba ? point.source.properties.dba : acc;
+					return acc < point.properties.dba ? point.properties.dba : acc;
+				}, -Infinity);
+				return Math.round(elVal);
+			},
 		};
 	}, [simpleDataContext.data]);
 
@@ -60,7 +89,11 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 
 	// add deckGl Layer
 	useEffect(() => {
-		if (!mapHook.map || (initializedRef.current && !deckGlContext.deckGl)) return;
+		if (
+			!mapHook.map ||
+			(initializedRef.current && !deckGlContext.deckGl && !simpleDataContext.data)
+		)
+			return;
 		initializedRef.current = true;
 
 		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
@@ -69,7 +102,7 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 			deckGlContext.deckGl.setProps({
 				layers: [
 					new HexagonLayer({
-						deckGlLayerProps,
+						...deckGlLayerProps,
 					}),
 				],
 			});
@@ -78,7 +111,7 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 		return () => {
 			// cleanup
 		};
-	}, [mapHook.map, deckGlContext.deckGl, props.mapId]);
+	}, [mapHook.map, deckGlContext.deckGl, props.mapId, deckGlLayerProps]);
 
 	return <></>;
 };
