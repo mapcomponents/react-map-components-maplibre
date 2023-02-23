@@ -33,6 +33,10 @@ export interface MlTemporalControllerProps {
 	 */
 	geojson: FeatureCollection;
 	/**
+	 * MapLibre attribution shown in the bottom right of the map, if this layer is visible
+	 */
+	attribution?: string;
+	/**
 	 * Type of the layer that will be added to the MapLibre instance.
 	 * Possible values: "line", "circle", "fill"
 	 */
@@ -194,6 +198,7 @@ const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal)
 	
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [accumulate, setAccumulate] = useState(props.accumulate);
+	const attribution = props.attribution || "";
 
 	const intervalRef: any = useRef();
 
@@ -266,6 +271,9 @@ const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal)
 							| FillLayerSpecification['paint']
 							| LineLayerSpecification['paint'])
 					}
+					options={{source:
+								{attribution: attribution}
+							}}
 				/>
 			)}
 

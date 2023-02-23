@@ -111,6 +111,7 @@ FillConfig.args = {
 	initialVal: 1904,
 	fitBounds: true,
 	showControls: true,
+	attribution: "Made with Natural Earth."
 };
 
 export const CircleConfig = CircleTemplate.bind({});
@@ -126,6 +127,7 @@ CircleConfig.args = {
 	minVal: 1900,
 	fitBounds: true,
 	showControls: true,
+	attribution: "National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K"
 };
 
 export const LineConfig = LineTemplate.bind({});
@@ -140,5 +142,6 @@ LineConfig.args = {
 	steps: 1,
 	featuresColor: '#1731F1',
 	fitBounds: true,
-	showControls: true	
+	showControls: true,
+	attribution: "Source: "	
 };

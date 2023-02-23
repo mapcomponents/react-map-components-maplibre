@@ -31,7 +31,7 @@ export interface TemporalControllerPlayerProps {
 	setLabels: Function;
 	labelColor: string;
 	setlabelColor: Function;
-	labelFadeIn: number ;
+	labelFadeIn: number;
 	setLabelFadein: Function;
 	labelFadeOut: number;
 	setLabelFadeOut: Function;
@@ -39,14 +39,17 @@ export interface TemporalControllerPlayerProps {
 	setAccumulate: Function;
 }
 
-
 export default function TemporalControllerPlayer(props: TemporalControllerPlayerProps) {
-
-
-const featuresOptionsList = [
+	const featuresOptionsList = [
 		{ id: 1, targetProp: 'fadeIn', type: 'slider', setter: props.setFadeIn, max: 15 },
 		{ id: 2, targetProp: 'fadeOut', type: 'slider', setter: props.setFadeOut, max: 15 },
-		{ id: 3, targetProp: 'featuresColor', type:'colorpicker', setter: props.setFeatureColor, max: 0	},
+		{
+			id: 3,
+			targetProp: 'featuresColor',
+			type: 'colorpicker',
+			setter: props.setFeatureColor,
+			max: 0,
+		},
 	];
 
 	const labelsOptionsList = [
@@ -67,13 +70,11 @@ const featuresOptionsList = [
 		{ key: 'Player', list: playerOptionsList },
 	];
 
-
 	const [currentVal, setCurrentVal] = useState(props.currentVal);
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 	const [toggleControls, setToggleControls] = useState(false);
 	const range = props.maxVal - props.minVal;
-	const intervalRef = useRef< ReturnType<typeof setInterval>| undefined>();
-
+	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
 
 	useEffect(() => {
 		return () => {
@@ -148,7 +149,6 @@ const featuresOptionsList = [
 	//Slider
 
 	const handleChange = (e: Event, newValue: number | number[]) => {
-	
 		if (!isPlaying) {
 			setCurrentVal(newValue as number);
 		} else {
@@ -160,7 +160,12 @@ const featuresOptionsList = [
 
 	return (
 		<>
-			<UserControls showOptions={toggleControls} onClose={setToggleControls} sections={sections} {...props} />
+			<UserControls
+				showOptions={toggleControls}
+				onClose={setToggleControls}
+				sections={sections}
+				{...props}
+			/>
 
 			<Drawer
 				anchor="bottom"
@@ -170,9 +175,10 @@ const featuresOptionsList = [
 					flexShrink: 0,
 
 					'& .MuiDrawer-paper': {
-						width: 'auto',
-						height: 90,
-						alignItems: 'center',
+						marginLeft: '15%',
+						width: '70%',
+						height: '90px',
+						alignItems: 'center'
 					},
 				}}
 			>
@@ -188,7 +194,9 @@ const featuresOptionsList = [
 								<TuneIcon />
 							</ToggleButton>
 						</Grid>
-					): (<Grid item sm={4} />)}
+					) : (
+						<Grid item sm={4} />
+					)}
 
 					<Grid item sm={6}>
 						<Button onClick={handleFastRewind}>
