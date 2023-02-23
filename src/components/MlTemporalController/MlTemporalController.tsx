@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 
-import { featureCollection, FeatureCollection, bbox } from '@turf/turf';
+import { FeatureCollection, bbox } from '@turf/turf';
 import {
 	LineLayerSpecification,
 	CircleLayerSpecification,
@@ -16,6 +16,7 @@ import {
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
+import useTemporalController from './utils/useTemporalController';
 
 export interface MlTemporalControllerProps {
 	/**
@@ -157,23 +158,6 @@ export interface MlTemporalControllerProps {
  *@component
  */
 
-function getMinVal(geojson: FeatureCollection | undefined, timeField: string) {
-	if (geojson?.features) {
-		let tempFeatures = [...(geojson.features ? geojson.features : [])];
-		tempFeatures.sort((a, b) => (a.properties?.[timeField] < b.properties?.[timeField] ? 1 : -1));
-		return tempFeatures[tempFeatures.length - 1]?.properties?.[timeField] || 0;
-	}
-	return 0;
-}
-
-function getMaxVal(geojson: FeatureCollection | undefined, timeField: string) {
-	if (geojson?.features) {
-		let tempFeatures = [...(geojson?.features ? geojson.features : [])];
-		tempFeatures.sort((a, b) => (a.properties?.[timeField] < b.properties?.[timeField] ? -1 : 1));
-		return tempFeatures[tempFeatures.length - 1]?.properties?.[timeField] || 0;
-	}
-	return 0;
-}
 
 const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const mapHook = useMap({
@@ -183,35 +167,32 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const initializedRef = useRef(false);
 
 	const labelField = props.labelField || props.geojson?.features[0]?.properties?.[0] || '';
-	const minVal = React.useMemo(() => {
-		if (props.minVal) {
-			return props.minVal;
-		}
-		return getMinVal(props.geojson, props.timeField);
-	}, [props.minVal, props.geojson, props.timeField]);
+	
 
-	const maxVal = React.useMemo(() => {
-		if (props.maxVal) {
-			return props.maxVal;
-		}
-		return getMaxVal(props.geojson, props.timeField);
-	}, [props.maxVal, props.geojson, props.timeField]);
+const {filteredData, minVal, maxVal} = useTemporalController({
+		geojson: props.geojson,
+		timeField: props.timeField,
+		minVal: props.minVal,
+		maxVal: props.maxVal,
+		initialVal: props.initialVal,
+		mapId: props.mapId,
+		});
 
+const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
 	const [type, setType] = useState(props.type);
-
 	const [step, setStep] = useState(props.step);
 	const [fadeIn, setFadeIn] = useState(props.fadeIn);
 	const [fadeOut, setFedeOut] = useState(props.fadeOut);
-
+	
 	const [featuresColor, setFeatureColor] = useState(props.featuresColor);
+	
 	const [labels, setLabels] = useState(props.label || true);
 	const [labelColor, setlabelColor] = useState(props.labelColor);
 	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn);
 	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut);
-
-	const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
+	
+	
 	const [isPlaying, setIsPlaying] = useState(false);
-
 	const [accumulate, setAccumulate] = useState(props.accumulate);
 
 	const intervalRef: any = useRef();
@@ -231,13 +212,16 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	};
 
 	const paint = usePaintPicker(paintPicker);
-
+	
+//Set Initial values and clear references
 	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-		initializedRef.current = true;
-	}, [mapHook.map, props.mapId]);
 
-	useEffect(() => {
+		if (!props.initialVal && minVal) {
+			setCurrentVal(minVal);
+		} else if(props.initialVal) {
+			setCurrentVal(props.initialVal);
+		}
+
 		return () => {
 			if (intervalRef.current) {
 				clearInterval(intervalRef.current);
@@ -245,36 +229,18 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+		initializedRef.current = true;
+	}, [mapHook.map, props.mapId]);
+
+
 	//use callback function from props, if exists
 	useEffect(() => {
 		if (typeof props.onStateChange === 'function') {
 			props.onStateChange(currentVal);
 		}
 	}, [props.onStateChange, currentVal]);
-
-	//get min and max time value
-	useEffect(() => {
-		if (!props.initialVal) {
-			const neuMin = getMinVal(props.geojson, props.timeField);
-			setCurrentVal(neuMin > minVal ? neuMin : minVal);
-		} else {
-			setCurrentVal(props.initialVal);
-		}
-	}, [minVal, props.geojson, props.timeField, props.initialVal]);
-
-	// filter geojson
-	const filteredData = useMemo<FeatureCollection | undefined>(() => {
-		if (props.geojson !== undefined && mapHook.map && minVal && maxVal) {
-			return featureCollection(
-				props.geojson.features.filter((e) => {
-					return (
-						e.properties?.[props.timeField] >= minVal && e.properties?.[props.timeField] <= maxVal
-					);
-				})
-			);
-		}
-		return;
-	}, [props.geojson, mapHook.map, minVal, maxVal, props.timeField]);
 
 	// Fit map to bbox
 	useEffect(() => {
@@ -304,49 +270,49 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 			)}
 
 			{labels && (
-				<MlTemporalControllerLabels
-					data={filteredData}
-					currentVal={currentVal}
-					fadeIn={labelFadeIn}
-					fadeOut={labelFadeOut}
-					step={step}
-					labelField={labelField}
-					labelColor={labelColor}
-					timeField={props.timeField}
-					minVal={minVal}
-					accumulate={accumulate}
-					isPlaying={isPlaying}
-				/>
-			)}
+    <MlTemporalControllerLabels
+        data={filteredData}
+        currentVal={currentVal}
+        fadeIn={labelFadeIn}
+        fadeOut={labelFadeOut}
+        step={step}
+        labelField={labelField}
+        labelColor={labelColor}
+        timeField={props.timeField}
+        minVal={minVal}
+        accumulate={accumulate}
+        isPlaying={isPlaying}
+    />
+)}
 
-			<TemporalControllerPlayer
-				currentVal={currentVal}
-				isPlaying={isPlaying}
-				step={step}
-				minVal={minVal}
-				maxVal={maxVal}
-				returnCurrent={setCurrentVal}
-				returnPlaying={setIsPlaying}
-				showControls={props.showControls ? props.showControls : false}
-				open={false}
-				fadeIn={fadeIn}
-				setFadeIn={setFadeIn}
-				fadeOut={fadeOut}
-				setFadeOut={setFedeOut}
-				setStep={setStep}
-				featuresColor={featuresColor}
-				setFeatureColor={setFeatureColor}
-				labels={labels}
-				setLabels={setLabels}
-				labelColor={labelColor}
-				setlabelColor={setlabelColor}
-				labelFadeIn={labelFadeIn}
-				setLabelFadein={setLabelFadein}
-				labelFadeOut={labelFadeOut}
-				setLabelFadeOut={setLabelFadeOut}
-				accumulate={accumulate}
-				setAccumulate={setAccumulate}
-			/>
+<TemporalControllerPlayer
+    currentVal={currentVal}
+    isPlaying={isPlaying}
+    step={step}
+    minVal={minVal}
+    maxVal={maxVal}
+    returnCurrent={setCurrentVal}
+    returnPlaying={setIsPlaying}
+    showControls={props.showControls ? props.showControls : false}
+    open={false}
+    fadeIn={fadeIn}
+    setFadeIn={setFadeIn}
+    fadeOut={fadeOut}
+    setFadeOut={setFedeOut}
+    setStep={setStep}
+    featuresColor={featuresColor}
+    setFeatureColor={setFeatureColor}
+    labels={labels}
+    setLabels={setLabels}
+    labelColor={labelColor}
+    setlabelColor={setlabelColor}
+    labelFadeIn={labelFadeIn}
+    setLabelFadein={setLabelFadein}
+    labelFadeOut={labelFadeOut}
+    setLabelFadeOut={setLabelFadeOut}
+    accumulate={accumulate}
+    setAccumulate={setAccumulate}
+/>			
 		</>
 	);
 };
@@ -354,7 +320,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 MlTemporalController.defaultProps = {
 	mapId: undefined,
 	type: 'circle',
-
 	step: 1,
 	fadeIn: 5,
 	fadeOut: 5,
