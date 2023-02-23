@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect, useContext, useMemo } from 'react';
 import useMap from '../../hooks/useMap';
 import DeckGlContext from '../../contexts/DeckGlContext';
-import hexa from '../../../public/assets/3D/hexa.json';
 import { HexagonLayer } from '@deck.gl/aggregation-layers/typed';
+import SimpleDataContext from '../../contexts/SimpleDataContext';
 
 export interface MlNoiseMapProps {
 	/**
@@ -18,29 +18,39 @@ export interface MlNoiseMapProps {
 
 const MlNoiseMap = (props: MlNoiseMapProps) => {
 	const deckGlContext = useContext(DeckGlContext);
-	const deckGlLayerProps = {
-		id: 'deckgl-noise-layer',
-		data: hexa,
-		type: HexagonLayer,
-		elevationScale: 0.3,
-		extruded: true,
-		autoHighlight: true,
-		getPosition: (d: any) => {
-			return d.coordinates;
-		},
-		pickable: true,
-		radius: 16,
-		upperPercentile: 100,
-		material: {
-			ambient: 0.8,
-			diffuse: 0.5,
-			shininess: 20,
-			specularColor: [51, 51, 51],
-		},
-		transitions: {
-			elevationScale: 1500,
-		},
-	};
+
+	interface DataType {
+		data: {
+			features: [object];
+		};
+	}
+	const simpleDataContext = useContext(SimpleDataContext) as DataType;
+	const deckGlLayerProps = useMemo(() => {
+		return {
+			id: props.mapId,
+
+			data: simpleDataContext.data ? simpleDataContext.data.features : [],
+			type: HexagonLayer,
+			elevationScale: 0.3,
+			extruded: true,
+			autoHighlight: true,
+			getPosition: (d: any) => {
+				return d.geometry.coordinates;
+			},
+			pickable: true,
+			radius: 16,
+			upperPercentile: 100,
+			material: {
+				ambient: 0.8,
+				diffuse: 0.5,
+				shininess: 20,
+				specularColor: [51, 51, 51],
+			},
+			transitions: {
+				elevationScale: 1500,
+			},
+		};
+	}, [simpleDataContext.data]);
 
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -50,25 +60,25 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 
 	// add deckGl Layer
 	useEffect(() => {
-		if (
-			!mapHook.map ||
-			!deckGlContext.deckGl ||
-			(deckGlContext.deckGl && mapHook.map && initializedRef.current)
-		) {
-			return;
-		}
-
-		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
+		if (!mapHook.map || (initializedRef.current && !deckGlContext.deckGl)) return;
 		initializedRef.current = true;
 
-		deckGlContext.deckGl.setProps({
-			layers: [
-				new HexagonLayer({
-					deckGlLayerProps,
-				}),
-			],
-		});
-	}, [mapHook.map]);
+		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
+
+		if (deckGlContext.deckGl) {
+			deckGlContext.deckGl.setProps({
+				layers: [
+					new HexagonLayer({
+						deckGlLayerProps,
+					}),
+				],
+			});
+		}
+
+		return () => {
+			// cleanup
+		};
+	}, [mapHook.map, deckGlContext.deckGl, props.mapId]);
 
 	return <></>;
 };

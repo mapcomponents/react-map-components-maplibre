@@ -2,6 +2,7 @@ import React from 'react';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlNoiseMap from './MlNoiseMap';
 import { DeckGlContextProvider } from '../../contexts/DeckGlContext';
+import SimpleDataProvider from '../../contexts/SimpleDataProvider';
 
 const storyoptions = {
 	title: 'MapComponents/MlNoiseMap',
@@ -17,7 +18,11 @@ interface TemplateProbs {
 const Template = (props: TemplateProbs) => {
 	return (
 		<DeckGlContextProvider {...props}>
-			<MlNoiseMap {...props} />
+			{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+			{/* @ts-ignore */}
+			<SimpleDataProvider format="json" url="assets/3D/laerm_points.json">
+				<MlNoiseMap {...props} />
+			</SimpleDataProvider>
 		</DeckGlContextProvider>
 	);
 };
@@ -25,5 +30,5 @@ const Template = (props: TemplateProbs) => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
-	mapId: '1',
+	mapId: 'map_1',
 };
