@@ -1,14 +1,19 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import useMap from '../hooks/useMap';
-import { Deck } from '@deck.gl/core/typed';
+import { Deck, Layer } from '@deck.gl/core/typed';
 import { MapboxLayer } from '@deck.gl/mapbox/typed';
-interface DeckGlContextType {
+
+export interface DeckGlContextType {
 	deckGl: Deck | undefined;
+	deckGlLayerArray: Layer[];
+	setDeckGlLayerArray: React.Dispatch<React.SetStateAction<Layer[]>>;
 }
 interface DeckGlContextProviderProps {
 	mapId: string;
 	children: ReactNode;
 }
+
+const layerId = 'deckgl-layer';
 const DeckGlContext = React.createContext({} as DeckGlContextType);
 
 const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) => {
@@ -16,6 +21,7 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 
 	const [deckGl, setDeckGl] = useState<Deck | undefined>(undefined);
 	const layerRef = useRef<MapboxLayer<any> | undefined>(undefined);
+	const [deckGlLayerArray, setDeckGlLayerArray] = useState([]);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -26,17 +32,30 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 		});
 
 		layerRef.current = new MapboxLayer({
-			id: 'deckgl-layer',
+			id: layerId,
 			deck: deck,
 		});
 
 		mapHook.map.addLayer(layerRef.current);
 
 		setDeckGl(deck);
+		return () => {
+			mapHook.map?.removeLayer(layerId);
+			layerRef.current = undefined;
+		};
 	}, [mapHook.map]);
+
+	useEffect(() => {
+		if (!deckGl) return;
+		deckGl.setProps({
+			layers: deckGlLayerArray,
+		});
+	}, [deckGlLayerArray, deckGl]);
 
 	const value = {
 		deckGl,
+		deckGlLayerArray,
+		setDeckGlLayerArray,
 	};
 	return <DeckGlContext.Provider value={value}>{children}</DeckGlContext.Provider>;
 };

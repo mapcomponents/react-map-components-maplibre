@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import useMap from '../../hooks/useMap';
 import DeckGlContext from '../../contexts/DeckGlContext';
-import { HexagonLayer } from '@deck.gl/aggregation-layers/typed';
+import { HexagonLayer, HexagonLayerProps } from '@deck.gl/aggregation-layers/typed';
 import SimpleDataContext from '../../contexts/SimpleDataContext';
+import useDeckGl from '../../contexts/useDeckGl';
 
 export interface MlNoiseMapProps {
 	/**
@@ -24,9 +25,13 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 			features: [object];
 		};
 	}
+	const deckGlHook = useDeckGl();
 	const simpleDataContext = useContext(SimpleDataContext) as DataType;
 	const layerOpacity = 0.8;
-	const getColorRange = (layerOpacity) => [
+	const specularColor: [number, number, number] = [51, 51, 51];
+	const getColorRange: (layerOpacity: number) => [number, number, number, number][] = (
+		layerOpacity: number
+	) => [
 		[1, 152, 189, Math.round(80 * layerOpacity)],
 		[73, 227, 206, Math.round(90 * layerOpacity)],
 		[216, 254, 181, Math.round(100 * layerOpacity)],
@@ -34,6 +39,7 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 		[254, 173, 84, Math.round(120 * layerOpacity)],
 		[209, 55, 78, Math.round(150 * layerOpacity)],
 	];
+	const elevationRange: [number, number] = [30, 75];
 
 	const deckGlLayerProps = useMemo(() => {
 		return {
@@ -43,7 +49,7 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 			type: HexagonLayer,
 			colorRange: getColorRange(layerOpacity),
 			coverage: 0.9,
-			elevationRange: [30, 75],
+			elevationRange: elevationRange,
 			elevationScale: 10,
 			extruded: true,
 			autoHighlight: true,
@@ -57,27 +63,28 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 				ambient: 0.8,
 				diffuse: 0.5,
 				shininess: 20,
-				specularColor: [51, 51, 51],
+				specularColor: specularColor,
 			},
 			transitions: {
 				elevationScale: 1500,
 			},
-			getColorValue: (points: any) => {
+			getColorValue: (points: any[]) => {
 				const elVal = points.reduce((acc, point) => {
+					if (!point?.properties && point.source.properties)
+						return acc < point.source.properties.dba ? point.source.properties.dba : acc;
+					return acc < point.properties.dba ? point.properties.dba : acc;
+				}, -Infinity);
+				return Math.round(elVal);
+			},
+			getElevationValue: (points: any): number => {
+				const elVal = points.reduce((acc: any, point: any) => {
 					if (!point.properties && point.source.properties)
 						return acc < point.source.properties.dba ? point.source.properties.dba : acc;
 					return acc < point.properties.dba ? point.properties.dba : acc;
 				}, -Infinity);
 				return Math.round(elVal);
 			},
-			getElevationValue: (points: any) => {
-				const elVal = points.reduce((acc, point) => {
-					if (!point.properties && point.source.properties)
-						return acc < point.source.properties.dba ? point.source.properties.dba : acc;
-					return acc < point.properties.dba ? point.properties.dba : acc;
-				}, -Infinity);
-				return Math.round(elVal);
-			},
+			_filterData: null,
 		};
 	}, [simpleDataContext.data]);
 
@@ -97,19 +104,29 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 		initializedRef.current = true;
 
 		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
+		const hexagonLayer = new HexagonLayer({ ...deckGlLayerProps } as unknown as HexagonLayerProps);
+		deckGlHook.addLayer(hexagonLayer);
+		//const deckHook = useDeckGl()
+		//deckHook.addDeckGlLayer([
+		//	new HexagonLayer({
+		//				...deckGlLayerProps,
+		//			}
+		//])
 
 		if (deckGlContext.deckGl) {
-			deckGlContext.deckGl.setProps({
-				layers: [
-					new HexagonLayer({
-						...deckGlLayerProps,
-					}),
-				],
-			});
+			//const deckGlHook = useDeckGl();
+			//	deckGlHook.addDeckGlLayer();
+			//	deckGlContext.deckGl.setProps({
+			//		layers: [
+			//			new HexagonLayer({
+			//				...deckGlLayerProps,
+			//			}),
+			//		],
+			//	});
 		}
 
 		return () => {
-			// cleanup
+			deckGlHook.removeLayer(hexagonLayer);
 		};
 	}, [mapHook.map, deckGlContext.deckGl, props.mapId, deckGlLayerProps]);
 
