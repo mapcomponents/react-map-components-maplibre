@@ -176,6 +176,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 					'& .MuiDrawer-paper': {
 						marginLeft: '15%',
+						marginBottom: '1%',
 						width: '70%',
 						height: '90px',
 						alignItems: 'center'
