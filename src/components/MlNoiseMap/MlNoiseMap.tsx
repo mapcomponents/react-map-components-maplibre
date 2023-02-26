@@ -104,29 +104,16 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 		initializedRef.current = true;
 
 		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
-		const hexagonLayer = new HexagonLayer({ ...deckGlLayerProps } as unknown as HexagonLayerProps);
-		deckGlHook.addLayer(hexagonLayer);
-		//const deckHook = useDeckGl()
-		//deckHook.addDeckGlLayer([
-		//	new HexagonLayer({
-		//				...deckGlLayerProps,
-		//			}
-		//])
+		const hexagonLayer = new HexagonLayer({
+			...deckGlLayerProps,
+		} as unknown as HexagonLayerProps);
 
 		if (deckGlContext.deckGl) {
-			//const deckGlHook = useDeckGl();
-			//	deckGlHook.addDeckGlLayer();
-			//	deckGlContext.deckGl.setProps({
-			//		layers: [
-			//			new HexagonLayer({
-			//				...deckGlLayerProps,
-			//			}),
-			//		],
-			//	});
+			deckGlHook.addLayer(hexagonLayer);
 		}
 
 		return () => {
-			deckGlHook.removeLayer(hexagonLayer);
+			hexagonLayer && deckGlHook.removeLayer(hexagonLayer);
 		};
 	}, [mapHook.map, deckGlContext.deckGl, props.mapId, deckGlLayerProps]);
 
