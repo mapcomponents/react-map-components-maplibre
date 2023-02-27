@@ -13,6 +13,7 @@ import {
 } from 'maplibre-gl';
 import { Map as MapType, Style } from 'maplibre-gl';
 import { MapboxLayer } from '@deck.gl/mapbox/typed';
+import { Layer } from '@deck.gl/core/typed';
 
 type WrapperEventArgArray = [string, (arg0: unknown) => void];
 type EventArgArray = [
@@ -65,7 +66,7 @@ interface MapLibreGlWrapper extends MapType {
 			| (CustomLayerInterface & {
 					source?: string | SourceSpecification | undefined;
 			  })
-			| (MapboxLayer<any> & {
+			| (MapboxLayer<Layer> & {
 					source?: string | SourceSpecification | undefined;
 			  }),
 		beforeId?: string | undefined,

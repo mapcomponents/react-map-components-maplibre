@@ -20,7 +20,7 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 	const mapHook = useMap({ mapId });
 
 	const [deckGl, setDeckGl] = useState<Deck | undefined>(undefined);
-	const layerRef = useRef<MapboxLayer<any> | undefined>(undefined);
+	const layerRef = useRef<MapboxLayer<Layer> | undefined>(undefined);
 	const [deckGlLayerArray, setDeckGlLayerArray] = useState([]);
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 	useEffect(() => {
 		if (!deckGl) return;
 		deckGl.setProps({
-			layers: deckGlLayerArray,
+			layers: [...deckGlLayerArray],
 		});
 	}, [deckGlLayerArray, deckGl]);
 

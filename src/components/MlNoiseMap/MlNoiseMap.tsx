@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import DeckGlContext from '../../contexts/DeckGlContext';
 import { HexagonLayer, HexagonLayerProps } from '@deck.gl/aggregation-layers/typed';
-import SimpleDataContext from '../../contexts/SimpleDataContext';
 import useDeckGl from '../../contexts/useDeckGl';
 
 export interface MlNoiseMapProps {
@@ -20,13 +19,30 @@ export interface MlNoiseMapProps {
 const MlNoiseMap = (props: MlNoiseMapProps) => {
 	const deckGlContext = useContext(DeckGlContext);
 
-	interface DataType {
-		data: {
-			features: [object];
-		};
-	}
+	const DATA_URL = 'assets/3D/laerm_points.json';
 	const deckGlHook = useDeckGl();
-	const simpleDataContext = useContext(SimpleDataContext) as DataType;
+	const [noiseData, setNoiseData] = useState({
+		type: '',
+		features: [],
+	});
+	const getJsonData = () => {
+		fetch(DATA_URL, {
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+			},
+		})
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (json) {
+				setNoiseData(json);
+			});
+	};
+	useEffect(() => {
+		getJsonData();
+	}, []);
+
 	const layerOpacity = 0.8;
 	const specularColor: [number, number, number] = [51, 51, 51];
 	const getColorRange: (layerOpacity: number) => [number, number, number, number][] = (
@@ -45,7 +61,7 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 		return {
 			id: 'deckgl-layer',
 
-			data: simpleDataContext.data ? simpleDataContext.data.features : [],
+			data: noiseData ? noiseData.features : [],
 			type: HexagonLayer,
 			colorRange: getColorRange(layerOpacity),
 			coverage: 0.9,
@@ -86,7 +102,7 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 			},
 			_filterData: null,
 		};
-	}, [simpleDataContext.data]);
+	}, [noiseData.features]);
 
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -98,22 +114,23 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 	useEffect(() => {
 		if (
 			!mapHook.map ||
-			(initializedRef.current && !deckGlContext.deckGl && !simpleDataContext.data)
+			!deckGlContext.deckGl ||
+			noiseData.features.length <= 0 ||
+			(initializedRef.current && deckGlContext.deckGl && noiseData.features.length >= 0)
 		)
 			return;
 		initializedRef.current = true;
 
 		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
+
 		const hexagonLayer = new HexagonLayer({
 			...deckGlLayerProps,
 		} as unknown as HexagonLayerProps);
-
-		if (deckGlContext.deckGl) {
-			deckGlHook.addLayer(hexagonLayer);
-		}
+		deckGlHook.addLayer(hexagonLayer);
 
 		return () => {
 			hexagonLayer && deckGlHook.removeLayer(hexagonLayer);
+			initializedRef.current = false;
 		};
 	}, [mapHook.map, deckGlContext.deckGl, props.mapId, deckGlLayerProps]);
 
