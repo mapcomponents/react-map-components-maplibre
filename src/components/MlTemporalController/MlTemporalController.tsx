@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-
 import { FeatureCollection, bbox } from '@turf/turf';
 import {
 	LineLayerSpecification,
@@ -12,11 +11,11 @@ import {
 	MapLayerMouseEvent,
 	LngLatBoundsLike,
 } from 'maplibre-gl';
-
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
 import useTemporalController from './utils/useTemporalController';
+import { useTheme } from '@mui/material/styles';
 
 export interface MlTemporalControllerProps {
 	/**
@@ -162,7 +161,6 @@ export interface MlTemporalControllerProps {
  *@component
  */
 
-
 const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -171,34 +169,34 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const initializedRef = useRef(false);
 
 	const labelField = props.labelField || props.geojson?.features[0]?.properties?.[0] || '';
-	
 
-const {filteredData, minVal, maxVal} = useTemporalController({
+	const { filteredData, minVal, maxVal } = useTemporalController({
 		geojson: props.geojson,
 		timeField: props.timeField,
 		minVal: props.minVal,
 		maxVal: props.maxVal,
 		initialVal: props.initialVal,
 		mapId: props.mapId,
-		});
+	});
 
-const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
+	const theme = useTheme();
+
+	const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
 	const [type, setType] = useState(props.type);
 	const [step, setStep] = useState(props.step);
 	const [fadeIn, setFadeIn] = useState(props.fadeIn);
 	const [fadeOut, setFedeOut] = useState(props.fadeOut);
-	
-	const [featuresColor, setFeatureColor] = useState(props.featuresColor);
-	
+
+	const [featuresColor, setFeatureColor] = useState(props.featuresColor || theme.palette.primary.main );
+
 	const [labels, setLabels] = useState(props.label || true);
 	const [labelColor, setlabelColor] = useState(props.labelColor);
 	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn);
 	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut);
-	
-	
+
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [accumulate, setAccumulate] = useState(props.accumulate);
-	const attribution = props.attribution || "";
+	const attribution = props.attribution || '';
 
 	const intervalRef: any = useRef();
 
@@ -217,13 +215,12 @@ const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal)
 	};
 
 	const paint = usePaintPicker(paintPicker);
-	
-//Set Initial values and clear references
-	useEffect(() => {
 
+	//Set Initial values and clear references
+	useEffect(() => {
 		if (!props.initialVal && minVal) {
 			setCurrentVal(minVal);
-		} else if(props.initialVal) {
+		} else if (props.initialVal) {
 			setCurrentVal(props.initialVal);
 		}
 
@@ -238,7 +235,6 @@ const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal)
 		if (!mapHook.map || initializedRef.current) return;
 		initializedRef.current = true;
 	}, [mapHook.map, props.mapId]);
-
 
 	//use callback function from props, if exists
 	useEffect(() => {
@@ -278,49 +274,49 @@ const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal)
 			)}
 
 			{labels && (
-    <MlTemporalControllerLabels
-        data={filteredData}
-        currentVal={currentVal}
-        fadeIn={labelFadeIn}
-        fadeOut={labelFadeOut}
-        step={step}
-        labelField={labelField}
-        labelColor={labelColor}
-        timeField={props.timeField}
-        minVal={minVal}
-        accumulate={accumulate}
-        isPlaying={isPlaying}
-    />
-)}
+				<MlTemporalControllerLabels
+					data={filteredData}
+					currentVal={currentVal}
+					fadeIn={labelFadeIn}
+					fadeOut={labelFadeOut}
+					step={step}
+					labelField={labelField}
+					labelColor={labelColor}
+					timeField={props.timeField}
+					minVal={minVal}
+					accumulate={accumulate}
+					isPlaying={isPlaying}
+				/>
+			)}
 
-<TemporalControllerPlayer
-    currentVal={currentVal}
-    isPlaying={isPlaying}
-    step={step}
-    minVal={minVal}
-    maxVal={maxVal}
-    returnCurrent={setCurrentVal}
-    returnPlaying={setIsPlaying}
-    showControls={props.showControls ? props.showControls : false}
-    open={false}
-    fadeIn={fadeIn}
-    setFadeIn={setFadeIn}
-    fadeOut={fadeOut}
-    setFadeOut={setFedeOut}
-    setStep={setStep}
-    featuresColor={featuresColor}
-    setFeatureColor={setFeatureColor}
-    labels={labels}
-    setLabels={setLabels}
-    labelColor={labelColor}
-    setlabelColor={setlabelColor}
-    labelFadeIn={labelFadeIn}
-    setLabelFadein={setLabelFadein}
-    labelFadeOut={labelFadeOut}
-    setLabelFadeOut={setLabelFadeOut}
-    accumulate={accumulate}
-    setAccumulate={setAccumulate}
-/>			
+			<TemporalControllerPlayer
+				currentVal={currentVal}
+				isPlaying={isPlaying}
+				step={step}
+				minVal={minVal}
+				maxVal={maxVal}
+				returnCurrent={setCurrentVal}
+				returnPlaying={setIsPlaying}
+				showControls={props.showControls ? props.showControls : false}
+				open={false}
+				fadeIn={fadeIn}
+				setFadeIn={setFadeIn}
+				fadeOut={fadeOut}
+				setFadeOut={setFedeOut}
+				setStep={setStep}
+				featuresColor={featuresColor}
+				setFeatureColor={setFeatureColor}
+				labels={labels}
+				setLabels={setLabels}
+				labelColor={labelColor}
+				setlabelColor={setlabelColor}
+				labelFadeIn={labelFadeIn}
+				setLabelFadein={setLabelFadein}
+				labelFadeOut={labelFadeOut}
+				setLabelFadeOut={setLabelFadeOut}
+				accumulate={accumulate}
+				setAccumulate={setAccumulate}
+			/>
 		</>
 	);
 };
@@ -331,10 +327,11 @@ MlTemporalController.defaultProps = {
 	step: 1,
 	fadeIn: 5,
 	fadeOut: 5,
-	featuresColor: '#1976D2',
+	//featuresColor: '#1976D2',
 	labelColor: '#000',
 	labelFadeIn: 5,
 	labelFadeOut: 5,
 	accumulate: false,
 };
+
 export default MlTemporalController;
