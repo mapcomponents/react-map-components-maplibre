@@ -70,11 +70,15 @@ const Template = () => {
 			<TopToolbar
 				buttons={
 					<>
-						<MenuItem>
-							<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
-								Informations
-							</Typography>
-						</MenuItem>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Informations
+						</Button>
+						<br />
+						<br />
 						<UploadButton
 							setData={setGpxData}
 							buttonComponent={
