@@ -1,6 +1,9 @@
 import React, { useState, useRef, ReactNode } from 'react';
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 
+import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
+import getTheme from '../ui_components/MapcomponentsTheme';
+
 export interface MapContextType {
 	mapIds: string[];
 	mapExists: (map_id: string | undefined) => boolean;
@@ -92,7 +95,11 @@ const MapComponentsProvider = ({ children }: { children: ReactNode }) => {
 		},
 	} as unknown as MapContextType;
 
-	return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
+	return (
+		<MapContext.Provider value={value}>
+			<MUIThemeProvider theme={getTheme('light')}>{children}</MUIThemeProvider>
+		</MapContext.Provider>
+	);
 };
 
 export { MapComponentsProvider };

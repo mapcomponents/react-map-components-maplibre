@@ -5,11 +5,11 @@
       "id": "core-maplibremap--example-config",
       "name": "Example Config",
       "title": "Core/MapLibreMap",
-      "importPath": 57291,
+      "importPath": 2049,
       "kind": "Core/MapLibreMap",
       "story": "Example Config",
       "parameters": {
-        "fileName": 57291,
+        "fileName": 2049,
         "framework": "react",
         "__id": "core-maplibremap--example-config",
         "__isArgsStory": true
@@ -19,11 +19,11 @@
       "id": "core-maplibremap--style-change-config",
       "name": "Style Change Config",
       "title": "Core/MapLibreMap",
-      "importPath": 57291,
+      "importPath": 2049,
       "kind": "Core/MapLibreMap",
       "story": "Style Change Config",
       "parameters": {
-        "fileName": 57291,
+        "fileName": 2049,
         "framework": "react",
         "__id": "core-maplibremap--style-change-config",
         "__isArgsStory": true

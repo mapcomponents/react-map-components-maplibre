@@ -2,11 +2,11 @@ import React, { useRef, useEffect, useState, useCallback, useMemo } from "react"
 import useMap from "../../hooks/useMap";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 
-import { Button, SxProps } from "@mui/material";
-import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import { Button } from '@mui/material';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
-import { point, circle, lineArc, Feature, Point } from "@turf/turf";
-import { CircleLayerSpecification, FillLayerSpecification } from "maplibre-gl";
+import { point, circle, lineArc, Feature, Point } from '@turf/turf';
+import { CircleLayerSpecification, FillLayerSpecification } from 'maplibre-gl';
 
 interface MlFollowGpsProps {
 	/**
@@ -47,13 +47,13 @@ interface MlFollowGpsProps {
 	 * Use any available paint prop from layer type "fill".
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
 	 */
-	orientationConePaint?: FillLayerSpecification["paint"];
+	orientationConePaint?: FillLayerSpecification['paint'];
 	/**
 	 * Position circle paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the position circle.
 	 * Use any available paint prop from layer type "circle".
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
 	 */
-	circlePaint?: CircleLayerSpecification["paint"];
+	circlePaint?: CircleLayerSpecification['paint'];
 	/**
 	 * Active button font color
 	 */
@@ -67,11 +67,7 @@ interface MlFollowGpsProps {
 	 * Use any available paint prop from layer type "fill".
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
 	 */
-	accuracyPaint?: FillLayerSpecification["paint"];
-	/**
-	 * CSS style object that is applied to the button component
-	 */
-	buttonSx?: SxProps | any;
+	accuracyPaint?: FillLayerSpecification['paint'];
 }
 
 /**
@@ -93,7 +89,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 	const initiallyCentered = useRef(false);
 
 	const getLocationSuccess = useCallback(
-		(pos:GeolocationPosition) => {
+		(pos: GeolocationPosition) => {
 			if (!mapHook.map) return;
 
 			if ((!props.centerUserPosition && !initiallyCentered.current) || props.centerUserPosition) {
@@ -119,7 +115,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 	);
 
 	const getLocationError = () => {
-		console.log("Access of user location denied");
+		console.log('Access of user location denied');
 		setLocationAccessDenied(true);
 	};
 
@@ -138,16 +134,18 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 		return copy;
 	}, [deviceOrientation, userLocationGeoJson]);
 
-	const handleOrientation = (event: any) => {
-		setDeviceOrientation(-event.alpha);
+	const handleOrientation = (event: DeviceOrientationEvent) => {
+		if (event?.alpha) {
+			setDeviceOrientation(-event.alpha);
+		}
 	};
 
 	useEffect(() => {
 		if (isFollowed) {
 			const _handleOrientation = handleOrientation;
-			window.addEventListener("deviceorientation", _handleOrientation);
+			window.addEventListener('deviceorientation', _handleOrientation);
 			return () => {
-				window.removeEventListener("deviceorientation", _handleOrientation);
+				window.removeEventListener('deviceorientation', _handleOrientation);
 			};
 		} else {
 			initiallyCentered.current = false;
@@ -173,10 +171,10 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 			{isFollowed && userLocationGeoJson && (
 				<MlGeoJsonLayer
 					geojson={accuracyGeoJson}
-					type={"fill"}
+					type={'fill'}
 					paint={{
-						"fill-color": "#cbd300",
-						"fill-opacity": 0.3,
+						'fill-color': '#cbd300',
+						'fill-opacity': 0.3,
 						...props.accuracyPaint,
 					}}
 					insertBeforeLayer={props.insertBeforeLayer}
@@ -186,11 +184,11 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 			{isFollowed && orientationCone && (
 				<MlGeoJsonLayer
 					geojson={orientationCone}
-					type={"fill"}
+					type={'fill'}
 					paint={{
-						"fill-color": "#0000ff",
-						"fill-antialias": false,
-						"fill-opacity": 0.3,
+						'fill-color': '#0000ff',
+						'fill-antialias': false,
+						'fill-opacity': 0.3,
 						...props.orientationConePaint,
 					}}
 					insertBeforeLayer={props.insertBeforeLayer}
@@ -200,12 +198,12 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 			{isFollowed && userLocationGeoJson && (
 				<MlGeoJsonLayer
 					geojson={userLocationGeoJson}
-					type={"circle"}
+					type={'circle'}
 					paint={{
-						"circle-color": "#009ee0",
-						"circle-radius": 5,
-						"circle-stroke-color": "#fafaff",
-						"circle-stroke-width": 1,
+						'circle-color': '#009ee0',
+						'circle-radius': 5,
+						'circle-stroke-color': '#fafaff',
+						'circle-stroke-width': 1,
 						...props.circlePaint,
 					}}
 					insertBeforeLayer={props.insertBeforeLayer}
@@ -213,20 +211,17 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 			)}
 
 			<Button
+				variant="navtools"
 				sx={{
 					zIndex: 1002,
 					color: isFollowed ? props.onColor : props.offColor,
-					...props.buttonSx,
 				}}
 				disabled={locationAccessDenied}
 				onClick={() => {
 					setIsFollowed(!isFollowed);
 				}}
 			>
-				{" "}
-				<GpsFixedIcon
-					sx={{ ...(props.buttonSx?.fontSize ? { fontSize: props.buttonSx?.fontSize } : {}) }}
-				/>{" "}
+				<GpsFixedIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 			</Button>
 		</>
 	);
@@ -234,22 +229,8 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 
 MlFollowGps.defaultProps = {
 	mapId: undefined,
-	buttonSx: {
-		minWidth: "30px",
-		minHeight: "30px",
-		width: "30px",
-		height: "30px",
-		backgroundColor: "#414141",
-		borderRadius: "23%",
-		margin: 0.15,
-		fontSize: "1.3em",
-		":hover": {
-			backgroundColor: "#515151",
-			color: "#ececec",
-		},
-	},
-	onColor: "#ececec",
-	offColor: "#666",
+	onColor: '#ececec',
+	offColor: '#666',
 	showAccuracyCircle: true,
 	showUserLocation: true,
 	showOrientation: true,

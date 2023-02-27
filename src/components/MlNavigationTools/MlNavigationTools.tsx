@@ -46,11 +46,16 @@ interface MlNavigationToolsProps {
 	 * Style attribute for NavigationTools container
 	 */
 	sx?: SxProps;
+	/**
+	 * Style attribute for NavigationTools container
+	 */
+	mediaIsMobile?: boolean;
 }
 
 /**
  * @component
  */
+
 const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -58,32 +63,13 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	});
 
 	const [pitch, setPitch] = useState(0);
-	const mediaIsMobile = useMediaQuery("(max-width:900px)");
-	const buttonStyle = {
-		minWidth: "20px",
-		minHeight: "20px",
-		width: mediaIsMobile ? "50px" : "30px",
-		height: mediaIsMobile ? "50px" : "30px",
-		backgroundColor: "#414141",
-		borderRadius: "23%",
-		//border: "1px solid #bbb",
-		//boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
-		margin: 0.15,
-		fontSize: mediaIsMobile ? "1.4em" : "1.2em",
-		":hover": {
-			backgroundColor: "#515151",
-		},
-		color: "#ececec",
-	};
-	const iconStyle = {
-		fontSize: buttonStyle.fontSize,
-	};
+	const mediaIsMobile = useMediaQuery('(max-width:900px)');
 
 	useEffect(() => {
 		if (!mapHook.map) return;
 
 		mapHook.map.on(
-			"pitchend",
+			'pitchend',
 			() => {
 				if (!mapHook.map) return;
 
@@ -124,63 +110,53 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		<Box
 			sx={{
 				zIndex: 501,
-				position: "absolute",
-				display: "flex",
-				flexDirection: "column",
-				...(mediaIsMobile ? { margin: "20px 10px 20px 10px" } : {}),
+				position: 'absolute',
+				display: 'flex',
+				flexDirection: 'column',
+				...(mediaIsMobile ? { margin: '20px 10px 20px 10px' } : {}),
 				...props.sx,
 			}}
 		>
 			<MlNavigationCompass
 				style={{
-					width: "31px",
-					position: "relative",
-					height: mediaIsMobile ? "55px" : "45px",
-					marginLeft: mediaIsMobile ? "3px" : "-5px",
-					transform: mediaIsMobile ? "scale(1.6)" : "scale(1)",
+					width: '31px',
+					position: 'relative',
+					height: mediaIsMobile ? '55px' : '45px',
+					marginLeft: mediaIsMobile ? '3px' : '-5px',
+					transform: mediaIsMobile ? 'scale(1.6)' : 'scale(1)',
 				}}
 				backgroundStyle={{
-					boxShadow: "0px 0px 18px rgba(0,0,0,.5)",
+					boxShadow: '0px 0px 18px rgba(0,0,0,.5)',
 				}}
 			/>
 			{props.show3DButton && (
-				<Button
-					sx={{ ...buttonStyle, fontSize: mediaIsMobile ? "1.4em" : "1em", fontWeight: 600 }}
-					onClick={adjustPitch}
-				>
-					{pitch ? "2D" : "3D"}
+				<Button variant="navtools" onClick={adjustPitch}>
+					{pitch ? '2D' : '3D'}
 				</Button>
 			)}
-			{props.showFollowGpsButton && (
-				<MlFollowGps buttonSx={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
-			)}
-			{props.showCenterLocationButton && (
-				<MlCenterPosition style={{ ...(({ color, ...rest }) => rest)(buttonStyle) }} />
-			)}
+			{props.showFollowGpsButton && <MlFollowGps />}
+			{props.showCenterLocationButton && <MlCenterPosition />}
 			<ButtonGroup
 				orientation="vertical"
 				sx={{
-					width: "50px",
-					border: "none",
-					Button: { minWidth: "20px !important", border: "none", padding: 0 },
-					"Button:hover": { border: "none" },
+					width: '50px',
+					border: 'none',
+					Button: { minWidth: '20px !important', border: 'none', padding: 0 },
+					'Button:hover': { border: 'none' },
 				}}
 			>
 				{props.showZoomButtons && (
 					<>
-						<Button sx={{ ...buttonStyle }} onClick={zoomIn}>
-							<ControlPointIcon sx={{ ...iconStyle }} />
+						<Button variant="navtools" onClick={zoomIn}>
+							<ControlPointIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
-						<Button sx={{ ...buttonStyle }} onClick={zoomOut}>
-							<RemoveCircleOutlineIcon sx={{ ...iconStyle }} />
+						<Button variant="navtools" onClick={zoomOut}>
+							<RemoveCircleOutlineIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 					</>
 				)}
 			</ButtonGroup>
-			{props.children &&
-				React.cloneElement(props.children, {
-					sx: { ...buttonStyle },
-				})}
+			{props.children && React.cloneElement(props.children, {})}
 		</Box>
 	);
 };

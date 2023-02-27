@@ -46,25 +46,17 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 			<MlWmsLoaderInstructions open={guide} />
 			<WMSLinks open={demoMode} close={() => setDemoMode(false)} load={loader} />
 			<TopToolbar appBarStyle={{ zIndex: 1220 }}>
-				<Button
-					variant="contained"
-					onClick={openGuide}
-					sx={{ marginRight: '10px' }}
-				>
+				<Button variant="contained" onClick={openGuide} sx={{ marginRight: '10px' }}>
 					Guide me through
 				</Button>
-				<Button
-					variant="contained"
-					onClick={() => setDemoMode(!demoMode)}
-					
-				>
+				<Button variant="contained" onClick={() => setDemoMode(!demoMode)}>
 					Demo WMS
 				</Button>
 			</TopToolbar>
 
 			{!mediaIsMobile || (mediaIsMobile && !demoMode) ? (
 				<Sidebar
-					drawerPaperProps={{ sx: { top: '65px', maxWidth: '20%', padding: '40px' } }}
+					drawerPaperProps={{ sx: { top: '64px', maxWidth: '20%', padding: '40px' } }}
 					drawerButtonStyle={{ top: '65px' }}
 					sx={{ wordBreak: 'break-word' }}
 				>

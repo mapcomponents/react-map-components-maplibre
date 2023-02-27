@@ -1,37 +1,39 @@
 import React from 'react';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
+import { Box, Typography } from '@mui/material';
 
 function BubbleForInstruction(props) {
 	return (
 		<>
-			<div
-				style={{
+			<Box
+				sx={{
 					width: '475px',
 					height: '475px',
 					position: 'fixed',
 					display: 'block',
 					borderRadius: '360px',
-					backgroundColor: 'steelblue',
+					bgcolor: 'primary.main',
 					right: props.bubbleRight,
 					bottom: props.bubbleBottom,
 					left: props.bubbleLeft,
 					top: props.bubbleTop,
-					zIndex: props.zIndex
+					zIndex: props.zIndex,
 				}}
 			>
-				<h2
-					style={{
+				<Typography
+					variant="h5"
+					sx={{
 						marginTop: props.textMarginTop,
 						marginLeft: props.textMarginLeft,
-						color: 'white',
+						color: 'text.contrast',
 						textAlign: 'left',
 					}}
 				>
-					{props.children}
-				</h2>
+					<b>{props.children}</b>
+				</Typography>
 				<ReplyAllIcon
-					style={{
-						color: 'white',
+					sx={{
+						color: 'text.contrast',
 						fontSize: '80px',
 						position: 'absolute',
 						transform: props.iconTransform,
@@ -39,7 +41,7 @@ function BubbleForInstruction(props) {
 						marginLeft: props.iconMarginLeft,
 					}}
 				/>
-			</div>
+			</Box>
 		</>
 	);
 }
