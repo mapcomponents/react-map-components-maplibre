@@ -55,11 +55,17 @@ const Template = () => {
 	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	return (
 		<>
-			<TopToolbar>
-				<Button variant="contained" className='pdfFormButton' onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}>
-					PDF
-				</Button>
-			</TopToolbar>
+			<TopToolbar
+				unmovableButtons={
+					<Button
+						variant={showCreatePdfForm ? 'contained' : 'outlined'}
+						className="pdfFormButton"
+						onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}
+					>
+						PDF
+					</Button>
+				}
+			/>
 			{showCreatePdfForm && (
 				<MlDialog title="Create PDF">
 					<MlCreatePdfForm

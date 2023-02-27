@@ -701,17 +701,17 @@
         "__isArgsStory": false
       }
     },
-    "mapcomponents-usegpx--example-config": {
-      "id": "mapcomponents-usegpx--example-config",
+    "hooks-usegpx--example-config": {
+      "id": "hooks-usegpx--example-config",
       "name": "Example Config",
-      "title": "MapComponents/useGpx",
+      "title": "Hooks/useGpx",
       "importPath": 19850,
-      "kind": "MapComponents/useGpx",
+      "kind": "Hooks/useGpx",
       "story": "Example Config",
       "parameters": {
         "fileName": 19850,
         "framework": "react",
-        "__id": "mapcomponents-usegpx--example-config",
+        "__id": "hooks-usegpx--example-config",
         "__isArgsStory": false
       }
     },
@@ -729,26 +729,26 @@
         "__isArgsStory": true
       }
     },
-    "mapcomponents-uselayerhoverpopup--example-config": {
-      "id": "mapcomponents-uselayerhoverpopup--example-config",
+    "hooks-uselayerhoverpopup--example-config": {
+      "id": "hooks-uselayerhoverpopup--example-config",
       "name": "Example Config",
-      "title": "MapComponents/useLayerHoverPopup",
+      "title": "Hooks/useLayerHoverPopup",
       "importPath": 91594,
-      "kind": "MapComponents/useLayerHoverPopup",
+      "kind": "Hooks/useLayerHoverPopup",
       "story": "Example Config",
       "parameters": {
         "fileName": 91594,
         "framework": "react",
-        "__id": "mapcomponents-uselayerhoverpopup--example-config",
+        "__id": "hooks-uselayerhoverpopup--example-config",
         "__isArgsStory": false
       }
     },
     "hooks-usemapstate--viewport-only": {
       "id": "hooks-usemapstate--viewport-only",
       "name": "Viewport Only",
-      "title": "Hooks/UseMapState",
+      "title": "Hooks/useMapState",
       "importPath": 9491,
-      "kind": "Hooks/UseMapState",
+      "kind": "Hooks/useMapState",
       "story": "Viewport Only",
       "parameters": {
         "fileName": 9491,
@@ -760,9 +760,9 @@
     "hooks-usemapstate--include-base-layers": {
       "id": "hooks-usemapstate--include-base-layers",
       "name": "Include Base Layers",
-      "title": "Hooks/UseMapState",
+      "title": "Hooks/useMapState",
       "importPath": 9491,
-      "kind": "Hooks/UseMapState",
+      "kind": "Hooks/useMapState",
       "story": "Include Base Layers",
       "parameters": {
         "fileName": 9491,
@@ -774,9 +774,9 @@
     "hooks-usemapstate--match-layer-id-string": {
       "id": "hooks-usemapstate--match-layer-id-string",
       "name": "Match Layer Id String",
-      "title": "Hooks/UseMapState",
+      "title": "Hooks/useMapState",
       "importPath": 9491,
-      "kind": "Hooks/UseMapState",
+      "kind": "Hooks/useMapState",
       "story": "Match Layer Id String",
       "parameters": {
         "fileName": 9491,
@@ -788,9 +788,9 @@
     "hooks-usemapstate--match-layer-id-regexp": {
       "id": "hooks-usemapstate--match-layer-id-regexp",
       "name": "Match Layer Id Regexp",
-      "title": "Hooks/UseMapState",
+      "title": "Hooks/useMapState",
       "importPath": 9491,
-      "kind": "Hooks/UseMapState",
+      "kind": "Hooks/useMapState",
       "story": "Match Layer Id Regexp",
       "parameters": {
         "fileName": 9491,
@@ -802,9 +802,9 @@
     "hooks-usemapstate--non-base-layers-only": {
       "id": "hooks-usemapstate--non-base-layers-only",
       "name": "Non Base Layers Only",
-      "title": "Hooks/UseMapState",
+      "title": "Hooks/useMapState",
       "importPath": 9491,
-      "kind": "Hooks/UseMapState",
+      "kind": "Hooks/useMapState",
       "story": "Non Base Layers Only",
       "parameters": {
         "fileName": 9491,
@@ -816,9 +816,9 @@
     "hooks-usesource--use-geojson-source-example": {
       "id": "hooks-usesource--use-geojson-source-example",
       "name": "Use Geojson Source Example",
-      "title": "Hooks/UseSource",
+      "title": "Hooks/useSource",
       "importPath": 33024,
-      "kind": "Hooks/UseSource",
+      "kind": "Hooks/useSource",
       "story": "Use Geojson Source Example",
       "parameters": {
         "fileName": 33024,
@@ -830,9 +830,9 @@
     "hooks-usesource--use-vector-source-example": {
       "id": "hooks-usesource--use-vector-source-example",
       "name": "Use Vector Source Example",
-      "title": "Hooks/UseSource",
+      "title": "Hooks/useSource",
       "importPath": 33024,
-      "kind": "Hooks/UseSource",
+      "kind": "Hooks/useSource",
       "story": "Use Vector Source Example",
       "parameters": {
         "fileName": 33024,
@@ -844,9 +844,9 @@
     "hooks-usesource--use-raster-source-example": {
       "id": "hooks-usesource--use-raster-source-example",
       "name": "Use Raster Source Example",
-      "title": "Hooks/UseSource",
+      "title": "Hooks/useSource",
       "importPath": 33024,
-      "kind": "Hooks/UseSource",
+      "kind": "Hooks/useSource",
       "story": "Use Raster Source Example",
       "parameters": {
         "fileName": 33024,
@@ -858,15 +858,57 @@
     "hooks-usesource--remove-source-example": {
       "id": "hooks-usesource--remove-source-example",
       "name": "Remove Source Example",
-      "title": "Hooks/UseSource",
+      "title": "Hooks/useSource",
       "importPath": 33024,
-      "kind": "Hooks/UseSource",
+      "kind": "Hooks/useSource",
       "story": "Remove Source Example",
       "parameters": {
         "fileName": 33024,
         "framework": "react",
         "__id": "hooks-usesource--remove-source-example",
         "__isArgsStory": true
+      }
+    },
+    "uicomponents-layerlist--example-config": {
+      "id": "uicomponents-layerlist--example-config",
+      "name": "Example Config",
+      "title": "UiComponents/LayerList",
+      "importPath": 45760,
+      "kind": "UiComponents/LayerList",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 45760,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--example-config",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--folder-example": {
+      "id": "uicomponents-layerlist--folder-example",
+      "name": "Folder Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 45760,
+      "kind": "UiComponents/LayerList",
+      "story": "Folder Example",
+      "parameters": {
+        "fileName": 45760,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--folder-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--vectortile-example": {
+      "id": "uicomponents-layerlist--vectortile-example",
+      "name": "Vectortile Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 45760,
+      "kind": "UiComponents/LayerList",
+      "story": "Vectortile Example",
+      "parameters": {
+        "fileName": 45760,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--vectortile-example",
+        "__isArgsStory": false
       }
     }
   }

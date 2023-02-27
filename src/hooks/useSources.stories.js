@@ -13,7 +13,7 @@ const vectorUrl =
 	'https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf';
 
 const storyoptions = {
-	title: 'Hooks/UseSource',
+	title: 'Hooks/useSource',
 	component: useSource,
 	argTypes: {},
 	decorators: mapContextDecoratorHooks,
@@ -149,20 +149,22 @@ const removeExample = (args) => {
 
 	return (
 		<>
-			<TopToolbar>
-				<Button
-					color="primary"
-					variant={sourceStatus ? 'contained' : 'outlined'}
-					onClick={() => setSourceStatus(!sourceStatus)}
-				>
-					Ml GeoJsonLayer With Source JSX Active?
-				</Button>
-			</TopToolbar>
+			<TopToolbar
+				buttons={
+					<Button
+						color="primary"
+						variant={sourceStatus ? 'contained' : 'outlined'}
+						onClick={() => setSourceStatus(!sourceStatus)}
+					>
+						Ml GeoJsonLayer With Source JSX Active?
+					</Button>
+				}
+			/>
 			{sourceStatus && <MlGeojsonLayerWithSource></MlGeojsonLayerWithSource>}
 			<div
 				style={{
 					position: 'fixed',
-					zIndex: 10000,
+					zIndex: 1290,
 					display: 'flex',
 					flexWrap: 'wrap',
 					top: '62px',

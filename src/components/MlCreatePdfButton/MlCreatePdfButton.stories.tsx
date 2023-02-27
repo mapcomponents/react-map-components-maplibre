@@ -7,19 +7,14 @@ import TopToolbar from "../../ui_components/TopToolbar";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
-	title: "MapComponents/MlCreatePdfButton",
+	title: 'MapComponents/MlCreatePdfButton',
 	component: MlCreatePdfButton,
-	argTypes: {
-	},
+	argTypes: {},
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
 
-const Template = () => (
-	<TopToolbar>
-		<MlCreatePdfButton />
-	</TopToolbar>
-);
+const Template = () => <TopToolbar unmovableButtons={<MlCreatePdfButton />} />;
 
 // <MapLibreMap options={args.options} />
 export const ExampleConfig = Template.bind({});

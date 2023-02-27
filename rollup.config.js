@@ -1,57 +1,74 @@
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
+import { defineConfig } from 'rollup';
 
 import babel from '@rollup/plugin-babel';
 import url from '@rollup/plugin-url';
-import external from 'rollup-plugin-peer-deps-external';
+import externals from 'rollup-plugin-node-externals';
 
 import css from 'rollup-plugin-import-css';
 import del from 'rollup-plugin-delete';
 import svgr from '@svgr/rollup';
 
-import pkg from "./package.json";
+import pkg from './package.json';
 
-const config = {
-	input: pkg.source,
-	output: [{ file: pkg.module, format: 'esm', sourcemap: true }],
-	plugins: [
-		svgr({
-			svgo: false,
-		}),
-		url(),
-		babel({
-			exclude: 'node_modules/**',
-			babelHelpers: 'bundled',
-			presets: ['@babel/preset-react'],
-		}),
-		external(),
-		peerDepsExternal(),
-		resolve(),
-		commonjs(),
-		typescript({
-			useTsconfigDeclarationDir: true,
-			tsconfig: 'tsconfig.json',
-		}),
-		css(),
-		del({ targets: ['build/*'] }),
-	],
-	external: [
-		'!maplibre-gl',
-		'prop-types',
-		'd3',
-		'@emotion/react',
-		'@emotion/styled',
-		'@babel/helpers',
-		'jspdf',
-		...Object.keys(pkg.dependencies),
-		...Object.keys(pkg.peerDependencies),
-		...Object.keys(pkg.devDependencies),
-	],
- inlineDynamicImports: true,
-	onwarn: function (warning, warn) {
-		warn(warning);
-	},
+const externalsConfig = {
+	deps: true,
+	devDeps: true,
+	exclude:['react', 'react-dom']
 };
+
+const config = defineConfig([
+	// CJS config
+	//{
+	//	input: ['src/index.ts'],
+	//	output: {
+	//		file: 'dist/index.js',
+	//		format: 'cjs',
+	//		sourcemap: true,
+	//	},
+	//	plugins: [
+	//		svgr({
+	//			svgo: false,
+	//		}),
+	//		url(),
+	//		babel(),
+	//		externals(externalsConfig),
+	//		typescript({ declarationDir: 'dist/types', sourceMap: true }),
+	//		css(),
+	//		del({ targets: ['dist/*'] }),
+	//	],
+	//},
+	// ESM config
+	{
+		input: ['src/index.ts'],
+		output: {
+			file: 'dist/index.esm.js',
+			format: 'cjs',
+			sourcemap: true,
+		},
+		plugins: [
+			svgr({
+				svgo: false,
+			}),
+			url(),
+			babel({
+				presets: ['@babel/preset-react'],
+			}),
+			externals(externalsConfig),
+			commonjs(),
+			typescript({ declarationDir: 'dist/types', sourceMap: true }),
+			css(),
+			del({ targets: ['dist/*'] }),
+		],
+		external: [
+			'react',
+			'react-dom',
+			'd3',
+			...Object.keys(pkg.dependencies),
+			...Object.keys(pkg.peerDependencies),
+			...Object.keys(pkg.devDependencies),
+		],
+	},
+]);
 export default config;

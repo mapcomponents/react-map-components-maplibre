@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useContext, FC,	RefObject } from "react";
+import React, { useRef, useEffect, useContext, FC, RefObject } from 'react';
 
-import MapContext, { MapContextType } from "../../contexts/MapContext";
-import MapLibreGlWrapper from "./lib/MapLibreGlWrapper";
+import MapContext, { MapContextType } from '../../contexts/MapContext';
+import MapLibreGlWrapper from './lib/MapLibreGlWrapper';
 
-import { MapOptions as MapOptionsType } from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
+import { MapOptions as MapOptionsType, Map } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 type MapLibreMapProps = {
 	/**
@@ -31,16 +31,18 @@ const defaultProps: MapLibreMapProps = {
 		container: '',
 		style: {
 			version: 8,
-			name: "blank",
+			name: 'blank',
 			center: [0, 0],
 			zoom: 0,
 			sources: {},
+			sprite: 'https://wms.wheregroup.com/tileserver/sprites/osm-bright',
+			glyphs: 'https://wms.wheregroup.com/tileserver/fonts/{fontstack}/{range}.pbf',
 			layers: [
 				{
-					id: "background",
-					type: "background",
+					id: '_background',
+					type: 'background',
 					paint: {
-						"background-color": "rgba(0,0,0,0)",
+						'background-color': 'rgba(0,0,0,0)',
 					},
 				},
 			],
@@ -72,6 +74,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 		const mapId = mapIdRef.current;
 
 		return () => {
+			initializedRef.current = false;
 			mapContext.removeMap(mapId);
 			map.current?.map?.remove?.();
 			map.current = undefined;
@@ -81,19 +84,17 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 	useEffect(() => {
 		if (initializedRef.current) return;
 
-		console.log(mapContainer.current);
-		
 		if (mapContainer.current) {
 			initializedRef.current = true;
 			map.current = new MapLibreGlWrapper({
 				mapOptions: {
 					style: '',
 					...props.options,
-					...(props?.options?.style?{}:{style:defaultProps?.options?.style}),
+					...(props?.options?.style ? {} : { style: defaultProps?.options?.style }),
 					container: mapContainer.current,
 				},
-				onReady: (map: any, wrapper: any) => {
-					map.once("load", () => {
+				onReady: (map: Map, wrapper: MapLibreGlWrapper) => {
+					map.once('load', () => {
 						if (props.mapId) {
 							mapContext.registerMap(props.mapId, wrapper);
 						} else {
@@ -107,13 +108,19 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 
 	useEffect(() => {
 		if (map.current?.map && props?.options?.style && currentStyle.current !== props.options.style) {
-			console.log("set style");
+			console.log('set style');
 			currentStyle.current = props.options.style;
 			map.current.map.setStyle(props.options.style);
 		}
-	}, [props?.options?.style])
+	}, [props?.options?.style]);
 
-	return <div ref={mapContainer as RefObject<HTMLDivElement>} className="mapContainer" style={props.style} />;
+	return (
+		<div
+			ref={mapContainer as RefObject<HTMLDivElement>}
+			className="mapContainer"
+			style={props.style}
+		/>
+	);
 };
 
 MapLibreMap.defaultProps = defaultProps;

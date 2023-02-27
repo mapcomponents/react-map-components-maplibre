@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Drawer, IconButton, PaperProps, SxProps, DrawerProps} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Paper, Drawer, IconButton, PaperProps, DrawerProps } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
-
-
+import { Global } from '@emotion/react';
+import { Typography, SwipeableDrawer } from '@mui/material/';
 
 const DrawerHeader = styled('div')(() => ({
 	display: 'flex',
@@ -16,67 +15,159 @@ const DrawerHeader = styled('div')(() => ({
 interface SidebarProps {
 	drawerPaperProps?: PaperProps;
 	drawerHeaderProps?: Headers;
-	drawerButtonStyle?: SxProps | undefined;
 	children?: React.ReactNode;
+	open?: boolean;
+	setOpen?: (val: boolean) => void;
+	name?: string;
 }
 
-export default function Sidebar({ drawerPaperProps, drawerHeaderProps, drawerButtonStyle, ...props }: SidebarProps & DrawerProps) {
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+const drawerBleeding = 56;
 
-	const [drawerOpen, setDrawerOpen] = useState(true);
+const Puller = styled(Box)(({ theme }) => ({
+	width: 30,
+	height: 6,
+	backgroundColor: theme.palette.text.primary,
+	borderRadius: 3,
+	position: 'absolute',
+	top: 8,
+	left: 'calc(50% - 15px)',
+}));
 
-	const handleDrawerOpen = () => {
-		setDrawerOpen(true);
-	};
-	const handleDrawerClose = () => {
-		setDrawerOpen(false);
-	};
+export default function Sidebar({
+	drawerPaperProps,
+	drawerHeaderProps,
+	...props
+}: SidebarProps & DrawerProps) {
+	const mediaIsMobile = useMediaQuery('(max-width:600px)');
+
+	const [drawerOpen, setDrawerOpen] = useState(false);
 
 	return (
 		<>
-			<IconButton
-				onClick={handleDrawerOpen}
-				sx={{
-					zIndex: 101,
-					position: 'relative',
-					padding: '20px',
-					...drawerButtonStyle
-				}}				
-			>
-				<MenuIcon />
-			</IconButton>
-			<Drawer
-				transitionDuration={0}
-				variant="persistent"
-				anchor="left"
-				open={drawerOpen}
-				PaperProps={{
-					sx: {
-						maxWidth: '20%',
-						padding: '40px'						
-					},
-					...drawerPaperProps,
-				}}
-				sx={{
-					flexGrow: 1,
-					zIndex: 105,
-					position: 'absolute',
-					top: 0,
-					backgroundColor: '#fafafa',
-					display: 'flex',
-					flexDirection: 'column',
-					maxWidth: mediaIsMobile ? '90vw' : '20vw',
-					...(drawerOpen ? {} : { left: mediaIsMobile ? '-90vw' : '-20vw' }),
-				}}
-				{...props}
-			>
-				<DrawerHeader {...drawerHeaderProps}>
-					<IconButton onClick={handleDrawerClose}>
-						<ChevronLeftIcon />
-					</IconButton>
-				</DrawerHeader>
-				<Box>{props.children}</Box>
-			</Drawer>
+			{!mediaIsMobile ? (
+				<Box sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}>
+					<Drawer
+						transitionDuration={0}
+						variant="persistent"
+						anchor="left"
+						open={typeof props.open === 'undefined' ? drawerOpen : props.open}
+						PaperProps={{
+							...drawerPaperProps,
+							sx: {
+								maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
+								padding: { lg: '20px', md: '20px', sm: '20px', xs: '10px' },
+								...drawerPaperProps?.sx,
+							},
+						}}
+						sx={{
+							flexGrow: 1,
+							zIndex: 105,
+							position: 'absolute',
+							top: 0,
+							bottom: 0,
+							display: 'flex',
+							flexDirection: 'column',
+							maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
+							...(drawerOpen ? {} : { left: mediaIsMobile ? '-90vw' : '-20vw' }),
+						}}
+						{...props}
+					>
+						<DrawerHeader {...drawerHeaderProps}>
+							<Typography variant="h6">{props.name}</Typography>
+							<IconButton
+								onClick={
+									props.setOpen
+										? () => {
+												props.setOpen?.(false);
+										  }
+										: () => {
+												setDrawerOpen(false);
+										  }
+								}
+								sx={{
+									position: 'absolute',
+									right: '20px',
+								}}
+							>
+								<CloseIcon />
+							</IconButton>
+						</DrawerHeader>
+						<Box>{props.children}</Box>
+					</Drawer>
+				</Box>
+			) : (
+				<Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
+					<Global
+						styles={{
+							'.MuiDrawer-root > .MuiPaper-root': {
+								height: `calc(50% - ${drawerBleeding}px)`,
+								overflow: 'visible',
+							},
+						}}
+					/>
+					<SwipeableDrawer
+						anchor="bottom"
+						open={typeof props.open === 'undefined' ? drawerOpen : props.open}
+						onClose={
+							props.setOpen
+								? () => {
+										props.setOpen?.(false);
+								  }
+								: () => {
+										setDrawerOpen(false);
+								  }
+						}
+						onOpen={
+							props.setOpen
+								? () => {
+										props.setOpen?.(true);
+								  }
+								: () => {
+										setDrawerOpen(true);
+								  }
+						}
+						swipeAreaWidth={drawerBleeding}
+						disableSwipeToOpen={false}
+						hideBackdrop={true}
+						ModalProps={{
+							keepMounted: true,
+							sx: {
+								top: `calc(90%)`,
+							},
+						}}
+					>
+						<Paper
+							sx={{
+								position: 'absolute',
+								top: -drawerBleeding,
+								borderTopLeftRadius: 8,
+								borderTopRightRadius: 8,
+								visibility: 'visible',
+								right: 0,
+								left: 0,
+							}}
+						>
+							<Puller />
+							<Typography variant="h6" sx={{ p: '13px' }}>
+								{props.name}
+							</Typography>
+						</Paper>
+
+						<Paper
+							sx={{
+								px: '15px',
+								pb: '15px',
+								height: '100%',
+								overflow: 'auto',
+								paddingTop: '20px',
+							}}
+						>
+							{props.children}
+						</Paper>
+					</SwipeableDrawer>
+				</Box>
+			)}
+			;
 		</>
 	);
 }

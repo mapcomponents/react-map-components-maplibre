@@ -84,7 +84,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 							<TextField
 								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
 								value={paintProps[key]}
-								onChange={(ev: React.ChangeEvent) => {
+								onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
 									if (ev?.target?.value) {
 										setPaintProps((current) => ({ ...current, [key]: parseInt(ev.target.value) }));
 									}

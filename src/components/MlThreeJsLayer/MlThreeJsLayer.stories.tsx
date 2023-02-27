@@ -24,12 +24,14 @@ const Template = () => {
 	const loadingOverlayContext = useContext(LoadingOverlayContext);
 
 	return (
-		<TopToolbar>
-			<MlThreeJsLayer
-				init={() => loadingOverlayContext?.setControlled?.(true)}
-				onDone={() => setTimeout(() => loadingOverlayContext?.setLoadingDone?.(true), 1200)}
-			/>
-		</TopToolbar>
+		<TopToolbar
+			unmovableButtons={
+				<MlThreeJsLayer
+					init={() => loadingOverlayContext?.setControlled?.(true)}
+					onDone={() => setTimeout(() => loadingOverlayContext?.setLoadingDone?.(true), 1200)}
+				/>
+			}
+		/>
 	);
 };
 

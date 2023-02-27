@@ -7,7 +7,7 @@ import mapContextDecorator from "../../decorators/MapContextDecorator";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const storyoptions = {
-	title: "MapComponents/MlScaleReference",
+	title: 'MapComponents/MlScaleReference',
 	component: MlScaleReference,
 	argTypes: {
 		url: {},
@@ -18,11 +18,7 @@ const storyoptions = {
 export default storyoptions;
 
 const ToolbarTemplate = (props) => {
-	return (
-		<TopToolbar>
-			<MlScaleReference {...props} />
-		</TopToolbar>
-	);
+	return <TopToolbar unmovableButtons={<MlScaleReference {...props} />} />;
 };
 const OverlayTemplate = (props) => {
 	const mediaIsMobile = useMediaQuery("(max-width:900px)");

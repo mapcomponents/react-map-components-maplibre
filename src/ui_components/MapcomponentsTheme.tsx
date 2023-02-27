@@ -28,13 +28,13 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						main: '#009FE3',
 					},
 					background: {
-						default: '#000',
-						paper: '#303030',
-						icon: '#424242',
+						default: '#222222',
+						paper: '#414141',
+						icon: '#525252',
 					},
 					text: {
 						secondary: '#fff',
-						contrast: '#000',
+						contrast: '#121212',
 					},
 			  }
 			: {
@@ -44,12 +44,12 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 
 					background: {
 						default: '#fff',
-						paper: '#eeeeee',
+						paper: '#fdfdfd',
 						icon: '#bdbdbd',
 					},
 					text: {
-						primary: '#000',
-						secondary: '#000',
+						primary: '#111',
+						secondary: '#121212',
 						contrast: '#fff',
 					},
 			  }),
@@ -62,6 +62,11 @@ const getTheme = (mode: 'light' | 'dark') => {
 	// @ts-ignore
 	return createTheme(theme, {
 		components: {
+			MuiTypography: {
+				styleOverrides: {
+					root: {},
+				},
+			},
 			MuiAppBar: {
 				styleOverrides: {
 					root: {
@@ -83,9 +88,8 @@ const getTheme = (mode: 'light' | 'dark') => {
 			},
 			MuiButton: {
 				styleOverrides: {
-					backgroundColor: theme.palette.background.paper,
-					':hover': {
-						backgroundColor: theme.palette.primary.main,
+					contained: {
+						color: '#fff',
 					},
 				},
 				variants: [
