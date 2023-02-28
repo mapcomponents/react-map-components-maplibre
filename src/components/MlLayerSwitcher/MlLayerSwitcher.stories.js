@@ -1,13 +1,16 @@
-import React from "react";
-import MlWmsLayer from "../MlWmsLayer/MlWmsLayer";
-import MlLayerSwitcher from "./MlLayerSwitcher";
-import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
-import sample_geojson_1 from "./assets/sample_1.json";
-import sample_geojson_2 from "./assets/sample_2.json";
+import React, { useState } from 'react';
+import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
+import MlLayerSwitcher from './MlLayerSwitcher';
+import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import mapContextDecorator from '../../decorators/MapContextDecorator';
+import sample_geojson_1 from './assets/sample_1.json';
+import sample_geojson_2 from './assets/sample_2.json';
+import Sidebar from '../../ui_components/Sidebar';
+import TopToolbar from '../..//ui_components/TopToolbar';
+import { Button } from '@mui/material';
 
 const storyoptions = {
-	title: "MapComponents/MlLayerSwitcher",
+	title: 'MapComponents/MlLayerSwitcher',
 	component: MlLayerSwitcher,
 	argTypes: {
 		url: {},
@@ -16,43 +19,73 @@ const storyoptions = {
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
+
+const sidebarSx = {
+	top: '64px',
+	width: {
+		xs: '80%',
+		sm: '60%',
+		md: '350px',
+		lg: '350px',
+	},
+	boxSizing: 'border-box',
+};
+
 const Template = (args) => {
+	const [openSidebar, setOpenSidebar] = useState(true);
 	return (
 		<>
-			<MlWmsLayer
-				url={args.url}
-				urlParameters={{ layers: args.layer }}
-				sourceOptions={args.sourceOptions}
-				layerId="historic"
-				visible={args.layerVisible}
+			<TopToolbar
+				buttons={
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Layer Switcher
+					</Button>
+				}
 			/>
-			<MlWmsLayer
-				url={args.url2}
-				urlParameters={{ layers: args.layer2 }}
-				sourceOptions={args.sourceOptions}
-				layerId={args.layer2}
-				visible={args.layer2Visible}
-			/>
-			<MlGeoJsonLayer
-				type="line"
-				layout={{ visibility: args.geojsonLayerVisible ? "visible" : "none" }}
-				geojson={sample_geojson_1}
-				layerId="geojson1"
-			/>
-			<MlGeoJsonLayer
-				type="line"
-				layout={{ visibility: args.geojson2LayerVisible ? "visible" : "none" }}
-				geojson={sample_geojson_2}
-				layerId="geojson2"
-			/>
-			<MlLayerSwitcher
-				baseSourceConfig={{
-					active: args.baseSourcesActive,
-					layers: args.layers,
-				}}
-				detailLayerConfig={args.detailLayerConfig}
-			/>
-			;
+			<Sidebar
+				drawerPaperProps={{ sx: sidebarSx }}
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'Layer Switcher'}
+			>
+				<MlWmsLayer
+					url={args.url}
+					urlParameters={{ layers: args.layer }}
+					sourceOptions={args.sourceOptions}
+					layerId="historic"
+					visible={args.layerVisible}
+				/>
+				<MlWmsLayer
+					url={args.url2}
+					urlParameters={{ layers: args.layer2 }}
+					sourceOptions={args.sourceOptions}
+					layerId={args.layer2}
+					visible={args.layer2Visible}
+				/>
+				<MlGeoJsonLayer
+					type="line"
+					layout={{ visibility: args.geojsonLayerVisible ? 'visible' : 'none' }}
+					geojson={sample_geojson_1}
+					layerId="geojson1"
+				/>
+				<MlGeoJsonLayer
+					type="line"
+					layout={{ visibility: args.geojson2LayerVisible ? 'visible' : 'none' }}
+					geojson={sample_geojson_2}
+					layerId="geojson2"
+				/>
+				<MlLayerSwitcher
+					baseSourceConfig={{
+						active: args.baseSourcesActive,
+						layers: args.layers,
+					}}
+					detailLayerConfig={args.detailLayerConfig}
+				/>
+			</Sidebar>
 		</>
 	);
 };
@@ -60,11 +93,11 @@ const Template = (args) => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {
-	url: "https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme",
-	layer: "nw_uraufnahme_rw",
+	url: 'https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme',
+	layer: 'nw_uraufnahme_rw',
 	layerVisible: true,
-	url2: "https://www.wms.nrw.de/geobasis/wms_nw_dop",
-	layer2: "WMS_NW_DOP",
+	url2: 'https://www.wms.nrw.de/geobasis/wms_nw_dop',
+	layer2: 'WMS_NW_DOP',
 	layer2Visible: false,
 	geojsonLayerVisible: true,
 	geojson2LayerVisible: true,
@@ -75,27 +108,27 @@ ExampleConfig.args = {
 	baseSourcesActive: true,
 	layers: [
 		{
-			label: "Historic",
-			layerId: "historic",
-			src: "assets/historic.png",
+			label: 'Historic',
+			layerId: 'historic',
+			src: 'assets/historic.png',
 		},
 		{
-			label: "Straßenkarte",
-			layerId: "styleBase",
-			src: "assets/osm.png",
+			label: 'Straßenkarte',
+			layerId: 'styleBase',
+			src: 'assets/osm.png',
 		},
 		{
-			label: "DOP",
-			layerId: "WMS_NW_DOP",
-			src: "assets/dop.png",
+			label: 'DOP',
+			layerId: 'WMS_NW_DOP',
+			src: 'assets/dop.png',
 		},
 	],
 	detailLayerConfig: {
 		layers: [
 			{
-				label: "GeoJson 1",
-				layerId: "geojson1",
-				src: "assets/historic.png",
+				label: 'GeoJson 1',
+				layerId: 'geojson1',
+				src: 'assets/historic.png',
 				active: true,
 			},
 		],
