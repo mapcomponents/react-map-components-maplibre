@@ -12,6 +12,9 @@ export interface TopToolbarProps {
 	children?: React.ReactNode;
 	unmovableButtons?: React.ReactNode;
 	buttons?: React.ReactNode;
+	darkLogo?: React.ReactNode;
+	ligthLogo?: React.ReactNode;
+	mobileLogo?: React.ReactNode;
 }
 
 function TopToolbar(props: TopToolbarProps) {
@@ -27,18 +30,22 @@ function TopToolbar(props: TopToolbarProps) {
 		setAnchorElNav(null);
 	};
 
-	function WhichLogo() {
+	function WhichLogo(): any {
 		if (theme.palette.mode === 'dark') {
-			return (
+			return props.darkLogo ? (
+				props.darkLogo
+			) : (
 				<img
-					src="assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg"
+					src={'assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg'}
 					style={{ width: '100%', maxWidth: '250px' }}
 				/>
 			);
 		} else {
-			return (
+			return props.ligthLogo ? (
+				props.ligthLogo
+			) : (
 				<img
-					src="assets/WG-MapComponents-Logo_rgb.svg"
+					src={'assets/WG-MapComponents-Logo_rgb.svg'}
 					style={{ width: '100%', maxWidth: '250px' }}
 				/>
 			);
@@ -74,7 +81,11 @@ function TopToolbar(props: TopToolbarProps) {
 						mr: { sm: '0px' },
 					}}
 				>
-					<img src="assets/mapcomponents_logo.png" width="50px" height="50px" />
+					{props.mobileLogo ? (
+						props.mobileLogo
+					) : (
+						<img src={'assets/mapcomponents_logo.png'} width="50px" height="50px" />
+					)}
 				</Box>
 				<Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>{props.unmovableButtons}</Box>
 				{props.buttons ? (
