@@ -135,56 +135,52 @@ const MlLayerSwitcher = (props) => {
 
 	return (
 		<>
-			<Card sx={{ zIndex: 101, position: "absolute", minWidth: "200px" }}>
-				<CardContent>
-					{showBaseSources && (
-						<Box sx={{ minHeight: "150px" }}>
-							<Typography variant="h6">{t(props.baseSourceConfig.label || "Map type")}</Typography>
-							<Divider />
-							<Box sx={{ display: "flex", paddingTop: "1rem" }}>
-								{props.baseSourceConfig.layers.map(({ src, label, layerId }) => {
-									return (
-										<LayerBox
-											mapId={props.mapId}
-											key={layerId}
-											activeLayers={activeLayers}
-											label={t(label)}
-											layerId={layerId}
-											thumbnail={src}
-											handleLayerBoxClick={() => {
-												handleLayerBoxClick(layerId);
-											}}
-										/>
-									);
-								})}
-							</Box>
-						</Box>
-					)}
-					{showDetailLayer && (
-						<Box sx={{ minHeight: "150px" }}>
-							<Typography variant="h6">{t("Map details")}</Typography>
-							<Divider />
-							<Box sx={{ display: "flex", paddingTop: "1rem" }}>
-								{props.detailLayerConfig.layers.map(({ src, label, layerId }) => {
-									return (
-										<LayerBox
-											mapId={props.mapId}
-											activeLayers={activeDetailLayers}
-											label={t(label)}
-											layerId={layerId}
-											key={layerId}
-											thumbnail={src}
-											handleLayerBoxClick={() => {
-												handleDetailLayerBoxClick(layerId);
-											}}
-										/>
-									);
-								})}
-							</Box>
-						</Box>
-					)}
-				</CardContent>{" "}
-			</Card>
+			{showBaseSources && (
+				<Box sx={{ minHeight: '150px' }}>
+					<Typography variant="h6">{t(props.baseSourceConfig.label || 'Map type')}</Typography>
+					<Divider />
+					<Box sx={{ display: 'flex', paddingTop: '1rem' }}>
+						{props.baseSourceConfig.layers.map(({ src, label, layerId }) => {
+							return (
+								<LayerBox
+									mapId={props.mapId}
+									key={layerId}
+									activeLayers={activeLayers}
+									label={t(label)}
+									layerId={layerId}
+									thumbnail={src}
+									handleLayerBoxClick={() => {
+										handleLayerBoxClick(layerId);
+									}}
+								/>
+							);
+						})}
+					</Box>
+				</Box>
+			)}
+			{showDetailLayer && (
+				<Box sx={{ minHeight: '150px' }}>
+					<Typography variant="h6">{t('Map details')}</Typography>
+					<Divider />
+					<Box sx={{ display: 'flex', paddingTop: '1rem' }}>
+						{props.detailLayerConfig.layers.map(({ src, label, layerId }) => {
+							return (
+								<LayerBox
+									mapId={props.mapId}
+									activeLayers={activeDetailLayers}
+									label={t(label)}
+									layerId={layerId}
+									key={layerId}
+									thumbnail={src}
+									handleLayerBoxClick={() => {
+										handleDetailLayerBoxClick(layerId);
+									}}
+								/>
+							);
+						})}
+					</Box>
+				</Box>
+			)}
 		</>
 	);
 };
