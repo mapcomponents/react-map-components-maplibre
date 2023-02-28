@@ -20,16 +20,9 @@ const sidebarSx = {
 	width: {
 		xs: '80%',
 		sm: '60%',
-	},
-	minWidth: {
 		md: '350px',
 		lg: '350px',
 	},
-	maxWidth: {
-		md: '550px',
-		lg: '550px',
-	},
-
 	boxSizing: 'border-box',
 };
 
