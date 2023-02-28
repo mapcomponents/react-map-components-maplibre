@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
-import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
+import { Select, Typography, Slider, Stack, MenuItem, FormControl, Button } from '@mui/material';
 import { ColorPicker } from 'mui-color';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import TopToolbar from '../../../ui_components/TopToolbar';
@@ -96,9 +96,13 @@ const PolygonStyler = (props) => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-						<Typography textAlign="center">GeoJson Layer Polygon</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJson Layer Polygon
+					</Button>
 				}
 			/>
 			<Sidebar
