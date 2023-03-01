@@ -142,10 +142,12 @@ const Template = () => {
 				</MenuItem>
 				<MenuItem
 					onClick={() => {
-						CameraFollowPath.reset();
 						setState((current) => {
 							return { ...current, pause: true, pitch: 60, zoom: 18, speed: 1 };
 						});
+						setTimeout(() => {
+							CameraFollowPath.reset();
+						}, 50);
 					}}
 				>
 					<Typography>Reset</Typography>
