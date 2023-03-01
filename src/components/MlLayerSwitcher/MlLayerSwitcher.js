@@ -3,7 +3,7 @@ import "./MlLayerSwitcher.css";
 import React, { useEffect, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Typography, Box } from '@mui/material';
 //Internal
 import MapContext from "../../contexts/MapContext";
 import LayerBox from "./components/LayerBox";

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MlWmsLoader from './MlWmsLoader';
-import { Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';

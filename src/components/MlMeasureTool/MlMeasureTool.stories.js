@@ -1,12 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from 'react';
 
-import MlMeasureTool from "./MlMeasureTool";
+import MlMeasureTool from './MlMeasureTool';
 
-import mapContextDecorator from "../../decorators/MapContextDecorator";
-import StraightenOutlinedIcon from "@mui/icons-material/StraightenOutlined";
-import SquareFootOutlinedIcon from "@mui/icons-material/SquareFootOutlined";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import mapContextDecorator from '../../decorators/MapContextDecorator';
+import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
+import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import { Button, MenuItem, Select } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -30,7 +30,7 @@ const sidebarSx = {
 	boxSizing: 'border-box',
 };
 
-const Template = (args) => {
+const Template = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [unit, setUnit] = useState('kilometers');
 	const handleChange = (event) => {
@@ -86,7 +86,7 @@ const Template = (args) => {
 	);
 };
 
-const LineTemplate = (args) => {
+const LineTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [unit, setUnit] = useState('kilometers');
 	const handleChange = (event) => {
