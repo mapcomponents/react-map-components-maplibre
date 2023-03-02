@@ -1,10 +1,11 @@
-import React from "react";
-import useMap from "../../hooks/useMap";
-
-import createPdf from "./lib/createPdf";
-
-import PrinterIcon from "@mui/icons-material/Print";
-import Button from "@mui/material/Button";
+import React from 'react';
+import useMap from '../../hooks/useMap';
+import PrinterIcon from '@mui/icons-material/Print';
+import Button from '@mui/material/Button';
+import { CircularProgress } from '@mui/material';
+import useExportMap from '../../hooks/useExportMap';
+import { BBox } from '@turf/turf';
+import { createExportOptions } from 'src/hooks/useExportMap/lib';
 
 export interface MlCreatePdfButtonProps {
 	/**
@@ -12,10 +13,9 @@ export interface MlCreatePdfButtonProps {
 	 */
 	mapId?: string;
 	/**
-	 * Id of an existing layer in the mapLibre instance to help specify the layer order
-	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+	 * Option overrides for the createExport function
 	 */
-	insertBeforeLayer?: string;
+	exportOptions?: createExportOptions
 }
 
 /**
@@ -24,8 +24,9 @@ export interface MlCreatePdfButtonProps {
 const MlCreatePdfButton = (props: MlCreatePdfButtonProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
-		waitForLayer: props.insertBeforeLayer,
 	});
+	const exportMap = useExportMap({ mapId: props.mapId });
+	const [loading, setLoading] = React.useState(false);
 
 	return (
 		<>
@@ -33,12 +34,48 @@ const MlCreatePdfButton = (props: MlCreatePdfButtonProps) => {
 				color="primary"
 				variant="contained"
 				onClick={() => {
-					if (mapHook.map) {
-						createPdf(mapHook.map, null, () => {});
+					if (mapHook.map && exportMap?.createExport) {
+						setLoading(true);
+						const bounds = mapHook.map.getBounds();
+						const bbox: BBox = [
+							bounds.getWest(),
+							bounds.getSouth(),
+							bounds.getEast(),
+							bounds.getNorth(),
+						];
+						exportMap
+							.createExport({
+								width: 595 * 1.4,
+								height: 842 * 1.4,
+								bbox: bbox,
+								bboxUnrotated: bbox,
+								bearing: mapHook.map.getBearing(),
+								format: 'a4',
+								orientation: 'portrait',
+								...props.exportOptions
+							})
+							.then((res) => res.createPdf())
+							.then((res) => {
+								setLoading(false);
+								return res.downloadPdf();
+							})
+							.catch((error) => {
+								console.log(error);
+								setLoading(false);
+							});
 					}
 				}}
 			>
-				<PrinterIcon />
+				{loading ? (
+					<CircularProgress
+						size={24}
+						sx={{
+							color: 'text.contrast',
+						}}
+					/>
+				) : (
+					<PrinterIcon />
+				)}
 			</Button>
 		</>
 	);
