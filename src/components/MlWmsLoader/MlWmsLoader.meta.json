@@ -1,14 +1,14 @@
 {
-  "name": "MlWmsLoader",
-  "title": "WMS loader",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "WMS Feature Info",
-      "description": ""
-    }
-  },
-  "tags": [],
-  "category": "",
-  "type": "component"
+	"name": "MlWmsLoader",
+	"title": "WMS loader",
+	"description": "Presentation of WMS services with the feature of an information query.",
+	"i18n": {
+		"de": {
+			"title": "WMS Feature Info",
+			"description": "Darstellung von WMS Diensten mit Feature Info Abfrage"
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
 }
