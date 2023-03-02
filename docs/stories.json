@@ -85,6 +85,20 @@
         "__isArgsStory": false
       }
     },
+    "mapcomponents-mlcreatepngbutton--example-config": {
+      "id": "mapcomponents-mlcreatepngbutton--example-config",
+      "name": "Example Config",
+      "title": "MapComponents/MlCreatePngButton",
+      "importPath": 71770,
+      "kind": "MapComponents/MlCreatePngButton",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 71770,
+        "framework": "react",
+        "__id": "mapcomponents-mlcreatepngbutton--example-config",
+        "__isArgsStory": false
+      }
+    },
     "mapcomponents-mlfeatureeditor--edit-polygon": {
       "id": "mapcomponents-mlfeatureeditor--edit-polygon",
       "name": "Edit Polygon",
