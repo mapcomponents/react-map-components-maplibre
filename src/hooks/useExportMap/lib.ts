@@ -195,7 +195,7 @@ interface downloadPngOptions extends createPngOptions {
 }
 
 function downloadPng(options: downloadPngOptions) {
-	var _a = document.createElement('a');
+	const _a = document.createElement('a');
 	_a.download = options?.name ? options.name + '.png' : 'map.png';
 	_a.href = options.png;
 	document.body.appendChild(_a);
