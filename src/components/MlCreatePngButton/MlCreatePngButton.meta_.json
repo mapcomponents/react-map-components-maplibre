@@ -1,0 +1,14 @@
+{
+  "name": "MlCreatePngButton",
+  "title": "Export PNG",
+  "description": "Creates a PNG file with the current map view.",
+  "i18n": {
+    "de": {
+      "title": "PNG Export",
+      "description": "Erzeugt eine PNG Datei aus der aktuellen Kartenansicht."
+    }
+  },
+  "tags": ["Map add-on"],
+  "category": "add-ons",
+  "type": "component"
+}

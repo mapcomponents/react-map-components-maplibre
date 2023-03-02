@@ -1,13 +1,13 @@
 import React from 'react';
 import useMap from '../../hooks/useMap';
-import PrinterIcon from '@mui/icons-material/Print';
+import ImageIcon from '@mui/icons-material/Image';
 import Button from '@mui/material/Button';
 import { CircularProgress } from '@mui/material';
 import useExportMap from '../../hooks/useExportMap';
 import { BBox } from '@turf/turf';
 import { createExportOptions } from 'src/hooks/useExportMap/lib';
 
-export interface MlCreatePdfButtonProps {
+export interface MlCreatePngButtonProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -19,9 +19,9 @@ export interface MlCreatePdfButtonProps {
 }
 
 /**
- * Renders a button that will create a PDF version of the current map view (dimensions adjusted to fit Din A4 Paper).
+ * Renders a button that will create a Png file of the current map view (dimensions adjusted to fit DIN A4 paper).
  */
-const MlCreatePdfButton = (props: MlCreatePdfButtonProps) => {
+const MlCreatePngButton = (props: MlCreatePngButtonProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 	});
@@ -54,10 +54,10 @@ const MlCreatePdfButton = (props: MlCreatePdfButtonProps) => {
 								orientation: 'portrait',
 								...props.exportOptions
 							})
-							.then((res) => res.createPdf())
+							.then((res) => res.createPng())
 							.then((res) => {
 								setLoading(false);
-								return res.downloadPdf();
+								return res.downloadPng();
 							})
 							.catch((error) => {
 								console.log(error);
@@ -74,15 +74,15 @@ const MlCreatePdfButton = (props: MlCreatePdfButtonProps) => {
 						}}
 					/>
 				) : (
-					<PrinterIcon />
+					<ImageIcon />
 				)}
 			</Button>
 		</>
 	);
 };
 
-MlCreatePdfButton.defaultProps = {
+MlCreatePngButton.defaultProps = {
 	mapId: undefined,
 };
 
-export default MlCreatePdfButton;
+export default MlCreatePngButton;
