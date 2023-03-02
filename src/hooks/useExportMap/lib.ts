@@ -23,6 +23,9 @@ const createExport = (options: createExportOptions) => {
 	// Create map container
 	const hiddenContainer = document.createElement('div');
 	hiddenContainer.className = 'hidden-map';
+	hiddenContainer.style.width = '0px';
+	hiddenContainer.style.height = '0px';
+	hiddenContainer.style.overflow = 'hidden';
 	document.body.appendChild(hiddenContainer);
 	const container = document.createElement('div');
 	container.style.width = width + 'px';
@@ -61,7 +64,7 @@ const createExport = (options: createExportOptions) => {
 	const bboxCamera = renderMap._cameraForBoxAndBearing(
 		[options.bboxUnrotated[0], options.bboxUnrotated[1]],
 		[options.bboxUnrotated[2], options.bboxUnrotated[3]],
-		options.bearing+options.map.map.getBearing()
+		options.bearing + options.map.map.getBearing()
 	);
 
 	renderMap._fitInternal(bboxCamera);
@@ -75,6 +78,8 @@ const createExport = (options: createExportOptions) => {
 				hiddenContainer,
 				createPdf: (_options?: createJsPdfOptions) =>
 					createJsPdf({ ...options, renderMap, hiddenContainer, ..._options }),
+				createPng: (_options?: createPngOptions) =>
+					createPng({ ...options, renderMap, hiddenContainer, ..._options }),
 			};
 
 			resolve(params);
@@ -84,6 +89,7 @@ const createExport = (options: createExportOptions) => {
 
 interface createExportResolverParams extends createExportOptions {
 	createPdf: (_options?: createJsPdfOptions) => Promise<createPdfResolverParams>;
+	createPng: (_options?: createPngOptions) => Promise<createPngResolverParams>;
 	renderMap: Map;
 	hiddenContainer: HTMLDivElement;
 }
@@ -135,13 +141,10 @@ function createJsPdf(options: createJsPdfOptions) {
 		resolve(params);
 	});
 }
-
 interface createPdfResolverParams extends createJsPdfOptions {
 	pdf: jsPDF;
 	downloadPdf: (_options?: downloadPdfOptions) => Promise<downloadPdfOptions>;
 }
-
-export type { createPdfResolverParams };
 
 interface downloadPdfOptions extends createJsPdfOptions {
 	pdf: jsPDF;
@@ -151,6 +154,55 @@ function downloadPdf(options: downloadPdfOptions) {
 	options.pdf.save('Map.pdf');
 
 	return new Promise<downloadPdfOptions>(function (resolve) {
+		resolve({ ...options });
+	});
+}
+
+export type { createPdfResolverParams };
+
+function createPng(options: createPngOptions) {
+	return new Promise<createPngResolverParams>((resolve) => {
+		const png = options.renderMap.getCanvas().toDataURL('image/png');
+		const params: createPngResolverParams = {
+			...options,
+			png,
+			downloadPng: (_options?: downloadPngOptions) => downloadPng({ ...params, ..._options }),
+		};
+
+		resolve(params);
+	});
+}
+
+interface createPngOptions extends createExportOptions {
+	renderMap: Map;
+	hiddenContainer: HTMLDivElement;
+}
+
+export type { createPngOptions };
+
+interface createPngResolverParams extends createPngOptions {
+	png: string;
+	downloadPng: (_options?: downloadPngOptions) => Promise<downloadPngOptions>;
+}
+
+export type { createPngResolverParams };
+
+interface downloadPngOptions extends createPngOptions {
+	// png image as data url
+	png: string;
+	// filename of the downloaded png
+	name?: string;
+}
+
+function downloadPng(options: downloadPngOptions) {
+	var _a = document.createElement('a');
+	_a.download = options?.name ? options.name + '.png' : 'map.png';
+	_a.href = options.png;
+	document.body.appendChild(_a);
+	_a.click();
+	document.body.removeChild(_a);
+
+	return new Promise<downloadPngOptions>(function (resolve) {
 		resolve({ ...options });
 	});
 }
