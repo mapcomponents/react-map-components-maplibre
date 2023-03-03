@@ -1,1 +1,0 @@
-Verschiebbare Darstellung verschiedener Karten
