@@ -5,11 +5,11 @@
       "id": "core-maplibremap--example-config",
       "name": "Example Config",
       "title": "Core/MapLibreMap",
-      "importPath": 2049,
+      "importPath": 57291,
       "kind": "Core/MapLibreMap",
       "story": "Example Config",
       "parameters": {
-        "fileName": 2049,
+        "fileName": 57291,
         "framework": "react",
         "__id": "core-maplibremap--example-config",
         "__isArgsStory": true
@@ -19,11 +19,11 @@
       "id": "core-maplibremap--style-change-config",
       "name": "Style Change Config",
       "title": "Core/MapLibreMap",
-      "importPath": 2049,
+      "importPath": 57291,
       "kind": "Core/MapLibreMap",
       "story": "Style Change Config",
       "parameters": {
-        "fileName": 2049,
+        "fileName": 57291,
         "framework": "react",
         "__id": "core-maplibremap--style-change-config",
         "__isArgsStory": true
@@ -390,7 +390,7 @@
         "fileName": 4407,
         "framework": "react",
         "__id": "mapcomponents-mlmeasuretool--measure-line",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlmeasuretool--measure-polygon": {
@@ -404,7 +404,7 @@
         "fileName": 4407,
         "framework": "react",
         "__id": "mapcomponents-mlmeasuretool--measure-polygon",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlnavigationcompass--standard": {
@@ -677,11 +677,11 @@
       "id": "mapcomponents-mlwmslayer--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlWmsLayer",
-      "importPath": 73892,
+      "importPath": 81938,
       "kind": "MapComponents/MlWmsLayer",
       "story": "Example Config",
       "parameters": {
-        "fileName": 73892,
+        "fileName": 81938,
         "framework": "react",
         "__id": "mapcomponents-mlwmslayer--example-config",
         "__isArgsStory": true
