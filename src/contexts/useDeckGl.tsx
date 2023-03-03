@@ -7,7 +7,7 @@ function useDeckGl() {
 	const layerArray = deckGlContext.deckGlLayerArray;
 
 	function addLayer(layer: Layer) {
-		const newDeckGLLayerArray = layerArray;
+		const newDeckGLLayerArray = [...layerArray];
 		newDeckGLLayerArray.push(layer);
 		deckGlContext.setDeckGlLayerArray(newDeckGLLayerArray);
 	}

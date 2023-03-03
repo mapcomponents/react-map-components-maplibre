@@ -121,8 +121,6 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 			return;
 		initializedRef.current = true;
 
-		mapHook.map.map.setCenter([7.132122000552613, 50.716405378037706]);
-
 		const hexagonLayer = new HexagonLayer({
 			...deckGlLayerProps,
 		} as unknown as HexagonLayerProps);
