@@ -76,3 +76,5 @@ export { default as LayerListFolder } from './ui_components/LayerList/LayerListF
 export { default as LayerPropertyForm } from './ui_components/LayerList/util/LayerPropertyForm';
 export { default as LayerListItemVectorLayer } from './ui_components/LayerList/util/LayerListItemVectorLayer';
 export { default as ColorPicker } from './ui_components/LayerList/util/input/ColorPicker';
+export { default as TopToolbar } from './ui_components/TopToolbar';
+export { default as Sidebar } from './ui_components/Sidebar';

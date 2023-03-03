@@ -9,6 +9,7 @@ import {
 	MenuItem,
 	Checkbox,
 	ListItemText,
+	Button,
 } from '@mui/material';
 import { ColorPicker } from 'mui-color';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
@@ -132,9 +133,13 @@ const LineStyler = (props) => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-						<Typography textAlign="center">GeoJson Layer</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJson Layer
+					</Button>
 				}
 			/>
 			<Sidebar

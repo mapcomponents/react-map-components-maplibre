@@ -14,7 +14,7 @@ import style from './assets/style.json';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
 import { Feature } from '@turf/turf';
-import { MenuItem, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 
 const storyoptions = {
@@ -49,11 +49,13 @@ const Template = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem>
-						<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
-							GeoJSON Layer
-						</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJSON Layer
+					</Button>
 				}
 			/>
 			<Sidebar
@@ -98,11 +100,13 @@ const FolderTemplate = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem>
-						<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
-							GeoJSON Layer
-						</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJSON Layer
+					</Button>
 				}
 			/>
 			<Sidebar
@@ -160,11 +164,13 @@ const VectortileTemplate = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem>
-						<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
-							GeoJSON Layer
-						</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJSON Layer
+					</Button>
 				}
 			/>
 			<Sidebar

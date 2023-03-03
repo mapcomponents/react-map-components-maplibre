@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MlWmsLoader from './MlWmsLoader';
-import { Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -57,17 +57,27 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 			<TopToolbar
 				buttons={
 					<>
-						<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-							<Typography textAlign="center">WMS Loader</Typography>
-						</MenuItem>
-						<MenuItem
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							WMS Loader
+						</Button>
+						<br />
+						<br />
+						<Button
+							variant={demoMode ? 'contained' : 'outlined'}
 							onClick={() => {
 								setDemoMode(!demoMode);
 								setOpenSidebar(true);
 							}}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 						>
-							<Typography textAlign="center">Demo WMS</Typography>
-						</MenuItem>
+							Demo WMS
+						</Button>
+						<br />
+						<br />
 						<Button variant="contained" onClick={openGuide} sx={{ display: 'none' }}>
 							Guide me through
 						</Button>

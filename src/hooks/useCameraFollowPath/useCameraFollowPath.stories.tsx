@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useCameraFollowPath from './useCameraFollowPath';
 import TopToolbar from '../../ui_components/TopToolbar';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { MenuItem, Slider, Typography } from '@mui/material';
+import { Button, MenuItem, Slider, Typography } from '@mui/material';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from '@turf/turf';
 import Sidebar from '../../ui_components/Sidebar';
@@ -92,9 +92,13 @@ const Template = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-						<Typography textAlign="center">Camera Settings</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Camera Settings
+					</Button>
 				}
 			/>
 			<Sidebar
@@ -138,10 +142,12 @@ const Template = () => {
 				</MenuItem>
 				<MenuItem
 					onClick={() => {
-						CameraFollowPath.reset();
 						setState((current) => {
 							return { ...current, pause: true, pitch: 60, zoom: 18, speed: 1 };
 						});
+						setTimeout(() => {
+							CameraFollowPath.reset();
+						}, 50);
 					}}
 				>
 					<Typography>Reset</Typography>

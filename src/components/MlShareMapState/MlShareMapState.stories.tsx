@@ -14,7 +14,7 @@ import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 import sample_geojson_2 from '../MlGeoJsonLayer/assets/sample_2.json';
 import List from '@mui/material/List';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import { MenuItem, ToggleButton, Typography } from '@mui/material';
+import { Button, ToggleButton } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -59,9 +59,13 @@ const Template = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-						<Typography textAlign="center">Share Map State</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Share Map State
+					</Button>
 				}
 			/>
 			<MlShareMapState active={watchState} />
