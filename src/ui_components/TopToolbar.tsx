@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,10 +12,12 @@ export interface TopToolbarProps {
 	children?: React.ReactNode;
 	unmovableButtons?: React.ReactNode;
 	buttons?: React.ReactNode;
-	darkLogo?: React.ReactNode;
-	ligthLogo?: React.ReactNode;
-	mobileLogo?: React.ReactNode;
+	logo?: React.ReactNode;
 }
+
+const logoUrl = 'assets/WG-MapComponents-Logo_rgb.svg';
+const logoUrl_dark = 'assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg';
+const logoUrl_mobile = 'assets/mapcomponents_logo.png';
 
 function TopToolbar(props: TopToolbarProps) {
 	const theme = useTheme();
@@ -30,28 +32,6 @@ function TopToolbar(props: TopToolbarProps) {
 		setAnchorElNav(null);
 	};
 
-	function WhichLogo(): any {
-		if (theme.palette.mode === 'dark') {
-			return props.darkLogo ? (
-				props.darkLogo
-			) : (
-				<img
-					src={'assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg'}
-					style={{ width: '100%', maxWidth: '250px' }}
-				/>
-			);
-		} else {
-			return props.ligthLogo ? (
-				props.ligthLogo
-			) : (
-				<img
-					src={'assets/WG-MapComponents-Logo_rgb.svg'}
-					style={{ width: '100%', maxWidth: '250px' }}
-				/>
-			);
-		}
-	}
-
 	return (
 		<AppBar
 			sx={{
@@ -62,31 +42,32 @@ function TopToolbar(props: TopToolbarProps) {
 			position="static"
 		>
 			<Toolbar disableGutters>
-				<Box
-					sx={{
-						marginLeft: '25px',
-						display: { xs: 'none', md: 'flex' },
-						flexGrow: { md: '30' },
-					}}
-				>
-					<WhichLogo />
-				</Box>
-				<Box
-					component="a"
-					href="/"
-					sx={{
-						marginLeft: '25px',
-						display: { xs: 'flex', sm: 'flex', md: 'none' },
-						flexGrow: { xs: '500' },
-						mr: { sm: '0px' },
-					}}
-				>
-					{props.mobileLogo ? (
-						props.mobileLogo
-					) : (
-						<img src={'assets/mapcomponents_logo.png'} width="50px" height="50px" />
-					)}
-				</Box>
+				{props.logo || (
+					<>
+						<Box
+							sx={{
+								marginLeft: '25px',
+								display: { xs: 'none', md: 'flex' },
+								flexGrow: { md: '30' },
+							}}
+						>
+							<img
+								src={theme.palette.mode === 'dark' ? logoUrl_dark : logoUrl}
+								style={{ width: '100%', maxWidth: '250px' }}
+							/>
+						</Box>
+						<Box
+							sx={{
+								marginLeft: '25px',
+								display: { xs: 'flex', sm: 'flex', md: 'none' },
+								flexGrow: { xs: '500' },
+								mr: { sm: '0px' },
+							}}
+						>
+							<img src={logoUrl_mobile} width="50px" height="50px" />
+						</Box>
+					</>
+				)}
 				<Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>{props.unmovableButtons}</Box>
 				{props.buttons ? (
 					<Box sx={{ flexGrow: 22, display: { xs: 'flex', sm: 'none' } }}>
