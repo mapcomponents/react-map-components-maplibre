@@ -29,8 +29,6 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	const layerLayoutConfsRef = useRef({});
 	const initializedRef = useRef(false);
 
-	console.log('render vt')
-	console.log(props.layers)
 	const createLayers = useCallback(() => {
 		if (!mapHook.map) return;
 
