@@ -1,1 +1,0 @@
-Presents GeoJSON objects.
