@@ -1,7 +1,7 @@
 # Change Log
 
 
-## [v0.1.71] - 2023-03-05
+## [v0.1.71] - 2023-03-04
 
 ### Fixed
 - e3178b5: fix Topbar sidebar defaults
