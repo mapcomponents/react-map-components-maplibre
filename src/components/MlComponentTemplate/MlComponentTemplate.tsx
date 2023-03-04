@@ -16,6 +16,7 @@ const MlComponentTemplate = (props: MlComponentTemplateProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 	});
+	console.log(mapHook.componentId + " remove this log");
 
 	return <></>;
 };
