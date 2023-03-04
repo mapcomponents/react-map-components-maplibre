@@ -18,6 +18,7 @@ import { Button, ToggleButton } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import TopToolbar from '../../ui_components/TopToolbar';
+import { Feature } from '@turf/turf';
 
 const storyoptions = {
 	title: 'MapComponents/MlShareMapState',
@@ -26,17 +27,6 @@ const storyoptions = {
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
-
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
 
 const Template = () => {
 	const geoJsonArray = [sample_geojson_1, sample_geojson_2];
@@ -70,14 +60,14 @@ const Template = () => {
 			/>
 			<MlShareMapState active={watchState} />
 			{geoJsonArray.map((el, i) => (
-				<MlGeoJsonLayer layerId={'GeoJson_' + i} type="line" geojson={el} key={'GeoJson_' + i} />
+				<MlGeoJsonLayer
+					layerId={'GeoJson_' + i}
+					type="line"
+					geojson={el as unknown as Feature}
+					key={'GeoJson_' + i}
+				/>
 			))}
-			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'Share Map State'}
-			>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Share Map State'}>
 				<ToggleButton
 					size="small"
 					selected={watchState}
@@ -99,16 +89,18 @@ const Template = () => {
 									edge="end"
 									aria-label="toggle visibility"
 									onClick={() => {
-										const currentVisibility = mapHook.map
-											?.getLayer?.(el?.id)
-											?.getLayoutProperty('visibility');
-										mapHook.map
-											?.getLayer?.(el?.id)
-											?.setLayoutProperty(
-												'visibility',
-												currentVisibility === 'none' ? 'visible' : 'none'
-											);
-										mapHook.map?.map.fire('zoom');
+										if (el?.id) {
+											const currentVisibility = mapHook.map
+												?.getLayer?.(el?.id)
+												?.getLayoutProperty('visibility');
+											mapHook.map
+												?.getLayer?.(el?.id)
+												?.setLayoutProperty(
+													'visibility',
+													currentVisibility === 'none' ? 'visible' : 'none'
+												);
+											mapHook.map?.map.fire('zoom');
+										}
 									}}
 								>
 									{el?.visible ? <VisibilityIcon /> : <VisibilityOffIcon />}

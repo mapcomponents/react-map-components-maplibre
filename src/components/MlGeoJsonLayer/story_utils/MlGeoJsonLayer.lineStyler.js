@@ -73,17 +73,6 @@ const MenuProps = {
 	},
 };
 
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const LineStyler = (props) => {
 	const [color, setColor] = useState('#2485C1');
 	const [opacity, setOpacity] = useState(0.8);
@@ -143,7 +132,6 @@ const LineStyler = (props) => {
 				}
 			/>
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'GeoJson Layer'}
