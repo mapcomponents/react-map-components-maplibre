@@ -63,17 +63,6 @@ const marks = [
 	},
 ];
 
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const Template = () => {
 	const [state, setState] = useState({ pause: true, zoom: 18, speed: 1, pitch: 60 });
 
@@ -102,7 +91,6 @@ const Template = () => {
 				}
 			/>
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'Camera Settings'}

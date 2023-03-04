@@ -56,6 +56,14 @@ export default function Sidebar({
 							sx: {
 								maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
 								padding: { lg: '20px', md: '20px', sm: '20px', xs: '10px' },
+								top: '64px',
+								width: {
+									xs: '80%',
+									sm: '60%',
+									md: '350px',
+									lg: '350px',
+								},
+								boxSizing: 'border-box',
 								...drawerPaperProps?.sx,
 							},
 						}}
@@ -63,7 +71,6 @@ export default function Sidebar({
 							flexGrow: 1,
 							zIndex: 105,
 							position: 'absolute',
-							top: 0,
 							bottom: 0,
 							display: 'flex',
 							flexDirection: 'column',

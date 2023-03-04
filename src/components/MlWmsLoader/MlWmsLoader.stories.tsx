@@ -21,17 +21,6 @@ export default storyoptions;
 interface MlWmsLoaderStoryProps {
 	url: string;
 }
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const Template = (props: MlWmsLoaderStoryProps) => {
 	const [url, setUrl] = useState(props.url || '');
 	const [demoMode, setDemoMode] = useState(false);
@@ -86,7 +75,6 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 			/>
 
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'WMS Loader'}

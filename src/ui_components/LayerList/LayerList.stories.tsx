@@ -25,17 +25,6 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const Template = () => {
 	const [layerOneState, setLayerOneState] = useState({ geojson: sample_geojson_1 as Feature });
 	const [layerTwoState, setLayerTwoState] = useState({ geojson: sample_geojson_2 as Feature });
@@ -59,8 +48,6 @@ const Template = () => {
 				}
 			/>
 			<Sidebar
-				sx={sidebarSx}
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'GeoJSON Layer'}
@@ -110,8 +97,6 @@ const FolderTemplate = () => {
 				}
 			/>
 			<Sidebar
-				sx={sidebarSx}
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'GeoJSON Layer'}
@@ -174,8 +159,6 @@ const VectortileTemplate = () => {
 				}
 			/>
 			<Sidebar
-				sx={sidebarSx}
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'Vector Tile Layer'}
