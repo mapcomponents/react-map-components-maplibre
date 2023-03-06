@@ -109,6 +109,7 @@ const FolderTemplate = () => {
 							configurable={false}
 							type="layer"
 							name="GeoJSON Layer"
+							key="GeoJSONLayer"
 						/>
 						<LayerListItem
 							layerComponent={<MlGeoJsonLayer geojson={sample_geojson_2 as Feature} />}
@@ -117,6 +118,7 @@ const FolderTemplate = () => {
 							type="layer"
 							name="GeoJSON Layer 2"
 							description="A visualization of a GeoJSON LineString"
+							key="GeoJSONLayer2"
 						/>
 					</LayerListFolder>
 				</LayerList>
