@@ -104,6 +104,8 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 							} else {
 								mapContext.setMap(wrapper);
 							}
+						}else{
+							map.remove();
 						}
 					});
 				},
