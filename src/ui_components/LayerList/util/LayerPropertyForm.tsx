@@ -131,6 +131,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 						padding: '15px',
 						boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
 						borderRadius: '5px',
+						width: '100%',
 					}}
 				>
 					{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
