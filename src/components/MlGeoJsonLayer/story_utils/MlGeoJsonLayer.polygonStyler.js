@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import { Select, Typography, Slider, Stack, MenuItem, FormControl, Button } from '@mui/material';
-import { ColorPicker } from 'mui-color';
+import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import TopToolbar from '../../../ui_components/TopToolbar';
 
@@ -76,8 +76,8 @@ const PolygonStyler = (props) => {
 		};
 	}, [featureToShow, props.geojson]);
 
-	const handleColorChange = (e) => {
-		setColor(`#${e.hex}`);
+	const handleColorChange = (value) => {
+		setColor(value);
 	};
 	const [openSidebar, setOpenSidebar] = useState(true);
 

@@ -11,7 +11,7 @@ import {
 	ListItemText,
 	Button,
 } from '@mui/material';
-import { ColorPicker } from 'mui-color';
+import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import useMap from '../../../hooks/useMap';
 import TopToolbar from '../../../ui_components/TopToolbar';
@@ -108,8 +108,8 @@ const LineStyler = (props) => {
 		console.log(featuresToShow);
 	};
 
-	const handleColorChange = (e) => {
-		setColor(`#${e.hex}`);
+	const handleColorChange = (value) => {
+		setColor(value);
 	};
 	const [openSidebar, setOpenSidebar] = useState(true);
 
