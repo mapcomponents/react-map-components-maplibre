@@ -55,8 +55,7 @@ export default function Sidebar({
 							...drawerPaperProps,
 							sx: {
 								maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
-								padding: { lg: '20px', md: '20px', sm: '20px', xs: '10px' },
-								top: '64px',
+								padding: { sm: '84px 20px 20px 20px', xs: '74px 10px 10px 10px' },
 								width: {
 									xs: '80%',
 									sm: '60%',
