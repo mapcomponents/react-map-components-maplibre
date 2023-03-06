@@ -9,12 +9,14 @@ import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
+import sample_geojson_polygon from './assets/sample_polygon_1.json';
+import sample_geojson_points from './assets/sample_points_1.json';
 import LayerListFolder from './LayerListFolder';
 
 import style from './assets/style.json';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
-import { Feature } from '@turf/turf';
+import { Feature, FeatureCollection } from '@turf/turf';
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 
@@ -25,57 +27,6 @@ const storyoptions = {
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
-
-const Template = () => {
-	const [layerOneState, setLayerOneState] = useState({ geojson: sample_geojson_1 as Feature });
-	const [layerTwoState, setLayerTwoState] = useState({ geojson: sample_geojson_2 as Feature });
-	const [openSidebar, setOpenSidebar] = useState(true);
-
-	useEffect(() => {
-		console.log(layerOneState, layerTwoState);
-	}, [layerOneState, layerTwoState]);
-
-	return (
-		<>
-			<TopToolbar
-				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						GeoJSON Layer
-					</Button>
-				}
-			/>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
-				<LayerList>
-					<LayerListItem
-						layerComponent={<MlGeoJsonLayer {...layerOneState} />}
-						setLayerState={setLayerOneState}
-						visible={true}
-						configurable={false}
-						type="layer"
-						name="GeoJSON Layer"
-					/>
-					<LayerListItem
-						layerComponent={<MlGeoJsonLayer {...layerTwoState} />}
-						setLayerState={setLayerTwoState}
-						visible={true}
-						configurable={true}
-						type="layer"
-						name="configurable GeoJSON Layer"
-						description="A visualization of a GeoJSON LineString"
-					/>
-				</LayerList>
-			</Sidebar>
-		</>
-	);
-};
-export const ExampleConfig = Template.bind({});
-
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
 
 const FolderTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
@@ -227,3 +178,103 @@ export const WmsLayerExample = WmsLayerTemplate.bind({});
 
 WmsLayerExample.parameters = {};
 WmsLayerExample.args = {};
+
+const GeoJsonLayerTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJSON Layer
+					</Button>
+				}
+			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
+				<LayerList>
+					<LayerListItem
+						layerComponent={<MlGeoJsonLayer geojson={sample_geojson_points as FeatureCollection} />}
+						visible={true}
+						configurable={true}
+						type="layer"
+						name="Point GeoJSON Layer"
+					/>
+					<LayerListItem
+						layerComponent={<MlGeoJsonLayer geojson={sample_geojson_1 as Feature} />}
+						visible={true}
+						configurable={true}
+						type="layer"
+						name="Line GeoJSON Layer"
+					/>
+					<LayerListItem
+						layerComponent={<MlGeoJsonLayer geojson={sample_geojson_polygon as FeatureCollection} />}
+						visible={true}
+						configurable={true}
+						type="layer"
+						name="Polygon GeoJSON Layer"
+					/>
+				</LayerList>
+			</Sidebar>
+		</>
+	);
+};
+export const GeoJsonLayerExample= GeoJsonLayerTemplate.bind({});
+
+GeoJsonLayerExample.parameters = {};
+GeoJsonLayerExample.args = {};
+
+const ConfigurableTemplate = () => {
+	const [layerOneState, setLayerOneState] = useState({ geojson: sample_geojson_1 as Feature });
+	const [layerTwoState, setLayerTwoState] = useState({ geojson: sample_geojson_2 as Feature });
+	const [openSidebar, setOpenSidebar] = useState(true);
+
+	useEffect(() => {
+		console.log(layerOneState, layerTwoState);
+	}, [layerOneState, layerTwoState]);
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJSON Layer
+					</Button>
+				}
+			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
+				<LayerList>
+					<LayerListItem
+						layerComponent={<MlGeoJsonLayer {...layerOneState} />}
+						setLayerState={setLayerOneState}
+						visible={true}
+						configurable={true}
+						type="layer"
+						name="GeoJSON Layer"
+					/>
+					<LayerListItem
+						layerComponent={<MlGeoJsonLayer {...layerTwoState} />}
+						setLayerState={setLayerTwoState}
+						visible={true}
+						configurable={true}
+						type="layer"
+						name="configurable GeoJSON Layer"
+						description="A visualization of a GeoJSON LineString"
+					/>
+				</LayerList>
+			</Sidebar>
+		</>
+	);
+};
+export const ConfigurableExample= ConfigurableTemplate.bind({});
+
+ConfigurableExample.parameters = {};
+ConfigurableExample.args = {};

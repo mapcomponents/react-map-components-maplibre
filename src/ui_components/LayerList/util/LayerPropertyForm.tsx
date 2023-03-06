@@ -22,7 +22,12 @@ type Props = {
 };
 
 const mapPropKeyToFormInputType = {
+	'circle-color': 'colorpicker',
+	'circle-radius': 'slider',
+	'circle-stroke-color': 'colorpicker',
+	'circle-stroke-width': 'slider',
 	'fill-color': 'colorpicker',
+	'fill-outline-color': 'colorpicker',
 	'line-color': 'colorpicker',
 	'line-width': 'slider',
 	'line-blur': 'slider',
@@ -30,6 +35,16 @@ const mapPropKeyToFormInputType = {
 const mapPropKeyToFormInputTypeKeys = Object.keys(mapPropKeyToFormInputType);
 
 const inputPropsByPropKey = {
+	'circle-stroke-width': {
+		step: 1,
+		min: 1,
+		max: 20,
+	},
+	'circle-radius': {
+		step: 1,
+		min: 1,
+		max: 100,
+	},
 	'line-blur': {
 		step: 1,
 		min: 1,
@@ -62,6 +77,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 								{...inputPropsByPropKey[key]}
 								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
 								value={paintProps[key]}
+								valueLabelDisplay="auto"
 								onChange={(_ev: Event, value: number) => {
 									if (value) {
 										setPaintProps((current) => ({ ...current, [key]: value }));
