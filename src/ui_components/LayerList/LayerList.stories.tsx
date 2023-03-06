@@ -6,6 +6,7 @@ import LayerListItem from './LayerListItem';
 import mapContextDecorator from '../../decorators/EmptyMapDecorator';
 import Sidebar from '../Sidebar';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 import LayerListFolder from './LayerListFolder';
@@ -47,11 +48,7 @@ const Template = () => {
 					</Button>
 				}
 			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'GeoJSON Layer'}
-			>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
 				<LayerList>
 					<LayerListItem
 						layerComponent={<MlGeoJsonLayer {...layerOneState} />}
@@ -96,11 +93,7 @@ const FolderTemplate = () => {
 					</Button>
 				}
 			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'GeoJSON Layer'}
-			>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
 				<LayerList>
 					<LayerListFolder visible={true} name={'GeoJSON Layers'}>
 						<LayerListItem
@@ -158,11 +151,7 @@ const VectortileTemplate = () => {
 					</Button>
 				}
 			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'Vector Tile Layer'}
-			>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Vector Tile Layer'}>
 				<LayerList>
 					<LayerListItem
 						layerComponent={<MlVectorTileLayer {...layerState} />}
@@ -177,7 +166,64 @@ const VectortileTemplate = () => {
 		</>
 	);
 };
+
 export const VectortileExample = VectortileTemplate.bind({});
 
 VectortileExample.parameters = {};
 VectortileExample.args = {};
+
+const WmsLayerTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+
+	const [layerState, setLayerState] = useState({
+		layerId: 'openmaptiles',
+		sourceOptions: {
+			type: 'vector' as const,
+			tiles: ['https://wms.wheregroup.com/tileserver/tile/world-0-14/{z}/{x}/{y}.pbf'],
+		},
+		layers: [...style.layers] as LayerSpecification[],
+	});
+
+	useEffect(() => {
+		console.log(layerState);
+	}, [layerState]);
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJSON Layer
+					</Button>
+				}
+			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layer List'}>
+				<LayerList>
+					<LayerListItem
+						layerComponent={
+							<MlWmsLayer
+								url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
+								urlParameters={{
+									layers: 'nw_uraufnahme_rw',
+								}}
+							/>
+						}
+						setLayerState={setLayerState}
+						visible={true}
+						configurable={false}
+						type="layer"
+						name="WMS Layer"
+					/>
+				</LayerList>
+			</Sidebar>
+		</>
+	);
+};
+export const WmsLayerExample = WmsLayerTemplate.bind({});
+
+WmsLayerExample.parameters = {};
+WmsLayerExample.args = {};
