@@ -18,18 +18,31 @@ const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
 
 	return (
 		<>
-			<Grid container sx={{flexWrap:'nowrap'}}>
-				<Grid xs={3} item style={{ display: 'flex', alignItems:'stretch' }}>
-					<Button variant="outlined" onClick={() => setShowPicker(true)} sx={{borderColor:(theme) => 'rgb(17,17,17)'}}>
-						<div style={{ width: '26px', height: '26px', backgroundColor: value }} />
+			<Grid container sx={{ flexWrap: 'nowrap' }}>
+				<Grid xs={2} item>
+					<Button
+						variant="outlined"
+						onClick={() => setShowPicker(true)}
+						sx={{
+							minWidth: 'initial',
+							padding: '5px',
+							borderColor: (theme) => theme.palette.text.primary,
+						}}
+					>
+						<div style={{ width: '25px', height: '25px', backgroundColor: value }} />
 					</Button>
 				</Grid>
-				<Grid xs={9} item>
-					<TextField value={value} variant="outlined" disabled={true} />
+				<Grid xs={10} item>
+					<TextField
+						onClick={() => setShowPicker(true)}
+						value={value}
+						variant="outlined"
+						disabled={true}
+					/>
 				</Grid>
 			</Grid>
 			{showPicker && (
-				<div style={{ position: 'relative', marginTop:0 }}>
+				<div style={{ position: 'relative', marginTop: 0 }}>
 					<div style={{ position: 'absolute', zIndex: 1000 }}>
 						<div
 							style={{ position: 'fixed', top: '0px', right: '0px', bottom: '0px', left: '0px' }}
