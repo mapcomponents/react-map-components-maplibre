@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
@@ -80,23 +80,23 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		setPitch(mapHook.map.map.getPitch());
 	}, [mapHook.map, props.mapId]);
 
-	const zoomIn = () => {
+	const zoomIn = useCallback(() => {
 		if (!mapHook.map) return;
 
 		if (mapHook.map.map.transform._zoom + 0.5 <= mapHook.map.map.transform._maxZoom) {
 			mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom + 0.5 });
 		}
-	};
+	}, [mapHook.map]);
 
-	const zoomOut = () => {
+	const zoomOut = useCallback(() => {
 		if (!mapHook.map) return;
 
 		if (mapHook.map.map.transform._zoom - 0.5 >= mapHook.map.map.transform._minZoom) {
 			mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom - 0.5 });
 		}
-	};
+	}, [mapHook.map]);
 
-	const adjustPitch = () => {
+	const adjustPitch = useCallback(() => {
 		if (!mapHook.map) return;
 
 		let targetPitch = 60;
@@ -104,7 +104,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 			targetPitch = 0;
 		}
 		mapHook.map.map.easeTo({ pitch: targetPitch });
-	};
+	}, [mapHook.map]);
 
 	return (
 		<Box

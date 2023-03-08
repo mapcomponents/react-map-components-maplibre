@@ -40,11 +40,10 @@ const MapComponentsProvider = ({ children }: { children: ReactNode }) => {
 			}
 			setMapIds([...mapIds_raw.current]);
 
-			if (mapIds.length === 1 && map) {
+			if (mapIds_raw.current.length === 0 && map) {
 				setMap(undefined);
 			}
 		} else {
-			setMap(undefined);
 			removeMap('anonymous_map');
 		}
 	};
@@ -70,13 +69,13 @@ const MapComponentsProvider = ({ children }: { children: ReactNode }) => {
 				mapIds_raw.current.push(mapId);
 				setMapIds([...mapIds_raw.current]);
 
-				if (!map) {
+				if (!map || map?.cancelled === true) {
 					setMap(mapInstance);
 				}
 			}
 		},
 		removeMap,
-		mapExists: (mapId: string) => {
+		mapExists: (mapId: string | undefined) => {
 			if (mapId && Object.keys(maps.current).indexOf(mapId) === -1) {
 				return false;
 			} else if (!mapId && !map) {

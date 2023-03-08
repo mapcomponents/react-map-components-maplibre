@@ -72,18 +72,28 @@ function LayerListItem({
 
 	const _layerComponent = useMemo(() => {
 		if (layerComponent && type === 'layer') {
-			if (layerComponent?.props?.layers) {
-				return React.cloneElement(layerComponent, {
-					...layerComponent?.props,
-					layers: layerComponent?.props?.layers,
-				});
-			} else {
-				return React.cloneElement(layerComponent, {
-					layout: {
-						visibility: _visible ? 'visible' : 'none',
-					},
-					...(setLayerState ? {} : { paint: paintProps }),
-				});
+			switch (layerComponent.type.displayName) {
+				case 'MlWmsLayer':
+					return React.cloneElement(layerComponent, {
+						...layerComponent?.props,
+						visible: _visible,
+					});
+					break;
+				case 'MlVectorTileLayer':
+					return React.cloneElement(layerComponent, {
+						...layerComponent?.props,
+						layers: layerComponent?.props?.layers,
+					});
+					break;
+				default:
+				case 'MlGeoJsonLayer':
+					return React.cloneElement(layerComponent, {
+						layout: {
+							visibility: _visible ? 'visible' : 'none',
+						},
+						...(setLayerState ? {} : { paint: paintProps }),
+					});
+					break;
 			}
 		}
 		return <></>;
