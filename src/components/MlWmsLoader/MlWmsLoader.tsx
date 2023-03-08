@@ -202,7 +202,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	useEffect(() => {
 		if (!capabilities?.Service) return;
 
-		if (capabilities?.Capability?.Layer?.CRS?.indexOf?.('EPSG:3857') === -1) {
+		if (capabilities?.Capability?.Layer?.CRS?.indexOf?.('EPSG:3857') === -1 && capabilities?.Capability?.Layer?.CRS?.indexOf?.('CRS:84') === -1) {
 			console.log(
 				'MlWmsLoader (' + capabilities.Service.Title + '): No WGS 84/Pseudo-Mercator support'
 			);
