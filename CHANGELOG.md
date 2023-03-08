@@ -1,6 +1,15 @@
 # Change Log
 
 
+## [v0.1.72] - 2023-03-08
+
+### Fixed
+- Fix/maplibremap registration react 18 (#89) …
+- remove mui-color dependency
+### Added
+- add new ColorPicker ui component
+- add MlWmsLayer support to LayerList component
+
 ## [v0.1.71] - 2023-03-04
 
 ### Fixed
