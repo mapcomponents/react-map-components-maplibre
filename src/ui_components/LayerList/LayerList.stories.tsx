@@ -40,11 +40,11 @@ const FolderTemplate = () => {
 						onClick={() => setOpenSidebar(!openSidebar)}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
-						GeoJSON Layer
+						Sidebar
 					</Button>
 				}
 			/>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<LayerList>
 					<LayerListFolder visible={true} name={'GeoJSON Layers'}>
 						<LayerListItem
@@ -100,7 +100,7 @@ const VectortileTemplate = () => {
 						onClick={() => setOpenSidebar(!openSidebar)}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
-						GeoJSON Layer
+						Sidebar
 					</Button>
 				}
 			/>
@@ -150,7 +150,7 @@ const WmsLayerTemplate = () => {
 						onClick={() => setOpenSidebar(!openSidebar)}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
-						GeoJSON Layer
+						Sidebar
 					</Button>
 				}
 			/>
@@ -193,11 +193,11 @@ const GeoJsonLayerTemplate = () => {
 						onClick={() => setOpenSidebar(!openSidebar)}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
-						GeoJSON Layer
+						Sidebar
 					</Button>
 				}
 			/>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<LayerList>
 					<LayerListItem
 						layerComponent={<MlGeoJsonLayer geojson={sample_geojson_points as FeatureCollection} />}
@@ -248,11 +248,11 @@ const ConfigurableTemplate = () => {
 						onClick={() => setOpenSidebar(!openSidebar)}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
-						GeoJSON Layer
+						Sidebar
 					</Button>
 				}
 			/>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJSON Layer'}>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<LayerList>
 					<LayerListItem
 						layerComponent={<MlGeoJsonLayer {...layerOneState} />}
