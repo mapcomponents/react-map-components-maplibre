@@ -883,29 +883,15 @@
         "__isArgsStory": true
       }
     },
-    "uicomponents-layerlist--example-config": {
-      "id": "uicomponents-layerlist--example-config",
-      "name": "Example Config",
-      "title": "UiComponents/LayerList",
-      "importPath": 45760,
-      "kind": "UiComponents/LayerList",
-      "story": "Example Config",
-      "parameters": {
-        "fileName": 45760,
-        "framework": "react",
-        "__id": "uicomponents-layerlist--example-config",
-        "__isArgsStory": false
-      }
-    },
     "uicomponents-layerlist--folder-example": {
       "id": "uicomponents-layerlist--folder-example",
       "name": "Folder Example",
       "title": "UiComponents/LayerList",
-      "importPath": 45760,
+      "importPath": 13098,
       "kind": "UiComponents/LayerList",
       "story": "Folder Example",
       "parameters": {
-        "fileName": 45760,
+        "fileName": 13098,
         "framework": "react",
         "__id": "uicomponents-layerlist--folder-example",
         "__isArgsStory": false
@@ -915,13 +901,55 @@
       "id": "uicomponents-layerlist--vectortile-example",
       "name": "Vectortile Example",
       "title": "UiComponents/LayerList",
-      "importPath": 45760,
+      "importPath": 13098,
       "kind": "UiComponents/LayerList",
       "story": "Vectortile Example",
       "parameters": {
-        "fileName": 45760,
+        "fileName": 13098,
         "framework": "react",
         "__id": "uicomponents-layerlist--vectortile-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--wms-layer-example": {
+      "id": "uicomponents-layerlist--wms-layer-example",
+      "name": "Wms Layer Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 13098,
+      "kind": "UiComponents/LayerList",
+      "story": "Wms Layer Example",
+      "parameters": {
+        "fileName": 13098,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--wms-layer-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--geo-json-layer-example": {
+      "id": "uicomponents-layerlist--geo-json-layer-example",
+      "name": "Geo Json Layer Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 13098,
+      "kind": "UiComponents/LayerList",
+      "story": "Geo Json Layer Example",
+      "parameters": {
+        "fileName": 13098,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--geo-json-layer-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--configurable-example": {
+      "id": "uicomponents-layerlist--configurable-example",
+      "name": "Configurable Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 13098,
+      "kind": "UiComponents/LayerList",
+      "story": "Configurable Example",
+      "parameters": {
+        "fileName": 13098,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--configurable-example",
         "__isArgsStory": false
       }
     }
