@@ -4,7 +4,7 @@ import DeckGlContext from '../../contexts/DeckGlContext';
 import { HexagonLayer, HexagonLayerProps } from '@deck.gl/aggregation-layers/typed';
 import useDeckGl from '../../contexts/useDeckGl';
 
-export interface MlNoiseMapProps {
+export interface MlHexagonMapProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -16,7 +16,7 @@ export interface MlNoiseMapProps {
 	insertBeforeLayer?: string;
 }
 
-const MlNoiseMap = (props: MlNoiseMapProps) => {
+const MlHexagonMap = (props: MlHexagonMapProps) => {
 	const deckGlContext = useContext(DeckGlContext);
 
 	const DATA_URL = 'assets/3D/laerm_points.json';
@@ -135,7 +135,7 @@ const MlNoiseMap = (props: MlNoiseMapProps) => {
 	return <></>;
 };
 
-MlNoiseMap.defaultProps = {
+MlHexagonMap.defaultProps = {
 	mapId: undefined,
 };
-export default MlNoiseMap;
+export default MlHexagonMap;

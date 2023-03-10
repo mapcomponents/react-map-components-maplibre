@@ -1,0 +1,14 @@
+{
+  "name": "MlHexagonMap",
+  "title": "Hexagon Map using DeckGl Layer",
+  "description": "A component demonstrating the use of the useDeckGL Hook to add a DeckGl Hexagon Layer to the MapLibre Map instance",
+  "i18n": {
+    "de": {
+      "title": "Hexagon Map basierend auf DeckGl Layer",
+      "description": "Eine Komponenten, die das Hinzufügen von DeckGL Hexagon Layern zur MapLibre Instanz mittels des useDeckGl Hooks demonstriert"
+    }
+  },
+  "tags": ["Map layer", "deckGL"],
+  "category": "Map layer",
+  "type": "component"
+}

@@ -1,11 +1,11 @@
 import React from 'react';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import MlNoiseMap from './MlNoiseMap';
+import MlHexagonMap from './MlHexagonMap';
 import { DeckGlContextProvider } from '../../contexts/DeckGlContext';
 
 const storyoptions = {
-	title: 'MapComponents/MlNoiseMap',
-	component: MlNoiseMap,
+	title: 'MapComponents/MlHexagonMap',
+	component: MlHexagonMap,
 	argTypes: {},
 	decorators: mapContextDecorator,
 };
@@ -17,13 +17,13 @@ interface TemplateProbs {
 const Template = (props: TemplateProbs) => {
 	return (
 		<DeckGlContextProvider {...props}>
-			<MlNoiseMap {...props} />
+			<MlHexagonMap {...props} />
 		</DeckGlContextProvider>
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {
+export const NoiseMap = Template.bind({});
+NoiseMap.parameters = {};
+NoiseMap.args = {
 	mapId: 'map_1',
 };
