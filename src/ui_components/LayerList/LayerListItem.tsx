@@ -53,14 +53,16 @@ function LayerListItem({
 		visibleRef.current = _visible;
 
 		const state = { ...layerComponent?.props };
-		state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
-			if (el.layout) {
-				el.layout['visibility'] = _visible ? 'visible' : 'none';
-			} else {
-				el.layout = { visibility: _visible ? 'visible' : 'none' };
-			}
-			return el;
-		});
+		if (layerComponent?.props?.layers) {
+			state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
+				if (el.layout) {
+					el.layout['visibility'] = _visible ? 'visible' : 'none';
+				} else {
+					el.layout = { visibility: _visible ? 'visible' : 'none' };
+				}
+				return el;
+			});
+		}
 		setLayerState(state);
 	}, [_visible, setLayerState, layerComponent?.props?.layers]);
 
@@ -72,7 +74,7 @@ function LayerListItem({
 
 	const _layerComponent = useMemo(() => {
 		if (layerComponent && type === 'layer') {
-			switch (layerComponent.type.displayName) {
+			switch (layerComponent.type.name) {
 				case 'MlWmsLayer':
 					return React.cloneElement(layerComponent, {
 						...layerComponent?.props,
@@ -174,6 +176,7 @@ function LayerListItem({
 							setVtProps={setLayerState}
 							id={'' + idx}
 							key={'' + idx}
+							visibleMaster={_visible}
 						/>
 					))}
 				</LayerListFolder>

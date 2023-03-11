@@ -9,9 +9,16 @@ type Props = {
 	configurable?: boolean;
 	vtProps: MlVectorTileLayerProps;
 	setVtProps: ((state: unknown) => void) | undefined;
+	visibleMaster?: boolean;
 };
 
-export default function LayerListItemVectorLayer({ configurable, vtProps, setVtProps, id }: Props) {
+export default function LayerListItemVectorLayer({
+	configurable,
+	vtProps,
+	setVtProps,
+	id,
+	...props
+}: Props) {
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const [visible, setVisible] = useState(true);
 	const [paintProps, setPaintProps] = useState(vtProps.layers[id].paint);
@@ -28,6 +35,10 @@ export default function LayerListItemVectorLayer({ configurable, vtProps, setVtP
 
 		setVtProps({ ...vtProps, layers: _layers });
 	}, [visible, id, setVtProps, vtProps]);
+
+	useEffect(() => {
+		setVisible(props.visibleMaster);
+	}, [props.visibleMaster]);
 
 	useEffect(() => {
 		if (!setVtProps) return;
