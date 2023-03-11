@@ -1,6 +1,11 @@
 # Change Log
 
 
+## [v0.1.73] - 2023-03-11
+
+### Fixed
+- 547db2c: Fix/layerlist visibility settings
+
 ## [v0.1.72] - 2023-03-08
 
 ### Fixed
