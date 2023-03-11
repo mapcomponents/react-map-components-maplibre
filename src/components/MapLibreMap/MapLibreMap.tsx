@@ -99,12 +99,14 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 				onReady: (map: Map, wrapper: MapLibreGlWrapper) => {
 					map.once('load', () => {
 						if (!wrapper?.cancelled) {
+							// add maplibre instance to window for debugging purposes
+							window['_map'] = map;
 							if (props.mapId) {
 								mapContext.registerMap(props.mapId, wrapper);
 							} else {
 								mapContext.setMap(wrapper);
 							}
-						}else{
+						} else {
 							map.remove();
 						}
 					});
