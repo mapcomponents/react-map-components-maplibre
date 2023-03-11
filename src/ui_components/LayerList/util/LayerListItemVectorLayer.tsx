@@ -37,7 +37,7 @@ export default function LayerListItemVectorLayer({
 	}, [visible, id, setVtProps, vtProps]);
 
 	useEffect(() => {
-		setVisible(props.visibleMaster);
+		setVisible(!!props.visibleMaster);
 	}, [props.visibleMaster]);
 
 	useEffect(() => {
