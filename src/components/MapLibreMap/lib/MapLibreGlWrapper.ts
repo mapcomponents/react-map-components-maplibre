@@ -662,7 +662,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map = new Map(props.mapOptions) as MapType;
-			window['_map'] = self.map;
+			
 
 			self.addNativeMaplibreFunctionsAndProps();
 			self.wrapper.refreshViewport();
