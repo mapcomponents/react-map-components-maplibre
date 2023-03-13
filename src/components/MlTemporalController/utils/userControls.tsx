@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Drawer,
 	Typography,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import CreateWidget from './createWidget';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
-import { ClickAwayListener } from '@mui/base';
+
 
 export interface userControlsProps {
 	showOptions: boolean;
@@ -50,6 +50,10 @@ export default function UserControls(props: userControlsProps) {
 			setExpanded(str);
 		}
 	};
+
+	useEffect(()=>{
+		
+	},[])
 
 	function Sublists(): JSX.Element {
 		return (
@@ -100,11 +104,7 @@ export default function UserControls(props: userControlsProps) {
 
 	return (
 		<>
-			<ClickAwayListener
-				mouseEvent="onMouseDown"
-				touchEvent="onTouchStart"
-				onClickAway={() => props.showOptions && props.onClose(false)}
-			>
+			
 				<Drawer
 					anchor="bottom"
 					open={props.showOptions}
@@ -116,14 +116,14 @@ export default function UserControls(props: userControlsProps) {
 							width: mediaIsMobile ? '70%' : '25%',
 							height: 'auto',
 							alignItems: 'center',
-							marginLeft: '4%',
+							marginLeft: '15%',
 							marginBottom: '80px',
 						},
 					}}
 				>
 					<Sublists />
 				</Drawer>
-			</ClickAwayListener>
+			
 		</>
 	);
 }

@@ -9,6 +9,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 
 import { Slider, Drawer, Button, Grid, ToggleButton } from '@mui/material';
 import UserControls from './userControls';
+import { ClickAwayListener } from '@mui/base';
 
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -167,6 +168,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 				{...props}
 			/>
 
+
 			<Drawer
 				anchor="bottom"
 				open={props.open || true}
@@ -186,14 +188,14 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 				<Grid container>
 					{props.showControls ? (
 						<Grid item sm={4}>
-							<ToggleButton
-								value={toggleControls}
-								selected={toggleControls}
-								onChange={() => setToggleControls(!toggleControls)}
+							<Button
+								//value={toggleControls}
+								//selected={toggleControls}
+								onClick={() => setToggleControls(!toggleControls)}
 								color={'primary'}
 							>
 								<TuneIcon />
-							</ToggleButton>
+							</Button>
 						</Grid>
 					) : (
 						<Grid item sm={4} />
@@ -234,6 +236,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 					max={props.maxVal}
 				/>
 			</Drawer>
+	
 		</>
 	);
 }
