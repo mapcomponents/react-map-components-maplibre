@@ -107,7 +107,6 @@ FillConfig.args = {
 	type: 'fill',
 	labelField: 'africa_independency_year',
 	accumulate: true,
-	steps: 1,
 	initialVal: 1904,
 	fitBounds: true,
 	showControls: true,
@@ -118,28 +117,24 @@ export const CircleConfig = CircleTemplate.bind({});
 CircleConfig.parameters = {};
 CircleConfig.args = {
 	geojson: earthq_5plus,
-	mapId: 'map_1',
 	timeField: 'Year',
-	type: 'circle',
 	labelField: 'LocationName',
 	accumulate: false,
-	steps: 1,
 	minVal: 1900,
 	fitBounds: true,
 	showControls: true,
 	attribution: "National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K"
+	
 };
 
 export const LineConfig = LineTemplate.bind({});
 LineConfig.parameters = {};
 LineConfig.args = {
 	geojson: jakobsweg,
-	mapId: 'map_1',
 	timeField: 'stage',
 	type: 'line',
 	labelField: 'name',
 	accumulate: true,	
-	steps: 1,
 	featuresColor: '#1731F1',
 	fitBounds: true,
 	showControls: true,

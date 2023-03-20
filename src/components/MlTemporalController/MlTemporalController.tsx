@@ -71,7 +71,7 @@ export interface MlTemporalControllerProps {
 	 * When true, the features will be accumulated in the map.
 	 * This option ist by default false.
 	 */
-	accumulate: boolean;
+	accumulate?: boolean;
 	/**
 	 * When true, the component will fit the map bounds to the shown features.
 	 * This option ist by default true.
@@ -95,26 +95,26 @@ export interface MlTemporalControllerProps {
 	/**
 	 * Sets the color of the features rendered by this component.
 	 */
-	featuresColor: string;
+	featuresColor?: string;
 	/**
 	 * How many units the timeline runs through at each step.
 	 * By default it is set to 1.
 	 */
-	step: number;
+	step?: number;
 	/**
 	 * A numeric value that sets how many steps before the feature starts to appear.
 	 * By default it is set to 5 steps.
 	 */
-	fadeIn: number;
+	fadeIn?: number;
 	/**
 	 * A numeric value that sets how many steps the feature fades out after it proper time value.
 	 * By default it is set to 5 steps.
 	 */
-	fadeOut: number;
+	fadeOut?: number;
 	/**
 	 * Sets the color of the features rendered by this component.
 	 */
-	labelColor: string;
+	labelColor?: string;
 	/**
 	 * Layout property object, that is passed to the labels layer.
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
@@ -134,12 +134,12 @@ export interface MlTemporalControllerProps {
 	 * A numeric value that sets how many steps before the labels start to appear.
 	 * By default it is set to 5 steps.
 	 */
-	labelFadeIn: number;
+	labelFadeIn?: number;
 	/**
 	 * A numeric value that sets how many steps the labels fade out after their proper time value.
 	 * By default it is set to 5 steps.
 	 */
-	labelFadeOut: number;
+	labelFadeOut?: number;
 	onHover?: MapLayerMouseEvent;
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is clicked.
@@ -187,10 +187,10 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const [fadeIn, setFadeIn] = useState(props.fadeIn);
 	const [fadeOut, setFedeOut] = useState(props.fadeOut);
 
-	const [featuresColor, setFeatureColor] = useState(props.featuresColor || theme.palette.primary.main );
+	const [featuresColor, setFeatureColor] = useState(props.featuresColor || theme.palette.text.primary );
 
 	const [labels, setLabels] = useState(props.label || true);
-	const [labelColor, setlabelColor] = useState(props.labelColor);
+	const [labelColor, setlabelColor] = useState(props.labelColor || theme.palette.secondary.main);
 	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn);
 	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut);
 
@@ -200,7 +200,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	const intervalRef: any = useRef();
 
-	const paintPicker = {
+	const paint = usePaintPicker({
 		type: type,
 		timeField: props.timeField,
 		currentVal: currentVal,
@@ -212,9 +212,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		featuresColor: featuresColor,
 		accumulate: accumulate,
 		userPaint: props.paint,
-	};
-
-	const paint = usePaintPicker(paintPicker);
+	});
 
 	//Set Initial values and clear references
 	useEffect(() => {
@@ -267,9 +265,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 							| FillLayerSpecification['paint']
 							| LineLayerSpecification['paint'])
 					}
-					//options={{source:
-					//			{attribution: attribution}
-					//		}}
+					//options={{source: {attribution: attribution}}}
 				/>
 			)}
 
@@ -327,11 +323,10 @@ MlTemporalController.defaultProps = {
 	step: 1,
 	fadeIn: 5,
 	fadeOut: 5,
-	//featuresColor: '#1976D2',
-	labelColor: '#000',
 	labelFadeIn: 5,
 	labelFadeOut: 5,
 	accumulate: false,
+	fitBounds: true
 };
 
 export default MlTemporalController;
