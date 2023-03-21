@@ -17,6 +17,7 @@ import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
 import useTemporalController from './utils/useTemporalController';
 import { useTheme } from '@mui/material/styles';
 
+
 export interface MlTemporalControllerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
@@ -140,11 +141,14 @@ export interface MlTemporalControllerProps {
 	 * By default it is set to 5 steps.
 	 */
 	labelFadeOut?: number;
-	onHover?: MapLayerMouseEvent;
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is clicked.
 	 */
 	onClick?: MapLayerMouseEvent;
+	/**
+	 * Click event handler that is executed whenever a geometry rendered by this component is hovered.
+	 */
+	onHover?: MapLayerMouseEvent;	
 	/**
 	 * Leave event handler that is executed whenever a geometry rendered by this component is
 	 * left/unhovered.
@@ -153,13 +157,20 @@ export interface MlTemporalControllerProps {
 	/**
 	 * Callback function defined by the user to recive the current value in the parent component.
 	 */
-	onStateChange?: React.Dispatch<React.SetStateAction<number | undefined>>;
+	onStateChange?: React.Dispatch<React.SetStateAction<TemporalControllerValues | undefined>>;
 }
 
 /**
  * Select a GeoJSON object to be displayed in a temporal line.
  *@component
  */
+
+ export interface TemporalControllerValues{
+	current: number;
+	paint: CircleLayerSpecification['paint']
+	| FillLayerSpecification['paint']
+	| LineLayerSpecification['paint'] ;
+}
 
 const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const mapHook = useMap({
@@ -187,10 +198,10 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const [fadeIn, setFadeIn] = useState(props.fadeIn);
 	const [fadeOut, setFedeOut] = useState(props.fadeOut);
 
-	const [featuresColor, setFeatureColor] = useState(props.featuresColor || theme.palette.text.primary );
+	const [featuresColor, setFeatureColor] = useState(props.featuresColor || theme.palette.primary.main );
 
 	const [labels, setLabels] = useState(props.label || true);
-	const [labelColor, setlabelColor] = useState(props.labelColor || theme.palette.secondary.main);
+	const [labelColor, setlabelColor] = useState(props.labelColor || theme.palette.text.primary);
 	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn);
 	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut);
 
@@ -237,7 +248,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	//use callback function from props, if exists
 	useEffect(() => {
 		if (typeof props.onStateChange === 'function') {
-			props.onStateChange(currentVal);
+			props.onStateChange({current: currentVal, paint: paint});
 		}
 	}, [props.onStateChange, currentVal]);
 
@@ -293,7 +304,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				maxVal={maxVal}
 				returnCurrent={setCurrentVal}
 				returnPlaying={setIsPlaying}
-				showControls={props.showControls ? props.showControls : false}
 				open={false}
 				fadeIn={fadeIn}
 				setFadeIn={setFadeIn}
