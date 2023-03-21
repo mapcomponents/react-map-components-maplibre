@@ -13,7 +13,7 @@ export interface useTemporalControllerProps {
 
 function getMinVal(geojson: FeatureCollection | undefined, timeField: string) {
 	if (geojson?.features) {
-		let tempFeatures = [...(geojson.features ? geojson.features : [])];
+		const tempFeatures = [...(geojson.features ? geojson.features : [])];
 		tempFeatures.sort((a, b) => (a.properties?.[timeField] < b.properties?.[timeField] ? 1 : -1));
 		return tempFeatures[tempFeatures.length - 1]?.properties?.[timeField] || 0;
 	}
@@ -22,14 +22,14 @@ function getMinVal(geojson: FeatureCollection | undefined, timeField: string) {
 
 function getMaxVal(geojson: FeatureCollection | undefined, timeField: string) {
 	if (geojson?.features) {
-		let tempFeatures = [...(geojson?.features ? geojson.features : [])];
+		const tempFeatures = [...(geojson?.features ? geojson.features : [])];
 		tempFeatures.sort((a, b) => (a.properties?.[timeField] < b.properties?.[timeField] ? -1 : 1));
 		return tempFeatures[tempFeatures.length - 1]?.properties?.[timeField] || 0;
 	}
 	return 0;
 }
 
-export default function useTemporalController(props: useTemporalControllerProps) {
+export default function useFilterData(props: useTemporalControllerProps) {
 	const mapHook = useMap({
 		mapId: props.mapId,
 	});

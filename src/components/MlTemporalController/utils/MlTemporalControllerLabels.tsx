@@ -4,7 +4,6 @@ import  MlLayer  from '../../MlLayer/MlLayer';
 import {
 	SymbolLayerSpecification,
 	SymbolLayoutProps,
-	//SymbolPaintProps
 } from 'maplibre-gl';
 
 interface MlTemporalControllerLabelsProps {
@@ -13,9 +12,9 @@ interface MlTemporalControllerLabelsProps {
 	fadeIn: number;
 	fadeOut: number;
 	step: number;
-	labelField: String;
-	labelColor: String;
-	timeField: String;
+	labelField: string;
+	labelColor: string;
+	timeField: string;
 	minVal: number;
 	accumulate: boolean;
 	isPlaying: boolean;
@@ -28,8 +27,8 @@ export default function MlTemporalControllerLabels(props: MlTemporalControllerLa
 const fadeInSteps = props.currentVal - props.fadeIn * props.step;
 const fadeOutSteps = props.currentVal + props.fadeIn * props.step;
 
-const noShow: any = { 'text-color': 'rgba(0,0,0,0)' };
-const defaultPaint: any = {
+const noShow: SymbolLayerSpecification["paint"] = { 'text-color': 'rgba(0,0,0,0)' };
+const defaultPaint: SymbolLayerSpecification["paint"] = {
 		'text-color': props.labelColor,
 		'text-opacity': [
 			'interpolate',
@@ -46,7 +45,7 @@ const defaultPaint: any = {
 		]	  
 	};  
 
-	const accumulatePaint: any = {
+	const accumulatePaint: SymbolLayerSpecification["paint"] = {
 		'text-color': props.labelColor,
 		'text-opacity': [
 			'interpolate',
@@ -72,7 +71,7 @@ const defaultPaint: any = {
 	}
 
 	
-	const defaultLayout: any = {
+	const defaultLayout: SymbolLayerSpecification["layout"] = {
 		'text-field': ['get', props.labelField],
 		'text-font': ['Metropolis Regular'],
 	}

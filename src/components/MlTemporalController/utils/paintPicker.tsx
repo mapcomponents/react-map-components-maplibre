@@ -1,17 +1,24 @@
+import {
+	LineLayerSpecification,
+	CircleLayerSpecification,
+	FillLayerSpecification,
 
+} from 'maplibre-gl';
 
 interface paintPickerProps {
 	type: 'fill' | 'line' | 'circle' | undefined,
-	timeField: String,
+	timeField: string,
 	currentVal: number,
 	minVal: number,
 	isPlaying: boolean,
 	fadeIn: number ,
 	fadeOut: number,
 	step: number,
-	featuresColor: String,
+	featuresColor: string,
 	accumulate: boolean,
-	userPaint: any
+	userPaint: CircleLayerSpecification['paint']
+	| FillLayerSpecification['paint']
+	| LineLayerSpecification['paint'];
 }
 
 export default function paintPicker(props: paintPickerProps) {

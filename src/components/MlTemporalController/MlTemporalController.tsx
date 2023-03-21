@@ -14,7 +14,7 @@ import {
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
-import useTemporalController from './utils/useTemporalController';
+import useFilterData from './utils/useFilterData';
 import { useTheme } from '@mui/material/styles';
 
 export interface MlTemporalControllerProps {
@@ -184,7 +184,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const initializedRef = useRef(false);
 	const labelField = props.labelField || props.geojson?.features[0]?.properties?.[0] || '';
 
-	const { filteredData, minVal, maxVal } = useTemporalController({
+	const { filteredData, minVal, maxVal } = useFilterData({
 		geojson: props.geojson,
 		timeField: props.timeField,
 		minVal: props.minVal,
@@ -198,8 +198,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const labelColor = props.labelColor || theme.palette.text.primary;
 	const [isPlaying, setIsPlaying] = useState(false);
 	//const attribution = props.attribution || '';
-
-	const intervalRef: any = useRef();
 
 	const paint = usePaintPicker({
 		type: props.type,
@@ -222,12 +220,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		} else if (props.initialVal) {
 			setCurrentVal(props.initialVal);
 		}
-
-		return () => {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current);
-			}
-		};
 	}, []);
 
 	useEffect(() => {
@@ -245,7 +237,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	// Fit map to bbox
 	useEffect(() => {
 		if (props.fitBounds && typeof filteredData !== 'undefined') {
-			let geojsonBbox = bbox(filteredData);
+			const geojsonBbox = bbox(filteredData);
 			mapHook.map?.map.fitBounds(geojsonBbox as LngLatBoundsLike);
 		}
 	}, [filteredData]);
@@ -298,7 +290,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				fadeIn={props.fadeIn as number}
 				fadeOut={props.fadeOut as number}
 				featuresColor={featuresColor}
-				labels={(props.label as boolean)}
+				labels={props.label as boolean}
 				labelColor={labelColor}
 				labelFadeIn={props.labelFadeIn as number}
 				labelFadeOut={props.labelFadeOut as number}
@@ -319,7 +311,7 @@ MlTemporalController.defaultProps = {
 	labelFadeOut: 5,
 	accumulate: false,
 	fitBounds: true,
-	label: true
+	label: true,
 };
 
 export default MlTemporalController;
