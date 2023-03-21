@@ -195,7 +195,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const theme = useTheme();
 	const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
 	const featuresColor = props.featuresColor || theme.palette.primary.main;
-	const labels = props.label || true;
 	const labelColor = props.labelColor || theme.palette.text.primary;
 	const [isPlaying, setIsPlaying] = useState(false);
 	//const attribution = props.attribution || '';
@@ -271,7 +270,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				/>
 			)}
 
-			{labels && (
+			{props.label && (
 				<MlTemporalControllerLabels
 					data={filteredData}
 					currentVal={currentVal}
@@ -299,7 +298,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				fadeIn={props.fadeIn as number}
 				fadeOut={props.fadeOut as number}
 				featuresColor={featuresColor}
-				labels={labels}
+				labels={(props.label as boolean)}
 				labelColor={labelColor}
 				labelFadeIn={props.labelFadeIn as number}
 				labelFadeOut={props.labelFadeOut as number}
@@ -320,6 +319,7 @@ MlTemporalController.defaultProps = {
 	labelFadeOut: 5,
 	accumulate: false,
 	fitBounds: true,
+	label: true
 };
 
 export default MlTemporalController;
