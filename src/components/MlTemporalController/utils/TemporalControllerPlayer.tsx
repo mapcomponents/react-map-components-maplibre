@@ -5,11 +5,11 @@ import PauseIcon from '@mui/icons-material/Pause';
 import StopIcon from '@mui/icons-material/Stop';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import TuneIcon from '@mui/icons-material/Tune';
 
-import { Slider, Drawer, Button, Grid, ToggleButton } from '@mui/material';
-import UserControls from './userControls';
-import { ClickAwayListener } from '@mui/base';
+
+import { Slider, Drawer, Button, Grid } from '@mui/material';
+
+
 
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -19,7 +19,6 @@ export interface TemporalControllerPlayerProps {
 	maxVal: number;
 	returnCurrent: any;
 	returnPlaying: any;
-	showControls: boolean;
 	fadeIn: number;
 	open: boolean;
 	setFadeIn: Function;
@@ -41,39 +40,9 @@ export interface TemporalControllerPlayerProps {
 }
 
 export default function TemporalControllerPlayer(props: TemporalControllerPlayerProps) {
-	const featuresOptionsList = [
-		{ id: 1, targetProp: 'fadeIn', type: 'slider', setter: props.setFadeIn, max: 15 },
-		{ id: 2, targetProp: 'fadeOut', type: 'slider', setter: props.setFadeOut, max: 15 },
-		{
-			id: 3,
-			targetProp: 'featuresColor',
-			type: 'colorpicker',
-			setter: props.setFeatureColor,
-			max: 0,
-		},
-	];
-
-	const labelsOptionsList = [
-		{ id: 4, targetProp: 'labels', type: 'boolean', setter: props.setLabels, max: 0 },
-		{ id: 5, targetProp: 'labelColor', type: 'colorpicker', setter: props.setlabelColor, max: 0 },
-		{ id: 6, targetProp: 'labelFadeIn', type: 'slider', setter: props.setLabelFadein, max: 15 },
-		{ id: 7, targetProp: 'labelFadeOut', type: 'slider', setter: props.setLabelFadeOut, max: 15 },
-	];
-
-	const playerOptionsList = [
-		{ id: 8, targetProp: 'accumulate', type: 'boolean', setter: props.setAccumulate, max: 0 },
-		{ id: 9, targetProp: 'step', type: 'numberfield', setter: props.setStep, max: 0 },
-	];
-
-	const sections = [
-		{ key: 'Features', list: featuresOptionsList },
-		{ key: 'Labels', list: labelsOptionsList },
-		{ key: 'Player', list: playerOptionsList },
-	];
-
+	
 	const [currentVal, setCurrentVal] = useState(props.currentVal);
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
-	const [toggleControls, setToggleControls] = useState(false);
 	const range = props.maxVal - props.minVal;
 	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
 
@@ -161,14 +130,6 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 	return (
 		<>
-			<UserControls
-				showOptions={toggleControls}
-				onClose={setToggleControls}
-				sections={sections}
-				{...props}
-			/>
-
-
 			<Drawer
 				anchor="bottom"
 				open={props.open || true}
@@ -186,21 +147,8 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 				}}
 			>
 				<Grid container>
-					{props.showControls ? (
-						<Grid item sm={4}>
-							<Button
-								//value={toggleControls}
-								//selected={toggleControls}
-								onClick={() => setToggleControls(!toggleControls)}
-								color={'primary'}
-							>
-								<TuneIcon />
-							</Button>
-						</Grid>
-					) : (
-						<Grid item sm={4} />
-					)}
-
+					
+					<Grid item sm={4} />
 					<Grid item sm={6}>
 						<Button onClick={handleFastRewind}>
 							<FastRewindIcon />

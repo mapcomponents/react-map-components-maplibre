@@ -37,15 +37,20 @@ export default function useTemporalController(props: useTemporalControllerProps)
     const minVal = useMemo(() => {
 		if (props.minVal) {
 			return props.minVal;
+		} 
+		if (minVal  === undefined){
+			return getMinVal(props.geojson, props.timeField);
 		}
-		return getMinVal(props.geojson, props.timeField);
+		
 	}, [props.minVal, props.geojson, props.timeField]);
 
 	const maxVal = useMemo(() => {
 		if (props.maxVal) {
 			return props.maxVal;
 		}
+		if (maxVal  === undefined){
 		return getMaxVal(props.geojson, props.timeField);
+		}
 	}, [props.maxVal, props.geojson, props.timeField]);
 
 
@@ -64,8 +69,8 @@ export default function useTemporalController(props: useTemporalControllerProps)
 			);
 		}
 		return;
-	}, [props.geojson, mapHook.map, props.minVal, props.maxVal, props.timeField]);
+	}, [props.geojson, mapHook.map, props.timeField]);
 
-console.log(minVal+ " / " + maxVal);
+
     return {filteredData, minVal, maxVal }
 }

@@ -6,11 +6,12 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jakobsweg.json';
-
+import {TemporalControllerValues} from './MlTemporalController';
 
 interface TimeDisplayProps {
-value: number | undefined
+value: TemporalControllerValues | undefined
 }
+
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
 	component: MlTemporalController,
@@ -25,7 +26,7 @@ export default storyoptions;
 
 
 const TimeDisplay = (props: TimeDisplayProps) => {
-	if (typeof props.value === 'number') {
+	if (typeof props.value?.current === 'number') {
 		return (
 			<>
 				<Box
@@ -39,7 +40,7 @@ const TimeDisplay = (props: TimeDisplayProps) => {
 						alignContent: 'center',
 					}}
 				>
-					<Typography variant="h3">{Math.floor(props.value)}</Typography>
+					<Typography variant="h3">{Math.floor(props.value.current)}</Typography>
 				</Box>
 			</>
 		);
@@ -49,7 +50,8 @@ const TimeDisplay = (props: TimeDisplayProps) => {
 };
 
 const FillTemplate = (props: MlTemporalControllerProps) => {
-	const [current, setCurrent] = useState<number>();
+	const [current, setCurrent] = useState<TemporalControllerValues>();
+
 
 	return (
 		<>
