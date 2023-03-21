@@ -217,11 +217,11 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		currentVal: currentVal,
 		minVal: minVal,
 		isPlaying: isPlaying,
-		fadeIn: fadeIn,
-		fadeOut: fadeOut,
-		step: step,
+		fadeIn: (fadeIn as number),
+		fadeOut: (fadeOut as number),
+		step:(step as number),
 		featuresColor: featuresColor,
-		accumulate: accumulate,
+		accumulate: (accumulate as boolean),
 		userPaint: props.paint,
 	});
 
@@ -284,14 +284,14 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				<MlTemporalControllerLabels
 					data={filteredData}
 					currentVal={currentVal}
-					fadeIn={labelFadeIn}
-					fadeOut={labelFadeOut}
-					step={step}
+					fadeIn={(labelFadeIn as number)}
+					fadeOut={(labelFadeOut as number)}
+					step={(step as number)}
 					labelField={labelField}
 					labelColor={labelColor}
 					timeField={props.timeField}
 					minVal={minVal}
-					accumulate={accumulate}
+					accumulate={(accumulate as boolean)}
 					isPlaying={isPlaying}
 				/>
 			)}
@@ -299,15 +299,15 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 			<TemporalControllerPlayer
 				currentVal={currentVal}
 				isPlaying={isPlaying}
-				step={step}
+				step={(step as number)}
 				minVal={minVal}
 				maxVal={maxVal}
 				returnCurrent={setCurrentVal}
 				returnPlaying={setIsPlaying}
 				open={false}
-				fadeIn={fadeIn}
+				fadeIn={(fadeIn as number)}
 				setFadeIn={setFadeIn}
-				fadeOut={fadeOut}
+				fadeOut={(fadeOut as number)}
 				setFadeOut={setFedeOut}
 				setStep={setStep}
 				featuresColor={featuresColor}
@@ -316,11 +316,11 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				setLabels={setLabels}
 				labelColor={labelColor}
 				setlabelColor={setlabelColor}
-				labelFadeIn={labelFadeIn}
+				labelFadeIn={(labelFadeIn as number)}
 				setLabelFadein={setLabelFadein}
-				labelFadeOut={labelFadeOut}
+				labelFadeOut={(labelFadeOut as number)}
 				setLabelFadeOut={setLabelFadeOut}
-				accumulate={accumulate}
+				accumulate={(accumulate as boolean)}
 				setAccumulate={setAccumulate}
 			/>
 		</>
