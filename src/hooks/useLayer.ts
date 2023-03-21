@@ -9,7 +9,7 @@ import {
 	GeoJSONFeature,
 	Style,
 	MapEventType,
-	Map
+	Map,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -76,7 +76,7 @@ function useLayer(props: useLayerProps): useLayerType {
 	);
 
 	const createLayer = useCallback(() => {
-		if (!mapHook.map) return;
+		if (!mapHook.map || mapHook?.map.cancelled) return;
 
 		if (mapHook.map.map.getLayer(layerId.current)) {
 			mapHook.cleanup();
@@ -90,7 +90,7 @@ function useLayer(props: useLayerProps): useLayerType {
 				return;
 			}
 		}
-		if(typeof props.options.type === 'undefined'){
+		if (typeof props.options.type === 'undefined') {
 			return;
 		}
 
@@ -157,7 +157,9 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (!mapHook.map) return;
 
 		if (
+			mapHook.map?.cancelled === false &&
 			initializedRef.current &&
+			mapHook?.map?.map?.getLayer?.(layerId.current) &&
 			(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) === -1 ||
 				(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) !== -1 &&
 					props.options.type === layerTypeRef.current))
@@ -169,7 +171,12 @@ function useLayer(props: useLayerProps): useLayerType {
 	}, [mapHook.map, props.options, createLayer]);
 
 	useEffect(() => {
-		if (!initializedRef.current || !mapHook.map?.map?.getSource(layerId.current)) return;
+		if (
+			mapHook.map?.cancelled === true ||
+			!initializedRef.current ||
+			!mapHook.map?.map?.getSource?.(layerId.current)
+		)
+			return;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore setData only exists on GeoJsonSource
@@ -178,6 +185,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	useEffect(() => {
 		if (
+			mapHook.map?.cancelled === true ||
 			!mapHook.map ||
 			!mapHook.map?.map?.getLayer?.(layerId.current) ||
 			!initializedRef.current ||
@@ -227,8 +235,6 @@ function useLayer(props: useLayerProps): useLayerType {
 	};
 }
 
-useLayer.defaultProps = {
-
-}
+useLayer.defaultProps = {};
 
 export default useLayer;

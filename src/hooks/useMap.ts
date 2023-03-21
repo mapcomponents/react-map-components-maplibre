@@ -13,7 +13,6 @@ type useMapType = {
 };
 
 function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
-	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	const mapContext: MapContextType = useContext(MapContext);
 	const [map, setMap] = useState<MapLibreGlWrapper>();
 
@@ -29,8 +28,6 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 		},
 	});
 
-	const initializedRef = useRef(false);
-
 	const mapRef = useRef<MapLibreGlWrapper>();
 
 	const componentId = useRef(uuidv4());
@@ -41,7 +38,6 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 		if (mapRef.current) {
 			mapRef.current.cleanup(componentId.current);
 		}
-		initializedRef.current = false;
 	};
 
 	useEffect(() => {
@@ -53,7 +49,12 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 	}, []);
 
 	useEffect(() => {
-		if (!mapContext.mapExists(props?.mapId) || initializedRef.current) return;
+		if(mapRef.current && mapRef.current.cancelled === true){
+			mapRef.current = undefined
+			setMap(undefined)
+			setMapIsReady(false)
+		}
+		if (mapRef.current || !mapContext.mapExists(props?.mapId)) return;
 
 		// check if waitForLayer (string, layer id of the layer this hook is supposed to wait for)
 		// exists as layer in the MapLibre instance
@@ -69,9 +70,6 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 				return;
 			}
 		}
-		// the MapLibre-gl instance (mapContext.getMap(props.mapId)) is accessible here
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
-		initializedRef.current = true;
 		mapRef.current = mapContext.getMap(props?.mapId);
 		setMap(mapRef.current);
 		setMapIsReady(true);

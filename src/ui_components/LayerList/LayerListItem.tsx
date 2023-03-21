@@ -53,14 +53,16 @@ function LayerListItem({
 		visibleRef.current = _visible;
 
 		const state = { ...layerComponent?.props };
-		state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
-			if (el.layout) {
-				el.layout['visibility'] = _visible ? 'visible' : 'none';
-			} else {
-				el.layout = { visibility: _visible ? 'visible' : 'none' };
-			}
-			return el;
-		});
+		if (layerComponent?.props?.layers) {
+			state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
+				if (el.layout) {
+					el.layout['visibility'] = _visible ? 'visible' : 'none';
+				} else {
+					el.layout = { visibility: _visible ? 'visible' : 'none' };
+				}
+				return el;
+			});
+		}
 		setLayerState(state);
 	}, [_visible, setLayerState, layerComponent?.props?.layers]);
 
@@ -72,18 +74,28 @@ function LayerListItem({
 
 	const _layerComponent = useMemo(() => {
 		if (layerComponent && type === 'layer') {
-			if (layerComponent?.props?.layers) {
-				return React.cloneElement(layerComponent, {
-					...layerComponent?.props,
-					layers: layerComponent?.props?.layers,
-				});
-			} else {
-				return React.cloneElement(layerComponent, {
-					layout: {
-						visibility: _visible ? 'visible' : 'none',
-					},
-					...(setLayerState ? {} : { paint: paintProps }),
-				});
+			switch (layerComponent.type.name) {
+				case 'MlWmsLayer':
+					return React.cloneElement(layerComponent, {
+						...layerComponent?.props,
+						visible: _visible,
+					});
+					break;
+				case 'MlVectorTileLayer':
+					return React.cloneElement(layerComponent, {
+						...layerComponent?.props,
+						layers: layerComponent?.props?.layers,
+					});
+					break;
+				default:
+				case 'MlGeoJsonLayer':
+					return React.cloneElement(layerComponent, {
+						layout: {
+							visibility: _visible ? 'visible' : 'none',
+						},
+						...(setLayerState ? {} : { paint: paintProps }),
+					});
+					break;
 			}
 		}
 		return <></>;
@@ -164,6 +176,7 @@ function LayerListItem({
 							setVtProps={setLayerState}
 							id={'' + idx}
 							key={'' + idx}
+							visibleMaster={_visible}
 						/>
 					))}
 				</LayerListFolder>

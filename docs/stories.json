@@ -5,11 +5,11 @@
       "id": "core-maplibremap--example-config",
       "name": "Example Config",
       "title": "Core/MapLibreMap",
-      "importPath": 2049,
+      "importPath": 57291,
       "kind": "Core/MapLibreMap",
       "story": "Example Config",
       "parameters": {
-        "fileName": 2049,
+        "fileName": 57291,
         "framework": "react",
         "__id": "core-maplibremap--example-config",
         "__isArgsStory": true
@@ -19,11 +19,11 @@
       "id": "core-maplibremap--style-change-config",
       "name": "Style Change Config",
       "title": "Core/MapLibreMap",
-      "importPath": 2049,
+      "importPath": 57291,
       "kind": "Core/MapLibreMap",
       "story": "Style Change Config",
       "parameters": {
-        "fileName": 2049,
+        "fileName": 57291,
         "framework": "react",
         "__id": "core-maplibremap--style-change-config",
         "__isArgsStory": true
@@ -82,6 +82,20 @@
         "fileName": 85402,
         "framework": "react",
         "__id": "mapcomponents-mlcreatepdfform--example-config",
+        "__isArgsStory": false
+      }
+    },
+    "mapcomponents-mlcreatepngbutton--example-config": {
+      "id": "mapcomponents-mlcreatepngbutton--example-config",
+      "name": "Example Config",
+      "title": "MapComponents/MlCreatePngButton",
+      "importPath": 71770,
+      "kind": "MapComponents/MlCreatePngButton",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 71770,
+        "framework": "react",
+        "__id": "mapcomponents-mlcreatepngbutton--example-config",
         "__isArgsStory": false
       }
     },
@@ -376,7 +390,7 @@
         "fileName": 4407,
         "framework": "react",
         "__id": "mapcomponents-mlmeasuretool--measure-line",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlmeasuretool--measure-polygon": {
@@ -390,7 +404,7 @@
         "fileName": 4407,
         "framework": "react",
         "__id": "mapcomponents-mlmeasuretool--measure-polygon",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlnavigationcompass--standard": {
@@ -663,11 +677,11 @@
       "id": "mapcomponents-mlwmslayer--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlWmsLayer",
-      "importPath": 73892,
+      "importPath": 81938,
       "kind": "MapComponents/MlWmsLayer",
       "story": "Example Config",
       "parameters": {
-        "fileName": 73892,
+        "fileName": 81938,
         "framework": "react",
         "__id": "mapcomponents-mlwmslayer--example-config",
         "__isArgsStory": true
@@ -869,29 +883,15 @@
         "__isArgsStory": true
       }
     },
-    "uicomponents-layerlist--example-config": {
-      "id": "uicomponents-layerlist--example-config",
-      "name": "Example Config",
-      "title": "UiComponents/LayerList",
-      "importPath": 45760,
-      "kind": "UiComponents/LayerList",
-      "story": "Example Config",
-      "parameters": {
-        "fileName": 45760,
-        "framework": "react",
-        "__id": "uicomponents-layerlist--example-config",
-        "__isArgsStory": false
-      }
-    },
     "uicomponents-layerlist--folder-example": {
       "id": "uicomponents-layerlist--folder-example",
       "name": "Folder Example",
       "title": "UiComponents/LayerList",
-      "importPath": 45760,
+      "importPath": 13098,
       "kind": "UiComponents/LayerList",
       "story": "Folder Example",
       "parameters": {
-        "fileName": 45760,
+        "fileName": 13098,
         "framework": "react",
         "__id": "uicomponents-layerlist--folder-example",
         "__isArgsStory": false
@@ -901,13 +901,55 @@
       "id": "uicomponents-layerlist--vectortile-example",
       "name": "Vectortile Example",
       "title": "UiComponents/LayerList",
-      "importPath": 45760,
+      "importPath": 13098,
       "kind": "UiComponents/LayerList",
       "story": "Vectortile Example",
       "parameters": {
-        "fileName": 45760,
+        "fileName": 13098,
         "framework": "react",
         "__id": "uicomponents-layerlist--vectortile-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--wms-layer-example": {
+      "id": "uicomponents-layerlist--wms-layer-example",
+      "name": "Wms Layer Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 13098,
+      "kind": "UiComponents/LayerList",
+      "story": "Wms Layer Example",
+      "parameters": {
+        "fileName": 13098,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--wms-layer-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--geo-json-layer-example": {
+      "id": "uicomponents-layerlist--geo-json-layer-example",
+      "name": "Geo Json Layer Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 13098,
+      "kind": "UiComponents/LayerList",
+      "story": "Geo Json Layer Example",
+      "parameters": {
+        "fileName": 13098,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--geo-json-layer-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--configurable-example": {
+      "id": "uicomponents-layerlist--configurable-example",
+      "name": "Configurable Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 13098,
+      "kind": "UiComponents/LayerList",
+      "story": "Configurable Example",
+      "parameters": {
+        "fileName": 13098,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--configurable-example",
         "__isArgsStory": false
       }
     }

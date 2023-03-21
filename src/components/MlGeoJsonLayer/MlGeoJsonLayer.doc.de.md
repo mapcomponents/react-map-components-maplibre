@@ -1,1 +1,0 @@
-Stellt GeoJSON Objekte dar

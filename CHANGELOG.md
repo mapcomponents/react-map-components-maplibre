@@ -1,6 +1,38 @@
 # Change Log
 
 
+## [v0.1.73] - 2023-03-11
+
+### Fixed
+- 547db2c: Fix/layerlist visibility settings
+
+## [v0.1.72] - 2023-03-08
+
+### Fixed
+- Fix/maplibremap registration react 18 (#89) …
+- remove mui-color dependency
+### Added
+- add new ColorPicker ui component
+- add MlWmsLayer support to LayerList component
+
+## [v0.1.71] - 2023-03-04
+
+### Fixed
+- e3178b5: fix Topbar sidebar defaults
+
+## [v0.1.70] - 2023-03-03
+
+### Fixed
+- 153b00d: fix react 18 compatibility issue. reset initializedRef if MapLibreMap is removed from react dom (#81) …
+
+### Added
+- TopToolbar and Sidebar component exports
+- cdc4b5b: add createPng & downloadPng function to useExportMap hook promise
+
+### Changed
+- cdc4b5b: adjust MlCreatePdfButton to use useExportMap hook
+- 6b6ce0c: update .npmignore to include all files & folders that aren't required in the module build
+
 ## [v0.1.69] - 2023-02-07
 
 ### Changed

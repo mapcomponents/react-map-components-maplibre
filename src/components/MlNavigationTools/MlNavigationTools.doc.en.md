@@ -1,1 +1,0 @@
-Default navigation tool.

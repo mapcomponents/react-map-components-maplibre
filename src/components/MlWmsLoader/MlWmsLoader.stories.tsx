@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MlWmsLoader from './MlWmsLoader';
-import { Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -21,17 +21,6 @@ export default storyoptions;
 interface MlWmsLoaderStoryProps {
 	url: string;
 }
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const Template = (props: MlWmsLoaderStoryProps) => {
 	const [url, setUrl] = useState(props.url || '');
 	const [demoMode, setDemoMode] = useState(false);
@@ -57,17 +46,27 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 			<TopToolbar
 				buttons={
 					<>
-						<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-							<Typography textAlign="center">WMS Loader</Typography>
-						</MenuItem>
-						<MenuItem
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							WMS Loader
+						</Button>
+						<br />
+						<br />
+						<Button
+							variant={demoMode ? 'contained' : 'outlined'}
 							onClick={() => {
 								setDemoMode(!demoMode);
 								setOpenSidebar(true);
 							}}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 						>
-							<Typography textAlign="center">Demo WMS</Typography>
-						</MenuItem>
+							Demo WMS
+						</Button>
+						<br />
+						<br />
 						<Button variant="contained" onClick={openGuide} sx={{ display: 'none' }}>
 							Guide me through
 						</Button>
@@ -76,7 +75,6 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 			/>
 
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'WMS Loader'}

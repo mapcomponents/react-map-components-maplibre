@@ -67,6 +67,7 @@ interface MapLibreGlWrapper extends MapType {
 		beforeId?: string | undefined,
 		componentId?: string | undefined
 	) => this;
+	cancelled: boolean;
 }
 class MapLibreGlWrapper {
 	registeredElements: {
@@ -343,6 +344,8 @@ class MapLibreGlWrapper {
 				self.wrapper.viewportState = self.wrapper.getViewport();
 			},
 		};
+
+		this.cancelled = false;
 
 		/**
 		 * Initializes an empty registered elements object for the given componentId
@@ -659,7 +662,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map = new Map(props.mapOptions) as MapType;
-			window['_map'] = self.map;
+			
 
 			self.addNativeMaplibreFunctionsAndProps();
 			self.wrapper.refreshViewport();
