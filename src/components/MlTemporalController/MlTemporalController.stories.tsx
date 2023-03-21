@@ -55,13 +55,12 @@ const FillTemplate = (props: MlTemporalControllerProps) => {
 
 	return (
 		<>
-		<TopToolbar>
-				<Typography variant="h6" color={'ButtonText'}>
-				African countries by independecy year.
-			</Typography>
-			</TopToolbar>
+		<TopToolbar unmovableButtons={<Typography variant="h6" color={'ButtonText'}>
+				African countries by independecy year
+			</Typography>} />  	
+			<TimeDisplay value={current} />			
 			<MlTemporalController {...props} onStateChange={setCurrent} />
-			<TimeDisplay value={current} />
+			
 		</>
 	);
 };
@@ -71,12 +70,9 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 
 	return (
 		<>
-			<TopToolbar>
-				<Typography variant="h6" color={'ButtonText'}>
-				Earthquakes with 5 or more magnitude in the mediterranean area.
-			</Typography>
-			</TopToolbar>
-			
+			<TopToolbar unmovableButtons={<Typography variant="h6" color={'ButtonText'}>
+				Earthquakes with 5 or more magnitude in the mediterranean area
+			</Typography>} />			
 			<MlTemporalController {...props} onStateChange={setCurrent} />
 			<TimeDisplay value={current} />
 		</>
@@ -88,11 +84,11 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 
 	return (
 		<>
-		<TopToolbar>
+		<TopToolbar unmovableButtons={
 				<Typography variant="h6" color={'ButtonText'}>
-				The French Way of Saint James by stage number.
-			</Typography>
-			</TopToolbar>
+				The French Way of Saint James by stage number
+			</Typography>}
+			/>
 			<MlTemporalController {...props} onStateChange={setCurrent} />
 			<TimeDisplay value={current} />
 		</>
