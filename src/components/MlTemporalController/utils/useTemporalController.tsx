@@ -1,5 +1,5 @@
 import { featureCollection, FeatureCollection } from '@turf/turf';
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import useMap from '../../../hooks/useMap';
 
 export interface useTemporalControllerProps {

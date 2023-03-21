@@ -1,15 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import StopIcon from '@mui/icons-material/Stop';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-
-
 import { Slider, Drawer, Button, Grid } from '@mui/material';
-
-
 
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -17,26 +12,18 @@ export interface TemporalControllerPlayerProps {
 	step: number;
 	minVal: number;
 	maxVal: number;
-	returnCurrent: any;
-	returnPlaying: any;
+	returnCurrent: React.Dispatch<React.SetStateAction<number>>;
+	returnPlaying: React.Dispatch<React.SetStateAction<boolean>>;
 	fadeIn: number;
 	open: boolean;
-	setFadeIn: Function;
 	fadeOut: number;
-	setFadeOut: Function;
-	setStep: Function;
 	featuresColor: string;
-	setFeatureColor: Function;
 	labels: boolean;
-	setLabels: Function;
 	labelColor: string;
-	setlabelColor: Function;
 	labelFadeIn: number;
-	setLabelFadein: Function;
 	labelFadeOut: number;
-	setLabelFadeOut: Function;
 	accumulate: boolean;
-	setAccumulate: Function;
+	
 }
 
 export default function TemporalControllerPlayer(props: TemporalControllerPlayerProps) {
@@ -122,9 +109,12 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 		if (!isPlaying) {
 			setCurrentVal(newValue as number);
 		} else {
-			clearInterval(intervalRef.current);
+			if(e){
+				clearInterval(intervalRef.current);
 			setCurrentVal(newValue as number);
 			play();
+			}
+			
 		}
 	};
 

@@ -17,7 +17,6 @@ import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
 import useTemporalController from './utils/useTemporalController';
 import { useTheme } from '@mui/material/styles';
 
-
 export interface MlTemporalControllerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
@@ -32,6 +31,10 @@ export interface MlTemporalControllerProps {
 	 * GeoJSON data that is supposed to be rendered by this component.
 	 */
 	geojson: FeatureCollection;
+	/**
+	 * If true,the component creates and loads a MlGeoJsonLayer to show the data.
+	 */
+	ownLayer?: boolean;
 	/**
 	 * MapLibre attribution shown in the bottom right of the map, if this layer is visible
 	 */
@@ -148,7 +151,7 @@ export interface MlTemporalControllerProps {
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is hovered.
 	 */
-	onHover?: MapLayerMouseEvent;	
+	onHover?: MapLayerMouseEvent;
 	/**
 	 * Leave event handler that is executed whenever a geometry rendered by this component is
 	 * left/unhovered.
@@ -165,11 +168,12 @@ export interface MlTemporalControllerProps {
  *@component
  */
 
- export interface TemporalControllerValues{
+export interface TemporalControllerValues {
 	current: number;
-	paint: CircleLayerSpecification['paint']
-	| FillLayerSpecification['paint']
-	| LineLayerSpecification['paint'] ;
+	paint:
+		| CircleLayerSpecification['paint']
+		| FillLayerSpecification['paint']
+		| LineLayerSpecification['paint'];
 }
 
 const MlTemporalController = (props: MlTemporalControllerProps) => {
@@ -178,7 +182,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 	const initializedRef = useRef(false);
-
 	const labelField = props.labelField || props.geojson?.features[0]?.properties?.[0] || '';
 
 	const { filteredData, minVal, maxVal } = useTemporalController({
@@ -189,39 +192,27 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		initialVal: props.initialVal,
 		mapId: props.mapId,
 	});
-
 	const theme = useTheme();
-
 	const [currentVal, setCurrentVal] = useState<number>(props.initialVal || minVal);
-	const [type, setType] = useState(props.type);
-	const [step, setStep] = useState(props.step);
-	const [fadeIn, setFadeIn] = useState(props.fadeIn);
-	const [fadeOut, setFedeOut] = useState(props.fadeOut);
-
-	const [featuresColor, setFeatureColor] = useState(props.featuresColor || theme.palette.primary.main );
-
-	const [labels, setLabels] = useState(props.label || true);
-	const [labelColor, setlabelColor] = useState(props.labelColor || theme.palette.text.primary);
-	const [labelFadeIn, setLabelFadein] = useState(props.labelFadeIn);
-	const [labelFadeOut, setLabelFadeOut] = useState(props.labelFadeOut);
-
+	const featuresColor = props.featuresColor || theme.palette.primary.main;
+	const labels = props.label || true;
+	const labelColor = props.labelColor || theme.palette.text.primary;
 	const [isPlaying, setIsPlaying] = useState(false);
-	const [accumulate, setAccumulate] = useState(props.accumulate);
-	const attribution = props.attribution || '';
+	//const attribution = props.attribution || '';
 
 	const intervalRef: any = useRef();
 
 	const paint = usePaintPicker({
-		type: type,
+		type: props.type,
 		timeField: props.timeField,
 		currentVal: currentVal,
 		minVal: minVal,
 		isPlaying: isPlaying,
-		fadeIn: (fadeIn as number),
-		fadeOut: (fadeOut as number),
-		step:(step as number),
+		fadeIn: props.fadeIn as number,
+		fadeOut: props.fadeOut as number,
+		step: props.step as number,
 		featuresColor: featuresColor,
-		accumulate: (accumulate as boolean),
+		accumulate: props.accumulate as boolean,
 		userPaint: props.paint,
 	});
 
@@ -248,7 +239,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	//use callback function from props, if exists
 	useEffect(() => {
 		if (typeof props.onStateChange === 'function') {
-			props.onStateChange({current: currentVal, paint: paint});
+			props.onStateChange({ current: currentVal, paint: paint });
 		}
 	}, [props.onStateChange, currentVal]);
 
@@ -262,7 +253,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	return (
 		<>
-			{filteredData && (
+			{filteredData && props.ownLayer && (
 				<MlGeoJsonLayer
 					type={props.type}
 					mapId={props.mapId}
@@ -284,14 +275,14 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				<MlTemporalControllerLabels
 					data={filteredData}
 					currentVal={currentVal}
-					fadeIn={(labelFadeIn as number)}
-					fadeOut={(labelFadeOut as number)}
-					step={(step as number)}
+					fadeIn={props.labelFadeIn as number}
+					fadeOut={props.labelFadeOut as number}
+					step={props.step as number}
 					labelField={labelField}
 					labelColor={labelColor}
 					timeField={props.timeField}
 					minVal={minVal}
-					accumulate={(accumulate as boolean)}
+					accumulate={props.accumulate as boolean}
 					isPlaying={isPlaying}
 				/>
 			)}
@@ -299,29 +290,20 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 			<TemporalControllerPlayer
 				currentVal={currentVal}
 				isPlaying={isPlaying}
-				step={(step as number)}
+				step={props.step as number}
 				minVal={minVal}
 				maxVal={maxVal}
 				returnCurrent={setCurrentVal}
 				returnPlaying={setIsPlaying}
 				open={false}
-				fadeIn={(fadeIn as number)}
-				setFadeIn={setFadeIn}
-				fadeOut={(fadeOut as number)}
-				setFadeOut={setFedeOut}
-				setStep={setStep}
+				fadeIn={props.fadeIn as number}
+				fadeOut={props.fadeOut as number}
 				featuresColor={featuresColor}
-				setFeatureColor={setFeatureColor}
 				labels={labels}
-				setLabels={setLabels}
 				labelColor={labelColor}
-				setlabelColor={setlabelColor}
-				labelFadeIn={(labelFadeIn as number)}
-				setLabelFadein={setLabelFadein}
-				labelFadeOut={(labelFadeOut as number)}
-				setLabelFadeOut={setLabelFadeOut}
-				accumulate={(accumulate as boolean)}
-				setAccumulate={setAccumulate}
+				labelFadeIn={props.labelFadeIn as number}
+				labelFadeOut={props.labelFadeOut as number}
+				accumulate={props.accumulate as boolean}
 			/>
 		</>
 	);
@@ -329,6 +311,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 MlTemporalController.defaultProps = {
 	mapId: undefined,
+	ownLayer: true,
 	type: 'circle',
 	step: 1,
 	fadeIn: 5,
@@ -336,7 +319,7 @@ MlTemporalController.defaultProps = {
 	labelFadeIn: 5,
 	labelFadeOut: 5,
 	accumulate: false,
-	fitBounds: true
+	fitBounds: true,
 };
 
 export default MlTemporalController;
