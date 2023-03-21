@@ -121,6 +121,7 @@ CircleConfig.args = {
 	minVal: 1900,
 	fitBounds: true,
 	showControls: true,
+	onClick: ()=>console.log("clicked"),
 	attribution: "National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K"
 	
 };

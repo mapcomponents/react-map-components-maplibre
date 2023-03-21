@@ -16,6 +16,7 @@ import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
 import TemporalControllerPlayer from './utils/TemporalControllerPlayer';
 import useFilterData from './utils/useFilterData';
 import { useTheme } from '@mui/material/styles';
+import { useLayerProps } from 'src/hooks/useLayer';
 
 export interface MlTemporalControllerProps {
 	/**
@@ -147,18 +148,18 @@ export interface MlTemporalControllerProps {
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is clicked.
 	 */
-	onClick?: MapLayerMouseEvent;
+	onClick?: useLayerProps['onClick'];
 	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is hovered.
 	 */
-	onHover?: MapLayerMouseEvent;
+	onHover?: useLayerProps['onHover'];
 	/**
 	 * Leave event handler that is executed whenever a geometry rendered by this component is
 	 * left/unhovered.
 	 */
-	onLeave?: MapLayerMouseEvent;
+	onLeave?: useLayerProps['onLeave'];
 	/**
-	 * Callback function defined by the user to recive the current value in the parent component.
+	 * Callback function defined by the user to recive the current time value and paint property in the parent component.
 	 */
 	onStateChange?: React.Dispatch<React.SetStateAction<TemporalControllerValues | undefined>>;
 }
@@ -230,7 +231,13 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	//use callback function from props, if exists
 	useEffect(() => {
 		if (typeof props.onStateChange === 'function') {
-			props.onStateChange({ current: currentVal, paint: paint });
+			props.onStateChange({
+				current: currentVal,
+				paint: paint as
+					| CircleLayerSpecification['paint']
+					| FillLayerSpecification['paint']
+					| LineLayerSpecification['paint'],
+			});
 		}
 	}, [props.onStateChange, currentVal]);
 
@@ -241,6 +248,19 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 			mapHook.map?.map.fitBounds(geojsonBbox as LngLatBoundsLike);
 		}
 	}, [filteredData]);
+
+	useEffect(() => {
+		if (!mapHook.map) return;
+		if (props.onClick) {
+			mapHook.map?.on('click', 'timeController', props.onClick);
+		}
+		if (props.onHover) {
+			mapHook.map?.on('hover', 'timeController', props.onHover);
+		}
+		if (props.onLeave) {
+			mapHook.map?.on('leave', 'timeController', props.onLeave);
+		}
+	}, [mapHook.map, props.onClick, props.onHover, props.onLeave]);
 
 	return (
 		<>
