@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import { FeatureCollection, bbox } from '@turf/turf';
@@ -8,8 +8,8 @@ import {
 	FillLayerSpecification,
 	SymbolLayoutProps,
 	SymbolPaintProps,
-	MapLayerMouseEvent,
 	LngLatBoundsLike,
+	MapEventType,
 } from 'maplibre-gl';
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
@@ -182,7 +182,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
-	const initializedRef = useRef(false);
 	const labelField = props.labelField || props.geojson?.features[0]?.properties?.[0] || '';
 
 	const { filteredData, minVal, maxVal } = useFilterData({
@@ -223,11 +222,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		}
 	}, []);
 
-	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-		initializedRef.current = true;
-	}, [mapHook.map, props.mapId]);
-
 	//use callback function from props, if exists
 	useEffect(() => {
 		if (typeof props.onStateChange === 'function') {
@@ -239,7 +233,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 					| LineLayerSpecification['paint'],
 			});
 		}
-	}, [props.onStateChange, currentVal]);
+	}, [props.onStateChange, paint, currentVal]);
 
 	// Fit map to bbox
 	useEffect(() => {
@@ -251,15 +245,39 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map) return;
+
+		let _onClick: ((ev: MapEventType) => void) | undefined,
+			_onHover: ((ev: MapEventType) => void) | undefined,
+			_onLeave: ((ev: MapEventType) => void) | undefined;
 		if (props.onClick) {
-			mapHook.map?.on('click', 'timeController', props.onClick);
+			_onClick = props.onClick;
+			mapHook.map?.on('click', 'timeController', _onClick);
 		}
 		if (props.onHover) {
-			mapHook.map?.on('hover', 'timeController', props.onHover);
+			_onHover = props.onHover;
+			mapHook.map?.on('mouseenter', 'timeController', _onHover);
 		}
 		if (props.onLeave) {
-			mapHook.map?.on('leave', 'timeController', props.onLeave);
+			_onLeave = props.onLeave;
+			mapHook.map?.on('mouseleave', 'timeController', _onLeave);
 		}
+		return () => {
+			if (_onClick) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore ignore supposedly incompatible function definition
+				mapHook.map?.off('click', 'timeController', _onClick);
+			}
+			if (_onHover) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore ignore supposedly incompatible function definition
+				mapHook.map?.off('mouseenter', 'timeController', _onHover);
+			}
+			if (_onLeave) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore ignore supposedly incompatible function definition
+				mapHook.map?.off('mouseleave', 'timeController', _onLeave);
+			}
+		};
 	}, [mapHook.map, props.onClick, props.onHover, props.onLeave]);
 
 	return (
