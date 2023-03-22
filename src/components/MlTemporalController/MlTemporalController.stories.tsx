@@ -6,10 +6,10 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jakobsweg.json';
-import {TemporalControllerValues} from './MlTemporalController';
+import { TemporalControllerValues } from './MlTemporalController';
 
 interface TimeDisplayProps {
-value: TemporalControllerValues | undefined
+	value: TemporalControllerValues | undefined;
 }
 
 const storyoptions = {
@@ -18,12 +18,10 @@ const storyoptions = {
 	argTypes: {},
 	decorators: mapContextDecorator,
 	parameters: {
-    sourceLink: 'components/MlTemporalController/MlTemporalController.tsx'
-	}
+		sourceLink: 'components/MlTemporalController/MlTemporalController.tsx',
+	},
 };
 export default storyoptions;
-
-
 
 const TimeDisplay = (props: TimeDisplayProps) => {
 	if (typeof props.value?.current === 'number') {
@@ -34,13 +32,19 @@ const TimeDisplay = (props: TimeDisplayProps) => {
 						position: 'absolute',
 						zIndex: 500,
 						top: '20%',
-						width: '120px',
-						height: '60px',
+						width: '100px',
 						backgroundColor: 'white',
-						alignContent: 'center',
 					}}
 				>
-					<Typography variant="h3">{Math.floor(props.value.current)}</Typography>
+					<Typography
+						sx={{
+							padding: '0 5px',
+							textAlign: 'center'
+						}}
+						variant="h4"
+					>
+						{Math.floor(props.value.current)}
+					</Typography>
 				</Box>
 			</>
 		);
@@ -52,15 +56,17 @@ const TimeDisplay = (props: TimeDisplayProps) => {
 const FillTemplate = (props: MlTemporalControllerProps) => {
 	const [current, setCurrent] = useState<TemporalControllerValues>();
 
-
 	return (
 		<>
-		<TopToolbar unmovableButtons={<Typography variant="h6" color={'ButtonText'}>
-				African countries by independecy year
-			</Typography>} />  	
-			<TimeDisplay value={current} />			
+			<TopToolbar
+				unmovableButtons={
+					<Typography variant="h6" color={'ButtonText'}>
+						African countries by independecy year
+					</Typography>
+				}
+			/>
+			<TimeDisplay value={current} />
 			<MlTemporalController {...props} onStateChange={setCurrent} />
-			
 		</>
 	);
 };
@@ -70,9 +76,13 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 
 	return (
 		<>
-			<TopToolbar unmovableButtons={<Typography variant="h6" color={'ButtonText'}>
-				Earthquakes with 5 or more magnitude in the mediterranean area
-			</Typography>} />			
+			<TopToolbar
+				unmovableButtons={
+					<Typography variant="h6" color={'ButtonText'}>
+						Earthquakes with 5 or more magnitude in the mediterranean area
+					</Typography>
+				}
+			/>
 			<MlTemporalController {...props} onStateChange={setCurrent} />
 			<TimeDisplay value={current} />
 		</>
@@ -84,10 +94,12 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 
 	return (
 		<>
-		<TopToolbar unmovableButtons={
-				<Typography variant="h6" color={'ButtonText'}>
-				The French Way of Saint James by stage number
-			</Typography>}
+			<TopToolbar
+				unmovableButtons={
+					<Typography variant="h6" color={'ButtonText'}>
+						The French Way of Saint James by stage number
+					</Typography>
+				}
 			/>
 			<MlTemporalController {...props} onStateChange={setCurrent} />
 			<TimeDisplay value={current} />
@@ -108,7 +120,7 @@ FillConfig.args = {
 	initialVal: 1904,
 	fitBounds: true,
 	showControls: true,
-	attribution: "Made with Natural Earth."
+	attribution: 'Made with Natural Earth.',
 };
 
 export const CircleConfig = CircleTemplate.bind({});
@@ -121,9 +133,9 @@ CircleConfig.args = {
 	minVal: 1900,
 	fitBounds: true,
 	showControls: true,
-	onClick: ()=>console.log("clicked"),
-	attribution: "National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K"
-	
+	onClick: () => console.log('clicked'),
+	attribution:
+		'National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K',
 };
 
 export const LineConfig = LineTemplate.bind({});
@@ -133,9 +145,9 @@ LineConfig.args = {
 	timeField: 'stage',
 	type: 'line',
 	labelField: 'name',
-	accumulate: true,	
+	accumulate: true,
 	featuresColor: '#1731F1',
 	fitBounds: true,
 	showControls: true,
-	attribution: "Source: "	
+	attribution: 'Source: ',
 };
