@@ -303,7 +303,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 			{props.label && (
 				<MlTemporalControllerLabels
-					data={filteredData}
+					data={(filteredData as FeatureCollection)}
 					currentVal={currentVal}
 					fadeIn={props.labelFadeIn as number}
 					fadeOut={props.labelFadeOut as number}

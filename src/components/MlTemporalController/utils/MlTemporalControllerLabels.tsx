@@ -9,7 +9,7 @@ import { FeatureCollection } from '@turf/turf';
 
 
 interface MlTemporalControllerLabelsProps {
-	data: FeatureCollection ;
+	data: FeatureCollection;
 	currentVal: number;
 	fadeIn: number;
 	fadeOut: number;
