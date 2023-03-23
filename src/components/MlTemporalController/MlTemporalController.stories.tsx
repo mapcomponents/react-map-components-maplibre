@@ -5,7 +5,7 @@ import { Box, Typography } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
-import jakobsweg from './assets/jakobsweg.json';
+import tour_de_france_2022 from './assets/tour_de_france_2022.json';
 import { TemporalControllerValues } from './MlTemporalController';
 
 interface TimeDisplayProps {
@@ -97,7 +97,7 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						The French Way of Saint James by stage number
+						Tour de France stages in 2022
 					</Typography>
 				}
 			/>
@@ -119,7 +119,6 @@ FillConfig.args = {
 	accumulate: true,
 	initialVal: 1904,
 	fitBounds: true,
-	showControls: true,
 	attribution: 'Made with Natural Earth.',
 };
 
@@ -132,7 +131,6 @@ CircleConfig.args = {
 	accumulate: false,
 	minVal: 1900,
 	fitBounds: true,
-	showControls: true,
 	onClick: () => console.log('clicked'),
 	attribution:
 		'National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K',
@@ -141,13 +139,11 @@ CircleConfig.args = {
 export const LineConfig = LineTemplate.bind({});
 LineConfig.parameters = {};
 LineConfig.args = {
-	geojson: jakobsweg,
-	timeField: 'stage',
+	geojson: tour_de_france_2022,
+	timeField: 'Etape',
 	type: 'line',
-	labelField: 'name',
+	labelField: 'Name',
 	accumulate: true,
-	featuresColor: '#1731F1',
-	fitBounds: true,
-	showControls: true,
-	attribution: 'Source: ',
+	fitBounds: true,	
+	attribution: 'Source: geovista.space ',
 };
