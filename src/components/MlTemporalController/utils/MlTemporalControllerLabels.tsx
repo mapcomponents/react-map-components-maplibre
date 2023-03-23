@@ -81,7 +81,6 @@ const defaultPaint: SymbolLayerSpecification["paint"] = {
 		<MlLayer
 			options={{
 				type: 'symbol',
-				source: 'timeController',
 				layout: props.labelLayout || defaultLayout,
 				paint: props.labelPaint || currentPaint(),
 			}}

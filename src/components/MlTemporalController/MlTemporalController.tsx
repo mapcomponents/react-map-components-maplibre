@@ -197,7 +197,6 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	const featuresColor = props.featuresColor || theme.palette.primary.main;
 	const labelColor = props.labelColor || theme.palette.text.primary;
 	const [isPlaying, setIsPlaying] = useState(false);
-	//const attribution = props.attribution || '';
 
 	const paint = usePaintPicker({
 		type: props.type,
@@ -222,18 +221,16 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 		}
 	}, []);
 
-	//use callback function from props, if exists
-	useEffect(() => {
-		if (typeof props.onStateChange === 'function') {
-			props.onStateChange({
-				current: currentVal,
-				paint: paint as
-					| CircleLayerSpecification['paint']
-					| FillLayerSpecification['paint']
-					| LineLayerSpecification['paint'],
-			});
-		}
-	}, [props.onStateChange, paint, currentVal]);
+	if (typeof props.onStateChange === 'function') {
+		// this is not in a useEffect hook because currentVal and paint are changing on almost every render
+		props.onStateChange({
+			current: currentVal,
+			paint: paint as
+				| CircleLayerSpecification['paint']
+				| FillLayerSpecification['paint']
+				| LineLayerSpecification['paint'],
+		});
+	}
 
 	// Fit map to bbox
 	useEffect(() => {
@@ -296,7 +293,11 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 							| FillLayerSpecification['paint']
 							| LineLayerSpecification['paint'])
 					}
-					//options={{source: {attribution: attribution}}}
+					options={{
+						source: {
+							attribution: props.attribution as string,
+						} as useLayerProps['options']['source'],
+					}}
 				/>
 			)}
 
@@ -350,6 +351,7 @@ MlTemporalController.defaultProps = {
 	accumulate: false,
 	fitBounds: true,
 	label: true,
+	attribution: '',
 };
 
 export default MlTemporalController;
