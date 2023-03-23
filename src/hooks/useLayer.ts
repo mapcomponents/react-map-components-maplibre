@@ -115,9 +115,7 @@ function useLayer(props: useLayerProps): useLayerType {
 				...props.options,
 				...(props.geojson &&
 				(!props.options?.source ||
-					(props.options?.source &&
-						props.options?.source?.attribution &&
-						!props.options?.source?.type))
+					(props.options?.source?.attribution && !props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
 					? {
 							source: {
 								type: 'geojson',
