@@ -55,20 +55,19 @@ const MlGpxViewer = (props: MlGpxViewerProps) => {
 
 	useLayer({
 		layerId: layerNameLines.current,
-		source: sourceName.current,
 		options: {
 			type: 'line',
 			paint: {
 				'line-width': 4,
 				'line-color': 'rgba(212, 55, 23,0.5)',
 			},
+			source: sourceName.current,
 		},
 		insertBeforeLayer: props.insertBeforeLayer,
 	});
 
 	useLayer({
 		layerId: layerNamePoints.current,
-		source: sourceName.current,
 		options: {
 			type: 'circle',
 			paint: {
@@ -76,23 +75,22 @@ const MlGpxViewer = (props: MlGpxViewerProps) => {
 				'circle-radius': 7,
 			},
 			filter: ['==', '$type', 'Point'],
+			source: sourceName.current,
 		},
 		insertBeforeLayer: props.insertBeforeLayer,
 	});
 
 	useEffect(() => {
-
-	    if (!mapHook.map || !parsedGpx.geojson) return;
+		if (!mapHook.map || !parsedGpx.geojson) return;
 
 		if (typeof props.onParseGpxData === 'function') {
 			props.onParseGpxData(parsedGpx);
 		}
-		
+
 		// fit map view to GeoJSON bbox
-		
+
 		const bounds = bbox(parsedGpx.geojson);
 		mapHook.map.map.fitBounds(bounds as LngLatBoundsLike);
-				
 	}, [parsedGpx]);
 
 	return <></>;
