@@ -222,6 +222,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 	}, []);
 
 	if (typeof props.onStateChange === 'function') {
+		// this is not in a useEffect hook because currentVal and paint are changing on almost every render
 		props.onStateChange({
 			current: currentVal,
 			paint: paint as
