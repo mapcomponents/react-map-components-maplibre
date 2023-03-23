@@ -4,7 +4,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import StopIcon from '@mui/icons-material/Stop';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import { Slider, Drawer, Button, Grid } from '@mui/material';
+import { Slider, Drawer, Button, Grid, Typography } from '@mui/material';
 
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -23,8 +23,8 @@ export interface TemporalControllerPlayerProps {
 	labelFadeIn: number;
 	labelFadeOut: number;
 	accumulate: boolean;
-	
-}
+	display: boolean
+	}
 
 export default function TemporalControllerPlayer(props: TemporalControllerPlayerProps) {
 	
@@ -156,6 +156,9 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 							<FastForwardIcon />
 						</Button>
 					</Grid>
+					{props.display && 
+					<Grid item sm={2} > <Typography variant="h5" textAlign={"right"} sx={{paddingRight: "25px"}}> {currentVal} </Typography> </Grid>
+					}
 				</Grid>
 
 				<Slider

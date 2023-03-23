@@ -23,35 +23,6 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const TimeDisplay = (props: TimeDisplayProps) => {
-	if (typeof props.value?.current === 'number') {
-		return (
-			<>
-				<Box
-					sx={{
-						position: 'absolute',
-						zIndex: 500,
-						top: '20%',
-						width: '100px',
-						backgroundColor: 'white',
-					}}
-				>
-					<Typography
-						sx={{
-							padding: '0 5px',
-							textAlign: 'center'
-						}}
-						variant="h4"
-					>
-						{Math.floor(props.value.current)}
-					</Typography>
-				</Box>
-			</>
-		);
-	} else {
-		return <></>;
-	}
-};
 
 const FillTemplate = (props: MlTemporalControllerProps) => {
 	const [current, setCurrent] = useState<TemporalControllerValues>();
@@ -65,7 +36,7 @@ const FillTemplate = (props: MlTemporalControllerProps) => {
 					</Typography>
 				}
 			/>
-			<TimeDisplay value={current} />
+
 			<MlTemporalController {...props} onStateChange={setCurrent} />
 		</>
 	);
@@ -84,7 +55,7 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 				}
 			/>
 			<MlTemporalController {...props} onStateChange={setCurrent} />
-			<TimeDisplay value={current} />
+		
 		</>
 	);
 };
@@ -102,7 +73,7 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 				}
 			/>
 			<MlTemporalController {...props} onStateChange={setCurrent} />
-			<TimeDisplay value={current} />
+		
 		</>
 	);
 };
@@ -119,7 +90,9 @@ FillConfig.args = {
 	accumulate: true,
 	initialVal: 1904,
 	fitBounds: true,
+	displayCurrentValue: true,
 	attribution: 'Made with Natural Earth.',
+	
 };
 
 export const CircleConfig = CircleTemplate.bind({});
@@ -132,6 +105,7 @@ CircleConfig.args = {
 	minVal: 1900,
 	fitBounds: true,
 	onClick: () => console.log('clicked'),
+	displayCurrentValue: true,
 	attribution:
 		'National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K',
 };
@@ -145,5 +119,6 @@ LineConfig.args = {
 	labelField: 'Name',
 	accumulate: true,
 	fitBounds: true,	
+	displayCurrentValue: true,
 	attribution: 'Source: geovista.space ',
 };
