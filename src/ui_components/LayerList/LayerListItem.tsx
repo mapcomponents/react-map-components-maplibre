@@ -92,6 +92,8 @@ function LayerListItem({
 					return React.cloneElement(layerComponent, {
 						layout: {
 							visibility: _visible ? 'visible' : 'none',
+							...layerComponent?.props?.layout,
+							...layerComponent?.props?.options?.layout,
 						},
 						...(setLayerState ? {} : { paint: paintProps }),
 					});
