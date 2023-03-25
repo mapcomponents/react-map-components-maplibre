@@ -13,10 +13,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import { LngLat,  MapMouseEvent } from 'maplibre-gl';
+import { LngLat, MapMouseEvent } from 'maplibre-gl';
 import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
+import { Box, Checkbox, ListItemIcon } from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
@@ -73,6 +75,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl }: useWmsReturnType = useWms({
 		urlParameters: props.urlParameters,
 	});
+	const [open, setOpen] = useState(false);
+	const [visible, setVisible] = useState(true);
 
 	const initializedRef = useRef(false);
 	const mapRef = useRef<MapLibreGlWrapper>();
@@ -118,7 +122,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 	const getFeatureInfo = useCallback(
 		// eslint-disable-next-line @typescript-eslint/ban-types
-		(ev:(MapMouseEvent & Object)) => {
+		(ev: MapMouseEvent & Object) => {
 			if (!mapRef.current) return;
 			setFeatureInfoLngLat(undefined);
 			setFeatureInfoContent(undefined);
@@ -202,7 +206,10 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	useEffect(() => {
 		if (!capabilities?.Service) return;
 
-		if (capabilities?.Capability?.Layer?.CRS?.indexOf?.('EPSG:3857') === -1 && capabilities?.Capability?.Layer?.CRS?.indexOf?.('CRS:84') === -1) {
+		if (
+			capabilities?.Capability?.Layer?.CRS?.indexOf?.('EPSG:3857') === -1 &&
+			capabilities?.Capability?.Layer?.CRS?.indexOf?.('CRS:84') === -1
+		) {
 			console.log(
 				'MlWmsLoader (' + capabilities.Service.Title + '): No WGS 84/Pseudo-Mercator support'
 			);
@@ -271,58 +278,87 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	return (
 		<>
 			{error && <p>{error}</p>}
-			<h3 key="title">{capabilities?.Service?.Title}</h3>
-			<List dense key="layers">
-				{wmsUrl &&
-					layers?.map?.((layer, idx) => {
-						return layer?.Name ? (
-							<ListItem
-								key={layer.Name + idx}
-								secondaryAction={
-									<IconButton
-										edge="end"
-										aria-label="toggle visibility"
-										onClick={() => {
-											const _layers: Array<LayerType> = [...layers];
-											_layers[idx].visible = !_layers[idx].visible;
-											setLayers([..._layers]);
-										}}
-									>
-										{layers[idx].visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-									</IconButton>
-								}
+			{wmsUrl && (
+				<>
+					<ListItem
+						secondaryAction={
+							<IconButton
+								sx={{ padding: '4px', marginTop: '-3px' }}
+								edge="end"
+								aria-label="open"
+								onClick={() => setOpen(!open)}
 							>
-								<ListItemText primary={layer?.Title} />
-							</ListItem>
-						) : (
-							<></>
-						);
-					})}
-			</List>
-			{wmsUrl && layers?.length && (
-				<MlWmsLayer
-					key={componentId.current}
-					url={wmsUrl}
-					attribution={attribution}
-					urlParameters={{
-						...props.wmsUrlParameters,
-						layers: layers
-							?.filter?.((layer) => layer.visible)
-							.map((el) => el.Name)
-							.reverse()
-							.join(','),
-					}}
-				/>
+								{open ? <ExpandLess /> : <ExpandMore />}
+							</IconButton>
+						}
+						sx={{
+							paddingRight: 0,
+							paddingLeft: 0,
+							paddingTop: 0,
+							paddingBottom: '4px',
+						}}
+					>
+						<ListItemIcon sx={{ minWidth: '30px' }}>
+							<Checkbox
+								sx={{ padding: 0 }}
+								checked={visible}
+								onClick={() => {
+									setVisible((val) => !val);
+								}}
+							/>
+						</ListItemIcon>
+						<ListItemText primary={capabilities?.Service?.Title} />
+					</ListItem>
+					<Box sx={{ display: open ? 'block' : 'none' }}>
+						<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
+							{wmsUrl &&
+								layers?.map?.((layer, idx) => {
+									return layer?.Name ? (
+										<ListItem key={layer.Name + idx}>
+											<ListItemIcon sx={{ minWidth: '30px' }}>
+												<Checkbox
+													checked={layer.visible}
+													sx={{ padding: 0 }}
+													onClick={() => {
+														const _layers: Array<LayerType> = [...layers];
+														_layers[idx].visible = !_layers[idx].visible;
+														setLayers([..._layers]);
+													}}
+												/>
+											</ListItemIcon>
+											<ListItemText primary={layer?.Title} />
+										</ListItem>
+									) : (
+										<></>
+									);
+								})}
+						</List>
+						{wmsUrl && layers?.length && (
+							<MlWmsLayer
+								key={componentId.current}
+								url={wmsUrl}
+								attribution={attribution}
+								visible={visible}
+								urlParameters={{
+									...props.wmsUrlParameters,
+									layers: layers
+										?.filter?.((layer) => layer.visible)
+										.map((el) => el.Name)
+										.reverse()
+										.join(','),
+								}}
+							/>
+						)}
+					</Box>
+				</>
 			)}
-
-			<p key="description" style={{ fontSize: '.7em' }}>
-				{capabilities?.Capability?.Layer?.['Abstract']}
-			</p>
-
-			{featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
 		</>
 	);
 };
+//<p key="description" style={{ fontSize: '.7em' }}>
+//	{capabilities?.Capability?.Layer?.['Abstract']}
+//</p>
+//{featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
 
 MlWmsLoader.defaultProps = {
 	url: '',

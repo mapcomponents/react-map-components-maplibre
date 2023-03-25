@@ -85,6 +85,7 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 					variant="standard"
 					value={url}
 					onChange={(ev) => setUrl(ev.target.value)}
+					sx={{marginBottom: '10px'}}
 				/>
 				<MlWmsLoader mapId={'map_1'} url={url} />
 			</Sidebar>
