@@ -603,6 +603,48 @@
         "__isArgsStory": false
       }
     },
+    "mapcomponents-mltemporalcontroller--fill-config": {
+      "id": "mapcomponents-mltemporalcontroller--fill-config",
+      "name": "Fill Config",
+      "title": "MapComponents/MlTemporalController",
+      "importPath": 87875,
+      "kind": "MapComponents/MlTemporalController",
+      "story": "Fill Config",
+      "parameters": {
+        "fileName": 87875,
+        "framework": "react",
+        "__id": "mapcomponents-mltemporalcontroller--fill-config",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mltemporalcontroller--circle-config": {
+      "id": "mapcomponents-mltemporalcontroller--circle-config",
+      "name": "Circle Config",
+      "title": "MapComponents/MlTemporalController",
+      "importPath": 87875,
+      "kind": "MapComponents/MlTemporalController",
+      "story": "Circle Config",
+      "parameters": {
+        "fileName": 87875,
+        "framework": "react",
+        "__id": "mapcomponents-mltemporalcontroller--circle-config",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mltemporalcontroller--line-config": {
+      "id": "mapcomponents-mltemporalcontroller--line-config",
+      "name": "Line Config",
+      "title": "MapComponents/MlTemporalController",
+      "importPath": 87875,
+      "kind": "MapComponents/MlTemporalController",
+      "story": "Line Config",
+      "parameters": {
+        "fileName": 87875,
+        "framework": "react",
+        "__id": "mapcomponents-mltemporalcontroller--line-config",
+        "__isArgsStory": true
+      }
+    },
     "mapcomponents-mlthreejslayer--example-config": {
       "id": "mapcomponents-mlthreejslayer--example-config",
       "name": "Example Config",

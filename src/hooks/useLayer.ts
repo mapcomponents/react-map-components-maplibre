@@ -10,6 +10,11 @@ import {
 	Style,
 	MapEventType,
 	Map,
+	RasterLayerSpecification,
+	BackgroundLayerSpecification,
+	VideoSourceSpecification,
+	ImageSourceSpecification,
+	HillshadeLayerSpecification,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -39,8 +44,17 @@ export interface useLayerProps {
 	insertBeforeLayer?: string;
 	insertBeforeFirstSymbolLayer?: boolean;
 	geojson?: GeoJSONObject;
-	source?: SourceSpecification | string;
-	options: Partial<LayerSpecification>;
+	options: Partial<
+		Exclude<
+			LayerSpecification,
+			RasterLayerSpecification | BackgroundLayerSpecification | HillshadeLayerSpecification
+		> & {
+			source?: Partial<
+				Exclude<SourceSpecification, VideoSourceSpecification | ImageSourceSpecification>
+			>;
+			id?: string;
+		}
+	>;
 	onHover?: (ev: MapEventType & unknown) => Map | void;
 	onClick?: (ev: MapEventType & unknown) => Map | void;
 	onLeave?: (ev: MapEventType & unknown) => Map | void;
@@ -85,8 +99,8 @@ function useLayer(props: useLayerProps): useLayerType {
 			mapHook.map.map.removeSource(layerId.current);
 		}
 
-		if (typeof props.source === 'string') {
-			if (props.source === '' || !mapHook.map.map.getSource(props.source)) {
+		if (typeof props.options.source === 'string') {
+			if (props.options.source === '' || !mapHook.map.map.getSource(props.options.source)) {
 				return;
 			}
 		}
@@ -99,17 +113,22 @@ function useLayer(props: useLayerProps): useLayerType {
 		mapHook.map.addLayer(
 			{
 				...props.options,
-				...(props.geojson && !props.source
+				...(props.geojson &&
+				(!props.options?.source ||
+					(props.options?.source?.attribution && !props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
 					? {
 							source: {
 								type: 'geojson',
 								data: props.geojson,
+								attribution: props.options.source?.attribution
+									? props.options.source?.attribution
+									: '',
 							},
 					  }
 					: {}),
-				...(props.source
+				...(typeof props.options?.source === 'string'
 					? {
-							source: props.source,
+							source: props.options.source,
 					  }
 					: {}),
 				id: layerId.current,

@@ -82,7 +82,6 @@ const MlGeojsonLayerWithSource = (props: MlGeojsonLayerWithSourceProps) => {
   useLayer({
     mapId: props.mapId,
     layerId: "Spiekeroog-area",
-    source: sourceId,
     options: {
       id: "layer1",
       source: sourceId,
@@ -97,7 +96,6 @@ const MlGeojsonLayerWithSource = (props: MlGeojsonLayerWithSourceProps) => {
   useLayer({
     mapId: props.mapId,
     layerId: "Spiekeroog-points",
-    source: sourceId,
     options: {
       id: "Spiekeroog-points",
       source: sourceId,

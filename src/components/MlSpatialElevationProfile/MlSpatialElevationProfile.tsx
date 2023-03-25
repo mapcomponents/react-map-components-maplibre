@@ -120,14 +120,14 @@ const MlSpatialElevationProfile = (props: MlSpatialElevationProfileProps) => {
 
 	useLayer({
 		layerId: layerName.current,
-		source: sourceName.current,
-
 		options: {
+			source: sourceName.current,
 			type: 'fill-extrusion',
 			paint: {
 				'fill-extrusion-height': ['get', 'height'],
 				'fill-extrusion-opacity': 0.9,
-				'fill-extrusion-color': (_fillExtrusionColor || defaultFillExtrusionColor) as (DataDrivenPropertyValueSpecification<string>),
+				'fill-extrusion-color': (_fillExtrusionColor ||
+					defaultFillExtrusionColor) as DataDrivenPropertyValueSpecification<string>,
 			},
 		},
 		insertBeforeLayer: props.insertBeforeLayer,

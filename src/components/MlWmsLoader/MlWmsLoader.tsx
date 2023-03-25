@@ -1,7 +1,5 @@
-import React, { useRef, useEffect, useContext, useCallback, useState, useMemo } from 'react';
+import React, {  useEffect,  useCallback, useState, useMemo } from 'react';
 
-import MapContext, { MapContextType } from '../../contexts/MapContext';
-import { v4 as uuidv4 } from 'uuid';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlMarker from '../MlMarker/MlMarker';
@@ -13,10 +11,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import { LngLat, MapMouseEvent } from 'maplibre-gl';
-import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
+import { LngLat,  MapMouseEvent } from 'maplibre-gl';
 import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
+import useMap from '../../hooks/useMap';
 import { Box, Checkbox, ListItemIcon } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
@@ -71,16 +69,13 @@ export type LayerType = {
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-	const mapContext: MapContextType = useContext(MapContext);
 	const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl }: useWmsReturnType = useWms({
 		urlParameters: props.urlParameters,
 	});
 	const [open, setOpen] = useState(false);
 	const [visible, setVisible] = useState(true);
 
-	const initializedRef = useRef(false);
-	const mapRef = useRef<MapLibreGlWrapper>();
-	const componentId = useRef((props.idPrefix ? props.idPrefix : 'MlWmsLoader-') + uuidv4());
+	const mapHook = useMap({mapId:props?.mapId});
 	const [layers, setLayers] = useState<Array<LayerType>>([]);
 
 	const [featureInfoLngLat, setFeatureInfoLngLat] = useState<
@@ -89,25 +84,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
-		const _componentId = componentId.current;
-
-		return () => {
-			// This is the cleanup function, it is called when this react component is removed from react-dom
-			// try to remove anything this component has added to the MapLibre-gl instance
-			// e.g.: remove the layer
-			// mapContext.getMap(props.mapId).removeLayer(layerRef.current);
-			// check for the existence of map.style before calling getLayer or getSource
-
-			if (mapRef.current) {
-				mapRef.current.cleanup(_componentId);
-				mapRef.current = undefined;
-			}
-			initializedRef.current = false;
-		};
-	}, []);
-
-	useEffect(() => {
-		if (!initializedRef.current) return;
 
 		setUrl(props.url);
 	}, [props.url]);
@@ -122,11 +98,11 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 	const getFeatureInfo = useCallback(
 		// eslint-disable-next-line @typescript-eslint/ban-types
-		(ev: MapMouseEvent & Object) => {
-			if (!mapRef.current) return;
+		(ev:(MapMouseEvent & Object)) => {
+			if (!mapHook.map) return;
 			setFeatureInfoLngLat(undefined);
 			setFeatureInfoContent(undefined);
-			const _bounds = mapRef.current.map.getBounds();
+			const _bounds = mapHook.map.getBounds();
 			const _sw = lngLatToMeters(_bounds._sw);
 			const _ne = lngLatToMeters(_bounds._ne);
 			const bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
@@ -141,13 +117,13 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						: 'text/plain',
 				FEATURE_COUNT: '10',
 				LAYERS: layers
-					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Title : undefined))
+					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
 				QUERY_LAYERS: layers
-					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Title : undefined))
+					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
-				WIDTH: mapRef.current?.map._container.clientWidth,
-				HEIGHT: mapRef.current?.map._container.clientHeight,
+				WIDTH: mapHook?.map._container.clientWidth,
+				HEIGHT: mapHook?.map._container.clientHeight,
 				srs: 'EPSG:3857',
 				CRS: 'EPSG:3857',
 				version: '1.3.0',
@@ -187,21 +163,21 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				})
 				.catch((error) => console.log(error));
 		},
-		[capabilities, getFeatureInfoUrl]
+		[capabilities, getFeatureInfoUrl, props, mapHook, layers]
 	);
 
 	useEffect(() => {
-		if (!mapRef.current) return;
+		if (!mapHook.map) return;
 
 		const _getFeatureInfo = getFeatureInfo;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore: ts appears not to consider overloads
-		mapRef.current.map.on('click', _getFeatureInfo, componentId.current);
+		mapHook.map.map.on('click', _getFeatureInfo);
 		return () => {
-			mapRef.current?.map.off?.('click', _getFeatureInfo);
+			mapHook.map?.map.off?.('click', _getFeatureInfo);
 		};
-	}, [getFeatureInfo]);
+	}, [getFeatureInfo, mapHook.map]);
 
 	useEffect(() => {
 		if (!capabilities?.Service) return;
@@ -257,23 +233,18 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			setLayers(_layers);
 
 			// zoom to extent of first layer
-			if (mapRef.current && _LatLonBoundingBox.length > 3) {
-				mapRef.current.map.fitBounds([
+			if (mapHook?.map && _LatLonBoundingBox.length > 3) {
+				mapHook?.map.fitBounds([
 					[_LatLonBoundingBox[0], _LatLonBoundingBox[1]],
 					[_LatLonBoundingBox[2], _LatLonBoundingBox[3]],
 				]);
 			}
 		}
-	}, [capabilities]);
+	}, [capabilities, mapHook.map]);
 
 	useEffect(() => {
-		if (!mapContext?.mapExists?.(props.mapId) || initializedRef.current) return;
-		// the MapLibre-gl instance (mapContext.map) is accessible here
-		// initialize the layer and add it to the MapLibre-gl instance or do something else with it
-		initializedRef.current = true;
-		mapRef.current = mapContext.getMap(props.mapId);
 		setUrl(props.url);
-	}, [mapContext.mapIds, mapContext, props.mapId, props.url]);
+	}, [props.url]);
 
 	return (
 		<>
@@ -335,7 +306,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						</List>
 						{wmsUrl && layers?.length && (
 							<MlWmsLayer
-								key={componentId.current}
+								key={mapHook.componentId}
 								url={wmsUrl}
 								attribution={attribution}
 								visible={visible}

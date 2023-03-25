@@ -1,0 +1,15 @@
+{
+  "name": "MlTemporalController",
+  "title": "Temporal navigation",
+  "description": "",
+  "i18n": {
+    "de": {
+      "title": "Zeitsteuerung",
+      "description": ""
+    }
+  },
+  "tags": [],
+  "category": "",
+  "type": "component",
+  "price": 0
+}
