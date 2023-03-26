@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MlWmsLoader from './MlWmsLoader';
-import { Button, TextField } from '@mui/material';
+import { Button, FormControl, TextField } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -74,19 +74,17 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 				}
 			/>
 
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'WMS Loader'}
-			>
-				<TextField
-					id="wms_text_field"
-					label="WMS Url"
-					variant="standard"
-					value={url}
-					onChange={(ev) => setUrl(ev.target.value)}
-					sx={{marginBottom: '10px'}}
-				/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'WMS Loader'}>
+				<FormControl fullWidth sx={{ marginTop: '10px' }}>
+					<TextField
+						id="wms_text_field"
+						label="WMS Url"
+						variant="standard"
+						value={url}
+						onChange={(ev) => setUrl(ev.target.value)}
+						sx={{ marginBottom: '10px' }}
+					/>
+				</FormControl>
 				<MlWmsLoader mapId={'map_1'} url={url} />
 			</Sidebar>
 		</>

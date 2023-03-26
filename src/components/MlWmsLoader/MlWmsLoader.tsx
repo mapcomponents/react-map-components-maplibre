@@ -1,17 +1,15 @@
-import React, {  useEffect,  useCallback, useState, useMemo } from 'react';
-
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlMarker from '../MlMarker/MlMarker';
 import useWms, { useWmsProps } from '../../hooks/useWms';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import InfoIcon from '@mui/icons-material/Info';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import { LngLat,  MapMouseEvent } from 'maplibre-gl';
+import { LngLat, MapMouseEvent } from 'maplibre-gl';
 import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
 import useMap from '../../hooks/useMap';
@@ -51,6 +49,7 @@ export interface MlWmsLoaderProps {
 	wmsUrlParameters?: { [key: string]: string };
 	lngLat?: LngLat;
 	idPrefix?: string;
+	featureInfoEnabled?: boolean;
 }
 
 export type LayerType = {
@@ -75,16 +74,16 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const [open, setOpen] = useState(false);
 	const [visible, setVisible] = useState(true);
 
-	const mapHook = useMap({mapId:props?.mapId});
+	const mapHook = useMap({ mapId: props?.mapId });
 	const [layers, setLayers] = useState<Array<LayerType>>([]);
 
+	const [featureInfoEventsEnabled, setFeatureInfoEventsEnabled] = useState<boolean>(false);
 	const [featureInfoLngLat, setFeatureInfoLngLat] = useState<
 		{ lng: number; lat: number } | undefined
 	>();
 	const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
-
 		setUrl(props.url);
 	}, [props.url]);
 
@@ -96,12 +95,16 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			.join(' ');
 	}, [layers]);
 
+	const resetFeatureInfo = function () {
+		setFeatureInfoLngLat(undefined);
+		setFeatureInfoContent(undefined);
+	};
+
 	const getFeatureInfo = useCallback(
 		// eslint-disable-next-line @typescript-eslint/ban-types
-		(ev:(MapMouseEvent & Object)) => {
+		(ev: MapMouseEvent & Object) => {
 			if (!mapHook.map) return;
-			setFeatureInfoLngLat(undefined);
-			setFeatureInfoContent(undefined);
+			resetFeatureInfo();
 			const _bounds = mapHook.map.getBounds();
 			const _sw = lngLatToMeters(_bounds._sw);
 			const _ne = lngLatToMeters(_bounds._ne);
@@ -166,8 +169,20 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		[capabilities, getFeatureInfoUrl, props, mapHook, layers]
 	);
 
+	const _featureInfoEventsEnabled = useMemo(() => {
+		return (
+			featureInfoEventsEnabled &&
+			layers?.some((layer) => layer.visible && layer.queryable) &&
+			!!mapHook.map
+		);
+	}, [featureInfoEventsEnabled, layers, mapHook.map]);
+
 	useEffect(() => {
-		if (!mapHook.map) return;
+		if (!_featureInfoEventsEnabled) {
+			resetFeatureInfo();
+
+			return;
+		}
 
 		const _getFeatureInfo = getFeatureInfo;
 
@@ -177,7 +192,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		return () => {
 			mapHook.map?.map.off?.('click', _getFeatureInfo);
 		};
-	}, [getFeatureInfo, mapHook.map]);
+	}, [_featureInfoEventsEnabled, getFeatureInfo, mapHook.map]);
 
 	useEffect(() => {
 		if (!capabilities?.Service) return;
@@ -253,14 +268,36 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				<>
 					<ListItem
 						secondaryAction={
-							<IconButton
-								sx={{ padding: '4px', marginTop: '-3px' }}
-								edge="end"
-								aria-label="open"
-								onClick={() => setOpen(!open)}
-							>
-								{open ? <ExpandLess /> : <ExpandMore />}
-							</IconButton>
+							<>
+								{props.featureInfoEnabled && (
+									<IconButton
+										sx={{
+											padding: '4px',
+											marginTop: '-3px',
+											marginRight: '4px',
+											background: (theme) => {
+												if (!layers?.some((layer) => layer.visible && layer.queryable))
+													return 'initial';
+												if (_featureInfoEventsEnabled) return theme.palette.info.light;
+												return theme.palette.grey[300];
+											},
+										}}
+										aria-label="featureinfo"
+										onClick={() => setFeatureInfoEventsEnabled((current) => !current)}
+										disabled={!layers?.some((layer) => layer.visible && layer.queryable)}
+									>
+										<InfoIcon />
+									</IconButton>
+								)}
+								<IconButton
+									sx={{ padding: '4px', marginTop: '-3px' }}
+									edge="end"
+									aria-label="open"
+									onClick={() => setOpen((current) => !current)}
+								>
+									{open ? <ExpandLess /> : <ExpandMore />}
+								</IconButton>
+							</>
 						}
 						sx={{
 							paddingRight: 0,
@@ -285,7 +322,10 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 							{wmsUrl &&
 								layers?.map?.((layer, idx) => {
 									return layer?.Name ? (
-										<ListItem key={layer.Name + idx}>
+										<ListItem
+											key={layer.Name + idx}
+											secondaryAction={<>{layer?.queryable && <InfoIcon />}</>}
+										>
 											<ListItemIcon sx={{ minWidth: '30px' }}>
 												<Checkbox
 													checked={layer.visible}
@@ -321,6 +361,10 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 							/>
 						)}
 					</Box>
+
+					{props.featureInfoEnabled && featureInfoLngLat && (
+						<MlMarker {...featureInfoLngLat} content={featureInfoContent} />
+					)}
 				</>
 			)}
 		</>
@@ -329,7 +373,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 //<p key="description" style={{ fontSize: '.7em' }}>
 //	{capabilities?.Capability?.Layer?.['Abstract']}
 //</p>
-//{featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
 
 MlWmsLoader.defaultProps = {
 	url: '',
@@ -341,6 +384,7 @@ MlWmsLoader.defaultProps = {
 	wmsUrlParameters: {
 		TRANSPARENT: 'TRUE',
 	},
+	featureInfoEnabled: true,
 };
 
 export default MlWmsLoader;
