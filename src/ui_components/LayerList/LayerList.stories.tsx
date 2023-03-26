@@ -125,6 +125,35 @@ export const VectortileExample = VectortileTemplate.bind({});
 VectortileExample.parameters = {};
 VectortileExample.args = {};
 
+const StyleJsonTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Sidebar
+					</Button>
+				}
+			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerList style'}>
+				<LayerList style={style}>
+				</LayerList>
+			</Sidebar>
+		</>
+	);
+};
+
+export const StyleJsonExample = StyleJsonTemplate.bind({});
+
+StyleJsonExample.parameters = {};
+StyleJsonExample.args = {};
+
 const WmsLayerTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 
