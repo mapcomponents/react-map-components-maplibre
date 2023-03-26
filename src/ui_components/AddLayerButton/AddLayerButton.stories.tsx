@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import LayerList from '../LayerList/LayerList';
-import LayerListItem from '../LayerList/LayerListItem';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../Sidebar';
-import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
-import LayerListFolder from '../LayerList/LayerListFolder';
 
-import style from './assets/style.json';
-import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { LayerSpecification } from 'maplibre-gl';
-import { Feature, FeatureCollection } from '@turf/turf';
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 import AddLayerButton from './AddLayerButton';
 import LayerListItemFactory from '../LayerList/LayerListItemFactory';
-import { LayerConfig } from './AddLayerPopup';
+import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
 
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
@@ -29,7 +21,19 @@ export default storyoptions;
 
 const FolderTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [layers, setLayers] = useState<LayerConfig[]>([]);
+	const layerContext = useContext(LayerContext);
+
+	useEffect(() => {
+		let _layers = localStorage.getItem('layers');
+		_layers = _layers ? JSON.parse(_layers) : [];
+		layerContext.setLayers(_layers as unknown as LayerConfig[]);
+	}, [])
+
+	useEffect(() => {
+		if (layerContext.layers.length > 0) {
+			localStorage.setItem('layers', JSON.stringify(layerContext.layers));
+		}
+	}, [layerContext.layers]);
 
 	return (
 		<>
@@ -45,9 +49,11 @@ const FolderTemplate = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
-				<AddLayerButton onComplete={(config) => setLayers((current) => [...current, config])} />
+				<AddLayerButton
+					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
+				/>
 				<LayerList>
-					<LayerListItemFactory layers={layers} />
+					<LayerListItemFactory layers={layerContext.layers} />
 				</LayerList>
 			</Sidebar>
 		</>

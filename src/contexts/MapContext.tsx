@@ -3,6 +3,7 @@ import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
+import { LayerContextProvider } from './LayerContext';
 
 export interface MapContextType {
 	mapIds: string[];
@@ -96,7 +97,9 @@ const MapComponentsProvider = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<MapContext.Provider value={value}>
-			<MUIThemeProvider theme={getTheme('light')}>{children}</MUIThemeProvider>
+			<LayerContextProvider>
+				<MUIThemeProvider theme={getTheme('light')}>{children}</MUIThemeProvider>
+			</LayerContextProvider>
 		</MapContext.Provider>
 	);
 };

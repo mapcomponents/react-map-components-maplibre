@@ -3,11 +3,7 @@ import React, { useState } from 'react';
 import GeoJsonLayerForm from './LayerConfigForms/GeoJsonLayerForm';
 import LayerTypeForm from './LayerConfigForms/LayerTypeForm';
 import WmsLayerForm from './LayerConfigForms/WmsLayerForm';
-
-export interface LayerConfig {
-	type: string;
-	config: any;
-}
+import { LayerConfig } from 'src/contexts/LayerContext';
 
 export interface AddLayerPopupProps {
 	open: boolean;
@@ -19,7 +15,7 @@ export interface AddLayerPopupProps {
 const AddLayerPopup = (props: AddLayerPopupProps) => {
 	const [layerConfig, setLayerConfig] = useState<LayerConfig>();
 
-	const updateLayerType = (type: string) => {
+	const updateLayerType = (type: LayerConfig['type']) => {
 		setLayerConfig({ type, config: {} });
 	};
 
