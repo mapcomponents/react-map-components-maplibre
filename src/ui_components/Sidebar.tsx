@@ -36,12 +36,12 @@ const Puller = styled(Box)(({ theme }) => ({
 export default function Sidebar({
 	drawerPaperProps,
 	drawerHeaderProps,
+	setOpen,
 	...props
 }: SidebarProps & DrawerProps) {
 	const mediaIsMobile = useMediaQuery('(max-width:600px)');
 
 	const [drawerOpen, setDrawerOpen] = useState(false);
-
 	return (
 		<>
 			{!mediaIsMobile ? (
@@ -82,9 +82,9 @@ export default function Sidebar({
 							<Typography variant="h6">{props.name}</Typography>
 							<IconButton
 								onClick={
-									props.setOpen
+									setOpen
 										? () => {
-												props.setOpen?.(false);
+												setOpen?.(false);
 										  }
 										: () => {
 												setDrawerOpen(false);
@@ -115,18 +115,18 @@ export default function Sidebar({
 						anchor="bottom"
 						open={typeof props.open === 'undefined' ? drawerOpen : props.open}
 						onClose={
-							props.setOpen
+							setOpen
 								? () => {
-										props.setOpen?.(false);
+										setOpen?.(false);
 								  }
 								: () => {
 										setDrawerOpen(false);
 								  }
 						}
 						onOpen={
-							props.setOpen
+							setOpen
 								? () => {
-										props.setOpen?.(true);
+										setOpen?.(true);
 								  }
 								: () => {
 										setDrawerOpen(true);
