@@ -21,13 +21,7 @@ export interface GeoJsonLayerFormProps {
 const types: string[] = [
 	'fill',
 	'line',
-	'symbol',
 	'circle',
-	'fill-extrusion',
-	'raster',
-	'hillshade',
-	'background',
-	'heatmap',
 ];
 export default function GeoJsonLayerForm(props: GeoJsonLayerFormProps) {
 	const [config, setConfig] = React.useState<Partial<MlGeoJsonLayerProps>>({ type: 'circle' });
