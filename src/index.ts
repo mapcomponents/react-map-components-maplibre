@@ -62,11 +62,15 @@ export { default as useMap } from "./hooks/useMap";
 export { default as useMapState } from "./hooks/useMapState";
 export { default as useSource } from "./hooks/useSource";
 export { default as useWms } from "./hooks/useWms";
+export { default as useLayerContext } from "./hooks/useLayerContext";
 
+// Context
 export { MapComponentsProvider } from "./contexts/MapContext";
 export { default as MapContext } from "./contexts/MapContext";
 export { default as SimpleDataProvider } from "./contexts/SimpleDataProvider";
 export { default as SimpleDataContext } from "./contexts/SimpleDataContext";
+export { default as LayerContext } from "./contexts/LayerContext";
+export { LayerContextProvider } from "./contexts/LayerContext";
 
 // Theme
 export { default as getTheme } from './ui_components/MapcomponentsTheme';
