@@ -85,7 +85,10 @@ export default function LayerListItemVectorLayer({
 						}}
 					/>
 				</ListItemIcon>
-				<ListItemText primary={vtProps.layers[id].id} />
+				<ListItemText
+					primary={vtProps.layers[id].id}
+					variant="layerlist"
+				/>
 			</ListItem>
 			{configurable && paintPropsFormVisible && (
 				<LayerPropertyForm

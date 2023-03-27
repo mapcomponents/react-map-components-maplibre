@@ -152,10 +152,9 @@ function LayerListItem({
 						/>
 					</ListItemIcon>
 					<ListItemText
+					 	variant="layerlist"
 						primary={name}
-						primaryTypographyProps={{ sx: { fontSize: '0.9rem' } }}
 						secondary={description}
-						secondaryTypographyProps={{ sx: { fontSize: '0.7rem' } }}
 					/>
 				</ListItem>
 			)}

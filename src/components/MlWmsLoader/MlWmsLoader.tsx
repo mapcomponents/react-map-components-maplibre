@@ -315,7 +315,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 								}}
 							/>
 						</ListItemIcon>
-						<ListItemText primary={capabilities?.Service?.Title} />
+						<ListItemText primary={capabilities?.Service?.Title} variant="layerlist" />
 					</ListItem>
 					<Box sx={{ display: open ? 'block' : 'none' }}>
 						<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
@@ -337,7 +337,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 													}}
 												/>
 											</ListItemIcon>
-											<ListItemText primary={layer?.Title} />
+											<ListItemText primary={layer?.Title} variant="layerlist" />
 										</ListItem>
 									) : (
 										<></>
