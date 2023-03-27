@@ -9,7 +9,7 @@ import Sidebar from '../Sidebar';
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 
-import { MonokaiStyle, SolarizedStyle } from '../../index';
+import { MonokaiStyle } from '../../index';
 import LayerContext from '../../contexts/LayerContext';
 import { StyleSpecification } from 'maplibre-gl';
 
@@ -27,7 +27,7 @@ const SelectStyleTemplate = () => {
 
 	useEffect(() => {
 		layerContext.updateStyle(MonokaiStyle as StyleSpecification);
-	},[])
+	}, []);
 
 	return (
 		<>

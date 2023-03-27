@@ -1,5 +1,5 @@
 import { List } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
