@@ -73,7 +73,7 @@ export default function GeoJsonLayerForm(props: GeoJsonLayerFormProps) {
 			</FormControl>
 			<DialogActions>
 				<Button onClick={props.onCancel}>Cancel</Button>
-				<Button disabled={!configIsValid} onClick={() => props.onSubmit(config)}>
+				<Button disabled={!configIsValid} onClick={() => props.onSubmit(config as MlGeoJsonLayerProps)}>
 					Add
 				</Button>
 			</DialogActions>
