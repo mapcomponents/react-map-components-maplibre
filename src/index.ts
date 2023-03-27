@@ -68,13 +68,31 @@ export { default as MapContext } from "./contexts/MapContext";
 export { default as SimpleDataProvider } from "./contexts/SimpleDataProvider";
 export { default as SimpleDataContext } from "./contexts/SimpleDataContext";
 
+// Theme
 export { default as getTheme } from './ui_components/MapcomponentsTheme';
 
+// UI Components
 export { default as LayerList } from './ui_components/LayerList/LayerList';
 export { default as LayerListItem } from './ui_components/LayerList/LayerListItem';
 export { default as LayerListFolder } from './ui_components/LayerList/LayerListFolder';
 export { default as LayerPropertyForm } from './ui_components/LayerList/util/LayerPropertyForm';
 export { default as LayerListItemVectorLayer } from './ui_components/LayerList/util/LayerListItemVectorLayer';
+export { default as AddLayerButton } from './ui_components/AddLayerButton/AddLayerButton';
+export { default as AddLayerPopup } from './ui_components/AddLayerButton/AddLayerPopup';
+export { default as GeoJsonLayerForm } from './ui_components/AddLayerButton/LayerConfigForms/GeoJsonLayerForm';
+export { default as LayerTypeForm } from './ui_components/AddLayerButton/LayerConfigForms/LayerTypeForm';
+export { default as WmsLayerForm } from './ui_components/AddLayerButton/LayerConfigForms/WmsLayerForm';
 export { default as ColorPicker } from './ui_components/LayerList/util/input/ColorPicker';
 export { default as TopToolbar } from './ui_components/TopToolbar';
 export { default as Sidebar } from './ui_components/Sidebar';
+export { default as UploadButton } from './ui_components/UploadButton';
+export { default as SelectStyleButton } from './ui_components/SelectStyleButton/SelectStyleButton';
+export { default as SelectStylePopup } from './ui_components/SelectStyleButton/SelectStylePopup';
+
+
+// Styles
+export { default as GruvboxStyle } from './omt_styles/gruvbox';
+export { default as MedievalKingdomStyle } from './omt_styles/medieval_kingdom';
+export { default as MonokaiStyle } from './omt_styles/monokai';
+export { default as OceanicNextStyle } from './omt_styles/oceanic_next';
+export { default as SolarizedStyle } from './omt_styles/solarized';

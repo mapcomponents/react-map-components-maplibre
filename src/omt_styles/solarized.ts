@@ -1,4 +1,4 @@
-import config from './config.js';
+import config from './config';
 
 export default {
 	version: 8,
@@ -15,8 +15,9 @@ export default {
 	},
 	sprite: config.sprite,
 	glyphs: config.glyphs,
+
 	layers: [
-		{ id: 'background', type: 'background', paint: { 'background-color': '#282822' } },
+		{ id: 'background', type: 'background', paint: { 'background-color': '#073642' } },
 		{
 			id: 'landcover-glacier',
 			type: 'fill',
@@ -26,7 +27,7 @@ export default {
 			filter: ['==', 'subclass', 'glacier'],
 			layout: { visibility: 'visible' },
 			paint: {
-				'fill-color': '#81a1c1',
+				'fill-color': '#2aa198',
 				'fill-opacity': {
 					base: 1,
 					stops: [
@@ -43,7 +44,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'residential'],
-			paint: { 'fill-color': '#a3be8c' },
+			paint: { 'fill-color': '#657b83' },
 		},
 		{
 			id: 'landuse-commercial',
@@ -52,7 +53,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['all', ['==', '$type', 'Polygon'], ['==', 'class', 'commercial']],
-			paint: { 'fill-color': '#acc598' },
+			paint: { 'fill-color': '#74888f' },
 		},
 		{
 			id: 'landuse-industrial',
@@ -61,7 +62,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['all', ['==', '$type', 'Polygon'], ['==', 'class', 'industrial']],
-			paint: { 'fill-color': '#b5cba3' },
+			paint: { 'fill-color': '#84959c' },
 		},
 		{
 			id: 'park',
@@ -71,7 +72,7 @@ export default {
 			'source-layer': 'park',
 			filter: ['==', '$type', 'Polygon'],
 			paint: {
-				'fill-color': '#a3be8c',
+				'fill-color': '#859900',
 				'fill-opacity': {
 					base: 1.8,
 					stops: [
@@ -89,7 +90,7 @@ export default {
 			'source-layer': 'park',
 			filter: ['==', '$type', 'Polygon'],
 			layout: {},
-			paint: { 'line-color': 'rgba(163,19,14,0.6)', 'line-dasharray': [3, 3] },
+			paint: { 'line-color': 'rgba(133,153,0,0.6)', 'line-dasharray': [3, 3] },
 		},
 		{
 			id: 'landuse-cemetery',
@@ -98,7 +99,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'cemetery'],
-			paint: { 'fill-color': '#cbdabe' },
+			paint: { 'fill-color': '#f2ff99' },
 		},
 		{
 			id: 'landuse-hospital',
@@ -107,7 +108,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'hospital'],
-			paint: { 'fill-color': '#b48ead' },
+			paint: { 'fill-color': '#d30102' },
 		},
 		{
 			id: 'landuse-school',
@@ -116,7 +117,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'school'],
-			paint: { 'fill-color': 'rgba(18,142,173,0.8)' },
+			paint: { 'fill-color': 'rgba(211,1,2,0.8)' },
 		},
 		{
 			id: 'landuse-railway',
@@ -125,7 +126,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'railway'],
-			paint: { 'fill-color': 'rgba(118,51,8,0.4)' },
+			paint: { 'fill-color': 'rgba(58,63,144,0.4)' },
 		},
 		{
 			id: 'landcover-wood',
@@ -135,7 +136,7 @@ export default {
 			'source-layer': 'landcover',
 			filter: ['==', 'class', 'wood'],
 			paint: {
-				'fill-color': '#81a1c1',
+				'fill-color': '#2aa198',
 				'fill-opacity': 0.1,
 				'fill-outline-color': 'hsla(0, 0%, 0%, 0.03)',
 				'fill-antialias': {
@@ -154,7 +155,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landcover',
 			filter: ['==', 'class', 'grass'],
-			paint: { 'fill-color': '#a3be8c', 'fill-opacity': 1 },
+			paint: { 'fill-color': '#859900', 'fill-opacity': 1 },
 		},
 		{
 			id: 'landcover-grass-park',
@@ -163,7 +164,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'park',
 			filter: ['==', 'class', 'public_park'],
-			paint: { 'fill-color': '#a3be8c', 'fill-opacity': 0.8 },
+			paint: { 'fill-color': '#859900', 'fill-opacity': 0.8 },
 		},
 		{
 			id: 'waterway-other',
@@ -174,7 +175,7 @@ export default {
 			filter: ['!in', 'class', 'canal', 'river', 'stream'],
 			layout: { 'line-cap': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#268bd2',
 				'line-width': {
 					base: 1.3,
 					stops: [
@@ -193,7 +194,7 @@ export default {
 			filter: ['in', 'class', 'canal', 'stream'],
 			layout: { 'line-cap': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#268bd2',
 				'line-width': {
 					base: 1.3,
 					stops: [
@@ -212,7 +213,7 @@ export default {
 			filter: ['==', 'class', 'river'],
 			layout: { 'line-cap': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#268bd2',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -233,7 +234,7 @@ export default {
 			layout: { visibility: 'visible' },
 			paint: {
 				'fill-opacity': 1,
-				'fill-color': '#8fbcbb',
+				'fill-color': '#268bd2',
 				'fill-translate': {
 					base: 1,
 					stops: [
@@ -250,7 +251,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'water',
 			layout: { visibility: 'visible' },
-			paint: { 'fill-color': '#5f9f9e' },
+			paint: { 'fill-color': '#1a6091' },
 		},
 		{
 			id: 'water-pattern',
@@ -270,7 +271,7 @@ export default {
 			filter: ['==', 'subclass', 'ice_shelf'],
 			layout: { visibility: 'visible' },
 			paint: {
-				'fill-color': '#81a1c1',
+				'fill-color': '#2aa198',
 				'fill-opacity': {
 					base: 1,
 					stops: [
@@ -286,7 +287,7 @@ export default {
 			metadata: { 'mapbox:group': '1444849364238.8171' },
 			source: 'openmaptiles',
 			'source-layer': 'building',
-			paint: { 'fill-color': '#65737e', 'fill-antialias': true },
+			paint: { 'fill-color': '#eee8d5', 'fill-antialias': true },
 		},
 		{
 			id: 'building-top',
@@ -304,7 +305,7 @@ export default {
 					],
 				},
 				'fill-outline-color': '#dfdbd7',
-				'fill-color': '#7e8d98',
+				'fill-color': '#fdfcf9',
 				'fill-opacity': {
 					base: 1,
 					stops: [
@@ -323,7 +324,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['in', 'class', 'service', 'track']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#6c71c4',
 				'line-dasharray': [0.5, 0.25],
 				'line-width': {
 					base: 1.2,
@@ -344,7 +345,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'minor']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#6c71c4',
 				'line-opacity': {
 					stops: [
 						[12, 0],
@@ -371,7 +372,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['in', 'class', 'secondary', 'tertiary']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -391,7 +392,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['in', 'class', 'primary', 'trunk']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -412,7 +413,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'motorway']],
 			layout: { 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-dasharray': [0.5, 0.25],
 				'line-width': {
 					base: 1.2,
@@ -437,7 +438,7 @@ export default {
 				['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'path']],
 			],
 			paint: {
-				'line-color': '#f17626',
+				'line-color': '#9094d3',
 				'line-dasharray': [1.5, 0.75],
 				'line-width': {
 					base: 1.2,
@@ -457,7 +458,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['in', 'class', 'service', 'track']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#f17626',
+				'line-color': '#9094d3',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -477,7 +478,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'minor_road']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#f17626',
+				'line-color': '#9094d3',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -498,7 +499,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['in', 'class', 'secondary', 'tertiary']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#f2853e',
+				'line-color': '#a3a6da',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -518,7 +519,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['in', 'class', 'primary', 'trunk']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -538,7 +539,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'motorway']],
 			layout: { 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': 'rgba(235,219,178,0.8)',
+				'line-color': 'rgba(108,113,196,0.8)',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -557,7 +558,7 @@ export default {
 			'source-layer': 'transportation',
 			filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'rail']],
 			paint: {
-				'line-color': '#763308',
+				'line-color': '#3a3f90',
 				'line-width': {
 					base: 1.4,
 					stops: [
@@ -579,7 +580,7 @@ export default {
 			filter: ['all', ['in', 'class', 'taxiway']],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#763308',
+				'line-color': '#3a3f90',
 				'line-width': {
 					base: 1.5,
 					stops: [
@@ -600,7 +601,7 @@ export default {
 			filter: ['all', ['in', 'class', 'runway']],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#763308',
+				'line-color': '#3a3f90',
 				'line-width': {
 					base: 1.5,
 					stops: [
@@ -628,7 +629,7 @@ export default {
 						[14, 1],
 					],
 				},
-				'fill-color': 'rgba(214,93,14,0.5)',
+				'fill-color': 'rgba(108,113,196,0.5)',
 			},
 		},
 		{
@@ -641,7 +642,7 @@ export default {
 			filter: ['all', ['in', 'class', 'taxiway'], ['==', '$type', 'LineString']],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#f2853e',
+				'line-color': '#a3a6da',
 				'line-width': {
 					base: 1.5,
 					stops: [
@@ -668,7 +669,7 @@ export default {
 			filter: ['all', ['in', 'class', 'runway'], ['==', '$type', 'LineString']],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#f2853e',
+				'line-color': '#a3a6da',
 				'line-width': {
 					base: 1.5,
 					stops: [
@@ -694,7 +695,7 @@ export default {
 			filter: ['==', '$type', 'Polygon'],
 			layout: { visibility: 'visible' },
 			paint: {
-				'fill-color': '#a6480b',
+				'fill-color': '#484fb5',
 				'fill-outline-color': '#cfcdca',
 				'fill-opacity': 0.9,
 				'fill-antialias': false,
@@ -710,7 +711,7 @@ export default {
 			filter: ['all', ['!in', 'brunnel', 'bridge', 'tunnel'], ['==', 'class', 'motorway_link']],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -737,7 +738,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -763,7 +764,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': 'rgba(214,93,14,0.8)',
+				'line-color': 'rgba(108,113,196,0.8)',
 				'line-opacity': {
 					stops: [
 						[12, 0],
@@ -794,7 +795,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -815,7 +816,7 @@ export default {
 			filter: ['all', ['!in', 'brunnel', 'bridge', 'tunnel'], ['in', 'class', 'primary']],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': {
 					stops: [
 						[7, 0],
@@ -843,7 +844,7 @@ export default {
 			filter: ['all', ['!in', 'brunnel', 'bridge', 'tunnel'], ['in', 'class', 'trunk']],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': {
 					stops: [
 						[5, 0],
@@ -871,7 +872,7 @@ export default {
 			filter: ['all', ['!in', 'brunnel', 'bridge', 'tunnel'], ['==', 'class', 'motorway']],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -902,7 +903,7 @@ export default {
 				['all', ['!in', 'brunnel', 'bridge', 'tunnel'], ['==', 'class', 'path']],
 			],
 			paint: {
-				'line-color': '#b48ead',
+				'line-color': '#cb4b16',
 				'line-dasharray': [1.5, 0.75],
 				'line-width': {
 					base: 1.2,
@@ -923,7 +924,7 @@ export default {
 			filter: ['all', ['!in', 'brunnel', 'bridge', 'tunnel'], ['==', 'class', 'motorway_link']],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -949,7 +950,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -974,7 +975,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': '#f49456',
+				'line-color': '#e58ab6',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -999,7 +1000,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1023,7 +1024,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1047,7 +1048,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1072,7 +1073,7 @@ export default {
 			],
 			layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1095,7 +1096,7 @@ export default {
 				['all', ['==', 'class', 'rail'], ['has', 'service']],
 			],
 			paint: {
-				'line-color': 'rgba(118,51,8,0.7)',
+				'line-color': 'rgba(58,63,144,0.7)',
 				'line-width': {
 					base: 1.4,
 					stops: [
@@ -1118,7 +1119,7 @@ export default {
 			],
 			layout: { visibility: 'visible' },
 			paint: {
-				'line-color': 'rgba(118,51,8,0.7)',
+				'line-color': 'rgba(58,63,144,0.7)',
 				'line-dasharray': [0.2, 8],
 				'line-width': {
 					base: 1.4,
@@ -1147,7 +1148,7 @@ export default {
 				],
 			],
 			paint: {
-				'line-color': '#763308',
+				'line-color': '#3a3f90',
 				'line-width': {
 					base: 1.4,
 					stops: [
@@ -1175,7 +1176,7 @@ export default {
 				],
 			],
 			paint: {
-				'line-color': '#763308',
+				'line-color': '#3a3f90',
 				'line-dasharray': [0.2, 8],
 				'line-width': {
 					base: 1.4,
@@ -1196,7 +1197,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'motorway_link']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -1222,7 +1223,7 @@ export default {
 			],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -1244,7 +1245,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['in', 'class', 'secondary', 'tertiary']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-opacity': 1,
 				'line-width': {
 					base: 1.2,
@@ -1264,7 +1265,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['in', 'class', 'primary', 'trunk']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1285,7 +1286,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'motorway']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#d65d0e',
+				'line-color': '#d33682',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1309,7 +1310,7 @@ export default {
 				['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'path']],
 			],
 			paint: {
-				'line-color': '#f17626',
+				'line-color': '#9094d3',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1331,7 +1332,7 @@ export default {
 				['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'path']],
 			],
 			paint: {
-				'line-color': '#b48ead',
+				'line-color': '#cb4b16',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1351,7 +1352,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'motorway_link']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1376,7 +1377,7 @@ export default {
 			],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1397,7 +1398,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['in', 'class', 'secondary', 'tertiary']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1417,7 +1418,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['in', 'class', 'primary', 'trunk']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1437,7 +1438,7 @@ export default {
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'motorway']],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#ebdbb2',
+				'line-color': '#6c71c4',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1456,7 +1457,7 @@ export default {
 			'source-layer': 'transportation',
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'rail']],
 			paint: {
-				'line-color': '#763308',
+				'line-color': '#3a3f90',
 				'line-width': {
 					base: 1.4,
 					stops: [
@@ -1475,7 +1476,7 @@ export default {
 			'source-layer': 'transportation',
 			filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'rail']],
 			paint: {
-				'line-color': '#763308',
+				'line-color': '#3a3f90',
 				'line-dasharray': [0.2, 8],
 				'line-width': {
 					base: 1.4,
@@ -1495,7 +1496,7 @@ export default {
 			filter: ['all', ['in', 'admin_level', 4, 6, 8], ['!=', 'maritime', 1]],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#268bd2',
 				'line-dasharray': [3, 1, 1, 1],
 				'line-width': {
 					base: 1.4,
@@ -1515,7 +1516,7 @@ export default {
 			filter: ['all', ['==', 'admin_level', 2], ['!=', 'maritime', 1]],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#268bd2',
 				'line-width': {
 					base: 1,
 					stops: [
@@ -1535,7 +1536,7 @@ export default {
 			filter: ['all', ['in', 'admin_level', 2, 4], ['==', 'maritime', 1]],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#268bd2',
 				'line-width': {
 					base: 1,
 					stops: [
