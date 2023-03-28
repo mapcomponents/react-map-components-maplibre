@@ -10,6 +10,7 @@ import TopToolbar from '../TopToolbar';
 import AddLayerButton from './AddLayerButton';
 import LayerListItemFactory from '../LayerList/LayerListItemFactory';
 import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
+import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
 
 import style from '../LayerList/assets/style.json';
 
@@ -99,6 +100,7 @@ const StyleJsonTemplate = () => {
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
 				/>
+					<SelectStyleButton sx={{marginLeft:'5px'}} />
 				<LayerList style={style}>
 					<LayerListItemFactory layers={layerContext.layers} />
 				</LayerList>

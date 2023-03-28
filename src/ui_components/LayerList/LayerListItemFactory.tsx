@@ -4,11 +4,12 @@ import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
 import LayerListItem from './LayerListItem';
 
 export interface LayerListItemFactoryProps {
+	mapId?: string;
 	layers: any[];
 	setLayers?: (layers: any[] | ((state: any[]) => any[])) => void;
 }
 
-export default function LayerListItemFactory(props: LayerListItemFactoryProps) {
+function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	return (
 		<>
 			{' '}
@@ -25,7 +26,7 @@ export default function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										layer?.config?.type + ' layer' ||
 										'unnamed layer'
 									}
-									layerComponent={<MlGeoJsonLayer {...layer.config} />}
+									layerComponent={<MlGeoJsonLayer {...layer.config} mapId={props?.mapId} />}
 									setLayerState={
 										props?.setLayers
 											? (layerConfig) =>
@@ -44,7 +45,7 @@ export default function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					case 'wms':
 						return (
 							<>
-								<MlWmsLoader {...layer.config} />{' '}
+								<MlWmsLoader {...layer.config} mapId={props?.mapId} />
 							</>
 						);
 					default:
@@ -54,3 +55,9 @@ export default function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		</>
 	);
 }
+
+LayerListItemFactory.defaultProps = {
+	mapId: undefined,
+};
+
+export default LayerListItemFactory;

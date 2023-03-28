@@ -7,6 +7,7 @@ import useLayerContext from '../../hooks/useLayerContext';
 import LayerListItem from './LayerListItem';
 
 type Props = {
+	mapId?: string;
 	children?: JSX.Element | JSX.Element[];
 	style?: any;
 };
@@ -19,7 +20,7 @@ function LayerList(props: Props) {
 			{layerContext?.backgroundLayers?.length > 0 && (
 				<LayerListItem
 					layerComponent={
-						<MlVectorTileLayer {...layerContext.vtLayerConfig} layers={layerContext.backgroundLayers} />
+						<MlVectorTileLayer {...layerContext.vtLayerConfig} layers={layerContext.backgroundLayers} mapId={props?.mapId} />
 					}
 					setLayerState={(state: MlVectorTileLayerProps) =>
 						layerContext.setBackgroundLayers(state?.layers)
@@ -34,7 +35,7 @@ function LayerList(props: Props) {
 			{layerContext?.symbolLayers?.length > 0 && (
 				<LayerListItem
 					layerComponent={
-						<MlVectorTileLayer {...layerContext.vtLayerConfig} layers={layerContext.symbolLayers} />
+						<MlVectorTileLayer {...layerContext.vtLayerConfig} layers={layerContext.symbolLayers} mapId={props?.mapId} />
 					}
 					setLayerState={(state: MlVectorTileLayerProps) =>
 						layerContext.setSymbolLayers(state?.layers)
