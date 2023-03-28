@@ -4,7 +4,6 @@ import {
 	DialogContent,
 	DialogTitle,
 	FormControl,
-	InputAdornment,
 	InputLabel,
 	OutlinedInput,
 } from '@mui/material';

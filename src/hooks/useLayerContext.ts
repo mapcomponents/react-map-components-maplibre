@@ -1,9 +1,8 @@
 import { useContext } from 'react';
 import LayerContext from '../contexts/LayerContext';
 
-type Props = {};
 
-const useLayerContext = (_props?: Props) => {
+const useLayerContext = () => {
 	const layerContext = useContext(LayerContext);
 	return layerContext;
 };

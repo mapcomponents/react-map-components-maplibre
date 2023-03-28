@@ -17,7 +17,7 @@ const SelectStylePopup = (props: SelectStylePopupProps) => {
 	return (
 		<Dialog open={props.open} onClose={handleCancel} PaperProps={{ sx: { padding: '20px' } }}>
 		{props?.styles?.map((style) => {
-			return (<Button onClick={() => props?.onSelect?.(style)}>{style.name}</Button>);
+			return (<Button key={style.name} onClick={() => props?.onSelect?.(style)}>{style.name}</Button>);
 		})}
 		</Dialog>
 	);
