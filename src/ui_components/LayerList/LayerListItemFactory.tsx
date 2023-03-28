@@ -5,18 +5,20 @@ import LayerListItem from './LayerListItem';
 
 export interface LayerListItemFactoryProps {
 	layers: any[];
+	setLayers?: (layers: any[] | ((state: any[]) => any[])) => void;
 }
 
 export default function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	return (
 		<>
 			{' '}
-			{props.layers.map((layer: any) => {
+			{props.layers.map((layer: any, idx: number) => {
 				switch (layer.type) {
 					case 'geojson':
 						return (
 							<>
 								<LayerListItem
+									key={idx}
 									name={
 										layer?.name ||
 										layer?.config?.geojson?.name ||
@@ -24,6 +26,17 @@ export default function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										'unnamed layer'
 									}
 									layerComponent={<MlGeoJsonLayer {...layer.config} />}
+									setLayerState={
+										props?.setLayers
+											? (layerConfig) =>
+													props?.setLayers?.((current: any[]) => {
+														const _layers = [...current];
+														current[idx].config = layerConfig;
+
+														return _layers;
+													})
+											: undefined
+									}
 									configurable={true}
 								/>
 							</>

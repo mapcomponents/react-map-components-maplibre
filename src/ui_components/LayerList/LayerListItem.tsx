@@ -69,8 +69,10 @@ function LayerListItem({
 	useEffect(() => {
 		if (!setLayerState || !paintProps) return;
 
+		if(JSON.stringify(paintProps) === JSON.stringify(layerComponent.props?.paint))return;
+
 		setLayerState({ ...layerComponent.props, paint: paintProps });
-	}, [paintProps, setLayerState]);
+	}, [paintProps, setLayerState, layerComponent.props?.paint]);
 
 	const _layerComponent = useMemo(() => {
 		if (layerComponent && type === 'layer') {

@@ -55,7 +55,7 @@ const FolderTemplate = () => {
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
 				/>
 				<LayerList>
-					<LayerListItemFactory layers={layerContext.layers} />
+					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} />
 				</LayerList>
 			</Sidebar>
 		</>
