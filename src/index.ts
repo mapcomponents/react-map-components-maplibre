@@ -50,6 +50,7 @@ export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
 export { default as MlWmsLoader } from "./components/MlWmsLoader/MlWmsLoader"
 
 export { default as MlBasicComponent } from "./components/MlBasicComponent.js";
+export { default as MlOrderLayers } from "./components/MlOrderLayers/MlOrderLayers";
 
 export { default as useCameraFollowPath } from "./hooks/useCameraFollowPath/useCameraFollowPath";
 export { default as useExportMap } from "./hooks/useExportMap";
