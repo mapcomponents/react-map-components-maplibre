@@ -28,6 +28,7 @@ function LayerListItem({
 	configurable,
 	setLayerState,
 }: Props) {
+	console.log('current style: ' + layerComponent.props?.layers?.[0]?.id)
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const visibleRef = useRef<boolean>(visible);
@@ -48,6 +49,7 @@ function LayerListItem({
 	}, [visible, localVisible]);
 
 	useEffect(() => {
+		console.log(!setLayerState, !layerComponent?.props?.layers, _visible === visibleRef.current);
 		if (!setLayerState || !layerComponent?.props?.layers || _visible === visibleRef.current) return;
 
 		visibleRef.current = _visible;
@@ -62,14 +64,15 @@ function LayerListItem({
 				}
 				return el;
 			});
+			console.log('setLayerState', state.layers);
+			setLayerState(state);
 		}
-		setLayerState(state);
 	}, [_visible, setLayerState, layerComponent?.props?.layers]);
 
 	useEffect(() => {
-		if (!setLayerState || !paintProps) return;
+		if (!setLayerState || !paintProps || layerComponent?.props?.layers) return;
 
-		if(JSON.stringify(paintProps) === JSON.stringify(layerComponent.props?.paint))return;
+		if (JSON.stringify(paintProps) === JSON.stringify(layerComponent.props?.paint)) return;
 
 		setLayerState({ ...layerComponent.props, paint: paintProps });
 	}, [paintProps, setLayerState, layerComponent.props?.paint]);
@@ -85,8 +88,7 @@ function LayerListItem({
 					break;
 				case 'MlVectorTileLayer':
 					return React.cloneElement(layerComponent, {
-						...layerComponent?.props,
-						layers: layerComponent?.props?.layers,
+						...layerComponent?.props
 					});
 					break;
 				default:
@@ -101,7 +103,7 @@ function LayerListItem({
 			}
 		}
 		return <></>;
-	}, [type, layerComponent, paintProps, _visible, layerComponent?.props?.layers]);
+	}, [type, layerComponent, paintProps, _visible, layerComponent?.props?.layers, setLayerState]);
 
 	const layerType = useMemo(() => {
 		if (layerComponent && type === 'layer') {
@@ -153,11 +155,7 @@ function LayerListItem({
 							}}
 						/>
 					</ListItemIcon>
-					<ListItemText
-					 	variant="layerlist"
-						primary={name}
-						secondary={description}
-					/>
+					<ListItemText variant="layerlist" primary={name} secondary={description} />
 				</ListItem>
 			)}
 			{_layerComponent}

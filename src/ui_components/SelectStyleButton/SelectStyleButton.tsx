@@ -42,7 +42,11 @@ const SelectStyleButton = (props: SelectStyleButtonProps) => {
 				open={popupOpen}
 				setOpen={setPopupOpen}
 				onSelect={(style) => {
+                    layerContext.setBackgroundLayers([]);
+                    setTimeout(() => {
+
 					layerContext.updateStyle(style);
+                    }, 100)
                     setPopupOpen(false);
 				}}
 			/>

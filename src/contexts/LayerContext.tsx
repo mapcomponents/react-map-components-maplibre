@@ -1,6 +1,7 @@
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import React, { useMemo } from 'react';
-import { MlVectorTileLayerProps } from 'src/components/MlVectorTileLayer/MlVectorTileLayer';
+import MlOrderLayers from '../components/MlOrderLayers/MlOrderLayers';
+import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
 import config from '../omt_styles/config';
 
 export interface LayerContextProps {
@@ -27,7 +28,7 @@ export interface LayerContextType {
 			| MlVectorTileLayerProps['layers']
 			| ((layers: MlVectorTileLayerProps['layers']) => MlVectorTileLayerProps['layers'])
 	) => void;
-    updateStyle: (style: StyleSpecification) => void;
+	updateStyle: (style: StyleSpecification) => void;
 	vtLayerConfig: Partial<MlVectorTileLayerProps>;
 	setTileUrl: (url: string) => void;
 	tileUrl: string;
@@ -57,10 +58,11 @@ function LayerContextProvider(props: LayerContextProps) {
 
 		const backgroundLayers: LayerSpecification[] = [];
 		const symbolLayers: LayerSpecification[] = [];
-		style.layers.forEach((layer: LayerSpecification) => {
+		style.layers.forEach((layer: LayerSpecification, idx: number) => {
 			if (layer.type === 'symbol') {
 				symbolLayers.push(layer);
 			} else {
+				if (idx === 0) layer.id = style.name || 'background';
 				backgroundLayers.push(layer);
 			}
 		});
@@ -81,7 +83,12 @@ function LayerContextProvider(props: LayerContextProps) {
 		setTileUrl,
 	} as LayerContextType;
 
-	return <LayerContext.Provider value={value}>{props.children}</LayerContext.Provider>;
+	return (
+		<LayerContext.Provider value={value}>
+			<MlOrderLayers layerIds={['labels', 'content', 'background']} />
+			{props.children}
+		</LayerContext.Provider>
+	);
 }
 
 export default LayerContext;

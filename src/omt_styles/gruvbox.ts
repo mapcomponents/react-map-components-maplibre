@@ -26,7 +26,7 @@ export default {
 			filter: ['==', 'subclass', 'glacier'],
 			layout: { visibility: 'visible' },
 			paint: {
-				'fill-color': '#81a1c1',
+				'fill-color': '#83a598',
 				'fill-opacity': {
 					base: 1,
 					stops: [
@@ -43,7 +43,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'residential'],
-			paint: { 'fill-color': '#a3be8c' },
+			paint: { 'fill-color': '#b8bb26' },
 		},
 		{
 			id: 'landuse-commercial',
@@ -52,7 +52,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['all', ['==', '$type', 'Polygon'], ['==', 'class', 'commercial']],
-			paint: { 'fill-color': '#acc598' },
+			paint: { 'fill-color': '#bfc23c' },
 		},
 		{
 			id: 'landuse-industrial',
@@ -61,7 +61,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['all', ['==', '$type', 'Polygon'], ['==', 'class', 'industrial']],
-			paint: { 'fill-color': '#b5cba3' },
+			paint: { 'fill-color': '#c6c951' },
 		},
 		{
 			id: 'park',
@@ -71,7 +71,7 @@ export default {
 			'source-layer': 'park',
 			filter: ['==', '$type', 'Polygon'],
 			paint: {
-				'fill-color': '#a3be8c',
+				'fill-color': '#b8bb26',
 				'fill-opacity': {
 					base: 1.8,
 					stops: [
@@ -89,7 +89,7 @@ export default {
 			'source-layer': 'park',
 			filter: ['==', '$type', 'Polygon'],
 			layout: {},
-			paint: { 'line-color': 'rgba(163,19,14,0.6)', 'line-dasharray': [3, 3] },
+			paint: { 'line-color': 'rgba(184,187,38,0.6)', 'line-dasharray': [3, 3] },
 		},
 		{
 			id: 'landuse-cemetery',
@@ -98,7 +98,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'cemetery'],
-			paint: { 'fill-color': '#cbdabe' },
+			paint: { 'fill-color': '#eceeaa' },
 		},
 		{
 			id: 'landuse-hospital',
@@ -107,7 +107,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'hospital'],
-			paint: { 'fill-color': '#b48ead' },
+			paint: { 'fill-color': '#fe8019' },
 		},
 		{
 			id: 'landuse-school',
@@ -116,7 +116,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landuse',
 			filter: ['==', 'class', 'school'],
-			paint: { 'fill-color': 'rgba(18,142,173,0.8)' },
+			paint: { 'fill-color': 'rgba(254,128,25,0.8)' },
 		},
 		{
 			id: 'landuse-railway',
@@ -135,7 +135,7 @@ export default {
 			'source-layer': 'landcover',
 			filter: ['==', 'class', 'wood'],
 			paint: {
-				'fill-color': '#81a1c1',
+				'fill-color': '#83a598',
 				'fill-opacity': 0.1,
 				'fill-outline-color': 'hsla(0, 0%, 0%, 0.03)',
 				'fill-antialias': {
@@ -154,7 +154,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'landcover',
 			filter: ['==', 'class', 'grass'],
-			paint: { 'fill-color': '#a3be8c', 'fill-opacity': 1 },
+			paint: { 'fill-color': '#b8bb26', 'fill-opacity': 1 },
 		},
 		{
 			id: 'landcover-grass-park',
@@ -163,7 +163,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'park',
 			filter: ['==', 'class', 'public_park'],
-			paint: { 'fill-color': '#a3be8c', 'fill-opacity': 0.8 },
+			paint: { 'fill-color': '#b8bb26', 'fill-opacity': 0.8 },
 		},
 		{
 			id: 'waterway-other',
@@ -174,7 +174,7 @@ export default {
 			filter: ['!in', 'class', 'canal', 'river', 'stream'],
 			layout: { 'line-cap': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#83a598',
 				'line-width': {
 					base: 1.3,
 					stops: [
@@ -193,7 +193,7 @@ export default {
 			filter: ['in', 'class', 'canal', 'stream'],
 			layout: { 'line-cap': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#83a598',
 				'line-width': {
 					base: 1.3,
 					stops: [
@@ -212,7 +212,7 @@ export default {
 			filter: ['==', 'class', 'river'],
 			layout: { 'line-cap': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#83a598',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -233,7 +233,7 @@ export default {
 			layout: { visibility: 'visible' },
 			paint: {
 				'fill-opacity': 1,
-				'fill-color': '#8fbcbb',
+				'fill-color': '#83a598',
 				'fill-translate': {
 					base: 1,
 					stops: [
@@ -250,7 +250,7 @@ export default {
 			source: 'openmaptiles',
 			'source-layer': 'water',
 			layout: { visibility: 'visible' },
-			paint: { 'fill-color': '#5f9f9e' },
+			paint: { 'fill-color': '#5c7f72' },
 		},
 		{
 			id: 'water-pattern',
@@ -270,7 +270,7 @@ export default {
 			filter: ['==', 'subclass', 'ice_shelf'],
 			layout: { visibility: 'visible' },
 			paint: {
-				'fill-color': '#81a1c1',
+				'fill-color': '#83a598',
 				'fill-opacity': {
 					base: 1,
 					stops: [
@@ -286,7 +286,7 @@ export default {
 			metadata: { 'mapbox:group': '1444849364238.8171' },
 			source: 'openmaptiles',
 			'source-layer': 'building',
-			paint: { 'fill-color': '#65737e', 'fill-antialias': true },
+			paint: { 'fill-color': '#928374', 'fill-antialias': true },
 		},
 		{
 			id: 'building-top',
@@ -304,7 +304,7 @@ export default {
 					],
 				},
 				'fill-outline-color': '#dfdbd7',
-				'fill-color': '#7e8d98',
+				'fill-color': '#a89c91',
 				'fill-opacity': {
 					base: 1,
 					stops: [
@@ -902,7 +902,7 @@ export default {
 				['all', ['!in', 'brunnel', 'bridge', 'tunnel'], ['==', 'class', 'path']],
 			],
 			paint: {
-				'line-color': '#b48ead',
+				'line-color': '#fe8019',
 				'line-dasharray': [1.5, 0.75],
 				'line-width': {
 					base: 1.2,
@@ -1331,7 +1331,7 @@ export default {
 				['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'path']],
 			],
 			paint: {
-				'line-color': '#b48ead',
+				'line-color': '#fe8019',
 				'line-width': {
 					base: 1.2,
 					stops: [
@@ -1495,7 +1495,7 @@ export default {
 			filter: ['all', ['in', 'admin_level', 4, 6, 8], ['!=', 'maritime', 1]],
 			layout: { 'line-join': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#fb4934',
 				'line-dasharray': [3, 1, 1, 1],
 				'line-width': {
 					base: 1.4,
@@ -1515,7 +1515,7 @@ export default {
 			filter: ['all', ['==', 'admin_level', 2], ['!=', 'maritime', 1]],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#fb4934',
 				'line-width': {
 					base: 1,
 					stops: [
@@ -1535,7 +1535,7 @@ export default {
 			filter: ['all', ['in', 'admin_level', 2, 4], ['==', 'maritime', 1]],
 			layout: { 'line-cap': 'round', 'line-join': 'round' },
 			paint: {
-				'line-color': '#8fbcbb',
+				'line-color': '#83a598',
 				'line-width': {
 					base: 1,
 					stops: [

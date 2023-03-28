@@ -55,8 +55,9 @@ const FolderTemplate = () => {
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
 				/>
+				<SelectStyleButton sx={{marginLeft:'5px'}} />
 				<LayerList>
-					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} />
+					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} insertBeforeLayer='order-content' />
 				</LayerList>
 			</Sidebar>
 		</>
@@ -102,7 +103,7 @@ const StyleJsonTemplate = () => {
 				/>
 					<SelectStyleButton sx={{marginLeft:'5px'}} />
 				<LayerList style={style}>
-					<LayerListItemFactory layers={layerContext.layers} />
+					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} insertBeforeLayer='order-content' />
 				</LayerList>
 			</Sidebar>
 		</>

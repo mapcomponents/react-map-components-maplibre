@@ -7,6 +7,7 @@ export interface LayerListItemFactoryProps {
 	mapId?: string;
 	layers: any[];
 	setLayers?: (layers: any[] | ((state: any[]) => any[])) => void;
+	insertBeforeLayer?: string;
 }
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
@@ -26,7 +27,13 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										layer?.config?.type + ' layer' ||
 										'unnamed layer'
 									}
-									layerComponent={<MlGeoJsonLayer {...layer.config} mapId={props?.mapId} />}
+									layerComponent={
+										<MlGeoJsonLayer
+											{...layer.config}
+											mapId={props?.mapId}
+											insertBeforeLayer={props?.insertBeforeLayer}
+										/>
+									}
 									setLayerState={
 										props?.setLayers
 											? (layerConfig) =>
@@ -45,7 +52,11 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					case 'wms':
 						return (
 							<>
-								<MlWmsLoader {...layer.config} mapId={props?.mapId} />
+								<MlWmsLoader
+									{...layer.config}
+									mapId={props?.mapId}
+									insertBeforeLayer={props?.insertBeforeLayer}
+								/>
 							</>
 						);
 					default:

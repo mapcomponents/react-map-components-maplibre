@@ -13,7 +13,7 @@ import { LngLat, MapMouseEvent } from 'maplibre-gl';
 import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
 import useMap from '../../hooks/useMap';
-import { Box, Checkbox, ListItemIcon } from '@mui/material';
+import { Box, Checkbox, ListItemIcon, Snackbar } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
@@ -39,6 +39,7 @@ export interface MlWmsLoaderProps {
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId: string;
+	insertBeforeLayer?: string;
 	/**
 	 * URL parameters that will be used in the getCapabilities request
 	 */
@@ -263,7 +264,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 	return (
 		<>
-			{error && <p>{error}</p>}
+			{error && <Snackbar ><Box>{error}</Box></Snackbar>}
 			{wmsUrl && (
 				<>
 					<ListItem
@@ -358,6 +359,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 										.reverse()
 										.join(','),
 								}}
+								insertBeforeLayer={props?.insertBeforeLayer}
 							/>
 						)}
 					</Box>

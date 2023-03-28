@@ -20,11 +20,17 @@ function LayerList(props: Props) {
 			{layerContext?.backgroundLayers?.length > 0 && (
 				<LayerListItem
 					layerComponent={
-						<MlVectorTileLayer {...layerContext.vtLayerConfig} layers={layerContext.backgroundLayers} mapId={props?.mapId} />
+						<MlVectorTileLayer
+							{...layerContext.vtLayerConfig}
+							layers={layerContext.backgroundLayers}
+							mapId={props?.mapId}
+							insertBeforeLayer={'order-background'}
+						/>
 					}
-					setLayerState={(state: MlVectorTileLayerProps) =>
-						layerContext.setBackgroundLayers(state?.layers)
-					}
+					setLayerState={(state: MlVectorTileLayerProps) => {
+						console.log('setLayerState', state, state.layers[0].id);
+						layerContext.setBackgroundLayers(state?.layers);
+					}}
 					visible={true}
 					configurable={true}
 					type="layer"
@@ -35,7 +41,12 @@ function LayerList(props: Props) {
 			{layerContext?.symbolLayers?.length > 0 && (
 				<LayerListItem
 					layerComponent={
-						<MlVectorTileLayer {...layerContext.vtLayerConfig} layers={layerContext.symbolLayers} mapId={props?.mapId} />
+						<MlVectorTileLayer
+							{...layerContext.vtLayerConfig}
+							layers={layerContext.symbolLayers}
+							mapId={props?.mapId}
+							insertBeforeLayer={'order-labels'}
+						/>
 					}
 					setLayerState={(state: MlVectorTileLayerProps) =>
 						layerContext.setSymbolLayers(state?.layers)
