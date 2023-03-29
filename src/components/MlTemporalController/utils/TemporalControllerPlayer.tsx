@@ -157,7 +157,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 						</Button>
 					</Grid>
 					{props.display && 
-					<Grid item sm={2} > <Typography variant="h5" textAlign={"right"} sx={{paddingRight: "25px"}}> {currentVal} </Typography> </Grid>
+					<Grid item sm={2} > <Typography variant="h5" textAlign={"right"} sx={{paddingRight: "25px"}}> {Math.floor(currentVal)} </Typography> </Grid>
 					}
 				</Grid>
 

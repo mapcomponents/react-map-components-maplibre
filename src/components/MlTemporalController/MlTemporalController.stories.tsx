@@ -102,6 +102,7 @@ CircleConfig.args = {
 	timeField: 'Year',
 	labelField: 'LocationName',
 	accumulate: false,
+	step: 0.3,
 	minVal: 1900,
 	fitBounds: true,
 	onClick: () => console.log('clicked'),
