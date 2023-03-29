@@ -29,7 +29,7 @@ const FillTemplate = (props: MlTemporalControllerProps) => {
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						African countries by independecy year
+						African countries by independency year
 					</Typography>
 				}
 			/>
