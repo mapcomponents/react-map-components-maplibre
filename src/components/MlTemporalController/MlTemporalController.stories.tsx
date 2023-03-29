@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import tour_de_france_2022 from './assets/tour_de_france_2022.json';
 import { TemporalControllerValues } from './MlTemporalController';
 
-interface TimeDisplayProps {
-	value: TemporalControllerValues | undefined;
-}
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
@@ -25,7 +22,7 @@ export default storyoptions;
 
 
 const FillTemplate = (props: MlTemporalControllerProps) => {
-	const [current, setCurrent] = useState<TemporalControllerValues>();
+
 
 	return (
 		<>
@@ -37,13 +34,13 @@ const FillTemplate = (props: MlTemporalControllerProps) => {
 				}
 			/>
 
-			<MlTemporalController {...props} onStateChange={setCurrent} />
+			<MlTemporalController {...props}  />
 		</>
 	);
 };
 
 const CircleTemplate = (props: MlTemporalControllerProps) => {
-	const [current, setCurrent] = useState();
+
 
 	return (
 		<>
@@ -54,15 +51,14 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 					</Typography>
 				}
 			/>
-			<MlTemporalController {...props} onStateChange={setCurrent} />
+			<MlTemporalController {...props} />
 		
 		</>
 	);
 };
 
 const LineTemplate = (props: MlTemporalControllerProps) => {
-	const [current, setCurrent] = useState();
-
+	
 	return (
 		<>
 			<TopToolbar
@@ -72,7 +68,7 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 					</Typography>
 				}
 			/>
-			<MlTemporalController {...props} onStateChange={setCurrent} />
+			<MlTemporalController {...props}  />
 		
 		</>
 	);
