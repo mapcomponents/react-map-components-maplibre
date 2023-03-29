@@ -49,6 +49,7 @@ export { default as MlWmsFeatureInfoPopup } from "./components/MlWmsFeatureInfoP
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
 export { default as MlWmsLoader } from "./components/MlWmsLoader/MlWmsLoader"
 
+export { default as MlTemporalController } from "./components/MlTemporalController/MlTemporalController"
 export { default as MlBasicComponent } from "./components/MlBasicComponent.js";
 
 export { default as useCameraFollowPath } from "./hooks/useCameraFollowPath/useCameraFollowPath";
@@ -62,6 +63,7 @@ export { default as useMap } from "./hooks/useMap";
 export { default as useMapState } from "./hooks/useMapState";
 export { default as useSource } from "./hooks/useSource";
 export { default as useWms } from "./hooks/useWms";
+export { default as useFilterData } from "./components/MlTemporalController/utils/useFilterData"
 
 export { MapComponentsProvider } from "./contexts/MapContext";
 export { default as MapContext } from "./contexts/MapContext";
