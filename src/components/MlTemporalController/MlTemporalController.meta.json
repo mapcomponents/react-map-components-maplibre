@@ -1,0 +1,14 @@
+{
+  "name": "MlTemporalController",
+  "title": "Temporal navigation",
+  "description": "Component that displays GeoJSON data on the map filtered by a numeral property controlled by a linear progress bar.",
+  "i18n": {
+    "de": {
+      "title": "Zeitsteuerung",
+      "description": "Nach einer numerischen Eigenschaft gefilterte Darstellung von GeoJSON Daten auf einer Karte, gesteuert durch eine lineare Fortschrittsanzeige."
+    }
+  },
+  "tags": [],
+  "category": "",
+  "type": "component"
+}
