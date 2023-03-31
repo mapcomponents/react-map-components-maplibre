@@ -41,25 +41,6 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					name="Background"
 				/>
 			)}
-			{layerContext?.symbolLayers?.length > 0 && (
-				<LayerListItem
-					layerComponent={
-						<MlVectorTileLayer
-							{...layerContext.vtLayerConfig}
-							layers={layerContext.symbolLayers}
-							mapId={props?.mapId}
-							insertBeforeLayer={'order-labels'}
-						/>
-					}
-					setLayerState={(state: MlVectorTileLayerProps) =>
-						layerContext.setSymbolLayers(state?.layers)
-					}
-					visible={true}
-					configurable={true}
-					type="layer"
-					name="Labels"
-				/>
-			)}
 			{props.layers.map((layer: LayerConfig, idx: number) => {
 				switch (layer.type) {
 					case 'geojson':
@@ -118,6 +99,25 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 						return null;
 				}
 			})}
+			{layerContext?.symbolLayers?.length > 0 && (
+				<LayerListItem
+					layerComponent={
+						<MlVectorTileLayer
+							{...layerContext.vtLayerConfig}
+							layers={layerContext.symbolLayers}
+							mapId={props?.mapId}
+							insertBeforeLayer={'order-labels'}
+						/>
+					}
+					setLayerState={(state: MlVectorTileLayerProps) =>
+						layerContext.setSymbolLayers(state?.layers)
+					}
+					visible={true}
+					configurable={true}
+					type="layer"
+					name="Labels"
+				/>
+			)}
 		</>
 	);
 }
