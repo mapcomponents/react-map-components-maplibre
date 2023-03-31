@@ -350,8 +350,15 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 									</IconButton>
 								)}
 								<IconButton
-									edge="end"
+									sx={{ padding: '4px', marginTop: '-3px', marginRight: '4px' }}
+									aria-label="open"
+									onClick={() => setOpen((current) => !current)}
+								>
+									{open ? <ExpandLess /> : <ExpandMore />}
+								</IconButton>
+								<IconButton
 									aria-label="delete"
+									edge="end"
 									onClick={() => {
 										if (typeof props.onConfigChange === 'function') {
 											props.onConfigChange(false);
@@ -360,14 +367,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 									sx={{ padding: '4px', marginTop: '-3px' }}
 								>
 									<DeleteForeverIcon />
-								</IconButton>
-								<IconButton
-									sx={{ padding: '4px', marginTop: '-3px' }}
-									edge="end"
-									aria-label="open"
-									onClick={() => setOpen((current) => !current)}
-								>
-									{open ? <ExpandLess /> : <ExpandMore />}
 								</IconButton>
 							</>
 						}
@@ -459,7 +458,7 @@ MlWmsLoader.defaultProps = {
 		TRANSPARENT: 'TRUE',
 	},
 	featureInfoEnabled: true,
-	zoomToExtent: false
+	zoomToExtent: false,
 };
 
 export default MlWmsLoader;
