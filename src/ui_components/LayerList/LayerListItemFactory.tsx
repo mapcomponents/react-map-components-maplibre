@@ -4,7 +4,6 @@ import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
 import LayerListItem from './LayerListItem';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
 import { LayerConfig } from 'src/contexts/LayerContext';
-import { FeatureCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 
 export interface LayerListItemFactoryProps {
@@ -39,7 +38,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									}
 									setLayerState={
 										props?.setLayers
-											? (layerConfig:MlGeoJsonLayerProps) =>
+											? (layerConfig:MlGeoJsonLayerProps | false) =>
 													props?.setLayers?.((current: LayerConfig[]) => {
 														const _layers = [...current];
 														if (layerConfig === false) {
@@ -53,7 +52,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											: undefined
 									}
 									configurable={true}
-									visible={layer?.visible}
+									showDeleteButton={true}
 								/>
 							</>
 						);
@@ -75,6 +74,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											return _layers;
 										});
 									}}
+									showDeleteButton={true}
 								/>
 							</>
 						);

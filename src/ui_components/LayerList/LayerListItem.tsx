@@ -8,7 +8,7 @@ import LayerListFolder from './LayerListFolder';
 import { LayerSpecification } from 'maplibre-gl';
 import LayerListItemVectorLayer from './util/LayerListItemVectorLayer';
 import { useEffect } from 'react';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type Props = {
 	layerComponent: JSX.Element;
@@ -18,6 +18,7 @@ type Props = {
 	name: string;
 	description?: string;
 	setLayerState?: (state: unknown) => void;
+	showDeleteButton?: boolean;
 };
 
 function LayerListItem({
@@ -28,6 +29,7 @@ function LayerListItem({
 	description,
 	configurable,
 	setLayerState,
+	...props
 }: Props) {
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
@@ -141,28 +143,38 @@ function LayerListItem({
 						configurable ? (
 							<>
 								<IconButton
+									edge={props.showDeleteButton ? false : 'end'}
 									aria-label="visibility"
 									onClick={() => {
 										setPaintPropsFormVisible((current) => {
 											return !current;
 										});
 									}}
-									sx={{ padding: '4px', marginTop: '-3px', marginRight: '4px' }}
+									sx={{
+										padding: '4px',
+										marginTop: '-3px',
+										...(props.showDeleteButton ? { marginRight: '4px' } : {}),
+									}}
 								>
 									<TuneIcon />
 								</IconButton>
-								<IconButton
-									edge="end"
-									aria-label="delete"
-									onClick={() => {
-										if (typeof setLayerState === 'function') {
-											setLayerState(false);
-										}
-									}}
-									sx={{ padding: '4px', marginTop: '-3px' }}
-								>
-									<DeleteForeverIcon />
-								</IconButton>
+								{props.showDeleteButton && (
+									<IconButton
+										edge="end"
+										aria-label="delete"
+										onClick={() => {
+											if (typeof setLayerState === 'function') {
+												setLayerState(false);
+											}
+										}}
+										sx={{
+											padding: '4px',
+											marginTop: '-3px',
+										}}
+									>
+										<DeleteIcon />
+									</IconButton>
+								)}
 							</>
 						) : undefined
 					}
@@ -209,6 +221,7 @@ function LayerListItem({
 LayerListItem.defaultProps = {
 	type: 'layer',
 	visible: true,
+	showDeleteButton: false,
 };
 
 export default LayerListItem;

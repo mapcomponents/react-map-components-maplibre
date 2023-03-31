@@ -15,7 +15,7 @@ import { useWmsReturnType } from '../../hooks/useWms';
 import useMap from '../../hooks/useMap';
 import { Box, Checkbox, ListItemIcon, Snackbar } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
@@ -64,8 +64,9 @@ export interface MlWmsLoaderProps {
 	idPrefix?: string;
 	featureInfoEnabled?: boolean;
 	config?: WmsConfig;
-	onConfigChange?: (config: WmsConfig | boolean) => void;
+	onConfigChange?: (config: WmsConfig | false) => void;
 	setLayers?: (layers: LayerType[]) => void;
+	showDeleteButton?: boolean;
 }
 
 export type LayerType = {
@@ -90,8 +91,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	}: useWmsReturnType = useWms({
 		urlParameters: props.urlParameters,
 	});
-	const [open, setOpen] = useState(false);
-	const [visible, setVisible] = useState(true);
+	const [open, setOpen] = useState(props?.config?.open || false);
+	const [visible, setVisible] = useState(props?.config?.visible || false);
 
 	const mapHook = useMap({ mapId: props?.mapId });
 	const [_layers, _setLayers] = useState<Array<LayerType>>(props?.config?.layers || []);
@@ -103,6 +104,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
+		if(props.config)return;
 		setUrl(props.url);
 	}, [props.url]);
 
@@ -313,10 +315,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		}
 	}, [capabilities, mapHook.map]);
 
-	useEffect(() => {
-		setUrl(props.url);
-	}, [props.url]);
-
 	return (
 		<>
 			{error && (
@@ -350,24 +348,31 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 									</IconButton>
 								)}
 								<IconButton
-									sx={{ padding: '4px', marginTop: '-3px', marginRight: '4px' }}
+									edge={props.showDeleteButton ? false : 'end'}
+									sx={{
+										padding: '4px',
+										marginTop: '-3px',
+										...(props.showDeleteButton ? { marginRight: '4px' } : {}),
+									}}
 									aria-label="open"
 									onClick={() => setOpen((current) => !current)}
 								>
 									{open ? <ExpandLess /> : <ExpandMore />}
 								</IconButton>
-								<IconButton
-									aria-label="delete"
-									edge="end"
-									onClick={() => {
-										if (typeof props.onConfigChange === 'function') {
-											props.onConfigChange(false);
-										}
-									}}
-									sx={{ padding: '4px', marginTop: '-3px' }}
-								>
-									<DeleteForeverIcon />
-								</IconButton>
+								{props.showDeleteButton && (
+									<IconButton
+										aria-label="delete"
+										edge="end"
+										onClick={() => {
+											if (typeof props.onConfigChange === 'function') {
+												props.onConfigChange(false);
+											}
+										}}
+										sx={{ padding: '4px', marginTop: '-3px' }}
+									>
+										<DeleteIcon />
+									</IconButton>
+								)}
 							</>
 						}
 						sx={{
@@ -459,6 +464,7 @@ MlWmsLoader.defaultProps = {
 	},
 	featureInfoEnabled: true,
 	zoomToExtent: false,
+	showDeleteButton: false,
 };
 
 export default MlWmsLoader;
