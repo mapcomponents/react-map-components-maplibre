@@ -24,7 +24,6 @@ export default function LayerListItemVectorLayer({
 	const [paintProps, setPaintProps] = useState(vtProps.layers[id].paint);
 
 	useEffect(() => {
-		console.log(typeof vtProps.layers[id]?.layout?.visibility,vtProps.layers[id]?.layout?.visibility, visible);
 		if (
 			!setVtProps ||
 			(typeof vtProps.layers[id]?.layout?.visibility === 'undefined' && visible) ||

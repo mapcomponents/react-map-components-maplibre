@@ -16,6 +16,8 @@ import { StyleSpecification } from 'maplibre-gl';
 export interface SelectStyleButtonProps {
 	sx?: SxProps;
 	onComplete?: (config: any) => void;
+	styles?: StyleSpecification[];
+	defaultStyles?: boolean;
 }
 
 const SelectStyleButton = (props: SelectStyleButtonProps) => {
@@ -32,28 +34,32 @@ const SelectStyleButton = (props: SelectStyleButtonProps) => {
 				<WallpaperIcon />
 			</Button>
 			<SelectStylePopup
-				styles={[
-					MonokaiStyle,
-					SolarizedStyle,
-					OceanicNextStyle,
-					MedievalKingdomStyle,
-					GruvboxStyle,
-				] as StyleSpecification[]}
+				styles={
+					[
+						...(props.defaultStyles
+							? [MonokaiStyle, SolarizedStyle, OceanicNextStyle, MedievalKingdomStyle, GruvboxStyle]
+							: []),
+						...(props.styles || []),
+					] as StyleSpecification[]
+				}
 				open={popupOpen}
 				setOpen={setPopupOpen}
 				onSelect={(style) => {
-                    layerContext.setBackgroundLayers([]);
-                    setTimeout(() => {
-
-					layerContext.updateStyle(style);
-                    }, 100)
-                    setPopupOpen(false);
+					// Todo: should be possible without clearing bg layers first & setTimeout
+					layerContext.setBackgroundLayers([]);
+					setTimeout(() => {
+						layerContext.updateStyle(style);
+					}, 100);
+					setPopupOpen(false);
 				}}
 			/>
 		</>
 	);
 };
 
-SelectStyleButton.defaultProps = {};
+SelectStyleButton.defaultProps = {
+	style: [],
+	defaultStyles: true,
+};
 
 export default SelectStyleButton;

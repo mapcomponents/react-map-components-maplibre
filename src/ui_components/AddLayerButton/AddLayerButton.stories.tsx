@@ -81,6 +81,7 @@ const StyleJsonTemplate = () => {
 
 	useEffect(() => {
 		if (layerContext.layers.length > 0) {
+			console.log(layerContext.layers)
 			localStorage.setItem('layers', JSON.stringify(layerContext.layers));
 		}
 	}, [layerContext.layers]);

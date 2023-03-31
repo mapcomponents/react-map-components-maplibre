@@ -28,7 +28,6 @@ function LayerList(props: Props) {
 						/>
 					}
 					setLayerState={(state: MlVectorTileLayerProps) => {
-						console.log('setLayerState', state, state.layers[0].id);
 						layerContext.setBackgroundLayers(state?.layers);
 					}}
 					visible={true}

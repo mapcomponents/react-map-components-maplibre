@@ -8,6 +8,7 @@ import LayerListFolder from './LayerListFolder';
 import { LayerSpecification } from 'maplibre-gl';
 import LayerListItemVectorLayer from './util/LayerListItemVectorLayer';
 import { useEffect } from 'react';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 type Props = {
 	layerComponent: JSX.Element;
@@ -28,7 +29,6 @@ function LayerListItem({
 	configurable,
 	setLayerState,
 }: Props) {
-	console.log('current style: ' + layerComponent.props?.layers?.[0]?.id)
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const visibleRef = useRef<boolean>(visible);
@@ -55,19 +55,29 @@ function LayerListItem({
 		visibleRef.current = _visible;
 
 		const state = { ...layerComponent?.props };
-		if (layerComponent?.props?.layers) {
-			state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
-				if (el.layout) {
-					el.layout['visibility'] = _visible ? 'visible' : 'none';
-				} else {
-					el.layout = { visibility: _visible ? 'visible' : 'none' };
+		switch (layerComponent.type.name) {
+			case 'MlWmsLayer':
+				break;
+			case 'MlVectorTileLayer':
+				if (layerComponent?.props?.layers) {
+					state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
+						if (el.layout) {
+							el.layout['visibility'] = _visible ? 'visible' : 'none';
+						} else {
+							el.layout = { visibility: _visible ? 'visible' : 'none' };
+						}
+						return el;
+					});
+					console.log('setLayerState', state.layers);
+					setLayerState(state);
 				}
-				return el;
-			});
-			console.log('setLayerState', state.layers);
-			setLayerState(state);
+				break;
+			case 'MlGeoJsonLayer':
+				break;
+			default:
+				break;
 		}
-	}, [_visible, setLayerState, layerComponent?.props?.layers]);
+	}, [_visible, setLayerState, layerComponent]);
 
 	useEffect(() => {
 		if (!setLayerState || !paintProps || layerComponent?.props?.layers) return;
@@ -88,7 +98,7 @@ function LayerListItem({
 					break;
 				case 'MlVectorTileLayer':
 					return React.cloneElement(layerComponent, {
-						...layerComponent?.props
+						...layerComponent?.props,
 					});
 					break;
 				default:
@@ -130,18 +140,31 @@ function LayerListItem({
 					}}
 					secondaryAction={
 						configurable ? (
-							<IconButton
-								edge="end"
-								aria-label="comments"
-								onClick={() => {
-									setPaintPropsFormVisible((current) => {
-										return !current;
-									});
-								}}
-								sx={{ padding: '4px', marginTop: '-3px' }}
-							>
-								<TuneIcon />
-							</IconButton>
+							<>
+								<IconButton
+									aria-label="visibility"
+									onClick={() => {
+										setPaintPropsFormVisible((current) => {
+											return !current;
+										});
+									}}
+									sx={{ padding: '4px', marginTop: '-3px', marginRight: '4px' }}
+								>
+									<TuneIcon />
+								</IconButton>
+								<IconButton
+									edge="end"
+									aria-label="delete"
+									onClick={() => {
+										if (typeof setLayerState === 'function') {
+											setLayerState(false);
+										}
+									}}
+									sx={{ padding: '4px', marginTop: '-3px' }}
+								>
+									<DeleteForeverIcon />
+								</IconButton>
+							</>
 						) : undefined
 					}
 				>

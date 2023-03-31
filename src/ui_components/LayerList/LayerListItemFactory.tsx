@@ -39,13 +39,18 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											? (layerConfig) =>
 													props?.setLayers?.((current: any[]) => {
 														const _layers = [...current];
-														current[idx].config = layerConfig;
+														if (layerConfig === false) {
+															_layers.splice(idx, 1);
+														} else {
+															_layers[idx].config = layerConfig;
+														}
 
 														return _layers;
 													})
 											: undefined
 									}
 									configurable={true}
+									visible={layer?.visible}
 								/>
 							</>
 						);
@@ -56,6 +61,17 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									{...layer.config}
 									mapId={props?.mapId}
 									insertBeforeLayer={props?.insertBeforeLayer}
+									onConfigChange={(layerConfig) => {
+										props?.setLayers?.((current: any[]) => {
+											const _layers = [...current];
+											if (layerConfig === false) {
+												_layers.splice(idx, 1);
+											} else {
+												_layers[idx].config.config = layerConfig;
+											}
+											return _layers;
+										});
+									}}
 								/>
 							</>
 						);
