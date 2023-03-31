@@ -49,7 +49,6 @@ function LayerListItem({
 	}, [visible, localVisible]);
 
 	useEffect(() => {
-		console.log(!setLayerState, !layerComponent?.props?.layers, _visible === visibleRef.current);
 		if (!setLayerState || !layerComponent?.props?.layers || _visible === visibleRef.current) return;
 
 		visibleRef.current = _visible;

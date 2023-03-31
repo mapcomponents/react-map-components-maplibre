@@ -2,19 +2,23 @@ import React from 'react';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
 import LayerListItem from './LayerListItem';
+import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
+import { LayerConfig } from 'src/contexts/LayerContext';
+import { FeatureCollection } from '@turf/turf';
+import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 
 export interface LayerListItemFactoryProps {
 	mapId?: string;
-	layers: any[];
-	setLayers?: (layers: any[] | ((state: any[]) => any[])) => void;
+	layers: LayerConfig[];
+	setLayers?: (layers: LayerConfig[] | ((state: LayerConfig[]) => LayerConfig[])) => void;
 	insertBeforeLayer?: string;
 }
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	return (
 		<>
-			{' '}
-			{props.layers.map((layer: any, idx: number) => {
+			<MlOrderLayers layerIds={['labels', 'content', 'background']} />
+			{props.layers.map((layer: LayerConfig, idx: number) => {
 				switch (layer.type) {
 					case 'geojson':
 						return (
@@ -23,7 +27,6 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									key={idx}
 									name={
 										layer?.name ||
-										layer?.config?.geojson?.name ||
 										layer?.config?.type + ' layer' ||
 										'unnamed layer'
 									}
@@ -36,8 +39,8 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									}
 									setLayerState={
 										props?.setLayers
-											? (layerConfig) =>
-													props?.setLayers?.((current: any[]) => {
+											? (layerConfig:MlGeoJsonLayerProps) =>
+													props?.setLayers?.((current: LayerConfig[]) => {
 														const _layers = [...current];
 														if (layerConfig === false) {
 															_layers.splice(idx, 1);

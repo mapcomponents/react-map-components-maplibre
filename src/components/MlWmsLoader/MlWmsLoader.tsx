@@ -49,7 +49,7 @@ export interface MlWmsLoaderProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
-	mapId: string;
+	mapId?: string;
 	insertBeforeLayer?: string;
 	/**
 	 * URL parameters that will be used in the getCapabilities request
@@ -448,6 +448,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 //</p>
 
 MlWmsLoader.defaultProps = {
+	mapId: undefined,
 	url: '',
 	urlParameters: {
 		SERVICE: 'WMS',
