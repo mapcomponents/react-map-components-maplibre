@@ -5,6 +5,10 @@ import LayerListItem from './LayerListItem';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
 import { LayerConfig } from 'src/contexts/LayerContext';
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import useLayerContext from '../../hooks/useLayerContext';
+import MlVectorTileLayer, {
+	MlVectorTileLayerProps,
+} from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 
 export interface LayerListItemFactoryProps {
 	mapId?: string;
@@ -14,9 +18,48 @@ export interface LayerListItemFactoryProps {
 }
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
+	const layerContext = useLayerContext();
 	return (
 		<>
 			<MlOrderLayers layerIds={['labels', 'content', 'background']} />
+			{layerContext?.backgroundLayers?.length > 0 && (
+				<LayerListItem
+					layerComponent={
+						<MlVectorTileLayer
+							{...layerContext.vtLayerConfig}
+							layers={layerContext.backgroundLayers}
+							mapId={props?.mapId}
+							insertBeforeLayer={'order-background'}
+						/>
+					}
+					setLayerState={(state: MlVectorTileLayerProps) => {
+						layerContext.setBackgroundLayers(state?.layers);
+					}}
+					visible={true}
+					configurable={true}
+					type="layer"
+					name="Background"
+				/>
+			)}
+			{layerContext?.symbolLayers?.length > 0 && (
+				<LayerListItem
+					layerComponent={
+						<MlVectorTileLayer
+							{...layerContext.vtLayerConfig}
+							layers={layerContext.symbolLayers}
+							mapId={props?.mapId}
+							insertBeforeLayer={'order-labels'}
+						/>
+					}
+					setLayerState={(state: MlVectorTileLayerProps) =>
+						layerContext.setSymbolLayers(state?.layers)
+					}
+					visible={true}
+					configurable={true}
+					type="layer"
+					name="Labels"
+				/>
+			)}
 			{props.layers.map((layer: LayerConfig, idx: number) => {
 				switch (layer.type) {
 					case 'geojson':
@@ -24,32 +67,25 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 							<>
 								<LayerListItem
 									key={idx}
-									name={
-										layer?.name ||
-										layer?.config?.type + ' layer' ||
-										'unnamed layer'
-									}
+									name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
 									layerComponent={
 										<MlGeoJsonLayer
 											{...layer.config}
 											mapId={props?.mapId}
-											insertBeforeLayer={props?.insertBeforeLayer}
+											insertBeforeLayer={props?.insertBeforeLayer || 'order-content'}
 										/>
 									}
-									setLayerState={
-										props?.setLayers
-											? (layerConfig:MlGeoJsonLayerProps | false) =>
-													props?.setLayers?.((current: LayerConfig[]) => {
-														const _layers = [...current];
-														if (layerConfig === false) {
-															_layers.splice(idx, 1);
-														} else {
-															_layers[idx].config = layerConfig;
-														}
+									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
+										props.setLayers?.((current: LayerConfig[]) => {
+											const _layers = [...current];
+											if (layerConfig === false) {
+												_layers.splice(idx, 1);
+											} else {
+												_layers[idx].config = layerConfig;
+											}
 
-														return _layers;
-													})
-											: undefined
+											return _layers;
+										})
 									}
 									configurable={true}
 									showDeleteButton={true}
@@ -62,7 +98,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 								<MlWmsLoader
 									{...layer.config}
 									mapId={props?.mapId}
-									insertBeforeLayer={props?.insertBeforeLayer}
+									insertBeforeLayer={props?.insertBeforeLayer || 'order-content'}
 									onConfigChange={(layerConfig) => {
 										props?.setLayers?.((current: any[]) => {
 											const _layers = [...current];

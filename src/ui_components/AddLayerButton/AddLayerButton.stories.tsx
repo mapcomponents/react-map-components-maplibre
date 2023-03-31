@@ -12,8 +12,6 @@ import LayerListItemFactory from '../LayerList/LayerListItemFactory';
 import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
 import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
 
-import style from '../LayerList/assets/style.json';
-
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
 	component: AddLayerButton,
@@ -55,9 +53,13 @@ const FolderTemplate = () => {
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
 				/>
-				<SelectStyleButton sx={{marginLeft:'5px'}} />
+				<SelectStyleButton sx={{ marginLeft: '5px' }} />
 				<LayerList>
-					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} insertBeforeLayer='order-content' />
+					<LayerListItemFactory
+						layers={layerContext.layers}
+						setLayers={layerContext.setLayers}
+						insertBeforeLayer="order-content"
+					/>
 				</LayerList>
 			</Sidebar>
 		</>
@@ -81,7 +83,7 @@ const StyleJsonTemplate = () => {
 
 	useEffect(() => {
 		if (layerContext.layers.length > 0) {
-			console.log(layerContext.layers)
+			console.log(layerContext.layers);
 			localStorage.setItem('layers', JSON.stringify(layerContext.layers));
 		}
 	}, [layerContext.layers]);
@@ -102,9 +104,9 @@ const StyleJsonTemplate = () => {
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
 				/>
-					<SelectStyleButton sx={{marginLeft:'5px'}} />
-				<LayerList style={style}>
-					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} insertBeforeLayer='order-content' />
+				<SelectStyleButton sx={{ marginLeft: '5px' }} />
+				<LayerList>
+					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} />
 				</LayerList>
 			</Sidebar>
 		</>
