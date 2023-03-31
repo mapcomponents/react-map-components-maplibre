@@ -28,7 +28,6 @@ function LayerListItem({
 	configurable,
 	setLayerState,
 }: Props) {
-	console.log('current style: ' + layerComponent.props?.layers?.[0]?.id)
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const visibleRef = useRef<boolean>(visible);
@@ -49,7 +48,6 @@ function LayerListItem({
 	}, [visible, localVisible]);
 
 	useEffect(() => {
-		console.log(!setLayerState, !layerComponent?.props?.layers, _visible === visibleRef.current);
 		if (!setLayerState || !layerComponent?.props?.layers || _visible === visibleRef.current) return;
 
 		visibleRef.current = _visible;
@@ -64,7 +62,6 @@ function LayerListItem({
 				}
 				return el;
 			});
-			console.log('setLayerState', state.layers);
 			setLayerState(state);
 		}
 	}, [_visible, setLayerState, layerComponent?.props?.layers]);
