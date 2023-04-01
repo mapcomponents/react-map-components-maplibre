@@ -16,6 +16,7 @@ import useMap from '../../hooks/useMap';
 import { Box, Checkbox, ListItemIcon, Snackbar } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
@@ -92,7 +93,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		urlParameters: props.urlParameters,
 	});
 	const [open, setOpen] = useState(props?.config?.open || false);
-	const [visible, setVisible] = useState(props?.config?.visible || false);
+	const [visible, setVisible] = useState<boolean>(props?.config?.visible || true);
+	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
 
 	const mapHook = useMap({ mapId: props?.mapId });
 	const [_layers, _setLayers] = useState<Array<LayerType>>(props?.config?.layers || []);
@@ -104,7 +106,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
-		if(props.config)return;
+		if (props.config) return;
 		setUrl(props.url);
 	}, [props.url]);
 
@@ -360,18 +362,36 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 									{open ? <ExpandLess /> : <ExpandMore />}
 								</IconButton>
 								{props.showDeleteButton && (
-									<IconButton
-										aria-label="delete"
-										edge="end"
-										onClick={() => {
-											if (typeof props.onConfigChange === 'function') {
-												props.onConfigChange(false);
-											}
-										}}
-										sx={{ padding: '4px', marginTop: '-3px' }}
-									>
-										<DeleteIcon />
-									</IconButton>
+									<>
+										<IconButton
+											aria-label="delete"
+											edge="end"
+											onClick={() => {
+												if (typeof props.onConfigChange === 'function') {
+													setShowDeletionConfirmationDialog(true);
+												}
+											}}
+											sx={{ padding: '4px', marginTop: '-3px' }}
+										>
+											<DeleteIcon />
+										</IconButton>
+
+										{showDeletionConfirmationDialog && (
+											<ConfirmDialog
+												open={showDeletionConfirmationDialog}
+												onConfirm={() => {
+													if (typeof props.onConfigChange === 'function') {
+														props.onConfigChange(false);
+													}
+												}}
+												onCancel={() => {
+													setShowDeletionConfirmationDialog(false);
+												}}
+												title="Delete layer"
+												text="Are you sure you want to delete this layer?"
+											/>
+										)}
+									</>
 								)}
 							</>
 						}

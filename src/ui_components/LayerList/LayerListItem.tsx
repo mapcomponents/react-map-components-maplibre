@@ -9,6 +9,7 @@ import { LayerSpecification } from 'maplibre-gl';
 import LayerListItemVectorLayer from './util/LayerListItemVectorLayer';
 import { useEffect } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmDialog from '../ConfirmDialog';
 
 type Props = {
 	layerComponent: JSX.Element;
@@ -33,6 +34,7 @@ function LayerListItem({
 }: Props) {
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
+	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
 	const visibleRef = useRef<boolean>(visible);
 
 	// this state variable is used for layer components that provide a paint attribute
@@ -159,21 +161,38 @@ function LayerListItem({
 									<TuneIcon />
 								</IconButton>
 								{props.showDeleteButton && (
-									<IconButton
-										edge="end"
-										aria-label="delete"
-										onClick={() => {
-											if (typeof setLayerState === 'function') {
-												setLayerState(false);
-											}
-										}}
-										sx={{
-											padding: '4px',
-											marginTop: '-3px',
-										}}
-									>
-										<DeleteIcon />
-									</IconButton>
+									<>
+										<IconButton
+											edge="end"
+											aria-label="delete"
+											onClick={() => {
+												if (typeof setLayerState === 'function') {
+													setShowDeletionConfirmationDialog(true);
+												}
+											}}
+											sx={{
+												padding: '4px',
+												marginTop: '-3px',
+											}}
+										>
+											<DeleteIcon />
+										</IconButton>
+										{showDeletionConfirmationDialog && (
+											<ConfirmDialog
+												open={showDeletionConfirmationDialog}
+												onConfirm={() => {
+													if (typeof setLayerState === 'function') {
+														setLayerState(false);
+													}
+												}}
+												onCancel={() => {
+													setShowDeletionConfirmationDialog(false);
+												}}
+												title="Delete layer"
+												text="Are you sure you want to delete this layer?"
+											/>
+										)}
+									</>
 								)}
 							</>
 						) : undefined

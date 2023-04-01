@@ -124,7 +124,7 @@ const StyleJsonTemplate = () => {
 					</Button>
 				}
 			/>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerList style'}>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerListItemFactory'}>
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
 				/>
