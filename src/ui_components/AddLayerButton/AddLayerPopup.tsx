@@ -16,7 +16,7 @@ const AddLayerPopup = (props: AddLayerPopupProps) => {
 	const [layerConfig, setLayerConfig] = useState<LayerConfig>();
 
 	const updateLayerType = (type: LayerConfig['type']) => {
-		setLayerConfig({ type, config: {} });
+		setLayerConfig({ type, config: {} } as LayerConfig);
 	};
 
 	const handleCancel = () => {
