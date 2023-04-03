@@ -13,12 +13,13 @@ import sample_geojson_polygon from './assets/sample_polygon_1.json';
 import sample_geojson_points from './assets/sample_points_1.json';
 import LayerListFolder from './LayerListFolder';
 
-import style from './assets/style.json';
+import style from '../../omt_styles/monokai';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
 import { Feature, FeatureCollection } from '@turf/turf';
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
+import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
 
 const storyoptions = {
 	title: 'UiComponents/LayerList',
@@ -124,6 +125,36 @@ export const VectortileExample = VectortileTemplate.bind({});
 
 VectortileExample.parameters = {};
 VectortileExample.args = {};
+
+const StyleJsonTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Sidebar
+					</Button>
+				}
+			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerList style'}>
+				<SelectStyleButton />
+				<LayerList style={style}>
+				</LayerList>
+			</Sidebar>
+		</>
+	);
+};
+
+export const StyleJsonExample = StyleJsonTemplate.bind({});
+
+StyleJsonExample.parameters = {};
+StyleJsonExample.args = {};
 
 const WmsLayerTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);

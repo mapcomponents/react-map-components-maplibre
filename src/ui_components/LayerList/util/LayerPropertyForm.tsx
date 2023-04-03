@@ -71,7 +71,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 			switch (mapPropKeyToFormInputType[key]) {
 				case 'slider':
 					return (
-						<>
+						<React.Fragment key={key}>
 							{label}
 							<Slider
 								{...inputPropsByPropKey[key]}
@@ -84,12 +84,12 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 									}
 								}}
 							/>
-						</>
+						</React.Fragment>
 					);
 					break;
 				case 'numberfield':
 					return (
-						<>
+						<React.Fragment key={key}>
 							{label}
 							<TextField
 								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
@@ -100,12 +100,12 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 									}
 								}}
 							/>
-						</>
+						</React.Fragment>
 					);
 					break;
 				case 'colorpicker':
 					return (
-						<>
+						<React.Fragment key={key}>
 							{label}
 							<Box sx={{ '& > div': { width: 'initial !important' } }}>
 								<ColorPicker
@@ -115,7 +115,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 									setPaintProps={setPaintProps}
 								/>
 							</Box>
-						</>
+						</React.Fragment>
 					);
 					break;
 			}

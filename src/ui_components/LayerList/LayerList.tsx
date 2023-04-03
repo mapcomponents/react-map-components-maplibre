@@ -2,11 +2,17 @@ import { List } from '@mui/material';
 import React from 'react';
 
 type Props = {
-	children: JSX.Element | JSX.Element[];
+	mapId?: string;
+	children?: JSX.Element | JSX.Element[];
 };
 
-function LayerList({ children }: Props) {
-	return <List sx={{marginTop:'15px'}}>{children}</List>;
+function LayerList(props: Props) {
+
+	return (
+		<List sx={{ marginTop: '15px' }}>
+			{props?.children}
+		</List>
+	);
 }
 
 export default LayerList;

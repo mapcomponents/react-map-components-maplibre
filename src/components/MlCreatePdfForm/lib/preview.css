@@ -109,6 +109,6 @@
 .MuiDialog-root{
   pointer-events: none;
 }
-.MuiDialog-root .react-draggable{
+.MuiDialog-root .react-draggable, .MuiDialog-root .MuiBackdrop-root,.MuiDialog-root .MuiDialog-container {
   pointer-events: all;
 }

@@ -60,7 +60,7 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 					<Checkbox
 						sx={{ padding: 0 }}
 						disabled={setVisible ? false : !visible}
-						checked={setVisible?visible:localVisible}
+						checked={setVisible ? visible : localVisible}
 						onClick={() => {
 							if (setVisible) {
 								setVisible((val) => !val);
@@ -70,7 +70,7 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 						}}
 					/>
 				</ListItemIcon>
-				<ListItemText primary={name} />
+				<ListItemText primary={name} variant="layerlist" />
 			</ListItem>
 			<Box sx={{ display: open ? 'block' : 'none' }}>
 				<List component="div" disablePadding sx={{ paddingLeft: '18px' }}>

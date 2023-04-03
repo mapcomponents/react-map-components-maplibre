@@ -1,9 +1,15 @@
+import { ListItemTextProps } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { Theme } from '@mui/system';
 
 declare module '@mui/material/Button' {
 	interface ButtonPropsVariantOverrides {
 		navtools: true;
+	}
+}
+declare module '@mui/material' {
+	export interface ListItemTextProps {
+		variant?: "layerlist";
 	}
 }
 
@@ -123,6 +129,22 @@ const getTheme = (mode: 'light' | 'dark') => {
 						},
 					},
 				],
+			},
+			MuiListItemText: {
+				styleOverrides: {
+					primary: ({ ownerState }: { ownerState: ListItemTextProps }) => {
+						if (ownerState?.variant === 'layerlist') {
+							return { fontSize: '0.9rem' };
+						}
+						return {};
+					},
+					secondary: ({ ownerState }: { ownerState: ListItemTextProps }) => {
+						if (ownerState?.variant === 'layerlist') {
+							return { fontSize: '0.7rem' };
+						}
+						return {};
+					},
+				},
 			},
 		},
 	});
