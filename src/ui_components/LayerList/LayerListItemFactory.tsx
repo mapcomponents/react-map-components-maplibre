@@ -43,12 +43,14 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 				/>
 			)}
 			{props.layers.map((layer: LayerConfig, idx: number) => {
+				if (!layer?.id) return null;
+
 				switch (layer.type) {
 					case 'geojson':
 						return (
 							<>
 								<LayerListItem
-									key={idx}
+									key={layer.id}
 									name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
 									layerComponent={
 										<MlGeoJsonLayer
@@ -79,6 +81,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 							<>
 								<MlWmsLoader
 									{...layer.config}
+									key={layer.id}
 									mapId={props?.mapId}
 									insertBeforeLayer={props?.insertBeforeLayer || 'order-content'}
 									onConfigChange={(layerConfig) => {

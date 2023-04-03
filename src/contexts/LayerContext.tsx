@@ -1,9 +1,10 @@
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
 import config from '../omt_styles/config';
 import { MlWmsLoaderProps } from '../components/MlWmsLoader/MlWmsLoader';
 import { MlGeoJsonLayerProps } from '../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface LayerContextProps {
 	children: React.ReactNode;
@@ -12,16 +13,19 @@ export interface LayerContextProps {
 export type WmsLayerConfig = {
 	type: 'wms';
 	name?: string;
+	id?: string;
 	config: MlWmsLoaderProps;
 };
 export type GeojsonLayerConfig = {
 	type: 'geojson';
 	name?: string;
+	id?: string;
 	config: MlGeoJsonLayerProps;
 };
 export type VtLayerConfig = {
 	type: 'vt';
 	name?: string;
+	id?: string;
 	config: MlVectorTileLayerProps;
 };
 
@@ -83,6 +87,18 @@ function LayerContextProvider(props: LayerContextProps) {
 		setBackgroundLayers(backgroundLayers);
 		setSymbolLayers(symbolLayers);
 	};
+
+	useEffect(() => {
+		if (layers.filter((el) => !el?.id).length) {
+			const _layers = [...layers];
+			_layers.forEach((el) => {
+				if (!el?.id) {
+					el.id = uuidv4();
+				}
+			});
+			setLayers(_layers);
+		}
+	}, [layers]);
 
 	const value = {
 		layers,

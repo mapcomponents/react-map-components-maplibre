@@ -35,6 +35,7 @@ function LayerListItem({
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
+	const deletedRef = useRef<boolean>(false);
 	const visibleRef = useRef<boolean>(visible);
 
 	// this state variable is used for layer components that provide a paint attribute
@@ -62,7 +63,7 @@ function LayerListItem({
 			case 'MlWmsLayer':
 				break;
 			case 'MlVectorTileLayer':
-				if (layerComponent?.props?.layers) {
+				if (layerComponent?.props?.layers && !deletedRef.current) {
 					state.layers = layerComponent?.props?.layers.map((el: LayerSpecification) => {
 						if (el.layout) {
 							el.layout['visibility'] = _visible ? 'visible' : 'none';
@@ -83,7 +84,8 @@ function LayerListItem({
 	}, [_visible, setLayerState, layerComponent]);
 
 	useEffect(() => {
-		if (!setLayerState || !paintProps || layerComponent?.props?.layers) return;
+		if (!setLayerState || deletedRef.current || !paintProps || layerComponent?.props?.layers)
+			return;
 
 		if (JSON.stringify(paintProps) === JSON.stringify(layerComponent.props?.paint)) return;
 
@@ -182,7 +184,9 @@ function LayerListItem({
 												open={showDeletionConfirmationDialog}
 												onConfirm={() => {
 													if (typeof setLayerState === 'function') {
+														deletedRef.current = true;
 														setLayerState(false);
+														setShowDeletionConfirmationDialog(false);
 													}
 												}}
 												onCancel={() => {
