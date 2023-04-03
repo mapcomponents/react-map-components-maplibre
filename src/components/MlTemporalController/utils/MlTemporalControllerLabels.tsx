@@ -5,9 +5,11 @@ import {
 	SymbolLayerSpecification,
 	SymbolLayoutProps,
 } from 'maplibre-gl';
+import { FeatureCollection } from '@turf/turf';
+
 
 interface MlTemporalControllerLabelsProps {
-	data: any ;
+	data: FeatureCollection;
 	currentVal: number;
 	fadeIn: number;
 	fadeOut: number;

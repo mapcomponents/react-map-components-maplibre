@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
-import jakobsweg from './assets/jakobsweg.json';
+import tour_de_france_2022 from './assets/tour_de_france_2022.json';
 import { TemporalControllerValues } from './MlTemporalController';
 
-interface TimeDisplayProps {
-	value: TemporalControllerValues | undefined;
-}
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
@@ -23,56 +20,27 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const TimeDisplay = (props: TimeDisplayProps) => {
-	if (typeof props.value?.current === 'number') {
-		return (
-			<>
-				<Box
-					sx={{
-						position: 'absolute',
-						zIndex: 500,
-						top: '20%',
-						width: '100px',
-						backgroundColor: 'white',
-					}}
-				>
-					<Typography
-						sx={{
-							padding: '0 5px',
-							textAlign: 'center'
-						}}
-						variant="h4"
-					>
-						{Math.floor(props.value.current)}
-					</Typography>
-				</Box>
-			</>
-		);
-	} else {
-		return <></>;
-	}
-};
 
 const FillTemplate = (props: MlTemporalControllerProps) => {
-	const [current, setCurrent] = useState<TemporalControllerValues>();
+
 
 	return (
 		<>
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						African countries by independecy year
+						African countries by independency year
 					</Typography>
 				}
 			/>
-			<TimeDisplay value={current} />
-			<MlTemporalController {...props} onStateChange={setCurrent} />
+
+			<MlTemporalController {...props}  />
 		</>
 	);
 };
 
 const CircleTemplate = (props: MlTemporalControllerProps) => {
-	const [current, setCurrent] = useState();
+
 
 	return (
 		<>
@@ -83,26 +51,25 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 					</Typography>
 				}
 			/>
-			<MlTemporalController {...props} onStateChange={setCurrent} />
-			<TimeDisplay value={current} />
+			<MlTemporalController {...props} />
+		
 		</>
 	);
 };
 
 const LineTemplate = (props: MlTemporalControllerProps) => {
-	const [current, setCurrent] = useState();
-
+	
 	return (
 		<>
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						The French Way of Saint James by stage number
+						Tour de France stages in 2022
 					</Typography>
 				}
 			/>
-			<MlTemporalController {...props} onStateChange={setCurrent} />
-			<TimeDisplay value={current} />
+			<MlTemporalController {...props}  />
+		
 		</>
 	);
 };
@@ -119,8 +86,9 @@ FillConfig.args = {
 	accumulate: true,
 	initialVal: 1904,
 	fitBounds: true,
-	showControls: true,
+	displayCurrentValue: true,
 	attribution: 'Made with Natural Earth.',
+	
 };
 
 export const CircleConfig = CircleTemplate.bind({});
@@ -130,10 +98,11 @@ CircleConfig.args = {
 	timeField: 'Year',
 	labelField: 'LocationName',
 	accumulate: false,
+	step: 0.3,
 	minVal: 1900,
 	fitBounds: true,
-	showControls: true,
 	onClick: () => console.log('clicked'),
+	displayCurrentValue: true,
 	attribution:
 		'National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K',
 };
@@ -141,13 +110,12 @@ CircleConfig.args = {
 export const LineConfig = LineTemplate.bind({});
 LineConfig.parameters = {};
 LineConfig.args = {
-	geojson: jakobsweg,
-	timeField: 'stage',
+	geojson: tour_de_france_2022,
+	timeField: 'Etape',
 	type: 'line',
-	labelField: 'name',
+	labelField: 'Name',
 	accumulate: true,
-	featuresColor: '#1731F1',
-	fitBounds: true,
-	showControls: true,
-	attribution: 'Source: ',
+	fitBounds: true,	
+	displayCurrentValue: true,
+	attribution: 'Source: geovista.space ',
 };

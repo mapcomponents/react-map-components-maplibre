@@ -146,6 +146,10 @@ export interface MlTemporalControllerProps {
 	 */
 	labelFadeOut?: number;
 	/**
+	 * If true, the current time value will be displayed in the controlls panel.
+	 */
+	displayCurrentValue?: boolean;
+	/**
 	 * Click event handler that is executed whenever a geometry rendered by this component is clicked.
 	 */
 	onClick?: useLayerProps['onClick'];
@@ -303,7 +307,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 
 			{props.label && (
 				<MlTemporalControllerLabels
-					data={filteredData}
+					data={(filteredData as FeatureCollection)}
 					currentVal={currentVal}
 					fadeIn={props.labelFadeIn as number}
 					fadeOut={props.labelFadeOut as number}
@@ -334,6 +338,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				labelFadeIn={props.labelFadeIn as number}
 				labelFadeOut={props.labelFadeOut as number}
 				accumulate={props.accumulate as boolean}
+				display={(props.displayCurrentValue as boolean)}
 			/>
 		</>
 	);
@@ -352,6 +357,7 @@ MlTemporalController.defaultProps = {
 	fitBounds: true,
 	label: true,
 	attribution: '',
+	displayCurrentValue: false
 };
 
 export default MlTemporalController;
