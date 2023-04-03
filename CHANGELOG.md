@@ -1,6 +1,25 @@
 # Change Log
 
 
+## [v0.1.74] - 2023-04-03
+
+### Fixed
+- 6e68b8c: fix wmsLoader feature info
+- 3eac872: fix useLayer hook source attribution settings
+
+### Added
+- 5a4c581: add component MlTemporalController
+- a85a5b1: add LayerListItemFactory
+- a85a5b1: add GeoJsonLayerForm
+- a85a5b1: add WmsLayerForm
+- a85a5b1: add LayerTypeForm
+- a85a5b1: add AddLayerButton
+- a85a5b1: add MlWmsLoader featureInfo configuration prop and queryable indicator next to layer
+- a85a5b1: add LayerContext and localStorage persistence to AddLayerButton story
+
+### Changed
+- a85a5b1: change MlWmsLoader to return LayerListItem compatible list elements
+
 ## [v0.1.73] - 2023-03-11
 
 ### Fixed
