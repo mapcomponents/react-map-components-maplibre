@@ -281,6 +281,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				return {
 					visible: capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true,
 					Attribution: { Title: '' },
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					...(({ CRS, ..._layer }) => _layer)(layer),
 				};
 			});
@@ -295,6 +296,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						return {
 							visible: false,
 							Attribution: { Title: '' },
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							...(({ CRS, ..._layer }) => _layer)(layer),
 						};
 					}

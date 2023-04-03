@@ -15,7 +15,7 @@ import { StyleSpecification } from 'maplibre-gl';
 
 export interface SelectStyleButtonProps {
 	sx?: SxProps;
-	onComplete?: (config: any) => void;
+	onComplete?: (config: StyleSpecification[] ) => void;
 	styles?: StyleSpecification[];
 	defaultStyles?: boolean;
 }

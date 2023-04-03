@@ -6,6 +6,7 @@ import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
 import { LayerConfig } from 'src/contexts/LayerContext';
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useLayerContext from '../../hooks/useLayerContext';
+import { MlWmsLoaderProps } from '../../components/MlWmsLoader/MlWmsLoader';
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
@@ -81,12 +82,12 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									mapId={props?.mapId}
 									insertBeforeLayer={props?.insertBeforeLayer || 'order-content'}
 									onConfigChange={(layerConfig) => {
-										props?.setLayers?.((current: any[]) => {
+										props?.setLayers?.((current: LayerConfig[]) => {
 											const _layers = [...current];
 											if (layerConfig === false) {
 												_layers.splice(idx, 1);
 											} else {
-												_layers[idx].config.config = layerConfig;
+												(_layers[idx].config as MlWmsLoaderProps).config = layerConfig;
 											}
 											return _layers;
 										});

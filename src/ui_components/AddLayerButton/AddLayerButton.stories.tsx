@@ -95,7 +95,7 @@ const StyleJsonTemplate = () => {
 	}, [layerContext.backgroundLayers, layerContext.symbolLayers]);
 
 	useEffect(() => {
-		let _bgStyle = localStorage.getItem('mc_background_style');
+		const _bgStyle = localStorage.getItem('mc_background_style');
 		const _parsedBgStyle: { [key: string]: LayerSpecification[] } = _bgStyle
 			? JSON.parse(_bgStyle)
 			: { backgroundLayers: [], symbolLayers: [] };

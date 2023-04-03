@@ -9,21 +9,21 @@ export interface LayerContextProps {
 	children: React.ReactNode;
 }
 
-export interface WmsLayerConfig {
+export type WmsLayerConfig = {
 	type: 'wms';
 	name?: string;
 	config: MlWmsLoaderProps;
-}
-export interface GeojsonLayerConfig {
+};
+export type GeojsonLayerConfig = {
 	type: 'geojson';
 	name?: string;
 	config: MlGeoJsonLayerProps;
-}
-export interface VtLayerConfig {
+};
+export type VtLayerConfig = {
 	type: 'vt';
 	name?: string;
 	config: MlVectorTileLayerProps;
-}
+};
 
 export type LayerConfig = WmsLayerConfig | GeojsonLayerConfig | VtLayerConfig;
 

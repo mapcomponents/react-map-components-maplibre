@@ -2,10 +2,11 @@ import { Button, SxProps } from '@mui/material';
 import React from 'react';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import AddLayerPopup from './AddLayerPopup';
+import { LayerConfig } from '../../contexts/LayerContext';
 
 export interface AddLayerButtonProps {
 	sx?: SxProps;
-    onComplete?: (config: any) => void;
+	onComplete?: (config: LayerConfig) => void;
 }
 
 const AddLayerButton = (props: AddLayerButtonProps) => {
