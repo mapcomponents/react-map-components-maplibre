@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.1.76] - 2023-04-04
+
+### Fixed
+- b879750: fix MlGeoJsonLayer layout option props spread order
+
+### Added
+- b879750: add thumbnails to style select menu
 
 ## [v0.1.75] - 2023-04-04
 
