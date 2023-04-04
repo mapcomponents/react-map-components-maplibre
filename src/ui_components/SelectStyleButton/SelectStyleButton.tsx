@@ -3,13 +3,11 @@ import React from 'react';
 import SelectStylePopup from './SelectStylePopup';
 import WallpaperIcon from '@mui/icons-material/Wallpaper';
 import LayerContext from '../../contexts/LayerContext';
-import {
-	MonokaiStyle,
-	SolarizedStyle,
-	OceanicNextStyle,
-	MedievalKingdomStyle,
-	GruvboxStyle,
-} from '../../index';
+import MonokaiStyle from '../../omt_styles/monokai';
+import SolarizedStyle from '../../omt_styles/monokai';
+import OceanicNextStyle from '../../omt_styles/monokai';
+import MedievalKingdomStyle from '../../omt_styles/monokai';
+import GruvboxStyle from '../../omt_styles/monokai';
 
 import { StyleSpecification } from 'maplibre-gl';
 
