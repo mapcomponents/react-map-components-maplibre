@@ -9,7 +9,7 @@ import Sidebar from '../Sidebar';
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 
-import { MonokaiStyle } from '../../index';
+import { LayerListItemFactory, MonokaiStyle } from '../../index';
 import LayerContext from '../../contexts/LayerContext';
 import { StyleSpecification } from 'maplibre-gl';
 
@@ -44,7 +44,9 @@ const SelectStyleTemplate = () => {
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<SelectStyleButton />
-				<LayerList></LayerList>
+				<LayerList>
+					<LayerListItemFactory />
+				</LayerList>
 			</Sidebar>
 		</>
 	);

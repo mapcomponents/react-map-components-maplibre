@@ -11,7 +11,8 @@ import AddLayerButton from './AddLayerButton';
 import LayerListItemFactory from '../LayerList/LayerListItemFactory';
 import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
 import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
-import { LayerSpecification } from 'maplibre-gl';
+import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
+import GruvboxStyle from '../../omt_styles/gruvbox';
 
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
@@ -99,10 +100,15 @@ const StyleJsonTemplate = () => {
 		const _parsedBgStyle: { [key: string]: LayerSpecification[] } = _bgStyle
 			? JSON.parse(_bgStyle)
 			: { backgroundLayers: [], symbolLayers: [] };
-		layerContext.setBackgroundLayers(
-			_parsedBgStyle?.backgroundLayers as unknown as LayerSpecification[]
-		);
-		layerContext.setSymbolLayers(_parsedBgStyle?.symbolLayers as unknown as LayerSpecification[]);
+
+		if (_parsedBgStyle.backgroundLayers.length > 0) {
+			layerContext.setBackgroundLayers(
+				_parsedBgStyle?.backgroundLayers as unknown as LayerSpecification[]
+			);
+			layerContext.setSymbolLayers(_parsedBgStyle?.symbolLayers as unknown as LayerSpecification[]);
+		} else {
+			layerContext.updateStyle(GruvboxStyle as StyleSpecification);
+		}
 	}, []);
 
 	useEffect(() => {
