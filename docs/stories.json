@@ -957,11 +957,11 @@
       "id": "uicomponents-addlayerbutton--folder-example",
       "name": "Folder Example",
       "title": "UiComponents/AddLayerButton",
-      "importPath": 68979,
+      "importPath": 26210,
       "kind": "UiComponents/AddLayerButton",
       "story": "Folder Example",
       "parameters": {
-        "fileName": 68979,
+        "fileName": 26210,
         "framework": "react",
         "__id": "uicomponents-addlayerbutton--folder-example",
         "__isArgsStory": false
@@ -971,11 +971,11 @@
       "id": "uicomponents-addlayerbutton--style-json-example",
       "name": "Style Json Example",
       "title": "UiComponents/AddLayerButton",
-      "importPath": 68979,
+      "importPath": 26210,
       "kind": "UiComponents/AddLayerButton",
       "story": "Style Json Example",
       "parameters": {
-        "fileName": 68979,
+        "fileName": 26210,
         "framework": "react",
         "__id": "uicomponents-addlayerbutton--style-json-example",
         "__isArgsStory": false
