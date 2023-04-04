@@ -10,11 +10,8 @@ import {
 	Style,
 	MapEventType,
 	Map,
-	RasterLayerSpecification,
-	BackgroundLayerSpecification,
 	VideoSourceSpecification,
 	ImageSourceSpecification,
-	HillshadeLayerSpecification,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
