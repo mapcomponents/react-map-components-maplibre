@@ -1009,20 +1009,6 @@
         "__isArgsStory": false
       }
     },
-    "uicomponents-layerlist--style-json-example": {
-      "id": "uicomponents-layerlist--style-json-example",
-      "name": "Style Json Example",
-      "title": "UiComponents/LayerList",
-      "importPath": 81948,
-      "kind": "UiComponents/LayerList",
-      "story": "Style Json Example",
-      "parameters": {
-        "fileName": 81948,
-        "framework": "react",
-        "__id": "uicomponents-layerlist--style-json-example",
-        "__isArgsStory": false
-      }
-    },
     "uicomponents-layerlist--wms-layer-example": {
       "id": "uicomponents-layerlist--wms-layer-example",
       "name": "Wms Layer Example",
@@ -1062,6 +1048,20 @@
         "fileName": 81948,
         "framework": "react",
         "__id": "uicomponents-layerlist--configurable-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--label-example": {
+      "id": "uicomponents-layerlist--label-example",
+      "name": "Label Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 81948,
+      "kind": "UiComponents/LayerList",
+      "story": "Label Example",
+      "parameters": {
+        "fileName": 81948,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--label-example",
         "__isArgsStory": false
       }
     },
