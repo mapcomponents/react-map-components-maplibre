@@ -1,6 +1,10 @@
 # Change Log
 
 
+## [v0.1.75] - 2023-04-04
+
+### Fixed
+- 66c8df2: add missing LayerListItemFactory export
 ## [v0.1.74] - 2023-04-03
 
 ### Fixed
