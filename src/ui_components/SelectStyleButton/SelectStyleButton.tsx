@@ -13,10 +13,14 @@ import { StyleSpecification } from 'maplibre-gl';
 
 export interface SelectStyleButtonProps {
 	sx?: SxProps;
-	onComplete?: (config: StyleSpecification[] ) => void;
+	onComplete?: (config: StyleSpecification[]) => void;
 	styles?: StyleSpecification[];
 	defaultStyles?: boolean;
+	styleThumbnailPaths?: { [key: string]: string };
 }
+
+const defaultStyleThumbnailPath =
+	'https://mapcomponents.github.io/react-map-components-maplibre/assets/style_thumbnails/';
 
 const SelectStyleButton = (props: SelectStyleButtonProps) => {
 	const layerContext = React.useContext(LayerContext);
@@ -40,6 +44,18 @@ const SelectStyleButton = (props: SelectStyleButtonProps) => {
 						...(props.styles || []),
 					] as StyleSpecification[]
 				}
+				styleThumbnailPaths={{
+					...props?.styleThumbnailPaths,
+					...(props.defaultStyles
+						? {
+								Monokai: defaultStyleThumbnailPath + 'monokai.png',
+								Gruvbox: defaultStyleThumbnailPath + 'gruvbox.png',
+								'Oceanic Next': defaultStyleThumbnailPath + 'oceanic_next.png',
+								Solarized: defaultStyleThumbnailPath + 'solarized.png',
+								'Medieval Kingdom': defaultStyleThumbnailPath + 'medieval_kingdom.png',
+						  }
+						: {}),
+				}}
 				open={popupOpen}
 				setOpen={setPopupOpen}
 				onSelect={(style) => {

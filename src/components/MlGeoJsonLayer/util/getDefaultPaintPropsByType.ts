@@ -23,7 +23,6 @@ const getDefaultPaintPropsByType = (
 				'line-blur': 0,
 			};
 		case 'circle':
-		default:
 			if (defaultPaintOverrides?.circle) {
 				return defaultPaintOverrides.circle;
 			}
@@ -33,6 +32,8 @@ const getDefaultPaintPropsByType = (
 				'circle-stroke-width': 2,
 				'circle-radius': 4,
 			};
+		default:
+			return {};
 	}
 };
 

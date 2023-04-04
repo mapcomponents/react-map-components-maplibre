@@ -32,7 +32,6 @@ export default function LayerListItemVectorLayer({
 		)
 			return;
 
-
 		const _layers = [...vtProps.layers];
 		if (!_layers[id].layout) {
 			_layers[id].layout = { visibility: visible ? 'visible' : 'none' };
@@ -101,7 +100,7 @@ export default function LayerListItemVectorLayer({
 					setPaintProps={setPaintProps}
 					layerType={vtProps.layers[id].type}
 				/>
-			)}
+			) }
 		</>
 	);
 }
