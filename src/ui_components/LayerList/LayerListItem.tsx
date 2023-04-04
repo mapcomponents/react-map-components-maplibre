@@ -144,7 +144,7 @@ function LayerListItem({
 						paddingBottom: '4px',
 					}}
 					secondaryAction={
-						configurable ? (
+						configurable && Object.keys(paintProps)?.length > 0 ? (
 							<>
 								<IconButton
 									edge={props.showDeleteButton ? false : 'end'}
@@ -216,13 +216,16 @@ function LayerListItem({
 				</ListItem>
 			)}
 			{_layerComponent}
-			{!layerComponent?.props?.layers && configurable && paintPropsFormVisible && (
-				<LayerPropertyForm
-					paintProps={paintProps}
-					setPaintProps={setPaintProps}
-					layerType={layerType}
-				/>
-			)}
+			{!layerComponent?.props?.layers &&
+				Object.keys(paintProps).length > 0 &&
+				configurable &&
+				paintPropsFormVisible && (
+					<LayerPropertyForm
+						paintProps={paintProps}
+						setPaintProps={setPaintProps}
+						layerType={layerType}
+					/>
+				)}
 
 			{layerComponent?.props?.layers && (
 				<LayerListFolder visible={localVisible} setVisible={setLocalVisible} name={name}>

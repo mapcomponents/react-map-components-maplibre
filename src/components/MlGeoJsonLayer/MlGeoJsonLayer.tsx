@@ -111,9 +111,15 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		layerId: props.layerId || 'MlGeoJsonLayer-' + uuidv4(),
 		geojson: props.geojson,
 		options: {
-			paint: props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides),
-			layout: props.layout || {},
 			...props.options,
+			paint: {
+				...(props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides)),
+				...props?.options?.paint,
+			},
+			layout: {
+				...(props?.layout || {}),
+				...props?.options?.layout,
+			},
 			type: layerType as LayerSpecification['type'],
 		} as useLayerProps['options'],
 		insertBeforeLayer: props.insertBeforeLayer,

@@ -5,7 +5,7 @@ import LayerListItem from './LayerListItem';
 
 import mapContextDecorator from '../../decorators/EmptyMapDecorator';
 import Sidebar from '../Sidebar';
-import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
@@ -286,7 +286,7 @@ ConfigurableExample.args = {};
 const LabelTemplate = () => {
 	const [layerOneState, setLayerOneState] = useState({
 		geojson: sample_geojson_1 as Feature,
-		type: 'symbol',
+		type: 'symbol' as const,
 		options: {
 			layout: {
 				"symbol-placement": "line",
@@ -317,7 +317,7 @@ const LabelTemplate = () => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<LayerList>
 					<LayerListItem
-						layerComponent={<MlGeoJsonLayer {...layerOneState} />}
+						layerComponent={<MlGeoJsonLayer {...layerOneState as MlGeoJsonLayerProps} />}
 						setLayerState={setLayerOneState}
 						visible={true}
 						configurable={true}
