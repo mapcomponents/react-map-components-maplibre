@@ -128,6 +128,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 LayerListItemFactory.defaultProps = {
 	mapId: undefined,
+	layers: []
 };
 
 export default LayerListItemFactory;
