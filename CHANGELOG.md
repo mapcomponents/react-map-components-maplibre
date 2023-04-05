@@ -1,5 +1,21 @@
 # Change Log
 
+## [v0.1.77] - 2023-04-05
+
+
+### Fixed
+- 92bac5c: remove deprecated @mui/styles dependency; fixes npm compatibility
+
+### Added
+- 6512e26: add name prop to MlWmsLoader
+
+### Changed
+- 6512e26: make AddLayerPopup initial config state configurable
+- 6512e26: make MlWmsLoader featureInfoActive controllable from parent component
+- 6512e26: make LayerListItemFactory control featureInfoActive to always reflect the state in LayerConfig
+
+### Added
+
 ## [v0.1.76] - 2023-04-04
 
 ### Fixed
