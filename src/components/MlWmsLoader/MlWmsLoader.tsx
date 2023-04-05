@@ -63,7 +63,10 @@ export interface MlWmsLoaderProps {
 	zoomToExtent?: boolean;
 	lngLat?: LngLat;
 	idPrefix?: string;
+	name?: string;
 	featureInfoEnabled?: boolean;
+	featureInfoActive?: boolean;
+	setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
 	config?: WmsConfig;
 	onConfigChange?: (config: WmsConfig | false) => void;
 	setLayers?: (layers: LayerType[]) => void;
@@ -123,8 +126,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	}, [_capabilities]);
 
 	const name = useMemo(() => {
-		return props?.config?.name || capabilities?.Service?.Title;
-	}, [props?.config?.name, capabilities?.Service?.Title]);
+		return props?.name || props?.config?.name || capabilities?.Service?.Title;
+	}, [props?.name, props?.config?.name, capabilities?.Service?.Title]);
 
 	const layers = useMemo(() => {
 		if (!props?.setLayers) return _layers;
@@ -149,9 +152,9 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 	const attribution = useMemo(() => {
 		return layers
-			.filter((el) => el.visible && el?.Attribution?.Title)
-			.map((el) => el?.Attribution?.Title)
-			.filter((value, index, self) => self.indexOf(value) === index)
+			.filter((el: LayerType) => el.visible && el?.Attribution?.Title)
+			.map((el: LayerType) => el?.Attribution?.Title)
+			.filter((value: string, index: number, self: string[]) => self.indexOf(value) === index)
 			.join(' ');
 	}, [layers]);
 
@@ -231,11 +234,12 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 	const _featureInfoEventsEnabled = useMemo(() => {
 		return (
-			featureInfoEventsEnabled &&
+			((typeof props?.featureInfoActive !== 'undefined' && props.featureInfoActive) ||
+				featureInfoEventsEnabled) &&
 			layers?.some((layer) => layer.visible && layer.queryable) &&
 			!!mapHook.map
 		);
-	}, [featureInfoEventsEnabled, layers, mapHook.map]);
+	}, [props?.featureInfoActive, featureInfoEventsEnabled, layers, mapHook.map]);
 
 	useEffect(() => {
 		if (!_featureInfoEventsEnabled) {
@@ -345,7 +349,13 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 											},
 										}}
 										aria-label="featureinfo"
-										onClick={() => setFeatureInfoEventsEnabled((current) => !current)}
+										onClick={() => {
+											if (typeof props?.setFeatureInfoActive === 'function') {
+												props.setFeatureInfoActive((current: boolean) => !current);
+											} else {
+												setFeatureInfoEventsEnabled((current: boolean) => !current);
+											}
+										}}
 										disabled={!layers?.some((layer) => layer.visible && layer.queryable)}
 									>
 										<InfoIcon />

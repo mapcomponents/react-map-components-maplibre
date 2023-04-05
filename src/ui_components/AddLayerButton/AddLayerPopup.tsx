@@ -7,13 +7,14 @@ import { LayerConfig } from 'src/contexts/LayerContext';
 
 export interface AddLayerPopupProps {
 	open: boolean;
+	config?: LayerConfig;
 	setOpen: (open: boolean) => void;
 	onChange?: (config: LayerConfig) => void;
 	onComplete?: (config: LayerConfig) => void;
 }
 
 const AddLayerPopup = (props: AddLayerPopupProps) => {
-	const [layerConfig, setLayerConfig] = useState<LayerConfig>();
+	const [layerConfig, setLayerConfig] = useState<LayerConfig | undefined>(props?.config);
 
 	const updateLayerType = (type: LayerConfig['type']) => {
 		setLayerConfig({ type, config: {} } as LayerConfig);

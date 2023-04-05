@@ -27,6 +27,7 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [openSidebar, setOpenSidebar] = useState(true);
+	const [featureInfoActive, setFeatureInfoActive] = useState(true);
 
 	const openGuide = () => {
 		setGuide(true);
@@ -92,6 +93,8 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 						url={url}
 						onConfigChange={(config) => console.log(config)}
 						zoomToExtent={true}
+						featureInfoActive={featureInfoActive}
+						setFeatureInfoActive={setFeatureInfoActive}
 					/>
 				</List>
 			</Sidebar>
