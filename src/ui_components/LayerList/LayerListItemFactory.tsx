@@ -95,6 +95,18 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											return _layers;
 										});
 									}}
+									featureInfoActive={layer?.config?.featureInfoActive || false}
+									setFeatureInfoActive={(updateFunction) => {
+										props?.setLayers?.((current: LayerConfig[]) => {
+											const _layers = [...current];
+											if (typeof updateFunction === 'function') {
+												(_layers[idx].config as MlWmsLoaderProps).featureInfoActive = updateFunction(
+													(_layers[idx].config as MlWmsLoaderProps)?.featureInfoActive || false
+												);
+											}
+											return _layers;
+										});
+									}}
 									showDeleteButton={true}
 								/>
 							</>
@@ -128,7 +140,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 LayerListItemFactory.defaultProps = {
 	mapId: undefined,
-	layers: []
+	layers: [],
 };
 
 export default LayerListItemFactory;
