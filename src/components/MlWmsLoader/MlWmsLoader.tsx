@@ -63,6 +63,7 @@ export interface MlWmsLoaderProps {
 	zoomToExtent?: boolean;
 	lngLat?: LngLat;
 	idPrefix?: string;
+	name?: string;
 	featureInfoEnabled?: boolean;
 	config?: WmsConfig;
 	onConfigChange?: (config: WmsConfig | false) => void;
@@ -123,8 +124,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	}, [_capabilities]);
 
 	const name = useMemo(() => {
-		return props?.config?.name || capabilities?.Service?.Title;
-	}, [props?.config?.name, capabilities?.Service?.Title]);
+		return props?.name || props?.config?.name || capabilities?.Service?.Title;
+	}, [props?.name, props?.config?.name, capabilities?.Service?.Title]);
 
 	const layers = useMemo(() => {
 		if (!props?.setLayers) return _layers;
