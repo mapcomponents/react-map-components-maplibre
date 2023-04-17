@@ -236,6 +236,18 @@ function useLayer(props: useLayerProps): useLayerType {
 	}, [props.options, mapHook.map]);
 
 	useEffect(() => {
+		if (
+			!props.insertBeforeLayer ||
+			!mapHook.map ||
+			!mapHook.map.getLayer(props.insertBeforeLayer) ||
+			!mapHook.map.getLayer(layerId.current)
+		)
+			return;
+
+		mapHook.map.moveLayer(layerId.current, props.insertBeforeLayer)
+	}, [mapHook.map, props.insertBeforeLayer]);
+
+	useEffect(() => {
 		return () => {
 			initializedRef.current = false;
 			mapHook.cleanup();
