@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
 import LayerListItem from './LayerListItem';
@@ -20,9 +20,19 @@ export interface LayerListItemFactoryProps {
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const layerContext = useLayerContext();
+
+	const orderLayers = useMemo(() => {
+		const layerIds = [
+			'background',
+			...layerContext.layers.map((el) => 'content_' + el.id),
+			'labels',
+		];
+
+		return layerIds.reverse();
+	}, [layerContext.layers]);
 	return (
 		<>
-			<MlOrderLayers layerIds={['labels', 'content', 'background']} />
+			<MlOrderLayers layerIds={orderLayers} />
 			{layerContext?.backgroundLayers?.length > 0 && (
 				<LayerListItem
 					layerComponent={
@@ -56,7 +66,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										<MlGeoJsonLayer
 											{...layer.config}
 											mapId={props?.mapId}
-											insertBeforeLayer={props?.insertBeforeLayer || 'order-content'}
+											insertBeforeLayer={'order-content_' + layer.id}
 										/>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
@@ -83,7 +93,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									{...layer.config}
 									key={layer.id}
 									mapId={props?.mapId}
-									insertBeforeLayer={props?.insertBeforeLayer || 'order-content'}
+									insertBeforeLayer={'order-content_' + layer.id}
 									onConfigChange={(layerConfig) => {
 										props?.setLayers?.((current: LayerConfig[]) => {
 											const _layers = [...current];
@@ -100,9 +110,10 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										props?.setLayers?.((current: LayerConfig[]) => {
 											const _layers = [...current];
 											if (typeof updateFunction === 'function') {
-												(_layers[idx].config as MlWmsLoaderProps).featureInfoActive = updateFunction(
-													(_layers[idx].config as MlWmsLoaderProps)?.featureInfoActive || false
-												);
+												(_layers[idx].config as MlWmsLoaderProps).featureInfoActive =
+													updateFunction(
+														(_layers[idx].config as MlWmsLoaderProps)?.featureInfoActive || false
+													);
 											}
 											return _layers;
 										});
