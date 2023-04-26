@@ -81,17 +81,16 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 	// Player buttons
 
-	const handlePlay = () => {
-		setIsPlaying(true);
+	const handlePlayPause = () => {
+		if(!isPlaying){
+			setIsPlaying(true);
 		play();
-	};
-	const handlePause = () => {
-		setIsPlaying(!isPlaying);
+		} else {
+			setIsPlaying(false);
 		if (isPlaying) {
 			clearInterval(intervalRef.current);
-		} else if (!isPlaying) {
-			play();
-		}
+		}		
+		}		
 	};
 
 	const handleStop = () => {
@@ -154,12 +153,9 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 						<Button onClick={handleStop} >
 							<StopIcon />
 						</Button>
-						<Button onClick={handlePlay} disabled={isPlaying} >
-							<PlayArrowIcon />
-						</Button>
-						<Button onClick={handlePause} >
-							<PauseIcon />
-						</Button>
+						<Button onClick={handlePlayPause}  >
+							{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+							</Button>
 						<Button onClick={handleFastForward}>
 							<FastForwardIcon />
 						</Button>

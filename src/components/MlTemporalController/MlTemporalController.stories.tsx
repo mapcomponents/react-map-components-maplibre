@@ -84,6 +84,7 @@ FillConfig.args = {
 	timeField: 'africa_independency_year',
 	type: 'fill',
 	labelField: 'africa_independency_year',
+	interval: 150,
 	accumulate: true,
 	initialVal: 1904,
 	fitBounds: true,
