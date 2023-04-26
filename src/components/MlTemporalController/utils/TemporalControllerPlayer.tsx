@@ -10,6 +10,7 @@ export interface TemporalControllerPlayerProps {
 	currentVal: number;
 	isPlaying: boolean;
 	step: number;
+	interval: number;
 	minVal: number;
 	maxVal: number;
 	returnCurrent: React.Dispatch<React.SetStateAction<number>>;
@@ -28,7 +29,7 @@ export interface TemporalControllerPlayerProps {
 
 const bigScreenBoxStyle = {
 	marginLeft: '15%',
-	marginBottom: '1%',
+	marginBottom: '3%',
 	width: '70%',
 	height: '90px',
 	alignItems: 'center',
@@ -75,7 +76,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 				setCurrentVal((val) => val + props.step);
 			}
 			counter = counter + props.step;
-		}, 200);
+		}, props.interval);
 	}, [props.step, props.maxVal, currentVal]);
 
 	// Player buttons

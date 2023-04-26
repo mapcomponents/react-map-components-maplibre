@@ -26,6 +26,7 @@ export default function paintPicker(props: paintPickerProps) {
 	const fillNoShow = { 'fill-color': 'rgba(0,0,0,0)', 'fill-outline-color': 'rgba(0,0,0,0)' };
 	const lineNoShow = { 'line-color': 'rgba(0,0,0,0)' };
 
+
 	const opacityInterpolate = [
 		'interpolate',
 		['linear'],
@@ -116,6 +117,7 @@ export default function paintPicker(props: paintPickerProps) {
 
 	const lineAccumulatePaint = {
 		'line-color': props.featuresColor,
+		'line-width': 3,
 		'line-opacity': accumulatedOpacityInterpolate,
 	};
 

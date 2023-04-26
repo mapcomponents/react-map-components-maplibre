@@ -6,7 +6,8 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import tour_de_france_2022 from './assets/tour_de_france_2022.json';
-import { TemporalControllerValues } from './MlTemporalController';
+import jakobsweg from './assets/jackobsweg.json';
+
 
 
 const storyoptions = {
@@ -64,7 +65,7 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						Tour de France stages in 2022
+						St. James Trials in the North Rhein Region by stage number
 					</Typography>
 				}
 			/>
@@ -110,12 +111,19 @@ CircleConfig.args = {
 export const LineConfig = LineTemplate.bind({});
 LineConfig.parameters = {};
 LineConfig.args = {
-	geojson: tour_de_france_2022,
-	timeField: 'Etape',
+	geojson: jakobsweg,
+	interval: 150,
+	step: 0.5,
+	timeField: 'etape',
+	fadeIn: 2,
+	fadeOut: 2,
+	labelFadeIn: 2,
+	labelFadeOut: 2,
 	type: 'line',
-	labelField: 'Name',
+	labelField: 'name',
+	featuresColor: "red",
 	accumulate: true,
 	fitBounds: true,	
 	displayCurrentValue: true,
-	attribution: 'Source: geovista.space ',
+	attribution: 'Source: deutsche-jakobswege.de ',
 };
