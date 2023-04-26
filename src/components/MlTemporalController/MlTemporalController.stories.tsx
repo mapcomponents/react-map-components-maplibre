@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
-import mapContextDecorator from '../../decorators/MapContextDecorator';
+import temporalControllerDecorator from '../../decorators/TemporalControllerDecorator';
 import { Typography } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
-import tour_de_france_2022 from './assets/tour_de_france_2022.json';
 import jakobsweg from './assets/jackobsweg.json';
 
 
@@ -14,7 +13,7 @@ const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
 	component: MlTemporalController,
 	argTypes: {},
-	decorators: mapContextDecorator,
+	decorators: temporalControllerDecorator,
 	parameters: {
 		sourceLink: 'components/MlTemporalController/MlTemporalController.tsx',
 	},
