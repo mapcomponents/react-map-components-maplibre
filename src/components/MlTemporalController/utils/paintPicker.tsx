@@ -153,7 +153,14 @@ export default function paintPicker(props: paintPickerProps) {
 					} else {
 						return defaultLinePaint;
 					}
-				
+				case undefined:
+					if (props.currentVal === props.minVal && !props.isPlaying) {
+						return circleNoShow;
+					} else if (props.accumulate ) {
+						return circleAccumulatePaint;
+					} else {
+						return defaultCirclePaint;
+					}
 		}
 	}
 }
