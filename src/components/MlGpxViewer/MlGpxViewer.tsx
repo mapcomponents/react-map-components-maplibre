@@ -39,8 +39,6 @@ const MlGpxViewer = (props: MlGpxViewerProps) => {
 	const layerNameLines = useRef('importer-layer-lines-' + uuidv4());
 	const layerNamePoints = useRef('importer-layer-points-' + uuidv4());
 
-	console.log(parsedGpx);
-
 	useLayerHoverPopup({
 		layerId: layerNamePoints.current,
 		getPopupContent: (feature) => feature?.properties?.name,
