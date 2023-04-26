@@ -2,29 +2,29 @@ import {
 	LineLayerSpecification,
 	CircleLayerSpecification,
 	FillLayerSpecification,
+
 } from 'maplibre-gl';
 
 interface paintPickerProps {
-	type: 'fill' | 'line' | 'circle' | undefined;
-	timeField: string;
-	currentVal: number;
-	minVal: number;
-	isPlaying: boolean;
-	fadeIn: number;
-	fadeOut: number;
-	step: number;
-	featuresColor: string;
-	accumulate: boolean;
-	userPaint:
-		| CircleLayerSpecification['paint']
-		| FillLayerSpecification['paint']
-		| LineLayerSpecification['paint'];
+	type: 'fill' | 'line' | 'circle' | undefined,
+	timeField: string,
+	currentVal: number,
+	minVal: number,
+	isPlaying: boolean,
+	fadeIn: number ,
+	fadeOut: number,
+	step: number,
+	featuresColor: string,
+	accumulate: boolean,
+	userPaint: CircleLayerSpecification['paint']
+	| FillLayerSpecification['paint']
+	| LineLayerSpecification['paint'];
 }
 
 export default function paintPicker(props: paintPickerProps) {
 	const circleNoShow = { 'circle-color': 'rgba(0,0,0,0)' };
-	const fillNoShow = { 'fill-color': 'rgba(0,0,0,0)', 'fill-outline-color': 'rgba(0,0,0,0)' };
-	const lineNoShow = { 'line-color': 'rgba(0,0,0,0)' };
+	const fillNoShow = { 'fill-color': 'rgba(0,0,0,0)', 'fill-outline-color':'rgba(0,0,0,0)' };
+	const lineNoShow = {'line-color': 'rgba(0,0,0,0)'}
 
 
 	const opacityInterpolate = [
@@ -81,8 +81,10 @@ export default function paintPicker(props: paintPickerProps) {
 		'circle-opacity': opacityInterpolate,
 	};
 	const defaultLinePaint = {
-		'line-color': props.featuresColor,
-		'line-opacity': opacityInterpolate
+'line-color': props.featuresColor,
+'line-width': 3,
+'line-opacity': opacityInterpolate
+
 	};
 
 	const circleAccumulatePaint = {
@@ -118,7 +120,7 @@ export default function paintPicker(props: paintPickerProps) {
 	const lineAccumulatePaint = {
 		'line-color': props.featuresColor,
 		'line-width': 3,
-		'line-opacity': accumulatedOpacityInterpolate,
+		'line-opacity': accumulatedOpacityInterpolate
 	};
 
 	if (props.userPaint !== undefined) {
@@ -128,41 +130,30 @@ export default function paintPicker(props: paintPickerProps) {
 			case 'circle':
 				if (props.currentVal === props.minVal && !props.isPlaying) {
 					return circleNoShow;
-				} else if (props.accumulate) {
-				} else if (props.accumulate) {
+				} else if (props.accumulate ) {
 					return circleAccumulatePaint;
 				} else {
 					return defaultCirclePaint;
 				}
-
-
+				
 			case 'fill':
 				if (props.currentVal === props.minVal && !props.isPlaying) {
 					return fillNoShow;
-				} else if (props.accumulate) {
-				} else if (props.accumulate) {
+				} else if (props.accumulate ) {
 					return fillAccumulatePaint;
 				} else {
 					return defaultFillPaint;
 				}
 
-			case 'line':
-				if (props.currentVal === props.minVal && !props.isPlaying) {
-					return lineNoShow;
-				} else if (props.accumulate) {
-					return lineAccumulatePaint;
-				} else {
-					return defaultLinePaint;
-				}
-
-			case undefined:
-				if (props.currentVal === props.minVal && !props.isPlaying) {
-					return circleNoShow;
-				} else if (props.accumulate) {
-					return circleAccumulatePaint;
-				} else {
-					return defaultCirclePaint;
-				}			
+				case 'line':
+					if (props.currentVal === props.minVal && !props.isPlaying) {
+						return lineNoShow;
+					} else if (props.accumulate ) {
+						return lineAccumulatePaint;
+					} else {
+						return defaultLinePaint;
+					}
+				
 		}
 	}
 }
