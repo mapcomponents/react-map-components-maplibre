@@ -24,15 +24,19 @@ export default storyoptions;
 const FillTemplate = (props: MlTemporalControllerProps) => {
 
 
+
 	return (
 		<>
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
 						African countries by independency year
+						African countries by independency year
 					</Typography>
 				}
 			/>
+
+			<MlTemporalController {...props}  />
 
 			<MlTemporalController {...props}  />
 		</>
@@ -40,6 +44,7 @@ const FillTemplate = (props: MlTemporalControllerProps) => {
 };
 
 const CircleTemplate = (props: MlTemporalControllerProps) => {
+
 
 
 	return (
@@ -53,11 +58,14 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 			/>
 			<MlTemporalController {...props} />
 		
+			<MlTemporalController {...props} />
+		
 		</>
 	);
 };
 
 const LineTemplate = (props: MlTemporalControllerProps) => {
+	
 	
 	return (
 		<>
@@ -68,6 +76,8 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 					</Typography>
 				}
 			/>
+			<MlTemporalController {...props}  />
+		
 			<MlTemporalController {...props}  />
 		
 		</>
@@ -88,7 +98,9 @@ FillConfig.args = {
 	initialVal: 1904,
 	fitBounds: true,
 	displayCurrentValue: true,
+	displayCurrentValue: true,
 	attribution: 'Made with Natural Earth.',
+	
 	
 };
 
@@ -100,9 +112,11 @@ CircleConfig.args = {
 	labelField: 'LocationName',
 	accumulate: false,
 	step: 0.3,
+	step: 0.3,
 	minVal: 1900,
 	fitBounds: true,
 	onClick: () => console.log('clicked'),
+	displayCurrentValue: true,
 	displayCurrentValue: true,
 	attribution:
 		'National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K',

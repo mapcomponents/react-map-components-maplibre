@@ -24,7 +24,13 @@ export default function LayerListItemVectorLayer({
 	const [paintProps, setPaintProps] = useState(vtProps.layers[id].paint);
 
 	useEffect(() => {
-		if (!setVtProps) return;
+		if (
+			!setVtProps ||
+			(typeof vtProps.layers[id]?.layout?.visibility === 'undefined' && visible) ||
+			(!visible && vtProps.layers[id]?.layout?.visibility === 'none') ||
+			(visible && vtProps.layers[id]?.layout?.visibility === 'visible')
+		)
+			return;
 
 		const _layers = [...vtProps.layers];
 		if (!_layers[id].layout) {
@@ -43,11 +49,12 @@ export default function LayerListItemVectorLayer({
 	useEffect(() => {
 		if (!setVtProps) return;
 
-		const _paintProps = { ...paintProps };
-		const _layers = [...vtProps.layers];
-		_layers[id].paint = _paintProps;
-
-		setVtProps({ ...vtProps, layers: _layers });
+		if (JSON.stringify(paintProps) !== JSON.stringify(vtProps.layers[id].paint)) {
+			const _paintProps = { ...paintProps };
+			const _layers = [...vtProps.layers];
+			_layers[id].paint = _paintProps;
+			setVtProps({ ...vtProps, layers: _layers });
+		}
 	}, [paintProps, id, setVtProps, vtProps]);
 
 	return (
@@ -85,7 +92,7 @@ export default function LayerListItemVectorLayer({
 						}}
 					/>
 				</ListItemIcon>
-				<ListItemText primary={vtProps.layers[id].id} />
+				<ListItemText primary={vtProps.layers[id].id} variant="layerlist" />
 			</ListItem>
 			{configurable && paintPropsFormVisible && (
 				<LayerPropertyForm
@@ -93,7 +100,7 @@ export default function LayerListItemVectorLayer({
 					setPaintProps={setPaintProps}
 					layerType={vtProps.layers[id].type}
 				/>
-			)}
+			) }
 		</>
 	);
 }

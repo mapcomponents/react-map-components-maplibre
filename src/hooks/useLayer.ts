@@ -10,11 +10,8 @@ import {
 	Style,
 	MapEventType,
 	Map,
-	RasterLayerSpecification,
-	BackgroundLayerSpecification,
 	VideoSourceSpecification,
 	ImageSourceSpecification,
-	HillshadeLayerSpecification,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -45,10 +42,7 @@ export interface useLayerProps {
 	insertBeforeFirstSymbolLayer?: boolean;
 	geojson?: GeoJSONObject;
 	options: Partial<
-		Exclude<
-			LayerSpecification,
-			RasterLayerSpecification | BackgroundLayerSpecification | HillshadeLayerSpecification
-		> & {
+		LayerSpecification & {
 			source?: Partial<
 				Exclude<SourceSpecification, VideoSourceSpecification | ImageSourceSpecification>
 			>;
@@ -110,37 +104,40 @@ function useLayer(props: useLayerProps): useLayerType {
 
 		initializedRef.current = true;
 
-		mapHook.map.addLayer(
-			{
-				...props.options,
-				...(props.geojson &&
-				(!props.options?.source ||
-					(props.options?.source?.attribution && !props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
-					? {
-							source: {
-								type: 'geojson',
-								data: props.geojson,
-								attribution: props.options.source?.attribution
-									? props.options.source?.attribution
-									: '',
-							},
-					  }
-					: {}),
-				...(typeof props.options?.source === 'string'
-					? {
-							source: props.options.source,
-					  }
-					: {}),
-				id: layerId.current,
-			} as LayerSpecification,
-			props.insertBeforeLayer
-				? props.insertBeforeLayer
-				: props.insertBeforeFirstSymbolLayer
-				? mapHook.map.firstSymbolLayer
-				: undefined,
-			mapHook.componentId
-		);
-
+		try {
+			mapHook.map.addLayer(
+				{
+					...props.options,
+					...(props.geojson &&
+					(!props.options?.source ||
+						(props.options?.source?.attribution && !props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
+						? {
+								source: {
+									type: 'geojson',
+									data: props.geojson,
+									attribution: props.options.source?.attribution
+										? props.options.source?.attribution
+										: '',
+								},
+						  }
+						: {}),
+					...(typeof props.options?.source === 'string'
+						? {
+								source: props.options.source,
+						  }
+						: {}),
+					id: layerId.current,
+				} as LayerSpecification,
+				props.insertBeforeLayer
+					? props.insertBeforeLayer
+					: props.insertBeforeFirstSymbolLayer
+					? mapHook.map.firstSymbolLayer
+					: undefined,
+				mapHook.componentId
+			);
+		} catch (e) {
+			console.log(e);
+		}
 		setLayer(() => mapHook.map?.map.getLayer(layerId.current));
 
 		if (typeof props.onHover !== 'undefined') {

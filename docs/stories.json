@@ -533,6 +533,20 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlorderlayers--example-config": {
+      "id": "mapcomponents-mlorderlayers--example-config",
+      "name": "Example Config",
+      "title": "MapComponents/MlOrderLayers",
+      "importPath": 27059,
+      "kind": "MapComponents/MlOrderLayers",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 27059,
+        "framework": "react",
+        "__id": "mapcomponents-mlorderlayers--example-config",
+        "__isArgsStory": false
+      }
+    },
     "mapcomponents-mlscalereference--toolbar": {
       "id": "mapcomponents-mlscalereference--toolbar",
       "name": "Toolbar",
@@ -607,11 +621,11 @@
       "id": "mapcomponents-mltemporalcontroller--fill-config",
       "name": "Fill Config",
       "title": "MapComponents/MlTemporalController",
-      "importPath": 87875,
+      "importPath": 96157,
       "kind": "MapComponents/MlTemporalController",
       "story": "Fill Config",
       "parameters": {
-        "fileName": 87875,
+        "fileName": 96157,
         "framework": "react",
         "__id": "mapcomponents-mltemporalcontroller--fill-config",
         "__isArgsStory": true
@@ -621,11 +635,11 @@
       "id": "mapcomponents-mltemporalcontroller--circle-config",
       "name": "Circle Config",
       "title": "MapComponents/MlTemporalController",
-      "importPath": 87875,
+      "importPath": 96157,
       "kind": "MapComponents/MlTemporalController",
       "story": "Circle Config",
       "parameters": {
-        "fileName": 87875,
+        "fileName": 96157,
         "framework": "react",
         "__id": "mapcomponents-mltemporalcontroller--circle-config",
         "__isArgsStory": true
@@ -635,11 +649,11 @@
       "id": "mapcomponents-mltemporalcontroller--line-config",
       "name": "Line Config",
       "title": "MapComponents/MlTemporalController",
-      "importPath": 87875,
+      "importPath": 96157,
       "kind": "MapComponents/MlTemporalController",
       "story": "Line Config",
       "parameters": {
-        "fileName": 87875,
+        "fileName": 96157,
         "framework": "react",
         "__id": "mapcomponents-mltemporalcontroller--line-config",
         "__isArgsStory": true
@@ -733,14 +747,28 @@
       "id": "mapcomponents-mlwmsloader--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlWmsLoader",
-      "importPath": 68274,
+      "importPath": 72893,
       "kind": "MapComponents/MlWmsLoader",
       "story": "Example Config",
       "parameters": {
-        "fileName": 68274,
+        "fileName": 72893,
         "framework": "react",
         "__id": "mapcomponents-mlwmsloader--example-config",
         "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlwmsloader--example-fixed-config": {
+      "id": "mapcomponents-mlwmsloader--example-fixed-config",
+      "name": "Example Fixed Config",
+      "title": "MapComponents/MlWmsLoader",
+      "importPath": 72893,
+      "kind": "MapComponents/MlWmsLoader",
+      "story": "Example Fixed Config",
+      "parameters": {
+        "fileName": 72893,
+        "framework": "react",
+        "__id": "mapcomponents-mlwmsloader--example-fixed-config",
+        "__isArgsStory": false
       }
     },
     "hooks-usecamerafollowpath--example-config": {
@@ -925,15 +953,43 @@
         "__isArgsStory": true
       }
     },
+    "uicomponents-addlayerbutton--folder-example": {
+      "id": "uicomponents-addlayerbutton--folder-example",
+      "name": "Folder Example",
+      "title": "UiComponents/AddLayerButton",
+      "importPath": 26210,
+      "kind": "UiComponents/AddLayerButton",
+      "story": "Folder Example",
+      "parameters": {
+        "fileName": 26210,
+        "framework": "react",
+        "__id": "uicomponents-addlayerbutton--folder-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-addlayerbutton--style-json-example": {
+      "id": "uicomponents-addlayerbutton--style-json-example",
+      "name": "Style Json Example",
+      "title": "UiComponents/AddLayerButton",
+      "importPath": 26210,
+      "kind": "UiComponents/AddLayerButton",
+      "story": "Style Json Example",
+      "parameters": {
+        "fileName": 26210,
+        "framework": "react",
+        "__id": "uicomponents-addlayerbutton--style-json-example",
+        "__isArgsStory": false
+      }
+    },
     "uicomponents-layerlist--folder-example": {
       "id": "uicomponents-layerlist--folder-example",
       "name": "Folder Example",
       "title": "UiComponents/LayerList",
-      "importPath": 13098,
+      "importPath": 81948,
       "kind": "UiComponents/LayerList",
       "story": "Folder Example",
       "parameters": {
-        "fileName": 13098,
+        "fileName": 81948,
         "framework": "react",
         "__id": "uicomponents-layerlist--folder-example",
         "__isArgsStory": false
@@ -943,11 +999,11 @@
       "id": "uicomponents-layerlist--vectortile-example",
       "name": "Vectortile Example",
       "title": "UiComponents/LayerList",
-      "importPath": 13098,
+      "importPath": 81948,
       "kind": "UiComponents/LayerList",
       "story": "Vectortile Example",
       "parameters": {
-        "fileName": 13098,
+        "fileName": 81948,
         "framework": "react",
         "__id": "uicomponents-layerlist--vectortile-example",
         "__isArgsStory": false
@@ -957,11 +1013,11 @@
       "id": "uicomponents-layerlist--wms-layer-example",
       "name": "Wms Layer Example",
       "title": "UiComponents/LayerList",
-      "importPath": 13098,
+      "importPath": 81948,
       "kind": "UiComponents/LayerList",
       "story": "Wms Layer Example",
       "parameters": {
-        "fileName": 13098,
+        "fileName": 81948,
         "framework": "react",
         "__id": "uicomponents-layerlist--wms-layer-example",
         "__isArgsStory": false
@@ -971,11 +1027,11 @@
       "id": "uicomponents-layerlist--geo-json-layer-example",
       "name": "Geo Json Layer Example",
       "title": "UiComponents/LayerList",
-      "importPath": 13098,
+      "importPath": 81948,
       "kind": "UiComponents/LayerList",
       "story": "Geo Json Layer Example",
       "parameters": {
-        "fileName": 13098,
+        "fileName": 81948,
         "framework": "react",
         "__id": "uicomponents-layerlist--geo-json-layer-example",
         "__isArgsStory": false
@@ -985,13 +1041,41 @@
       "id": "uicomponents-layerlist--configurable-example",
       "name": "Configurable Example",
       "title": "UiComponents/LayerList",
-      "importPath": 13098,
+      "importPath": 81948,
       "kind": "UiComponents/LayerList",
       "story": "Configurable Example",
       "parameters": {
-        "fileName": 13098,
+        "fileName": 81948,
         "framework": "react",
         "__id": "uicomponents-layerlist--configurable-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-layerlist--label-example": {
+      "id": "uicomponents-layerlist--label-example",
+      "name": "Label Example",
+      "title": "UiComponents/LayerList",
+      "importPath": 81948,
+      "kind": "UiComponents/LayerList",
+      "story": "Label Example",
+      "parameters": {
+        "fileName": 81948,
+        "framework": "react",
+        "__id": "uicomponents-layerlist--label-example",
+        "__isArgsStory": false
+      }
+    },
+    "uicomponents-selectstylebutton--select-style-button-example": {
+      "id": "uicomponents-selectstylebutton--select-style-button-example",
+      "name": "Select Style Button Example",
+      "title": "UiComponents/SelectStyleButton",
+      "importPath": 91306,
+      "kind": "UiComponents/SelectStyleButton",
+      "story": "Select Style Button Example",
+      "parameters": {
+        "fileName": 91306,
+        "framework": "react",
+        "__id": "uicomponents-selectstylebutton--select-style-button-example",
         "__isArgsStory": false
       }
     }

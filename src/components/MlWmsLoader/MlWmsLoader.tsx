@@ -1,20 +1,22 @@
-import React, {  useEffect,  useCallback, useState, useMemo } from 'react';
-
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlMarker from '../MlMarker/MlMarker';
 import useWms, { useWmsProps } from '../../hooks/useWms';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import InfoIcon from '@mui/icons-material/Info';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import { LngLat,  MapMouseEvent } from 'maplibre-gl';
+import { LngLat, MapMouseEvent } from 'maplibre-gl';
 import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
 import useMap from '../../hooks/useMap';
+import { Box, Checkbox, ListItemIcon, Snackbar } from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
@@ -30,6 +32,16 @@ const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, deci
 	return [x, y];
 };
 
+export interface WmsConfig {
+	//capabilities?: useWmsReturnType['capabilities'];
+	getFeatureInfoUrl: useWmsReturnType['getFeatureInfoUrl'];
+	wmsUrl: useWmsReturnType['wmsUrl'];
+	layers: LayerType[];
+	visible: boolean;
+	open: boolean;
+	name?: string;
+}
+
 export interface MlWmsLoaderProps {
 	/**
 	 * WMS URL
@@ -38,7 +50,8 @@ export interface MlWmsLoaderProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
-	mapId: string;
+	mapId?: string;
+	insertBeforeLayer?: string;
 	/**
 	 * URL parameters that will be used in the getCapabilities request
 	 */
@@ -47,57 +60,114 @@ export interface MlWmsLoaderProps {
 	 * URL parameters that will be added when requesting WMS capabilities
 	 */
 	wmsUrlParameters?: { [key: string]: string };
+	zoomToExtent?: boolean;
 	lngLat?: LngLat;
 	idPrefix?: string;
+	name?: string;
+	featureInfoEnabled?: boolean;
+	featureInfoActive?: boolean;
+	setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
+	config?: WmsConfig;
+	onConfigChange?: (config: WmsConfig | false) => void;
+	setLayers?: (layers: LayerType[]) => void;
+	showDeleteButton?: boolean;
 }
 
 export type LayerType = {
 	visible: boolean;
 	Name: string;
 	Attribution?: { Title: string };
-} & Omit<Layer2, 'Layer'> &
+} & Omit<Layer2, 'Layer' | 'CRS'> &
 	Partial<Pick<Layer2, 'Layer'>>;
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
  *
- * TODO: EaseTo the extend offered by the WMS in a zoom level that is supported
- *
  * @component
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
-	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
-	const { capabilities, error, setUrl, getFeatureInfoUrl, wmsUrl }: useWmsReturnType = useWms({
+	const {
+		capabilities: _capabilities,
+		error,
+		setUrl,
+		getFeatureInfoUrl: _getFeatureInfoUrl,
+		wmsUrl: _wmsUrl,
+	}: useWmsReturnType = useWms({
 		urlParameters: props.urlParameters,
 	});
+	const [open, setOpen] = useState(props?.config?.open || false);
+	const [visible, setVisible] = useState<boolean>(props?.config?.visible || true);
+	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
 
-	const mapHook = useMap({mapId:props?.mapId});
-	const [layers, setLayers] = useState<Array<LayerType>>([]);
+	const mapHook = useMap({ mapId: props?.mapId });
+	const [_layers, _setLayers] = useState<Array<LayerType>>(props?.config?.layers || []);
 
+	const [featureInfoEventsEnabled, setFeatureInfoEventsEnabled] = useState<boolean>(false);
 	const [featureInfoLngLat, setFeatureInfoLngLat] = useState<
 		{ lng: number; lat: number } | undefined
 	>();
 	const [featureInfoContent, setFeatureInfoContent] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
-
+		if (props.config) return;
 		setUrl(props.url);
 	}, [props.url]);
 
+	const wmsUrl = useMemo(() => {
+		return props?.config?.wmsUrl || _wmsUrl;
+	}, [props?.config?.wmsUrl, _wmsUrl]);
+
+	const getFeatureInfoUrl = useMemo(() => {
+		return props?.config?.getFeatureInfoUrl || _getFeatureInfoUrl;
+	}, [props?.config?.getFeatureInfoUrl, _getFeatureInfoUrl]);
+
+	const capabilities = useMemo(() => {
+		return _capabilities;
+	}, [_capabilities]);
+
+	const name = useMemo(() => {
+		return props?.name || props?.config?.name || capabilities?.Service?.Title;
+	}, [props?.name, props?.config?.name, capabilities?.Service?.Title]);
+
+	const layers = useMemo(() => {
+		if (!props?.setLayers) return _layers;
+		return props?.config?.layers || _layers;
+	}, [props?.config?.layers, _layers]);
+
+	const setLayers = useMemo(() => {
+		return props?.setLayers || _setLayers;
+	}, [props?.setLayers, _setLayers]);
+
+	useEffect(() => {
+		props?.onConfigChange?.({
+			layers,
+			//capabilities,
+			getFeatureInfoUrl,
+			wmsUrl,
+			visible,
+			open,
+			name,
+		});
+	}, [layers, capabilities, getFeatureInfoUrl, wmsUrl, visible, open, name]);
+
 	const attribution = useMemo(() => {
 		return layers
-			.filter((el) => el.visible && el?.Attribution?.Title)
-			.map((el) => el?.Attribution?.Title)
-			.filter((value, index, self) => self.indexOf(value) === index)
+			.filter((el: LayerType) => el.visible && el?.Attribution?.Title)
+			.map((el: LayerType) => el?.Attribution?.Title)
+			.filter((value: string, index: number, self: string[]) => self.indexOf(value) === index)
 			.join(' ');
 	}, [layers]);
 
+	const resetFeatureInfo = function () {
+		setFeatureInfoLngLat(undefined);
+		setFeatureInfoContent(undefined);
+	};
+
 	const getFeatureInfo = useCallback(
 		// eslint-disable-next-line @typescript-eslint/ban-types
-		(ev:(MapMouseEvent & Object)) => {
+		(ev: MapMouseEvent & Object) => {
 			if (!mapHook.map) return;
-			setFeatureInfoLngLat(undefined);
-			setFeatureInfoContent(undefined);
+			resetFeatureInfo();
 			const _bounds = mapHook.map.getBounds();
 			const _sw = lngLatToMeters(_bounds._sw);
 			const _ne = lngLatToMeters(_bounds._ne);
@@ -162,8 +232,21 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		[capabilities, getFeatureInfoUrl, props, mapHook, layers]
 	);
 
+	const _featureInfoEventsEnabled = useMemo(() => {
+		return (
+			((typeof props?.featureInfoActive !== 'undefined' && props.featureInfoActive) ||
+				featureInfoEventsEnabled) &&
+			layers?.some((layer) => layer.visible && layer.queryable) &&
+			!!mapHook.map
+		);
+	}, [props?.featureInfoActive, featureInfoEventsEnabled, layers, mapHook.map]);
+
 	useEffect(() => {
-		if (!mapHook.map) return;
+		if (!_featureInfoEventsEnabled) {
+			resetFeatureInfo();
+
+			return;
+		}
 
 		const _getFeatureInfo = getFeatureInfo;
 
@@ -173,12 +256,15 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		return () => {
 			mapHook.map?.map.off?.('click', _getFeatureInfo);
 		};
-	}, [getFeatureInfo, mapHook.map]);
+	}, [_featureInfoEventsEnabled, getFeatureInfo, mapHook.map]);
 
 	useEffect(() => {
 		if (!capabilities?.Service) return;
 
-		if (capabilities?.Capability?.Layer?.CRS?.indexOf?.('EPSG:3857') === -1 && capabilities?.Capability?.Layer?.CRS?.indexOf?.('CRS:84') === -1) {
+		if (
+			capabilities?.Capability?.Layer?.CRS?.indexOf?.('EPSG:3857') === -1 &&
+			capabilities?.Capability?.Layer?.CRS?.indexOf?.('CRS:84') === -1
+		) {
 			console.log(
 				'MlWmsLoader (' + capabilities.Service.Title + '): No WGS 84/Pseudo-Mercator support'
 			);
@@ -189,7 +275,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 
 			let _LatLonBoundingBox: Array<number> = [];
 
-			// collect aueriable Layer2 layers
+			// collect queriable Layer2 layers
 			let _layers: LayerType[] = capabilities?.Capability?.Layer?.Layer.filter(
 				(el) => !el.Layer?.length
 			).map((layer: Layer2 & { Name: string }, idx: number) => {
@@ -199,11 +285,12 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				return {
 					visible: capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true,
 					Attribution: { Title: '' },
-					...layer,
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
+					...(({ CRS, ..._layer }) => _layer)(layer),
 				};
 			});
 
-			// collect aueriable Layer3 layers
+			// collect queriable Layer3 layers
 			capabilities?.Capability?.Layer?.Layer.forEach((el) => {
 				const tmpLayers = el?.Layer?.filter((el) => el.CRS.length).map(
 					(layer: Layer3, idx: number) => {
@@ -213,7 +300,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						return {
 							visible: false,
 							Attribution: { Title: '' },
-							...layer,
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							...(({ CRS, ..._layer }) => _layer)(layer),
 						};
 					}
 				);
@@ -226,7 +314,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			setLayers(_layers);
 
 			// zoom to extent of first layer
-			if (mapHook?.map && _LatLonBoundingBox.length > 3) {
+			if (props.zoomToExtent && mapHook?.map && _LatLonBoundingBox.length > 3) {
 				mapHook?.map.fitBounds([
 					[_LatLonBoundingBox[0], _LatLonBoundingBox[1]],
 					[_LatLonBoundingBox[2], _LatLonBoundingBox[3]],
@@ -235,67 +323,168 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		}
 	}, [capabilities, mapHook.map]);
 
-	useEffect(() => {
-		setUrl(props.url);
-	}, [props.url]);
-
 	return (
 		<>
-			{error && <p>{error}</p>}
-			<h3 key="title">{capabilities?.Service?.Title}</h3>
-			<List dense key="layers">
-				{wmsUrl &&
-					layers?.map?.((layer, idx) => {
-						return layer?.Name ? (
-							<ListItem
-								key={layer.Name + idx}
-								secondaryAction={
-									<IconButton
-										edge="end"
-										aria-label="toggle visibility"
-										onClick={() => {
-											const _layers: Array<LayerType> = [...layers];
-											_layers[idx].visible = !_layers[idx].visible;
-											setLayers([..._layers]);
-										}}
-									>
-										{layers[idx].visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-									</IconButton>
-								}
-							>
-								<ListItemText primary={layer?.Title} />
-							</ListItem>
-						) : (
-							<></>
-						);
-					})}
-			</List>
-			{wmsUrl && layers?.length && (
-				<MlWmsLayer
-					key={mapHook.componentId}
-					url={wmsUrl}
-					attribution={attribution}
-					urlParameters={{
-						...props.wmsUrlParameters,
-						layers: layers
-							?.filter?.((layer) => layer.visible)
-							.map((el) => el.Name)
-							.reverse()
-							.join(','),
-					}}
-				/>
+			{error && (
+				<Snackbar>
+					<Box>{error}</Box>
+				</Snackbar>
 			)}
+			{wmsUrl && (
+				<>
+					<ListItem
+						secondaryAction={
+							<>
+								{props.featureInfoEnabled && (
+									<IconButton
+										sx={{
+											padding: '4px',
+											marginTop: '-3px',
+											marginRight: '4px',
+											background: (theme) => {
+												if (!layers?.some((layer) => layer.visible && layer.queryable))
+													return 'initial';
+												if (_featureInfoEventsEnabled) return theme.palette.info.light;
+												return theme.palette.grey[300];
+											},
+										}}
+										aria-label="featureinfo"
+										onClick={() => {
+											if (typeof props?.setFeatureInfoActive === 'function') {
+												props.setFeatureInfoActive((current: boolean) => !current);
+											} else {
+												setFeatureInfoEventsEnabled((current: boolean) => !current);
+											}
+										}}
+										disabled={!layers?.some((layer) => layer.visible && layer.queryable)}
+									>
+										<InfoIcon />
+									</IconButton>
+								)}
+								<IconButton
+									edge={props.showDeleteButton ? false : 'end'}
+									sx={{
+										padding: '4px',
+										marginTop: '-3px',
+										...(props.showDeleteButton ? { marginRight: '4px' } : {}),
+									}}
+									aria-label="open"
+									onClick={() => setOpen((current) => !current)}
+								>
+									{open ? <ExpandLess /> : <ExpandMore />}
+								</IconButton>
+								{props.showDeleteButton && (
+									<>
+										<IconButton
+											aria-label="delete"
+											edge="end"
+											onClick={() => {
+												if (typeof props.onConfigChange === 'function') {
+													setShowDeletionConfirmationDialog(true);
+												}
+											}}
+											sx={{ padding: '4px', marginTop: '-3px' }}
+										>
+											<DeleteIcon />
+										</IconButton>
 
-			<p key="description" style={{ fontSize: '.7em' }}>
-				{capabilities?.Capability?.Layer?.['Abstract']}
-			</p>
+										{showDeletionConfirmationDialog && (
+											<ConfirmDialog
+												open={showDeletionConfirmationDialog}
+												onConfirm={() => {
+													if (typeof props.onConfigChange === 'function') {
+														props.onConfigChange(false);
+													}
+												}}
+												onCancel={() => {
+													setShowDeletionConfirmationDialog(false);
+												}}
+												title="Delete layer"
+												text="Are you sure you want to delete this layer?"
+											/>
+										)}
+									</>
+								)}
+							</>
+						}
+						sx={{
+							paddingRight: 0,
+							paddingLeft: 0,
+							paddingTop: 0,
+							paddingBottom: '4px',
+						}}
+					>
+						<ListItemIcon sx={{ minWidth: '30px' }}>
+							<Checkbox
+								sx={{ padding: 0 }}
+								checked={visible}
+								onClick={() => {
+									setVisible((val) => !val);
+								}}
+							/>
+						</ListItemIcon>
+						<ListItemText primary={name} variant="layerlist" />
+					</ListItem>
+					<Box sx={{ display: open ? 'block' : 'none' }}>
+						<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
+							{wmsUrl &&
+								layers?.map?.((layer, idx) => {
+									return layer?.Name ? (
+										<ListItem
+											key={layer.Name + idx}
+											secondaryAction={<>{layer?.queryable && <InfoIcon />}</>}
+										>
+											<ListItemIcon sx={{ minWidth: '30px' }}>
+												<Checkbox
+													checked={layer.visible}
+													sx={{ padding: 0 }}
+													onClick={() => {
+														const _layers: Array<LayerType> = [...layers];
+														_layers[idx].visible = !_layers[idx].visible;
+														setLayers([..._layers]);
+													}}
+												/>
+											</ListItemIcon>
+											<ListItemText primary={layer?.Title} variant="layerlist" />
+										</ListItem>
+									) : (
+										<></>
+									);
+								})}
+						</List>
+						{wmsUrl && layers?.length && (
+							<MlWmsLayer
+								key={mapHook.componentId}
+								url={wmsUrl}
+								attribution={attribution}
+								visible={visible}
+								urlParameters={{
+									...props.wmsUrlParameters,
+									layers: layers
+										?.filter?.((layer) => layer.visible)
+										.map((el) => el.Name)
+										.reverse()
+										.join(','),
+								}}
+								insertBeforeLayer={props?.insertBeforeLayer}
+							/>
+						)}
+					</Box>
 
-			{featureInfoLngLat && <MlMarker {...featureInfoLngLat} content={featureInfoContent} />}
+					{props.featureInfoEnabled && featureInfoLngLat && (
+						<MlMarker {...featureInfoLngLat} content={featureInfoContent} />
+					)}
+				</>
+			)}
 		</>
 	);
 };
+//<p key="description" style={{ fontSize: '.7em' }}>
+//	{capabilities?.Capability?.Layer?.['Abstract']}
+//</p>
 
 MlWmsLoader.defaultProps = {
+	mapId: undefined,
 	url: '',
 	urlParameters: {
 		SERVICE: 'WMS',
@@ -305,6 +494,9 @@ MlWmsLoader.defaultProps = {
 	wmsUrlParameters: {
 		TRANSPARENT: 'TRUE',
 	},
+	featureInfoEnabled: true,
+	zoomToExtent: false,
+	showDeleteButton: false,
 };
 
 export default MlWmsLoader;

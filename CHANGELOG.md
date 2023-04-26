@@ -1,5 +1,51 @@
 # Change Log
 
+## [v0.1.77] - 2023-04-05
+
+
+### Fixed
+- 92bac5c: remove deprecated @mui/styles dependency; fixes npm compatibility
+
+### Added
+- 6512e26: add name prop to MlWmsLoader
+
+### Changed
+- 6512e26: make AddLayerPopup initial config state configurable
+- 6512e26: make MlWmsLoader featureInfoActive controllable from parent component
+- 6512e26: make LayerListItemFactory control featureInfoActive to always reflect the state in LayerConfig
+
+### Added
+
+## [v0.1.76] - 2023-04-04
+
+### Fixed
+- b879750: fix MlGeoJsonLayer layout option props spread order
+
+### Added
+- b879750: add thumbnails to style select menu
+
+## [v0.1.75] - 2023-04-04
+
+### Fixed
+- 66c8df2: add missing LayerListItemFactory export
+## [v0.1.74] - 2023-04-03
+
+### Fixed
+- 6e68b8c: fix wmsLoader feature info
+- 3eac872: fix useLayer hook source attribution settings
+
+### Added
+- 5a4c581: add component MlTemporalController
+- a85a5b1: add LayerListItemFactory
+- a85a5b1: add GeoJsonLayerForm
+- a85a5b1: add WmsLayerForm
+- a85a5b1: add LayerTypeForm
+- a85a5b1: add AddLayerButton
+- a85a5b1: add MlWmsLoader featureInfo configuration prop and queryable indicator next to layer
+- a85a5b1: add LayerContext and localStorage persistence to AddLayerButton story
+
+### Changed
+- a85a5b1: change MlWmsLoader to return LayerListItem compatible list elements
 
 ## [v0.1.73] - 2023-03-11
 

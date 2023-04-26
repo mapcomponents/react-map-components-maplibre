@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "0.1.73",
+	"version": "0.1.77",
 	"main": "dist/index.esm.js",
 	"license": "MIT",
 	"module": "dist/index.esm.js",
@@ -26,7 +26,6 @@
 		"@mapbox/mapbox-gl-sync-move": "^0.3.1",
 		"@mui/icons-material": "^5.11.0",
 		"@mui/material": "^5.11.7",
-		"@mui/styles": "^5.11.7",
 		"@turf/turf": "^6.5.0",
 		"@types/react-color": "^3.0.6",
 		"d3": "^7.8.2",

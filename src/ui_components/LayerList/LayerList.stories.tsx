@@ -5,7 +5,7 @@ import LayerListItem from './LayerListItem';
 
 import mapContextDecorator from '../../decorators/EmptyMapDecorator';
 import Sidebar from '../Sidebar';
-import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
@@ -13,7 +13,7 @@ import sample_geojson_polygon from './assets/sample_polygon_1.json';
 import sample_geojson_points from './assets/sample_points_1.json';
 import LayerListFolder from './LayerListFolder';
 
-import style from './assets/style.json';
+import style from '../../omt_styles/monokai';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
 import { Feature, FeatureCollection } from '@turf/turf';
@@ -214,7 +214,9 @@ const GeoJsonLayerTemplate = () => {
 						name="Line GeoJSON Layer"
 					/>
 					<LayerListItem
-						layerComponent={<MlGeoJsonLayer geojson={sample_geojson_polygon as FeatureCollection} />}
+						layerComponent={
+							<MlGeoJsonLayer geojson={sample_geojson_polygon as FeatureCollection} />
+						}
 						visible={true}
 						configurable={true}
 						type="layer"
@@ -225,7 +227,7 @@ const GeoJsonLayerTemplate = () => {
 		</>
 	);
 };
-export const GeoJsonLayerExample= GeoJsonLayerTemplate.bind({});
+export const GeoJsonLayerExample = GeoJsonLayerTemplate.bind({});
 
 GeoJsonLayerExample.parameters = {};
 GeoJsonLayerExample.args = {};
@@ -276,7 +278,58 @@ const ConfigurableTemplate = () => {
 		</>
 	);
 };
-export const ConfigurableExample= ConfigurableTemplate.bind({});
+export const ConfigurableExample = ConfigurableTemplate.bind({});
 
 ConfigurableExample.parameters = {};
 ConfigurableExample.args = {};
+
+const LabelTemplate = () => {
+	const [layerOneState, setLayerOneState] = useState({
+		geojson: sample_geojson_1 as Feature,
+		type: 'symbol' as const,
+		options: {
+			layout: {
+				"symbol-placement": "line",
+				'text-field': '{name}',
+				'text-justify': 'auto',
+				'text-font': ['Open Sans Regular'],
+			},
+			paint: {
+				'text-color': 'white',
+			},
+		},
+	});
+	const [openSidebar, setOpenSidebar] = useState(true);
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Sidebar
+					</Button>
+				}
+			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
+				<LayerList>
+					<LayerListItem
+						layerComponent={<MlGeoJsonLayer {...layerOneState as MlGeoJsonLayerProps} />}
+						setLayerState={setLayerOneState}
+						visible={true}
+						configurable={true}
+						type="layer"
+						name="GeoJSON Layer"
+					/>
+				</LayerList>
+			</Sidebar>
+		</>
+	);
+};
+export const LabelExample = LabelTemplate.bind({});
+
+LabelExample.parameters = {};
+LabelExample.args = {};

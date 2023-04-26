@@ -19,6 +19,20 @@ interface paintPickerProps {
 		| CircleLayerSpecification['paint']
 		| FillLayerSpecification['paint']
 		| LineLayerSpecification['paint'];
+	type: 'fill' | 'line' | 'circle' | undefined;
+	timeField: string;
+	currentVal: number;
+	minVal: number;
+	isPlaying: boolean;
+	fadeIn: number;
+	fadeOut: number;
+	step: number;
+	featuresColor: string;
+	accumulate: boolean;
+	userPaint:
+		| CircleLayerSpecification['paint']
+		| FillLayerSpecification['paint']
+		| LineLayerSpecification['paint'];
 }
 
 export default function paintPicker(props: paintPickerProps) {
@@ -83,6 +97,8 @@ export default function paintPicker(props: paintPickerProps) {
 	const defaultLinePaint = {
 		'line-color': props.featuresColor,
 		'line-opacity': opacityInterpolate,
+		'line-color': props.featuresColor,
+		'line-opacity': opacityInterpolate,
 	};
 
 	const circleAccumulatePaint = {
@@ -129,20 +145,40 @@ export default function paintPicker(props: paintPickerProps) {
 				if (props.currentVal === props.minVal && !props.isPlaying) {
 					return circleNoShow;
 				} else if (props.accumulate) {
+				} else if (props.accumulate) {
 					return circleAccumulatePaint;
 				} else {
 					return defaultCirclePaint;
 				}
 
+
 			case 'fill':
 				if (props.currentVal === props.minVal && !props.isPlaying) {
 					return fillNoShow;
+				} else if (props.accumulate) {
 				} else if (props.accumulate) {
 					return fillAccumulatePaint;
 				} else {
 					return defaultFillPaint;
 				}
 
+			case 'line':
+				if (props.currentVal === props.minVal && !props.isPlaying) {
+					return lineNoShow;
+				} else if (props.accumulate) {
+					return lineAccumulatePaint;
+				} else {
+					return defaultLinePaint;
+				}
+
+			case undefined:
+				if (props.currentVal === props.minVal && !props.isPlaying) {
+					return circleNoShow;
+				} else if (props.accumulate) {
+					return circleAccumulatePaint;
+				} else {
+					return defaultCirclePaint;
+				}
 			case 'line':
 				if (props.currentVal === props.minVal && !props.isPlaying) {
 					return lineNoShow;
