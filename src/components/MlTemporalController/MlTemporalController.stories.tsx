@@ -31,14 +31,13 @@ const FillTemplate = (props: MlTemporalControllerProps) => {
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
 						African countries by independency year
-						African countries by independency year
+						
 					</Typography>
 				}
 			/>
 
 			<MlTemporalController {...props}  />
-
-			<MlTemporalController {...props}  />
+			
 		</>
 	);
 };
@@ -56,9 +55,8 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 					</Typography>
 				}
 			/>
-			<MlTemporalController {...props} />
+			<MlTemporalController {...props} />	
 		
-			<MlTemporalController {...props} />
 		
 		</>
 	);
@@ -76,10 +74,7 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 					</Typography>
 				}
 			/>
-			<MlTemporalController {...props}  />
-		
-			<MlTemporalController {...props}  />
-		
+			<MlTemporalController {...props}  />			
 		</>
 	);
 };
@@ -88,7 +83,6 @@ export const FillConfig = FillTemplate.bind({});
 FillConfig.parameters = {};
 FillConfig.args = {
 	geojson: african_independency,
-
 	path: 'african_independency.json',
 	timeField: 'africa_independency_year',
 	type: 'fill',
@@ -97,7 +91,6 @@ FillConfig.args = {
 	accumulate: true,
 	initialVal: 1904,
 	fitBounds: true,
-	displayCurrentValue: true,
 	displayCurrentValue: true,
 	attribution: 'Made with Natural Earth.',
 	
@@ -112,11 +105,9 @@ CircleConfig.args = {
 	labelField: 'LocationName',
 	accumulate: false,
 	step: 0.3,
-	step: 0.3,
 	minVal: 1900,
 	fitBounds: true,
 	onClick: () => console.log('clicked'),
-	displayCurrentValue: true,
 	displayCurrentValue: true,
 	attribution:
 		'National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K',
