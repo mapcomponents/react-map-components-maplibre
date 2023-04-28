@@ -6,10 +6,12 @@ import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
 import { Slider, Drawer, Button, Grid, Typography, useMediaQuery } from '@mui/material';
 
+
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
 	isPlaying: boolean;
 	step: number;
+	interval: number;
 	minVal: number;
 	maxVal: number;
 	returnCurrent: React.Dispatch<React.SetStateAction<number>>;
@@ -28,7 +30,7 @@ export interface TemporalControllerPlayerProps {
 
 const bigScreenBoxStyle = {
 	marginLeft: '15%',
-	marginBottom: '1%',
+	marginBottom: '3%',
 	width: '70%',
 	height: '90px',
 	alignItems: 'center',
@@ -75,22 +77,21 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 				setCurrentVal((val) => val + props.step);
 			}
 			counter = counter + props.step;
-		}, 200);
+		}, props.interval);
 	}, [props.step, props.maxVal, currentVal]);
 
 	// Player buttons
 
-	const handlePlay = () => {
-		setIsPlaying(true);
+	const handlePlayPause = () => {
+		if(!isPlaying){
+			setIsPlaying(true);
 		play();
-	};
-	const handlePause = () => {
-		setIsPlaying(!isPlaying);
+		} else {
+			setIsPlaying(false);
 		if (isPlaying) {
 			clearInterval(intervalRef.current);
-		} else if (!isPlaying) {
-			play();
-		}
+		}		
+		}		
 	};
 
 	const handleStop = () => {
@@ -125,9 +126,10 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 			setCurrentVal(newValue as number);
 		} else {
 			if (e) {
+		
 				clearInterval(intervalRef.current);
 				setCurrentVal(newValue as number);
-				play();
+				play();				
 			}
 		}
 	};
@@ -140,11 +142,10 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 				variant="persistent"
 				sx={{
 					flexShrink: 0,
-
 					'& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
 				}}
 			>
-				<Grid container >
+			<Grid container >
 					{mediaIsMobile ? <></> : <Grid item xs={3} />}
 					<Grid item xs={mediaIsMobile ? 12 : 6} textAlign="center">
 						<Button onClick={handleFastRewind}>
@@ -153,16 +154,14 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 						<Button onClick={handleStop} >
 							<StopIcon />
 						</Button>
-						<Button onClick={handlePlay} disabled={isPlaying} >
-							<PlayArrowIcon />
-						</Button>
-						<Button onClick={handlePause} >
-							<PauseIcon />
-						</Button>
+						<Button onClick={handlePlayPause}  >
+							{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+							</Button>
 						<Button onClick={handleFastForward}>
 							<FastForwardIcon />
 						</Button>
 					</Grid>
+			
 					{props.display && !mediaIsMobile && (
 						<Grid item xs={3}>							
 							<Typography variant={'h5'} textAlign={'right'} sx={{ paddingRight: '25px' }}>							
