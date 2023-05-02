@@ -61,7 +61,10 @@ const StyleChangeTemplate = (args) => {
 								onClick={() => {
 									setActiveStyle(style.url);
 								}}
-								sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+								sx={{
+									marginRight: '10px',
+									marginTop: { xs: '10px', sm: '0px' },
+								}}
 							>
 								{style.name}
 							</Button>
