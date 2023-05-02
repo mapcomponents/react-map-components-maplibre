@@ -26,21 +26,7 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (args) => {
-	return (
-		<MapLibreMap
-			options={{ ...args.options }}
-			style={{
-				position: 'absolute',
-				height: '100vh',
-				width: '100vw',
-				top: 0,
-				right: 0,
-				left: 0,
-				bottom: 0,
-				zIndex: 100,
-			}}
-		/>
-	);
+	return <MapLibreMap options={{ ...args.options }} />;
 };
 
 export const ExampleConfig = Template.bind({});
@@ -52,54 +38,38 @@ ExampleConfig.args = {
 	},
 };
 
+const styles = [
+	{ name: 'OSM-Bright', url: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json' },
+	{
+		name: 'OSM-Fiord-Color',
+		url: 'https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json',
+	},
+];
+
 const StyleChangeTemplate = (args) => {
-	const [activeStyle, setActiveStyle] = useState(
-		'https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json'
-	);
-	const [showOsmFiord, setShowOsmFiord] = useState(true);
+	const [activeStyle, setActiveStyle] = useState(styles[1].url);
 
 	return (
 		<>
 			<TopToolbar
 				buttons={
 					<>
-						<Button
-							variant={showOsmFiord ? 'outlined' : 'contained'}
-							onClick={() => {
-								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json');
-								setShowOsmFiord(false);
-							}}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
-							OSM-Bright
-						</Button>
-						<br />
-						<br />
-						<Button
-							variant={showOsmFiord ? 'contained' : 'outlined'}
-							onClick={() => {
-								setActiveStyle('https://wms.wheregroup.com/tileserver/style/osm-fiord-color.json');
-								setShowOsmFiord(true);
-							}}
-						>
-							OSM-Fiord-Color
-						</Button>
+						{styles.map((style) => (
+							<Button
+								key={style.name}
+								variant={activeStyle === style.url ? 'contained' : 'outlined'}
+								onClick={() => {
+									setActiveStyle(style.url);
+								}}
+								sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+							>
+								{style.name}
+							</Button>
+						))}
 					</>
 				}
 			/>
-			<MapLibreMap
-				options={{ ...args.options, style: activeStyle }}
-				style={{
-					position: 'absolute',
-					height: '100vh',
-					width: '100vw',
-					top: 0,
-					right: 0,
-					left: 0,
-					bottom: 0,
-					zIndex: 100,
-				}}
-			/>
+			<MapLibreMap options={{ ...args.options, style: activeStyle }} />
 			<MlGeoJsonLayer type="line" geojson={sample_geojson_1} />
 		</>
 	);
