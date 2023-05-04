@@ -34,14 +34,12 @@ export interface SpeedDialProps {
 const SpeedDial = (props: SpeedDialProps) => {
 	const [open, setOpen] = React.useState(false);
 	const handleOpen = (_event: React.SyntheticEvent<Event>, reason: OpenReason) => {
-		console.log('Hallo Tobi');
 		if (reason === 'toggle') {
 			setOpen(true);
 		}
 	};
 	const handleClose = () => setOpen(false);
 	const theme = getTheme('light');
-	console.log(theme);
 
 	return (
 		<Box
