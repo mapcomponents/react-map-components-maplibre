@@ -9,8 +9,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import getTheme from '../MapcomponentsTheme';
-import { color } from '@mui/system';
-import { light } from '@mui/material/styles/createPalette';
+
 
 const actions = [
 	{ icon: <PictureAsPdfIcon />, name: 'Create PDF' },
@@ -28,7 +27,7 @@ export interface SpeedDialProps {
 
 /**
  * Component description
- *
+ * SpeedDial Button, which opens up options for Background, Layers, Sketch and Create PDF
  */
 
 const SpeedDial = (props: SpeedDialProps) => {
