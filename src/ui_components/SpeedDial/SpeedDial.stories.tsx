@@ -1,11 +1,11 @@
 import React from 'react';
 
-import SpeedDial from './MlSpeedDial';
+import SpeedDial from './SpeedDial';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
 const storyoptions = {
-	title: 'UiComponents/MlSpeedDial',
+	title: 'UiComponents/SpeedDial',
 	component: SpeedDial,
 	argTypes: {},
 	decorators: mapContextDecorator,

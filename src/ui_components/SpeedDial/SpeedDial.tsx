@@ -10,7 +10,6 @@ import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import getTheme from '../MapcomponentsTheme';
 
-
 const actions = [
 	{ icon: <PictureAsPdfIcon />, name: 'Create PDF' },
 	{ icon: <DesignServicesIcon />, name: 'Sketch' },
