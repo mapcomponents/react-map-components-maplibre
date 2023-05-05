@@ -1,11 +1,11 @@
-const { defineConfig } = require('cypress');
+import { defineConfig } from 'cypress';
 
 //const isRunningInCI = process.env.CI === 'true';
 
 export default defineConfig({
 	component: {
 		viewportWidth: 800,
-  	viewportHeight: 600,
+		viewportHeight: 600,
 		//supportFile: './cypress/support/component.js',
 		devServer: {
 			framework: 'react',
@@ -35,7 +35,7 @@ export default defineConfig({
 									},
 								},
 							],
-							exclude: [ /node_modules/, /dist/ ]
+							exclude: [/node_modules/, /dist/],
 						},
 						{
 							test: /\.(svg|ico|jpg|jpeg|png|apng|gif|eot|otf|webp|ttf|woff|woff2|cur|ani|pdf)(\?.*)?$/,
