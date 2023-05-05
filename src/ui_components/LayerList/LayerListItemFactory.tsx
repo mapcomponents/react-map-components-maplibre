@@ -10,6 +10,7 @@ import { MlWmsLoaderProps } from '../../components/MlWmsLoader/MlWmsLoader';
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
+import { Button } from '@mui/material';
 
 export interface LayerListItemFactoryProps {
 	mapId?: string;
@@ -30,6 +31,18 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 		return layerIds.reverse();
 	}, [layerContext.layers]);
+
+	const layers: LayerConfig[] = useMemo(() => {
+		if (props.layers) return props.layers;
+		if (layerContext?.layers) return layerContext.layers;
+		return [];
+	}, [props.layers, layerContext.layers]);
+
+	const setLayers: (arg1: LayerConfig[] | ((arg: LayerConfig[]) => void)) => void = useMemo(() => {
+		if (props.setLayers) return props.setLayers;
+		return layerContext.setLayers;
+	}, [props.setLayers, layerContext.setLayers]);
+
 	return (
 		<>
 			<MlOrderLayers layerIds={orderLayers} />
@@ -52,7 +65,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					name="Background"
 				/>
 			)}
-			{props.layers.map((layer: LayerConfig, idx: number) => {
+			{layers.map((layer: LayerConfig, idx: number) => {
 				if (!layer?.id) return null;
 
 				switch (layer.type) {
@@ -62,6 +75,15 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 								<LayerListItem
 									key={layer.id}
 									name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
+									additionalOptions={
+										<Button
+											onClick={() => {
+												layerContext.moveUp(layer.id);
+											}}
+										>
+											up
+										</Button>
+									}
 									layerComponent={
 										<MlGeoJsonLayer
 											{...layer.config}
@@ -70,7 +92,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										/>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
-										props.setLayers?.((current: LayerConfig[]) => {
+										setLayers?.((current: LayerConfig[]) => {
 											const _layers = [...current];
 											if (layerConfig === false) {
 												_layers.splice(idx, 1);
@@ -95,7 +117,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									mapId={props?.mapId}
 									insertBeforeLayer={'order-content_' + layer.id}
 									onConfigChange={(layerConfig) => {
-										props?.setLayers?.((current: LayerConfig[]) => {
+										setLayers?.((current: LayerConfig[]) => {
 											const _layers = [...current];
 											if (layerConfig === false) {
 												_layers.splice(idx, 1);
@@ -107,7 +129,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									}}
 									featureInfoActive={layer?.config?.featureInfoActive || false}
 									setFeatureInfoActive={(updateFunction) => {
-										props?.setLayers?.((current: LayerConfig[]) => {
+										setLayers?.((current: LayerConfig[]) => {
 											const _layers = [...current];
 											if (typeof updateFunction === 'function') {
 												(_layers[idx].config as MlWmsLoaderProps).featureInfoActive =
@@ -151,7 +173,6 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 LayerListItemFactory.defaultProps = {
 	mapId: undefined,
-	layers: [],
 };
 
 export default LayerListItemFactory;

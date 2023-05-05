@@ -1,5 +1,5 @@
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
 import config from '../omt_styles/config';
 import { MlWmsLoaderProps } from '../components/MlWmsLoader/MlWmsLoader';
@@ -100,6 +100,20 @@ function LayerContextProvider(props: LayerContextProps) {
 		}
 	}, [layers]);
 
+	const moveUp = useCallback(
+		(layerId: string) => {
+			const filteredLayers = layers?.filter?.((el) => el.id === layerId);
+			const idx = layers.indexOf(element);
+			if (filteredLayers.length > idx) {
+				const newLayers = [...layers];
+				const element = filteredLayers[0];
+				newLayers.splice(idx, 1);
+				newLayers.splice(idx, 0, element);
+			}
+		},
+		[layers]
+	);
+
 	const value = {
 		layers,
 		setLayers,
@@ -111,6 +125,7 @@ function LayerContextProvider(props: LayerContextProps) {
 		vtLayerConfig,
 		tileUrl,
 		setTileUrl,
+		moveUp
 	} as LayerContextType;
 
 	return <LayerContext.Provider value={value}>{props.children}</LayerContext.Provider>;
