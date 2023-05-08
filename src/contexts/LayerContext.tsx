@@ -50,6 +50,7 @@ export interface LayerContextType {
 	vtLayerConfig: Partial<MlVectorTileLayerProps>;
 	setTileUrl: (url: string) => void;
 	tileUrl: string;
+	moveUp: (layerId: string) => void;
 }
 
 const LayerContext = React.createContext({} as LayerContextType);
@@ -103,12 +104,16 @@ function LayerContextProvider(props: LayerContextProps) {
 	const moveUp = useCallback(
 		(layerId: string) => {
 			const filteredLayers = layers?.filter?.((el) => el.id === layerId);
-			const idx = layers.indexOf(element);
-			if (filteredLayers.length > idx) {
+
+			if (filteredLayers.length > 0) {
 				const newLayers = [...layers];
 				const element = filteredLayers[0];
-				newLayers.splice(idx, 1);
-				newLayers.splice(idx, 0, element);
+				const idx = layers.indexOf(element);
+				if (idx - 1 >= 0) {
+					newLayers.splice(idx, 1);
+					newLayers.splice(idx - 1, 0, element);
+					setLayers(newLayers);
+				}
 			}
 		},
 		[layers]
@@ -125,7 +130,7 @@ function LayerContextProvider(props: LayerContextProps) {
 		vtLayerConfig,
 		tileUrl,
 		setTileUrl,
-		moveUp
+		moveUp,
 	} as LayerContextType;
 
 	return <LayerContext.Provider value={value}>{props.children}</LayerContext.Provider>;

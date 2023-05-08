@@ -1,4 +1,4 @@
-import { Checkbox, IconButton, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Button, Checkbox, IconButton, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import React, { useMemo, useRef, useState } from 'react';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
@@ -20,6 +20,7 @@ type Props = {
 	description?: string;
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
+	buttons?: JSX.Element;
 };
 
 function LayerListItem({
@@ -162,6 +163,7 @@ function LayerListItem({
 								>
 									<TuneIcon />
 								</IconButton>
+								{props?.buttons}
 								{props.showDeleteButton && (
 									<>
 										<IconButton
@@ -248,6 +250,7 @@ LayerListItem.defaultProps = {
 	type: 'layer',
 	visible: true,
 	showDeleteButton: false,
+	buttons: <></>,
 };
 
 export default LayerListItem;

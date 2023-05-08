@@ -48,6 +48,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 			<MlOrderLayers layerIds={orderLayers} />
 			{layerContext?.backgroundLayers?.length > 0 && (
 				<LayerListItem
+					key={'background_geometry'}
 					layerComponent={
 						<MlVectorTileLayer
 							{...layerContext.vtLayerConfig}
@@ -75,21 +76,23 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 								<LayerListItem
 									key={layer.id}
 									name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
-									additionalOptions={
-										<Button
-											onClick={() => {
-												layerContext.moveUp(layer.id);
-											}}
-										>
-											up
-										</Button>
-									}
 									layerComponent={
 										<MlGeoJsonLayer
 											{...layer.config}
 											mapId={props?.mapId}
 											insertBeforeLayer={'order-content_' + layer.id}
 										/>
+									}
+									buttons={
+										<>
+											<Button
+												onClick={() => {
+													layerContext.moveUp(layer.id || '');
+												}}
+											>
+												up
+											</Button>
+										</>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
 										setLayers?.((current: LayerConfig[]) => {
@@ -150,6 +153,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 			})}
 			{layerContext?.symbolLayers?.length > 0 && (
 				<LayerListItem
+					key={'background_labels'}
 					layerComponent={
 						<MlVectorTileLayer
 							{...layerContext.vtLayerConfig}
