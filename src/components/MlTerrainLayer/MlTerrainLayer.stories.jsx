@@ -12,7 +12,6 @@ const storyoptions = {
 };
 export default storyoptions;
 
-
 const Template = (props) => {
 	const mapOptions = {
 		zoom: 4,
@@ -33,7 +32,6 @@ const Template = (props) => {
 				}}
 				url="https://sgx.geodatenzentrum.de/wms_basemapde_schummerung"
 			/>
-			
 		</>
 	);
 };

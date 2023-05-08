@@ -1,8 +1,8 @@
-import React, { useEffect,  } from 'react';
+import React, { useEffect } from 'react';
 import { useMap } from '../../hooks/useMap';
 
 const MlTerrainLayer = (props) => {
-	const mapHook = useMap({ mapId: 'map_1' });
+	const mapHook = useMap({ mapId: props.mapId });
 
 	useEffect(() => {
 		if (!mapHook.map) return;
