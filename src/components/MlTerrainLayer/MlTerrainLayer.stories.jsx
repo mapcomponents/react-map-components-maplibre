@@ -1,6 +1,7 @@
-import MapLibreMap from '../MapLibreMap';
-import MlNavigationTools from '../MlNavigationTools';
-import MlWmsLayer from '../MlWmsLayer';
+import React from 'react';
+import { MapLibreMap } from '../MapLibreMap/MapLibreMap';
+import { MlNavigationTools } from '../MlNavigationTools/MlNavigationTools';
+import { MlWmsLayer } from '../MlWmsLayer/MlWmsLayer';
 import MlTerrainLayer from './MlTerrainLayer';
 import MapContextDecorator from '../../decorators/MapContextDecorator';
 
