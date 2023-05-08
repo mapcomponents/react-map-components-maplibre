@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useMap } from '@mapcomponents/react-maplibre';
+import { useMap } from '../../hooks/useMap';
 
 const MlTerrainLayer = (props) => {
 	const mapHook = useMap({ mapId: 'map_1' });
