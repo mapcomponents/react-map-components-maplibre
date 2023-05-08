@@ -47,11 +47,13 @@ export { default as MlVectorTileLayer } from "./components/MlVectorTileLayer/MlV
 
 export { default as MlWmsFeatureInfoPopup } from "./components/MlWmsFeatureInfoPopup/MlWmsFeatureInfoPopup";
 export { default as MlWmsLayer } from "./components/MlWmsLayer/MlWmsLayer";
-export { default as MlWmsLoader } from "./components/MlWmsLoader/MlWmsLoader"
+export { default as MlWmsLoader } from "./components/MlWmsLoader/MlWmsLoader";
 
 export { default as MlTemporalController } from "./components/MlTemporalController/MlTemporalController"
 export { default as MlBasicComponent } from "./components/MlBasicComponent.js";
 export { default as MlOrderLayers } from "./components/MlOrderLayers/MlOrderLayers";
+export { default as MlTerrainLayer } from "./components/MlTerrainLayer/MlTerrainLayer";
+
 
 export { default as useCameraFollowPath } from "./hooks/useCameraFollowPath/useCameraFollowPath";
 export { default as useExportMap } from "./hooks/useExportMap";
