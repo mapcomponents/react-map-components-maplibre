@@ -1,15 +1,14 @@
 import React from 'react';
 import { MapLibreMap } from '../MapLibreMap/MapLibreMap';
-import { MlNavigationTools } from '../MlNavigationTools/MlNavigationTools';
 import { MlWmsLayer } from '../MlWmsLayer/MlWmsLayer';
 import MlTerrainLayer from './MlTerrainLayer';
-import MapContextDecorator from '../../decorators/MapContextDecorator';
+import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
 
 const storyoptions = {
 	title: 'MapComponents/MlTerrainLayer',
 	component: MlTerrainLayer,
 	argTypes: {},
-	decorators: MapContextDecorator,
+	decorators: EmptyMapDecorator,
 };
 export default storyoptions;
 
@@ -34,7 +33,7 @@ const Template = (props) => {
 				}}
 				url="https://sgx.geodatenzentrum.de/wms_basemapde_schummerung"
 			/>
-			<MlNavigationTools />
+			
 		</>
 	);
 };
