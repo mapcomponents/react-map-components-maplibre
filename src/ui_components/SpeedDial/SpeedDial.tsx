@@ -24,8 +24,7 @@ export interface SpeedDialProps {
 	mapId?: string;
 }
 
-/**
- * Component description
+/*
  * SpeedDial Button, which opens up options for Background, Layers, Sketch and Create PDF
  */
 
