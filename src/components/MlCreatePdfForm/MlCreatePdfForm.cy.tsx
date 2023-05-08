@@ -15,7 +15,7 @@ describe('MlCreatePdfForm Tests', () => {
  
 		cy.wait(1000)
     cy.get(".createPdfButton").click();
-		cy.wait(2000)
+		cy.wait(5000)
     cy.readFile("./cypress/downloads/Map.pdf").should('contain', 'WhereGroup')
 	});
 });
