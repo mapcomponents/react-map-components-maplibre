@@ -9,7 +9,7 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
 import MlGpxViewerInstructions from '../MlGpxViewer/util/MlGpxViewerInstructions';
-import { Button, MenuItem, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import MlGpxDemoLoader from '../MlGpxViewer/util/MlGpxDemoLoader';
 import Sidebar from '../../ui_components/Sidebar';
 
@@ -26,17 +26,6 @@ const storyoptions = {
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
-
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
 
 const Template = () => {
 	const [gpxData, setGpxData] = useState<string | undefined>();
@@ -70,11 +59,15 @@ const Template = () => {
 			<TopToolbar
 				buttons={
 					<>
-						<MenuItem>
-							<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
-								Informations
-							</Typography>
-						</MenuItem>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Informations
+						</Button>
+						<br />
+						<br />
 						<UploadButton
 							setData={setGpxData}
 							buttonComponent={
@@ -100,10 +93,13 @@ const Template = () => {
 					</>
 				}
 			/>
-			<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
+			<MlGpxDemoLoader
+				open={demoLoaderOpen}
+				close={() => setDemoLoaderOpen(false)}
+				setGpx={setGpxData}
+			/>
 
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'GPX Informations'}

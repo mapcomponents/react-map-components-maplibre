@@ -3,7 +3,7 @@ import MlGpxViewer from './MlGpxViewer';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlGpxViewerInstructions from './util/MlGpxViewerInstructions';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Button, MenuItem, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import MlGpxDemoLoader from './util/MlGpxDemoLoader';
 import Dropzone from '../../ui_components/Dropzone';
 import UploadButton from '../../ui_components/UploadButton';
@@ -25,17 +25,6 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const Template = () => {
 	const [gpxData, setGpxData] = useState<string | ArrayBuffer | undefined>();
 	const [demoLoaderOpen, setDemoLoaderOpen] = useState(false);
@@ -43,7 +32,7 @@ const Template = () => {
 	const [metadata, setMetadata] = useState<MetadataType[]>([]);
 	const [openSidebar, setOpenSidebar] = useState(true);
 
-	const handleClick1 = () => {
+	const demoLoader = () => {
 		setDemoLoaderOpen(!demoLoaderOpen);
 		setOpenSidebar(true);
 	};
@@ -57,15 +46,23 @@ const Template = () => {
 	return (
 		<>
 			<MlGpxViewerInstructions open={guide} />
-			<MlGpxDemoLoader open={demoLoaderOpen} setOpen={setDemoLoaderOpen} setGpx={setGpxData} />
+			<MlGpxDemoLoader
+				open={demoLoaderOpen}
+				close={() => setDemoLoaderOpen(false)}
+				setGpx={setGpxData}
+			/>
 			<TopToolbar
 				buttons={
 					<>
-						<MenuItem>
-							<Typography textAlign="center" onClick={() => setOpenSidebar(!openSidebar)}>
-								Informations
-							</Typography>
-						</MenuItem>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Informations
+						</Button>
+						<br />
+						<br />
 						<UploadButton
 							setData={setGpxData}
 							buttonComponent={
@@ -77,8 +74,8 @@ const Template = () => {
 						<br />
 						<br />
 						<Button
-							variant="contained"
-							onClick={handleClick1}
+							variant={demoLoaderOpen ? 'contained' : 'outlined'}
+							onClick={demoLoader}
 							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 						>
 							Demo Mode
@@ -92,7 +89,6 @@ const Template = () => {
 				}
 			/>
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'GPX Informations'}

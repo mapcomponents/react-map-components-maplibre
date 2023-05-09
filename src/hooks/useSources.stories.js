@@ -26,8 +26,8 @@ const GeojsonExample = (args) => {
 	useLayer({
 		mapId: args.mapId,
 		layerId: 'layer1',
-		source: source?.id ? source.id : '',
 		options: {
+		source: source?.id ? source.id : '',
 			type: 'circle',
 			paint: {
 				'circle-radius': 6,
@@ -38,8 +38,8 @@ const GeojsonExample = (args) => {
 	useLayer({
 		mapId: args.mapId,
 		layerId: 'layer2',
-		source: source?.id ? source.id : '',
 		options: {
+		source: source?.id ? source.id : '',
 			type: 'circle',
 			paint: {
 				'circle-radius': 4,

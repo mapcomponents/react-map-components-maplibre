@@ -36,12 +36,12 @@ const Puller = styled(Box)(({ theme }) => ({
 export default function Sidebar({
 	drawerPaperProps,
 	drawerHeaderProps,
+	setOpen,
 	...props
 }: SidebarProps & DrawerProps) {
 	const mediaIsMobile = useMediaQuery('(max-width:600px)');
 
 	const [drawerOpen, setDrawerOpen] = useState(false);
-
 	return (
 		<>
 			{!mediaIsMobile ? (
@@ -55,7 +55,14 @@ export default function Sidebar({
 							...drawerPaperProps,
 							sx: {
 								maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
-								padding: { lg: '20px', md: '20px', sm: '20px', xs: '10px' },
+								padding: { sm: '84px 20px 20px 20px', xs: '74px 10px 10px 10px' },
+								width: {
+									xs: '80%',
+									sm: '60%',
+									md: '350px',
+									lg: '350px',
+								},
+								boxSizing: 'border-box',
 								...drawerPaperProps?.sx,
 							},
 						}}
@@ -63,7 +70,6 @@ export default function Sidebar({
 							flexGrow: 1,
 							zIndex: 105,
 							position: 'absolute',
-							top: 0,
 							bottom: 0,
 							display: 'flex',
 							flexDirection: 'column',
@@ -76,9 +82,9 @@ export default function Sidebar({
 							<Typography variant="h6">{props.name}</Typography>
 							<IconButton
 								onClick={
-									props.setOpen
+									setOpen
 										? () => {
-												props.setOpen?.(false);
+												setOpen?.(false);
 										  }
 										: () => {
 												setDrawerOpen(false);
@@ -109,18 +115,18 @@ export default function Sidebar({
 						anchor="bottom"
 						open={typeof props.open === 'undefined' ? drawerOpen : props.open}
 						onClose={
-							props.setOpen
+							setOpen
 								? () => {
-										props.setOpen?.(false);
+										setOpen?.(false);
 								  }
 								: () => {
 										setDrawerOpen(false);
 								  }
 						}
 						onOpen={
-							props.setOpen
+							setOpen
 								? () => {
-										props.setOpen?.(true);
+										setOpen?.(true);
 								  }
 								: () => {
 										setDrawerOpen(true);

@@ -9,8 +9,9 @@ import {
 	MenuItem,
 	Checkbox,
 	ListItemText,
+	Button,
 } from '@mui/material';
-import { ColorPicker } from 'mui-color';
+import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import useMap from '../../../hooks/useMap';
 import TopToolbar from '../../../ui_components/TopToolbar';
@@ -72,17 +73,6 @@ const MenuProps = {
 	},
 };
 
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const LineStyler = (props) => {
 	const [color, setColor] = useState('#2485C1');
 	const [opacity, setOpacity] = useState(0.8);
@@ -118,8 +108,8 @@ const LineStyler = (props) => {
 		console.log(featuresToShow);
 	};
 
-	const handleColorChange = (e) => {
-		setColor(`#${e.hex}`);
+	const handleColorChange = (value) => {
+		setColor(value);
 	};
 	const [openSidebar, setOpenSidebar] = useState(true);
 
@@ -132,13 +122,16 @@ const LineStyler = (props) => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-						<Typography textAlign="center">GeoJson Layer</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJson Layer
+					</Button>
 				}
 			/>
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'GeoJson Layer'}

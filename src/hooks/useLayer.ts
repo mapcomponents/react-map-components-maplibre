@@ -9,7 +9,9 @@ import {
 	GeoJSONFeature,
 	Style,
 	MapEventType,
-	Map
+	Map,
+	VideoSourceSpecification,
+	ImageSourceSpecification,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -39,8 +41,14 @@ export interface useLayerProps {
 	insertBeforeLayer?: string;
 	insertBeforeFirstSymbolLayer?: boolean;
 	geojson?: GeoJSONObject;
-	source?: SourceSpecification | string;
-	options: Partial<LayerSpecification>;
+	options: Partial<
+		LayerSpecification & {
+			source?: Partial<
+				Exclude<SourceSpecification, VideoSourceSpecification | ImageSourceSpecification>
+			>;
+			id?: string;
+		}
+	>;
 	onHover?: (ev: MapEventType & unknown) => Map | void;
 	onClick?: (ev: MapEventType & unknown) => Map | void;
 	onLeave?: (ev: MapEventType & unknown) => Map | void;
@@ -76,7 +84,7 @@ function useLayer(props: useLayerProps): useLayerType {
 	);
 
 	const createLayer = useCallback(() => {
-		if (!mapHook.map) return;
+		if (!mapHook.map || mapHook?.map.cancelled) return;
 
 		if (mapHook.map.map.getLayer(layerId.current)) {
 			mapHook.cleanup();
@@ -85,43 +93,51 @@ function useLayer(props: useLayerProps): useLayerType {
 			mapHook.map.map.removeSource(layerId.current);
 		}
 
-		if (typeof props.source === 'string') {
-			if (props.source === '' || !mapHook.map.map.getSource(props.source)) {
+		if (typeof props.options.source === 'string') {
+			if (props.options.source === '' || !mapHook.map.map.getSource(props.options.source)) {
 				return;
 			}
 		}
-		if(typeof props.options.type === 'undefined'){
+		if (typeof props.options.type === 'undefined') {
 			return;
 		}
 
 		initializedRef.current = true;
 
-		mapHook.map.addLayer(
-			{
-				...props.options,
-				...(props.geojson && !props.source
-					? {
-							source: {
-								type: 'geojson',
-								data: props.geojson,
-							},
-					  }
-					: {}),
-				...(props.source
-					? {
-							source: props.source,
-					  }
-					: {}),
-				id: layerId.current,
-			} as LayerSpecification,
-			props.insertBeforeLayer
-				? props.insertBeforeLayer
-				: props.insertBeforeFirstSymbolLayer
-				? mapHook.map.firstSymbolLayer
-				: undefined,
-			mapHook.componentId
-		);
-
+		try {
+			mapHook.map.addLayer(
+				{
+					...props.options,
+					...(props.geojson &&
+					(!props.options?.source ||
+						(props.options?.source?.attribution && !props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
+						? {
+								source: {
+									type: 'geojson',
+									data: props.geojson,
+									attribution: props.options.source?.attribution
+										? props.options.source?.attribution
+										: '',
+								},
+						  }
+						: {}),
+					...(typeof props.options?.source === 'string'
+						? {
+								source: props.options.source,
+						  }
+						: {}),
+					id: layerId.current,
+				} as LayerSpecification,
+				props.insertBeforeLayer
+					? props.insertBeforeLayer
+					: props.insertBeforeFirstSymbolLayer
+					? mapHook.map.firstSymbolLayer
+					: undefined,
+				mapHook.componentId
+			);
+		} catch (e) {
+			console.log(e);
+		}
 		setLayer(() => mapHook.map?.map.getLayer(layerId.current));
 
 		if (typeof props.onHover !== 'undefined') {
@@ -157,7 +173,9 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (!mapHook.map) return;
 
 		if (
+			mapHook.map?.cancelled === false &&
 			initializedRef.current &&
+			mapHook?.map?.map?.getLayer?.(layerId.current) &&
 			(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) === -1 ||
 				(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) !== -1 &&
 					props.options.type === layerTypeRef.current))
@@ -169,7 +187,12 @@ function useLayer(props: useLayerProps): useLayerType {
 	}, [mapHook.map, props.options, createLayer]);
 
 	useEffect(() => {
-		if (!initializedRef.current || !mapHook.map?.map?.getSource(layerId.current)) return;
+		if (
+			mapHook.map?.cancelled === true ||
+			!initializedRef.current ||
+			!mapHook.map?.map?.getSource?.(layerId.current)
+		)
+			return;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore setData only exists on GeoJsonSource
@@ -178,6 +201,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	useEffect(() => {
 		if (
+			mapHook.map?.cancelled === true ||
 			!mapHook.map ||
 			!mapHook.map?.map?.getLayer?.(layerId.current) ||
 			!initializedRef.current ||
@@ -227,8 +251,6 @@ function useLayer(props: useLayerProps): useLayerType {
 	};
 }
 
-useLayer.defaultProps = {
-
-}
+useLayer.defaultProps = {};
 
 export default useLayer;

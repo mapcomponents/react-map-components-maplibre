@@ -9,15 +9,28 @@ type Props = {
 	configurable?: boolean;
 	vtProps: MlVectorTileLayerProps;
 	setVtProps: ((state: unknown) => void) | undefined;
+	visibleMaster?: boolean;
 };
 
-export default function LayerListItemVectorLayer({ configurable, vtProps, setVtProps, id }: Props) {
+export default function LayerListItemVectorLayer({
+	configurable,
+	vtProps,
+	setVtProps,
+	id,
+	...props
+}: Props) {
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const [visible, setVisible] = useState(true);
 	const [paintProps, setPaintProps] = useState(vtProps.layers[id].paint);
 
 	useEffect(() => {
-		if (!setVtProps) return;
+		if (
+			!setVtProps ||
+			(typeof vtProps.layers[id]?.layout?.visibility === 'undefined' && visible) ||
+			(!visible && vtProps.layers[id]?.layout?.visibility === 'none') ||
+			(visible && vtProps.layers[id]?.layout?.visibility === 'visible')
+		)
+			return;
 
 		const _layers = [...vtProps.layers];
 		if (!_layers[id].layout) {
@@ -30,13 +43,18 @@ export default function LayerListItemVectorLayer({ configurable, vtProps, setVtP
 	}, [visible, id, setVtProps, vtProps]);
 
 	useEffect(() => {
+		setVisible(!!props.visibleMaster);
+	}, [props.visibleMaster]);
+
+	useEffect(() => {
 		if (!setVtProps) return;
 
-		const _paintProps = { ...paintProps };
-		const _layers = [...vtProps.layers];
-		_layers[id].paint = _paintProps;
-
-		setVtProps({ ...vtProps, layers: _layers });
+		if (JSON.stringify(paintProps) !== JSON.stringify(vtProps.layers[id].paint)) {
+			const _paintProps = { ...paintProps };
+			const _layers = [...vtProps.layers];
+			_layers[id].paint = _paintProps;
+			setVtProps({ ...vtProps, layers: _layers });
+		}
 	}, [paintProps, id, setVtProps, vtProps]);
 
 	return (
@@ -74,7 +92,7 @@ export default function LayerListItemVectorLayer({ configurable, vtProps, setVtP
 						}}
 					/>
 				</ListItemIcon>
-				<ListItemText primary={vtProps.layers[id].id} />
+				<ListItemText primary={vtProps.layers[id].id} variant="layerlist" />
 			</ListItem>
 			{configurable && paintPropsFormVisible && (
 				<LayerPropertyForm
@@ -82,7 +100,7 @@ export default function LayerListItemVectorLayer({ configurable, vtProps, setVtP
 					setPaintProps={setPaintProps}
 					layerType={vtProps.layers[id].type}
 				/>
-			)}
+			) }
 		</>
 	);
 }

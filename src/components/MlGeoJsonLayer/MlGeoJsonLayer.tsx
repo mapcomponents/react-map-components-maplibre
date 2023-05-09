@@ -73,7 +73,7 @@ export type MlGeoJsonLayerProps = {
 	/**
 	 * Javascript object that is spread into the addLayer commands first parameter.
 	 */
-	options?: Exclude<LayerSpecification, RasterLayerSpecification>;
+	options?: useLayerProps['options'];
 	/**
 	 * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
 	 */
@@ -111,11 +111,17 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		layerId: props.layerId || 'MlGeoJsonLayer-' + uuidv4(),
 		geojson: props.geojson,
 		options: {
-			paint: props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides),
-			layout: props.layout || {},
 			...props.options,
+			paint: {
+				...(props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides)),
+				...props?.options?.paint,
+			},
+			layout: {
+				...(props?.layout || {}),
+				...props?.options?.layout,
+			},
 			type: layerType as LayerSpecification['type'],
-		} as Partial<LayerSpecification>,
+		} as useLayerProps['options'],
 		insertBeforeLayer: props.insertBeforeLayer,
 		onHover: props.onHover,
 		onClick: props.onClick,

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
-import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
-import { ColorPicker } from 'mui-color';
+import { Select, Typography, Slider, Stack, MenuItem, FormControl, Button } from '@mui/material';
+import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import TopToolbar from '../../../ui_components/TopToolbar';
 
@@ -59,17 +59,6 @@ const widthMarks = [
 	},
 ];
 
-const sidebarSx = {
-	top: '64px',
-	width: {
-		xs: '80%',
-		sm: '60%',
-		md: '350px',
-		lg: '350px',
-	},
-	boxSizing: 'border-box',
-};
-
 const PolygonStyler = (props) => {
 	const [color, setColor] = useState('#2485C1');
 	const [opacity, setOpacity] = useState(0.8);
@@ -87,8 +76,8 @@ const PolygonStyler = (props) => {
 		};
 	}, [featureToShow, props.geojson]);
 
-	const handleColorChange = (e) => {
-		setColor(`#${e.hex}`);
+	const handleColorChange = (value) => {
+		setColor(value);
 	};
 	const [openSidebar, setOpenSidebar] = useState(true);
 
@@ -96,13 +85,16 @@ const PolygonStyler = (props) => {
 		<>
 			<TopToolbar
 				buttons={
-					<MenuItem onClick={() => setOpenSidebar(!openSidebar)}>
-						<Typography textAlign="center">GeoJson Layer Polygon</Typography>
-					</MenuItem>
+					<Button
+						variant={openSidebar ? 'contained' : 'outlined'}
+						onClick={() => setOpenSidebar(!openSidebar)}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						GeoJson Layer Polygon
+					</Button>
 				}
 			/>
 			<Sidebar
-				drawerPaperProps={{ sx: sidebarSx }}
 				open={openSidebar}
 				setOpen={setOpenSidebar}
 				name={'GeoJson Layer Polygon'}

@@ -1,5 +1,88 @@
 # Change Log
 
+## [v0.1.78] - 2023-04-28
+
+### Added
+- cedf14b: add interval parameter to MlTemporalController
+
+## [v0.1.77] - 2023-04-05
+
+
+### Fixed
+- 92bac5c: remove deprecated @mui/styles dependency; fixes npm compatibility
+
+### Added
+- 6512e26: add name prop to MlWmsLoader
+
+### Changed
+- 6512e26: make AddLayerPopup initial config state configurable
+- 6512e26: make MlWmsLoader featureInfoActive controllable from parent component
+- 6512e26: make LayerListItemFactory control featureInfoActive to always reflect the state in LayerConfig
+
+### Added
+
+## [v0.1.76] - 2023-04-04
+
+### Fixed
+- b879750: fix MlGeoJsonLayer layout option props spread order
+
+### Added
+- b879750: add thumbnails to style select menu
+
+## [v0.1.75] - 2023-04-04
+
+### Fixed
+- 66c8df2: add missing LayerListItemFactory export
+## [v0.1.74] - 2023-04-03
+
+### Fixed
+- 6e68b8c: fix wmsLoader feature info
+- 3eac872: fix useLayer hook source attribution settings
+
+### Added
+- 5a4c581: add component MlTemporalController
+- a85a5b1: add LayerListItemFactory
+- a85a5b1: add GeoJsonLayerForm
+- a85a5b1: add WmsLayerForm
+- a85a5b1: add LayerTypeForm
+- a85a5b1: add AddLayerButton
+- a85a5b1: add MlWmsLoader featureInfo configuration prop and queryable indicator next to layer
+- a85a5b1: add LayerContext and localStorage persistence to AddLayerButton story
+
+### Changed
+- a85a5b1: change MlWmsLoader to return LayerListItem compatible list elements
+
+## [v0.1.73] - 2023-03-11
+
+### Fixed
+- 547db2c: Fix/layerlist visibility settings
+
+## [v0.1.72] - 2023-03-08
+
+### Fixed
+- Fix/maplibremap registration react 18 (#89) …
+- remove mui-color dependency
+### Added
+- add new ColorPicker ui component
+- add MlWmsLayer support to LayerList component
+
+## [v0.1.71] - 2023-03-04
+
+### Fixed
+- e3178b5: fix Topbar sidebar defaults
+
+## [v0.1.70] - 2023-03-03
+
+### Fixed
+- 153b00d: fix react 18 compatibility issue. reset initializedRef if MapLibreMap is removed from react dom (#81) …
+
+### Added
+- TopToolbar and Sidebar component exports
+- cdc4b5b: add createPng & downloadPng function to useExportMap hook promise
+
+### Changed
+- cdc4b5b: adjust MlCreatePdfButton to use useExportMap hook
+- 6b6ce0c: update .npmignore to include all files & folders that aren't required in the module build
 
 ## [v0.1.69] - 2023-02-07
 

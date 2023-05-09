@@ -1,1 +1,0 @@
-Darstellung von Vector Tiles

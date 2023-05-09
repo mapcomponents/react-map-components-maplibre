@@ -6,7 +6,7 @@ import {
 import React, { useRef } from 'react';
 import ColorPicker from './input/ColorPicker';
 import { Box, ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
-import {useCallback} from 'react';
+import { useCallback } from 'react';
 
 export type paintPropsType =
 	| CircleLayerSpecification['paint']
@@ -22,7 +22,12 @@ type Props = {
 };
 
 const mapPropKeyToFormInputType = {
+	'circle-color': 'colorpicker',
+	'circle-radius': 'slider',
+	'circle-stroke-color': 'colorpicker',
+	'circle-stroke-width': 'slider',
 	'fill-color': 'colorpicker',
+	'fill-outline-color': 'colorpicker',
 	'line-color': 'colorpicker',
 	'line-width': 'slider',
 	'line-blur': 'slider',
@@ -30,6 +35,16 @@ const mapPropKeyToFormInputType = {
 const mapPropKeyToFormInputTypeKeys = Object.keys(mapPropKeyToFormInputType);
 
 const inputPropsByPropKey = {
+	'circle-stroke-width': {
+		step: 1,
+		min: 1,
+		max: 20,
+	},
+	'circle-radius': {
+		step: 1,
+		min: 1,
+		max: 100,
+	},
 	'line-blur': {
 		step: 1,
 		min: 1,
@@ -46,66 +61,76 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 	const key = useRef(Math.round(Math.random() * 10000000000));
 	//const onChange = (event) => {};
 
-	const getFormInputByType = useCallback((key: string) => {
-		if (mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1) {
-			const label = (
-				<Typography id={key + '_label'} gutterBottom>
-					{key}
-				</Typography>
-			);
-			switch (mapPropKeyToFormInputType[key]) {
-				case 'slider':
-					return (
-						<>
-							{label}
-							<Slider
-								{...inputPropsByPropKey[key]}
-								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-								value={paintProps[key]}
-								onChange={(_ev: Event, value: number) => {
-									if (value) {
-										setPaintProps((current) => ({ ...current, [key]: value }));
-									}
-								}}
-							/>
-						</>
-					);
-					break;
-				case 'numberfield':
-					return (
-						<>
-							{label}
-							<TextField
-								inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-								value={paintProps[key]}
-								onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-									if (ev?.target?.value) {
-										setPaintProps((current) => ({ ...current, [key]: parseInt(ev.target.value) }));
-									}
-								}}
-							/>
-						</>
-					);
-					break;
-				case 'colorpicker':
-					return (
-						<>
-							{label}
-							<Box sx={{ '& > div': { width: 'initial !important' } }}>
-								<ColorPicker
-									key={key}
+	const getFormInputByType = useCallback(
+		(key: string) => {
+			if (
+				mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1 &&
+				(typeof paintProps[key] === 'number' || typeof paintProps[key] === 'string')
+			) {
+				const label = (
+					<Typography id={key + '_label'} gutterBottom>
+						{key}
+					</Typography>
+				);
+				switch (mapPropKeyToFormInputType[key]) {
+					case 'slider':
+						return (
+							<React.Fragment key={key}>
+								{label}
+								<Slider
+									{...inputPropsByPropKey[key]}
+									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
 									value={paintProps[key]}
-									propKey={key}
-									setPaintProps={setPaintProps}
+									valueLabelDisplay="auto"
+									onChange={(_ev: Event, value: number) => {
+										if (value) {
+											setPaintProps((current) => ({ ...current, [key]: value }));
+										}
+									}}
 								/>
-							</Box>
-						</>
-					);
-					break;
+							</React.Fragment>
+						);
+						break;
+					case 'numberfield':
+						return (
+							<React.Fragment key={key}>
+								{label}
+								<TextField
+									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
+									value={paintProps[key]}
+									onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+										if (ev?.target?.value) {
+											setPaintProps((current) => ({
+												...current,
+												[key]: parseInt(ev.target.value),
+											}));
+										}
+									}}
+								/>
+							</React.Fragment>
+						);
+						break;
+					case 'colorpicker':
+						return (
+							<React.Fragment key={key}>
+								{label}
+								<Box sx={{ '& > div': { width: 'initial !important' } }}>
+									<ColorPicker
+										key={key}
+										value={paintProps[key]}
+										propKey={key}
+										setPaintProps={setPaintProps}
+									/>
+								</Box>
+							</React.Fragment>
+						);
+						break;
+				}
 			}
-		}
-		return null;
-	},[paintProps]);
+			return null;
+		},
+		[paintProps]
+	);
 
 	return (
 		<>
@@ -115,6 +140,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 						padding: '15px',
 						boxShadow: 'inset 0px 0px 10px rgb(50 50 50 / 10%)',
 						borderRadius: '5px',
+						width: '100%',
 					}}
 				>
 					{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}

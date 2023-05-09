@@ -10,7 +10,7 @@ export type MlVectorTileLayerProps = {
 	sourceOptions?: VectorSourceSpecification;
 	url?: string;
 	layers: LayerSpecification[];
-}
+};
 
 /**
  * Adds a vector-tile source and 0...n vector-tile-layers to the MapLibre instance referenced by
@@ -39,18 +39,20 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 		}
 
 		// Add the new layer to the maplibre instance once it is available
-		mapHook.map.addSource(
-			layerId.current,
-			{
-				type: 'vector',
-				tiles: [props.url || ''],
-				attribution: '',
-				minzoom: 0,
-				maxzoom: 14,
-				...props.sourceOptions,
-			},
-			mapHook.componentId
-		);
+		if (!mapHook.map.map.getSource(layerId.current)) {
+			mapHook.map.addSource(
+				layerId.current,
+				{
+					type: 'vector',
+					tiles: [props.url || ''],
+					attribution: '',
+					minzoom: 0,
+					maxzoom: 14,
+					...props.sourceOptions,
+				},
+				mapHook.componentId
+			);
+		}
 
 		props.layers.forEach((layer) => {
 			if (!mapHook.map) return;

@@ -11,6 +11,7 @@ const getDefaultPaintPropsByType = (
 			}
 			return {
 				'fill-color': 'rgba(10,240,256,0.6)',
+				'fill-outline-color': 'rgba(20,230,256,0.8)',
 			};
 		case 'line':
 			if (defaultPaintOverrides?.line) {
@@ -22,7 +23,6 @@ const getDefaultPaintPropsByType = (
 				'line-blur': 0,
 			};
 		case 'circle':
-		default:
 			if (defaultPaintOverrides?.circle) {
 				return defaultPaintOverrides.circle;
 			}
@@ -30,7 +30,10 @@ const getDefaultPaintPropsByType = (
 				'circle-color': 'rgba(10,240,256,0.8)',
 				'circle-stroke-color': '#fff',
 				'circle-stroke-width': 2,
+				'circle-radius': 4,
 			};
+		default:
+			return {};
 	}
 };
 

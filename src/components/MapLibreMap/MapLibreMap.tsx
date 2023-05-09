@@ -61,7 +61,7 @@ const defaultProps: MapLibreMapProps = {
  * @category Map components
  */
 const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
-	const map = useRef<MapLibreGlWrapper>();
+	const mapRef = useRef<MapLibreGlWrapper>();
 	const mapContainer = useRef<HTMLDivElement>();
 
 	const mapContext = useContext<MapContextType>(MapContext);
@@ -76,8 +76,11 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 		return () => {
 			initializedRef.current = false;
 			mapContext.removeMap(mapId);
-			map.current?.map?.remove?.();
-			map.current = undefined;
+			if (mapRef.current) {
+				mapRef.current.map?.remove?.();
+				mapRef.current.cancelled = true;
+				mapRef.current = undefined;
+			}
 		};
 	}, []);
 
@@ -86,7 +89,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 
 		if (mapContainer.current) {
 			initializedRef.current = true;
-			map.current = new MapLibreGlWrapper({
+			mapRef.current = new MapLibreGlWrapper({
 				mapOptions: {
 					style: '',
 					...props.options,
@@ -95,10 +98,16 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 				},
 				onReady: (map: Map, wrapper: MapLibreGlWrapper) => {
 					map.once('load', () => {
-						if (props.mapId) {
-							mapContext.registerMap(props.mapId, wrapper);
+						if (!wrapper?.cancelled) {
+							// add maplibre instance to window for debugging purposes
+							window['_map'] = map;
+							if (props.mapId) {
+								mapContext.registerMap(props.mapId, wrapper);
+							} else {
+								mapContext.setMap(wrapper);
+							}
 						} else {
-							mapContext.setMap(wrapper);
+							map.remove();
 						}
 					});
 				},
@@ -107,10 +116,13 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 	}, [props.options, props.mapId]);
 
 	useEffect(() => {
-		if (map.current?.map && props?.options?.style && currentStyle.current !== props.options.style) {
-			console.log('set style');
+		if (
+			mapRef.current?.map &&
+			props?.options?.style &&
+			currentStyle.current !== props.options.style
+		) {
 			currentStyle.current = props.options.style;
-			map.current.map.setStyle(props.options.style);
+			mapRef.current.map.setStyle(props.options.style);
 		}
 	}, [props?.options?.style]);
 
