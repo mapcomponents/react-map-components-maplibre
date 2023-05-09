@@ -1,8 +1,29 @@
 import React, { useEffect } from 'react';
 import useMap from '../../hooks/useMap';
 
-const MlTerrainLayer = (props) => {
-	const mapHook = useMap({ mapId: props.mapId });
+interface MlTerrainLayerProps {
+	/**
+	 * Id of the target MapLibre instance in mapContext
+	 */
+	mapId?: string;
+	/**
+	 * Source of tiles with possibles options
+	 */
+	sourceOptions?: object;
+	/**
+	 * do we need it?
+	 */
+	terrainOptions?: object;
+}
+
+export type { MlTerrainLayerProps };
+
+/**
+ * Create Terrain Layer Component
+ *
+ */
+const MlTerrainLayer = (props: MlTerrainLayerProps) => {
+	const mapHook = useMap({ mapId: 'map_1' });
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -23,8 +44,8 @@ const MlTerrainLayer = (props) => {
 		});
 
 		return () => {
-			mapHook.map.map.setTerrain(null);
-			if (mapHook.map.map.getSource('terrain')) {
+			mapHook.map?.map.setTerrain(null);
+			if (mapHook.map?.map.getSource('terrain')) {
 				mapHook.map.map.removeSource('terrain');
 			}
 		};
@@ -33,4 +54,7 @@ const MlTerrainLayer = (props) => {
 	return <></>;
 };
 
+MlTerrainLayer.defaultProps = {
+	mapId: undefined,
+};
 export default MlTerrainLayer;

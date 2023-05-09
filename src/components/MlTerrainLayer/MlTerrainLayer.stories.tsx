@@ -12,15 +12,15 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
-	const mapOptions = {
+const Template = () => {
+	const mapOptions: object = {
 		zoom: 4,
 		style: 'https://sgx.geodatenzentrum.de/gdz_basemapde_vektor/styles/bm_web_col.json',
 		center: [7.0851268, 50.73884],
 	};
 	return (
 		<>
-			<MapLibreMap options={mapOptions} mapId={props.mapId} />
+			<MapLibreMap options={mapOptions} mapId="map_1" />
 			<MlTerrainLayer
 				sourceOptions={{
 					tiles: ['https://vtc-cdn.maptoolkit.net/terrainrgb/{z}/{x}/{y}.webp'],
