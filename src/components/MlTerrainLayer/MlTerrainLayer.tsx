@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import useMap from '../../hooks/useMap';
+import { TerrainSpecification } from 'maplibre-gl';
 
 interface MlTerrainLayerProps {
 	/**
@@ -11,9 +12,9 @@ interface MlTerrainLayerProps {
 	 */
 	sourceOptions?: object;
 	/**
-	 * do we need it?
+	 * Options for new exaggeration value
 	 */
-	terrainOptions?: object;
+	terrainOptions?: TerrainSpecification;
 }
 
 export type { MlTerrainLayerProps };
@@ -44,7 +45,7 @@ const MlTerrainLayer = (props: MlTerrainLayerProps) => {
 		});
 
 		return () => {
-			mapHook.map?.map.setTerrain(null);
+			mapHook.map?.map.setTerrain(null as unknown as TerrainSpecification);
 			if (mapHook.map?.map.getSource('terrain')) {
 				mapHook.map.map.removeSource('terrain');
 			}
