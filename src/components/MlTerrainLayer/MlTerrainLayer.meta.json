@@ -1,11 +1,11 @@
 {
 	"name": "MlTerrainLayer",
-	"title": "",
-	"description": "",
+	"title": "Terrain layer",
+	"description": "Presents a terrain layer.",
 	"i18n": {
 		"de": {
-			"title": "",
-			"description": ""
+			"title": "Terrain-Layer",
+			"description": "Stellt ein Terrain Layer dar."
 		}
 	},
 	"tags": [],
