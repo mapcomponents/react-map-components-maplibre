@@ -1,14 +1,14 @@
 import React from 'react';
-import { MapLibreMap } from '../MapLibreMap/MapLibreMap';
-import { MlWmsLayer } from '../MlWmsLayer/MlWmsLayer';
+import MapLibreMap from '../MapLibreMap/MapLibreMap';
+import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlTerrainLayer from './MlTerrainLayer';
-import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
+import ThemeDecorator from '../../decorators/ThemeDecorator';
 
 const storyoptions = {
 	title: 'MapComponents/MlTerrainLayer',
 	component: MlTerrainLayer,
 	argTypes: {},
-	decorators: EmptyMapDecorator,
+	decorators: ThemeDecorator,
 };
 export default storyoptions;
 
@@ -20,7 +20,7 @@ const Template = (props) => {
 	};
 	return (
 		<>
-			<MapLibreMap options={mapOptions} mapId="map_1" />
+			<MapLibreMap options={mapOptions} mapId={props.mapId} />
 			<MlTerrainLayer
 				sourceOptions={{
 					tiles: ['https://vtc-cdn.maptoolkit.net/terrainrgb/{z}/{x}/{y}.webp'],
