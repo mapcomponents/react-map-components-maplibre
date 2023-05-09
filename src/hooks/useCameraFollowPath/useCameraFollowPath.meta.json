@@ -1,7 +1,7 @@
 {
 	"name": "useCameraFollowPath",
 	"title": "Move camera along linestring",
-	"description": "is Component accepts an array consisting of coordinates and travels this route with the camera. Options for speed, initial zoom level and final zoom level are also available.",
+	"description": "The Component accepts an array consisting of coordinates and travels this route with the camera. Options for speed, initial zoom level and final zoom level are also available.",
 	"i18n": {
 		"de": {
 			"title": "Kamerafahrt entlang eines Linestrings",

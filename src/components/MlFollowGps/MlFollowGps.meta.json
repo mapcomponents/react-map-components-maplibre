@@ -1,7 +1,7 @@
 {
 	"name": "MlFollowGps",
 	"title": "GPS tracker",
-	"description": "Display of the current position and the line of sight.",
+	"description": "Display of the current position and viewing direction.",
 	"i18n": {
 		"de": {
 			"title": "GPS-Tracker",
