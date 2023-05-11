@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Box from '@mui/material/Box';
 import { default as MuiSpeedDial, OpenReason } from '@mui/material/SpeedDial';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -28,8 +28,10 @@ export interface SpeedDialProps {
  * SpeedDial Button, which opens up options for Background, Layers, Sketch and Create PDF
  */
 
-const SpeedDial = (props: SpeedDialProps) => {
-	const [open, setOpen] = React.useState(false);
+const SpeedDial = () => {
+
+	const [open, setOpen] = useState(false);
+	
 	const handleOpen = (_event: React.SyntheticEvent<Event>, reason: OpenReason) => {
 		if (reason === 'toggle') {
 			setOpen(true);
@@ -55,7 +57,7 @@ const SpeedDial = (props: SpeedDialProps) => {
 				ariaLabel="SpeedDial tooltip example"
 				sx={{ position: 'absolute', bottom: 16, right: 16 }}
 				icon={open ? <CloseIcon /> : <MoreVertIcon />}
-				onClick={open ? handleClose : handleOpen}
+				onClick={open ? handleClose : handleOpen as ()=>void}
 				onOpen={handleOpen}
 				open={open}
 			>
