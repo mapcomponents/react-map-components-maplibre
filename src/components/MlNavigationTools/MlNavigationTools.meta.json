@@ -1,14 +1,14 @@
 {
-  "name": "MlNavigationTools",
-  "title": "Navigation tools",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "Navigationswerkzeuge",
-      "description": ""
-    }
-  },
-  "tags": [],
-  "category": "",
-  "type": "component"
+	"name": "MlNavigationTools",
+	"title": "Navigation tools",
+	"description": "Default navigation tool.",
+	"i18n": {
+		"de": {
+			"title": "Navigationswerkzeuge",
+			"description": "Standard Navigationstool"
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
 }

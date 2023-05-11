@@ -1,14 +1,14 @@
 {
-  "name": "MlScaleReference",
-  "title": "Reference scale",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "Maßstabsreferenz",
-      "description": ""
-    }
-  },
-  "tags": [],
-  "category": "",
-  "type": "component"
+	"name": "MlScaleReference",
+	"title": "Reference scale",
+	"description": "Default scale bar.",
+	"i18n": {
+		"de": {
+			"title": "Maßstabsreferenz",
+			"description": "Standard Maßstabsleiste"
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
 }

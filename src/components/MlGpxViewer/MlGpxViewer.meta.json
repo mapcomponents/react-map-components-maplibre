@@ -1,14 +1,14 @@
 {
-  "name": "MlGpxViewer",
-  "title": "GPX viewer",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "GPX Darstellung",
-      "description": ""
-    }
-  },
-  "tags": ["Map add-on"],
-  "category": "add-ons",
-  "type": "component"
+	"name": "MlGpxViewer",
+	"title": "GPX viewer",
+	"description": "Upload and presentation of GPX tracks.",
+	"i18n": {
+		"de": {
+			"title": "GPX Darstellung",
+			"description": "Upload und Darstellung von GPX Tracks "
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component"
 }

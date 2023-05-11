@@ -1,14 +1,14 @@
 {
-  "name": "MlFollowGps",
-  "title": "GPS tracker",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "GPS-Tracker",
-      "description": ""
-    }
-  },
-  "tags": [],
-  "category": "",
-  "type": "component"
+	"name": "MlFollowGps",
+	"title": "GPS tracker",
+	"description": "Display of the current position and viewing direction.",
+	"i18n": {
+		"de": {
+			"title": "GPS-Tracker",
+			"description": "Darstellung der aktuellen Position und Blickrichtung"
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
 }
