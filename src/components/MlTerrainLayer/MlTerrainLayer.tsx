@@ -54,6 +54,7 @@ const MlTerrainLayer = (props: MlTerrainLayerProps) => {
 
 		return () => {
 			mapHook.map?.map.setTerrain(null as unknown as TerrainSpecification);
+			mapHook.map?.map.removeLayer('hills');
 			if (mapHook.map?.map.getSource('terrain')) {
 				mapHook.map.map.removeSource('terrain');
 			}
