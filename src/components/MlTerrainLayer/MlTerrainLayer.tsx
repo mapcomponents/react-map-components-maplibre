@@ -44,6 +44,14 @@ const MlTerrainLayer = (props: MlTerrainLayerProps) => {
 			...props.terrainOptions,
 		});
 
+		mapHook.map.addLayer({
+			id: 'hills',
+			type: 'hillshade',
+			source: 'terrain',
+			layout: { visibility: 'visible' },
+			paint: { 'hillshade-shadow-color': 'rgba(71,59,36,0.4)' },
+		});
+
 		return () => {
 			mapHook.map?.map.setTerrain(null as unknown as TerrainSpecification);
 			if (mapHook.map?.map.getSource('terrain')) {

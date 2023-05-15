@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlTerrainLayer from './MlTerrainLayer';
 import MapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -21,7 +20,11 @@ const Template = () => {
 			<TopToolbar
 				unmovableButtons={
 					<>
-						<Button variant={start ? 'contained' : 'outlined'} onClick={() => setStart(!start)}>
+						<Button
+							variant={start ? 'contained' : 'outlined'}
+							className="terrainLayerButton"
+							onClick={() => setStart(!start)}
+						>
 							Terrain Layer
 						</Button>
 					</>
@@ -29,16 +32,11 @@ const Template = () => {
 			/>
 			{start && (
 				<>
-					<MlWmsLayer
-						urlParameters={{
-							LAYERS: 'de_basemapde_web_raster_hillshade',
-							TRANSPARENT: 'TRUE',
-						}}
-						url="https://sgx.geodatenzentrum.de/wms_basemapde_schummerung"
-					/>
 					<MlTerrainLayer
 						sourceOptions={{
-							tiles: ['https://vtc-cdn.maptoolkit.net/terrainrgb/{z}/{x}/{y}.webp'],
+							tiles: [
+								'https://wms.wheregroup.com/dem_tileserver/index.php/raster_dem/{z}/{x}/{y}.webp',
+							],
 						}}
 					/>
 				</>
