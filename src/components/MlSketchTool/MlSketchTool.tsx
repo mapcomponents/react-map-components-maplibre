@@ -1,9 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
 import PentagonIcon from '@mui/icons-material/Pentagon';
 import { Box } from '@mui/system';
-//import useMediaQuery from '@mui/material/useMediaQuery';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import List from '@mui/material/List';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,11 +12,16 @@ import * as turf from '@turf/turf';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import LayerListItem from './LayerList/LayerListItem';
+import LayerListItem from '../../ui_components/LayerList/LayerListItem';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature } from '@turf/turf';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
+import { Button, Typography } from '@mui/material';
+
+import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
+import PolylineIcon from '@mui/icons-material/Polyline';
+
 
 export interface MlSketchToolProps {
 	/**
@@ -38,18 +40,19 @@ export interface MlSketchToolProps {
 	buttonStyleOverride?: SxProps;
 }
 
+type SketchStateType = {
+	selectedGeoJson?: Feature;
+	activeGeometryIndex?: number;
+	geometries: Feature[];
+	drawMode?: keyof MapboxDraw.Modes;
+};
+
 /**
  * Component template
  *
  */
 
 const MlSketchTool = (props: MlSketchToolProps) => {
-	type SketchStateType = {
-		selectedGeoJson: Feature | undefined;
-		activeGeometryIndex: number;
-		geometries: Feature[];
-		drawMode: string;
-	};
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
@@ -57,45 +60,34 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	//const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
 	const [sketchState, setSketchState] = useState<SketchStateType>({
-		activeGeometryIndex: 0,
+		activeGeometryIndex: undefined,
 		selectedGeoJson: undefined,
 		geometries: [],
-		drawMode: '',
+		drawMode: undefined,
 	});
 
 	const buttonStyle = {
 		...props.buttonStyleOverride,
 	};
 
-	const buttonClickHandler = useCallback(
-		(buttonDrawMode: string) => {
-			console.log(buttonDrawMode);
-			sketchState.drawMode !== buttonDrawMode
-				? setSketchState((_sketchTool) => ({
-						drawMode: buttonDrawMode,
-						geometries: _sketchTool.geometries,
-						activeGeometryIndex: 0,
-						selectedGeoJson: undefined,
-				  }))
-				: setSketchState((_sketchTool) => ({
-						drawMode: '',
-						geometries: _sketchTool.geometries,
-						activeGeometryIndex: 0,
-						selectedGeoJson: undefined,
-				  }));
-		},
-		[sketchState]
-	);
+	const buttonClickHandler = (buttonDrawMode: keyof MapboxDraw.Modes) => {
+		setSketchState((_state) => ({
+			drawMode: _state.drawMode !== buttonDrawMode ? buttonDrawMode : undefined,
+			geometries: _state.geometries,
+			activeGeometryIndex: undefined,
+			selectedGeoJson: undefined,
+		}))
+	};
 
 	const removeGeoJson = (geoJson: Feature): void => {
 		setSketchState((_sketchState) => {
-			const tempGeometries = [..._sketchState.geometries];
-			tempGeometries.splice(tempGeometries.indexOf(geoJson), 1);
+			const _geometries = [..._sketchState.geometries];
+			_geometries.splice(_geometries.indexOf(geoJson), 1);
 
 			return {
 				..._sketchState,
-				geometries: tempGeometries,
-				activeGeometryIndex: _sketchState.activeGeometryIndex - 1,
+				geometries: _geometries,
+				activeGeometryIndex: _sketchState.activeGeometryIndex ? _sketchState.activeGeometryIndex - 1 : undefined,
 			};
 		});
 	};
@@ -108,20 +100,20 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				}}
 			>
 				<ButtonGroup>
-					<Tooltip title={'point'}>
-						<IconButton sx={buttonStyle} onClick={() => buttonClickHandler('draw_point')}>
-							<PanoramaFishEyeIcon />
-						</IconButton>
+					<Tooltip title={'Point'}>
+						<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_point')}>
+							<ScatterPlotIcon />
+						</Button>
 					</Tooltip>
-					<Tooltip title={'Line'}>
-						<IconButton sx={buttonStyle} onClick={() => buttonClickHandler('draw_line_string')}>
-							<ShowChartIcon />
-						</IconButton>
+					<Tooltip title={'LineString'}>
+						<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_line_string')}>
+							<PolylineIcon />
+						</Button>
 					</Tooltip>
 					<Tooltip title={'Polygon'}>
-						<IconButton sx={buttonStyle} onClick={() => buttonClickHandler('custom_polygon')}>
+						<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_polygon')}>
 							<PentagonIcon />
-						</IconButton>
+						</Button>
 					</Tooltip>
 				</ButtonGroup>
 			</Box>
@@ -129,34 +121,23 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			{sketchState.drawMode && (
 				<MlFeatureEditor
 					mode={
-						sketchState.drawMode === 'edit'
-							? sketchState.selectedGeoJson?.geometry?.type === 'LineString'
-								? 'simple_select'
-								: 'custom_select'
-							: sketchState.drawMode
+						sketchState.drawMode
 					}
-					geojson={sketchState.drawMode === 'edit' ? sketchState.selectedGeoJson : undefined}
+					geojson={sketchState.selectedGeoJson}
 					onChange={(feature: object) => {
 						setSketchState((_sketchState) => {
 							const _geometries = [...sketchState.geometries];
-							if (sketchState.drawMode === 'edit' && sketchState.selectedGeoJson) {
-								_geometries[_geometries.indexOf(sketchState.selectedGeoJson)] = feature[0];
-							} else {
-								if (!sketchState.activeGeometryIndex) {
-									const tempFeature = feature[0];
-									tempFeature.properties.id = tempFeature.id;
+							if (typeof _sketchState.activeGeometryIndex === 'undefined') {
+								const tempFeature = feature[0];
+								tempFeature.properties.id = tempFeature.id;
 
-									_geometries.push(tempFeature);
-								} else {
-									_geometries[sketchState.activeGeometryIndex] = feature[0];
-								}
+								_sketchState.activeGeometryIndex = _geometries.length;
+								_geometries.push(tempFeature);
+							} else {
+								_geometries[_sketchState.activeGeometryIndex] = feature[0];
 							}
 							return {
 								..._sketchState,
-								activeGeometryIndex:
-									_sketchState.drawMode !== 'edit' && feature[0].geometry.type !== 'Point'
-										? _geometries.length - 1
-										: _sketchState.activeGeometryIndex,
 								geometries: _geometries,
 							};
 						});
@@ -164,11 +145,9 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					onFinish={() => {
 						setSketchState((_sketchState) => ({
 							..._sketchState,
-							drawMode: '',
-							activeGeometryIndex:
-								_sketchState.drawMode !== 'draw_point' ? 0 : _sketchState.activeGeometryIndex,
-							selectedGeoJson:
-								_sketchState.drawMode !== 'draw_point' ? undefined : _sketchState.selectedGeoJson,
+							drawMode: undefined,
+							activeGeometryIndex: undefined,
+							selectedGeoJson: undefined,
 						}));
 					}}
 				/>
@@ -197,7 +176,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 								{/* @ts-ignore-next-line */}
 								<LayerListItem
 									sx={buttonStyle}
-									visible={true}
 									configurable={true}
 									layerComponent={
 										<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={String(el.id)} />
@@ -206,39 +184,46 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									name={String(el.id)}
 									description={el.geometry.type}
 								>
-									<SettingsIcon />
 								</LayerListItem>
-								<IconButton
-									onClick={() => {
-										mapHook?.map?.map.setCenter(
-											el.geometry.type === 'Point'
-												? (el.geometry.coordinates as LngLatLike)
-												: (turf.centerOfMass(el).geometry.coordinates as LngLatLike)
-										);
-									}}
-								>
-									<GpsFixedIcon />
-								</IconButton>
-								<IconButton
-									sx={buttonStyle}
-									onClick={() => {
-										setSketchState((_sketchState) => ({
-											..._sketchState,
-											selectedGeoJson: el,
-											drawMode: 'edit',
-										}));
-									}}
-								>
-									<EditIcon />
-								</IconButton>
-								<IconButton
-									sx={buttonStyle}
-									onClick={() => {
-										removeGeoJson(el);
-									}}
-								>
-									<DeleteIcon />
-								</IconButton>
+								<Box sx={{
+									padding: '3px'
+								}} >
+									<ButtonGroup size="small">
+
+										<Button
+											onClick={() => {
+												mapHook?.map?.map.setCenter(
+													el.geometry.type === 'Point'
+														? (el.geometry.coordinates as LngLatLike)
+														: (turf.centerOfMass(el).geometry.coordinates as LngLatLike)
+												);
+											}}
+										>
+											<GpsFixedIcon />
+										</Button>
+										<Button
+											sx={buttonStyle}
+											onClick={() => {
+												setSketchState((_sketchState) => ({
+													..._sketchState,
+													selectedGeoJson: el,
+													activeGeometryIndex: _sketchState.geometries.indexOf(el),
+													drawMode: 'simple_select',
+												}));
+											}}
+										>
+											<EditIcon />
+										</Button>
+										<Button
+											sx={buttonStyle}
+											onClick={() => {
+												removeGeoJson(el);
+											}}
+										>
+											<DeleteIcon />
+										</Button>
+									</ButtonGroup>
+								</Box>
 							</Box>
 						</Box>
 					</>
@@ -256,10 +241,12 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						}}
 					/>
 				)}
-			</List>
-			{sketchState.drawMode === 'edit' && (
-				<Box>Edit {sketchState.selectedGeoJson?.geometry?.type}</Box>
-			)}
+			</List >
+			{
+				sketchState.drawMode === 'simple_select' && (
+					<Typography sx={{ fontSize: '0.6em' }}>Edit {sketchState.selectedGeoJson?.geometry?.type}</Typography>
+				)
+			}
 		</>
 	);
 };

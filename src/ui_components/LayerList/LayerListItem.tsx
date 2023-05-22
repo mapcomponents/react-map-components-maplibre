@@ -1,4 +1,4 @@
-import { Checkbox, IconButton, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Checkbox, IconButton, ListItem, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import React, { useMemo, useRef, useState } from 'react';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
@@ -20,6 +20,7 @@ type Props = {
 	description?: string;
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
+	listItemSx?: SxProps;
 };
 
 function LayerListItem({
@@ -41,9 +42,9 @@ function LayerListItem({
 	// this state variable is used for layer components that provide a paint attribute
 	const [paintProps, setPaintProps] = useState(
 		layerComponent?.props?.paint ||
-			getDefaultPaintPropsByType(
-				layerComponent?.props?.type || getDefaulLayerTypeByGeometry(layerComponent.props.geojson)
-			)
+		getDefaultPaintPropsByType(
+			layerComponent?.props?.type || getDefaulLayerTypeByGeometry(layerComponent.props.geojson)
+		)
 	);
 
 	const _visible = useMemo(() => {
@@ -142,6 +143,7 @@ function LayerListItem({
 						paddingLeft: 0,
 						paddingTop: 0,
 						paddingBottom: '4px',
+						...props.listItemSx
 					}}
 					secondaryAction={
 						configurable && Object.keys(paintProps)?.length > 0 ? (
@@ -212,7 +214,7 @@ function LayerListItem({
 							}}
 						/>
 					</ListItemIcon>
-					<ListItemText variant="layerlist" primary={name} secondary={description} />
+					<ListItemText variant="layerlist" primary={name} secondary={description} primaryTypographyProps={{overflow:'hidden'}} />
 				</ListItem>
 			)}
 			{_layerComponent}

@@ -44,7 +44,7 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				onChange={(features:any) => {
 					setCurrentFeatures(features);
 				}}
-				mode={props.measureType === "polygon" ? "custom_polygon" : "draw_line_string"}
+				mode={props.measureType === "polygon" ? "draw_polygon" : "draw_line_string"}
 			/>
 			{length.toFixed(2)} {getUnitLabel(props.unit)}
 			{props.measureType === "polygon" ? "²" : ""}
