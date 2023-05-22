@@ -137,6 +137,9 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			draw.current.changeMode(props.mode);
+            if(props.mode !== 'simple_select' && props.mode !== 'direct_select'){
+                draw.current.set({ type: 'FeatureCollection', features: [] });
+            }
 		}
 	}, [props.mode]);
 

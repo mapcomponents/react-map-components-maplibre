@@ -125,7 +125,10 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					}
 					geojson={sketchState.selectedGeoJson}
 					onChange={(feature: object) => {
+						if(!feature?.[0]) return;
+
 						setSketchState((_sketchState) => {
+
 							const _geometries = [...sketchState.geometries];
 							if (typeof _sketchState.activeGeometryIndex === 'undefined') {
 								const tempFeature = feature[0];
@@ -186,7 +189,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 								>
 								</LayerListItem>
 								<Box sx={{
-									padding: '3px'
+									padding: '3px 30px'
 								}} >
 									<ButtonGroup size="small">
 
