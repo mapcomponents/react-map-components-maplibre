@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -33,11 +33,11 @@ export interface useFeatureEditorProps {
 	onFinish?: () => void;
 	/**
 	 * Feature editor modes:
-     * - draw_line_string 
-     * - draw_polygon
-     * - draw_point
-     * - simple_select
-     * - direct_select
+	 * - draw_line_string 
+	 * - draw_polygon
+	 * - draw_point
+	 * - simple_select
+	 * - direct_select
 	 */
 	mode?: keyof MapboxDraw.Modes;
 }
@@ -54,7 +54,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 
 	const drawToolsInitialized = useRef(false);
 	const [drawToolsReady, setDrawToolsReady] = useState(false);
-	const [feature, setFeature] = useState();
+	const [feature, setFeature] = useState<GeoJSONObject[]>();
 
 	const modeChangeHandler = (e: any) => {
 		console.log('MlFeatureEditor mode change to ' + e.mode);
@@ -107,8 +107,9 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 		const changeHandler = () => {
 			if (draw.current) {
 				// update drawnFeatures state object
+				const currentFeatureCollection = draw.current.getAll?.();
+				setFeature(currentFeatureCollection?.features);
 				if (typeof props.onChange === 'function') {
-					const currentFeatureCollection = draw.current.getAll?.();
 					props.onChange(currentFeatureCollection?.features);
 				}
 			}
@@ -137,17 +138,17 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			draw.current.changeMode(props.mode);
-            if(props.mode !== 'simple_select' && props.mode !== 'direct_select'){
-                draw.current.set({ type: 'FeatureCollection', features: [] });
-            }
+			if (props.mode !== 'simple_select' && props.mode !== 'direct_select') {
+				draw.current.set({ type: 'FeatureCollection', features: [] });
+			}
 		}
 	}, [props.mode]);
 
 	return {
-        feature,
-        drawToolsReady,
-        draw:draw.current
-    };
+		feature,
+		drawToolsReady,
+		draw: draw.current
+	};
 };
 
 export default useFeatureEditor;
