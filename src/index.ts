@@ -97,6 +97,7 @@ export { default as UploadButton } from './ui_components/UploadButton';
 export { default as SelectStyleButton } from './ui_components/SelectStyleButton/SelectStyleButton';
 export { default as SelectStylePopup } from './ui_components/SelectStyleButton/SelectStylePopup';
 export { default as ConfirmDialog } from './ui_components/ConfirmDialog';
+export { default as SpeedDial } from './ui_components/SpeedDial/SpeedDial';
 
 
 // Styles
