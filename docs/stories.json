@@ -593,11 +593,11 @@
       "id": "mapcomponents-mlsketchtool--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlSketchTool",
-      "importPath": 89545,
+      "importPath": 73653,
       "kind": "MapComponents/MlSketchTool",
       "story": "Example Config",
       "parameters": {
-        "fileName": 89545,
+        "fileName": 73653,
         "framework": "react",
         "__id": "mapcomponents-mlsketchtool--example-config",
         "__isArgsStory": false
@@ -1083,11 +1083,11 @@
       "id": "uicomponents-speeddial--example-config",
       "name": "Example Config",
       "title": "UiComponents/SpeedDial",
-      "importPath": 62419,
+      "importPath": 2577,
       "kind": "UiComponents/SpeedDial",
       "story": "Example Config",
       "parameters": {
-        "fileName": 62419,
+        "fileName": 2577,
         "framework": "react",
         "__id": "uicomponents-speeddial--example-config",
         "__isArgsStory": false
