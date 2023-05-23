@@ -1,0 +1,14 @@
+{
+	"name": "SpeedDial",
+	"title": "Speed Dial",
+	"description": "",
+	"i18n": {
+		"de": {
+			"title": "Kurzwahl",
+			"description": ""
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "ui_component"
+}
