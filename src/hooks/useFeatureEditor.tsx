@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -6,6 +6,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 
 import useMap from './useMap';
 import { GeoJSONObject, Feature } from '@turf/turf';
+import { MapEventType } from 'maplibre-gl';
 
 export interface useFeatureEditorProps {
 	/**
@@ -56,7 +57,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 	const [drawToolsReady, setDrawToolsReady] = useState(false);
 	const [feature, setFeature] = useState<GeoJSONObject[]>();
 
-	const modeChangeHandler = (e: any) => {
+	const modeChangeHandler = useCallback((e: MapEventType & { mode: keyof MapboxDraw.Modes }) => {
 		console.log('MlFeatureEditor mode change to ' + e.mode);
 		//setDrawMode(e.mode);
 		if (
@@ -65,7 +66,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 		) {
 			props.onFinish();
 		}
-	};
+	}, [props.onFinish]);
 
 	useEffect(() => {
 		if (mapHook.map && !drawToolsInitialized.current) {
@@ -99,7 +100,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 
 			setDrawToolsReady(true);
 		}
-	}, [mapHook.map, props, drawToolsInitialized]);
+	}, [mapHook.map, props, drawToolsInitialized, modeChangeHandler]);
 
 	useEffect(() => {
 		if (!mapHook.map || !drawToolsReady) return;
@@ -129,12 +130,14 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 
 	useEffect(() => {
 		if (draw.current && props.geojson?.geometry) {
-			draw.current.set({ type: 'FeatureCollection', features: [props.geojson as any] });
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			draw.current.set({ type: 'FeatureCollection', features: [props.geojson] });
 		}
 	}, [props.geojson, drawToolsReady]);
 
 	useEffect(() => {
-		if (props.mode && draw.current) {
+		if (props.mode && draw.current && draw.current.getMode() !== props.mode) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			draw.current.changeMode(props.mode);
@@ -142,7 +145,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 				draw.current.set({ type: 'FeatureCollection', features: [] });
 			}
 		}
-	}, [props.mode]);
+	}, [props.mode, mapHook.map]);
 
 	return {
 		feature,

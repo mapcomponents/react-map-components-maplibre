@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MlFeatureEditor from "../MlFeatureEditor/MlFeatureEditor";
 import * as turf from "@turf/turf";
+import { Feature, GeoJSONObject } from "@turf/turf";
 
 interface MlMeasureToolProps {
 	/**
@@ -26,14 +27,14 @@ function getUnitLabel(measureType:string | undefined) {
 
 const MlMeasureTool = (props: MlMeasureToolProps) => {
 	const [length, setLength] = useState(0);
-	const [currentFeatures, setCurrentFeatures] = useState([undefined]);
+	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
 
 	useEffect(() => {
 		if (currentFeatures[0]) {
 			setLength(
 				props.measureType === "polygon"
-					? (turf.area(currentFeatures[0]) / 1000000) * getUnitSquareMultiplier(props.unit)
-					: turf.length(currentFeatures[0], { units: props.unit })
+					? (turf.area(currentFeatures[0] as Feature) / 1000000) * getUnitSquareMultiplier(props.unit)
+					: turf.length(currentFeatures[0] as Feature, { units: props.unit })
 			);
 		}
 	}, [props.unit, currentFeatures]);
@@ -41,7 +42,7 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 	return (
 		<>
 			<MlFeatureEditor
-				onChange={(features:any) => {
+				onChange={(features) => {
 					setCurrentFeatures(features);
 				}}
 				mode={props.measureType === "polygon" ? "draw_polygon" : "draw_line_string"}

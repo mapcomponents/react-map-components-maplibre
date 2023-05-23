@@ -3,7 +3,7 @@ import useFeatureEditor, { useFeatureEditorProps } from '../../hooks/useFeatureE
 import './MlFeatureEditor.css';
 
 const MlFeatureEditor: React.FC<useFeatureEditorProps> = (props) => {
-	const { } = useFeatureEditor({
+	useFeatureEditor({
 		mode: props.mode,
 		geojson: props.geojson,
 		onChange: props.onChange,

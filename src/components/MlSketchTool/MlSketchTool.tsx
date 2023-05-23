@@ -1,16 +1,14 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import PentagonIcon from '@mui/icons-material/Pentagon';
 import { Box } from '@mui/system';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import List from '@mui/material/List';
 import EditIcon from '@mui/icons-material/Edit';
-import SettingsIcon from '@mui/icons-material/Settings';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import DeleteIcon from '@mui/icons-material/Delete';
 import * as turf from '@turf/turf';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import LayerListItem from '../../ui_components/LayerList/LayerListItem';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
