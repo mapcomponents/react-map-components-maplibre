@@ -137,10 +137,10 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 	}, [props.geojson, drawToolsReady]);
 
 	useEffect(() => {
-		if (props.mode && draw.current && draw.current.getMode() !== props.mode) {
+		if (props.mode && draw.current && draw.current?.getMode?.() !== props.mode) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			draw.current.changeMode(props.mode);
+			draw.current?.changeMode?.(props.mode);
 			if (props.mode !== 'simple_select' && props.mode !== 'direct_select') {
 				draw.current.set({ type: 'FeatureCollection', features: [] });
 			}
