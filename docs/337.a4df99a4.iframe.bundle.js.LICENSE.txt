@@ -1,3 +1,9 @@
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
 /**
  * @license React
  * react-is.production.min.js
@@ -9,7 +15,7 @@
  */
 
 /**
- * @mui/styled-engine v5.11.8
+ * @mui/styled-engine v5.12.3
  *
  * @license MIT
  * This source code is licensed under the MIT license found in the

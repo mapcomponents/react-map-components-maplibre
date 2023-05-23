@@ -1078,6 +1078,20 @@
         "__id": "uicomponents-selectstylebutton--select-style-button-example",
         "__isArgsStory": false
       }
+    },
+    "uicomponents-speeddial--example-config": {
+      "id": "uicomponents-speeddial--example-config",
+      "name": "Example Config",
+      "title": "UiComponents/SpeedDial",
+      "importPath": 62419,
+      "kind": "UiComponents/SpeedDial",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 62419,
+        "framework": "react",
+        "__id": "uicomponents-speeddial--example-config",
+        "__isArgsStory": false
+      }
     }
   }
 }
