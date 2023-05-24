@@ -25,7 +25,7 @@ const Template = (args) => {
 
 export const EditPolygon = Template.bind({});
 EditPolygon.args = {
-	mode: "custom_select",
+	mode: "simple_select",
 	geojson: {
 		type: "Feature",
 		properties: {},
@@ -46,7 +46,7 @@ EditPolygon.args = {
 
 export const EditPoint = Template.bind({});
 EditPoint.args = {
-	mode: "custom_select",
+	mode: "simple_select",
 	geojson: {
 		type: "Feature",
 		properties: {},
@@ -77,7 +77,7 @@ EditLineString.args = {
 
 export const DrawPolygon = Template.bind({});
 DrawPolygon.args = {
-	mode: "custom_polygon",
+	mode: "draw_polygon",
 };
 
 export const DrawPoint = Template.bind({});

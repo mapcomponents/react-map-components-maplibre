@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.1.78] - 2023-04-28
+
+### Added
+- cedf14b: add interval parameter to MlTemporalController
+
 ## [v0.1.77] - 2023-04-05
 
 

@@ -1,14 +1,14 @@
 {
-  "name": "MlNavigationCompass",
-  "title": "Compass",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "Kompass",
-      "description": ""
-    }
-  },
-  "tags": [],
-  "category": "",
-  "type": "component"
+	"name": "MlNavigationCompass",
+	"title": "Compass",
+	"description": "Tool to tilt, rotate and align the map.",
+	"i18n": {
+		"de": {
+			"title": "Kompass",
+			"description": "Tool zum Kippen, Drehen und Ausrichten der Karte"
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
 }

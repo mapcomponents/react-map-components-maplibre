@@ -107,6 +107,11 @@ export interface MlTemporalControllerProps {
 	 */
 	step?: number;
 	/**
+	 *  The time between each addition to the counter, expressed in milliseconds. 
+	 *  By default, 200 ms.
+	 */
+    interval?: number;
+	/**
 	 * A numeric value that sets how many steps before the feature starts to appear.
 	 * By default it is set to 5 steps.
 	 */
@@ -325,6 +330,7 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				currentVal={currentVal}
 				isPlaying={isPlaying}
 				step={props.step as number}
+				interval={props.interval as number}
 				minVal={minVal}
 				maxVal={maxVal}
 				returnCurrent={setCurrentVal}
@@ -349,6 +355,7 @@ MlTemporalController.defaultProps = {
 	ownLayer: true,
 	type: 'circle',
 	step: 1,
+	interval: 200,
 	fadeIn: 5,
 	fadeOut: 5,
 	labelFadeIn: 5,

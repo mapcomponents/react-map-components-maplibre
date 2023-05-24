@@ -1,14 +1,14 @@
 {
-  "name": "MlTransitionGeoJsonLayer",
-  "title": "Transition GeoJSON layer",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "Animierte GeoJSON Ebene",
-      "description": ""
-    }
-  },
-  "tags": [],
-  "category": "",
-  "type": "component"
+	"name": "MlTransitionGeoJsonLayer",
+	"title": "Transition GeoJSON layer",
+	"description": "Representation of an animated GeoJSON layer on a map.",
+	"i18n": {
+		"de": {
+			"title": "Animierte GeoJSON Ebene",
+			"description": "Darstellung einer animierte GeoJSON-Ebene auf einer Karte."
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
 }

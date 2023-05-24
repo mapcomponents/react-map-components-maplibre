@@ -1,14 +1,14 @@
 {
-  "name": "MlMeasureTool",
-  "title": "Measure tool",
-  "description": "",
-  "i18n": {
-    "de": {
-      "title": "Messwerkzeug",
-      "description": ""
-    }
-  },
-  "tags": [],
-  "category": "",
-  "type": "component"
+	"name": "MlMeasureTool",
+	"title": "Measure tool",
+	"description": "A tool for measuring distances and areas.",
+	"i18n": {
+		"de": {
+			"title": "Messwerkzeug",
+			"description": "Ein Werkzeug zum Messen von Strecken und Flächen."
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
 }
