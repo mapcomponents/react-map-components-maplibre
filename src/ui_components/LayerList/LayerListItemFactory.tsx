@@ -28,7 +28,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const orderLayers = useMemo(() => {
 		const layerIds = [
 			'order-background',
-			...[...layerContext.layers].reverse().map((_el, idx) => 'content_order_' + idx),
+			...[...layerContext.layers].map((_el, idx) => 'content_order_' + idx),
 			'order-labels',
 		];
 
@@ -69,7 +69,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					name="Labels"
 				/>
 			)}
-			{[...layers].reverse().map((layer: LayerConfig, idx: number) => {
+			{[...layers].map((layer: LayerConfig, idx: number) => {
 				if (!layer?.id) return null;
 
 				switch (layer.type) {

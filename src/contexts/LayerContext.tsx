@@ -91,6 +91,9 @@ function LayerContextProvider(props: LayerContextProps) {
 	};
 
 	useEffect(() => {
+		console.log('layers', layers);
+
+
 		if (layers.filter((el) => !el?.id).length) {
 			const _layers = [...layers];
 			_layers.forEach((el) => {
@@ -110,9 +113,9 @@ function LayerContextProvider(props: LayerContextProps) {
 				const newLayers = [...layers];
 				const element = targetLayer[0];
 				const idx = layers.indexOf(element);
-				if (idx - 1 >= 0) {
+				if (idx + 1 <= layers.length - 1) {
 					newLayers.splice(idx, 1);
-					newLayers.splice(idx - 1, 0, element);
+					newLayers.splice(idx + 1, 0, element);
 					setLayers(newLayers);
 				}
 			}
@@ -128,9 +131,9 @@ function LayerContextProvider(props: LayerContextProps) {
 				const newLayers = JSON.parse(JSON.stringify(layers));
 				const element = targetLayer[0];
 				const idx = layers.indexOf(element);
-				if (idx + 1 <= layers.length - 1) {
+				if (idx - 1 >= 0) {
 					newLayers.splice(idx, 1);
-					newLayers.splice(idx + 1, 0, element);
+					newLayers.splice(idx - 1, 0, element);
 					setLayers(newLayers);
 				}
 			}

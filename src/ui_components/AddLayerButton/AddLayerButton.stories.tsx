@@ -132,7 +132,7 @@ const StyleJsonTemplate = () => {
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerListItemFactory'}>
 				<AddLayerButton
-					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
+					onComplete={(config) => { layerContext.setLayers((current) => { console.log([config, ...current]); return [config, ...current]; }) }}
 				/>
 				<SelectStyleButton sx={{ marginLeft: '5px' }} />
 				<LayerList>
