@@ -659,6 +659,20 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlterrainlayer--example-config": {
+      "id": "mapcomponents-mlterrainlayer--example-config",
+      "name": "Example Config",
+      "title": "MapComponents/MlTerrainLayer",
+      "importPath": 77517,
+      "kind": "MapComponents/MlTerrainLayer",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 77517,
+        "framework": "react",
+        "__id": "mapcomponents-mlterrainlayer--example-config",
+        "__isArgsStory": false
+      }
+    },
     "mapcomponents-mlthreejslayer--example-config": {
       "id": "mapcomponents-mlthreejslayer--example-config",
       "name": "Example Config",
