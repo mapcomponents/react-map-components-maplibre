@@ -149,7 +149,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									{...layer.config}
 									key={layer.id}
 									mapId={props?.mapId}
-									insertBeforeLayer={'order-content_' + layer.id}
+									insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
 									onConfigChange={(layerConfig) => {
 										setLayers?.((current: LayerConfig[]) => {
 											const _layers = [...current];
@@ -175,6 +175,44 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										});
 									}}
 									showDeleteButton={true}
+									buttons={
+										<>
+											<IconButton
+												disabled={idx === layers.length - 1}
+												onClick={() => {
+													layerContext.moveDown(layer.id || '');
+												}}
+
+												sx={{
+													padding: '4px',
+													marginTop: '-3px',
+													background: 'none',
+													"&:hover": {
+														background: "none"
+													}
+												}}
+											>
+												<ArrowCircleDownIcon />
+											</IconButton>
+											<IconButton
+												disabled={idx === 0}
+												onClick={() => {
+													layerContext.moveUp(layer.id || '');
+												}}
+
+												sx={{
+													padding: '4px',
+													marginTop: '-3px',
+													background: 'none',
+													"&:hover": {
+														background: "none"
+													}
+												}}
+											>
+												<ArrowCircleUpIcon />
+											</IconButton>
+										</>
+									}
 								/>
 							</>
 						);
