@@ -21,6 +21,7 @@ type Props = {
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
 	listItemSx?: SxProps;
+	buttons?: JSX.Element;
 };
 
 function LayerListItem({
@@ -148,9 +149,10 @@ function LayerListItem({
 					secondaryAction={
 						configurable && Object.keys(paintProps)?.length > 0 ? (
 							<>
+								{props?.buttons}
 								<IconButton
 									edge={props.showDeleteButton ? false : 'end'}
-									aria-label="visibility"
+									aria-label="settings"
 									onClick={() => {
 										setPaintPropsFormVisible((current) => {
 											return !current;
@@ -214,7 +216,7 @@ function LayerListItem({
 							}}
 						/>
 					</ListItemIcon>
-					<ListItemText variant="layerlist" primary={name} secondary={description} primaryTypographyProps={{overflow:'hidden'}} />
+					<ListItemText variant="layerlist" primary={name} secondary={description} primaryTypographyProps={{ overflow: 'hidden' }} />
 				</ListItem>
 			)}
 			{_layerComponent}
@@ -250,6 +252,7 @@ LayerListItem.defaultProps = {
 	type: 'layer',
 	visible: true,
 	showDeleteButton: false,
+	buttons: <></>,
 };
 
 export default LayerListItem;

@@ -1,5 +1,5 @@
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
 import config from '../omt_styles/config';
 import { MlWmsLoaderProps } from '../components/MlWmsLoader/MlWmsLoader';
@@ -50,6 +50,8 @@ export interface LayerContextType {
 	vtLayerConfig: Partial<MlVectorTileLayerProps>;
 	setTileUrl: (url: string) => void;
 	tileUrl: string;
+	moveUp: (layerId: string) => void;
+	moveDown: (layerId: string) => void;
 }
 
 const LayerContext = React.createContext({} as LayerContextType);
@@ -89,6 +91,9 @@ function LayerContextProvider(props: LayerContextProps) {
 	};
 
 	useEffect(() => {
+		console.log('layers', layers);
+
+
 		if (layers.filter((el) => !el?.id).length) {
 			const _layers = [...layers];
 			_layers.forEach((el) => {
@@ -99,6 +104,42 @@ function LayerContextProvider(props: LayerContextProps) {
 			setLayers(_layers);
 		}
 	}, [layers]);
+
+	const moveDown = useCallback(
+		(layerId: string) => {
+			const targetLayer = layers?.filter?.((el) => el.id === layerId);
+
+			if (targetLayer.length > 0) {
+				const newLayers = [...layers];
+				const element = targetLayer[0];
+				const idx = layers.indexOf(element);
+				if (idx + 1 <= layers.length - 1) {
+					newLayers.splice(idx, 1);
+					newLayers.splice(idx + 1, 0, element);
+					setLayers(newLayers);
+				}
+			}
+		},
+		[layers]
+	);
+
+	const moveUp = useCallback(
+		(layerId: string) => {
+			const targetLayer = layers?.filter?.((el) => el.id === layerId);
+
+			if (targetLayer.length > 0) {
+				const newLayers = JSON.parse(JSON.stringify(layers));
+				const element = targetLayer[0];
+				const idx = layers.indexOf(element);
+				if (idx - 1 >= 0) {
+					newLayers.splice(idx, 1);
+					newLayers.splice(idx - 1, 0, element);
+					setLayers(newLayers);
+				}
+			}
+		},
+		[layers]
+	);
 
 	const value = {
 		layers,
@@ -111,6 +152,8 @@ function LayerContextProvider(props: LayerContextProps) {
 		vtLayerConfig,
 		tileUrl,
 		setTileUrl,
+		moveUp,
+		moveDown,
 	} as LayerContextType;
 
 	return <LayerContext.Provider value={value}>{props.children}</LayerContext.Provider>;

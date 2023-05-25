@@ -15,19 +15,18 @@ export interface MlOrderLayersProps {
  *
  */
 const MlOrderLayers = (props: MlOrderLayersProps) => {
-
 	return (
 		<>
 			{props?.layerIds?.map((layer, idx) => (
 				<MlLayer
-					layerId={'order-' + layer}
+					layerId={layer}
 					options={{
 						display: 'none',
 					}}
 					key={layer}
 					{...(idx > 0
 						? {
-								insertBeforeLayer: 'order-' + props?.layerIds?.[idx - 1],
+								insertBeforeLayer: props?.layerIds?.[idx - 1],
 						  }
 						: { insertBeforeLayer: props.insertBeforeLayer })}
 				/>

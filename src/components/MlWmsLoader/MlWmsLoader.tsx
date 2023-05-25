@@ -71,6 +71,7 @@ export interface MlWmsLoaderProps {
 	onConfigChange?: (config: WmsConfig | false) => void;
 	setLayers?: (layers: LayerType[]) => void;
 	showDeleteButton?: boolean;
+	buttons?: JSX.Element;
 }
 
 export type LayerType = {
@@ -335,6 +336,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 					<ListItem
 						secondaryAction={
 							<>
+								{props.buttons}
 								{props.featureInfoEnabled && (
 									<IconButton
 										sx={{
