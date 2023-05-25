@@ -101,7 +101,7 @@ function LayerContextProvider(props: LayerContextProps) {
 		}
 	}, [layers]);
 
-	const moveUp = useCallback(
+	const moveDown = useCallback(
 		(layerId: string) => {
 			const filteredLayers = layers?.filter?.((el) => el.id === layerId);
 
@@ -112,6 +112,26 @@ function LayerContextProvider(props: LayerContextProps) {
 				if (idx - 1 >= 0) {
 					newLayers.splice(idx, 1);
 					newLayers.splice(idx - 1, 0, element);
+					setLayers(newLayers.map((el) => ({...el, insertBeforeLayer: ''})));
+					setLayers(newLayers);
+				}
+			}
+		},
+		[layers]
+	);
+
+	const moveUp = useCallback(
+		(layerId: string) => {
+			const filteredLayers = layers?.filter?.((el) => el.id === layerId);
+
+			if (filteredLayers.length > 0) {
+				const newLayers = JSON.parse(JSON.stringify(layers));
+				const element = filteredLayers[0];
+				const idx = layers.indexOf(element);
+				if (idx + 1 <= layers.length - 1) {
+					newLayers.splice(idx, 1);
+					newLayers.splice(idx + 1, 0, element);
+					setLayers(newLayers.map((el) => ({...el, insertBeforeLayer: ''})));
 					setLayers(newLayers);
 				}
 			}
@@ -131,6 +151,7 @@ function LayerContextProvider(props: LayerContextProps) {
 		tileUrl,
 		setTileUrl,
 		moveUp,
+		moveDown,
 	} as LayerContextType;
 
 	return <LayerContext.Provider value={value}>{props.children}</LayerContext.Provider>;

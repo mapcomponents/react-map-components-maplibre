@@ -25,7 +25,8 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const orderLayers = useMemo(() => {
 		const layerIds = [
 			'background',
-			...layerContext.layers.map((el) => 'content_' + el.id),
+			...[...layerContext.layers].reverse().map((el, idx) => 'content_order_' + idx),
+			//...layerContext.layers.map((el) => 'content_' + el.id),
 			'labels',
 		];
 
@@ -45,28 +46,28 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 	return (
 		<>
-			<MlOrderLayers layerIds={orderLayers} />
-			{layerContext?.backgroundLayers?.length > 0 && (
+			<MlOrderLayers layerIds={orderLayers} insertBeforeLayer='_background' />
+			{layerContext?.symbolLayers?.length > 0 && (
 				<LayerListItem
-					key={'background_geometry'}
+					key={'background_labels'}
 					layerComponent={
 						<MlVectorTileLayer
 							{...layerContext.vtLayerConfig}
-							layers={layerContext.backgroundLayers}
+							layers={layerContext.symbolLayers}
 							mapId={props?.mapId}
-							insertBeforeLayer={'order-background'}
+							insertBeforeLayer={'order-labels'}
 						/>
 					}
-					setLayerState={(state: MlVectorTileLayerProps) => {
-						layerContext.setBackgroundLayers(state?.layers);
-					}}
+					setLayerState={(state: MlVectorTileLayerProps) =>
+						layerContext.setSymbolLayers(state?.layers)
+					}
 					visible={true}
 					configurable={true}
 					type="layer"
-					name="Background"
+					name="Labels"
 				/>
 			)}
-			{layers.map((layer: LayerConfig, idx: number) => {
+			{[...layers].reverse().map((layer: LayerConfig, idx: number) => {
 				if (!layer?.id) return null;
 
 				switch (layer.type) {
@@ -80,11 +81,19 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										<MlGeoJsonLayer
 											{...layer.config}
 											mapId={props?.mapId}
-											insertBeforeLayer={'order-content_' + layer.id}
+											layerId={layer.id}
+											insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
 										/>
 									}
 									buttons={
 										<>
+											<Button
+												onClick={() => {
+													layerContext.moveDown(layer.id || '');
+												}}
+											>
+												down
+											</Button>
 											<Button
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');
@@ -151,24 +160,24 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 						return null;
 				}
 			})}
-			{layerContext?.symbolLayers?.length > 0 && (
+			{layerContext?.backgroundLayers?.length > 0 && (
 				<LayerListItem
-					key={'background_labels'}
+					key={'background_geometry'}
 					layerComponent={
 						<MlVectorTileLayer
 							{...layerContext.vtLayerConfig}
-							layers={layerContext.symbolLayers}
+							layers={layerContext.backgroundLayers}
 							mapId={props?.mapId}
-							insertBeforeLayer={'order-labels'}
+							insertBeforeLayer={'order-background'}
 						/>
 					}
-					setLayerState={(state: MlVectorTileLayerProps) =>
-						layerContext.setSymbolLayers(state?.layers)
-					}
+					setLayerState={(state: MlVectorTileLayerProps) => {
+						layerContext.setBackgroundLayers(state?.layers);
+					}}
 					visible={true}
 					configurable={true}
 					type="layer"
-					name="Labels"
+					name="Background"
 				/>
 			)}
 		</>

@@ -13,6 +13,7 @@ import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
 import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import GruvboxStyle from '../../omt_styles/gruvbox';
+import useMapState from '../../hooks/useMapState';
 
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
@@ -75,6 +76,17 @@ FolderExample.args = {};
 const StyleJsonTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 
+	const mapState = useMapState({
+		mapId: 'map_1',
+		watch: {
+			viewport: false,
+			layers: true,
+			sources: false,
+		},
+		filter: {
+			includeBaseLayers: false,
+		},
+	});
 	const layerContext = useContext(LayerContext);
 
 	useEffect(() => {
@@ -138,6 +150,12 @@ const StyleJsonTemplate = () => {
 				<LayerList>
 					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} />
 				</LayerList>
+
+				<ul>
+					{[...mapState.layers].reverse().map((layer) => (
+						<>{ <li key={layer.id}><b>{layer.type}</b> <span style={{fontSize:'.6em'}}>{layer.id}</span></li> }</>
+					))}
+				</ul>
 			</Sidebar>
 		</>
 	);
