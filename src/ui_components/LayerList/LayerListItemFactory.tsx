@@ -10,7 +10,10 @@ import { MlWmsLoaderProps } from '../../components/MlWmsLoader/MlWmsLoader';
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
+
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 
 export interface LayerListItemFactoryProps {
 	mapId?: string;
@@ -24,10 +27,9 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 	const orderLayers = useMemo(() => {
 		const layerIds = [
-			'background',
+			'order-background',
 			...[...layerContext.layers].reverse().map((el, idx) => 'content_order_' + idx),
-			//...layerContext.layers.map((el) => 'content_' + el.id),
-			'labels',
+			'order-labels',
 		];
 
 		return layerIds.reverse();
@@ -87,20 +89,40 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									}
 									buttons={
 										<>
-											<Button
+											<IconButton
+												disabled={idx === layers.length - 1}
 												onClick={() => {
 													layerContext.moveDown(layer.id || '');
 												}}
+
+												sx={{
+													padding: '4px',
+													marginTop: '-3px',
+													background: 'none',
+													"&:hover": {
+														background: "none"
+													}
+												}}
 											>
-												down
-											</Button>
-											<Button
+												<ArrowCircleDownIcon />
+											</IconButton>
+											<IconButton
+												disabled={idx === 0}
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');
 												}}
+
+												sx={{
+													padding: '4px',
+													marginTop: '-3px',
+													background: 'none',
+													"&:hover": {
+														background: "none"
+													}
+												}}
 											>
-												up
-											</Button>
+												<ArrowCircleUpIcon />
+											</IconButton>
 										</>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>

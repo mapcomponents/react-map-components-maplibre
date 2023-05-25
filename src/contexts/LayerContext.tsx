@@ -51,6 +51,7 @@ export interface LayerContextType {
 	setTileUrl: (url: string) => void;
 	tileUrl: string;
 	moveUp: (layerId: string) => void;
+	moveDown: (layerId: string) => void;
 }
 
 const LayerContext = React.createContext({} as LayerContextType);
@@ -103,16 +104,15 @@ function LayerContextProvider(props: LayerContextProps) {
 
 	const moveDown = useCallback(
 		(layerId: string) => {
-			const filteredLayers = layers?.filter?.((el) => el.id === layerId);
+			const targetLayer = layers?.filter?.((el) => el.id === layerId);
 
-			if (filteredLayers.length > 0) {
+			if (targetLayer.length > 0) {
 				const newLayers = [...layers];
-				const element = filteredLayers[0];
+				const element = targetLayer[0];
 				const idx = layers.indexOf(element);
 				if (idx - 1 >= 0) {
 					newLayers.splice(idx, 1);
 					newLayers.splice(idx - 1, 0, element);
-					setLayers(newLayers.map((el) => ({...el, insertBeforeLayer: ''})));
 					setLayers(newLayers);
 				}
 			}
@@ -122,16 +122,15 @@ function LayerContextProvider(props: LayerContextProps) {
 
 	const moveUp = useCallback(
 		(layerId: string) => {
-			const filteredLayers = layers?.filter?.((el) => el.id === layerId);
+			const targetLayer = layers?.filter?.((el) => el.id === layerId);
 
-			if (filteredLayers.length > 0) {
+			if (targetLayer.length > 0) {
 				const newLayers = JSON.parse(JSON.stringify(layers));
-				const element = filteredLayers[0];
+				const element = targetLayer[0];
 				const idx = layers.indexOf(element);
 				if (idx + 1 <= layers.length - 1) {
 					newLayers.splice(idx, 1);
 					newLayers.splice(idx + 1, 0, element);
-					setLayers(newLayers.map((el) => ({...el, insertBeforeLayer: ''})));
 					setLayers(newLayers);
 				}
 			}

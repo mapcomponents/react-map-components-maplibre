@@ -1,4 +1,4 @@
-import { Button, Checkbox, IconButton, ListItem, ListItemIcon, ListItemText, SxProps } from '@mui/material';
+import { Checkbox, IconButton, ListItem, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import React, { useMemo, useRef, useState } from 'react';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
@@ -149,9 +149,10 @@ function LayerListItem({
 					secondaryAction={
 						configurable && Object.keys(paintProps)?.length > 0 ? (
 							<>
+								{props?.buttons}
 								<IconButton
 									edge={props.showDeleteButton ? false : 'end'}
-									aria-label="visibility"
+									aria-label="settings"
 									onClick={() => {
 										setPaintPropsFormVisible((current) => {
 											return !current;
@@ -165,7 +166,6 @@ function LayerListItem({
 								>
 									<TuneIcon />
 								</IconButton>
-								{props?.buttons}
 								{props.showDeleteButton && (
 									<>
 										<IconButton
@@ -216,7 +216,7 @@ function LayerListItem({
 							}}
 						/>
 					</ListItemIcon>
-					<ListItemText variant="layerlist" primary={name} secondary={description} primaryTypographyProps={{overflow:'hidden'}} />
+					<ListItemText variant="layerlist" primary={name} secondary={description} primaryTypographyProps={{ overflow: 'hidden' }} />
 				</ListItem>
 			)}
 			{_layerComponent}
