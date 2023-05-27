@@ -212,7 +212,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	};
 
 	const getFeatureInfo = useCallback(
-		(ev: MapMouseEvent & Object) => {
+		(ev: MapMouseEvent & unknown) => {
 			if (!mapHook.map) return;
 			resetFeatureInfo();
 			const unprojected = mapHook.map.unproject([ev.point.x, ev.point.y]);
