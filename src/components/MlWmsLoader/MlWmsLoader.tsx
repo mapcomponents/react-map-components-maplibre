@@ -18,6 +18,8 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
+import * as turf from '@turf/turf';
+
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
 	const lng = lnglat.lng;
@@ -33,12 +35,29 @@ const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, deci
 };
 
 export interface WmsConfig {
-	//capabilities?: useWmsReturnType['capabilities'];
+	/**
+	 * The URL to use for the getFeatureInfo request
+	 */
 	getFeatureInfoUrl: useWmsReturnType['getFeatureInfoUrl'];
+	/**
+	 * The URL of the WMS service
+	 */
 	wmsUrl: useWmsReturnType['wmsUrl'];
+	/**
+	 * The layers to display on the map
+	 */
 	layers: LayerType[];
+	/**
+	 * If true, the WMS layer is visible
+	 */
 	visible: boolean;
+	/**
+	 * If true, the WMS layer is open
+	 */
 	open: boolean;
+	/**
+	 * The name of the WMS layer
+	 */
 	name?: string;
 }
 
@@ -60,17 +79,45 @@ export interface MlWmsLoaderProps {
 	 * URL parameters that will be added when requesting WMS capabilities
 	 */
 	wmsUrlParameters?: { [key: string]: string };
+	/**
+	 * If true, zooms to the extent of the WMS layer after loading the getCapabilities response
+	 */
 	zoomToExtent?: boolean;
-	lngLat?: LngLat;
-	idPrefix?: string;
+	/**
+	 * The name of the ListItem element representing the WmsLoader
+	 */
 	name?: string;
+	/**
+	 * If true, enables the feature info functionality
+	 */
 	featureInfoEnabled?: boolean;
+	/**
+	 * If true, the feature info functionality is active
+	 */
 	featureInfoActive?: boolean;
+	/**
+	 * A function to set the feature info active state
+	 */
 	setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
+	/**
+	 * The WMS configuration object
+	 */
 	config?: WmsConfig;
+	/**
+	 * A function to handle changes to the WMS configuration
+	 */
 	onConfigChange?: (config: WmsConfig | false) => void;
+	/**
+	 * A function to update a LayerType config array that is passed to this component at props.config.layers
+	 */
 	setLayers?: (layers: LayerType[]) => void;
+	/**
+	 * If true, shows the delete button for the WMSLoader
+	 */
 	showDeleteButton?: boolean;
+	/**
+	 * Custom buttons to display for the WMSLoader
+	 */
 	buttons?: JSX.Element;
 }
 
@@ -165,13 +212,15 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	};
 
 	const getFeatureInfo = useCallback(
-		// eslint-disable-next-line @typescript-eslint/ban-types
-		(ev: MapMouseEvent & Object) => {
+		(ev: MapMouseEvent & unknown) => {
 			if (!mapHook.map) return;
 			resetFeatureInfo();
-			const _bounds = mapHook.map.getBounds();
-			const _sw = lngLatToMeters(_bounds._sw);
-			const _ne = lngLatToMeters(_bounds._ne);
+			const unprojected = mapHook.map.unproject([ev.point.x, ev.point.y]);
+			const point = turf.point([unprojected.lng, unprojected.lat]);
+            const buffered = turf.buffer(point, 50, {units: 'meters'});
+			const _bbox = turf.bbox(buffered);
+			const _sw = lngLatToMeters({lng:_bbox[0],lat:_bbox[1]} as LngLat);
+			const _ne = lngLatToMeters({lng:_bbox[2],lat:_bbox[3]} as LngLat);
 			const bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
 			const _getFeatureInfoUrlParams = {
 				REQUEST: 'GetFeatureInfo',
@@ -189,15 +238,15 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				QUERY_LAYERS: layers
 					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
-				WIDTH: mapHook?.map._container.clientWidth,
-				HEIGHT: mapHook?.map._container.clientHeight,
+				WIDTH: 100,
+				HEIGHT: 100,
 				srs: 'EPSG:3857',
 				CRS: 'EPSG:3857',
 				version: '1.3.0',
-				X: ev.point.x,
-				Y: ev.point.y,
-				I: ev.point.x,
-				J: ev.point.y,
+				X: 50,
+				Y: 50,
+				I: 50,
+				J: 50,
 				buffer: '50',
 			};
 
