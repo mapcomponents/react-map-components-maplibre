@@ -33,13 +33,30 @@ const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, deci
 };
 
 export interface WmsConfig {
-	//capabilities?: useWmsReturnType['capabilities'];
-	getFeatureInfoUrl: useWmsReturnType['getFeatureInfoUrl'];
-	wmsUrl: useWmsReturnType['wmsUrl'];
-	layers: LayerType[];
-	visible: boolean;
-	open: boolean;
-	name?: string;
+    /**
+     * The URL to use for the getFeatureInfo request
+     */
+    getFeatureInfoUrl: useWmsReturnType['getFeatureInfoUrl'];
+    /**
+     * The URL of the WMS service
+     */
+    wmsUrl: useWmsReturnType['wmsUrl'];
+    /**
+     * The layers to display on the map
+     */
+    layers: LayerType[];
+    /**
+     * If true, the WMS layer is visible
+     */
+    visible: boolean;
+    /**
+     * If true, the WMS layer is open
+     */
+    open: boolean;
+    /**
+     * The name of the WMS layer
+     */
+    name?: string;
 }
 
 export interface MlWmsLoaderProps {
@@ -57,21 +74,49 @@ export interface MlWmsLoaderProps {
 	 */
 	urlParameters?: useWmsProps['urlParameters'];
 	/**
-	 * URL parameters that will be added when requesting WMS capabilities
-	 */
-	wmsUrlParameters?: { [key: string]: string };
-	zoomToExtent?: boolean;
-	lngLat?: LngLat;
-	idPrefix?: string;
-	name?: string;
-	featureInfoEnabled?: boolean;
-	featureInfoActive?: boolean;
-	setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
-	config?: WmsConfig;
-	onConfigChange?: (config: WmsConfig | false) => void;
-	setLayers?: (layers: LayerType[]) => void;
-	showDeleteButton?: boolean;
-	buttons?: JSX.Element;
+     * URL parameters that will be added when requesting WMS capabilities
+     */
+    wmsUrlParameters?: { [key: string]: string };
+    /**
+     * If true, zooms to the extent of the WMS layer after loading the getCapabilities response
+     */
+    zoomToExtent?: boolean;
+    /**
+     * The name of the ListItem element representing the WmsLoader
+     */
+    name?: string;
+    /**
+     * If true, enables the feature info functionality
+     */
+    featureInfoEnabled?: boolean;
+    /**
+     * If true, the feature info functionality is active
+     */
+    featureInfoActive?: boolean;
+    /**
+     * A function to set the feature info active state
+     */
+    setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
+    /**
+     * The WMS configuration object
+     */
+    config?: WmsConfig;
+    /**
+     * A function to handle changes to the WMS configuration
+     */
+    onConfigChange?: (config: WmsConfig | false) => void;
+    /**
+     * A function to update a LayerType config array that is passed to this component at props.config.layers
+     */
+    setLayers?: (layers: LayerType[]) => void;
+    /**
+     * If true, shows the delete button for the WMSLoader
+     */
+    showDeleteButton?: boolean;
+    /**
+     * Custom buttons to display for the WMSLoader
+     */
+    buttons?: JSX.Element;
 }
 
 export type LayerType = {
@@ -165,7 +210,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	};
 
 	const getFeatureInfo = useCallback(
-		// eslint-disable-next-line @typescript-eslint/ban-types
 		(ev: MapMouseEvent & Object) => {
 			if (!mapHook.map) return;
 			resetFeatureInfo();
