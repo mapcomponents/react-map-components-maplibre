@@ -9,7 +9,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import { LngLat, LngLatLike, MapMouseEvent, MercatorCoordinate } from 'maplibre-gl';
+import { LngLat, MapMouseEvent } from 'maplibre-gl';
 import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
 import useMap from '../../hooks/useMap';
@@ -216,12 +216,12 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			if (!mapHook.map) return;
 			resetFeatureInfo();
 			const unprojected = mapHook.map.unproject([ev.point.x, ev.point.y]);
-			var point = turf.point([unprojected.lng, unprojected.lat]);
-            var buffered = turf.buffer(point, 50, {units: 'meters'});
-			var bbox = turf.bbox(buffered);
-			const _sw = lngLatToMeters({lng:bbox[0],lat:bbox[1]} as LngLat);
-			const _ne = lngLatToMeters({lng:bbox[2],lat:bbox[3]} as LngLat);
-			bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
+			const point = turf.point([unprojected.lng, unprojected.lat]);
+            const buffered = turf.buffer(point, 50, {units: 'meters'});
+			const _bbox = turf.bbox(buffered);
+			const _sw = lngLatToMeters({lng:_bbox[0],lat:_bbox[1]} as LngLat);
+			const _ne = lngLatToMeters({lng:_bbox[2],lat:_bbox[3]} as LngLat);
+			const bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
 			const _getFeatureInfoUrlParams = {
 				REQUEST: 'GetFeatureInfo',
 
