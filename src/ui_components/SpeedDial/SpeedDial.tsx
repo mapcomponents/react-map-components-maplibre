@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import Box from '@mui/material/Box';
 import { default as MuiSpeedDial, OpenReason } from '@mui/material/SpeedDial';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -52,10 +52,11 @@ const SpeedDial = (props: SpeedDialProps) => {
 			}}
 		>
 			<MuiSpeedDial
+				className="dialButton"
 				ariaLabel="SpeedDial tooltip example"
 				sx={{ position: 'absolute', bottom: 16, right: 16 }}
 				icon={open ? <CloseIcon /> : <MoreVertIcon />}
-				onClick={open ? handleClose : handleOpen}
+				onClick={open ? (handleClose as MouseEventHandler) : (handleOpen as any)}
 				onOpen={handleOpen}
 				open={open}
 			>
