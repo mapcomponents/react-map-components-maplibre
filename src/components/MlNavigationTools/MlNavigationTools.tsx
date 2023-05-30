@@ -5,12 +5,16 @@ import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Box from "@mui/material/Box";
 import { SxProps } from "@mui/material";
-
-import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
-import MlFollowGps from "../MlFollowGps/MlFollowGps";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import useMap from "../../hooks/useMap";
-import MlCenterPosition from "../MlCenterPosition/MlCenterPosition";
+import Divider from '@mui/material/Divider';
+import MlNavigationCompass from '../MlNavigationCompass/MlNavigationCompass';
+import MlFollowGps from '../MlFollowGps/MlFollowGps';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import useMap from '../../hooks/useMap';
+import MlCenterPosition from '../MlCenterPosition/MlCenterPosition';
+import zIndex from '@mui/material/styles/zIndex';
+import { color } from '@storybook/theming';
+import MapcomponentsTheme from '../../ui_components/MapcomponentsTheme';
+import { useTheme } from '@mui/material';
 
 interface MlNavigationToolsProps {
 	/**
@@ -64,6 +68,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 
 	const [pitch, setPitch] = useState(0);
 	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const theme = useTheme();
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -130,7 +135,11 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				}}
 			/>
 			{props.show3DButton && (
-				<Button variant="navtools" onClick={adjustPitch}>
+				<Button
+					variant="navtools"
+					onClick={adjustPitch}
+					sx={{ color: theme.palette.secondary.main }}
+				>
 					{pitch ? '2D' : '3D'}
 				</Button>
 			)}
@@ -141,17 +150,22 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				sx={{
 					width: '50px',
 					border: 'none',
-					Button: { minWidth: '20px !important'},
+					Button: { minWidth: '20px !important' },
 					'Button:hover': { border: 'none' },
 				}}
 			>
 				{props.showZoomButtons && (
 					<>
 						<Button variant="navtools" onClick={zoomIn}>
-							<ControlPointIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+							<ControlPointIcon
+								sx={{ fontSize: { xs: '1.4em', md: '1em' }, color: theme.palette.secondary.main }}
+							/>
 						</Button>
+						<Divider color="#D3DCE1" sx={{ zIndex: 500, width: mediaIsMobile ? '50px' : '32px' }} />
 						<Button variant="navtools" onClick={zoomOut}>
-							<RemoveCircleOutlineIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+							<RemoveCircleOutlineIcon
+								sx={{ fontSize: { xs: '1.4em', md: '1em' }, color: theme.palette.secondary.main }}
+							/>
 						</Button>
 					</>
 				)}
