@@ -15,7 +15,7 @@ describe('MlTerrainLayer Tests', () => {
 
 		// Access the map instance from the window object
 		cy.window().then((win) => {
-			const { _map } = win as { _map: any };
+			const { _map }: any = win;
 			expect(_map?.style?.sourceCaches?.terrain).to.not.be.undefined;
 			expect(_map?.style?._layers?.hills).to.not.be.undefined;
 			expect(_map?.style?.terrain).to.not.be.null;
@@ -27,7 +27,7 @@ describe('MlTerrainLayer Tests', () => {
 
 		// Access the map instance from the window object
 		cy.window().then((win) => {
-			const { _map } = win as { _map: any };
+			const { _map }: any = win;
 			expect(_map?.style?.sourceCaches?.terrain).to.be.undefined;
 			expect(_map?.style?._layers?.hills).to.be.undefined;
 			expect(_map?.style?.terrain).to.be.null;
