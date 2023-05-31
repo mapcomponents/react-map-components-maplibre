@@ -9,7 +9,7 @@ declare module '@mui/material/Button' {
 }
 declare module '@mui/material' {
 	export interface ListItemTextProps {
-		variant?: "layerlist";
+		variant?: 'layerlist';
 	}
 }
 
@@ -53,7 +53,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					background: {
 						default: '#fff',
 						paper: '#fdfdfd',
-						icon: '#bdbdbd',
+						icon: '#fff',
 					},
 					text: {
 						primary: '#1A171B',
@@ -125,7 +125,7 @@ const getTheme = (mode: 'light' | 'dark') => {
 							marginTop: '4px',
 							':hover': {
 								color: theme.palette.primary.main,
-								backgroundColor: theme.palette.background.icon,
+								backgroundColor: '#f5f5f5',
 							},
 							color: theme.palette.text.secondary,
 						},
