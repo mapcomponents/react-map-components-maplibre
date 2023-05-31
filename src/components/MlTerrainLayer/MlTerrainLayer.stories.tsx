@@ -43,9 +43,7 @@ const Template = () => {
 				<>
 					<MlTerrainLayer
 						sourceOptions={{
-							tiles: [
-								'https://wms.wheregroup.com/dem_tileserver/index.php/raster_dem/{z}/{x}/{y}.webp',
-							],
+							tiles: ['https://wms.wheregroup.com/dem_tileserver/raster_dem/{z}/{x}/{y}.webp'],
 						}}
 					/>
 				</>
