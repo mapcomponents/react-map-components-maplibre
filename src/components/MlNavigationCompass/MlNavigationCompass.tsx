@@ -12,12 +12,10 @@ import useMap from "../../hooks/useMap";
 const NeedleButton = styled.div`
 	display: flex;
 	align-items: center;
-	zIndex: 1005;
+	zIndex: 1010;
 	position: absolute;
 
-	&:hover {
-		cursor: pointer;
-	}
+	
 	path {
 		filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2));
 	}
@@ -58,8 +56,6 @@ interface MlNavigationCompassProps {
 	style?: any;
 	backgroundStyle?: any;
 	needleStyle?: any;
-	rotateRightStyle?: any;
-	rotateLeftStyle?: any;
 }
 /**
  * Navigation component that displays a compass component which indicates the current oriantation of the map it is registered for and offers controls to turn the bearing 90° left/right or reset north to point up.
@@ -115,6 +111,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						alignItems: "center",
 						transform: "scale(0.2) translateX(-448px) translateY(-448px)",
 						...props.backgroundStyle,
+				
 					})}
 				>
 					
@@ -129,10 +126,12 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 								transform: "rotate(" + (bearing>0?"-"+bearing:-1*bearing) + "deg)",
 							}}
 						>
-							<CompassNeedle />
+							<CompassNeedle  />
 						</NeedleContainer>
 					</NeedleButton>
-					<CompassBackground style={{transform: "scale(4.6)", zIndex: 1000}} />
+					<CompassBackground style={{transform: "scale(4.6)", zIndex: 1000, cursor:"pointer"}} onClick={() => {
+							mapHook.map?.map.setBearing(0);
+						}}/>
 				</div>
 			</div>
 		</>
@@ -160,71 +159,3 @@ MlNavigationCompass.propTypes = {
 
 export default MlNavigationCompass;
 
-
-/*
-
-
-import { ReactComponent as RotateRightIcon } from "./assets/rotate_right.svg";
-import { ReactComponent as RotateLeftIcon } from "./assets/rotate_left.svg";
-
-const RotateButton = styled.div`
-	width: 30%;
-	margin-top: 14px;
-	z-index: 999;
-	display: flex;
-
-	svg:hover {
-		cursor: pointer;
-	}
-	svg:hover path {
-		fill: #ececec;
-		filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));
-	}
-	path {
-		fill: #bbb;
-	}
-	svg {
-		transform: scale(0.6);
-		z-index: 9990;
-		height: 172px;
-	}
-`;
-
-	<RotateButton className={css({ ...props.rotateLeftStyle })}>
-						<RotateLeftIcon
-							onClick={() => {
-								if(!mapHook.map)return;
-
-								let bearing = Math.round(mapHook.map.map.getBearing());
-								let rest = Math.round(bearing % 90);
-								if (bearing < 0) {
-									rest = 90 + rest;
-								}
-								if (rest === 0) {
-									rest = 90;
-								}
-								mapHook.map.map.setBearing(Math.round(bearing - Math.abs(rest)));
-							}}
-						></RotateLeftIcon>
-					</RotateButton>
-
-
-						<RotateButton className={css({ ...props.rotateRightStyle })}>
-						<RotateRightIcon
-							onClick={() => {
-								if(!mapHook.map)return;
-
-								let bearing = Math.round(mapHook.map.map.getBearing());
-								let rest = Math.round(bearing % 90);
-								if (bearing > 0) {
-									rest = 90 - rest;
-								}
-								if (rest === 0) {
-									rest = 90;
-								}
-								mapHook.map.map.setBearing(Math.round(bearing + Math.abs(rest)));
-							}}
-						></RotateRightIcon>
-					</RotateButton>
-
-*/
