@@ -55,7 +55,7 @@ const SpeedDial = (props: SpeedDialProps) => {
 				className="dialButton"
 				ariaLabel="SpeedDial tooltip example"
 				sx={{ position: 'absolute', bottom: 16, right: 16 }}
-				icon={open ? <CloseIcon /> : <MoreVertIcon />}
+				icon={open ? <CloseIcon fontSize="large" /> : <MoreVertIcon fontSize="large" />}
 				onClick={open ? (handleClose as MouseEventHandler) : (handleOpen as any)}
 				onOpen={handleOpen}
 				open={open}
