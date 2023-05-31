@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-import { ReactComponent as RotateRightIcon } from "./assets/rotate_right.svg";
-import { ReactComponent as RotateLeftIcon } from "./assets/rotate_left.svg";
-import { ReactComponent as NeedleIcon } from "./assets/needle.svg";
+
+import { ReactComponent as CompassNeedle } from "./assets/CompassNeedle.svg";
+import { ReactComponent as CompassBackground } from "./assets/CompassBackground.svg";
 
 import styled from "@emotion/styled";
 import { css } from "@emotion/css";
 import useMap from "../../hooks/useMap";
 
 const NeedleButton = styled.div`
-	width: 40%;
 	display: flex;
 	align-items: center;
+	zIndex: 1005;
+	position: absolute;
 
 	&:hover {
 		cursor: pointer;
@@ -24,13 +25,13 @@ const NeedleButton = styled.div`
 		filter: drop-shadow(0px 0px 13px rgba(255, 255, 255, 0.1));
 	}
 	path:nth-of-type(2) {
-		fill: #343434;
+		fill: #D3DCE1;
 	}
 	&:hover path:nth-of-type(2) {
 		fill: #434343;
 	}
 	path:nth-of-type(1) {
-		fill: #e90318;
+		fill: #CF003D;
 	}
 	&:hover path:nth-of-type(1) {
 		fill: #fb4052;
@@ -40,44 +41,17 @@ const NeedleContainer = styled.div`
 	pointer-events: none;
 	display: flex;
 	z-index: 1002;
-	position: absolute;
 	align-items: center;
-
-	margin-left: -30%;
-	path:nth-of-type(2) {
-	}
-	svg g {
-		transform: translate(-76.7053, -29.7727) scale(2, 1);
-	}
-	svg {
-		z-index: 9990;
-		height: 150px;
-		width: 200px;
-	}
-`;
-const RotateButton = styled.div`
-	width: 30%;
-	margin-top: 14px;
-	z-index: 999;
-	display: flex;
-
-	svg:hover {
+	
+	&:hover {
 		cursor: pointer;
 	}
-	svg:hover path {
-		fill: #ececec;
-		filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));
-	}
-	path {
-		fill: #bbb;
-	}
+
 	svg {
-		transform: scale(0.6);
 		z-index: 9990;
-		height: 172px;
+		transform: scale(5)
 	}
 `;
-
 interface MlNavigationCompassProps {
 	mapId?: string;
 	insertBeforeLayer?: string;
@@ -130,35 +104,20 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 				<div
 					className={css({
 						position: "absolute",
-						border: "10px solid #bcbcbc",
-						backgroundColor: "#717171",
-						background: "radial-gradient(#717171, #414141)",
+						border: "10px solid #717171",
+						backgroundColor: "#fff",
+						//background: "radial-gradient(#717171, #414141)",
 						height: "200px",
 						width: "200px",
 						borderRadius: "50%",
 						display: "flex",
 						justifyContent: "center",
+						alignItems: "center",
 						transform: "scale(0.2) translateX(-448px) translateY(-448px)",
 						...props.backgroundStyle,
 					})}
 				>
-					<RotateButton className={css({ ...props.rotateRightStyle })}>
-						<RotateRightIcon
-							onClick={() => {
-								if(!mapHook.map)return;
-
-								let bearing = Math.round(mapHook.map.map.getBearing());
-								let rest = Math.round(bearing % 90);
-								if (bearing > 0) {
-									rest = 90 - rest;
-								}
-								if (rest === 0) {
-									rest = 90;
-								}
-								mapHook.map.map.setBearing(Math.round(bearing + Math.abs(rest)));
-							}}
-						></RotateRightIcon>
-					</RotateButton>
+					
 					<NeedleButton
 						className={css({ ...props.needleStyle })}
 						onClick={() => {
@@ -170,26 +129,10 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 								transform: "rotate(" + (bearing>0?"-"+bearing:-1*bearing) + "deg)",
 							}}
 						>
-							<NeedleIcon />
+							<CompassNeedle />
 						</NeedleContainer>
 					</NeedleButton>
-					<RotateButton className={css({ ...props.rotateLeftStyle })}>
-						<RotateLeftIcon
-							onClick={() => {
-								if(!mapHook.map)return;
-
-								let bearing = Math.round(mapHook.map.map.getBearing());
-								let rest = Math.round(bearing % 90);
-								if (bearing < 0) {
-									rest = 90 + rest;
-								}
-								if (rest === 0) {
-									rest = 90;
-								}
-								mapHook.map.map.setBearing(Math.round(bearing - Math.abs(rest)));
-							}}
-						></RotateLeftIcon>
-					</RotateButton>
+					<CompassBackground style={{transform: "scale(4.6)", zIndex: 1000}} />
 				</div>
 			</div>
 		</>
@@ -213,14 +156,75 @@ MlNavigationCompass.propTypes = {
 	 * Style object to adjust css definitions of the compass needle.
 	 */
 	needleStyle: PropTypes.object,
-	/**
-	 * Style object to adjust css definitions of the rotate right button.
-	 */
-	rotateRightStyle: PropTypes.object,
-	/**
-	 * Style object to adjust css definitions of the rotate left button.
-	 */
-	rotateLeftStyle: PropTypes.object,
-};
+	};
 
 export default MlNavigationCompass;
+
+
+/*
+
+
+import { ReactComponent as RotateRightIcon } from "./assets/rotate_right.svg";
+import { ReactComponent as RotateLeftIcon } from "./assets/rotate_left.svg";
+
+const RotateButton = styled.div`
+	width: 30%;
+	margin-top: 14px;
+	z-index: 999;
+	display: flex;
+
+	svg:hover {
+		cursor: pointer;
+	}
+	svg:hover path {
+		fill: #ececec;
+		filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.1));
+	}
+	path {
+		fill: #bbb;
+	}
+	svg {
+		transform: scale(0.6);
+		z-index: 9990;
+		height: 172px;
+	}
+`;
+
+	<RotateButton className={css({ ...props.rotateLeftStyle })}>
+						<RotateLeftIcon
+							onClick={() => {
+								if(!mapHook.map)return;
+
+								let bearing = Math.round(mapHook.map.map.getBearing());
+								let rest = Math.round(bearing % 90);
+								if (bearing < 0) {
+									rest = 90 + rest;
+								}
+								if (rest === 0) {
+									rest = 90;
+								}
+								mapHook.map.map.setBearing(Math.round(bearing - Math.abs(rest)));
+							}}
+						></RotateLeftIcon>
+					</RotateButton>
+
+
+						<RotateButton className={css({ ...props.rotateRightStyle })}>
+						<RotateRightIcon
+							onClick={() => {
+								if(!mapHook.map)return;
+
+								let bearing = Math.round(mapHook.map.map.getBearing());
+								let rest = Math.round(bearing % 90);
+								if (bearing > 0) {
+									rest = 90 - rest;
+								}
+								if (rest === 0) {
+									rest = 90;
+								}
+								mapHook.map.map.setBearing(Math.round(bearing + Math.abs(rest)));
+							}}
+						></RotateRightIcon>
+					</RotateButton>
+
+*/
