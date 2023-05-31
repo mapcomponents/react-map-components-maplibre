@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MlTerrainLayer from './MlTerrainLayer';
 import MapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { Button } from '@mui/material';
+import useMap from '../../hooks/useMap';
 
 const storyoptions = {
 	title: 'MapComponents/MlTerrainLayer',
@@ -14,6 +15,14 @@ export default storyoptions;
 
 const Template = () => {
 	const [start, setStart] = useState<boolean>(true);
+
+	const mapHook = useMap({ mapId: 'map_1' });
+	useEffect(() => {
+		if (!mapHook.map) return;
+		mapHook.map.map.setCenter([11.200688, 47.427417]);
+		mapHook.map.map.setZoom(12);
+		mapHook.map.map.setPitch(60);
+	}, [mapHook.map]);
 
 	return (
 		<>
