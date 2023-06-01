@@ -1,5 +1,25 @@
 # Change Log
 
+## [v0.1.79] - 2023-05-31
+
+### Added
+
+- f253071: Reliable & adjustable layer order (#105) …
+- c7c4fdf: add MlTerrainLayer component (#108) …
+- 70c18d7: optimize map libre map stories presentation (#103) …
+- a02db81: add missing catalogue descriptions (#109) …
+- bdd32ae: add SpeedDial UI component (#106) …
+
+### Changed
+
+- **Breaking:** 36be5ab: change MlFeatureEditor to useFeatureEditor hook, replace custom draw modes with default modes, draw mode strings require adjustment to the equivalent default mode (#110) …
+
+
+### Fixed
+
+- c0c302a: Feature/fix wmsloader featureinfo (#111) …
+- e743b79: Fix/cypress config (#104) …
+
 ## [v0.1.78] - 2023-04-28
 
 ### Added
@@ -87,7 +107,7 @@
 ## [v0.1.69] - 2023-02-07
 
 ### Changed
-- readd dependencies to package.dependencies
+- read dependencies from package.dependencies
 
 ## [v0.1.68] - 2023-02-07
 
@@ -186,7 +206,7 @@
 
 ### Changed
 
-- 7687eec: change MlVectorTileLayer layers prop type from object to array
+- **Breaking:** 7687eec: change MlVectorTileLayer layers prop type from object to array
 
 ## [v0.1.59] - 2022-10-04
 

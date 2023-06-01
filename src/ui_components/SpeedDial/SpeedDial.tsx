@@ -56,8 +56,8 @@ const SpeedDial = () => {
 			<MuiSpeedDial
 				ariaLabel="SpeedDial tooltip example"
 				sx={{ position: 'absolute', bottom: 16, right: 16 }}
-				icon={open ? <CloseIcon /> : <MoreVertIcon />}
-				onClick={open ? handleClose : handleOpen as ()=>void}
+				icon={open ? <CloseIcon fontSize="large" /> : <MoreVertIcon fontSize="large" />}
+				onClick={open ? handleClose : (handleOpen as () => void)}
 				onOpen={handleOpen}
 				open={open}
 			>
