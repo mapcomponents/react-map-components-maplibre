@@ -33,7 +33,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					primary: {
 						main: '#009EE0',
 					},
-					secondary: { main: '#747577' },
+					secondary: { main: '#fff' },
 					background: {
 						default: '#222222',
 						paper: '#414141',

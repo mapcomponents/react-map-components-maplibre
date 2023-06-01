@@ -7,6 +7,7 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
 import { point, circle, lineArc, Feature, Point } from '@turf/turf';
 import { CircleLayerSpecification, FillLayerSpecification } from 'maplibre-gl';
+import { DarkMode } from '@mui/icons-material';
 
 interface MlFollowGpsProps {
 	/**
@@ -229,8 +230,8 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 
 MlFollowGps.defaultProps = {
 	mapId: undefined,
-	onColor: '#ececec',
-	offColor: '#666',
+	onColor: '#009ee0',
+	offColor: '#747577',
 	showAccuracyCircle: true,
 	showUserLocation: true,
 	showOrientation: true,
