@@ -12,10 +12,13 @@ import useMap from "../../hooks/useMap";
 const NeedleButton = styled.div`
 	display: flex;
 	align-items: center;
-	zIndex: 1010;
 	position: absolute;
-
-	
+	width: 60;
+	height: 150;
+		
+	&:hover {
+		cursor: pointer;
+	}
 	path {
 		filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.2));
 	}
@@ -26,27 +29,28 @@ const NeedleButton = styled.div`
 		fill: #D3DCE1;
 	}
 	&:hover path:nth-of-type(2) {
-		fill: #434343;
+		fill: #D3DCE1;
 	}
 	path:nth-of-type(1) {
 		fill: #CF003D;
 	}
 	&:hover path:nth-of-type(1) {
-		fill: #fb4052;
+		fill: #CF003D;
 	}
 `;
 const NeedleContainer = styled.div`
 	pointer-events: none;
 	display: flex;
-	z-index: 1002;
+	z-index: 1050;
 	align-items: center;
+
 	
 	&:hover {
 		cursor: pointer;
 	}
 
 	svg {
-		z-index: 9990;
+	
 		transform: scale(5)
 	}
 `;
@@ -100,20 +104,24 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 				<div
 					className={css({
 						position: "absolute",
-						border: "10px solid #717171",
-						backgroundColor: "#fff",
-						//background: "radial-gradient(#717171, #414141)",
+						border: "10px solid",					
 						height: "200px",
 						width: "200px",
-						borderRadius: "50%",
+						borderRadius: "50%",						
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
 						transform: "scale(0.2) translateX(-448px) translateY(-448px)",
 						...props.backgroundStyle,
-				
-					})}
+						"&:hover circle" : {
+								fill: "#f5f5f5"
+							  }						  
+					}
+				)}
 				>
+					<CompassBackground style={{transform: "scale(4.6)", cursor:"pointer" }} onClick={() => {
+							mapHook.map?.map.setBearing(0);
+						}}/>
 					
 					<NeedleButton
 						className={css({ ...props.needleStyle })}
@@ -129,9 +137,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 							<CompassNeedle  />
 						</NeedleContainer>
 					</NeedleButton>
-					<CompassBackground style={{transform: "scale(4.6)", zIndex: 1000, cursor:"pointer"}} onClick={() => {
-							mapHook.map?.map.setBearing(0);
-						}}/>
+					
 				</div>
 			</div>
 		</>
