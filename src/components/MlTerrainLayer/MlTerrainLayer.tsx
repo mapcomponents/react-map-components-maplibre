@@ -33,7 +33,7 @@ const MlTerrainLayer = (props: MlTerrainLayerProps) => {
 			mapHook.map.map.addSource('terrain', {
 				type: 'raster-dem',
 				encoding: 'mapbox',
-				maxzoom: 14,
+				maxzoom: 12,
 				minzoom: 4,
 				...props.sourceOptions,
 			});
