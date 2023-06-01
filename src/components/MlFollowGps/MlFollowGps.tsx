@@ -7,7 +7,6 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
 import { point, circle, lineArc, Feature, Point } from '@turf/turf';
 import { CircleLayerSpecification, FillLayerSpecification } from 'maplibre-gl';
-import { DarkMode } from '@mui/icons-material';
 
 interface MlFollowGpsProps {
 	/**
