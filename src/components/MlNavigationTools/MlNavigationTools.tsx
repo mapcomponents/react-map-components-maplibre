@@ -11,9 +11,6 @@ import MlFollowGps from '../MlFollowGps/MlFollowGps';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
 import MlCenterPosition from '../MlCenterPosition/MlCenterPosition';
-import zIndex from '@mui/material/styles/zIndex';
-import { color } from '@storybook/theming';
-import MapcomponentsTheme from '../../ui_components/MapcomponentsTheme';
 import { useTheme } from '@mui/material';
 
 interface MlNavigationToolsProps {
