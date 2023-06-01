@@ -1,5 +1,15 @@
 # Change Log
 
+## [v0.1.8] - 2023-06-01
+
+### Added
+
+- bea7ecc: add a test, add thumbnail (#112) …
+
+### Fixed
+
+- f423ada: fix layerContext moveUp moveDown functions (#114) …
+
 ## [v0.1.79] - 2023-05-31
 
 ### Added
