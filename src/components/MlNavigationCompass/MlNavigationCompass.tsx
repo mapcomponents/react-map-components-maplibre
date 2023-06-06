@@ -118,11 +118,18 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 					<CompassBackground
 						style={{ transform: 'scale(4.6)', cursor: 'pointer' }}
 						onClick={() => {
-							if (bearing / 90 != 0 || bearing / 180 != 0 || bearing / 270 != 0) {
+							if (bearing == 0) {
+								mapHook.map?.map.setBearing(-90);
+							} else if (bearing == -90) {
+								mapHook.map?.map.setBearing(180);
+							} else if (bearing == 180) {
+								mapHook.map?.map.setBearing(90);
+							} else if (bearing == 90) {
 								mapHook.map?.map.setBearing(0);
 							} else {
-								mapHook.map?.map.setBearing(bearing + 90);
+								mapHook.map?.map.setBearing(0);
 							}
+							console.log(bearing);
 						}}
 					/>
 
