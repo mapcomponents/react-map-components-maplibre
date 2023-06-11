@@ -785,6 +785,20 @@
         "__isArgsStory": false
       }
     },
+    "hooks-useaddprotocol--example-config": {
+      "id": "hooks-useaddprotocol--example-config",
+      "name": "Example Config",
+      "title": "hooks/useAddProtocol",
+      "importPath": 15426,
+      "kind": "hooks/useAddProtocol",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 15426,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--example-config",
+        "__isArgsStory": false
+      }
+    },
     "hooks-usecamerafollowpath--example-config": {
       "id": "hooks-usecamerafollowpath--example-config",
       "name": "Example Config",
