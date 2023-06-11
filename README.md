@@ -20,7 +20,7 @@ Use our Codesandbox template to quickly try out this library without any setup r
 
 ### **... a new project**
 
-The easiest way to start a new project using this framework is to bootstrap a react application using our [create-react-app-template](https://github.com/mapcomponents/react-map-components-maplibre-cra-template).
+The easiest way to start a new project using this framework is to bootstrap a react application using our [vite-template](https://github.com/mapcomponents/template).
 
 **Requirements:**
 
