@@ -2,7 +2,7 @@ import React from 'react';
 
 import useAddProtocol from './useAddProtocol';
 
-import mapContextDecorator from '../../decorators/TemporalControllerDecorator';
+import mapContextDecorator from '../../decorators/LowZoomDecorator';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
 import initSqlJs from 'sql.js';
