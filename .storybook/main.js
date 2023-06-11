@@ -1,10 +1,10 @@
 module.exports = {
-  core: {
-    builder: '@storybook/builder-webpack5',
-  },
+	core: {
+		builder: '@storybook/builder-webpack5',
+	},
 	stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
 	addons: [
-  'storybook-source-link',
+		'storybook-source-link',
 		'@storybook/addon-storysource',
 		'@storybook/addon-links',
 		'@storybook/addon-essentials',
@@ -15,7 +15,7 @@ module.exports = {
 			},
 		},
 	],
-  framework: '@storybook/react',
+	framework: '@storybook/react',
 	webpackFinal: async (config, { configType }) => {
 		// split into more chunks
 		config.optimization = {
@@ -25,6 +25,8 @@ module.exports = {
 				maxSize: 1024 * 1024, // 1MB
 			},
 		};
+
+		config.externals = { fs: 'fs' };
 
 		return config;
 	},
