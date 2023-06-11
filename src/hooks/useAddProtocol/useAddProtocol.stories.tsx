@@ -77,10 +77,13 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
 				reject(new Error('Tile not found.'));
 				return;
 			}
-			let binData = result[0].values[0][0] as Uint8Array;
-			let isGzipped = binData[0] === 0x1f && binData[1] === 0x8b;
+			const resultData = result[0].values[0][0] as Uint8Array;
+			let binData:Uint8Array;
+			const isGzipped = resultData[0] === 0x1f && resultData[1] === 0x8b;
 			if (isGzipped) {
-				binData = pako.inflate(binData);
+				binData = pako.inflate(resultData);
+			}else{
+				binData = resultData;
 			}
 			if (binData?.buffer) {
 
