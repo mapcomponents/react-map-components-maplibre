@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.82] - 2023-06-12
+
+### Fixed
+
+- b89794a: remove mbTilesProtocolHandler from export to remove sql.js dependency as it breaks app builds
+
 ## [v0.1.81] - 2023-06-12
 
 ### Added
