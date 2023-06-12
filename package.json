@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "0.1.81",
+	"version": "0.1.82",
 	"main": "dist/index.esm.js",
 	"license": "MIT",
 	"module": "dist/index.esm.js",
@@ -40,11 +40,8 @@
 		"wms-capabilities": "^0.6.0",
 		"xmldom": "^0.6.0"
 	},
-	"peerDependencies": {
-	},
+	"peerDependencies": {},
 	"devDependencies": {
-		"@types/sql.js": "^1.4.4",
-		"sql.js": "^1.8.0",
 		"@babel/preset-react": "^7.18.6",
 		"@bahmutov/cy-rollup": "^2.0.0",
 		"@cypress/react": "^7.0.2",
@@ -77,6 +74,7 @@
 		"@types/pako": "^2.0.0",
 		"@types/react": "^18.0.27",
 		"@types/react-dom": "^18.0.10",
+		"@types/sql.js": "^1.4.4",
 		"@types/three": "^0.148.1",
 		"@types/uuid": "^9.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.49.0",
@@ -114,6 +112,7 @@
 		"rollup-plugin-node-externals": "^5.1.2",
 		"rollup-plugin-typescript2": "^0.31.2",
 		"showdown": "^2.1.0",
+		"sql.js": "^1.8.0",
 		"storybook-source-link": "^2.0.4",
 		"ts-jest": "^29.0.5",
 		"typescript": "^4.9.4",
