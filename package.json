@@ -41,10 +41,10 @@
 		"xmldom": "^0.6.0"
 	},
 	"peerDependencies": {
-		"@types/sql.js": "^1.4.4",
-		"sql.js": "^1.8.0"
 	},
 	"devDependencies": {
+		"@types/sql.js": "^1.4.4",
+		"sql.js": "^1.8.0",
 		"@babel/preset-react": "^7.18.6",
 		"@bahmutov/cy-rollup": "^2.0.0",
 		"@cypress/react": "^7.0.2",
