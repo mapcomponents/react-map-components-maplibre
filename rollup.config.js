@@ -54,6 +54,7 @@ const config = defineConfig([
 			url(),
 			babel({
 				presets: ['@babel/preset-react'],
+				babelHelpers: 'bundled'
 			}),
 			externals(externalsConfig),
 			commonjs(),

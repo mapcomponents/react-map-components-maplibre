@@ -71,7 +71,7 @@ export { default as useLayerContext } from "./hooks/useLayerContext";
 export { default as useFeatureEditor } from "./hooks/useFeatureEditor";
 export { default as useAddProtocol } from "./hooks/useAddProtocol/useAddProtocol";
 
-export { mbTilesProtocolHandler } from "./protocol_handlers/mbtiles";
+//export { mbTilesProtocolHandler } from "./protocol_handlers/mbtiles";
 
 // Context
 export { MapComponentsProvider } from "./contexts/MapContext";
