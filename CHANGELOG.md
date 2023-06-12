@@ -1,6 +1,13 @@
 # Change Log
 
-## [v0.1.8] - 2023-06-01
+## [v0.1.81] - 2023-06-12
+
+### Added
+
+- 2ba02ba: add useAddProtocol hook
+- 2ba02ba: add mbTilesProtocolHandler
+
+## [v0.1.80] - 2023-06-01
 
 ### Added
 
