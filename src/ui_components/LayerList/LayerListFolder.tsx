@@ -39,16 +39,6 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 	return (
 		<>
 			<ListItem
-				secondaryAction={
-					<IconButton
-						sx={{ padding: '4px', marginTop: '-3px' }}
-						edge="end"
-						aria-label="open"
-						onClick={() => setOpen(!open)}
-					>
-						{open ? <ExpandLess /> : <ExpandMore />}
-					</IconButton>
-				}
 				sx={{
 					paddingRight: 0,
 					paddingLeft: 0,
@@ -57,8 +47,10 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 				}}
 			>
 				<ListItemIcon sx={{ minWidth: '30px' }}>
+					<IconButton edge="end" aria-label="open" onClick={() => setOpen(!open)}>
+						{open ? <ExpandLess /> : <ExpandMore />}
+					</IconButton>
 					<Checkbox
-						sx={{ padding: 0 }}
 						disabled={setVisible ? false : !visible}
 						checked={setVisible ? visible : localVisible}
 						onClick={() => {
@@ -73,7 +65,7 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 				<ListItemText primary={name} variant="layerlist" />
 			</ListItem>
 			<Box sx={{ display: open ? 'block' : 'none' }}>
-				<List component="div" disablePadding sx={{ paddingLeft: '18px' }}>
+				<List component="div" disablePadding sx={{ paddingLeft: '70px' }}>
 					{_children}
 				</List>
 			</Box>
