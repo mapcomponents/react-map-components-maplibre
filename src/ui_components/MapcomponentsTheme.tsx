@@ -82,18 +82,7 @@ const getTheme = (mode: 'light' | 'dark') => {
 					},
 				},
 			},
-			MuiIconButton: {
-				styleOverrides: {
-					root: {
-						color: theme.palette.text.primary,
-						backgroundColor: theme.palette.background.icon,
-						':hover': {
-							backgroundColor: theme.palette.background.icon,
-							color: theme.palette.primary.main,
-						},
-					},
-				},
-			},
+
 			MuiButton: {
 				styleOverrides: {
 					contained: {
