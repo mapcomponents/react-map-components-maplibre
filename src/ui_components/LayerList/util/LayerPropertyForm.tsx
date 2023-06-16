@@ -139,7 +139,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 					marginLeft: '-100px',
 					marginRight: '-20px',
 					background: '#F5F5F5',
-					paddingLeft: '115px',
+					paddingLeft: '81px',
 				}}
 			>
 				<ListItem key={key + '_paintPropForm'}>
