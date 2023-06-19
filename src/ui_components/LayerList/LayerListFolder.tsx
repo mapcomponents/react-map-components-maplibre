@@ -48,7 +48,15 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 				}}
 			>
 				<ListItemIcon sx={{ minWidth: '30px' }}>
-					<IconButton edge="end" aria-label="open" onClick={() => setOpen(!open)}>
+					<IconButton
+						sx={{
+							marginRight: '0px',
+							padding: '0px',
+						}}
+						edge="end"
+						aria-label="open"
+						onClick={() => setOpen(!open)}
+					>
 						{open ? <ExpandMore /> : <ExpandLess />}
 					</IconButton>
 					<Checkbox

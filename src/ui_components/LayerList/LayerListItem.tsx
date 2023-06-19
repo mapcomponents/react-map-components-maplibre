@@ -141,10 +141,9 @@ function LayerListItem({
 				<ListItem
 					sx={{
 						paddingRight: configurable ? '56px' : 0,
-						paddingLeft: 0,
+						paddingLeft: '30px',
 						paddingTop: 0,
 						paddingBottom: '4px',
-						marginLeft: '30px',
 						...props.listItemSx,
 					}}
 					secondaryAction={
@@ -160,7 +159,7 @@ function LayerListItem({
 										});
 									}}
 									sx={{
-										marginRight: '20px',
+										marginRight: '0px',
 										padding: '4px',
 										marginTop: '-3px',
 										...(props.showDeleteButton ? { marginRight: '4px' } : {}),
