@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { ChromePicker } from 'react-color';
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { converters } from './transformers';
 
 export interface ColorPickerProps {
