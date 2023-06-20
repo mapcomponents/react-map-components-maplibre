@@ -62,7 +62,7 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 					<Checkbox
 						disabled={setVisible ? false : !visible}
 						checked={setVisible ? visible : localVisible}
-						sx={{ padding: 0 }}
+						sx={{ padding: 0, marginRight: '5px' }}
 						onClick={() => {
 							if (setVisible) {
 								setVisible((val) => !val);

@@ -134,11 +134,10 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 
 	return (
 		<>
-			<Box
+			<Paper
 				sx={{
 					marginLeft: '-100px',
 					marginRight: '-20px',
-					background: '#F5F5F5',
 					paddingLeft: '81px',
 				}}
 			>
@@ -151,7 +150,7 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 						{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
 					</Box>
 				</ListItem>
-			</Box>
+			</Paper>
 		</>
 	);
 }

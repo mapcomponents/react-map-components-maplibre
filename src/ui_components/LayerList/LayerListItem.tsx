@@ -141,7 +141,7 @@ function LayerListItem({
 				<ListItem
 					sx={{
 						paddingRight: configurable ? '56px' : 0,
-						paddingLeft: '30px',
+						paddingLeft: '25px',
 						paddingTop: 0,
 						paddingBottom: '4px',
 						...props.listItemSx,
