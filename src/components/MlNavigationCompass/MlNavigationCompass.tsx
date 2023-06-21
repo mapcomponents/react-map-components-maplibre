@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import PropTypes from 'prop-types';
 
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
-import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
-import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
+
 
 import styled from '@emotion/styled';
 import { css } from '@emotion/css';
 import useMap from '../../hooks/useMap';
-import styled from '@emotion/styled';
-import { css } from '@emotion/css';
-import useMap from '../../hooks/useMap';
+
 
 const NeedleButton = styled.div`
 	display: flex;
@@ -109,7 +106,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 					zIndex: 1000,
 					top: 0,
 					position: 'absolute',
-					position: 'absolute',
+					
 					...props.style,
 				})}
 			>
@@ -124,24 +121,13 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						justifyContent: 'center',
 						alignItems: 'center',
 						transform: 'scale(0.2) translateX(-448px) translateY(-448px)',
-						position: 'absolute',
-						border: '10px solid',
-						height: '200px',
-						width: '200px',
-						borderRadius: '50%',
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-						transform: 'scale(0.2) translateX(-448px) translateY(-448px)',
+						
 						...props.backgroundStyle,
 						'&:hover circle': {
 							fill: '#f5f5f5',
 						},
 					})}
-						'&:hover circle': {
-							fill: '#f5f5f5',
-						},
-					})}
+		
 				>
 					<CompassBackground
 						style={{ transform: 'scale(4.6)', cursor: 'pointer' }}
@@ -167,7 +153,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						<NeedleContainer
 							style={{
 								transform: 'rotate(' + (bearing > 0 ? '-' + bearing : -1 * bearing) + 'deg)',
-								transform: 'rotate(' + (bearing > 0 ? '-' + bearing : -1 * bearing) + 'deg)',
+								
 							}}
 						>
 							<CompassNeedle />
@@ -198,6 +184,6 @@ MlNavigationCompass.propTypes = {
 	 */
 	needleStyle: PropTypes.object,
 };
-};
+
 
 export default MlNavigationCompass;
