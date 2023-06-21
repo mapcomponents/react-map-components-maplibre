@@ -10,6 +10,11 @@
   left: 0;
   right: 0;
 }
+
+.docs-story > div > div:first-child{
+  height: initial;
+}
+
 .innerZoomElementWrapper > div > div > div:first-child{
   height: 100% !important;
 }
