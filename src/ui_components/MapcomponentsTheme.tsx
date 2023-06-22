@@ -33,14 +33,11 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					primary: {
 						main: '#009EE0',
 					},
-					//secondary: { main: '#747577' },
-					background: {
-						paper: '#222222',
-					},
+					secondary: { main: '#747577' },
+					background: { paper: '#272727' },
 					text: {
 						primary: '#fff',
-						//secondary: '#fff',
-						//contrast: '#121212',
+						contrast: '#000',
 					},
 					topToolbar: { barColor: '#000' },
 					navigation: { navColor: '#525252', navHover: '#626262' },
@@ -49,15 +46,10 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					primary: {
 						main: '#009EE0',
 					},
-					//secondary: { main: '#747577' },
-					background: {
-						default: '#fff',
-						paper: '#fdfdfd',
-					},
+					secondary: { main: '#747577' },
 					text: {
 						primary: '#000',
-						//secondary: '#121212',
-						//contrast: '#fff',
+						contrast: '#fff',
 					},
 					topToolbar: { barColor: '#fff' },
 					navigation: { navColor: '#fff', navHover: '#f5f5f5' },

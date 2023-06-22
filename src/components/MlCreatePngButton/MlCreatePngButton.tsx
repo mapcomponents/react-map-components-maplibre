@@ -52,7 +52,7 @@ const MlCreatePngButton = (props: MlCreatePngButtonProps) => {
 								bearing: mapHook.map.getBearing(),
 								format: 'a4',
 								orientation: 'portrait',
-								...props.exportOptions
+								...props.exportOptions,
 							})
 							.then((res) => res.createPng())
 							.then((res) => {
@@ -70,7 +70,7 @@ const MlCreatePngButton = (props: MlCreatePngButtonProps) => {
 					<CircularProgress
 						size={24}
 						sx={{
-							color: 'text.contrast',
+							color: '#fff',
 						}}
 					/>
 				) : (

@@ -52,7 +52,7 @@ const MlCreatePdfButton = (props: MlCreatePdfButtonProps) => {
 								bearing: mapHook.map.getBearing(),
 								format: 'a4',
 								orientation: 'portrait',
-								...props.exportOptions
+								...props.exportOptions,
 							})
 							.then((res) => res.createPdf())
 							.then((res) => {
@@ -70,7 +70,7 @@ const MlCreatePdfButton = (props: MlCreatePdfButtonProps) => {
 					<CircularProgress
 						size={24}
 						sx={{
-							color: 'text.contrast',
+							color: '#fff',
 						}}
 					/>
 				) : (
