@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
 
-
 import styled from '@emotion/styled';
 import { css } from '@emotion/css';
 import useMap from '../../hooks/useMap';
-
 
 const NeedleButton = styled.div`
 	display: flex;
@@ -16,7 +14,6 @@ const NeedleButton = styled.div`
 	position: absolute;
 	width: 60;
 	height: 150;
-
 
 	&:hover {
 		cursor: pointer;
@@ -29,18 +26,14 @@ const NeedleButton = styled.div`
 	}
 	path:nth-of-type(2) {
 		fill: #d3dce1;
-		fill: #d3dce1;
 	}
 	&:hover path:nth-of-type(2) {
-		fill: #d3dce1;
 		fill: #d3dce1;
 	}
 	path:nth-of-type(1) {
 		fill: #cf003d;
-		fill: #cf003d;
 	}
 	&:hover path:nth-of-type(1) {
-		fill: #cf003d;
 		fill: #cf003d;
 	}
 `;
@@ -50,13 +43,11 @@ const NeedleContainer = styled.div`
 	z-index: 1050;
 	align-items: center;
 
-
 	&:hover {
 		cursor: pointer;
 	}
 
 	svg {
-		transform: scale(5);
 		transform: scale(5);
 	}
 `;
@@ -90,11 +81,9 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		};
 
 		mapHook.map.on('rotate', _updateBearing, mapHook.componentId);
-		mapHook.map.on('rotate', _updateBearing, mapHook.componentId);
 		_updateBearing();
 
 		return () => {
-			mapHook.map?.map.off('rotate', _updateBearing);
 			mapHook.map?.map.off('rotate', _updateBearing);
 		};
 	}, [mapHook.map, props.mapId]);
@@ -106,7 +95,6 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 					zIndex: 1000,
 					top: 0,
 					position: 'absolute',
-					
 					...props.style,
 				})}
 			>
@@ -121,13 +109,11 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						justifyContent: 'center',
 						alignItems: 'center',
 						transform: 'scale(0.2) translateX(-448px) translateY(-448px)',
-						
-						...props.backgroundStyle,
 						'&:hover circle': {
 							fill: '#f5f5f5',
 						},
+						...props.backgroundStyle,
 					})}
-		
 				>
 					<CompassBackground
 						style={{ transform: 'scale(4.6)', cursor: 'pointer' }}
@@ -153,10 +139,8 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						<NeedleContainer
 							style={{
 								transform: 'rotate(' + (bearing > 0 ? '-' + bearing : -1 * bearing) + 'deg)',
-								
 							}}
 						>
-							<CompassNeedle />
 							<CompassNeedle />
 						</NeedleContainer>
 					</NeedleButton>
