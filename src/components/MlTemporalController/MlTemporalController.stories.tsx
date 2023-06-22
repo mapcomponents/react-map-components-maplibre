@@ -1,6 +1,6 @@
 import React from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
-import temporalControllerDecorator from '../../decorators/TemporalControllerDecorator';
+import temporalControllerDecorator from '../../decorators/LowZoomDecorator';
 import { Typography } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';

@@ -1,4 +1,4 @@
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { KeyboardArrowRight as ExpandLess, ExpandMore } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, List, Checkbox, ListItem, IconButton } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useMemo, useState } from 'react';
@@ -39,16 +39,7 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 	return (
 		<>
 			<ListItem
-				secondaryAction={
-					<IconButton
-						sx={{ padding: '4px', marginTop: '-3px' }}
-						edge="end"
-						aria-label="open"
-						onClick={() => setOpen(!open)}
-					>
-						{open ? <ExpandLess /> : <ExpandMore />}
-					</IconButton>
-				}
+				className={'listItemFolder'}
 				sx={{
 					paddingRight: 0,
 					paddingLeft: 0,
@@ -57,10 +48,21 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 				}}
 			>
 				<ListItemIcon sx={{ minWidth: '30px' }}>
+					<IconButton
+						sx={{
+							marginRight: '0px',
+							padding: '0px',
+						}}
+						edge="end"
+						aria-label="open"
+						onClick={() => setOpen(!open)}
+					>
+						{open ? <ExpandMore /> : <ExpandLess />}
+					</IconButton>
 					<Checkbox
-						sx={{ padding: 0 }}
 						disabled={setVisible ? false : !visible}
 						checked={setVisible ? visible : localVisible}
+						sx={{ padding: 0, marginRight: '5px' }}
 						onClick={() => {
 							if (setVisible) {
 								setVisible((val) => !val);
@@ -73,7 +75,7 @@ export default function LayerListFolder({ visible = true, name, children, setVis
 				<ListItemText primary={name} variant="layerlist" />
 			</ListItem>
 			<Box sx={{ display: open ? 'block' : 'none' }}>
-				<List component="div" disablePadding sx={{ paddingLeft: '18px' }}>
+				<List component="div" disablePadding sx={{ marginLeft: '25px' }}>
 					{_children}
 				</List>
 			</Box>

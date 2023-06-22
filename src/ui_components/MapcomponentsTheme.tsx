@@ -33,7 +33,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					primary: {
 						main: '#009EE0',
 					},
-					secondary: { main: '#747577' },
+					secondary: { main: '#fff' },
 					background: {
 						default: '#222222',
 						paper: '#414141',
@@ -82,18 +82,7 @@ const getTheme = (mode: 'light' | 'dark') => {
 					},
 				},
 			},
-			MuiIconButton: {
-				styleOverrides: {
-					root: {
-						color: theme.palette.text.primary,
-						backgroundColor: theme.palette.background.icon,
-						':hover': {
-							backgroundColor: theme.palette.background.icon,
-							color: theme.palette.primary.main,
-						},
-					},
-				},
-			},
+
 			MuiButton: {
 				styleOverrides: {
 					contained: {

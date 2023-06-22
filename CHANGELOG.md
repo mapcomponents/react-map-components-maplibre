@@ -1,5 +1,28 @@
 # Change Log
 
+## [v0.1.82] - 2023-06-12
+
+### Fixed
+
+- b89794a: remove mbTilesProtocolHandler from export to remove sql.js dependency as it breaks app builds
+
+## [v0.1.81] - 2023-06-12
+
+### Added
+
+- 2ba02ba: add useAddProtocol hook
+- 2ba02ba: add mbTilesProtocolHandler
+
+## [v0.1.80] - 2023-06-01
+
+### Added
+
+- bea7ecc: add a test, add thumbnail (#112) …
+
+### Fixed
+
+- f423ada: fix layerContext moveUp moveDown functions (#114) …
+
 ## [v0.1.79] - 2023-05-31
 
 ### Added

@@ -20,7 +20,7 @@ Use our Codesandbox template to quickly try out this library without any setup r
 
 ### **... a new project**
 
-The easiest way to start a new project using this framework is to bootstrap a react application using our [create-react-app-template](https://github.com/mapcomponents/react-map-components-maplibre-cra-template).
+The easiest way to start a new project using this framework is to bootstrap a react application using our [vite-template](https://github.com/mapcomponents/template).
 
 **Requirements:**
 
@@ -29,12 +29,12 @@ The easiest way to start a new project using this framework is to bootstrap a re
 
 Run the following commands in the terminal:
 
-1. `npx create-react-app {your-app-name} --template @mapcomponents/cra-template`
+1. `npx degit mapcomponents/template {your-app-name}`
 2. `cd {your-app-name}`
 3. `yarn`
-4. `yarn start`
+4. `yarn dev`
 
-This will start a development server that serves the mapcomponents app on port 3000 of your local machine as well as a browser tab with live reload enabled. This reloads the affected parts of the application if changes are detected to the corresponding files in the filesystem. Open the project folder in the IDE of your choice and start building your map client.
+This will start a development server that serves the mapcomponents app on port 5174 of your local machine as well as a browser tab with live reload enabled. This reloads the affected parts of the application if changes are detected to the corresponding files in the filesystem. Open the project folder in the IDE of your choice and start building your map client.
 
 ### **... an existing react project**
 
