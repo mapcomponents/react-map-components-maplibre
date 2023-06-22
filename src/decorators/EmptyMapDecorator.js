@@ -23,11 +23,7 @@ const decorators = [
 								center: [7.0851268, 50.73884],
 							}}
 						/>
-						<MlNavgiationTools
-							sx={{ bottom: '25px', right: '5px' }}
-							showZoomButtons={false}
-							mapId="map_1"
-						/>
+						<MlNavgiationTools showZoomButtons={false} mapId="map_1" />
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>
