@@ -33,33 +33,35 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					primary: {
 						main: '#009EE0',
 					},
-					secondary: { main: '#fff' },
+					//secondary: { main: '#747577' },
 					background: {
-						default: '#222222',
-						paper: '#414141',
-						icon: '#525252',
+						paper: '#222222',
 					},
 					text: {
-						secondary: '#fff',
-						contrast: '#121212',
+						primary: '#fff',
+						//secondary: '#fff',
+						//contrast: '#121212',
 					},
+					topToolbar: { barColor: '#000' },
+					navigation: { navColor: '#525252', navHover: '#626262' },
 			  }
 			: {
 					primary: {
 						main: '#009EE0',
 					},
-					secondary: { main: '#747577' },
-
+					//secondary: { main: '#747577' },
 					background: {
 						default: '#fff',
 						paper: '#fdfdfd',
-						icon: '#fff',
 					},
 					text: {
-						primary: '#1A171B',
-						secondary: '#121212',
-						contrast: '#fff',
+						primary: '#000',
+						//secondary: '#121212',
+						//contrast: '#fff',
 					},
+					topToolbar: { barColor: '#fff' },
+					navigation: { navColor: '#fff', navHover: '#f5f5f5' },
+					compass: { compColor: '#fff', compHover: '#f5f5f5' },
 			  }),
 	},
 });
@@ -78,11 +80,10 @@ const getTheme = (mode: 'light' | 'dark') => {
 			MuiAppBar: {
 				styleOverrides: {
 					root: {
-						backgroundColor: theme.palette.background.default,
+						backgroundColor: theme.palette.topToolbar.barColor,
 					},
 				},
 			},
-
 			MuiButton: {
 				styleOverrides: {
 					contained: {
@@ -106,7 +107,8 @@ const getTheme = (mode: 'light' | 'dark') => {
 								height: '30px',
 								fontSize: '1.2em',
 							},
-							backgroundColor: theme.palette.background.icon,
+							color: theme.palette.text.primary,
+							backgroundColor: theme.palette.navigation.navColor,
 							borderRadius: '23%',
 							//border: "1px solid #bbb",
 							//boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
@@ -114,9 +116,8 @@ const getTheme = (mode: 'light' | 'dark') => {
 							marginTop: '4px',
 							':hover': {
 								color: theme.palette.primary.main,
-								backgroundColor: '#f5f5f5',
+								backgroundColor: theme.palette.navigation.navHover,
 							},
-							color: theme.palette.text.secondary,
 						},
 					},
 				],
