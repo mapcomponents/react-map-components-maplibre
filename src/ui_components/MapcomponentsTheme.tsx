@@ -41,6 +41,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					},
 					topToolbar: { barColor: '#000' },
 					navigation: { navColor: '#525252', navHover: '#626262' },
+					compass: { compColor: '#000', compHover: '#000' },
 			  }
 			: {
 					primary: {
