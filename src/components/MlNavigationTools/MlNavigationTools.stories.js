@@ -38,7 +38,7 @@ ShowCenterLocationButton.args = {
 export const AlterToolPosition = Template.bind({});
 AlterToolPosition.parameters = {};
 AlterToolPosition.args = {
-	sx: { top: '10px', right: '5px' },
+	sx: { top: '10px' },
 };
 
 export const NoZoomButtons = Template.bind({});
