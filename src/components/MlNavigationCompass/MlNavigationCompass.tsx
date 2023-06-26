@@ -4,6 +4,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import useMap from '../../hooks/useMap';
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
+import getTheme from 'src/ui_components/MapcomponentsTheme';
 
 interface MlNavigationCompassProps {
 	mapId?: string;
@@ -29,7 +30,8 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		if (!mapHook.map?.map?.getBearing) return;
 		setBearing(Math.round(mapHook.map.map.getBearing()));
 	};
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const theme = getTheme('light');
+	const mediaIsMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -59,7 +61,6 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 					zIndex: 1000,
 					transform: mediaIsMobile ? 'scale(1.6)' : 'scale(1)',
 					cursor: 'pointer',
-
 					...props.style,
 				}}
 			>
@@ -69,8 +70,11 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						position: 'absolute',
 						right: mediaIsMobile ? '0px' : '-10px',
 						top: mediaIsMobile ? '-52px' : '-52px',
+						circle: {
+							fill: theme.palette.compass.compColor,
+						},
 						'&:hover circle': {
-							fill: '#f5f5f5',
+							fill: theme.palette.compass.compHover,
 						},
 						...props.backgroundStyle,
 					}}

@@ -41,7 +41,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					},
 					topToolbar: { barColor: '#000' },
 					navigation: { navColor: '#525252', navHover: '#626262' },
-					compass: { compColor: '#000', compHover: '#000' },
+					compass: { compColor: '#525252', compHover: '#626262' },
 			  }
 			: {
 					primary: {
@@ -103,8 +103,6 @@ const getTheme = (mode: 'light' | 'dark') => {
 							color: theme.palette.text.primary,
 							backgroundColor: theme.palette.navigation.navColor,
 							borderRadius: '23%',
-							//border: "1px solid #bbb",
-							//boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
 							margin: '0.15px',
 							marginTop: '4px',
 							':hover': {
