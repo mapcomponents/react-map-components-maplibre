@@ -4,7 +4,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import useMap from '../../hooks/useMap';
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
-import getTheme from 'src/ui_components/MapcomponentsTheme';
+import getTheme from '../../ui_components/MapcomponentsTheme';
 
 interface MlNavigationCompassProps {
 	mapId?: string;
