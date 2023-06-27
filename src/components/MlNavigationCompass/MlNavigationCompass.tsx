@@ -25,13 +25,16 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
+
+	const theme = getTheme(
+		window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ? 'dark' : 'light'
+	);
+	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const [bearing, setBearing] = useState(0);
 	const _updateBearing = () => {
 		if (!mapHook.map?.map?.getBearing) return;
 		setBearing(Math.round(mapHook.map.map.getBearing()));
 	};
-	const theme = getTheme('light');
-	const mediaIsMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 	useEffect(() => {
 		if (!mapHook.map) return;
