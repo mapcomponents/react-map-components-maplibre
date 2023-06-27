@@ -62,3 +62,7 @@ CustomButton.args = {
 		</Button>
 	),
 };
+export const ExampleConfig = Template.bind({});
+ExampleConfig.parameters = {};
+ExampleConfig.args = {};
+
