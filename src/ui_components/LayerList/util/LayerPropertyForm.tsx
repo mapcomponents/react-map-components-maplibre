@@ -137,8 +137,9 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 			<Paper
 				sx={{
 					marginLeft: '-100px',
-					marginRight: '-20px',
+					marginRight: '-21px',
 					paddingLeft: '81px',
+					borderRadius: '0px',
 				}}
 			>
 				<ListItem key={key + '_paintPropForm'}>

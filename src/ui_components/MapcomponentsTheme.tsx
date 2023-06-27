@@ -2,6 +2,13 @@ import { ListItemTextProps } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { Theme } from '@mui/system';
 
+declare module '@mui/material' {
+	interface Palette {
+		topToolbar: { barColor: string };
+		navigation: { navColor: string; navHover: string };
+		compass: { compColor: string; compHover: string };
+	}
+}
 declare module '@mui/material/Button' {
 	interface ButtonPropsVariantOverrides {
 		navtools: true;
@@ -34,13 +41,14 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						main: '#009EE0',
 					},
 					secondary: { main: '#747577' },
-					background: { paper: '#272727' },
+					background: { paper: '#272727', test: '#272727' },
 					text: {
 						primary: '#fff',
 						contrast: '#000',
 					},
 					topToolbar: { barColor: '#000' },
 					navigation: { navColor: '#525252', navHover: '#626262' },
+					compass: { compColor: '#525252', compHover: '#626262' },
 			  }
 			: {
 					primary: {
@@ -102,8 +110,6 @@ const getTheme = (mode: 'light' | 'dark') => {
 							color: theme.palette.text.primary,
 							backgroundColor: theme.palette.navigation.navColor,
 							borderRadius: '23%',
-							//border: "1px solid #bbb",
-							//boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
 							margin: '0.15px',
 							marginTop: '4px',
 							':hover': {

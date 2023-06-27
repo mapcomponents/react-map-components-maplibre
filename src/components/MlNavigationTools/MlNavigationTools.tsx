@@ -115,22 +115,11 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				flexDirection: 'column',
 				right: mediaIsMobile ? '15px' : '25px',
 				bottom: mediaIsMobile ? '20px' : '30px',
-				...(mediaIsMobile ? { margin: '20px 10px 20px 10px' } : {}),
+				...(mediaIsMobile ? { margin: '80px 10px 20px 10px' } : { marginTop: '50px' }),
 				...props.sx,
 			}}
 		>
-			<MlNavigationCompass
-				style={{
-					width: '31px',
-					position: 'relative',
-					height: mediaIsMobile ? '55px' : '45px',
-					marginLeft: mediaIsMobile ? '0px' : '-5px',
-					transform: mediaIsMobile ? 'scale(1.6)' : 'scale(1)',
-				}}
-				backgroundStyle={{
-					boxShadow: '0px 0px 18px rgba(0,0,0,.5)',
-				}}
-			/>
+			<MlNavigationCompass />
 			{props.show3DButton && (
 				<Button variant="navtools" onClick={adjustPitch} sx={{}}>
 					{pitch ? '2D' : '3D'}
