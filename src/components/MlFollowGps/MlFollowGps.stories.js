@@ -14,7 +14,7 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (props) => {
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
 	return (
 		<>
 			<div

@@ -39,7 +39,7 @@ export default function Sidebar({
 	setOpen,
 	...props
 }: SidebarProps & DrawerProps) {
-	const mediaIsMobile = useMediaQuery('(max-width:600px)');
+	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	return (

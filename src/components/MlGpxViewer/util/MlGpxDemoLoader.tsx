@@ -68,7 +68,7 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 		}
 	};
 
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	const loadSample = (samplePath: string) => {
 		fetch(samplePath)

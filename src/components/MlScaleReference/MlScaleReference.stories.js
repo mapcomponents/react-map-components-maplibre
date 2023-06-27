@@ -21,7 +21,8 @@ const ToolbarTemplate = (props) => {
 	return <TopToolbar unmovableButtons={<MlScaleReference {...props} />} />;
 };
 const OverlayTemplate = (props) => {
-	const mediaIsMobile = useMediaQuery("(max-width:900px)");
+	const mediaIsMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
+
 	return (
 		<div
 			style={{

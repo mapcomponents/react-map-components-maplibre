@@ -63,7 +63,8 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	});
 
 	const [pitch, setPitch] = useState(0);
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+
 
 	useEffect(() => {
 		if (!mapHook.map) return;

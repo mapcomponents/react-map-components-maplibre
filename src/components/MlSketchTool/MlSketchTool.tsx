@@ -55,7 +55,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
-	//const mediaIsMobile = useMediaQuery('(max-width:900px)');
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
 	const [sketchState, setSketchState] = useState<SketchStateType>({
 		activeGeometryIndex: undefined,
@@ -74,7 +73,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			geometries: _state.geometries,
 			activeGeometryIndex: undefined,
 			selectedGeoJson: undefined,
-		}))
+		}));
 	};
 
 	const removeGeoJson = (geoJson: Feature): void => {
@@ -85,7 +84,9 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			return {
 				..._sketchState,
 				geometries: _geometries,
-				activeGeometryIndex: _sketchState.activeGeometryIndex ? _sketchState.activeGeometryIndex - 1 : undefined,
+				activeGeometryIndex: _sketchState.activeGeometryIndex
+					? _sketchState.activeGeometryIndex - 1
+					: undefined,
 			};
 		});
 	};
@@ -118,15 +119,12 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 
 			{sketchState.drawMode && (
 				<MlFeatureEditor
-					mode={
-						sketchState.drawMode
-					}
+					mode={sketchState.drawMode}
 					geojson={sketchState.selectedGeoJson}
 					onChange={(feature: object) => {
-						if(!feature?.[0]) return;
+						if (!feature?.[0]) return;
 
 						setSketchState((_sketchState) => {
-
 							const _geometries = [...sketchState.geometries];
 							if (typeof _sketchState.activeGeometryIndex === 'undefined') {
 								const tempFeature = feature[0];
@@ -184,13 +182,13 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									type={'layer'}
 									name={String(el.id)}
 									description={el.geometry.type}
+								></LayerListItem>
+								<Box
+									sx={{
+										padding: '3px 30px',
+									}}
 								>
-								</LayerListItem>
-								<Box sx={{
-									padding: '3px 30px'
-								}} >
 									<ButtonGroup size="small">
-
 										<Button
 											onClick={() => {
 												mapHook?.map?.map.setCenter(
@@ -242,12 +240,12 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						}}
 					/>
 				)}
-			</List >
-			{
-				sketchState.drawMode === 'simple_select' && (
-					<Typography sx={{ fontSize: '0.6em' }}>Edit {sketchState.selectedGeoJson?.geometry?.type}</Typography>
-				)
-			}
+			</List>
+			{sketchState.drawMode === 'simple_select' && (
+				<Typography sx={{ fontSize: '0.6em' }}>
+					Edit {sketchState.selectedGeoJson?.geometry?.type}
+				</Typography>
+			)}
 		</>
 	);
 };

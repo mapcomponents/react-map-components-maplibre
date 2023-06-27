@@ -60,7 +60,7 @@ const getSteps = (mediaIsMobile: boolean) => [
 	},
 ];
 export default function MlGpxViewerInstructions(props: { open: boolean }) {
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	return (
 		<>

@@ -63,7 +63,7 @@ export interface wmsLinksProps {
 }
 
 export default function WMSLinks(props: wmsLinksProps) {
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const [selectedSample, setSelectedSample] = useState<string>();
 	
 	const Links = () => {

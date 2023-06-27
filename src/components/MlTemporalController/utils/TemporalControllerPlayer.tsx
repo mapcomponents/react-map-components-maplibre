@@ -48,7 +48,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 	const range = props.maxVal - props.minVal;
 	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 
 	useEffect(() => {
 		return () => {
