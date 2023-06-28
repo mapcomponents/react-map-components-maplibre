@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.83] - 2023-06-28
+
+### Changed
+
+- d43a6e8: new Compass, NavTools and LayerList style
+  
 ## [v0.1.82] - 2023-06-12
 
 ### Fixed
