@@ -1,10 +1,38 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
 import PropTypes from 'prop-types';
-import { Box, useMediaQuery } from '@mui/material';
 import useMap from '../../hooks/useMap';
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
-import getTheme from '../../ui_components/MapcomponentsTheme';
+import { styled } from '@mui/material';
+
+const StyleBox = styled('div')(({ theme }) => ({
+	zIndex: 1000,
+	cursor: 'pointer',
+	transform: 'scale(1)',
+	[theme.breakpoints.down('md')]: {
+		transform: 'scale(1.6)',
+	},
+}));
+const CompassBox = styled('div')(({ theme }) => ({
+	position: 'absolute',
+	right: '-10px',
+	top: '-52px',
+	[theme.breakpoints.down('md')]: {
+		right: '0px',
+		top: '-52px',
+	},
+	circle: {
+		fill: theme.palette.compass.compColor,
+	},
+	'&:hover circle': {
+		fill: theme.palette.compass.compHover,
+	},
+}));
+const NeedleBox = styled('div')({
+	position: 'absolute',
+	right: '21.4px',
+	top: '6px',
+});
 
 interface MlNavigationCompassProps {
 	mapId?: string;
@@ -26,10 +54,6 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const theme = getTheme(
-		window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ? 'dark' : 'light'
-	);
-	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
 	const [bearing, setBearing] = useState(0);
 	const _updateBearing = () => {
 		if (!mapHook.map?.map?.getBearing) return;
@@ -59,47 +83,18 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 
 	return (
 		<>
-			<Box
-				sx={{
-					zIndex: 1000,
-					transform: mediaIsMobile ? 'scale(1.6)' : 'scale(1)',
-					cursor: 'pointer',
-					...props.style,
-				}}
-			>
-				<Box
-					onClick={rotate}
-					sx={{
-						position: 'absolute',
-						right: mediaIsMobile ? '0px' : '-10px',
-						top: mediaIsMobile ? '-52px' : '-52px',
-						circle: {
-							fill: theme.palette.compass.compColor,
-						},
-						'&:hover circle': {
-							fill: theme.palette.compass.compHover,
-						},
-						...props.backgroundStyle,
-					}}
-				>
+			<StyleBox sx={{ ...props.style }}>
+				<CompassBox onClick={rotate} sx={{ ...props.backgroundStyle }}>
 					<CompassBackground />
-					<Box
-						onClick={rotate}
-						sx={{
-							position: 'absolute',
-							right: '21.4px',
-							top: '6px',
-							...props.needleStyle,
-						}}
-					>
+					<NeedleBox onClick={rotate} sx={{ ...props.needleStyle }}>
 						<CompassNeedle
 							style={{
 								transform: 'rotate(' + (bearing > 0 ? '-' + bearing : -1 * bearing) + 'deg)',
 							}}
 						/>
-					</Box>
-				</Box>
-			</Box>
+					</NeedleBox>
+				</CompassBox>
+			</StyleBox>
 		</>
 	);
 };
