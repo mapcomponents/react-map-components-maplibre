@@ -25,7 +25,7 @@ function BubbleForInstruction(props) {
 					sx={{
 						marginTop: props.textMarginTop,
 						marginLeft: props.textMarginLeft,
-						color: 'text.contrast',
+						color: '#fff',
 						textAlign: 'left',
 					}}
 				>
@@ -33,7 +33,7 @@ function BubbleForInstruction(props) {
 				</Typography>
 				<ReplyAllIcon
 					sx={{
-						color: 'text.contrast',
+						color: '#fff',
 						fontSize: '80px',
 						position: 'absolute',
 						transform: props.iconTransform,

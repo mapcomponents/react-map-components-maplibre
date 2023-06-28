@@ -141,10 +141,10 @@ function LayerListItem({
 				<ListItem
 					sx={{
 						paddingRight: configurable ? '56px' : 0,
-						paddingLeft: 0,
+						paddingLeft: '25px',
 						paddingTop: 0,
 						paddingBottom: '4px',
-						...props.listItemSx
+						...props.listItemSx,
 					}}
 					secondaryAction={
 						configurable && Object.keys(paintProps)?.length > 0 ? (
@@ -159,6 +159,7 @@ function LayerListItem({
 										});
 									}}
 									sx={{
+										marginRight: '0px',
 										padding: '4px',
 										marginTop: '-3px',
 										...(props.showDeleteButton ? { marginRight: '4px' } : {}),
@@ -216,7 +217,12 @@ function LayerListItem({
 							}}
 						/>
 					</ListItemIcon>
-					<ListItemText variant="layerlist" primary={name} secondary={description} primaryTypographyProps={{ overflow: 'hidden' }} />
+					<ListItemText
+						variant="layerlist"
+						primary={name}
+						secondary={description}
+						primaryTypographyProps={{ overflow: 'hidden' }}
+					/>
 				</ListItem>
 			)}
 			{_layerComponent}

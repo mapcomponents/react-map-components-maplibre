@@ -4,8 +4,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import StopIcon from '@mui/icons-material/Stop';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import { Slider, Drawer, Button, Grid, Typography, useMediaQuery } from '@mui/material';
-
+import { Slider, Drawer, Button, Grid, Typography, useMediaQuery, Theme } from '@mui/material';
 
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -48,7 +47,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 	const range = props.maxVal - props.minVal;
 	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
 	useEffect(() => {
 		return () => {
@@ -83,15 +82,15 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 	// Player buttons
 
 	const handlePlayPause = () => {
-		if(!isPlaying){
+		if (!isPlaying) {
 			setIsPlaying(true);
-		play();
+			play();
 		} else {
 			setIsPlaying(false);
-		if (isPlaying) {
-			clearInterval(intervalRef.current);
-		}		
-		}		
+			if (isPlaying) {
+				clearInterval(intervalRef.current);
+			}
+		}
 	};
 
 	const handleStop = () => {
@@ -126,10 +125,9 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 			setCurrentVal(newValue as number);
 		} else {
 			if (e) {
-		
 				clearInterval(intervalRef.current);
 				setCurrentVal(newValue as number);
-				play();				
+				play();
 			}
 		}
 	};
@@ -145,26 +143,26 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 					'& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
 				}}
 			>
-			<Grid container >
+				<Grid container>
 					{mediaIsMobile ? <></> : <Grid item xs={3} />}
 					<Grid item xs={mediaIsMobile ? 12 : 6} textAlign="center">
 						<Button onClick={handleFastRewind}>
 							<FastRewindIcon />
 						</Button>
-						<Button onClick={handleStop} >
+						<Button onClick={handleStop}>
 							<StopIcon />
 						</Button>
-						<Button onClick={handlePlayPause}  >
+						<Button onClick={handlePlayPause}>
 							{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-							</Button>
+						</Button>
 						<Button onClick={handleFastForward}>
 							<FastForwardIcon />
 						</Button>
 					</Grid>
-			
+
 					{props.display && !mediaIsMobile && (
-						<Grid item xs={3}>							
-							<Typography variant={'h5'} textAlign={'right'} sx={{ paddingRight: '25px' }}>							
+						<Grid item xs={3}>
+							<Typography variant={'h5'} textAlign={'right'} sx={{ paddingRight: '25px' }}>
 								{Math.floor(currentVal)}
 							</Typography>
 						</Grid>

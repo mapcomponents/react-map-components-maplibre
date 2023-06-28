@@ -4,13 +4,13 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Box from "@mui/material/Box";
-import { SxProps } from "@mui/material";
-
-import MlNavigationCompass from "../MlNavigationCompass/MlNavigationCompass";
-import MlFollowGps from "../MlFollowGps/MlFollowGps";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import useMap from "../../hooks/useMap";
-import MlCenterPosition from "../MlCenterPosition/MlCenterPosition";
+import { SxProps, Theme } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import MlNavigationCompass from '../MlNavigationCompass/MlNavigationCompass';
+import MlFollowGps from '../MlFollowGps/MlFollowGps';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import useMap from '../../hooks/useMap';
+import MlCenterPosition from '../MlCenterPosition/MlCenterPosition';
 
 interface MlNavigationToolsProps {
 	/**
@@ -63,7 +63,8 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	});
 
 	const [pitch, setPitch] = useState(0);
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -113,24 +114,15 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				position: 'absolute',
 				display: 'flex',
 				flexDirection: 'column',
-				...(mediaIsMobile ? { margin: '20px 10px 20px 10px' } : {}),
+				right: mediaIsMobile ? '15px' : '25px',
+				bottom: mediaIsMobile ? '20px' : '30px',
+				...(mediaIsMobile ? { margin: '80px 10px 20px 10px' } : { marginTop: '50px' }),
 				...props.sx,
 			}}
 		>
-			<MlNavigationCompass
-				style={{
-					width: '31px',
-					position: 'relative',
-					height: mediaIsMobile ? '55px' : '45px',
-					marginLeft: mediaIsMobile ? '3px' : '-5px',
-					transform: mediaIsMobile ? 'scale(1.6)' : 'scale(1)',
-				}}
-				backgroundStyle={{
-					boxShadow: '0px 0px 18px rgba(0,0,0,.5)',
-				}}
-			/>
+			<MlNavigationCompass />
 			{props.show3DButton && (
-				<Button variant="navtools" onClick={adjustPitch}>
+				<Button variant="navtools" onClick={adjustPitch} className="pitchbutton" sx={{}}>
 					{pitch ? '2D' : '3D'}
 				</Button>
 			)}
@@ -139,18 +131,18 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 			<ButtonGroup
 				orientation="vertical"
 				sx={{
-					width: '50px',
 					border: 'none',
-					Button: { minWidth: '20px !important'},
+					Button: { minWidth: '20px !important' },
 					'Button:hover': { border: 'none' },
 				}}
 			>
 				{props.showZoomButtons && (
 					<>
-						<Button variant="navtools" onClick={zoomIn}>
+						<Button className="zoomplus" variant="navtools" onClick={zoomIn}>
 							<ControlPointIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
-						<Button variant="navtools" onClick={zoomOut}>
+						<Divider sx={{ zIndex: 500, marginLeft: '7px', marginRight: '7px' }} />
+						<Button className="zoomminus" variant="navtools" onClick={zoomOut}>
 							<RemoveCircleOutlineIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 					</>
@@ -167,10 +159,6 @@ MlNavigationTools.defaultProps = {
 	showFollowGpsButton: true,
 	showCenterLocationButton: false,
 	showZoomButtons: true,
-	sx: {
-		right: "5px",
-		bottom: "20px",
-	},
 };
 
 export default MlNavigationTools;

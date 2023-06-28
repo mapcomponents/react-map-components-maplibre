@@ -2,6 +2,13 @@ import { ListItemTextProps } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { Theme } from '@mui/system';
 
+declare module '@mui/material' {
+	interface Palette {
+		topToolbar: { barColor: string };
+		navigation: { navColor: string; navHover: string };
+		compass: { compColor: string; compHover: string };
+	}
+}
 declare module '@mui/material/Button' {
 	interface ButtonPropsVariantOverrides {
 		navtools: true;
@@ -9,7 +16,7 @@ declare module '@mui/material/Button' {
 }
 declare module '@mui/material' {
 	export interface ListItemTextProps {
-		variant?: "layerlist";
+		variant?: 'layerlist';
 	}
 }
 
@@ -31,35 +38,30 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 		...(mode === 'dark'
 			? {
 					primary: {
-						main: '#009EE0',
+						main: '#FFF',
 					},
 					secondary: { main: '#747577' },
-					background: {
-						default: '#222222',
-						paper: '#414141',
-						icon: '#525252',
-					},
+					background: { paper: '#414244', test: '#272727' },
 					text: {
-						secondary: '#fff',
-						contrast: '#121212',
+						primary: '#BCBDBF',
+						contrast: '#000',
 					},
+					topToolbar: { barColor: '#000' },
+					navigation: { navColor: '#525252', navHover: '#626262' },
+					compass: { compColor: '#414244', compHover: '#626262' },
 			  }
 			: {
 					primary: {
 						main: '#009EE0',
 					},
 					secondary: { main: '#747577' },
-
-					background: {
-						default: '#fff',
-						paper: '#fdfdfd',
-						icon: '#bdbdbd',
-					},
 					text: {
-						primary: '#1A171B',
-						secondary: '#121212',
+						primary: '#000',
 						contrast: '#fff',
 					},
+					topToolbar: { barColor: '#fff' },
+					navigation: { navColor: '#fff', navHover: '#f5f5f5' },
+					compass: { compColor: '#fff', compHover: '#f5f5f5' },
 			  }),
 	},
 });
@@ -78,19 +80,7 @@ const getTheme = (mode: 'light' | 'dark') => {
 			MuiAppBar: {
 				styleOverrides: {
 					root: {
-						backgroundColor: theme.palette.background.default,
-					},
-				},
-			},
-			MuiIconButton: {
-				styleOverrides: {
-					root: {
-						color: theme.palette.text.primary,
-						backgroundColor: theme.palette.background.icon,
-						':hover': {
-							backgroundColor: theme.palette.background.icon,
-							color: theme.palette.primary.main,
-						},
+						backgroundColor: theme.palette.topToolbar.barColor,
 					},
 				},
 			},
@@ -117,17 +107,15 @@ const getTheme = (mode: 'light' | 'dark') => {
 								height: '30px',
 								fontSize: '1.2em',
 							},
-							backgroundColor: theme.palette.background.icon,
+							color: theme.palette.text.primary,
+							backgroundColor: theme.palette.navigation.navColor,
 							borderRadius: '23%',
-							//border: "1px solid #bbb",
-							//boxShadow: "0px 0px 4px rgba(0,0,0,.5)",
 							margin: '0.15px',
 							marginTop: '4px',
 							':hover': {
 								color: theme.palette.primary.main,
-								backgroundColor: theme.palette.background.icon,
+								backgroundColor: theme.palette.navigation.navHover,
 							},
-							color: theme.palette.text.secondary,
 						},
 					},
 				],
