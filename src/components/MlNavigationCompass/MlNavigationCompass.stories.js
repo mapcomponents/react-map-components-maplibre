@@ -16,8 +16,8 @@ Standard.args = {
 	style: {
 		position: { xs: 'absolute' },
 		transform: { xs: 'scale(4)' },
-		left: { xs: '75%', md: '50%' },
-		top: { xs: '50%' },
+		left: { xs: '75%', sm: '65%', md: '55%' },
+		top: { xs: '50%', md: '55%' },
 	},
 };
 export const StyleExample = Template.bind({});
@@ -25,8 +25,8 @@ StyleExample.args = {
 	style: {
 		position: { xs: 'absolute' },
 		transform: { xs: 'scale(4)' },
-		left: { xs: '75%', md: '50%' },
-		top: { xs: '50%' },
+		left: { xs: '75%', sm: '65%', md: '55%' },
+		top: { xs: '50%', md: '55%' },
 	},
 	backgroundStyle: {
 		'svg circle': {
