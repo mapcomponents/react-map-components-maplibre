@@ -1,11 +1,9 @@
-import React from "react";
-
-import MlNavigationCompass from "./MlNavigationCompass";
-
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+import React from 'react';
+import MlNavigationCompass from './MlNavigationCompass';
+import mapContextDecorator from '../../decorators/MapContextDecorator';
 
 const storyoptions = {
-	title: "MapComponents/MlNavigationCompass",
+	title: 'MapComponents/MlNavigationCompass',
 	component: MlNavigationCompass,
 	decorators: mapContextDecorator,
 };
@@ -16,19 +14,19 @@ const Template = (props) => <MlNavigationCompass {...props} />;
 export const Standard = Template.bind({});
 Standard.args = {
 	style: {
-		position: 'absolute',
-		transform: 'scale(4)',
-		left: '50%',
-		top: '50%',
+		position: { xs: 'absolute' },
+		transform: { xs: 'scale(4)' },
+		left: { xs: '75%', md: '50%' },
+		top: { xs: '50%' },
 	},
 };
 export const StyleExample = Template.bind({});
 StyleExample.args = {
 	style: {
-		position: 'absolute',
-		transform: 'scale(4)',
-		left: '50%',
-		top: '50%',
+		position: { xs: 'absolute' },
+		transform: { xs: 'scale(4)' },
+		left: { xs: '75%', md: '50%' },
+		top: { xs: '50%' },
 	},
 	backgroundStyle: {
 		'svg circle': {
