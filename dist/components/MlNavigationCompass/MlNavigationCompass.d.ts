@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
-import { CSSProperties } from "react";
 
 interface MlNavigationCompassProps {
     mapId?: string;
     insertBeforeLayer?: string;
-    style?: CSSProperties;
-    backgroundStyle?: CSSProperties;
-    needleStyle?: CSSProperties;
+    style?: object;
+    backgroundStyle?: object;
+    needleStyle?: object;
 }
 /**
  * Navigation component that displays a compass component which indicates the current oriantation of the map it is registered for and offers controls to turn the bearing 90° left/right or reset north to point up.
@@ -25,15 +24,15 @@ declare const MlNavigationCompass: {
         /**
          * Style object to adjust css definitions of the component.
          */
-        style: PropTypes.Requireable<CSSProperties>;
+        style: PropTypes.Requireable<object>;
         /**
          * Style object to adjust css definitions of the background.
          */
-        backgroundStyle: PropTypes.Requireable<CSSProperties>;
+        backgroundStyle: PropTypes.Requireable<object>;
         /**
          * Style object to adjust css definitions of the compass needle.
          */
-        needleStyle: PropTypes.Requireable<CSSProperties>;
+        needleStyle: PropTypes.Requireable<object>;
     };
 };
 export default MlNavigationCompass;
