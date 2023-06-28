@@ -1,9 +1,8 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
-import PropTypes from 'prop-types';
-import useMap from '../../hooks/useMap';
+import { styled } from '@mui/material';
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
-import { styled } from '@mui/material';
+import useMap from '../../hooks/useMap';
 
 const StyleBox = styled('div')(({ theme }) => ({
 	zIndex: 1000,
@@ -35,10 +34,26 @@ const NeedleBox = styled('div')({
 });
 
 interface MlNavigationCompassProps {
+	/**
+	 * Id of the target MapLibre instance in mapHook
+	 */
 	mapId?: string;
+	/**
+	 * The layerId of an existing layer this layer should be rendered visually beneath
+	 * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+	 */
 	insertBeforeLayer?: string;
+	/**
+	 * Style object to adjust css definitions of the component.
+	 */
 	style?: CSSProperties;
+	/**
+	 * Style object to adjust css definitions of the background.
+	 */
 	backgroundStyle?: CSSProperties;
+	/**
+	 * Style object to adjust css definitions of the compass needle.
+	 */
 	needleStyle?: CSSProperties;
 }
 /**
@@ -59,7 +74,6 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		if (!mapHook.map?.map?.getBearing) return;
 		setBearing(Math.round(mapHook.map.map.getBearing()));
 	};
-
 	useEffect(() => {
 		if (!mapHook.map) return;
 		mapHook.map.on('rotate', _updateBearing, mapHook.componentId);
@@ -98,25 +112,5 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		</>
 	);
 };
-
-MlNavigationCompass.propTypes = {
-	/**
-	 * Component id prefix
-	 */
-	idPrefix: PropTypes.string,
-	/**
-	 * Style object to adjust css definitions of the component.
-	 */
-	style: PropTypes.object,
-	/**
-	 * Style object to adjust css definitions of the background.
-	 */
-	backgroundStyle: PropTypes.object,
-	/**
-	 * Style object to adjust css definitions of the compass needle.
-	 */
-	needleStyle: PropTypes.object,
-};
-
 
 export default MlNavigationCompass;
