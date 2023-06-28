@@ -38,17 +38,17 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 		...(mode === 'dark'
 			? {
 					primary: {
-						main: '#009EE0',
+						main: '#FFF',
 					},
 					secondary: { main: '#747577' },
-					background: { paper: '#272727', test: '#272727' },
+					background: { paper: '#414244', test: '#272727' },
 					text: {
-						primary: '#fff',
+						primary: '#BCBDBF',
 						contrast: '#000',
 					},
 					topToolbar: { barColor: '#000' },
 					navigation: { navColor: '#525252', navHover: '#626262' },
-					compass: { compColor: '#525252', compHover: '#626262' },
+					compass: { compColor: '#414244', compHover: '#626262' },
 			  }
 			: {
 					primary: {
