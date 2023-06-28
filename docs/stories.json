@@ -533,6 +533,20 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlnavigationtools--example-config": {
+      "id": "mapcomponents-mlnavigationtools--example-config",
+      "name": "Example Config",
+      "title": "MapComponents/MlNavigationTools",
+      "importPath": 5138,
+      "kind": "MapComponents/MlNavigationTools",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 5138,
+        "framework": "react",
+        "__id": "mapcomponents-mlnavigationtools--example-config",
+        "__isArgsStory": true
+      }
+    },
     "mapcomponents-mlorderlayers--example-config": {
       "id": "mapcomponents-mlorderlayers--example-config",
       "name": "Example Config",
