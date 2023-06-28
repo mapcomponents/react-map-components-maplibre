@@ -5,8 +5,9 @@ import { Theme } from '@mui/system';
 declare module '@mui/material' {
 	interface Palette {
 		topToolbar: { barColor: string };
-		navigation: { navColor: string; navHover: string };
+		navigation: { navColor: string; navHover: string; navText: string; navTextHover: string };
 		compass: { compColor: string; compHover: string };
+		followGPS: { GPSBackround: string; GPSHover: string };
 	}
 }
 declare module '@mui/material/Button' {
@@ -38,21 +39,27 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 		...(mode === 'dark'
 			? {
 					primary: {
-						main: '#FFF',
+						main: '#009EE0',
 					},
 					secondary: { main: '#747577' },
-					background: { paper: '#414244', test: '#272727' },
+					background: { paper: '#414244' },
 					text: {
-						primary: '#BCBDBF',
+						primary: '#FFF',
 						contrast: '#000',
 					},
 					topToolbar: { barColor: '#000' },
-					navigation: { navColor: '#525252', navHover: '#626262' },
+					navigation: {
+						navColor: '#414244',
+						navHover: '#414244',
+						navText: '#BCBDBF',
+						navTextHover: '#FFF',
+					},
 					compass: { compColor: '#414244', compHover: '#626262' },
+					followGPS: { GPSBackround: '#414244', GPSHover: '#FFF' },
 			  }
 			: {
 					primary: {
-						main: '#009EE0',
+						main: '#009ee0',
 					},
 					secondary: { main: '#747577' },
 					text: {
@@ -62,6 +69,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					topToolbar: { barColor: '#fff' },
 					navigation: { navColor: '#fff', navHover: '#f5f5f5' },
 					compass: { compColor: '#fff', compHover: '#f5f5f5' },
+					followGPS: { GPSBackround: '#FFF', GPSHover: '#f5f5f5' },
 			  }),
 	},
 });
@@ -107,13 +115,13 @@ const getTheme = (mode: 'light' | 'dark') => {
 								height: '30px',
 								fontSize: '1.2em',
 							},
-							color: theme.palette.text.primary,
+							color: theme.palette.navigation.navText,
 							backgroundColor: theme.palette.navigation.navColor,
 							borderRadius: '23%',
 							margin: '0.15px',
 							marginTop: '4px',
 							':hover': {
-								color: theme.palette.primary.main,
+								color: theme.palette.navigation.navTextHover,
 								backgroundColor: theme.palette.navigation.navHover,
 							},
 						},

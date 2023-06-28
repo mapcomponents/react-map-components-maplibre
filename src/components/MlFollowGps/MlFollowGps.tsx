@@ -229,8 +229,8 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 
 MlFollowGps.defaultProps = {
 	mapId: undefined,
-	onColor: '#ececec',
-	offColor: '#666',
+	onColor: '#009ee0',
+	offColor: 'palette.followGPS',
 	showAccuracyCircle: true,
 	showUserLocation: true,
 	showOrientation: true,
