@@ -1,22 +1,65 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
-import PropTypes from 'prop-types';
-import { Box, useMediaQuery } from '@mui/material';
-import useMap from '../../hooks/useMap';
+import { styled } from '@mui/material';
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
-import getTheme from '../../ui_components/MapcomponentsTheme';
+import useMap from '../../hooks/useMap';
+
+const StyleBox = styled('div')(({ theme }) => ({
+	zIndex: 1000,
+	cursor: 'pointer',
+	transform: 'scale(1)',
+	[theme.breakpoints.down('md')]: {
+		transform: 'scale(1.6)',
+	},
+}));
+const CompassBox = styled('div')(({ theme }) => ({
+	position: 'absolute',
+	right: '-10px',
+	top: '-52px',
+	[theme.breakpoints.down('md')]: {
+		right: '0px',
+		top: '-52px',
+	},
+	circle: {
+		fill: theme.palette.compass.compColor,
+	},
+	'&:hover circle': {
+		fill: theme.palette.compass.compHover,
+	},
+}));
+const NeedleBox = styled('div')({
+	position: 'absolute',
+	right: '21.4px',
+	top: '6px',
+});
 
 interface MlNavigationCompassProps {
+	/**
+	 * Id of the target MapLibre instance in mapHook
+	 */
 	mapId?: string;
+	/**
+	 * The layerId of an existing layer this layer should be rendered visually beneath
+	 * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+	 */
 	insertBeforeLayer?: string;
+	/**
+	 * Style object to adjust css definitions of the component.
+	 */
 	style?: CSSProperties;
+	/**
+	 * Style object to adjust css definitions of the background.
+	 */
 	backgroundStyle?: CSSProperties;
+	/**
+	 * Style object to adjust css definitions of the compass needle.
+	 */
 	needleStyle?: CSSProperties;
 }
 /**
  * Navigation component that displays a compass component which indicates the current oriantation of the map it is registered for and offers controls to turn the bearing 90° left/right or reset north to point up.
  *
- * All style props are applied using @emotion/css to allow more complex css selectors.
+ * All style props are applied using @mui/material/styled to allow more complex css selectors.
  *
  * @component
  */
@@ -25,14 +68,12 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
+
 	const [bearing, setBearing] = useState(0);
 	const _updateBearing = () => {
 		if (!mapHook.map?.map?.getBearing) return;
 		setBearing(Math.round(mapHook.map.map.getBearing()));
 	};
-	const theme = getTheme('light');
-	const mediaIsMobile = useMediaQuery(theme.breakpoints.down('md'));
-
 	useEffect(() => {
 		if (!mapHook.map) return;
 		mapHook.map.on('rotate', _updateBearing, mapHook.componentId);
@@ -56,69 +97,20 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 
 	return (
 		<>
-			<Box
-				sx={{
-					zIndex: 1000,
-					transform: mediaIsMobile ? 'scale(1.6)' : 'scale(1)',
-					cursor: 'pointer',
-					...props.style,
-				}}
-			>
-				<Box
-					onClick={rotate}
-					sx={{
-						position: 'absolute',
-						right: mediaIsMobile ? '0px' : '-10px',
-						top: mediaIsMobile ? '-52px' : '-52px',
-						circle: {
-							fill: theme.palette.compass.compColor,
-						},
-						'&:hover circle': {
-							fill: theme.palette.compass.compHover,
-						},
-						...props.backgroundStyle,
-					}}
-				>
+			<StyleBox sx={{ ...props.style }}>
+				<CompassBox onClick={rotate} sx={{ ...props.backgroundStyle }}>
 					<CompassBackground />
-					<Box
-						onClick={rotate}
-						sx={{
-							position: 'absolute',
-							right: '21.4px',
-							top: '6px',
-							...props.needleStyle,
-						}}
-					>
+					<NeedleBox onClick={rotate} sx={{ ...props.needleStyle }}>
 						<CompassNeedle
 							style={{
 								transform: 'rotate(' + (bearing > 0 ? '-' + bearing : -1 * bearing) + 'deg)',
 							}}
 						/>
-					</Box>
-				</Box>
-			</Box>
+					</NeedleBox>
+				</CompassBox>
+			</StyleBox>
 		</>
 	);
 };
-
-MlNavigationCompass.propTypes = {
-	/**
-	 * Component id prefix
-	 */
-	idPrefix: PropTypes.string,
-	/**
-	 * Style object to adjust css definitions of the component.
-	 */
-	style: PropTypes.object,
-	/**
-	 * Style object to adjust css definitions of the background.
-	 */
-	backgroundStyle: PropTypes.object,
-	/**
-	 * Style object to adjust css definitions of the compass needle.
-	 */
-	needleStyle: PropTypes.object,
-};
-
 
 export default MlNavigationCompass;

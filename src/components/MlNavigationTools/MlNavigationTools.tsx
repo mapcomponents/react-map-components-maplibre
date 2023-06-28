@@ -4,7 +4,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import Box from "@mui/material/Box";
-import { SxProps } from "@mui/material";
+import { SxProps, Theme } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import MlNavigationCompass from '../MlNavigationCompass/MlNavigationCompass';
 import MlFollowGps from '../MlFollowGps/MlFollowGps';
@@ -63,7 +63,8 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	});
 
 	const [pitch, setPitch] = useState(0);
-	const mediaIsMobile = useMediaQuery('(max-width:900px)');
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+
 
 	useEffect(() => {
 		if (!mapHook.map) return;
