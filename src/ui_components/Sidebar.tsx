@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-import { Paper, Drawer, IconButton, PaperProps, DrawerProps } from '@mui/material';
+import { Paper, Drawer, IconButton, PaperProps, DrawerProps, Theme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import { Global } from '@emotion/react';
@@ -39,7 +39,7 @@ export default function Sidebar({
 	setOpen,
 	...props
 }: SidebarProps & DrawerProps) {
-	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	return (

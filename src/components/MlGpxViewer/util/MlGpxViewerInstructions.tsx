@@ -1,6 +1,6 @@
 import React from 'react';
 import Instructions from '../../../util/Instructions';
-import { useMediaQuery } from '@mui/material';
+import { Theme, useMediaQuery } from '@mui/material';
 
 const bubbleBottomRightStyle = {
 	bubbleTop: '-150px',
@@ -60,7 +60,7 @@ const getSteps = (mediaIsMobile: boolean) => [
 	},
 ];
 export default function MlGpxViewerInstructions(props: { open: boolean }) {
-	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
 	return (
 		<>

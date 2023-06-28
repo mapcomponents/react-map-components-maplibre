@@ -9,7 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
-import { Fade, ListItemButton, Paper } from '@mui/material';
+import { Fade, ListItemButton, Paper, Theme } from '@mui/material';
 
 const modalStyle = {
 	position: 'absolute',
@@ -68,7 +68,7 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 		}
 	};
 
-	const mediaIsMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
 	const loadSample = (samplePath: string) => {
 		fetch(samplePath)
