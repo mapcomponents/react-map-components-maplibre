@@ -8,7 +8,6 @@ import WallpaperIcon from '@mui/icons-material/Wallpaper';
 import LayersIcon from '@mui/icons-material/Layers';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import getTheme from '../MapcomponentsTheme';
 
 const actions = [
 	{ icon: <PictureAsPdfIcon />, name: 'Create PDF' },
@@ -29,16 +28,14 @@ export interface SpeedDialProps {
  */
 
 const SpeedDial = () => {
-
 	const [open, setOpen] = useState(false);
-	
+
 	const handleOpen = (_event: React.SyntheticEvent<Event>, reason: OpenReason) => {
 		if (reason === 'toggle') {
 			setOpen(true);
 		}
 	};
 	const handleClose = () => setOpen(false);
-	const theme = getTheme('light');
 
 	return (
 		<Box
@@ -68,7 +65,7 @@ const SpeedDial = () => {
 						tooltipTitle={action.name}
 						tooltipOpen
 						onClick={handleClose}
-						FabProps={{ sx: { color: theme.palette.secondary.main } }}
+						FabProps={{ sx: { color: 'text.primary' } }}
 					/>
 				))}
 			</MuiSpeedDial>
