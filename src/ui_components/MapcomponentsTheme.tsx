@@ -38,16 +38,16 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 		...(mode === 'dark'
 			? {
 					primary: {
-						main: '#FFF',
+						main: '#009EE0',
 					},
 					secondary: { main: '#747577' },
-					background: { paper: '#414244', test: '#272727' },
+					background: { paper: '#414244' },
 					text: {
-						primary: '#BCBDBF',
+						primary: '#FFF',
 						contrast: '#000',
 					},
 					topToolbar: { barColor: '#000' },
-					navigation: { navColor: '#525252', navHover: '#626262' },
+					navigation: { navColor: '#414244', navHover: '#747577' },
 					compass: { compColor: '#414244', compHover: '#626262' },
 			  }
 			: {
@@ -85,11 +85,6 @@ const getTheme = (mode: 'light' | 'dark') => {
 				},
 			},
 			MuiButton: {
-				styleOverrides: {
-					contained: {
-						color: '#fff',
-					},
-				},
 				variants: [
 					{
 						props: { variant: 'navtools' },
@@ -113,7 +108,6 @@ const getTheme = (mode: 'light' | 'dark') => {
 							margin: '0.15px',
 							marginTop: '4px',
 							':hover': {
-								color: theme.palette.primary.main,
 								backgroundColor: theme.palette.navigation.navHover,
 							},
 						},

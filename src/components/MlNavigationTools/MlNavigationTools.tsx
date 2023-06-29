@@ -122,7 +122,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		>
 			<MlNavigationCompass />
 			{props.show3DButton && (
-				<Button variant="navtools" onClick={adjustPitch} className="pitchbutton" sx={{}}>
+				<Button variant="navtools" onClick={adjustPitch}>
 					{pitch ? '2D' : '3D'}
 				</Button>
 			)}
@@ -138,11 +138,11 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 			>
 				{props.showZoomButtons && (
 					<>
-						<Button className="zoomplus" variant="navtools" onClick={zoomIn}>
+						<Button variant="navtools" onClick={zoomIn}>
 							<ControlPointIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 						<Divider sx={{ zIndex: 500, marginLeft: '7px', marginRight: '7px' }} />
-						<Button className="zoomminus" variant="navtools" onClick={zoomOut}>
+						<Button variant="navtools" onClick={zoomOut}>
 							<RemoveCircleOutlineIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 					</>
