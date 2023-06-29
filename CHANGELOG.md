@@ -1,4 +1,9 @@
 # Change Log
+## [v0.1.84] - 2023-06-29
+
+### Fixed
+
+- 2690227: fix theme, remove unfinished cy test
 
 ## [v0.1.83] - 2023-06-28
 
