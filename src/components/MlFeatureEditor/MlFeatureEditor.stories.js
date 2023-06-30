@@ -1,11 +1,11 @@
-import React from "react";
-
-import MlFeatureEditor from "./MlFeatureEditor";
-
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+import React, { useRef, useEffect } from 'react';
+import MlFeatureEditor from './MlFeatureEditor';
+import useMap from '../../hooks/useMap';
+import mapContextDecorator from '../../decorators/MapContextDecorator';
+import { center, points, centerOfMass } from '@turf/turf';
 
 const storyoptions = {
-	title: "MapComponents/MlFeatureEditor",
+	title: 'MapComponents/MlFeatureEditor',
 	component: MlFeatureEditor,
 	argTypes: {},
 	decorators: mapContextDecorator,
@@ -13,6 +13,10 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (args) => {
+	const initializedRef = useRef(false);
+	const mapHook = useMap({ mapId: undefined });
+
+
 	return (
 		<MlFeatureEditor
 			{...args}
@@ -25,9 +29,9 @@ const Template = (args) => {
 
 export const EditPolygon = Template.bind({});
 EditPolygon.args = {
-	mode: "simple_select",
+	mode: 'simple_select',
 	geojson: {
-		type: "Feature",
+		type: 'Feature',
 		properties: {},
 		geometry: {
 			coordinates: [
@@ -39,29 +43,29 @@ EditPolygon.args = {
 					[7.0904979943736635, 50.73948334574527],
 				],
 			],
-			type: "Polygon",
+			type: 'Polygon',
 		},
 	},
 };
 
 export const EditPoint = Template.bind({});
 EditPoint.args = {
-	mode: "simple_select",
+	mode: 'simple_select',
 	geojson: {
-		type: "Feature",
+		type: 'Feature',
 		properties: {},
 		geometry: {
-			type: "Point",
-			coordinates: [7.0904979943736635, 50.73948334574527],
+			type: 'Point',
+			coordinates: [7.0851268, 50.73884],
 		},
 	},
 };
 
 export const EditLineString = Template.bind({});
 EditLineString.args = {
-	mode: "simple_select",
+	mode: 'simple_select',
 	geojson: {
-		type: "Feature",
+		type: 'Feature',
 		properties: {},
 		geometry: {
 			coordinates: [
@@ -70,22 +74,22 @@ EditLineString.args = {
 				[7.093562913197076, 50.73723639825727],
 				[7.096294028980594, 50.7387727842636],
 			],
-			type: "LineString",
+			type: 'LineString',
 		},
 	},
 };
 
 export const DrawPolygon = Template.bind({});
 DrawPolygon.args = {
-	mode: "draw_polygon",
+	mode: 'draw_polygon',
 };
 
 export const DrawPoint = Template.bind({});
 DrawPoint.args = {
-	mode: "draw_point",
+	mode: 'draw_point',
 };
 
 export const DrawLineString = Template.bind({});
 DrawLineString.args = {
-	mode: "draw_line_string",
+	mode: 'draw_line_string',
 };
