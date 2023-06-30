@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import MlGeoJsonLayer from './MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
+import geoJsonDecorator from '../../decorators/GeoJsonMapDecorator';
+import lowZoomDecorator from '../../decorators/LowZoomDecorator';
 import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
 import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
 import HeatMapStyler from './story_utils/MlGeojsonLayerHeatMapStyler';
@@ -9,7 +11,7 @@ import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 import earthquakes from './assets/earthquake.json';
 import wg_locations from './assets/wg_locations.json';
-import { GeoJSONObject } from '@turf/turf';
+import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
 
@@ -19,17 +21,25 @@ const storyoptions = {
 
 	argTypes: {},
 
-	decorators: mapContextDecorator,
+	decorators: geoJsonDecorator,
 };
 export default storyoptions;
 
 interface TemplateProps {
-	geojson: GeoJSONObject;
+	geojson: Feature<Geometry | GeometryCollection>;
 	mapId: string;
 	type: string;
 }
 
-const Template = (props: TemplateProps) => {
+const Template = (props: MlGeoJsonLayerProps) => {
+	return (
+		<>
+			<MlGeoJsonLayer {...props} />
+		</>
+	);
+};
+
+const LineTemplate = (props: TemplateProps) => {
 	const mapHook = useMap({
 		mapId: undefined,
 	});
@@ -40,9 +50,8 @@ const Template = (props: TemplateProps) => {
 		if (!mapHook.map || initializedRef.current) return;
 
 		initializedRef.current = true;
-		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 15 });
+		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 16 });
 	}, [mapHook.map]);
-
 	return (
 		<>
 			<LineStyler {...props} />
@@ -50,6 +59,14 @@ const Template = (props: TemplateProps) => {
 	);
 };
 const PolygonTemplate = (props: TemplateProps) => {
+	return (
+		<>
+			<PolygonStyler {...props} />
+		</>
+	);
+};
+
+const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 	const mapHook = useMap({
 		mapId: undefined,
 	});
@@ -60,14 +77,10 @@ const PolygonTemplate = (props: TemplateProps) => {
 		if (!mapHook.map || initializedRef.current) return;
 
 		initializedRef.current = true;
-		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 15 });
+		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
 	}, [mapHook.map]);
 
-	return (
-		<>
-			<PolygonStyler {...props} />
-		</>
-	);
+	return <CircleMapStyler {...props} />;
 };
 
 const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
@@ -86,32 +99,23 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 
 	return <HeatMapStyler {...props} />;
 };
-const CircleTemplate = (props: MlGeoJsonLayerProps) => {
-	const mapHook = useMap({
-		mapId: undefined,
-	});
 
-	const initializedRef = useRef(false);
-
-	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-
-		initializedRef.current = true;
-		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
-	}, [mapHook.map]);
-
-	return <CircleMapStyler {...props} />;
+export const Circle = CircleTemplate.bind({});
+Circle.parameters = {};
+Circle.args = {
+	geojson: wg_locations,
+	paint: {
+		'circle-radius': ['/', ['get', 'Mitarbeitende'], 1.2],
+		'circle-color': '#B11E40',
+	},
+	type: 'circle',
 };
 
-export const Linestring = Template.bind({});
+export const Linestring = LineTemplate.bind({});
 Linestring.parameters = {};
 Linestring.args = {
 	geojson: sample_geojson_2,
 	mapId: 'Map_1',
-	/*paint:{
-		"stroke-color": 'rgba(123,20,80)',
-		"fill-opacity": 0
-	},*/
 	type: 'line',
 };
 
@@ -121,27 +125,9 @@ Polygon.args = {
 	geojson: sample_geojson_1,
 };
 
-export const DefaultPaintOverrides = Template.bind({});
-DefaultPaintOverrides.parameters = {};
-DefaultPaintOverrides.args = {
-	defaultPaintOverrides: {
-		fill: {
-			'fill-color': 'blue',
-		},
-		circle: {
-			'circle-color': 'red',
-		},
-		line: {
-			'line-color': 'black',
-		},
-	},
-	geojson: sample_geojson_1,
-	type: '',
-};
-
-export const HeatMapEarthquakes = HeatmapTemplate.bind({});
-HeatMapEarthquakes.parameters = {};
-HeatMapEarthquakes.args = {
+export const HeatMap = HeatmapTemplate.bind({});
+HeatMap.parameters = {};
+HeatMap.args = {
 	geojson: earthquakes,
 	options: {
 		// paint examples copied from https://maplibre.org/maplibre-gl-js-docs/example/heatmap-layer/
@@ -179,13 +165,21 @@ HeatMapEarthquakes.args = {
 	},
 	type: 'heatmap',
 };
-export const CircleMapWheregroupLocations = CircleTemplate.bind({});
-CircleMapWheregroupLocations.parameters = {};
-CircleMapWheregroupLocations.args = {
-	geojson: wg_locations,
-	paint: {
-		'circle-radius': ['/', ['get', 'Mitarbeitende'], 1.2],
-		'circle-color': '#B11E40',
+
+export const DefaultPaintOverrides = Template.bind({});
+DefaultPaintOverrides.parameters = {};
+DefaultPaintOverrides.args = {
+	defaultPaintOverrides: {
+		fill: {
+			'fill-color': 'blue',
+		},
+		circle: {
+			'circle-color': 'red',
+		},
+		line: {
+			'line-color': 'black',
+		},
 	},
-	type: 'circle',
+	geojson: sample_geojson_1,
+	type: '',
 };

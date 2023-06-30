@@ -111,12 +111,8 @@ const LineStyler = (props) => {
 	const handleColorChange = (value) => {
 		setColor(value);
 	};
-	const [openSidebar, setOpenSidebar] = useState(true);
+	const [openSidebar, setOpenSidebar] = useState(false);
 
-	useEffect(() => {
-		mapHook.map?.map.setCenter([7.099301807798469, 50.734214410085684]);
-		mapHook.map?.map.setZoom(16.5);
-	}, [mapHook.map]);
 
 	return (
 		<>
@@ -127,7 +123,7 @@ const LineStyler = (props) => {
 						onClick={() => setOpenSidebar(!openSidebar)}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
-						GeoJson Layer
+						Layer options
 					</Button>
 				}
 			/>
