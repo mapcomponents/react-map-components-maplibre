@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import MlGeoJsonLayer from './MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
-import mapContextDecorator from '../../decorators/MapContextDecorator';
 import geoJsonDecorator from '../../decorators/GeoJsonMapDecorator';
-import lowZoomDecorator from '../../decorators/LowZoomDecorator';
 import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
 import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
 import HeatMapStyler from './story_utils/MlGeojsonLayerHeatMapStyler';
@@ -105,7 +103,8 @@ Circle.parameters = {};
 Circle.args = {
 	geojson: wg_locations,
 	paint: {
-		'circle-radius': ['/', ['get', 'Mitarbeitende'], 1.2],
+		//'circle-radius': ['/', ['get', 'Mitarbeitende'], 1.1],
+		'circle-radius': { property: 'Mitarbeitende', stops: [ [3, 6], [26, 35] ] },
 		'circle-color': '#B11E40',
 	},
 	type: 'circle',
