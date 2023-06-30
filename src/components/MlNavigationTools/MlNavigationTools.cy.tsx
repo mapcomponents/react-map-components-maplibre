@@ -7,41 +7,44 @@ import MlNavigationTools from './MlNavigationTools';
 // compile the "Primary" story with the library
 const { ExampleConfig } = composeStories(stories);
 
-// test for FollowGPS button not yet implemented
 describe('MlNavigationTools Tests', () => {
-	it('should test the functionality of the Zoom Button (+)', async () => {
+	it('should test the functionality of the Zoom Button (+)', () => {
 		mount(<ExampleConfig />);
 
-		let initialZoom;
+		let firstZoom: number;
+		let secondZoom: number;
 
-		await cy.wait(3000);
+		cy.get('.maplibregl-canvas-container').as('getMap');
+		cy.wait('@getMap').then(() => {
+			console.log('Hello World');
+		});
+
 		cy.window().then((win) => {
-			initialZoom = win?._map?.getZoom();
+			firstZoom = win?._map?.style.z;
+			console.log(win?._map?.style.z);
 		});
 
 		cy.get('.zoomplus').click();
 
-		cy.window().then(
-			(win) => {
-				const { _map }: any = win;
-				console.log(initialZoom, _map?.getZoom());
-				expect(_map?.getZoom()).to.be.greaterThan(initialZoom);
-			}
-
-			/* cy.window().then((win) => {
-			const { _map }: any = win;
-			expect(_map?._easeOptions?.pitch).to.not.be.exist;
+		cy.window().then((win) => {
+			secondZoom = win?._map?.style.z;
+			console.log(secondZoom);
 		});
 
-		cy.get('.pitchbutton').click();
-
-		cy.wait(3000);
-
-		cy.window().then((win) => {
+		cy.window().should((win) => {
 			const { _map }: any = win;
-			expect(_map?._easeOptions?.pitch).to.be.exist;
-		}
-    */
-		);
+			console.log(firstZoom, _map?.getZoom());
+			expect(_map?.getZoom()).to.be.greaterThan(firstZoom);
+		});
+		cy.get('.zoomminus').click();
+		cy.get('.zoomminus').click();
+
+		cy.window().should((win) => {
+			const { _map }: any = win;
+			console.log(_map?.getZoom());
+			expect(_map?.getZoom()).to.be.lessThan(secondZoom);
+		});
 	});
 });
+
+// test for FollowGPS button not yet implemented
