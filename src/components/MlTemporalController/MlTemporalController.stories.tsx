@@ -50,14 +50,12 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 		<>
 			<TopToolbar
 				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
+					<Typography variant="body1" color={'ButtonText'}>
 						Earthquakes with 5 or more magnitude in the mediterranean area
 					</Typography>
 				}
 			/>
-			<MlTemporalController {...props} />	
-		
-		
+			<MlTemporalController {...props} />
 		</>
 	);
 };
