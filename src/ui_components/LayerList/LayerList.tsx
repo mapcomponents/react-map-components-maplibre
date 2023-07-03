@@ -1,18 +1,15 @@
-import { List } from '@mui/material';
 import React from 'react';
+import { List } from '@mui/material';
 
-type Props = {
+const listStyle = { marginTop: '15px' };
+
+interface LayerListProps {
 	mapId?: string;
 	children?: JSX.Element | JSX.Element[];
-};
+}
 
-function LayerList(props: Props) {
-
-	return (
-		<List sx={{ marginTop: '15px' }}>
-			{props?.children}
-		</List>
-	);
+function LayerList(props: LayerListProps) {
+	return <List sx={listStyle}>{props?.children}</List>;
 }
 
 export default LayerList;
