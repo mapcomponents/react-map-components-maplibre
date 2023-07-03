@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import MlGeoJsonLayer from './MlGeoJsonLayer';
+import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
 import geoJsonDecorator from '../../decorators/GeoJsonMapDecorator';
 import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
@@ -12,6 +13,7 @@ import wg_locations from './assets/wg_locations.json';
 import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
+import { Typography } from '@mui/material';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -78,7 +80,19 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
 	}, [mapHook.map]);
 
-	return <CircleMapStyler {...props} />;
+	return (
+		<>
+			<TopToolbar
+				unmovableButtons={
+					<Typography variant="h6" color={'ButtonText'}>
+						WhereGroup locations by number of employees
+					</Typography>
+				}
+			/>
+
+			<CircleMapStyler {...props} />
+		</>
+	);
 };
 
 const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
@@ -95,7 +109,16 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 		mapHook.map.map.flyTo({ center: [-150.4048, 63.1224], zoom: 3 });
 	}, [mapHook.map]);
 
-	return <HeatMapStyler {...props} />;
+	return(<>
+		<TopToolbar
+			unmovableButtons={
+				<Typography variant="h6" color={'ButtonText'}>
+					Earthquakes by magnitude in Alaska
+				</Typography>
+			}
+		/>
+		<HeatMapStyler {...props} />;
+	</>);	
 };
 
 export const Circle = CircleTemplate.bind({});
@@ -104,7 +127,13 @@ Circle.args = {
 	geojson: wg_locations,
 	paint: {
 		//'circle-radius': ['/', ['get', 'Mitarbeitende'], 1.1],
-		'circle-radius': { property: 'Mitarbeitende', stops: [ [3, 6], [26, 35] ] },
+		'circle-radius': {
+			property: 'Mitarbeitende',
+			stops: [
+				[3, 6],
+				[26, 35],
+			],
+		},
 		'circle-color': '#B11E40',
 	},
 	type: 'circle',
