@@ -50,6 +50,7 @@ ExampleConfig.args = {
 			'source-layer': 'water',
 			layout: {},
 			paint: { 'fill-color': '#0905f5', 'fill-opacity': 0.5 },
+			maxzoom: 20,
 		},
 		{
 			id: 'buildings',
@@ -57,11 +58,11 @@ ExampleConfig.args = {
 			'source-layer': 'building',
 			layout: {},
 			paint: { 'fill-color': '#717875' },
+			maxzoom: 20,
 		},
 	],
 	sourceOptions: {
 		minzoom: 0,
-		maxzoom: 20,
 	},
 };
 //
