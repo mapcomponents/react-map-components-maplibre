@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MlGpxViewer from './MlGpxViewer';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlGpxViewerInstructions from './util/MlGpxViewerInstructions';
@@ -30,11 +30,10 @@ const Template = () => {
 	const [demoLoaderOpen, setDemoLoaderOpen] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [metadata, setMetadata] = useState<MetadataType[]>([]);
-	const [openSidebar, setOpenSidebar] = useState(true);
+	const [openSidebar, setOpenSidebar] = useState(false);
 
 	const demoLoader = () => {
-		setDemoLoaderOpen(!demoLoaderOpen);
-		setOpenSidebar(true);
+		setDemoLoaderOpen(!demoLoaderOpen);		
 	};
 	const handleClick2 = () => {
 		setGuide(true);
@@ -42,6 +41,14 @@ const Template = () => {
 			setGuide(false);
 		}, 9000);
 	};
+
+	useEffect(() => {
+		if (metadata.length === 0) {
+			setOpenSidebar(false);
+		} else {
+			setOpenSidebar(true);
+		}
+	}, [metadata]);
 
 	return (
 		<>
@@ -88,11 +95,7 @@ const Template = () => {
 					</>
 				}
 			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'GPX Informations'}
-			>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GPX Informations'}>
 				<Metadata metadata={metadata} />
 			</Sidebar>
 			<Dropzone setData={(data) => setGpxData(data)} />
