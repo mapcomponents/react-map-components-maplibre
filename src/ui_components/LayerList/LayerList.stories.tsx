@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
-
+import { LayerSpecification } from 'maplibre-gl';
+import { Feature, FeatureCollection } from '@turf/turf';
+import { Button } from '@mui/material';
 import LayerList from './LayerList';
 import LayerListItem from './LayerListItem';
-
-import mapContextDecorator from '../../decorators/EmptyMapDecorator';
-import Sidebar from '../Sidebar';
-import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
+import LayerListFolder from './LayerListFolder';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 import sample_geojson_polygon from './assets/sample_polygon_1.json';
 import sample_geojson_points from './assets/sample_points_1.json';
-import LayerListFolder from './LayerListFolder';
-
-import style from '../../omt_styles/monokai';
-import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { LayerSpecification } from 'maplibre-gl';
-import { Feature, FeatureCollection } from '@turf/turf';
-import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
+import Sidebar from '../Sidebar';
+import style from '../../omt_styles/monokai';
+import mapContextDecorator from '../../decorators/EmptyMapDecorator';
+import MlGeoJsonLayer, {
+	MlGeoJsonLayerProps,
+} from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
+import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
+
+const buttonStyle = {
+	marginRight: { xs: '0px', sm: '10px' },
+};
 
 const storyoptions = {
 	title: 'UiComponents/LayerList',
@@ -38,7 +41,7 @@ const FolderTemplate = () => {
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -54,6 +57,7 @@ const FolderTemplate = () => {
 							type="layer"
 							name="GeoJSON Layer"
 							key="GeoJSONLayer"
+							showDeleteButton={true}
 						/>
 						<LayerListItem
 							layerComponent={<MlGeoJsonLayer geojson={sample_geojson_2 as Feature} />}
@@ -98,7 +102,7 @@ const VectortileTemplate = () => {
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -148,7 +152,7 @@ const WmsLayerTemplate = () => {
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -191,7 +195,7 @@ const GeoJsonLayerTemplate = () => {
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -248,7 +252,7 @@ const ConfigurableTemplate = () => {
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -289,7 +293,7 @@ const LabelTemplate = () => {
 		type: 'symbol' as const,
 		options: {
 			layout: {
-				"symbol-placement": "line",
+				'symbol-placement': 'line',
 				'text-field': '{name}',
 				'text-justify': 'auto',
 				'text-font': ['Open Sans Regular'],
@@ -308,7 +312,7 @@ const LabelTemplate = () => {
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -317,7 +321,7 @@ const LabelTemplate = () => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<LayerList>
 					<LayerListItem
-						layerComponent={<MlGeoJsonLayer {...layerOneState as MlGeoJsonLayerProps} />}
+						layerComponent={<MlGeoJsonLayer {...(layerOneState as MlGeoJsonLayerProps)} />}
 						setLayerState={setLayerOneState}
 						visible={true}
 						configurable={true}
