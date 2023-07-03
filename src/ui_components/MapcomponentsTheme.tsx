@@ -6,8 +6,19 @@ declare module '@mui/material' {
 	interface Palette {
 		topToolbar: { barColor: string };
 		navigation: { navColor: string; navHover: string; navText: string; navTextHover: string };
-		compass: { compColor: string; compHover: string };
-		followGPS: { GPSBackround: string; GPSHover: string };
+		compass: {
+			compStroke: string;
+			compColor: string;
+			compHover: string;
+			compNorth: string;
+			compSouth: string;
+		};
+		followGPS: {
+			GPSBackround: string;
+			GPSHover: string;
+			GPSActivated: string;
+			GPSActiveBackground: string;
+		};
 	}
 }
 declare module '@mui/material/Button' {
@@ -54,8 +65,19 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						navText: '#BCBDBF',
 						navTextHover: '#FFF',
 					},
-					compass: { compColor: '#414244', compHover: '#626262' },
-					followGPS: { GPSBackround: '#414244', GPSHover: '#FFF' },
+					compass: {
+						compColor: '#414244',
+						compHover: '#626262',
+						compStroke: '#D3DCE1',
+						compNorth: '#CF003D',
+						compSouth: '#D3DCE1',
+					},
+					followGPS: {
+						GPSBackround: '#414244',
+						GPSHover: '#FFF',
+						GPSActivated: '#fff',
+						GPSActiveBackground: '#747577',
+					},
 			  }
 			: {
 					primary: {
@@ -68,8 +90,19 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					},
 					topToolbar: { barColor: '#fff' },
 					navigation: { navColor: '#fff', navHover: '#f5f5f5' },
-					compass: { compColor: '#fff', compHover: '#f5f5f5' },
-					followGPS: { GPSBackround: '#FFF', GPSHover: '#f5f5f5' },
+					compass: {
+						compColor: '#fff',
+						compHover: '#f5f5f5',
+						compStroke: '#009ee0',
+						compNorth: '#CF003D',
+						compSouth: '#D3DCE1',
+					},
+					followGPS: {
+						GPSBackround: '#FFF',
+						GPSHover: '#f5f5f5',
+						GPSActivated: '#009ee0',
+						GPSActiveBackground: '#fff',
+					},
 			  }),
 	},
 });

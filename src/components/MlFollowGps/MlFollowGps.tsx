@@ -3,7 +3,7 @@ import useMap from "../../hooks/useMap";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 
 import { Button } from '@mui/material';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import FilterCenterFocusIcon from '@mui/icons-material/FilterCenterFocus';
 
 import { point, circle, lineArc, Feature, Point } from '@turf/turf';
 import { CircleLayerSpecification, FillLayerSpecification } from 'maplibre-gl';
@@ -221,7 +221,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 					setIsFollowed(!isFollowed);
 				}}
 			>
-				<GpsFixedIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+				<FilterCenterFocusIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 			</Button>
 		</>
 	);
@@ -230,7 +230,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 MlFollowGps.defaultProps = {
 	mapId: undefined,
 	onColor: '#009ee0',
-	offColor: 'palette.followGPS',
+	offColor: '#BCBDBF',
 	showAccuracyCircle: true,
 	showUserLocation: true,
 	showOrientation: true,

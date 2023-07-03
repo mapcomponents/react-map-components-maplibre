@@ -4,6 +4,11 @@ import { mount } from '@cypress/react';
 import * as stories from './MlNavigationTools.stories';
 import MlNavigationTools from './MlNavigationTools';
 
+
+/* 
+This test does not properly work yet!
+*/
+
 // compile the "Primary" story with the library
 const { ExampleConfig } = composeStories(stories);
 
