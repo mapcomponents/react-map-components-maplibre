@@ -1,17 +1,17 @@
-import ColorPicker from '../../../ColorPicker/ColorPicker';
 import React from 'react';
 import { paintPropsType } from '../LayerPropertyForm';
+import ColorPicker from '../../../ColorPicker/ColorPicker';
 
-type Props = {
+interface PaintPropsColorPickerProps {
 	key: string;
 	value: string;
 	propKey: string;
 	setPaintProps: (
 		paintProps: paintPropsType | ((current: paintPropsType) => paintPropsType)
 	) => void;
-};
+}
 
-export default function PaintPropsColorPicker({ propKey, value, setPaintProps }: Props) {
+function PaintPropsColorPicker({ propKey, value, setPaintProps }: PaintPropsColorPickerProps) {
 	return (
 		<ColorPicker
 			value={value}
@@ -22,10 +22,10 @@ export default function PaintPropsColorPicker({ propKey, value, setPaintProps }:
 						...current,
 						[propKey]: value,
 					};
-
 					return newProps;
 				});
 			}}
 		/>
 	);
 }
+export default PaintPropsColorPicker;
