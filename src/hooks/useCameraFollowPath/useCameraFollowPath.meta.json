@@ -8,7 +8,7 @@
 			"description": "Das Component akzeptiert einen Array bestehend aus Koordinaten und fährt diese Strecke mit der Kamera ab. Einstellungsmöglichkeiten für Geschwindigkeit, Initiale Zoomstufe und End-Zoomstufe sind ebenfalls vorhanden."
 		}
 	},
-	"tags": [],
-	"category": "",
+	"tags": ["Map add-on"],
+	"category": "add-ons",
 	"type": "component"
 }

@@ -8,7 +8,7 @@
 			"description": "Darstellung der aktuellen Position und Blickrichtung"
 		}
 	},
-	"tags": [],
-	"category": "",
+	"tags": ["Map add-on"],
+	"category": "add-ons",
 	"type": "component"
 }

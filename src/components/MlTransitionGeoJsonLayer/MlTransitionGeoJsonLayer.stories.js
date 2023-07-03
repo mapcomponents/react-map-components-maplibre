@@ -28,8 +28,6 @@ const LinestringTransitionTemplate = (props) => {
 	const initializedRef = useRef(false);
 	const [disabled, setDisabled] = useState(true);
 
-	console.log(geojson?.properties.name);
-
 	useEffect(()=>{
 		enableButton(6000)
 	}, []);
