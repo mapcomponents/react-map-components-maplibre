@@ -1,26 +1,21 @@
+import React, { useRef, useCallback } from 'react';
 import {
 	CircleLayerSpecification,
 	FillLayerSpecification,
 	LineLayerSpecification,
 } from 'maplibre-gl';
-import React, { useRef } from 'react';
-import ColorPicker from './input/ColorPicker';
 import { Box, ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
-import { useCallback } from 'react';
+import ColorPicker from './input/ColorPicker';
 
-export type paintPropsType =
-	| CircleLayerSpecification['paint']
-	| FillLayerSpecification['paint']
-	| LineLayerSpecification['paint'];
-
-type Props = {
-	paintProps: paintPropsType;
-	setPaintProps: (
-		paintProps: paintPropsType | ((current: paintPropsType) => paintPropsType)
-	) => void;
-	layerType: string;
+const paperStyle = {
+	marginLeft: '-100px',
+	marginRight: '-21px',
+	paddingLeft: '81px',
+	borderRadius: '0px',
 };
-
+const boxStyle = {
+	marginLeft: '61px',
+};
 const mapPropKeyToFormInputType = {
 	'circle-color': 'colorpicker',
 	'circle-radius': 'slider',
@@ -57,9 +52,21 @@ const inputPropsByPropKey = {
 	},
 };
 
-export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Props) {
+export type paintPropsType =
+	| CircleLayerSpecification['paint']
+	| FillLayerSpecification['paint']
+	| LineLayerSpecification['paint'];
+
+interface LayerPropertyFormProps {
+	paintProps: paintPropsType;
+	setPaintProps: (
+		paintProps: paintPropsType | ((current: paintPropsType) => paintPropsType)
+	) => void;
+	layerType: string;
+}
+
+function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyFormProps) {
 	const key = useRef(Math.round(Math.random() * 10000000000));
-	//const onChange = (event) => {};
 
 	const getFormInputByType = useCallback(
 		(key: string) => {
@@ -134,20 +141,9 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 
 	return (
 		<>
-			<Paper
-				sx={{
-					marginLeft: '-100px',
-					marginRight: '-21px',
-					paddingLeft: '81px',
-					borderRadius: '0px',
-				}}
-			>
+			<Paper sx={paperStyle}>
 				<ListItem key={key + '_paintPropForm'}>
-					<Box
-						sx={{
-							marginLeft: '61px',
-						}}
-					>
+					<Box sx={boxStyle}>
 						{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
 					</Box>
 				</ListItem>
@@ -155,3 +151,4 @@ export default function LayerPropertyForm({ paintProps = {}, setPaintProps }: Pr
 		</>
 	);
 }
+export default LayerPropertyForm;
