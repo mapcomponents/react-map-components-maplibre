@@ -1,6 +1,6 @@
 {
   "type": "Feature",
-  "properties": {},
+  "properties": {"name": "sample1"},
   "geometry": {
     "type": "LineString",
     "coordinates": [
