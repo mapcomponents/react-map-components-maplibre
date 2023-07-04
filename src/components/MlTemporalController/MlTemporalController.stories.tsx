@@ -18,8 +18,6 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const supported = ['en', 'de'];
-
 const titels = {
 	fill: 'African countries by independency year',
 	line: 'St. James Trials in the North Rhein Region by stage number',

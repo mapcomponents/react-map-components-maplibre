@@ -204,7 +204,7 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 					showLayerRef.current = !showLayer;
 				}}
 			>
-				3D
+				3D model
 			</Button>
 		</>
 	);
