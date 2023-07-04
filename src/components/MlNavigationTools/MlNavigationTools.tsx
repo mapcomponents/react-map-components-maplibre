@@ -12,7 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
 import MlCenterPosition from '../MlCenterPosition/MlCenterPosition';
 
-interface MlNavigationToolsProps {
+export interface MlNavigationToolsProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */

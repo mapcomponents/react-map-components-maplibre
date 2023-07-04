@@ -1,14 +1,14 @@
 import React from "react";
-
-import MlNavigationTools from "./MlNavigationTools";
-
+import MlNavigationTools, { MlNavigationToolsProps } from "./MlNavigationTools";
 import noNavToolsDecorator from "../../decorators/NoNavToolsDecorator";
 import BuildIcon from "@mui/icons-material/Build";
 import Button from "@mui/material/Button";
 
+
 const storyoptions = {
 	title: 'MapComponents/MlNavigationTools',
 	component: MlNavigationTools,
+
 	argTypes: {
 		url: {},
 		layer: {},
@@ -17,7 +17,8 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <MlNavigationTools {...args} />;
+
+const Template = (props: MlNavigationToolsProps ) => <MlNavigationTools {...props} />;
 
 export const DefaultConfig = Template.bind({});
 DefaultConfig.parameters = {};
