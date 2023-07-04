@@ -21,7 +21,7 @@ export default storyoptions;
 const titels = {
 	fill: 'African countries by independency year',
 	line: 'St. James Trials in the North Rhein Region by stage number',
-	circle: 'Earthquakes with 5 or more magnitude in the mediterranean area',
+	circle: 'Earthquakes with 5 or more magnitude',
 };
 
 const Template = (props: MlTemporalControllerProps) => {
