@@ -96,7 +96,7 @@ const Template = () => {
 				name={'Camera Settings'}
 			>
 				<MenuItem onClick={() => setShowRoute(!showRoute)}>
-					<Typography>{showRoute ? 'Route ausblenden' : 'Route einblenden'}</Typography>
+					<Typography>{showRoute ? 'Hide route' : 'Show route'}</Typography>
 				</MenuItem>
 				{showRoute ? (
 					<MlGeoJsonLayer
