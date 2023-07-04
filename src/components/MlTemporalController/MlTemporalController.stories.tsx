@@ -20,31 +20,10 @@ export default storyoptions;
 
 const supported = ['en', 'de'];
 
-const titel = {
-	fill: {
-		en: 'African countries by independency year',
-		de: 'Afrikanische Länder nach Unabhängigkeitsjahr',
-	},
-	line: {
-		en: 'St. James Trials in the North Rhein Region by stage number',
-		de: 'Jakobsweg in der Region Nordrhein nach Etappennummer',
-	},
-	circle: {
-		en: 'Earthquakes with 5 or more magnitude in the mediterranean area',
-		de: 'Erdbeben mit 5 oder mehr Magnituden im Mittelmeerraum',
-	},
-};
-
-const queryString = window.location.pathname;
-const regex = /\/([^/]+)/;
-const match = queryString.match(regex);
-const lang = match !== null ? match[1] : undefined ;
-const currentLang = ()=>{
-	if (typeof lang === 'string') {
-		if (supported.includes(lang)) {
-			return lang
-	}}
-	return 'en'
+const titels = {
+	fill: 'African countries by independency year',
+	line: 'St. James Trials in the North Rhein Region by stage number',
+	circle: 'Earthquakes with 5 or more magnitude in the mediterranean area',
 };
 
 const Template = (props: MlTemporalControllerProps) => {
@@ -55,7 +34,7 @@ const Template = (props: MlTemporalControllerProps) => {
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						{titel[type][currentLang()]}
+						{titels[type]}
 					</Typography>
 				}
 			/>
