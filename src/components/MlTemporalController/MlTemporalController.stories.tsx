@@ -7,8 +7,6 @@ import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jackobsweg.json';
 
-
-
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
 	component: MlTemporalController,
@@ -20,50 +18,52 @@ const storyoptions = {
 };
 export default storyoptions;
 
+const supported = ['en', 'de'];
+
 const titel = {
 	fill: {
-		en: "African countries by independency year",
-		de: "Afrikanische Länder nach Unabhängigkeitsjahr"
+		en: 'African countries by independency year',
+		de: 'Afrikanische Länder nach Unabhängigkeitsjahr',
 	},
 	line: {
-		en: "St. James Trials in the North Rhein Region by stage number",
-		de: "Jakobsweg in der Region Nordrhein nach Etappennummer"
+		en: 'St. James Trials in the North Rhein Region by stage number',
+		de: 'Jakobsweg in der Region Nordrhein nach Etappennummer',
 	},
 	circle: {
-		en: "Earthquakes with 5 or more magnitude in the mediterranean area",
-		de: "Erdbeben mit 5 oder mehr Magnituden im Mittelmeerraum"
+		en: 'Earthquakes with 5 or more magnitude in the mediterranean area',
+		de: 'Erdbeben mit 5 oder mehr Magnituden im Mittelmeerraum',
+	},
+};
 
-	}
-}
-
-
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const lang = urlParams.get('lng');
-const currentLang = lang || 'en'; 
+const queryString = window.location.pathname;
+const regex = /\/([^/]+)/;
+const match = queryString.match(regex);
+const lang = match !== null ? match[1] : undefined ;
+const currentLang = ()=>{
+	if (typeof lang === 'string') {
+		if (supported.includes(lang)) {
+			return lang
+	}}
+	return 'en'
+};
 
 const Template = (props: MlTemporalControllerProps) => {
-
-const type = props.type || "circle";
+	const type = props.type || 'circle';
 
 	return (
 		<>
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-					{titel[type][currentLang]}					
-						
+						{titel[type][currentLang()]}
 					</Typography>
 				}
 			/>
 
-			<MlTemporalController {...props}  />
-			
+			<MlTemporalController {...props} />
 		</>
 	);
 };
-
-
 
 export const FillConfig = Template.bind({});
 FillConfig.parameters = {};
@@ -78,7 +78,7 @@ FillConfig.args = {
 	initialVal: 1904,
 	fitBounds: true,
 	displayCurrentValue: true,
-	attribution: 'Made with Natural Earth.',	
+	attribution: 'Made with Natural Earth.',
 };
 
 export const CircleConfig = Template.bind({});
@@ -111,9 +111,9 @@ LineConfig.args = {
 	labelFadeOut: 2,
 	type: 'line',
 	labelField: 'name',
-	featuresColor: "red",
+	featuresColor: 'red',
 	accumulate: true,
-	fitBounds: true,	
+	fitBounds: true,
 	displayCurrentValue: true,
 	attribution: 'Source: deutsche-jakobswege.de ',
 };
