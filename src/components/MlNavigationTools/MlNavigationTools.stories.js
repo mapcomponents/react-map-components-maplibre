@@ -18,6 +18,7 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (args) => <MlNavigationTools {...args} />;
+
 export const DefaultConfig = Template.bind({});
 DefaultConfig.parameters = {};
 DefaultConfig.args = {};
@@ -35,9 +36,9 @@ ShowCenterLocationButton.args = {
 	showCenterLocationButton: true,
 };
 
-export const AlterToolPosition = Template.bind({});
-AlterToolPosition.parameters = {};
-AlterToolPosition.args = {
+export const AlternativePosition = Template.bind({});
+AlternativePosition.parameters = {};
+AlternativePosition.args = {
 	sx: { top: '10px' },
 };
 
