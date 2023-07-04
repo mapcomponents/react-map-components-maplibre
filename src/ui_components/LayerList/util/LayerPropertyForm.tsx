@@ -4,18 +4,19 @@ import {
 	FillLayerSpecification,
 	LineLayerSpecification,
 } from 'maplibre-gl';
-import { Box, ListItem, Paper, Slider, TextField, Typography } from '@mui/material';
+import { Box, ListItem, Paper, Slider, TextField, Typography, styled } from '@mui/material';
 import ColorPicker from './input/ColorPicker';
 
-const paperStyle = {
+const PaperStyled = styled(Paper)({
 	marginLeft: '-100px',
 	marginRight: '-21px',
 	paddingLeft: '81px',
 	borderRadius: '0px',
-};
-const boxStyle = {
+});
+const BoxStyled = styled(Box)({
 	marginLeft: '61px',
-};
+});
+
 const mapPropKeyToFormInputType = {
 	'circle-color': 'colorpicker',
 	'circle-radius': 'slider',
@@ -141,13 +142,13 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 
 	return (
 		<>
-			<Paper sx={paperStyle}>
+			<PaperStyled>
 				<ListItem key={key + '_paintPropForm'}>
-					<Box sx={boxStyle}>
+					<BoxStyled>
 						{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
-					</Box>
+					</BoxStyled>
 				</ListItem>
-			</Paper>
+			</PaperStyled>
 		</>
 	);
 }

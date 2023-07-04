@@ -1,32 +1,31 @@
 import React, { useMemo, useState } from 'react';
-import { Box } from '@mui/system';
+import { Box, styled } from '@mui/system';
 import { ListItemIcon, ListItemText, List, Checkbox, ListItem, IconButton } from '@mui/material';
 import { KeyboardArrowRight as ExpandLess, ExpandMore } from '@mui/icons-material';
 
-const listItemStyle = {
+const ListItemStyled = styled(ListItem)({
 	paddingRight: 0,
 	paddingLeft: 0,
 	paddingTop: 0,
 	paddingBottom: '4px',
-};
-const listItemIconStyle = {
+});
+const ListItemIconStyled = styled(ListItemIcon)({
 	minWidth: '30px',
-};
-
-const iconButtonStyle = {
+});
+const IconButtonStyled = styled(IconButton)({
 	marginRight: '0px',
 	padding: '0px',
-};
-const checkboxStyle = {
+});
+const CheckboxStyled = styled(Checkbox)({
 	padding: 0,
 	marginRight: '5px',
-};
-const boxStyle = (open: boolean) => ({
-	display: open ? 'block' : 'none',
 });
-const listStyle = {
-	marginLeft: '25px',
-};
+const BoxStyled = styled(Box)<{ open: boolean }>(({ open }) => ({
+	display: open ? 'block' : 'none',
+}));
+const ListStyled = styled(List)({
+	marginLeft: '50px',
+});
 
 interface LayerListFolderProps {
 	visible: boolean;
@@ -63,20 +62,14 @@ function LayerListFolder({ visible = true, name, children, setVisible }: LayerLi
 
 	return (
 		<>
-			<ListItem sx={listItemStyle}>
-				<ListItemIcon sx={listItemIconStyle}>
-					<IconButton
-						sx={iconButtonStyle}
-						edge="end"
-						aria-label="open"
-						onClick={() => setOpen(!open)}
-					>
+			<ListItemStyled>
+				<ListItemIconStyled>
+					<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
 						{open ? <ExpandMore /> : <ExpandLess />}
-					</IconButton>
-					<Checkbox
+					</IconButtonStyled>
+					<CheckboxStyled
 						disabled={setVisible ? false : !visible}
 						checked={setVisible ? visible : localVisible}
-						sx={checkboxStyle}
 						onClick={() => {
 							if (setVisible) {
 								setVisible((val) => !val);
@@ -85,14 +78,12 @@ function LayerListFolder({ visible = true, name, children, setVisible }: LayerLi
 							}
 						}}
 					/>
-				</ListItemIcon>
+				</ListItemIconStyled>
 				<ListItemText primary={name} variant="layerlist" />
-			</ListItem>
-			<Box sx={boxStyle(open)}>
-				<List component="div" disablePadding sx={listStyle}>
-					{_children}
-				</List>
-			</Box>
+			</ListItemStyled>
+			<BoxStyled open={open}>
+				<ListStyled disablePadding>{_children}</ListStyled>
+			</BoxStyled>
 		</>
 	);
 }

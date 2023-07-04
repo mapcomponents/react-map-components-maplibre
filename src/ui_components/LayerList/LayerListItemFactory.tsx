@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { IconButton } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 import {
 	ArrowCircleDown as ArrowCircleDownIcon,
 	ArrowCircleUp as ArrowCircleUpIcon,
@@ -16,14 +16,14 @@ import MlVectorTileLayer, {
 import useLayerContext from '../../hooks/useLayerContext';
 import { LayerConfig } from '../../contexts/LayerContext';
 
-const iconButtonStyle = {
+const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
 	marginTop: '-3px',
 	background: 'none',
 	'&:hover': {
 		background: 'none',
 	},
-};
+});
 
 export interface LayerListItemFactoryProps {
 	mapId?: string;
@@ -99,24 +99,22 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									}
 									buttons={
 										<>
-											<IconButton
+											<IconButtonStyled
 												disabled={idx === layers.length - 1}
 												onClick={() => {
 													layerContext.moveDown(layer.id || '');
 												}}
-												sx={iconButtonStyle}
 											>
 												<ArrowCircleDownIcon />
-											</IconButton>
-											<IconButton
+											</IconButtonStyled>
+											<IconButtonStyled
 												disabled={idx === 0}
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');
 												}}
-												sx={iconButtonStyle}
 											>
 												<ArrowCircleUpIcon />
-											</IconButton>
+											</IconButtonStyled>
 										</>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
@@ -171,24 +169,22 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									showDeleteButton={true}
 									buttons={
 										<>
-											<IconButton
+											<IconButtonStyled
 												disabled={idx === layers.length - 1}
 												onClick={() => {
 													layerContext.moveDown(layer.id || '');
 												}}
-												sx={iconButtonStyle}
 											>
 												<ArrowCircleDownIcon />
-											</IconButton>
-											<IconButton
+											</IconButtonStyled>
+											<IconButtonStyled
 												disabled={idx === 0}
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');
 												}}
-												sx={iconButtonStyle}
 											>
 												<ArrowCircleUpIcon />
-											</IconButton>
+											</IconButtonStyled>
 										</>
 									}
 								/>

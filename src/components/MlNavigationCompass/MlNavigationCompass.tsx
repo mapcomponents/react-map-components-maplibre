@@ -4,7 +4,7 @@ import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
 import useMap from '../../hooks/useMap';
 
-const StyleBox = styled(Box)(({ theme }) => ({
+const BoxStyled = styled(Box)(({ theme }) => ({
 	zIndex: 1000,
 	cursor: 'pointer',
 	transform: 'scale(1)',
@@ -97,7 +97,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 
 	return (
 		<>
-			<StyleBox sx={{ ...props.style }}>
+			<BoxStyled sx={{ ...props.style }}>
 				<CompassBox onClick={rotate} sx={{ ...props.backgroundStyle }}>
 					<CompassBackground />
 					<NeedleBox onClick={rotate} sx={{ ...props.needleStyle }}>
@@ -108,7 +108,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						/>
 					</NeedleBox>
 				</CompassBox>
-			</StyleBox>
+			</BoxStyled>
 		</>
 	);
 };

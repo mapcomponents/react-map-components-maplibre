@@ -17,18 +17,12 @@ import ConfirmDialog from '../ConfirmDialog';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
 
-const listItemStyle = (configurable?: boolean) => ({
+const ListItemStyled = styled(ListItem)((configurable) => ({
 	paddingRight: configurable ? '56px' : 0,
 	paddingLeft: 0,
 	paddingTop: 0,
 	paddingBottom: '4px',
-});
-// const ListItemStyle = styled(ListItem)((configurable) => ({
-// 	paddingRight: configurable ? '56px' : 0,
-// 	paddingLeft: 0,
-// 	paddingTop: 0,
-// 	paddingBottom: '4px',
-// }));
+}));
 const TuneIconButton = styled(IconButton)((showDeleteButton) => ({
 	marginRight: showDeleteButton ? '4px' : '1000px',
 	padding: '4px',
@@ -38,12 +32,12 @@ const DeleteIconButton = styled(IconButton)({
 	padding: '4px',
 	marginTop: '-3px',
 });
-
-const listItemIconStyle = {
+const CheckboxListItemIcon = styled(ListItemIcon)({
 	minWidth: '30px',
-};
-
-const checkboxStyle = { padding: 0 };
+});
+const CheckboxStyled = styled(Checkbox)({
+	padding: 0,
+});
 
 interface LayerListItemProps {
 	layerComponent: JSX.Element;
@@ -172,8 +166,8 @@ function LayerListItem({
 	return (
 		<>
 			{!layerComponent?.props?.layers && (
-				<ListItem
-					sx={(listItemStyle(configurable), { ...props.listItemSx })}
+				<ListItemStyled
+					sx={{ ...props.listItemSx }}
 					secondaryAction={
 						configurable && Object.keys(paintProps)?.length > 0 ? (
 							<>
@@ -225,23 +219,22 @@ function LayerListItem({
 						) : undefined
 					}
 				>
-					<ListItemIcon sx={listItemIconStyle}>
-						<Checkbox
+					<CheckboxListItemIcon>
+						<CheckboxStyled
 							disabled={!visible}
 							checked={localVisible}
-							sx={checkboxStyle}
 							onClick={() => {
 								setLocalVisible((val) => !val);
 							}}
 						/>
-					</ListItemIcon>
+					</CheckboxListItemIcon>
 					<ListItemText
 						variant="layerlist"
 						primary={name}
 						secondary={description}
 						primaryTypographyProps={{ overflow: 'hidden' }}
 					/>
-				</ListItem>
+				</ListItemStyled>
 			)}
 			{_layerComponent}
 			{!layerComponent?.props?.layers &&

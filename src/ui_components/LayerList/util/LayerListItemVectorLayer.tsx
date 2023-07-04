@@ -4,7 +4,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import LayerPropertyForm from './LayerPropertyForm';
 import { MlVectorTileLayerProps } from '../../../components/MlVectorTileLayer/MlVectorTileLayer';
 
-const VectorLayerListItem = styled(ListItem)((configurable) => ({
+const ListItemStyled = styled(ListItem)((configurable) => ({
 	paddingRight: configurable ? '56px' : 0,
 	paddingLeft: 0,
 	paddingTop: 0,
@@ -14,8 +14,8 @@ const TuneIconButton = styled(IconButton)({
 	padding: '4px',
 	marginTop: '-3px',
 });
-const CheckboxlistItemIcon = styled(ListItemIcon)({
-	marginLeft: '15px',
+const CheckboxListItemIcon = styled(ListItemIcon)({
+	marginLeft: '-10px',
 	minWidth: '30px',
 });
 
@@ -74,7 +74,7 @@ function LayerListItemVectorLayer({
 
 	return (
 		<>
-			<VectorLayerListItem
+			<ListItemStyled
 				key={id}
 				secondaryAction={
 					configurable ? (
@@ -92,16 +92,16 @@ function LayerListItemVectorLayer({
 					) : undefined
 				}
 			>
-				<CheckboxlistItemIcon>
+				<CheckboxListItemIcon>
 					<Checkbox
 						checked={visible}
 						onClick={() => {
 							setVisible((val) => !val);
 						}}
 					/>
-				</CheckboxlistItemIcon>
+				</CheckboxListItemIcon>
 				<ListItemText primary={vtProps.layers[id].id} variant="layerlist" />
-			</VectorLayerListItem>
+			</ListItemStyled>
 			{configurable && paintPropsFormVisible && (
 				<LayerPropertyForm
 					paintProps={paintProps}
