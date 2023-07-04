@@ -9,11 +9,12 @@ import HeatMapStyler from './story_utils/MlGeojsonLayerHeatMapStyler';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 import earthquakes from './assets/earthquake.json';
-import wg_locations from './assets/wg_locations.json';
+import wgLocations from './assets/wg_locations.json';
 import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
 import { Typography } from '@mui/material';
+import wgMarker from '../../components/MlGeoJsonLayer/assets/wgMarker.png';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -109,22 +110,24 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 		mapHook.map.map.flyTo({ center: [-150.4048, 63.1224], zoom: 3 });
 	}, [mapHook.map]);
 
-	return(<>
-		<TopToolbar
-			unmovableButtons={
-				<Typography variant="h6" color={'ButtonText'}>
-					Earthquakes by magnitude in Alaska
-				</Typography>
-			}
-		/>
-		<HeatMapStyler {...props} />;
-	</>);	
+	return (
+		<>
+			<TopToolbar
+				unmovableButtons={
+					<Typography variant="h6" color={'ButtonText'}>
+						Earthquakes by magnitude in Alaska
+					</Typography>
+				}
+			/>
+			<HeatMapStyler {...props} />;
+		</>
+	);
 };
 
 export const Circle = CircleTemplate.bind({});
 Circle.parameters = {};
 Circle.args = {
-	geojson: wg_locations,
+	geojson: wgLocations,
 	paint: {
 		//'circle-radius': ['/', ['get', 'Mitarbeitende'], 1.1],
 		'circle-radius': {
@@ -143,7 +146,6 @@ export const Linestring = LineTemplate.bind({});
 Linestring.parameters = {};
 Linestring.args = {
 	geojson: sample_geojson_2,
-	mapId: 'Map_1',
 	type: 'line',
 };
 
@@ -192,6 +194,22 @@ HeatMap.args = {
 		},
 	},
 	type: 'heatmap',
+};
+
+export const Symbol = CircleTemplate.bind({});
+Symbol.parameters = {};
+Symbol.args = {
+	geojson: wgLocations,
+	options: {
+		layout: {
+			'icon-image': wgMarker,
+			'icon-size': 0.5,
+		},
+		paint: {
+			'icon-color': 'rgb(220,80,30)',
+		},
+	},
+	type: 'symbol',
 };
 
 export const DefaultPaintOverrides = Template.bind({});
