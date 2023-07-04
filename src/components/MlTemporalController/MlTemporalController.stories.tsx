@@ -20,9 +20,29 @@ const storyoptions = {
 };
 export default storyoptions;
 
+const titel = {
+	fill: {
+		en: "African countries by independency year",
+		de: "Afrikanische Länder nach Unabhängigkeitsjahr"
+	},
+	line: {
+		en: "St. James Trials in the North Rhein Region by stage number",
+		de: "Jakobsweg in der Region Nordrhein nach Etappennummer"
+	},
+	circle: {
+		en: "Earthquakes with 5 or more magnitude in the mediterranean area",
+		de: "Erdbeben mit 5 oder mehr Magnituden im Mittelmeerraum"
+
+	}
+}
+
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const lang = urlParams.get('lng');
+const currentLang = lang || 'en'; 
 
 const FillTemplate = (props: MlTemporalControllerProps) => {
-
 
 
 	return (
@@ -30,7 +50,7 @@ const FillTemplate = (props: MlTemporalControllerProps) => {
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						African countries by independency year
+					{titel.fill[currentLang]}					
 						
 					</Typography>
 				}
@@ -51,7 +71,7 @@ const CircleTemplate = (props: MlTemporalControllerProps) => {
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="body1" color={'ButtonText'}>
-						Earthquakes with 5 or more magnitude in the mediterranean area
+						{titel.circle[currentLang]}
 					</Typography>
 				}
 			/>
@@ -68,7 +88,7 @@ const LineTemplate = (props: MlTemporalControllerProps) => {
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						St. James Trials in the North Rhein Region by stage number
+						{titel.line[currentLang]}
 					</Typography>
 				}
 			/>
