@@ -19,10 +19,6 @@ import MlGeoJsonLayer, {
 import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 
-const buttonStyle = {
-	marginRight: { xs: '0px', sm: '10px' },
-};
-
 const storyoptions = {
 	title: 'UiComponents/LayerList',
 	component: LayerList,
@@ -37,11 +33,10 @@ const FolderTemplate = () => {
 	return (
 		<>
 			<TopToolbar
-				buttons={
+				unmovableButtons={
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -98,11 +93,10 @@ const VectortileTemplate = () => {
 	return (
 		<>
 			<TopToolbar
-				buttons={
+				unmovableButtons={
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -148,11 +142,10 @@ const WmsLayerTemplate = () => {
 	return (
 		<>
 			<TopToolbar
-				buttons={
+				unmovableButtons={
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -191,11 +184,10 @@ const GeoJsonLayerTemplate = () => {
 	return (
 		<>
 			<TopToolbar
-				buttons={
+				unmovableButtons={
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -248,11 +240,10 @@ const ConfigurableTemplate = () => {
 	return (
 		<>
 			<TopToolbar
-				buttons={
+				unmovableButtons={
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
@@ -308,11 +299,10 @@ const LabelTemplate = () => {
 	return (
 		<>
 			<TopToolbar
-				buttons={
+				unmovableButtons={
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
 						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={buttonStyle}
 					>
 						Sidebar
 					</Button>
