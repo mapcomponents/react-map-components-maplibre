@@ -22,9 +22,9 @@ export const DefaultConfig = Template.bind({});
 DefaultConfig.parameters = {};
 DefaultConfig.args = {};
 
-export const No3DButton = Template.bind({});
-No3DButton.parameters = {};
-No3DButton.args = {
+export const No3dButton = Template.bind({});
+No3dButton.parameters = {};
+No3dButton.args = {
 	show3DButton: false,
 };
 

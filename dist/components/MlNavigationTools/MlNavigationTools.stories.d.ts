@@ -1,6 +1,6 @@
 export default storyoptions;
 export const DefaultConfig: any;
-export const No3DButton: any;
+export const No3dButton: any;
 export const ShowCenterLocationButton: any;
 export const AlterToolPosition: any;
 export const NoZoomButtons: any;
