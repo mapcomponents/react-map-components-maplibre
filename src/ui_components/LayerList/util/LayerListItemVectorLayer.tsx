@@ -4,7 +4,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import LayerPropertyForm from './LayerPropertyForm';
 import { MlVectorTileLayerProps } from '../../../components/MlVectorTileLayer/MlVectorTileLayer';
 
-const ListItemStyled = styled(ListItem)((configurable) => ({
+export const ListItemStyled = styled(ListItem)((configurable) => ({
 	paddingRight: configurable ? '56px' : 0,
 	paddingLeft: 0,
 	paddingTop: 0,

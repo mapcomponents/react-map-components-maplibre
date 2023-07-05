@@ -1,28 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { LayerSpecification } from 'maplibre-gl';
-import {
-	Checkbox,
-	IconButton,
-	ListItem,
-	ListItemIcon,
-	ListItemText,
-	SxProps,
-	styled,
-} from '@mui/material';
+import { Checkbox, IconButton, ListItemIcon, ListItemText, SxProps, styled } from '@mui/material';
 import { Delete as DeleteIcon, Tune as TuneIcon } from '@mui/icons-material';
 import LayerListFolder from './LayerListFolder';
 import LayerPropertyForm from './util/LayerPropertyForm';
-import LayerListItemVectorLayer from './util/LayerListItemVectorLayer';
+import LayerListItemVectorLayer, { ListItemStyled } from './util/LayerListItemVectorLayer';
 import ConfirmDialog from '../ConfirmDialog';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
 
-const ListItemStyled = styled(ListItem)((configurable) => ({
-	paddingRight: configurable ? '56px' : 0,
-	paddingLeft: 0,
-	paddingTop: 0,
-	paddingBottom: '4px',
-}));
 const TuneIconButton = styled(IconButton)((showDeleteButton) => ({
 	marginRight: showDeleteButton ? '4px' : '1000px',
 	padding: '4px',
