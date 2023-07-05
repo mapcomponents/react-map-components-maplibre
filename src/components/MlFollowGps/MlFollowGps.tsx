@@ -1,12 +1,23 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from "react";
-import useMap from "../../hooks/useMap";
-import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import useMap from '../../hooks/useMap';
+import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 
 import { Button } from '@mui/material';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
-import { point, circle, lineArc, Feature, Point } from '@turf/turf';
-import { CircleLayerSpecification, FillLayerSpecification } from 'maplibre-gl';
+import {
+	point,
+	circle,
+	lineArc,
+	Feature,
+	Point,
+	bbox,
+	booleanContains,
+	bboxPolygon,
+	polygon,
+	BBox,
+} from '@turf/turf';
+import { CircleLayerSpecification, FillLayerSpecification, LngLatBoundsLike } from 'maplibre-gl';
 
 interface MlFollowGpsProps {
 	/**
@@ -165,6 +176,29 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 		}
 		return;
 	}, [mapHook.map, isFollowed, getLocationSuccess]);
+
+	useEffect(() => {
+		if (accuracyGeoJson?.type) {
+			const getBounds = mapHook.map?.getBounds();
+			const actualBounds = [
+				getBounds?._ne.lng,
+				getBounds?._ne.lat,
+				getBounds?._sw.lng,
+				getBounds?._sw.lat,
+			];
+			const accurancyBounds = bbox(accuracyGeoJson) as LngLatBoundsLike;
+			const contained = booleanContains(
+				bboxPolygon(actualBounds as BBox),
+				bboxPolygon(accurancyBounds as BBox) 
+			);
+			
+			if (contained === false) {
+				mapHook.map?.fitBounds(accurancyBounds, {
+					padding: { top: 25, bottom: 25 },
+				});
+			}
+		}
+	}, [accuracyGeoJson]);
 
 	return (
 		<>
