@@ -6,6 +6,7 @@ type Props = {
 	setData: (data: string) => void;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	buttonComponent: any;
+	accept?: string
 };
 
 export default function UploadButton(props: Props) {
@@ -48,9 +49,10 @@ export default function UploadButton(props: Props) {
 				ref={fileupload}
 				onChange={fileUploadOnChange}
 				type="file"
+				accept={props.accept}
 				id="input"
 				multiple
-				style={{ display: 'none' }}
+				style={{ display: 'none' }}			
 			></input>
 		</>
 	);

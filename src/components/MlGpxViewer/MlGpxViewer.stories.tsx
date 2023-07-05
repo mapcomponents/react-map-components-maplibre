@@ -77,6 +77,7 @@ const Template = () => {
 									Upload
 								</Button>
 							}
+							accept='.gpx'
 						/>
 						<br />
 						<br />
