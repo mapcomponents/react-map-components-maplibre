@@ -10,7 +10,7 @@ import ColorPicker from './input/ColorPicker';
 const PaperStyled = styled(Paper)({
 	marginLeft: '-100px',
 	marginRight: '-21px',
-	paddingLeft: '81px',
+	paddingLeft: '53px',
 	borderRadius: '0px',
 });
 const BoxStyled = styled(Box)({
