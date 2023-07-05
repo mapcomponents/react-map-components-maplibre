@@ -14,9 +14,11 @@ const TuneIconButton = styled(IconButton)({
 	padding: '4px',
 	marginTop: '-3px',
 });
-const CheckboxListItemIcon = styled(ListItemIcon)({
-	marginLeft: '-10px',
+export const CheckboxListItemIcon = styled(ListItemIcon)({
 	minWidth: '30px',
+});
+export const CheckboxStyled = styled(Checkbox)({
+	padding: 0,
 });
 
 interface LayerListItemVectorLayerProps {
@@ -93,7 +95,7 @@ function LayerListItemVectorLayer({
 				}
 			>
 				<CheckboxListItemIcon>
-					<Checkbox
+					<CheckboxStyled
 						checked={visible}
 						onClick={() => {
 							setVisible((val) => !val);

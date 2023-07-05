@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { LayerSpecification } from 'maplibre-gl';
-import { Checkbox, IconButton, ListItemIcon, ListItemText, SxProps, styled } from '@mui/material';
+import { IconButton, ListItemText, SxProps, styled } from '@mui/material';
 import { Delete as DeleteIcon, Tune as TuneIcon } from '@mui/icons-material';
 import LayerListFolder from './LayerListFolder';
 import LayerPropertyForm from './util/LayerPropertyForm';
-import LayerListItemVectorLayer, { ListItemStyled } from './util/LayerListItemVectorLayer';
+import LayerListItemVectorLayer, {
+	ListItemStyled,
+	CheckboxListItemIcon,
+	CheckboxStyled,
+} from './util/LayerListItemVectorLayer';
 import ConfirmDialog from '../ConfirmDialog';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
@@ -17,12 +21,6 @@ const TuneIconButton = styled(IconButton)((showDeleteButton) => ({
 const DeleteIconButton = styled(IconButton)({
 	padding: '4px',
 	marginTop: '-3px',
-});
-const CheckboxListItemIcon = styled(ListItemIcon)({
-	minWidth: '30px',
-});
-const CheckboxStyled = styled(Checkbox)({
-	padding: 0,
 });
 
 interface LayerListItemProps {
