@@ -13,7 +13,10 @@ import {
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
-
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const modalStyle = {
 	position: 'absolute',
@@ -69,34 +72,64 @@ export interface wmsLinksProps {
 	load: (str: string) => void;
 	open: boolean;
 	close: () => void;
-	
 }
 
 export default function WMSLinks(props: wmsLinksProps) {
 	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 	const [selectedSample, setSelectedSample] = useState<string>();
-	
+
 	const Links = () => {
 		return (
 			<>
-				{wmsServices.map((el) => (
-					<Grid item xs={12} sx={{ marginTop: 5 }} key={el.id}>
-						<Typography variant="h6">{el.title}</Typography>
-						<Typography variant="body2">{el.description}</Typography>
-						<TextField value={el.link} size="small"></TextField>
-						<Button
-							variant="contained"
-							sx={{ marginTop: 0.2 }}
-							onClick={() => {
-								setSelectedSample(el.link);
-								document.getElementById('wms_text_field')?.focus()
-							}}
-						>
-							<ContentCopyIcon />
-						</Button>
-						<Divider sx={{ marginTop: '10px' }} />
-					</Grid>
-				))}
+				{mediaIsMobile ? (
+					<div style={{ width: '105%', height: '70%' }}>
+						{wmsServices.map((el) => (
+							<Grid item xs={12} sx={{ marginTop: 5 }} key={el.id}>
+								<Accordion>
+									<AccordionSummary expandIcon={<ExpandMoreIcon />}>
+										<Typography variant="h6">{el.title}</Typography>
+									</AccordionSummary>
+									<div>
+										<Typography variant="body2">{el.description}</Typography>
+										<TextField value={el.link} size="small" />
+										<Button
+											variant="contained"
+											sx={{ marginTop: 0.2 }}
+											onClick={() => {
+												setSelectedSample(el.link);
+												document.getElementById('wms_text_field')?.focus();
+											}}
+										>
+											<ContentCopyIcon />
+										</Button>
+										<Divider sx={{ marginTop: '10px' }} />
+									</div>
+								</Accordion>
+							</Grid>
+						))}
+					</div>
+				) : (
+					<>
+						{wmsServices.map((el) => (
+							<Grid item xs={12} sx={{ marginTop: 5 }} key={el.id}>
+								<Typography variant="h6">{el.title}</Typography>
+								<Typography variant="body2">{el.description}</Typography>
+								<TextField value={el.link} size="small"></TextField>
+								<Button
+									variant="contained"
+									sx={{ marginTop: 0.2 }}
+									onClick={() => {
+										setSelectedSample(el.link);
+										document.getElementById('wms_text_field')?.focus();
+									}}
+								>
+									<ContentCopyIcon />
+								</Button>
+								<Divider sx={{ marginTop: '10px' }} />
+							</Grid>
+						))}
+					</>
+				)}
 			</>
 		);
 	};
@@ -112,7 +145,7 @@ export default function WMSLinks(props: wmsLinksProps) {
 			{props.open && (
 				<Fade in={props.open} appear={false}>
 					<Box sx={mediaIsMobile ? mobileStyle : modalStyle}>
-						<Paper sx={{ padding: '20px' }}>
+						<Paper sx={{ padding: '10px' }}>
 							<Grid container>
 								<Grid item xs={10}>
 									<Typography id="modal-modal-title" variant="h6">

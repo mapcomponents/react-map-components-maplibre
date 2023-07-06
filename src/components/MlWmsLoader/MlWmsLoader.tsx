@@ -18,6 +18,7 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
+
 import * as turf from '@turf/turf';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
@@ -217,10 +218,10 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			resetFeatureInfo();
 			const unprojected = mapHook.map.unproject([ev.point.x, ev.point.y]);
 			const point = turf.point([unprojected.lng, unprojected.lat]);
-            const buffered = turf.buffer(point, 50, {units: 'meters'});
+			const buffered = turf.buffer(point, 50, { units: 'meters' });
 			const _bbox = turf.bbox(buffered);
-			const _sw = lngLatToMeters({lng:_bbox[0],lat:_bbox[1]} as LngLat);
-			const _ne = lngLatToMeters({lng:_bbox[2],lat:_bbox[3]} as LngLat);
+			const _sw = lngLatToMeters({ lng: _bbox[0], lat: _bbox[1] } as LngLat);
+			const _ne = lngLatToMeters({ lng: _bbox[2], lat: _bbox[3] } as LngLat);
 			const bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
 			const _getFeatureInfoUrlParams = {
 				REQUEST: 'GetFeatureInfo',
