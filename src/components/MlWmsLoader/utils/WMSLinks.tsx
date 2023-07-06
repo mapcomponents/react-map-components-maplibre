@@ -36,9 +36,10 @@ const modalStyle = {
 const mobileStyle = {
 	position: 'absolute',
 	top: '10%',
-	left: '20%',
-	width: '60%',
-	height: '70%',
+	left: '5%',
+	right: '5%',
+	//width: '60%',
+	//height: '70%',
 	bgcolor: 'background.paper',
 	boxShadow: 24,
 	zIndex: 200,
@@ -72,6 +73,7 @@ export interface wmsLinksProps {
 	load: (str: string) => void;
 	open: boolean;
 	close: () => void;
+	openWMSLoader: (boolean: boolean) => void;
 }
 
 export default function WMSLinks(props: wmsLinksProps) {
@@ -87,21 +89,25 @@ export default function WMSLinks(props: wmsLinksProps) {
 							<Grid item xs={12} sx={{ marginTop: 5 }} key={el.id}>
 								<Accordion>
 									<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-										<Typography variant="h6">{el.title}</Typography>
-									</AccordionSummary>
-									<div>
-										<Typography variant="body2">{el.description}</Typography>
-										<TextField value={el.link} size="small" />
+										<Typography marginRight={1.5} variant="h6">
+											{el.title}{' '}
+										</Typography>
 										<Button
 											variant="contained"
 											sx={{ marginTop: 0.2 }}
 											onClick={() => {
 												setSelectedSample(el.link);
 												document.getElementById('wms_text_field')?.focus();
+												props.openWMSLoader(true);
 											}}
 										>
 											<ContentCopyIcon />
 										</Button>
+									</AccordionSummary>
+									<div>
+										<Typography variant="body2">{el.description}</Typography>
+										<TextField value={el.link} size="small" />
+
 										<Divider sx={{ marginTop: '10px' }} />
 									</div>
 								</Accordion>

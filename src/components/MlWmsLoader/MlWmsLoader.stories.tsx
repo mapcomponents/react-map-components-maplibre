@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MlWmsLoader, { WmsConfig } from './MlWmsLoader';
-import { Button, FormControl, List, TextField } from '@mui/material';
+import { Button, FormControl, List, TextField, Theme, useMediaQuery } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -29,6 +29,7 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [featureInfoActive, setFeatureInfoActive] = useState(true);
 
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 	const openGuide = () => {
 		setGuide(true);
 		setTimeout(() => {
@@ -44,7 +45,12 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 	return (
 		<>
 			<MlWmsLoaderInstructions open={guide} />
-			<WMSLinks open={demoMode} close={() => setDemoMode(false)} load={loader} />
+			<WMSLinks
+				open={demoMode}
+				close={() => setDemoMode(false)}
+				load={loader}
+				openWMSLoader={setOpenSidebar}
+			/>
 			<TopToolbar
 				buttons={
 					<>
@@ -61,7 +67,7 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 							variant={demoMode ? 'contained' : 'outlined'}
 							onClick={() => {
 								setDemoMode(!demoMode);
-								setOpenSidebar(true);
+								setOpenSidebar(mediaIsMobile ? false : true);
 							}}
 							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 						>
