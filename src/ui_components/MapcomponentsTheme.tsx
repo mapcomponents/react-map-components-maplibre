@@ -14,8 +14,9 @@ declare module '@mui/material' {
 			compSouth: string;
 		};
 		followGPS: {
-			GPSBackround: string;
+			GPSBackground: string;
 			GPSHover: string;
+			GPSInactive: string;
 			GPSActivated: string;
 			GPSActiveBackground: string;
 		};
@@ -73,8 +74,9 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						compSouth: '#D3DCE1',
 					},
 					followGPS: {
-						GPSBackround: '#414244',
+						GPSBackground: '#414244',
 						GPSHover: '#FFF',
+						GPSInactive: '#BCBDBF',
 						GPSActivated: '#fff',
 						GPSActiveBackground: '#747577',
 					},
@@ -98,8 +100,9 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						compSouth: '#D3DCE1',
 					},
 					followGPS: {
-						GPSBackround: '#FFF',
+						GPSBackground: '#FFF',
 						GPSHover: '#f5f5f5',
+						GPSInactive: '#BCBDBF',
 						GPSActivated: '#009ee0',
 						GPSActiveBackground: '#fff',
 					},

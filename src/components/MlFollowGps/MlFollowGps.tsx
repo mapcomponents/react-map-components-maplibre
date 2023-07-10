@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useCallback, useMemo } from "react"
 import useMap from "../../hooks/useMap";
 import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
 
-import { Button } from '@mui/material';
+import { Button, Theme } from '@mui/material';
 import FilterCenterFocusIcon from '@mui/icons-material/FilterCenterFocus';
 
 import { point, circle, lineArc, Feature, Point } from '@turf/turf';
@@ -87,6 +87,9 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 	const [accuracyGeoJson, setAccuracyGeoJson] = useState<Feature>();
 	const [deviceOrientation, setDeviceOrientation] = useState(0);
 	const initiallyCentered = useRef(false);
+
+	const activeColor = (theme: Theme) => props.onColor || theme.palette.followGPS.GPSActivated;
+	const notActiveColor = (theme: Theme) => props.offColor || theme.palette.followGPS.GPSInactive;
 
 	const getLocationSuccess = useCallback(
 		(pos: GeolocationPosition) => {
@@ -214,7 +217,11 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 				variant="navtools"
 				sx={{
 					zIndex: 1002,
-					color: isFollowed ? props.onColor : props.offColor,
+					color: isFollowed ? activeColor : notActiveColor,
+					backgroundColor: (theme: Theme) =>
+						isFollowed
+							? theme.palette.followGPS.GPSActiveBackground
+							: theme.palette.followGPS.GPSBackground,
 				}}
 				disabled={locationAccessDenied}
 				onClick={() => {
@@ -229,8 +236,8 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 
 MlFollowGps.defaultProps = {
 	mapId: undefined,
-	onColor: '#009ee0',
-	offColor: '#BCBDBF',
+	onColor: undefined,
+	offColor: undefined,
 	showAccuracyCircle: true,
 	showUserLocation: true,
 	showOrientation: true,
