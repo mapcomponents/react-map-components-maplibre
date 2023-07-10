@@ -13,7 +13,7 @@ import wgLocations from './assets/wg_locations.json';
 import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
-import { Typography } from '@mui/material';
+import { Theme, Typography } from '@mui/material';
 import wgMarker from '../../components/MlGeoJsonLayer/assets/wgMarker.png';
 
 const storyoptions = {
@@ -81,6 +81,13 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
 	}, [mapHook.map]);
 
+	if (props.type === 'symbol') {
+		mapHook.map?.loadImage(wgMarker, function (error, image: HTMLImageElement) {
+			if (error) throw error;
+			mapHook.map?.addImage('wgLogo', image);
+		});
+	}
+
 	return (
 		<>
 			<TopToolbar
@@ -129,7 +136,6 @@ Circle.parameters = {};
 Circle.args = {
 	geojson: wgLocations,
 	paint: {
-		//'circle-radius': ['/', ['get', 'Mitarbeitende'], 1.1],
 		'circle-radius': {
 			property: 'Mitarbeitende',
 			stops: [
@@ -137,7 +143,7 @@ Circle.args = {
 				[26, 35],
 			],
 		},
-		'circle-color': '#B11E40',
+		'circle-color': '#009EE0' ,
 	},
 	type: 'circle',
 };
@@ -202,11 +208,14 @@ Symbol.args = {
 	geojson: wgLocations,
 	options: {
 		layout: {
-			'icon-image': wgMarker,
-			'icon-size': 0.5,
-		},
-		paint: {
-			'icon-color': 'rgb(220,80,30)',
+			'icon-image': 'wgLogo',
+			'icon-size': {
+				property: 'Mitarbeitende',
+				stops: [
+					[3, 0.06],
+					[26, 0.2],
+				],
+			},
 		},
 	},
 	type: 'symbol',
