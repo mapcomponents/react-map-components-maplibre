@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import Box from "@mui/material/Box";
+import React, { useCallback, useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import MlNavigationCompass from '../MlNavigationCompass/MlNavigationCompass';
@@ -65,7 +65,6 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	const [pitch, setPitch] = useState(0);
 	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
-
 	useEffect(() => {
 		if (!mapHook.map) return;
 
@@ -74,37 +73,35 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 			() => {
 				if (!mapHook.map) return;
 
-				setPitch(mapHook.map.map.getPitch());
+				setPitch(mapHook.map.getPitch());
 			},
 			mapHook.componentId
 		);
-		setPitch(mapHook.map.map.getPitch());
+		setPitch(mapHook.map.getPitch());
 	}, [mapHook.map, props.mapId]);
 
 	const zoomIn = useCallback(() => {
 		if (!mapHook.map) return;
 
-		if (mapHook.map.map.transform._zoom + 0.5 <= mapHook.map.map.transform._maxZoom) {
-			mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom + 0.5 });
+		if (mapHook.map.transform._zoom + 0.5 <= mapHook.map.transform._maxZoom) {
+			mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom + 0.5 });
 		}
 	}, [mapHook.map]);
 
 	const zoomOut = useCallback(() => {
 		if (!mapHook.map) return;
 
-		if (mapHook.map.map.transform._zoom - 0.5 >= mapHook.map.map.transform._minZoom) {
-			mapHook.map.map.easeTo({ zoom: mapHook.map.map.transform._zoom - 0.5 });
+		if (mapHook.map.transform._zoom - 0.5 >= mapHook.map.transform._minZoom) {
+			mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom - 0.5 });
 		}
 	}, [mapHook.map]);
 
 	const adjustPitch = useCallback(() => {
 		if (!mapHook.map) return;
-
-		let targetPitch = 60;
-		if (mapHook.map.map.getPitch() !== 0) {
-			targetPitch = 0;
-		}
-		mapHook.map.map.easeTo({ pitch: targetPitch });
+		setPitch(mapHook.map.getPitch());
+		const targetPitch = mapHook.map.getPitch() !== 0 ? 0 : 60;
+		mapHook.map.easeTo({ pitch: targetPitch });
+		
 	}, [mapHook.map]);
 
 	return (
@@ -123,7 +120,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 			<MlNavigationCompass />
 			{props.show3DButton && (
 				<Button variant="navtools" onClick={adjustPitch}>
-					{pitch ? '2D' : '3D'}
+					{pitch < 59 ? '2D' : '3D'}
 				</Button>
 			)}
 			{props.showFollowGpsButton && <MlFollowGps />}

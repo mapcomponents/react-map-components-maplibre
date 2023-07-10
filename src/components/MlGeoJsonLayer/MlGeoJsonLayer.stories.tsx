@@ -13,7 +13,7 @@ import wgLocations from './assets/wg_locations.json';
 import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
-import { Theme, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import wgMarker from '../../components/MlGeoJsonLayer/assets/wgMarker.png';
 
 const storyoptions = {
