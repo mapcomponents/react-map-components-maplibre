@@ -1,10 +1,11 @@
 import React from "react";
 
-import MlScaleReference from "./MlScaleReference";
+import MlScaleReference, { MlScaleReferenceProps } from "./MlScaleReference";
 
 import TopToolbar from "../../ui_components/TopToolbar";
 import mapContextDecorator from "../../decorators/MapContextDecorator";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { useMediaQuery, Theme } from "@mui/material";
+
 
 const storyoptions = {
 	title: 'MapComponents/MlScaleReference',
@@ -17,19 +18,19 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const ToolbarTemplate = (props) => {
+const ToolbarTemplate = (props: MlScaleReferenceProps ) => {
 	return <TopToolbar unmovableButtons={<MlScaleReference {...props} />} />;
 };
-const OverlayTemplate = (props) => {
-	const mediaIsMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
+const OverlayTemplate = (props: MlScaleReferenceProps ) => {
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
 	return (
 		<div
 			style={{
 				position: "absolute",
-				zIndex: 100000,
-				bottom: mediaIsMobile ? "40px" : "20px",
-				right: "20px",
+				zIndex: 1000,
+				bottom: mediaIsMobile ? "38px": "8px",
+				left: "10px",
 			}}
 		>
 			<MlScaleReference {...props} />
@@ -39,10 +40,9 @@ const OverlayTemplate = (props) => {
 
 export const Toolbar = ToolbarTemplate.bind({});
 Toolbar.args = {
-	show: "toolbar",
+	
 };
 
 export const Overlay = OverlayTemplate.bind({});
-Overlay.args = {
-	show: "overlay",
+Overlay.args = {	
 };
