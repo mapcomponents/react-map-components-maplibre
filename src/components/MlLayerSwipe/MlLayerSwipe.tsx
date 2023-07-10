@@ -23,6 +23,7 @@ export interface MlLayerSwipeProps {
 /**
  *	creates a split view of 2 synchronised maplibre instances
  */
+
 const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	const mapContext: MapContextType = useContext(MapContext);
 	const initializedRef = useRef(false);
@@ -48,7 +49,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	};
 
 	const onMove = useCallback(
-		(e:(TouchEvent & MouseEvent)) => {
+		(e: TouchEvent & MouseEvent) => {
 			if (!mapExists()) return;
 
 			const bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
@@ -87,7 +88,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 		);
 		onMove({
 			clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
-		} as (TouchEvent & MouseEvent));
+		} as TouchEvent & MouseEvent);
 	}, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
 	const onDown = (e: React.MouseEvent | React.TouchEvent) => {
@@ -109,6 +110,29 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 		document.removeEventListener('mousemove', onMove);
 		document.removeEventListener('mouseup', onMouseUp);
 	};
+
+	function adjustWindowSize() {
+		
+		const clipWidth = mapContext.maps[props.map2Id].getContainer().style.clip.split(',')[1].replace('px', '');
+		const canvasWidth = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect().width;
+
+		if (parseFloat(clipWidth) < canvasWidth) {
+			const newPosition = parseFloat(((clipWidth / canvasWidth) * 100).toFixed(2));
+			setSwipeX(newPosition);
+		} else {
+			const newClip = 'rect(0, ' + canvasWidth / 2 + 'px, 999em, 0)';
+			mapContext.maps[props.map2Id].getContainer().style.clip = newClip;
+			setSwipeX(50);
+		}
+	}
+
+	useEffect(() => {
+		window.addEventListener('resize', adjustWindowSize);
+
+		return () => {
+			window.removeEventListener('resize', adjustWindowSize);
+		};
+	}, [mapContext]);
 
 	return (
 		<div
