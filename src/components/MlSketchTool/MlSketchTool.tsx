@@ -15,11 +15,16 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature } from '@turf/turf';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Button, Typography } from '@mui/material';
+import { Button, Theme, Typography } from '@mui/material';
 
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
+const sketchTools = [
+	{ name: 'Point', mode: 'draw_point', icon: <ScatterPlotIcon /> },
+	{ name: 'LineString', mode: 'draw_line_string', icon: <PolylineIcon /> },
+	{ name: 'Polygon', mode: 'draw_polygon', icon: <PentagonIcon /> },
+];
 
 export interface MlSketchToolProps {
 	/**
@@ -91,6 +96,50 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		});
 	};
 
+	const SketchToolButtons = () => {		
+		
+		return <>
+		{sketchTools.map((el) => {
+
+		const stateColor = (theme: Theme) => {
+			if(sketchState.drawMode === el.mode){
+				return theme.palette.primary.main;
+			}else{
+				return theme.palette.navigation.navColor;
+			}
+			
+		};
+
+		const stateIconColor = (theme: Theme) => {
+			if(sketchState.drawMode !== el.mode){
+				return theme.palette.primary.main;
+			}else{
+				return theme.palette.navigation.navColor;
+			}
+			
+		};
+
+		return (
+				<>
+				<Tooltip title={el.name}>
+					<Button
+						sx={{
+							color: stateIconColor,
+							backgroundColor: stateColor,							
+							...buttonStyle
+						}}
+						onClick={() => buttonClickHandler(el.mode as keyof MapboxDraw.Modes)}
+					>
+						{el.icon}
+					</Button>
+				</Tooltip>
+				</>
+				);
+		})
+		}
+		</>
+	};
+
 	return (
 		<>
 			<Box
@@ -99,21 +148,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				}}
 			>
 				<ButtonGroup>
-					<Tooltip title={'Point'}>
-						<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_point')}>
-							<ScatterPlotIcon />
-						</Button>
-					</Tooltip>
-					<Tooltip title={'LineString'}>
-						<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_line_string')}>
-							<PolylineIcon />
-						</Button>
-					</Tooltip>
-					<Tooltip title={'Polygon'}>
-						<Button sx={buttonStyle} onClick={() => buttonClickHandler('draw_polygon')}>
-							<PentagonIcon />
-						</Button>
-					</Tooltip>
+					<SketchToolButtons />
 				</ButtonGroup>
 			</Box>
 
@@ -174,7 +209,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 								{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 								{/* @ts-ignore-next-line */}
 								<LayerListItem
-									sx={buttonStyle}
+									listItemSx={buttonStyle}
 									configurable={true}
 									layerComponent={
 										<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={String(el.id)} />
