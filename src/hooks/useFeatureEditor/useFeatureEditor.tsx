@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 
-import useMap from '../../useMap';
+import useMap from '../useMap';
 import { GeoJSONObject, Feature } from '@turf/turf';
 import { MapEventType } from 'maplibre-gl';
 import  featureEditorStyle  from './utils/FeatureEditorStyle';
