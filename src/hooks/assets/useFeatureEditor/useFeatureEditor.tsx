@@ -4,9 +4,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 
-import useMap from './useMap';
+import useMap from '../../useMap';
 import { GeoJSONObject, Feature } from '@turf/turf';
 import { MapEventType } from 'maplibre-gl';
+import  featureEditorStyle  from './utils/FeatureEditorStyle';
 
 export interface useFeatureEditorProps {
 	/**
@@ -56,6 +57,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 	const drawToolsInitialized = useRef(false);
 	const [drawToolsReady, setDrawToolsReady] = useState(false);
 	const [feature, setFeature] = useState<GeoJSONObject[]>();
+//	mapHook.map?.dragPan._touchPan.disable();
 
 	const modeChangeHandler = useCallback((e: MapEventType & { mode: keyof MapboxDraw.Modes }) => {
 		console.log('MlFeatureEditor mode change to ' + e.mode);
@@ -93,10 +95,14 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 					},
 					MapboxDraw.modes
 				),
+				userProperties: true,
+				styles: featureEditorStyle
 			});
 
 			mapHook.map.addControl(draw.current, 'top-left', mapHook.componentId);
+			
 			mapHook.map.on('draw.modechange', modeChangeHandler, mapHook.componentId);
+	
 
 			setDrawToolsReady(true);
 		}
@@ -117,7 +123,6 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 		};
 
 		mapHook.map.on('mouseup', changeHandler);
-
 		mapHook.map.on('touchend', changeHandler);
 
 		return () => {

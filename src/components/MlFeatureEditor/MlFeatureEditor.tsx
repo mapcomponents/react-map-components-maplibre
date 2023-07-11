@@ -1,5 +1,5 @@
 import React from 'react';
-import useFeatureEditor, { useFeatureEditorProps } from '../../hooks/useFeatureEditor';
+import useFeatureEditor, { useFeatureEditorProps } from '../../hooks/assets/useFeatureEditor/useFeatureEditor';
 import './MlFeatureEditor.css';
 
 const MlFeatureEditor: React.FC<useFeatureEditorProps> = (props) => {
