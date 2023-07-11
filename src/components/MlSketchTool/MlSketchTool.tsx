@@ -19,6 +19,7 @@ import { Button, Theme, Typography } from '@mui/material';
 
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
+import { red } from '@mui/material/colors';
 
 const sketchTools = [
 	{ name: 'Point', mode: 'draw_point', icon: <ScatterPlotIcon /> },
@@ -96,48 +97,49 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		});
 	};
 
-	const SketchToolButtons = () => {		
-		
-		return <>
-		{sketchTools.map((el) => {
-
-		const stateColor = (theme: Theme) => {
-			if(sketchState.drawMode === el.mode){
-				return theme.palette.primary.main;
-			}else{
-				return theme.palette.navigation.navColor;
-			}
-			
-		};
-
-		const stateIconColor = (theme: Theme) => {
-			if(sketchState.drawMode !== el.mode){
-				return theme.palette.primary.main;
-			}else{
-				return theme.palette.navigation.navColor;
-			}
-			
-		};
-
+	const SketchToolButtons = () => {
 		return (
-				<>
-				<Tooltip title={el.name}>
-					<Button
-						sx={{
-							color: stateIconColor,
-							backgroundColor: stateColor,							
-							...buttonStyle
-						}}
-						onClick={() => buttonClickHandler(el.mode as keyof MapboxDraw.Modes)}
-					>
-						{el.icon}
-					</Button>
-				</Tooltip>
-				</>
-				);
-		})
-		}
-		</>
+			<>
+				{sketchTools.map((el) => {
+					const stateColor = (theme: Theme) => {
+						if (sketchState.drawMode === el.mode) {
+							return theme.palette.primary.main;
+						} else {
+							return theme.palette.navigation.navColor;
+						}
+					};
+
+					const stateIconColor = (theme: Theme) => {
+						if (sketchState.drawMode !== el.mode) {
+							return theme.palette.primary.main;
+						} else {
+							return theme.palette.navigation.navColor;
+						}
+					};
+
+					return (
+						<>
+							<Tooltip title={el.name}>
+								<Button
+									sx={{
+										color: stateIconColor,
+										backgroundColor: stateColor,
+
+										'&:hover': {
+											backgroundColor: stateColor,
+										},
+										...buttonStyle,
+									}}
+									onClick={() => buttonClickHandler(el.mode as keyof MapboxDraw.Modes)}
+								>
+									{el.icon}
+								</Button>
+							</Tooltip>
+						</>
+					);
+				})}
+			</>
+		);
 	};
 
 	return (
@@ -252,6 +254,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 											sx={buttonStyle}
 											onClick={() => {
 												removeGeoJson(el);
+												setHoveredGeometry(undefined);
 											}}
 										>
 											<DeleteIcon />
