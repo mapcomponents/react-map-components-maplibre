@@ -14,7 +14,6 @@ import {
 	bbox,
 	booleanContains,
 	bboxPolygon,
-	polygon,
 	BBox,
 } from '@turf/turf';
 import { CircleLayerSpecification, FillLayerSpecification, LngLatBoundsLike } from 'maplibre-gl';

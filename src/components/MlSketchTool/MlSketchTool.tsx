@@ -19,7 +19,7 @@ import { Button, Theme, Typography } from '@mui/material';
 
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
-import { red } from '@mui/material/colors';
+
 
 const sketchTools = [
 	{ name: 'Point', mode: 'draw_point', icon: <ScatterPlotIcon /> },
