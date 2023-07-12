@@ -79,8 +79,8 @@ const LinestringTransitionTemplate = (props) => {
 	);
 };
 
-export const Linestring = LinestringTransitionTemplate.bind({});
-Linestring.parameters = {};
-Linestring.args = {
+export const ExampleConfig = LinestringTransitionTemplate.bind({});
+ExampleConfig.parameters = {};
+ExampleConfig.args = {
 	paint: { 'line-color': 'red', 'line-width': 4 },
 };
