@@ -22,13 +22,13 @@ export default storyoptions;
 
 const Template = () => {
 	const loadingOverlayContext = useContext(LoadingOverlayContext);
-
+console.log(loadingOverlayContext)
 	return (
 		<TopToolbar
 			unmovableButtons={
 				<MlThreeJsLayer
-					init={() => loadingOverlayContext?.setControlled?.(true)}
-					onDone={() => setTimeout(() => loadingOverlayContext?.setLoadingDone?.(true), 1200)}
+				init={() => loadingOverlayContext?.setControlled?.(true)}
+				onDone={() => setTimeout(() => loadingOverlayContext?.setLoadingDone?.(true), 1200)}
 				/>
 			}
 		/>
