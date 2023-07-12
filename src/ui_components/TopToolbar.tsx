@@ -100,7 +100,7 @@ function TopToolbar(props: TopToolbarProps) {
 								display: { xs: 'block', sm: 'none' },
 							}}
 						>
-							<Box sx={{ paddingLeft: '10px', paddingRight: '10px' }}>{props.buttons}</Box>
+							<Box sx={{ paddingLeft: '10px', paddingRight: '10px' }} onClick={handleCloseNavMenu}>{props.buttons}</Box>
 						</Menu>
 					</Box>
 				) : (
