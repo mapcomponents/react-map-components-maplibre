@@ -1,8 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import MlFeatureEditor from './MlFeatureEditor';
 import useMap from '../../hooks/useMap';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { center, points, centerOfMass } from '@turf/turf';
+import { Button } from '@mui/material';
+import TopToolbar from '../../ui_components/TopToolbar';
 
 const storyoptions = {
 	title: 'MapComponents/MlFeatureEditor',
@@ -16,14 +18,40 @@ const Template = (args) => {
 	const initializedRef = useRef(false);
 	const mapHook = useMap({ mapId: undefined });
 
+	const [visible, setVisible] = useState(true);
+
+	useEffect(() => {
+		if (visible === false) {
+			setTimeout(() => {
+				setVisible(true);
+			}, 750);
+		}
+	}, [visible]);
 
 	return (
-		<MlFeatureEditor
-			{...args}
-			onChange={(features) => {
-				console.log(features);
-			}}
-		/>
+		<>
+			<TopToolbar
+				unmovableButtons={
+					<Button
+						variant={ visible ? 'contained' : 'outlined'}
+						onClick={() => {
+							setVisible(false);
+						}}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Restart
+					</Button>
+				}
+			/>
+			{visible && (
+				<MlFeatureEditor
+					{...args}
+					onChange={(features) => {
+						console.log(features);
+					}}
+				/>
+			)}
+		</>
 	);
 };
 
@@ -62,7 +90,7 @@ EditPoint.args = {
 };
 
 export const EditLinestring = Template.bind({});
-EditLineString.args = {
+EditLinestring.args = {
 	mode: 'simple_select',
 	geojson: {
 		type: 'Feature',
@@ -90,6 +118,6 @@ DrawPoint.args = {
 };
 
 export const DrawLinestring = Template.bind({});
-DrawLineString.args = {
+DrawLinestring.args = {
 	mode: 'draw_line_string',
 };
