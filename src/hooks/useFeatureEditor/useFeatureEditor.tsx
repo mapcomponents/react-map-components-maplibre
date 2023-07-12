@@ -7,7 +7,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import useMap from '../useMap';
 import { GeoJSONObject, Feature } from '@turf/turf';
 import { MapEventType } from 'maplibre-gl';
-import  featureEditorStyle  from './utils/FeatureEditorStyle';
+import featureEditorStyle from './utils/FeatureEditorStyle';
 
 export interface useFeatureEditorProps {
 	/**
@@ -35,7 +35,7 @@ export interface useFeatureEditorProps {
 	onFinish?: () => void;
 	/**
 	 * Feature editor modes:
-	 * - draw_line_string 
+	 * - draw_line_string
 	 * - draw_polygon
 	 * - draw_point
 	 * - simple_select
@@ -48,6 +48,7 @@ export interface useFeatureEditorProps {
  * GeoJson Feature editor that allows to create or manipulate GeoJson data
  */
 const useFeatureEditor = (props: useFeatureEditorProps) => {
+	console.log(featureEditorStyle());
 	const draw = useRef<MapboxDraw>();
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -57,18 +58,18 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 	const drawToolsInitialized = useRef(false);
 	const [drawToolsReady, setDrawToolsReady] = useState(false);
 	const [feature, setFeature] = useState<GeoJSONObject[]>();
-//	mapHook.map?.dragPan._touchPan.disable();
+	const style = featureEditorStyle();
 
-	const modeChangeHandler = useCallback((e: MapEventType & { mode: keyof MapboxDraw.Modes }) => {
-		console.log('MlFeatureEditor mode change to ' + e.mode);
-		//setDrawMode(e.mode);
-		if (
-			typeof props.onFinish === 'function' &&
-			(e.mode === 'simple_select')
-		) {
-			props.onFinish();
-		}
-	}, [props.onFinish]);
+	const modeChangeHandler = useCallback(
+		(e: MapEventType & { mode: keyof MapboxDraw.Modes }) => {
+			console.log('MlFeatureEditor mode change to ' + e.mode);
+			//setDrawMode(e.mode);
+			if (typeof props.onFinish === 'function' && e.mode === 'simple_select') {
+				props.onFinish();
+			}
+		},
+		[props.onFinish]
+	);
 
 	useEffect(() => {
 		if (mapHook.map && !drawToolsInitialized.current) {
@@ -90,19 +91,14 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 				defaultMode: props.mode || 'simple_select',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				modes: Object.assign(
-					{
-					},
-					MapboxDraw.modes
-				),
+				modes: Object.assign({}, MapboxDraw.modes),
 				userProperties: true,
-				styles: featureEditorStyle
+				styles: style,
 			});
 
 			mapHook.map.addControl(draw.current, 'top-left', mapHook.componentId);
-			
+
 			mapHook.map.on('draw.modechange', modeChangeHandler, mapHook.componentId);
-	
 
 			setDrawToolsReady(true);
 		}
@@ -155,7 +151,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 	return {
 		feature,
 		drawToolsReady,
-		draw: draw.current
+		draw: draw.current,
 	};
 };
 
