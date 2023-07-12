@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import useMap from "../../hooks/useMap";
 import { Button, SxProps, Theme } from '@mui/material';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import FilterCenterFocusIcon from '@mui/icons-material/FilterCenterFocus';
 
 export interface MlCenterPositionProps {
 	/**
@@ -65,7 +65,7 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 				onClick={centerCurrentLocation}
 				disabled={locationAccessDenied}
 			>
-				<GpsFixedIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+				<FilterCenterFocusIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 			</Button>
 		</>
 	);
