@@ -14,7 +14,6 @@ const decorators = [
 const storyZoom = context.name === "Heat Map" || context.name === "Circle" || context.name === "Symbol" ? 3 : 15;
 const storyCenter = context.name === "Heat Map" || context.name === "Circle" || context.name === "Symbol" ? [4.542400, 39.44518] : [7.104418060409521, 50.73394661255866];
 
-console.log (typeof Story)
 		return (
 			<div className="fullscreen_map">
 				<MapComponentsProvider>
