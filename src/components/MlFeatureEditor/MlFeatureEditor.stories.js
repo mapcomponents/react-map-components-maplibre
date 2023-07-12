@@ -61,7 +61,7 @@ EditPoint.args = {
 	},
 };
 
-export const EditLineString = Template.bind({});
+export const EditLinestring = Template.bind({});
 EditLineString.args = {
 	mode: 'simple_select',
 	geojson: {
@@ -89,7 +89,7 @@ DrawPoint.args = {
 	mode: 'draw_point',
 };
 
-export const DrawLineString = Template.bind({});
+export const DrawLinestring = Template.bind({});
 DrawLineString.args = {
 	mode: 'draw_line_string',
 };
