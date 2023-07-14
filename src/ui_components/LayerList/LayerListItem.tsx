@@ -1,17 +1,29 @@
-import { Checkbox, IconButton, ListItem, ListItemIcon, ListItemText, SxProps } from '@mui/material';
-import TuneIcon from '@mui/icons-material/Tune';
-import React, { useMemo, useRef, useState } from 'react';
-import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
-import LayerPropertyForm from './util/LayerPropertyForm';
-import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
-import LayerListFolder from './LayerListFolder';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { LayerSpecification } from 'maplibre-gl';
-import LayerListItemVectorLayer from './util/LayerListItemVectorLayer';
-import { useEffect } from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton, ListItemText, SxProps, styled } from '@mui/material';
+import { Delete as DeleteIcon, Tune as TuneIcon } from '@mui/icons-material';
+import LayerListFolder from './LayerListFolder';
+import LayerPropertyForm from './util/LayerPropertyForm';
+import LayerListItemVectorLayer, {
+	ListItemStyled,
+	CheckboxListItemIcon,
+	CheckboxStyled,
+} from './util/LayerListItemVectorLayer';
 import ConfirmDialog from '../ConfirmDialog';
+import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
+import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
 
-type Props = {
+const TuneIconButton = styled(IconButton)((showDeleteButton) => ({
+	marginRight: showDeleteButton ? '4px' : '1000px',
+	padding: '4px',
+	marginTop: '-3px',
+}));
+const DeleteIconButton = styled(IconButton)({
+	padding: '4px',
+	marginTop: '-3px',
+});
+
+interface LayerListItemProps {
 	layerComponent: JSX.Element;
 	visible: boolean;
 	configurable: boolean;
@@ -22,7 +34,7 @@ type Props = {
 	showDeleteButton?: boolean;
 	listItemSx?: SxProps;
 	buttons?: JSX.Element;
-};
+}
 
 function LayerListItem({
 	layerComponent,
@@ -33,7 +45,7 @@ function LayerListItem({
 	configurable,
 	setLayerState,
 	...props
-}: Props) {
+}: LayerListItemProps) {
 	const [localVisible, setLocalVisible] = useState(true);
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
@@ -43,9 +55,9 @@ function LayerListItem({
 	// this state variable is used for layer components that provide a paint attribute
 	const [paintProps, setPaintProps] = useState(
 		layerComponent?.props?.paint ||
-		getDefaultPaintPropsByType(
-			layerComponent?.props?.type || getDefaulLayerTypeByGeometry(layerComponent.props.geojson)
-		)
+			getDefaultPaintPropsByType(
+				layerComponent?.props?.type || getDefaulLayerTypeByGeometry(layerComponent.props.geojson)
+			)
 	);
 
 	const _visible = useMemo(() => {
@@ -138,19 +150,13 @@ function LayerListItem({
 	return (
 		<>
 			{!layerComponent?.props?.layers && (
-				<ListItem
-					sx={{
-						paddingRight: configurable ? '56px' : 0,
-						paddingLeft: '25px',
-						paddingTop: 0,
-						paddingBottom: '4px',
-						...props.listItemSx,
-					}}
+				<ListItemStyled
+					sx={{ ...props.listItemSx }}
 					secondaryAction={
 						configurable && Object.keys(paintProps)?.length > 0 ? (
 							<>
 								{props?.buttons}
-								<IconButton
+								<TuneIconButton
 									edge={props.showDeleteButton ? false : 'end'}
 									aria-label="settings"
 									onClick={() => {
@@ -158,18 +164,12 @@ function LayerListItem({
 											return !current;
 										});
 									}}
-									sx={{
-										marginRight: '0px',
-										padding: '4px',
-										marginTop: '-3px',
-										...(props.showDeleteButton ? { marginRight: '4px' } : {}),
-									}}
 								>
 									<TuneIcon />
-								</IconButton>
+								</TuneIconButton>
 								{props.showDeleteButton && (
 									<>
-										<IconButton
+										<DeleteIconButton
 											edge="end"
 											aria-label="delete"
 											onClick={() => {
@@ -177,13 +177,9 @@ function LayerListItem({
 													setShowDeletionConfirmationDialog(true);
 												}
 											}}
-											sx={{
-												padding: '4px',
-												marginTop: '-3px',
-											}}
 										>
 											<DeleteIcon />
-										</IconButton>
+										</DeleteIconButton>
 										{showDeletionConfirmationDialog && (
 											<ConfirmDialog
 												open={showDeletionConfirmationDialog}
@@ -207,23 +203,22 @@ function LayerListItem({
 						) : undefined
 					}
 				>
-					<ListItemIcon sx={{ minWidth: '30px' }}>
-						<Checkbox
+					<CheckboxListItemIcon>
+						<CheckboxStyled
 							disabled={!visible}
 							checked={localVisible}
-							sx={{ padding: 0 }}
 							onClick={() => {
 								setLocalVisible((val) => !val);
 							}}
 						/>
-					</ListItemIcon>
+					</CheckboxListItemIcon>
 					<ListItemText
 						variant="layerlist"
 						primary={name}
 						secondary={description}
 						primaryTypographyProps={{ overflow: 'hidden' }}
 					/>
-				</ListItem>
+				</ListItemStyled>
 			)}
 			{_layerComponent}
 			{!layerComponent?.props?.layers &&

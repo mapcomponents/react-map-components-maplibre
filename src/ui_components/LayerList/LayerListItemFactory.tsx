@@ -1,19 +1,29 @@
 import React, { useMemo } from 'react';
+import { IconButton, styled } from '@mui/material';
+import {
+	ArrowCircleDown as ArrowCircleDownIcon,
+	ArrowCircleUp as ArrowCircleUpIcon,
+} from '@mui/icons-material';
+import LayerListItem from './LayerListItem';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
-import LayerListItem from './LayerListItem';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
-import { LayerConfig } from 'src/contexts/LayerContext';
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import useLayerContext from '../../hooks/useLayerContext';
 import { MlWmsLoaderProps } from '../../components/MlWmsLoader/MlWmsLoader';
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { IconButton } from '@mui/material';
+import useLayerContext from '../../hooks/useLayerContext';
+import { LayerConfig } from '../../contexts/LayerContext';
 
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+const IconButtonStyled = styled(IconButton)({
+	padding: '4px',
+	marginTop: '-3px',
+	background: 'none',
+	'&:hover': {
+		background: 'none',
+	},
+});
 
 export interface LayerListItemFactoryProps {
 	mapId?: string;
@@ -48,7 +58,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 	return (
 		<>
-			<MlOrderLayers layerIds={orderLayers} insertBeforeLayer='_background' />
+			<MlOrderLayers layerIds={orderLayers} insertBeforeLayer="_background" />
 			{layerContext?.symbolLayers?.length > 0 && (
 				<LayerListItem
 					key={'background_labels'}
@@ -89,40 +99,22 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									}
 									buttons={
 										<>
-											<IconButton
+											<IconButtonStyled
 												disabled={idx === layers.length - 1}
 												onClick={() => {
 													layerContext.moveDown(layer.id || '');
 												}}
-
-												sx={{
-													padding: '4px',
-													marginTop: '-3px',
-													background: 'none',
-													"&:hover": {
-														background: "none"
-													}
-												}}
 											>
 												<ArrowCircleDownIcon />
-											</IconButton>
-											<IconButton
+											</IconButtonStyled>
+											<IconButtonStyled
 												disabled={idx === 0}
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');
 												}}
-
-												sx={{
-													padding: '4px',
-													marginTop: '-3px',
-													background: 'none',
-													"&:hover": {
-														background: "none"
-													}
-												}}
 											>
 												<ArrowCircleUpIcon />
-											</IconButton>
+											</IconButtonStyled>
 										</>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
@@ -177,40 +169,22 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									showDeleteButton={true}
 									buttons={
 										<>
-											<IconButton
+											<IconButtonStyled
 												disabled={idx === layers.length - 1}
 												onClick={() => {
 													layerContext.moveDown(layer.id || '');
 												}}
-
-												sx={{
-													padding: '4px',
-													marginTop: '-3px',
-													background: 'none',
-													"&:hover": {
-														background: "none"
-													}
-												}}
 											>
 												<ArrowCircleDownIcon />
-											</IconButton>
-											<IconButton
+											</IconButtonStyled>
+											<IconButtonStyled
 												disabled={idx === 0}
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');
 												}}
-
-												sx={{
-													padding: '4px',
-													marginTop: '-3px',
-													background: 'none',
-													"&:hover": {
-														background: "none"
-													}
-												}}
 											>
 												<ArrowCircleUpIcon />
-											</IconButton>
+											</IconButtonStyled>
 										</>
 									}
 								/>

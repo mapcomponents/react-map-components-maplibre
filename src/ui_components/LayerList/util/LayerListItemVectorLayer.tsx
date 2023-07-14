@@ -1,24 +1,41 @@
-import { ListItem, IconButton, ListItemIcon, Checkbox, ListItemText } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import LayerPropertyForm from './LayerPropertyForm';
+import { ListItem, IconButton, ListItemIcon, Checkbox, ListItemText, styled } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
+import LayerPropertyForm from './LayerPropertyForm';
 import { MlVectorTileLayerProps } from '../../../components/MlVectorTileLayer/MlVectorTileLayer';
 
-type Props = {
+export const ListItemStyled = styled(ListItem)((configurable) => ({
+	paddingRight: configurable ? '56px' : 0,
+	paddingLeft: 0,
+	paddingTop: 0,
+	paddingBottom: '4px',
+}));
+const TuneIconButton = styled(IconButton)({
+	padding: '4px',
+	marginTop: '-3px',
+});
+export const CheckboxListItemIcon = styled(ListItemIcon)({
+	minWidth: '30px',
+});
+export const CheckboxStyled = styled(Checkbox)({
+	padding: 0,
+});
+
+interface LayerListItemVectorLayerProps {
 	id: string;
 	configurable?: boolean;
 	vtProps: MlVectorTileLayerProps;
 	setVtProps: ((state: unknown) => void) | undefined;
 	visibleMaster?: boolean;
-};
+}
 
-export default function LayerListItemVectorLayer({
+function LayerListItemVectorLayer({
 	configurable,
 	vtProps,
 	setVtProps,
 	id,
 	...props
-}: Props) {
+}: LayerListItemVectorLayerProps) {
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const [visible, setVisible] = useState(true);
 	const [paintProps, setPaintProps] = useState(vtProps.layers[id].paint);
@@ -59,17 +76,11 @@ export default function LayerListItemVectorLayer({
 
 	return (
 		<>
-			<ListItem
+			<ListItemStyled
 				key={id}
-				sx={{
-					paddingRight: configurable ? '56px' : 0,
-					paddingLeft: 0,
-					paddingTop: 0,
-					paddingBottom: '4px',
-				}}
 				secondaryAction={
 					configurable ? (
-						<IconButton
+						<TuneIconButton
 							edge="end"
 							aria-label="comments"
 							onClick={() => {
@@ -77,30 +88,29 @@ export default function LayerListItemVectorLayer({
 									return !current;
 								});
 							}}
-							sx={{ padding: '4px', marginTop: '-3px' }}
 						>
 							<TuneIcon />
-						</IconButton>
+						</TuneIconButton>
 					) : undefined
 				}
 			>
-				<ListItemIcon sx={{ minWidth: '30px' }}>
-					<Checkbox
+				<CheckboxListItemIcon>
+					<CheckboxStyled
 						checked={visible}
 						onClick={() => {
 							setVisible((val) => !val);
 						}}
 					/>
-				</ListItemIcon>
+				</CheckboxListItemIcon>
 				<ListItemText primary={vtProps.layers[id].id} variant="layerlist" />
-			</ListItem>
+			</ListItemStyled>
 			{configurable && paintPropsFormVisible && (
 				<LayerPropertyForm
 					paintProps={paintProps}
 					setPaintProps={setPaintProps}
 					layerType={vtProps.layers[id].type}
 				/>
-			) }
+			)}
 		</>
 	);
 }
@@ -108,3 +118,5 @@ export default function LayerListItemVectorLayer({
 LayerListItemVectorLayer.defaultProps = {
 	configurable: true,
 };
+
+export default LayerListItemVectorLayer;

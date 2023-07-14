@@ -1,10 +1,10 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
 import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
 import useMap from '../../hooks/useMap';
 
-const StyleBox = styled('div')(({ theme }) => ({
+const BoxStyled = styled(Box)(({ theme }) => ({
 	zIndex: 1000,
 	cursor: 'pointer',
 	transform: 'scale(1)',
@@ -12,7 +12,7 @@ const StyleBox = styled('div')(({ theme }) => ({
 		transform: 'scale(1.6)',
 	},
 }));
-const CompassBox = styled('div')(({ theme }) => ({
+const CompassBox = styled(Box)(({ theme }) => ({
 	position: 'absolute',
 	right: '-10px',
 	top: '-52px',
@@ -27,7 +27,7 @@ const CompassBox = styled('div')(({ theme }) => ({
 		fill: theme.palette.compass.compHover,
 	},
 }));
-const NeedleBox = styled('div')({
+const NeedleBox = styled(Box)({
 	position: 'absolute',
 	right: '21.4px',
 	top: '6px',
@@ -97,7 +97,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 
 	return (
 		<>
-			<StyleBox sx={{ ...props.style }}>
+			<BoxStyled sx={{ ...props.style }}>
 				<CompassBox onClick={rotate} sx={{ ...props.backgroundStyle }}>
 					<CompassBackground />
 					<NeedleBox onClick={rotate} sx={{ ...props.needleStyle }}>
@@ -108,7 +108,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 						/>
 					</NeedleBox>
 				</CompassBox>
-			</StyleBox>
+			</BoxStyled>
 		</>
 	);
 };
