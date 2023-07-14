@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
-
+import noNavToolsDecorator from '../../decorators/NoNavToolsDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
 import MlThreeJsLayer from './MlThreeJsLayer';
-
-import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { LoadingOverlayContext } from '../../ui_components/LoadingOverlayContext';
+import MlNavigationTools from '../MlNavigationTools/MlNavigationTools';
 
 const storyoptions = {
 	title: 'MapComponents/MlThreeJsLayer',
@@ -16,14 +15,15 @@ const storyoptions = {
 			},
 		},
 	},
-	decorators: mapContextDecorator,
+	decorators: noNavToolsDecorator,
 };
 export default storyoptions;
 
 const Template = () => {
 	const loadingOverlayContext = useContext(LoadingOverlayContext);
-console.log(loadingOverlayContext)
+
 	return (
+		<>
 		<TopToolbar
 			unmovableButtons={
 				<MlThreeJsLayer
@@ -32,6 +32,9 @@ console.log(loadingOverlayContext)
 				/>
 			}
 		/>
+		<MlNavigationTools showFollowGpsButton={false} />
+		</>
+		
 	);
 };
 

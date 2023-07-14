@@ -66,6 +66,7 @@ const PolygonStyler = (props) => {
 	const [featureToShow, setFeatureToShow] = useState('Show all');
 	const [geomType, setGeomType] = useState('fill');
 	const [lineWidth, setLineWidth] = useState(6);
+	const [openSidebar, setOpenSidebar] = useState(true);
 
 		const storyGeoJson = useMemo(() => {
 		if (featureToShow === 'Show all') {
@@ -80,7 +81,7 @@ const PolygonStyler = (props) => {
 	const handleColorChange = (value) => {
 		setColor(value);
 	};
-	const [openSidebar, setOpenSidebar] = useState(false);
+	
 
 
 	return (

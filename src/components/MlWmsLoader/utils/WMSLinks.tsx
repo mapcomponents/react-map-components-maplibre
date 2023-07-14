@@ -14,7 +14,6 @@ import {
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
 import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -38,8 +37,6 @@ const mobileStyle = {
 	top: '10%',
 	left: '5%',
 	right: '5%',
-	//width: '60%',
-	//height: '70%',
 	bgcolor: 'background.paper',
 	boxShadow: 24,
 	zIndex: 200,
@@ -90,7 +87,7 @@ export default function WMSLinks(props: wmsLinksProps) {
 								<Accordion>
 									<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 										<Typography marginRight={1.5} variant="h6">
-											{el.title}{' '}
+											{el.title}
 										</Typography>
 										<Button
 											variant="contained"

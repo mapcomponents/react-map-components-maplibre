@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
-import MlFeatureEditor from './MlFeatureEditor';
-import useMap from '../../hooks/useMap';
-import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { center, points, centerOfMass } from '@turf/turf';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
+import MlFeatureEditor from './MlFeatureEditor';
+import mapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
+import { useFeatureEditorProps } from 'src/hooks/useFeatureEditor/useFeatureEditor';
 
 const storyoptions = {
 	title: 'MapComponents/MlFeatureEditor',
@@ -14,9 +13,10 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => {
-	const initializedRef = useRef(false);
-	const mapHook = useMap({ mapId: undefined });
+
+
+const Template = (args: React.FC<useFeatureEditorProps>) => {
+
 
 	const [visible, setVisible] = useState(true);
 

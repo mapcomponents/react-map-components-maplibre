@@ -10,8 +10,7 @@ import getTheme from '../ui_components/MapcomponentsTheme';
 const decorators = [
 	(Story, context) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
-		const showCenterLocation =
-			context.componentId === 'mapcomponents-mlthreejslayer' ? false : true;
+		
 
 		return (
 			<div className="fullscreen_map">
@@ -28,7 +27,6 @@ const decorators = [
 						/>
 						<MlNavgiationTools
 							showZoomButtons={false}
-							showFollowGpsButton={showCenterLocation}
 							mapId="map_1"
 						/>
 					</MUIThemeProvider>
