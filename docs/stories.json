@@ -103,11 +103,11 @@
       "id": "mapcomponents-mlfeatureeditor--edit-polygon",
       "name": "Edit Polygon",
       "title": "MapComponents/MlFeatureEditor",
-      "importPath": 31594,
+      "importPath": 96178,
       "kind": "MapComponents/MlFeatureEditor",
       "story": "Edit Polygon",
       "parameters": {
-        "fileName": 31594,
+        "fileName": 96178,
         "framework": "react",
         "__id": "mapcomponents-mlfeatureeditor--edit-polygon",
         "__isArgsStory": true
@@ -117,27 +117,27 @@
       "id": "mapcomponents-mlfeatureeditor--edit-point",
       "name": "Edit Point",
       "title": "MapComponents/MlFeatureEditor",
-      "importPath": 31594,
+      "importPath": 96178,
       "kind": "MapComponents/MlFeatureEditor",
       "story": "Edit Point",
       "parameters": {
-        "fileName": 31594,
+        "fileName": 96178,
         "framework": "react",
         "__id": "mapcomponents-mlfeatureeditor--edit-point",
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlfeatureeditor--edit-line-string": {
-      "id": "mapcomponents-mlfeatureeditor--edit-line-string",
-      "name": "Edit Line String",
+    "mapcomponents-mlfeatureeditor--edit-linestring": {
+      "id": "mapcomponents-mlfeatureeditor--edit-linestring",
+      "name": "Edit Linestring",
       "title": "MapComponents/MlFeatureEditor",
-      "importPath": 31594,
+      "importPath": 96178,
       "kind": "MapComponents/MlFeatureEditor",
-      "story": "Edit Line String",
+      "story": "Edit Linestring",
       "parameters": {
-        "fileName": 31594,
+        "fileName": 96178,
         "framework": "react",
-        "__id": "mapcomponents-mlfeatureeditor--edit-line-string",
+        "__id": "mapcomponents-mlfeatureeditor--edit-linestring",
         "__isArgsStory": true
       }
     },
@@ -145,11 +145,11 @@
       "id": "mapcomponents-mlfeatureeditor--draw-polygon",
       "name": "Draw Polygon",
       "title": "MapComponents/MlFeatureEditor",
-      "importPath": 31594,
+      "importPath": 96178,
       "kind": "MapComponents/MlFeatureEditor",
       "story": "Draw Polygon",
       "parameters": {
-        "fileName": 31594,
+        "fileName": 96178,
         "framework": "react",
         "__id": "mapcomponents-mlfeatureeditor--draw-polygon",
         "__isArgsStory": true
@@ -159,27 +159,27 @@
       "id": "mapcomponents-mlfeatureeditor--draw-point",
       "name": "Draw Point",
       "title": "MapComponents/MlFeatureEditor",
-      "importPath": 31594,
+      "importPath": 96178,
       "kind": "MapComponents/MlFeatureEditor",
       "story": "Draw Point",
       "parameters": {
-        "fileName": 31594,
+        "fileName": 96178,
         "framework": "react",
         "__id": "mapcomponents-mlfeatureeditor--draw-point",
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlfeatureeditor--draw-line-string": {
-      "id": "mapcomponents-mlfeatureeditor--draw-line-string",
-      "name": "Draw Line String",
+    "mapcomponents-mlfeatureeditor--draw-linestring": {
+      "id": "mapcomponents-mlfeatureeditor--draw-linestring",
+      "name": "Draw Linestring",
       "title": "MapComponents/MlFeatureEditor",
-      "importPath": 31594,
+      "importPath": 96178,
       "kind": "MapComponents/MlFeatureEditor",
-      "story": "Draw Line String",
+      "story": "Draw Linestring",
       "parameters": {
-        "fileName": 31594,
+        "fileName": 96178,
         "framework": "react",
-        "__id": "mapcomponents-mlfeatureeditor--draw-line-string",
+        "__id": "mapcomponents-mlfeatureeditor--draw-linestring",
         "__isArgsStory": true
       }
     },
@@ -211,15 +211,29 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlgeojsonlayer--circle": {
+      "id": "mapcomponents-mlgeojsonlayer--circle",
+      "name": "Circle",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 93495,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Circle",
+      "parameters": {
+        "fileName": 93495,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--circle",
+        "__isArgsStory": true
+      }
+    },
     "mapcomponents-mlgeojsonlayer--linestring": {
       "id": "mapcomponents-mlgeojsonlayer--linestring",
       "name": "Linestring",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 86078,
+      "importPath": 93495,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Linestring",
       "parameters": {
-        "fileName": 86078,
+        "fileName": 93495,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--linestring",
         "__isArgsStory": true
@@ -229,13 +243,41 @@
       "id": "mapcomponents-mlgeojsonlayer--polygon",
       "name": "Polygon",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 86078,
+      "importPath": 93495,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Polygon",
       "parameters": {
-        "fileName": 86078,
+        "fileName": 93495,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--polygon",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlgeojsonlayer--heat-map": {
+      "id": "mapcomponents-mlgeojsonlayer--heat-map",
+      "name": "Heat Map",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 93495,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Heat Map",
+      "parameters": {
+        "fileName": 93495,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--heat-map",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlgeojsonlayer--symbol": {
+      "id": "mapcomponents-mlgeojsonlayer--symbol",
+      "name": "Symbol",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 93495,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Symbol",
+      "parameters": {
+        "fileName": 93495,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--symbol",
         "__isArgsStory": true
       }
     },
@@ -243,41 +285,13 @@
       "id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
       "name": "Default Paint Overrides",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 86078,
+      "importPath": 93495,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Default Paint Overrides",
       "parameters": {
-        "fileName": 86078,
+        "fileName": 93495,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
-        "__isArgsStory": true
-      }
-    },
-    "mapcomponents-mlgeojsonlayer--heat-map-earthquakes": {
-      "id": "mapcomponents-mlgeojsonlayer--heat-map-earthquakes",
-      "name": "Heat Map Earthquakes",
-      "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 86078,
-      "kind": "MapComponents/MlGeoJsonLayer",
-      "story": "Heat Map Earthquakes",
-      "parameters": {
-        "fileName": 86078,
-        "framework": "react",
-        "__id": "mapcomponents-mlgeojsonlayer--heat-map-earthquakes",
-        "__isArgsStory": true
-      }
-    },
-    "mapcomponents-mlgeojsonlayer--circle-map-wheregroup-locations": {
-      "id": "mapcomponents-mlgeojsonlayer--circle-map-wheregroup-locations",
-      "name": "Circle Map Wheregroup Locations",
-      "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 86078,
-      "kind": "MapComponents/MlGeoJsonLayer",
-      "story": "Circle Map Wheregroup Locations",
-      "parameters": {
-        "fileName": 86078,
-        "framework": "react",
-        "__id": "mapcomponents-mlgeojsonlayer--circle-map-wheregroup-locations",
         "__isArgsStory": true
       }
     },
@@ -439,11 +453,11 @@
       "id": "mapcomponents-mlnavigationtools--default-config",
       "name": "Default Config",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
+      "importPath": 84870,
       "kind": "MapComponents/MlNavigationTools",
       "story": "Default Config",
       "parameters": {
-        "fileName": 5138,
+        "fileName": 84870,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--default-config",
         "__isArgsStory": true
@@ -453,11 +467,11 @@
       "id": "mapcomponents-mlnavigationtools--no-3-d-button",
       "name": "No 3 D Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
+      "importPath": 84870,
       "kind": "MapComponents/MlNavigationTools",
       "story": "No 3 D Button",
       "parameters": {
-        "fileName": 5138,
+        "fileName": 84870,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--no-3-d-button",
         "__isArgsStory": true
@@ -467,27 +481,27 @@
       "id": "mapcomponents-mlnavigationtools--show-center-location-button",
       "name": "Show Center Location Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
+      "importPath": 84870,
       "kind": "MapComponents/MlNavigationTools",
       "story": "Show Center Location Button",
       "parameters": {
-        "fileName": 5138,
+        "fileName": 84870,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--show-center-location-button",
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlnavigationtools--alter-tool-position": {
-      "id": "mapcomponents-mlnavigationtools--alter-tool-position",
-      "name": "Alter Tool Position",
+    "mapcomponents-mlnavigationtools--alternative-position": {
+      "id": "mapcomponents-mlnavigationtools--alternative-position",
+      "name": "Alternative Position",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
+      "importPath": 84870,
       "kind": "MapComponents/MlNavigationTools",
-      "story": "Alter Tool Position",
+      "story": "Alternative Position",
       "parameters": {
-        "fileName": 5138,
+        "fileName": 84870,
         "framework": "react",
-        "__id": "mapcomponents-mlnavigationtools--alter-tool-position",
+        "__id": "mapcomponents-mlnavigationtools--alternative-position",
         "__isArgsStory": true
       }
     },
@@ -495,11 +509,11 @@
       "id": "mapcomponents-mlnavigationtools--no-zoom-buttons",
       "name": "No Zoom Buttons",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
+      "importPath": 84870,
       "kind": "MapComponents/MlNavigationTools",
       "story": "No Zoom Buttons",
       "parameters": {
-        "fileName": 5138,
+        "fileName": 84870,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--no-zoom-buttons",
         "__isArgsStory": true
@@ -509,11 +523,11 @@
       "id": "mapcomponents-mlnavigationtools--no-follow-gps-button",
       "name": "No Follow Gps Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
+      "importPath": 84870,
       "kind": "MapComponents/MlNavigationTools",
       "story": "No Follow Gps Button",
       "parameters": {
-        "fileName": 5138,
+        "fileName": 84870,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--no-follow-gps-button",
         "__isArgsStory": true
@@ -523,27 +537,13 @@
       "id": "mapcomponents-mlnavigationtools--custom-button",
       "name": "Custom Button",
       "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
+      "importPath": 84870,
       "kind": "MapComponents/MlNavigationTools",
       "story": "Custom Button",
       "parameters": {
-        "fileName": 5138,
+        "fileName": 84870,
         "framework": "react",
         "__id": "mapcomponents-mlnavigationtools--custom-button",
-        "__isArgsStory": true
-      }
-    },
-    "mapcomponents-mlnavigationtools--example-config": {
-      "id": "mapcomponents-mlnavigationtools--example-config",
-      "name": "Example Config",
-      "title": "MapComponents/MlNavigationTools",
-      "importPath": 5138,
-      "kind": "MapComponents/MlNavigationTools",
-      "story": "Example Config",
-      "parameters": {
-        "fileName": 5138,
-        "framework": "react",
-        "__id": "mapcomponents-mlnavigationtools--example-config",
         "__isArgsStory": true
       }
     },
@@ -565,11 +565,11 @@
       "id": "mapcomponents-mlscalereference--toolbar",
       "name": "Toolbar",
       "title": "MapComponents/MlScaleReference",
-      "importPath": 59732,
+      "importPath": 25018,
       "kind": "MapComponents/MlScaleReference",
       "story": "Toolbar",
       "parameters": {
-        "fileName": 59732,
+        "fileName": 25018,
         "framework": "react",
         "__id": "mapcomponents-mlscalereference--toolbar",
         "__isArgsStory": true
@@ -579,11 +579,11 @@
       "id": "mapcomponents-mlscalereference--overlay",
       "name": "Overlay",
       "title": "MapComponents/MlScaleReference",
-      "importPath": 59732,
+      "importPath": 25018,
       "kind": "MapComponents/MlScaleReference",
       "story": "Overlay",
       "parameters": {
-        "fileName": 59732,
+        "fileName": 25018,
         "framework": "react",
         "__id": "mapcomponents-mlscalereference--overlay",
         "__isArgsStory": true
@@ -701,17 +701,17 @@
         "__isArgsStory": false
       }
     },
-    "mapcomponents-mltransitiongeojsonlayer--linestring": {
-      "id": "mapcomponents-mltransitiongeojsonlayer--linestring",
-      "name": "Linestring",
+    "mapcomponents-mltransitiongeojsonlayer--example-config": {
+      "id": "mapcomponents-mltransitiongeojsonlayer--example-config",
+      "name": "Example Config",
       "title": "MapComponents/MlTransitionGeoJsonLayer",
       "importPath": 38316,
       "kind": "MapComponents/MlTransitionGeoJsonLayer",
-      "story": "Linestring",
+      "story": "Example Config",
       "parameters": {
         "fileName": 38316,
         "framework": "react",
-        "__id": "mapcomponents-mltransitiongeojsonlayer--linestring",
+        "__id": "mapcomponents-mltransitiongeojsonlayer--example-config",
         "__isArgsStory": true
       }
     },
