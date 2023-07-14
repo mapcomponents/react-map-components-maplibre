@@ -1,4 +1,19 @@
 # Change Log
+## [v0.1.85] - 2023-07-14
+
+### Fixed
+- b0be9be: MlLayerSwipe resize window bug
+- b0be9be: MlSketchTools hovered Feature and mobile edition bugs 
+- b0be9be: MlNavToools setpitch bug
+- b0be9be: Optimized stories
+
+### Changed
+- b0be9be: mapbox-gl-draw from 1.4.0 to 1.4.2 
+- 5dd85be: code styling
+
+### Added
+- b0be9be: added mlFollowgps accurancy fitBounds function
+ 
 ## [v0.1.84] - 2023-06-29
 
 ### Fixed
