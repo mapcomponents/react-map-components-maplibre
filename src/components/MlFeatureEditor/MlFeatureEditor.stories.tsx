@@ -15,7 +15,7 @@ export default storyoptions;
 
 
 
-const Template = (args: React.FC<useFeatureEditorProps>) => {
+const Template = (args: useFeatureEditorProps) => {
 
 
 	const [visible, setVisible] = useState(true);
