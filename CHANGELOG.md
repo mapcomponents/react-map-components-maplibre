@@ -9,7 +9,7 @@
 
 ### Changed
 - b0be9be: mapbox-gl-draw from 1.4.0 to 1.4.2 
-- 5dd85be: code styling
+- 5dd85be: code styling in LayerList, Compass and ColorPicker
 
 ### Added
 - b0be9be: added mlFollowgps accurancy fitBounds function
