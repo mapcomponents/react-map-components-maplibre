@@ -8,7 +8,7 @@
 			"description": "Stellt ein Terrain Layer dar."
 		}
 	},
-	"tags": [],
-	"category": "",
+	"tags": ["Map layer"],
+	"category": "layer",
 	"type": "component"
 }

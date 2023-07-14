@@ -8,7 +8,7 @@
 			"description": "Tool zum Kippen, Drehen und Ausrichten der Karte"
 		}
 	},
-	"tags": [],
-	"category": "",
+	"tags": ["Map add-on"],
+	"category": "add-ons",
 	"type": "component"
 }

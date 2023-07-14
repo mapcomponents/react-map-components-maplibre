@@ -1,14 +1,14 @@
 import React from "react";
-
-import MlNavigationTools from "./MlNavigationTools";
-
+import MlNavigationTools, { MlNavigationToolsProps } from "./MlNavigationTools";
 import noNavToolsDecorator from "../../decorators/NoNavToolsDecorator";
 import BuildIcon from "@mui/icons-material/Build";
 import Button from "@mui/material/Button";
 
+
 const storyoptions = {
 	title: 'MapComponents/MlNavigationTools',
 	component: MlNavigationTools,
+
 	argTypes: {
 		url: {},
 		layer: {},
@@ -17,14 +17,16 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <MlNavigationTools {...args} />;
+
+const Template = (props: MlNavigationToolsProps ) => <MlNavigationTools {...props} />;
+
 export const DefaultConfig = Template.bind({});
 DefaultConfig.parameters = {};
 DefaultConfig.args = {};
 
-export const No3DButton = Template.bind({});
-No3DButton.parameters = {};
-No3DButton.args = {
+export const No3dButton = Template.bind({});
+No3dButton.parameters = {};
+No3dButton.args = {
 	show3DButton: false,
 };
 
@@ -35,9 +37,9 @@ ShowCenterLocationButton.args = {
 	showCenterLocationButton: true,
 };
 
-export const AlterToolPosition = Template.bind({});
-AlterToolPosition.parameters = {};
-AlterToolPosition.args = {
+export const AlternativePosition = Template.bind({});
+AlternativePosition.parameters = {};
+AlternativePosition.args = {
 	sx: { top: '10px' },
 };
 
@@ -62,7 +64,4 @@ CustomButton.args = {
 		</Button>
 	),
 };
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
 

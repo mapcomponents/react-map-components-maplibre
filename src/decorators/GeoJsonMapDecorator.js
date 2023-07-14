@@ -3,14 +3,16 @@ import React, { useMemo } from 'react';
 import { MapComponentsProvider } from '../index';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import './style.css';
-import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
+
+
 
 const decorators = [
 	(Story, context) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
-		
+const storyZoom = context.name === "Heat Map" || context.name === "Circle" || context.name === "Symbol" ? 3 : 15;
+const storyCenter = context.name === "Heat Map" || context.name === "Circle" || context.name === "Symbol" ? [4.542400, 39.44518] : [7.104418060409521, 50.73394661255866];
 
 		return (
 			<div className="fullscreen_map">
@@ -19,14 +21,10 @@ const decorators = [
 						<Story />
 						<MapLibreMap
 							options={{
-								zoom: 14.5,
+								zoom: storyZoom,
 								style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
-								center: [7.0851268, 50.73884],
+								center: storyCenter,
 							}}
-							mapId="map_1"
-						/>
-						<MlNavgiationTools
-							showZoomButtons={false}
 							mapId="map_1"
 						/>
 					</MUIThemeProvider>

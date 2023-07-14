@@ -8,7 +8,7 @@
 			"description": "Darstellung von WMS Diensten mit Feature Info Abfrage"
 		}
 	},
-	"tags": [],
-	"category": "",
+	"tags": ["Map add-on"],
+	"category": "add-ons",
 	"type": "component"
 }

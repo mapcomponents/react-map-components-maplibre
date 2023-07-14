@@ -1,10 +1,10 @@
 export default storyoptions;
 export const EditPolygon: any;
 export const EditPoint: any;
-export const EditLineString: any;
+export const EditLinestring: any;
 export const DrawPolygon: any;
 export const DrawPoint: any;
-export const DrawLineString: any;
+export const DrawLinestring: any;
 declare namespace storyoptions {
     export const title: string;
     export { MlFeatureEditor as component };

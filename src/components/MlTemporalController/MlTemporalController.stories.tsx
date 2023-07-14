@@ -7,8 +7,6 @@ import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jackobsweg.json';
 
-
-
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
 	component: MlTemporalController,
@@ -20,66 +18,31 @@ const storyoptions = {
 };
 export default storyoptions;
 
+const titels = {
+	fill: 'African countries by independency year',
+	line: 'St. James Trials in the North Rhein Region by stage number',
+	circle: 'Earthquakes with 5 or more magnitude',
+};
 
-const FillTemplate = (props: MlTemporalControllerProps) => {
-
-
+const Template = (props: MlTemporalControllerProps) => {
+	const type = props.type || 'circle';
 
 	return (
 		<>
 			<TopToolbar
 				unmovableButtons={
 					<Typography variant="h6" color={'ButtonText'}>
-						African countries by independency year
-						
+						{titels[type]}
 					</Typography>
 				}
 			/>
 
-			<MlTemporalController {...props}  />
-			
+			<MlTemporalController {...props} />
 		</>
 	);
 };
 
-const CircleTemplate = (props: MlTemporalControllerProps) => {
-
-
-
-	return (
-		<>
-			<TopToolbar
-				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
-						Earthquakes with 5 or more magnitude in the mediterranean area
-					</Typography>
-				}
-			/>
-			<MlTemporalController {...props} />	
-		
-		
-		</>
-	);
-};
-
-const LineTemplate = (props: MlTemporalControllerProps) => {
-	
-	
-	return (
-		<>
-			<TopToolbar
-				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
-						St. James Trials in the North Rhein Region by stage number
-					</Typography>
-				}
-			/>
-			<MlTemporalController {...props}  />			
-		</>
-	);
-};
-
-export const FillConfig = FillTemplate.bind({});
+export const FillConfig = Template.bind({});
 FillConfig.parameters = {};
 FillConfig.args = {
 	geojson: african_independency,
@@ -93,14 +56,13 @@ FillConfig.args = {
 	fitBounds: true,
 	displayCurrentValue: true,
 	attribution: 'Made with Natural Earth.',
-	
-	
 };
 
-export const CircleConfig = CircleTemplate.bind({});
+export const CircleConfig = Template.bind({});
 CircleConfig.parameters = {};
 CircleConfig.args = {
 	geojson: earthq_5plus,
+	type: 'circle',
 	timeField: 'Year',
 	labelField: 'LocationName',
 	accumulate: false,
@@ -113,7 +75,7 @@ CircleConfig.args = {
 		'National Geophysical Data Center / World Data Service (NGDC/WDS): NCEI/WDS Global Significant Earthquake Database. NOAA National Centers for Environmental Information. doi:10.7289/V5TD9V7K',
 };
 
-export const LineConfig = LineTemplate.bind({});
+export const LineConfig = Template.bind({});
 LineConfig.parameters = {};
 LineConfig.args = {
 	geojson: jakobsweg,
@@ -126,9 +88,9 @@ LineConfig.args = {
 	labelFadeOut: 2,
 	type: 'line',
 	labelField: 'name',
-	featuresColor: "red",
+	featuresColor: 'red',
 	accumulate: true,
-	fitBounds: true,	
+	fitBounds: true,
 	displayCurrentValue: true,
 	attribution: 'Source: deutsche-jakobswege.de ',
 };

@@ -8,7 +8,7 @@
 			"description": "Darstellung einer animierte GeoJSON-Ebene auf einer Karte."
 		}
 	},
-	"tags": [],
-	"category": "",
+	"tags": ["Map layer"],
+	"category": "layer",
 	"type": "component"
 }

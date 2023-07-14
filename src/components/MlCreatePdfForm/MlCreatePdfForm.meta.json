@@ -8,7 +8,7 @@
       "description": "Erzeugt eine PDF Datei aus der aktuellen Vorschau, mit anpassbarem Position, Format, Rotation und Auflösung."
     }
   },
-  "tags": [],
-  "category": "",
+  "tags": ["Map add-on"],
+  "category": "add-ons",
   "type": "component"
 }

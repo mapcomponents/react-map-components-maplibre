@@ -8,7 +8,7 @@
       "description": "Nach einer numerischen Eigenschaft gefilterte Darstellung von GeoJSON Daten auf einer Karte, gesteuert durch eine lineare Fortschrittsanzeige."
     }
   },
-  "tags": [],
-  "category": "",
+  "tags": ["Map add-on"],
+  "category": "add-ons",
   "type": "component"
 }

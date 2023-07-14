@@ -105,7 +105,12 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 									{samples.map((el, idx) => (
 										<>
 											<ListItem key={idx}>
-												<ListItemButton onClick={() => loadSample(el.path)}>
+												<ListItemButton
+													onClick={() => {
+														loadSample(el.path);
+														props.close();
+													}}
+												>
 													<ListItemText>{el.name}</ListItemText>
 												</ListItemButton>
 											</ListItem>

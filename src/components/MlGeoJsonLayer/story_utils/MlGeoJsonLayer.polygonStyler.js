@@ -5,6 +5,7 @@ import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import TopToolbar from '../../../ui_components/TopToolbar';
 
+
 /*
 const FeatureNames = () => {
 	const names = ['Show all', 'Hofgarten', 'Stadtgarten', 'Opernplatz', 'Keiserplatz'];
@@ -65,8 +66,9 @@ const PolygonStyler = (props) => {
 	const [featureToShow, setFeatureToShow] = useState('Show all');
 	const [geomType, setGeomType] = useState('fill');
 	const [lineWidth, setLineWidth] = useState(6);
+	const [openSidebar, setOpenSidebar] = useState(true);
 
-	const storyGeoJson = useMemo(() => {
+		const storyGeoJson = useMemo(() => {
 		if (featureToShow === 'Show all') {
 			return props.geojson;
 		}
@@ -79,7 +81,8 @@ const PolygonStyler = (props) => {
 	const handleColorChange = (value) => {
 		setColor(value);
 	};
-	const [openSidebar, setOpenSidebar] = useState(true);
+	
+
 
 	return (
 		<>
@@ -90,23 +93,18 @@ const PolygonStyler = (props) => {
 						onClick={() => setOpenSidebar(!openSidebar)}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
-						GeoJson Layer Polygon
+						Layer options
 					</Button>
 				}
 			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'GeoJson Layer Polygon'}
-			>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJson Layer Polygon'}>
 				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 15 }} alignItems="left">
 					<FormControl>
 						<Typography>Geometry type:</Typography>
 						<Select
 							value={geomType}
 							onChange={(e) => {
-								setGeomType(e.target.value);
-								console.log(e.target.value);
+								setGeomType(e.target.value);								
 							}}
 						>
 							<MenuItem value={'fill'} key={1}>
@@ -125,8 +123,7 @@ const PolygonStyler = (props) => {
 						<Select
 							value={featureToShow}
 							onChange={(e) => {
-								setFeatureToShow(e.target.value);
-								console.log(e.target.value);
+								setFeatureToShow(e.target.value);							
 							}}
 						>
 							<MenuItem value={'Show all'} key={1}>
@@ -178,26 +175,26 @@ const PolygonStyler = (props) => {
 					/>
 				</Stack>
 			</Sidebar>
-
-			<MlGeoJsonLayer
-				geojson={storyGeoJson}
-				defaultPaintOverrides={{
-					fill: {
-						'fill-color': color,
-						'fill-opacity': opacity,
-					},
-					circle: {
-						'circle-color': color,
-						'circle-opacity': opacity,
-					},
-					line: {
-						'line-color': color,
-						'line-opacity': opacity,
-						'line-width': lineWidth,
-					},
-				}}
-				type={geomType}
-			/>
+			
+				<MlGeoJsonLayer
+					geojson={storyGeoJson}
+					defaultPaintOverrides={{
+						fill: {
+							'fill-color': color,
+							'fill-opacity': opacity,
+						},
+						circle: {
+							'circle-color': color,
+							'circle-opacity': opacity,
+						},
+						line: {
+							'line-color': color,
+							'line-opacity': opacity,
+							'line-width': lineWidth,
+						},
+					}}
+					type={geomType}
+				/>
 		</>
 	);
 };
