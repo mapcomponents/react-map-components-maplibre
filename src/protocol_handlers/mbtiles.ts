@@ -13,6 +13,7 @@ const parseParams = (url: string) => {
 	const x = mbtilesParts.splice(mbtilesPartsLength - 2, 1)[0];
 	const z = mbtilesParts.splice(mbtilesPartsLength - 3, 1)[0];
 	const filename = mbtilesParts.join('/');
+
 	return {
 		filename,
 		z,
@@ -59,11 +60,13 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
 			// some of the logic here was heavily inspired by
 			// https://github.com/IsraelHikingMap/Site/blob/6aa2ec0cfb8891fa048b1d9e2a4fc7d4cbcc8c97/IsraelHiking.Web/src/application/services/database.service.ts
 			const result = db.exec(query);
+			console.log(result)
 			if (result.length !== 1) {
 				reject(new Error('Tile not found.'));
 				return;
 			}
 			const resultData = result[0].values[0][0] as Uint8Array;
+			
 			let binData: Uint8Array;
 			const isGzipped = resultData[0] === 0x1f && resultData[1] === 0x8b;
 			if (isGzipped) {
@@ -91,6 +94,7 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mbTilesProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
 	const parsedParams = parseParams(params.url);
+	
 	getBufferFromMbtiles(parsedParams).then((result) => {
 		if (result) {
 			callback(null, result, null, null);
@@ -98,6 +102,7 @@ const mbTilesProtocolHandler = (params: RequestParameters, callback: ResponseCal
 			callback(new Error('Tile not found'));
 		}
 	});
+
 	return { cancel: () => {} };
 };
 
