@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
-import useMap from '../../../hooks/useMap';
 import TopToolbar from '../../../ui_components/TopToolbar';
 
 const streetNames = [
