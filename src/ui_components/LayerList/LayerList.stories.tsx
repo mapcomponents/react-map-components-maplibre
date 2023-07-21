@@ -52,7 +52,6 @@ const FolderTemplate = () => {
 							type="layer"
 							name="GeoJSON Layer"
 							key="GeoJSONLayer"
-							showDeleteButton={true}
 						/>
 						<LayerListItem
 							layerComponent={<MlGeoJsonLayer geojson={sample_geojson_2 as Feature} />}

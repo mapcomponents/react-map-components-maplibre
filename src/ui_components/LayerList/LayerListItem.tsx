@@ -13,14 +13,12 @@ import ConfirmDialog from '../ConfirmDialog';
 import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
 
-const TuneIconButton = styled(IconButton)((showDeleteButton) => ({
-	marginRight: showDeleteButton ? '4px' : '1000px',
+const TuneIconButton = styled(IconButton)({
 	padding: '4px',
 	marginTop: '-3px',
-}));
+});
 const DeleteIconButton = styled(IconButton)({
-	padding: '4px',
-	marginTop: '-3px',
+	marginLeft: '20px',
 });
 
 interface LayerListItemProps {
@@ -157,7 +155,7 @@ function LayerListItem({
 							<>
 								{props?.buttons}
 								<TuneIconButton
-									edge={props.showDeleteButton ? false : 'end'}
+									edge={'end'}
 									aria-label="settings"
 									onClick={() => {
 										setPaintPropsFormVisible((current) => {
@@ -167,38 +165,6 @@ function LayerListItem({
 								>
 									<TuneIcon />
 								</TuneIconButton>
-								{props.showDeleteButton && (
-									<>
-										<DeleteIconButton
-											edge="end"
-											aria-label="delete"
-											onClick={() => {
-												if (typeof setLayerState === 'function') {
-													setShowDeletionConfirmationDialog(true);
-												}
-											}}
-										>
-											<DeleteIcon />
-										</DeleteIconButton>
-										{showDeletionConfirmationDialog && (
-											<ConfirmDialog
-												open={showDeletionConfirmationDialog}
-												onConfirm={() => {
-													if (typeof setLayerState === 'function') {
-														deletedRef.current = true;
-														setLayerState(false);
-														setShowDeletionConfirmationDialog(false);
-													}
-												}}
-												onCancel={() => {
-													setShowDeletionConfirmationDialog(false);
-												}}
-												title="Delete layer"
-												text="Are you sure you want to delete this layer?"
-											/>
-										)}
-									</>
-								)}
 							</>
 						) : undefined
 					}
@@ -225,11 +191,45 @@ function LayerListItem({
 				Object.keys(paintProps).length > 0 &&
 				configurable &&
 				paintPropsFormVisible && (
-					<LayerPropertyForm
-						paintProps={paintProps}
-						setPaintProps={setPaintProps}
-						layerType={layerType}
-					/>
+					<>
+						{props.showDeleteButton && (
+							<>
+								<DeleteIconButton
+									edge="end"
+									aria-label="delete"
+									onClick={() => {
+										if (typeof setLayerState === 'function') {
+											setShowDeletionConfirmationDialog(true);
+										}
+									}}
+								>
+									<DeleteIcon />
+								</DeleteIconButton>
+								{showDeletionConfirmationDialog && (
+									<ConfirmDialog
+										open={showDeletionConfirmationDialog}
+										onConfirm={() => {
+											if (typeof setLayerState === 'function') {
+												deletedRef.current = true;
+												setLayerState(false);
+												setShowDeletionConfirmationDialog(false);
+											}
+										}}
+										onCancel={() => {
+											setShowDeletionConfirmationDialog(false);
+										}}
+										title="Delete layer"
+										text="Are you sure you want to delete this layer?"
+									/>
+								)}
+							</>
+						)}
+						<LayerPropertyForm
+							paintProps={paintProps}
+							setPaintProps={setPaintProps}
+							layerType={layerType}
+						/>
+					</>
 				)}
 
 			{layerComponent?.props?.layers && (
