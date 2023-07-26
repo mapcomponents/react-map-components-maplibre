@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { FeatureCollection } from '@turf/turf';
 import * as csv2geojson from 'csv2geojson';
+
 
 const parseParams = (url: string) => {
 	const urlParts = url.split('://');
@@ -14,66 +14,55 @@ const parseParams = (url: string) => {
 	};
 };
 
-/**
- * Example usage:
- * getDataFromCSV({ filename: 'csv/restaurants.csv'}).then(
- * 	(result) => {
- * 		console.log(result);
- * 	}
- * );
- */
-// function getDatafromCSV(params: { filename: string }) {
-// 	// Define options for the csv2geojson library
+async function getData(path: string) {
+	try {
+		const response = await fetch(path);
+		const rawData = await response.text();
+		return rawData;
+	} catch (error) {
+		console.error('File could not be loaded: ', error);
+		return error;
+	}
+}
 
-// 	const [geojson, setGeojson] = useState<FeatureCollection>();
+async function convertCsv(params: { filename: string }): Promise<FeatureCollection> {
 
-// 	let options: csv2geojson.csvOptions = {};
+	// Use the csv2geojson library to convert the CSV to GeoJSON
+	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 
-// 	fetch(params.filename)
-// 		.then((response) => response.text())
-// 		.then((rawData) => {
-// 			csv2geojson.csv2geojson(rawData, options, (err: String, data: FeatureCollection) => {
-// 				setGeojson(data);
-// 				if (err) {
-// 					console.log(err);
-// 				}
-// 			});
-// 		});
+		let options: csv2geojson.csvOptions= {};
+		//const extension = 
+		
+		// if(extension === 'tsv'){
+		// 	options.delimiter = '\t';
+		// }
 
-// 	return new Promise((resolve, reject) => {
-// 		try {
-// 			resolve(geojson);
-// 		} catch (error) {
-// 			reject(error);
-// 		}
-// 	});
-// }
+		getData(params.filename).then((rawData) => {
+			csv2geojson.csv2geojson(rawData, {}, (err: string, data: FeatureCollection) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(data);
+				}
+			});
+		});
+	});
+
+	return geojson;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CSVProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
 	const parsedParams = parseParams(params.url);
 
-	//getDatafromCSV(parsedParams).
-	fetch(parsedParams.filename)
-		.then((response) => response.text())
-		.then((rawData) => {
-			csv2geojson.csv2geojson(rawData, {}, (err: String, data: FeatureCollection) => {
-				if (err) {
-					console.log(err);
-				}
-
-				if (data !== null) {
-				// See if the callback takes only an bufferArray or it can also take a JSON object 
-				//	let binData: Uint8Array;
-
-					callback(null, data, null, null);
-				} else {
-					callback(new Error('CSV not found'));
-				}
-			});
-		});
-
+	convertCsv(parsedParams).then((data) => {
+		if (data !== undefined) {
+			callback(null, data, null, null);
+		} else {
+			callback(new Error('CSV not found'));
+		}
+	});
 	return { cancel: () => {} };
 };
 
-export { CSVProtocolHandler, parseParams };
+export { CSVProtocolHandler, convertCsv, getData, parseParams };

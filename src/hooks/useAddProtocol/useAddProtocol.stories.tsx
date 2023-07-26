@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import useAddProtocol from './useAddProtocol';
 
 import mapContextDecorator from '../../decorators/LowZoomDecorator';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { LayerSpecification } from 'maplibre-gl';
+import { Cancelable, LayerSpecification, LngLatLike, RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
-//import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-//import { FeatureCollection } from '@turf/turf';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 import useMap from '../useMap';
-import { Zoom } from '@mui/material';
-import MlLayer from 'src/components/MlLayer/MlLayer';
-import maplibregl from 'maplibre-gl';
+import MlLayer from '../../components/MlLayer/MlLayer';
+
 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
@@ -22,53 +19,43 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const csvTemplate = () => {
+interface geojsonTemplateProps {
+	protocol: string,
+	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable,
+	sourceId: string ;
+	filePath: string;
+	type: 'circle' | 'line' | 'fill';
+	paint: LayerSpecification['paint'];
+	center: LngLatLike;
+}
+
+const geojsonTemplate = (props: geojsonTemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
 
 	useAddProtocol({
-		protocol: 'csv',
-		handler: CSVProtocolHandler,
+		protocol: props.protocol,
+		handler: props.handler,
 	});
 
 	useEffect(() => {
-		mapHook.map?.flyTo({ center: [-74.856923, 39.050793], zoom: 10, speed: 2 });
-		// mapHook.map?.addLayer({
-		// 	id: '000test',
-		// 	type: 'circle',
-		// 	source: 'csv://csv/restaurants.csv',
-		// 	//'source-layer': 'restaurants',
-		// 	minzoom: 0,
-		// 	maxzoom: 20,
-		// 	paint: {
-		// 		'circle-color': 'yellow',
-		// 		'circle-radius': 20,
-		// 	},
-		// });
+		mapHook.map?.addSource(props.sourceId, { type: 'geojson', data:  props.protocol + '://' + props.filePath });
+		mapHook.map?.flyTo({ center: props.center, zoom: 13, speed: 2 });
 	}, [mapHook.map]);
 
-	return <>
-	<MlVectorTileLayer
-				mapId={'map_1'}
-				url={'csv://csv/restaurants.csv'}
-				layers={
-					[
-						{
-							id: 'restaurants',
-							type: 'circle',
-							'source-layer': 'restaurants',
-							layout: {},
-							paint: { 'circle-color': 'yellow','circle-radius': 20, },
-						},
-					] as unknown as LayerSpecification[]
-				}
-				
-				sourceOptions={{
-					type: 'vector',
-					minzoom: 4,
-					maxzoom: 18,
+	return (
+		<>
+			<MlLayer
+				layerId={'UseAddProtocolLayer'}
+				options={{
+					type: props.type,
+					source: props.sourceId,
+					// { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
+					paint: props.paint,
 				}}
+				insertBeforeLayer={'waterway-name'}
 			/>
-	</>;
+		</>
+	);
 };
 
 const Template = () => {
@@ -108,6 +95,19 @@ export const MbTiles = Template.bind({});
 MbTiles.parameters = {};
 MbTiles.args = {};
 
-export const CSV = csvTemplate.bind({});
+export const CSV = geojsonTemplate.bind({});
 CSV.parameters = {};
-CSV.args = {};
+CSV.args = {
+	protocol: 'csv',
+	handler: CSVProtocolHandler,
+	sourceId: 'fromCSV-Source',
+	filePath: 'csv/restaurants.csv',
+	type: 'circle',
+	paint: {
+		'circle-color': '#009EE0',
+		'circle-stroke-color': '#F0f0f0',
+		'circle-stroke-width': 2,
+		'circle-radius': 18,
+	},
+	center: [-74.914516, 38.935759]
+};

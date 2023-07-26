@@ -1,0 +1,5 @@
+https:live.thunderbird.net:443:.:^partitionKey=%28https%2Cthunderbird.net%29:3	0	19552	https:live.thunderbird.net:443:live.thunderbird.net:443::n:1689432755:h3:y:1689346355:n:^partitionKey=%28https%2Cthunderbird.net%29:|n:y:
+https:sb-ssl.google.com:443:.:^firstPartyDomain=safebrowsing.86868755-6b82-4842-b301-72671a0db32e.mozilla:3	0	19296	https:sb-ssl.google.com:443:sb-ssl.google.com:443::n:1669797811:h3:y:1667205238:n:^firstPartyDomain=safebrowsing.86868755-6b82-4842-b301-72671a0db32e.mozilla:|n:y:
+https:start.thunderbird.net:443:.:^partitionKey=%28https%2Cthunderbird.net%29:3	0	19552	https:start.thunderbird.net:443:start.thunderbird.net:443::n:1689432756:h3:y:1689346355:n:^partitionKey=%28https%2Cthunderbird.net%29:|n:y:
+https:thunderbird-settings.thunderbird.net:443:.::3	0	19552	https:thunderbird-settings.thunderbird.net:443:thunderbird-settings.thunderbird.net:443::n:1689432904:h3:y:1689346355:n::|n:y:
+https:us06web.zoom.us:443:.:^partitionKey=%28imap%2Cwheregroup.lan%29:3	0	19331	https:us06web.zoom.us:443:us06web.zoom.us:443::n:1670226595:h3:n:1670226177:n:^partitionKey=%28imap%2Cwheregroup.lan%29:|n:y:
