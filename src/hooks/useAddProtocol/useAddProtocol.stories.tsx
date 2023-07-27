@@ -49,7 +49,7 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 				options={{
 					type: props.type,
 					source: props.sourceId,
-					// { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
+					//source: { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
 					paint: props.paint,
 				}}
 				insertBeforeLayer={'waterway-name'}
@@ -95,9 +95,9 @@ export const MbTiles = Template.bind({});
 MbTiles.parameters = {};
 MbTiles.args = {};
 
-export const CSV = geojsonTemplate.bind({});
-CSV.parameters = {};
-CSV.args = {
+export const CSVOrTSV = geojsonTemplate.bind({});
+CSVOrTSV.parameters = {};
+CSVOrTSV.args = {
 	protocol: 'csv',
 	handler: CSVProtocolHandler,
 	sourceId: 'fromCSV-Source',

@@ -31,14 +31,14 @@ async function convertCsv(params: { filename: string }): Promise<FeatureCollecti
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 
 		let options: csv2geojson.csvOptions= {};
-		//const extension = 
+		const extension = params.filename.substring(params.filename.length -3)
 		
-		// if(extension === 'tsv'){
-		// 	options.delimiter = '\t';
-		// }
+		if(extension === 'tsv'){
+			options.delimiter = '\t';
+		}
 
 		getData(params.filename).then((rawData) => {
-			csv2geojson.csv2geojson(rawData, {}, (err: string, data: FeatureCollection) => {
+			csv2geojson.csv2geojson(rawData, options, (err: string, data: FeatureCollection) => {
 				if (err) {
 					reject(err);
 				} else {
