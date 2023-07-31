@@ -14,6 +14,7 @@ import {
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../protocol_handlers/topojson';
+import { OSMProtocolHandler } from '../../protocol_handlers/osm';
 
 import useMap from '../useMap';
 import MlLayer from '../../components/MlLayer/MlLayer';
@@ -121,8 +122,20 @@ CSVOrTSV.args = {
 		'circle-stroke-width': 2,
 		'circle-radius': 18,
 	},
-	flyTo:{ center:[-74.914516, 38.935759], zoom: 13, speed: 2 }
+	flyTo: { center: [-74.914516, 38.935759], zoom: 13, speed: 2 },
 };
+
+export const OSM = geojsonTemplate.bind({});
+OSM.parameters = {};
+OSM.args = {
+	protocol: 'osm',
+	handler: OSMProtocolHandler,
+	sourceId: 'fromOSM-Source',
+	filePath: 'osm/palma.osm',
+	type: 'line',
+	paint: { 'line-color': '#009EE0', 'line-width': 3 },
+	flyTo: { center: [2.651811, 39.571309], zoom: 15.5, speed: 4 },
+}; 
 
 export const Topojson = geojsonTemplate.bind({});
 Topojson.parameters = {};
@@ -132,22 +145,29 @@ Topojson.args = {
 	sourceId: 'fromTopoJson-Source',
 	filePath: 'topojson/usa.topojson',
 	type: 'line',
-	paint: { 'line-color': 
-	[
-		'match', ['get', 'fromObject'],
-		'land', '#111111',
-		'states', '#009EE0',
-		'counties', '#747577', 
-		'white'// otherwise
-	 ],
-	 'line-width':
-	 [
-		'match', ['get', 'fromObject'],
-		'land', 3,
-		'states', 2,
-		'counties', 1, 
-		1 // otherwise
-	 ],	
+	paint: {
+		'line-color': [
+			'match',
+			['get', 'fromObject'],
+			'land',
+			'#111111',
+			'states',
+			'#009EE0',
+			'counties',
+			'#747577',
+			'white', // otherwise
+		],
+		'line-width': [
+			'match',
+			['get', 'fromObject'],
+			'land',
+			3,
+			'states',
+			2,
+			'counties',
+			1,
+			1, // otherwise
+		],
 	},
-	flyTo:{ center:[ -99.110122, 39.827183], zoom: 4, speed: 2 }
+	flyTo: { center: [-99.110122, 39.827183], zoom: 4, speed: 2 },
 };
