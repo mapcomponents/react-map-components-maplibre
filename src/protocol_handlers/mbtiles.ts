@@ -60,7 +60,7 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
 			// some of the logic here was heavily inspired by
 			// https://github.com/IsraelHikingMap/Site/blob/6aa2ec0cfb8891fa048b1d9e2a4fc7d4cbcc8c97/IsraelHiking.Web/src/application/services/database.service.ts
 			const result = db.exec(query);
-			console.log(result)
+		
 			if (result.length !== 1) {
 				reject(new Error('Tile not found.'));
 				return;
