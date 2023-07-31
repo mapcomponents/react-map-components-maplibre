@@ -3324,6 +3324,11 @@
     "@testing-library/dom" "^8.5.0"
     "@types/react-dom" "^18.0.0"
 
+"@tmcw/togeojson@^5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@tmcw/togeojson/-/togeojson-5.7.0.tgz#1ce51da1924a493ce43fbe64a46a497485336a9a"
+  integrity sha512-nW5o0MFtsMh24KA5rnnbSp/IJpLxBrR82udP+926uHMnMp01e6eOWQJiUtxsl7f+Y/fvcWhwjdMCgCiYeonDeA==
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"

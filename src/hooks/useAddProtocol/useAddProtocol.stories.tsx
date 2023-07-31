@@ -15,6 +15,7 @@ import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
+import {GPXProtocolHandler} from '../../protocol_handlers/gpx';
 
 import useMap from '../useMap';
 import MlLayer from '../../components/MlLayer/MlLayer';
@@ -135,6 +136,18 @@ OSM.args = {
 	type: 'line',
 	paint: { 'line-color': '#009EE0', 'line-width': 3 },
 	flyTo: { center: [2.651811, 39.571309], zoom: 15.5, speed: 4 },
+}; 
+
+export const GPX = geojsonTemplate.bind({});
+GPX.parameters = {};
+GPX.args = {
+	protocol: 'gpx',
+	handler: GPXProtocolHandler,
+	sourceId: 'fromGPX-Source',
+	filePath: 'gpx/santiago.gpx',
+	type: 'line',
+	paint: { 'line-color': '#009EE0', 'line-width': 3 },
+	flyTo: { center: [-5.100251, 42.887371], zoom: 7, speed: 3 },
 }; 
 
 export const Topojson = geojsonTemplate.bind({});
