@@ -15,7 +15,7 @@ import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
-import {GPXProtocolHandler} from '../../protocol_handlers/gpx';
+import { XMLProtocolHandler } from '../../protocol_handlers/xml';
 
 import useMap from '../useMap';
 import MlLayer from '../../components/MlLayer/MlLayer';
@@ -61,10 +61,10 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 			<MlLayer
 				layerId={'UseAddProtocolLayer'}
 				options={{
-					type: props.type,
+					type: props.type || 'line',
 					source: props.sourceId,
 					//source: { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
-					paint: props.paint,
+					paint: props.paint || { 'line-color': '#009EE0', 'line-width': 3 },
 				}}
 				insertBeforeLayer={'waterway-name'}
 			/>
@@ -133,22 +133,39 @@ OSM.args = {
 	handler: OSMProtocolHandler,
 	sourceId: 'fromOSM-Source',
 	filePath: 'osm/palma.osm',
-	type: 'line',
-	paint: { 'line-color': '#009EE0', 'line-width': 3 },
+
 	flyTo: { center: [2.651811, 39.571309], zoom: 15.5, speed: 4 },
-}; 
+};
 
 export const GPX = geojsonTemplate.bind({});
 GPX.parameters = {};
 GPX.args = {
 	protocol: 'gpx',
-	handler: GPXProtocolHandler,
+	handler: XMLProtocolHandler,
 	sourceId: 'fromGPX-Source',
 	filePath: 'gpx/santiago.gpx',
-	type: 'line',
-	paint: { 'line-color': '#009EE0', 'line-width': 3 },
 	flyTo: { center: [-5.100251, 42.887371], zoom: 7, speed: 3 },
-}; 
+};
+
+export const KML = geojsonTemplate.bind({});
+KML.parameters = {};
+KML.args = {
+	protocol: 'kml',
+	handler: XMLProtocolHandler,
+	sourceId: 'fromKML-Source',
+	filePath: 'kml/cape_may.kml',
+	flyTo: { center: [-74.82832, 39.093526], zoom: 9, speed: 2 },
+};
+
+export const TCX = geojsonTemplate.bind({});
+TCX.parameters = {};
+TCX.args = {
+	protocol: 'tcx',
+	handler: XMLProtocolHandler,
+	sourceId: 'fromTCX-Source',
+	filePath: 'tcx/biking.tcx',
+	flyTo: { center: [-73.9687900, 40.7795800], zoom: 16, speed: 3 },
+};
 
 export const Topojson = geojsonTemplate.bind({});
 Topojson.parameters = {};
@@ -157,7 +174,6 @@ Topojson.args = {
 	handler: TopojsonProtocolHandler,
 	sourceId: 'fromTopoJson-Source',
 	filePath: 'topojson/usa.topojson',
-	type: 'line',
 	paint: {
 		'line-color': [
 			'match',

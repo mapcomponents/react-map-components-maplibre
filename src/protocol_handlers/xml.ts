@@ -1,6 +1,9 @@
-import { RequestParameters, ResponseCallback } from 'maplibre-gl';
+import { LngLat, RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
-import toGeoJSON from '../hooks/useGpx//lib/gpxConverter';
+import toGeoJSON from '../hooks/useGpx/lib/gpxConverter'; 
+import * as externParser from '@tmcw/togeojson';	
+
+
 
 
 const parseParams = (url: string) => {
@@ -25,14 +28,21 @@ async function getData(path: string) {
 	}
 }
 
-async function convertGPX(params: { filename: string }): Promise<FeatureCollection> {
+async function convertXML(params: { filename: string }): Promise<FeatureCollection> {
 	// Use the csv2geojson library to convert the CSV to GeoJSON
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 		getData(params.filename).then((rawData) => {
+            const extension = params.filename.substring(params.filename.length -3)
+			
 			var newData: FeatureCollection;
-			newData = toGeoJSON.gpx(
+			newData = externParser[extension](
 				new DOMParser().parseFromString(rawData, 'text/xml')
 			) as FeatureCollection<Geometry | GeometryCollection, Properties>;
+
+// if(extension === 'tcx'){
+// newData.features.forEach((el)=> 
+// el.geometry.coordinates.forEach((coord: number[])=>coord.splice(2) ))
+// }
 
 			if (!newData) {
 				reject('Conversion failed');
@@ -46,10 +56,10 @@ async function convertGPX(params: { filename: string }): Promise<FeatureCollecti
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const GPXProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
+const XMLProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
 	const parsedParams = parseParams(params.url);
 
-	convertGPX(parsedParams).then((data) => {
+	convertXML(parsedParams).then((data) => {
 		if (data !== undefined) {
 			console.log(data);
 			callback(null, data, null, null);
@@ -60,4 +70,4 @@ const GPXProtocolHandler = (params: RequestParameters, callback: ResponseCallbac
 	return { cancel: () => {} };
 };
 
-export { GPXProtocolHandler, convertGPX, getData, parseParams };
+export { XMLProtocolHandler, convertXML, getData, parseParams };
