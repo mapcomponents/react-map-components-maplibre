@@ -1,12 +1,12 @@
-import { RequestParameters, ResponseCallback } from 'maplibre-gl';
+import { LngLatLike, RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { Feature, FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
-import { Topology } from 'topojson-specification';
 import { feature as topojsonFeature } from 'topojson-client';
 
 type TopoJson = {
 	type?: 'Topology';
-	objects?: { [key: string]: Topology };
-	arcs?: any;
+	objects?: { key: string, features?: Feature | FeatureCollection };
+	arcs?: LngLatLike[];
+	transform?: {scale: [number, number] , translate: LngLatLike }
 };
 
 const parseParams = (url: string) => {
@@ -59,7 +59,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 		getData(params.filename).then((rawData) => {
 			try {
 				topoJsonData = JSON.parse(rawData);
-			
+				console.log(topoJsonData)
 			} catch (e) {
 				throw 'Invalid TopoJson';
 			}
@@ -76,7 +76,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 					if (topoJsonData.objects?.[key].type === 'GeometryCollection') {
 						
 						topoJsonData.objects?.[key].geometries?.forEach(
-							(e) => (e.properties = { fromObject: key, ...e.properties })
+							(e: Feature) => (e.properties = { fromObject: key, ...e.properties })
 						);
 					} else if (
 						topoJsonData?.objects?.[key] &&
