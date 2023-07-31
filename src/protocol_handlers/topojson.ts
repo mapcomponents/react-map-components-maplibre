@@ -4,9 +4,9 @@ import { feature as topojsonFeature } from 'topojson-client';
 
 type TopoJson = {
 	type?: 'Topology';
-	objects?: { key: string, features?: Feature | FeatureCollection };
+	objects?: { key: string; features?: Feature | FeatureCollection };
 	arcs?: LngLatLike[];
-	transform?: {scale: [number, number] , translate: LngLatLike }
+	transform?: { scale: [number, number]; translate: LngLatLike };
 };
 
 const parseParams = (url: string) => {
@@ -59,7 +59,6 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 		getData(params.filename).then((rawData) => {
 			try {
 				topoJsonData = JSON.parse(rawData);
-				console.log(topoJsonData)
 			} catch (e) {
 				throw 'Invalid TopoJson';
 			}
@@ -70,11 +69,10 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 			};
 
 			if (topoJsonData.type === 'Topology' && topoJsonData.objects !== undefined) {
-
+				
 				// add the "fromObject" property in each topojson feature
 				Object.keys(topoJsonData.objects).map((key) => {
 					if (topoJsonData.objects?.[key].type === 'GeometryCollection') {
-						
 						topoJsonData.objects?.[key].geometries?.forEach(
 							(e: Feature) => (e.properties = { fromObject: key, ...e.properties })
 						);
@@ -98,7 +96,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 				};
 				result.features = reduceFeatures(result);
 			}
-			
+
 			resolve(result);
 		});
 	});

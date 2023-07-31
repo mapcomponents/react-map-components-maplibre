@@ -33,6 +33,7 @@
 		"d3": "^7.8.2",
 		"jspdf": "^2.5.1",
 		"maplibre-gl": "^2.4.0",
+		"osm2geojson-lite": "^0.9.2",
 		"pako": "^2.1.0",
 		"react-color": "^2.19.3",
 		"react-moveable": "^0.46.1",

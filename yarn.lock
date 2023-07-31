@@ -4572,6 +4572,11 @@
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.8.tgz#30744afdb385e2945e22f3b033f897f76b1f12ca"
   integrity sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA==
 
+"@types/geojson@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-1.0.6.tgz#3e02972728c69248c2af08d60a48cbb8680fffdf"
+  integrity sha512-Xqg/lIZMrUd0VRmSRbCAewtwGZiAk3mEUDvV4op1tGl+LvyPcb/MIOSxTl9z+9+J+R4/vpjiCAT4xeKzH9ji1w==
+
 "@types/glob@*":
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-8.0.1.tgz#6e3041640148b7764adf21ce5c7138ad454725b0"
@@ -12978,6 +12983,13 @@ os-homedir@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-homedir/-/os-homedir-1.0.2.tgz#ffbc4988336e0e833de0c168c7ef152121aa7fb3"
   integrity sha512-B5JU3cabzk8c67mRRd3ECmROafjYMXbuzlwtqdM8IbS8ktlTix8aFGb2bAGKrSRIlnfKwovGUUr72JUPyOb6kQ==
+
+osm2geojson-lite@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/osm2geojson-lite/-/osm2geojson-lite-0.9.2.tgz#90acc030bd98e7c0dbe1b072e02eda0995846e52"
+  integrity sha512-volI0mxigK6V6DyxGbdsRozW1mabvxaJnhqe0yuggopnXp6k+Vsc9pDB+OePrCKcaYdtQsw1ChT1jnqTYqOFDA==
+  optionalDependencies:
+    "@types/geojson" "^1.0.6"
 
 ospath@^1.2.2:
   version "1.2.2"
