@@ -4,12 +4,19 @@ import useAddProtocol from './useAddProtocol';
 
 import mapContextDecorator from '../../decorators/LowZoomDecorator';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { Cancelable, LayerSpecification, LngLatLike, RequestParameters, ResponseCallback } from 'maplibre-gl';
+import {
+	Cancelable,
+	FlyToOptions,
+	LayerSpecification,
+	RequestParameters,
+	ResponseCallback,
+} from 'maplibre-gl';
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
+import { TopojsonProtocolHandler } from '../../protocol_handlers/topojson';
+
 import useMap from '../useMap';
 import MlLayer from '../../components/MlLayer/MlLayer';
-
 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
@@ -20,13 +27,13 @@ const storyoptions = {
 export default storyoptions;
 
 interface geojsonTemplateProps {
-	protocol: string,
-	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable,
-	sourceId: string ;
+	protocol: string;
+	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable;
+	sourceId: string;
 	filePath: string;
 	type: 'circle' | 'line' | 'fill';
 	paint: LayerSpecification['paint'];
-	center: LngLatLike;
+	flyTo: FlyToOptions;
 }
 
 const geojsonTemplate = (props: geojsonTemplateProps) => {
@@ -38,8 +45,13 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 	});
 
 	useEffect(() => {
-		mapHook.map?.addSource(props.sourceId, { type: 'geojson', data:  props.protocol + '://' + props.filePath });
-		mapHook.map?.flyTo({ center: props.center, zoom: 13, speed: 2 });
+		mapHook.map?.addSource(props.sourceId, {
+			type: 'geojson',
+			data: props.protocol + '://' + props.filePath,
+		});
+		if (props.flyTo) {
+			mapHook.map?.flyTo(props.flyTo as FlyToOptions);
+		}
 	}, [mapHook.map]);
 
 	return (
@@ -109,5 +121,33 @@ CSVOrTSV.args = {
 		'circle-stroke-width': 2,
 		'circle-radius': 18,
 	},
-	center: [-74.914516, 38.935759]
+	flyTo:{ center:[-74.914516, 38.935759], zoom: 13, speed: 2 }
+};
+
+export const Topojson = geojsonTemplate.bind({});
+Topojson.parameters = {};
+Topojson.args = {
+	protocol: 'topojson',
+	handler: TopojsonProtocolHandler,
+	sourceId: 'fromTopoJson-Source',
+	filePath: 'topojson/usa.topojson',
+	type: 'line',
+	paint: { 'line-color': 
+	[
+		'match', ['get', 'fromObject'],
+		'land', '#111111',
+		'states', '#009EE0',
+		'counties', '#747577', 
+		'white'// otherwise
+	 ],
+	 'line-width':
+	 [
+		'match', ['get', 'fromObject'],
+		'land', 3,
+		'states', 2,
+		'counties', 1, 
+		1 // otherwise
+	 ],	
+	},
+	flyTo:{ center:[ -99.110122, 39.827183], zoom: 4, speed: 2 }
 };
