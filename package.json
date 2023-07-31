@@ -26,6 +26,7 @@
 		"@mapbox/mapbox-gl-sync-move": "^0.3.1",
 		"@mui/icons-material": "^5.11.0",
 		"@mui/material": "^5.12.3",
+		"@tmcw/togeojson": "^5.7.0",
 		"@turf/turf": "^6.5.0",
 		"@types/react-color": "^3.0.6",
 		"@types/topojson-client": "^3.1.1",
