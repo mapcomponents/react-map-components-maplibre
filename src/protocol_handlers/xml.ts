@@ -1,10 +1,7 @@
-import { LngLat, RequestParameters, ResponseCallback } from 'maplibre-gl';
+import { RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
-import toGeoJSON from '../hooks/useGpx/lib/gpxConverter'; 
-import * as externParser from '@tmcw/togeojson';	
-
-
-
+import * as externParser from '@tmcw/togeojson';
+import toGeoJSON from '../hooks/useGpx/lib/gpxConverter';
 
 const parseParams = (url: string) => {
 	const urlParts = url.split('://');
@@ -29,25 +26,33 @@ async function getData(path: string) {
 }
 
 async function convertXML(params: { filename: string }): Promise<FeatureCollection> {
-	// Use the csv2geojson library to convert the CSV to GeoJSON
+
+	const extension = params.filename.substring(params.filename.length - 3);
+
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 		getData(params.filename).then((rawData) => {
-            const extension = params.filename.substring(params.filename.length -3)
-			
-			var newData: FeatureCollection;
-			newData = externParser[extension](
-				new DOMParser().parseFromString(rawData, 'text/xml')
-			) as FeatureCollection<Geometry | GeometryCollection, Properties>;
+			var newData = () => {
 
-// if(extension === 'tcx'){
-// newData.features.forEach((el)=> 
-// el.geometry.coordinates.forEach((coord: number[])=>coord.splice(2) ))
-// }
+				// use an extern converter for tcx files
 
-			if (!newData) {
+				if (extension === 'tcx') {
+					return externParser[extension](
+						new DOMParser().parseFromString(rawData, 'text/xml')
+					) as FeatureCollection<Geometry | GeometryCollection, Properties>;
+
+				// use the projects gpxConverter function for gpx and kml files
+
+				} else {
+					return toGeoJSON[extension](
+						new DOMParser().parseFromString(rawData, 'text/xml')
+					) as FeatureCollection<Geometry | GeometryCollection, Properties>;
+				}
+			};
+
+			if (!newData()) {
 				reject('Conversion failed');
 			} else {
-				resolve(newData);
+				resolve(newData());
 			}
 		});
 	});
@@ -61,10 +66,9 @@ const XMLProtocolHandler = (params: RequestParameters, callback: ResponseCallbac
 
 	convertXML(parsedParams).then((data) => {
 		if (data !== undefined) {
-			console.log(data);
 			callback(null, data, null, null);
 		} else {
-			callback(new Error('CSV not found'));
+			callback(new Error('XML not found'));
 		}
 	});
 	return { cancel: () => {} };
