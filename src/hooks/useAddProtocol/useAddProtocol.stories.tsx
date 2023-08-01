@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect} from 'react';
 
 import useAddProtocol from './useAddProtocol';
 
@@ -40,6 +40,7 @@ interface geojsonTemplateProps {
 
 const geojsonTemplate = (props: geojsonTemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
+	
 
 	useAddProtocol({
 		protocol: props.protocol,
@@ -56,19 +57,20 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 		}
 	}, [mapHook.map]);
 
+
 	return (
 		<>
 			<MlLayer
-				layerId={'UseAddProtocolLayer'}
-				options={{
-					type: props.type || 'line',
-					source: props.sourceId,
-					//source: { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
-					paint: props.paint || { 'line-color': '#009EE0', 'line-width': 3 },
-				}}
-				insertBeforeLayer={'waterway-name'}
-			/>
-		</>
+					layerId={'useAddProtocolLayer'}
+					options={{
+						type: props.type || 'line',
+						source: props.sourceId,
+						//source: { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
+						paint: props.paint || { 'line-color': '#009EE0', 'line-width': 3 },
+					}}
+					insertBeforeLayer={'waterway-name'}
+				/>
+			</>
 	);
 };
 
@@ -164,7 +166,7 @@ TCX.args = {
 	handler: XMLProtocolHandler,
 	sourceId: 'fromTCX-Source',
 	filePath: 'tcx/biking.tcx',
-	flyTo: { center: [-73.9687900, 40.7795800], zoom: 16, speed: 3 },
+	flyTo: { center: [-73.96879, 40.77958], zoom: 16, speed: 3 },
 };
 
 export const Topojson = geojsonTemplate.bind({});
