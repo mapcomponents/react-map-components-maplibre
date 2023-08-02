@@ -55,7 +55,7 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 			type: 'geojson',
 			
 	
-	//  The data url is expected to have the following Format: 
+	//  The url is expected to have the following Format: 
 	// 			[protocol]://[filePath -extension included-]		
 	// 	Example:'csv://csv/restaurants.csv'
 
