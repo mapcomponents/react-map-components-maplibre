@@ -2,35 +2,16 @@ import { RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
 import * as externParser from '@tmcw/togeojson';
 import toGeoJSON from '../hooks/useGpx/lib/gpxConverter';
+import protocolPathParser from './utils/protocolPathParser';
+import getProtocolData from './utils/getProtocolData';
 
-const parseParams = (url: string) => {
-	const urlParts = url.split('://');
-	const csvUrl = urlParts[1];
-	const csvParts = csvUrl.split('/');
-	const filename = csvParts.join('/');
-
-	return {
-		filename,
-	};
-};
-
-async function getData(path: string) {
-	try {
-		const response = await fetch(path);
-		const rawData = await response.text();
-		return rawData;
-	} catch (error) {
-		console.error('File could not be loaded: ', error);
-		return error;
-	}
-}
 
 async function convertXML(params: { filename: string }): Promise<FeatureCollection> {
 
 	const extension = params.filename.substring(params.filename.length - 3);
 
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
-		getData(params.filename).then((rawData) => {
+		getProtocolData(params.filename).then((rawData) => {
 			var newData = () => {
 
 				// use an extern converter for tcx files
@@ -62,7 +43,7 @@ async function convertXML(params: { filename: string }): Promise<FeatureCollecti
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const XMLProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
-	const parsedParams = parseParams(params.url);
+	const parsedParams = protocolPathParser(params.url);
 
 	convertXML(parsedParams).then((data) => {
 		if (data !== undefined) {
@@ -74,4 +55,4 @@ const XMLProtocolHandler = (params: RequestParameters, callback: ResponseCallbac
 	return { cancel: () => {} };
 };
 
-export { XMLProtocolHandler, convertXML, getData, parseParams };
+export { XMLProtocolHandler, convertXML};

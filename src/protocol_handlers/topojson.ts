@@ -1,6 +1,8 @@
 import { LngLatLike, RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { Feature, FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
 import { feature as topojsonFeature } from 'topojson-client';
+import protocolPathParser from './utils/protocolPathParser';
+import getProtocolData from './utils/getProtocolData';
 
 type TopoJson = {
 	type?: 'Topology';
@@ -8,28 +10,6 @@ type TopoJson = {
 	arcs?: LngLatLike[];
 	transform?: { scale: [number, number]; translate: LngLatLike };
 };
-
-const parseParams = (url: string) => {
-	const urlParts = url.split('://');
-	const topojsonUrl = urlParts[1];
-	const topojsonParts = topojsonUrl.split('/');
-	const filename = topojsonParts.join('/');
-
-	return {
-		filename,
-	};
-};
-
-async function getData(path: string) {
-	try {
-		const response = await fetch(path);
-		const rawData = await response.text();
-		return rawData;
-	} catch (error) {
-		console.error('File could not be loaded: ', error);
-		return error;
-	}
-}
 
 function reduceFeatures(geojson: FeatureCollection) {
 	const newFeatures: any = [];
@@ -56,7 +36,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 	const geojson = await new Promise<FeatureCollection>((resolve) => {
 		let topoJsonData: TopoJson = {};
 
-		getData(params.filename).then((rawData) => {
+		getProtocolData(params.filename).then((rawData) => {
 			try {
 				topoJsonData = JSON.parse(rawData);
 			} catch (e) {
@@ -105,7 +85,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 }
 
 const TopojsonProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
-	const parsedParams = parseParams(params.url);
+	const parsedParams = protocolPathParser(params.url);
 
 	convertTopojson(parsedParams).then((data) => {
 		if (data !== undefined) {
@@ -117,4 +97,4 @@ const TopojsonProtocolHandler = (params: RequestParameters, callback: ResponseCa
 	return { cancel: () => {} };
 };
 
-export { TopojsonProtocolHandler, convertTopojson, getData, parseParams };
+export { TopojsonProtocolHandler, convertTopojson };

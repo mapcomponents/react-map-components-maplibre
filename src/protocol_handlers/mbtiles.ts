@@ -4,7 +4,7 @@ import { RequestParameters, ResponseCallback } from 'maplibre-gl';
 
 const loadedMbtiles = {};
 
-const parseParams = (url: string) => {
+const parseTileParams = (url: string) => {
 	const urlParts = url.split('://');
 	const mbtilesUrl = urlParts[1];
 	const mbtilesParts = mbtilesUrl.split('/');
@@ -93,7 +93,7 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mbTilesProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
-	const parsedParams = parseParams(params.url);
+	const parsedParams = parseTileParams(params.url);
 	
 	getBufferFromMbtiles(parsedParams).then((result) => {
 		if (result) {
@@ -106,4 +106,4 @@ const mbTilesProtocolHandler = (params: RequestParameters, callback: ResponseCal
 	return { cancel: () => {} };
 };
 
-export { mbTilesProtocolHandler, parseParams, getBufferFromMbtiles, getMbtilesDbHandler };
+export { mbTilesProtocolHandler, parseTileParams, getBufferFromMbtiles, getMbtilesDbHandler };
