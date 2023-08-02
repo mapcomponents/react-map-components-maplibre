@@ -10,7 +10,6 @@ export default function protocolPathParser(url: string){
 	const optionsString = decodeURI(test[1]);
 	const options = Object.fromEntries(new URLSearchParams(optionsString))
 
-	console.log("option form parser: ", options)
 	return {
         protocolId,
 		filename,
