@@ -1,9 +1,9 @@
 
 declare module 'csv2geojson' {
     export interface csvOptions {
-        'latfield'?: string,
-        'lonfield'?: string,
-        'delimiter'?: string
+        latfield?: string,
+        lonfield?: string,
+        delimiter?: string
     }
 
     export function csv2geojson(

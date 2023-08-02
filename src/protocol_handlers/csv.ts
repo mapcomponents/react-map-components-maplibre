@@ -5,11 +5,11 @@ import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
 
 
-async function convertCsv(params: { filename: string }): Promise<FeatureCollection> {
+async function convertCsv(params: { filename: string, options: csv2geojson.csvOptions }): Promise<FeatureCollection> {
 
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 	
-		let options: csv2geojson.csvOptions= {};
+		let options: csv2geojson.csvOptions= params.options || {};
 		const extension = params.filename.substring(params.filename.length -3)
 				
 		if(extension === 'tsv'){
@@ -18,6 +18,7 @@ async function convertCsv(params: { filename: string }): Promise<FeatureCollecti
 
 		getProtocolData(params.filename).then((rawData) => {
 		// Use the csv2geojson library to convert the CSV to GeoJSON	
+		console.log(options);
 		csv2geojson.csv2geojson(rawData, options, (err: string, data: FeatureCollection) => {
 				if (err) {
 					reject(err);

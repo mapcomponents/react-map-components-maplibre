@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 import useAddProtocol from './useAddProtocol';
 
@@ -16,6 +16,7 @@ import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../protocol_handlers/xml';
+import { csvOptions } from 'csv2geojson';
 
 import useMap from '../useMap';
 import MlLayer from '../../components/MlLayer/MlLayer';
@@ -33,14 +34,31 @@ interface geojsonTemplateProps {
 	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable;
 	sourceId: string;
 	filePath: string;
-	type: 'circle' | 'line' | 'fill';
-	paint: LayerSpecification['paint'];
-	flyTo: FlyToOptions;
+	type?: 'circle' | 'line' | 'fill';
+	paint?: LayerSpecification['paint'];
+	flyTo?: FlyToOptions;
+
+	options?: /**
+	 * CSV Handler Options:
+ 		 -lat        the name of the latitude column
+ 		 -lon        the name of the longitude column
+ 		 -line       whether or not to output points as a LineString  [default: false]
+ 		 -delimiter  the type of delimiter                            [default: ","]
+ 		 -numeric-fields comma separated list of fields to convert to numbers
+	 */
+	| csvOptions
+		/**
+	*  OSM Handler Options:
+  		 - `completeFeature/allFeatures`:  the default value is `false`. When it's set to `true`, the returned geojson will include all elements that meet the specified conditions in `FeatureCollection` format; otherwise, only the bare geometry of the first `relation` element will be returned.
+  		 - `renderTagged`: the default value is `false`. When it's set to `true`, the returned geojson will include all elements with tags (i.e., tagged) until `suppressWay` changes its behavior a bit; otherwise only the unreferenced ones get returned.
+   		 - `suppressWay/excludeWay`: the default value is `true`. When it's set to `true`, the returned `FeatureCollection` will exclude all referenced `way`s even though they are tagged; otherwise the features of those `way`s will be included in the resulted result as well.
+	 */
+		| osm2geojson.Options;
 }
 
 const geojsonTemplate = (props: geojsonTemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
-	
+	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
 
 	useAddProtocol({
 		protocol: props.protocol,
@@ -50,27 +68,44 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 	useEffect(() => {
 		mapHook.map?.addSource(props.sourceId, {
 			type: 'geojson',
-			data: props.protocol + '://' + props.filePath,
+			
+	/*
+	 The url is expected to have the following Format: 
+			[protocol]://[filePath -extension included-]		
+		Example: 'csv://csv/restaurants.csv'
+	 An optional encoded options object can be added after a '?' sign at the end of the url. Handler that support options are: 
+	 -OSM Handler Options:
+  		 -- `completeFeature/allFeatures`:  the default value is `false`. When it's set to `true`, the returned geojson will include all elements that meet the specified conditions in `FeatureCollection` format; otherwise, only the bare geometry of the first `relation` element will be returned.
+  		 -- `renderTagged`: the default value is `false`. When it's set to `true`, the returned geojson will include all elements with tags (i.e., tagged) until `suppressWay` changes its behavior a bit; otherwise only the unreferenced ones get returned.
+   		 -- `suppressWay/excludeWay`: the default value is `true`. When it's set to `true`, the returned `FeatureCollection` will exclude all referenced `way`s even though they are tagged; otherwise the features of those `way`s will be included in the resulted result as well.
+		
+	-CSV Handler Options:
+ 		--lat        the name of the latitude column
+ 		--lon        the name of the longitude column
+ 		--line       whether or not to output points as a LineString  [default: false]
+ 		--delimiter  the type of delimiter                            [default: ","]
+ 		--numeric-fields comma separated list of fields to convert to numbers
+	 */
+			data: props.protocol + '://' + props.filePath + optionsURL,
 		});
 		if (props.flyTo) {
 			mapHook.map?.flyTo(props.flyTo as FlyToOptions);
 		}
 	}, [mapHook.map]);
 
-
 	return (
 		<>
 			<MlLayer
-					layerId={'useAddProtocolLayer'}
-					options={{
-						type: props.type || 'line',
-						source: props.sourceId,
-						//source: { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
-						paint: props.paint || { 'line-color': '#009EE0', 'line-width': 3 },
-					}}
-					insertBeforeLayer={'waterway-name'}
-				/>
-			</>
+				layerId={'useAddProtocolLayer'}
+				options={{
+					type: props.type || 'line',
+					source: props.sourceId,
+					//source: { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
+					paint: props.paint || { 'line-color': '#009EE0', 'line-width': 3 },
+				}}
+				insertBeforeLayer={'waterway-name'}
+			/>
+		</>
 	);
 };
 
@@ -126,6 +161,22 @@ CSVOrTSV.args = {
 		'circle-radius': 18,
 	},
 	flyTo: { center: [-74.914516, 38.935759], zoom: 13, speed: 2 },
+};
+
+export const CSVWithOptions = geojsonTemplate.bind({});
+CSVWithOptions.parameters = {};
+CSVWithOptions.args = {
+	protocol: 'csv',
+	handler: CSVProtocolHandler,
+	sourceId: 'fromCSV-Source',
+	filePath: 'csv/gemany_100_postcodes.csv',
+	options: { latfield: 'Axe-y', lonfield: 'Axe-x', delimiter: ':' },
+	type: 'circle',
+	paint: {
+		'circle-color': '#009EE0',
+		'circle-radius': 10,
+	},
+	flyTo: { center: [10.147049, 50.871231], zoom: 6, speed: 2 },
 };
 
 export const OSM = geojsonTemplate.bind({});
