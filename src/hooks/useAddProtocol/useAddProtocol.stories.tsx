@@ -38,22 +38,7 @@ interface geojsonTemplateProps {
 	paint?: LayerSpecification['paint'];
 	flyTo?: FlyToOptions;
 
-	options?: /**
-	 * CSV Handler Options:
- 		 -lat        the name of the latitude column
- 		 -lon        the name of the longitude column
- 		 -line       whether or not to output points as a LineString  [default: false]
- 		 -delimiter  the type of delimiter                            [default: ","]
- 		 -numeric-fields comma separated list of fields to convert to numbers
-	 */
-	| csvOptions
-		/**
-	*  OSM Handler Options:
-  		 - `completeFeature/allFeatures`:  the default value is `false`. When it's set to `true`, the returned geojson will include all elements that meet the specified conditions in `FeatureCollection` format; otherwise, only the bare geometry of the first `relation` element will be returned.
-  		 - `renderTagged`: the default value is `false`. When it's set to `true`, the returned geojson will include all elements with tags (i.e., tagged) until `suppressWay` changes its behavior a bit; otherwise only the unreferenced ones get returned.
-   		 - `suppressWay/excludeWay`: the default value is `true`. When it's set to `true`, the returned `FeatureCollection` will exclude all referenced `way`s even though they are tagged; otherwise the features of those `way`s will be included in the resulted result as well.
-	 */
-		| osm2geojson.Options;
+	options?: csvOptions | osm2geojson.Options;
 }
 
 const geojsonTemplate = (props: geojsonTemplateProps) => {
@@ -69,23 +54,17 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 		mapHook.map?.addSource(props.sourceId, {
 			type: 'geojson',
 			
-	/*
-	 The url is expected to have the following Format: 
-			[protocol]://[filePath -extension included-]		
-		Example: 'csv://csv/restaurants.csv'
-	 An optional encoded options object can be added after a '?' sign at the end of the url. Handler that support options are: 
-	 -OSM Handler Options:
-  		 -- `completeFeature/allFeatures`:  the default value is `false`. When it's set to `true`, the returned geojson will include all elements that meet the specified conditions in `FeatureCollection` format; otherwise, only the bare geometry of the first `relation` element will be returned.
-  		 -- `renderTagged`: the default value is `false`. When it's set to `true`, the returned geojson will include all elements with tags (i.e., tagged) until `suppressWay` changes its behavior a bit; otherwise only the unreferenced ones get returned.
-   		 -- `suppressWay/excludeWay`: the default value is `true`. When it's set to `true`, the returned `FeatureCollection` will exclude all referenced `way`s even though they are tagged; otherwise the features of those `way`s will be included in the resulted result as well.
-		
-	-CSV Handler Options:
- 		--lat        the name of the latitude column
- 		--lon        the name of the longitude column
- 		--line       whether or not to output points as a LineString  [default: false]
- 		--delimiter  the type of delimiter                            [default: ","]
- 		--numeric-fields comma separated list of fields to convert to numbers
-	 */
+	
+	//  The url is expected to have the following Format: 
+	// 			[protocol]://[filePath -extension included-]		
+	// 	Example:'csv://csv/restaurants.csv'
+
+	//  An optional encoded options object can be added after a '?' sign at the end of the url. 
+	//  Handlers that support options are: 
+
+	// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
+	// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
+	
 			data: props.protocol + '://' + props.filePath + optionsURL,
 		});
 		if (props.flyTo) {
