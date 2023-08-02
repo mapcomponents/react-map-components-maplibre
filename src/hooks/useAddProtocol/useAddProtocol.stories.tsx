@@ -195,8 +195,8 @@ TCX.args = {
 	protocol: 'tcx',
 	handler: XMLProtocolHandler,
 	sourceId: 'fromTCX-Source',
-	filePath: 'tcx/biking.tcx',
-	flyTo: { center: [-73.96879, 40.77958], zoom: 16, speed: 3 },
+	filePath: 'tcx/example.tcx',
+	flyTo: { center: [32.711545, 34.844962], zoom: 9, speed: 3 },
 };
 
 export const Topojson = geojsonTemplate.bind({});
