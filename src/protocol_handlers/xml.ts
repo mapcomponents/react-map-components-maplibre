@@ -12,7 +12,7 @@ async function convertXML(params: { filename: string }): Promise<FeatureCollecti
 
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 		getProtocolData(params.filename).then((rawData) => {
-			var newData = () => {
+			const newData = () => {
 
 				// use an extern converter for tcx files
 

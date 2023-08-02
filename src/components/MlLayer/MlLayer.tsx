@@ -1,8 +1,7 @@
-import React, { useEffect, useCallback, useRef } from 'react';
-
+import React from 'react';
 import useLayer from '../../hooks/useLayer';
 import { Feature, FeatureCollection } from '@turf/turf';
-import useMap from '../../hooks/useMap';
+
 
 interface MlLayerProps {
 	/**
@@ -36,32 +35,7 @@ interface MlLayerProps {
  */
 const MlLayer = (props: MlLayerProps) => {
 	
-// 	const mapHook = useMap({
-// 		mapId: props.mapId,
-// 		waitForLayer: props.insertBeforeLayer,
-// 	});
-// 	const sourceId = useRef(props.layerId || 'MlLayer-' + mapHook.componentId);
-// 	const initializedRef = useRef(false);
 
-// const addLayer = useCallback(()=> {
-
-// 	if (!mapHook.map) return;
-
-// 	initializedRef.current = true;
-
-// 	if (mapHook.map.getSource(sourceId.current)) {
-// 		mapHook.cleanup();
-// 	}
-
-// // Add the new source to the maplibre instance if it is available
-// 	if (!mapHook.map?.getSource(sourceId.current)) {
-		
-// 		mapHook.map?.addSource(
-// 			sourceId.current,
-// 			{...props.options.source},
-// 			mapHook.componentId
-// 		);
-// 	};
 
 	useLayer({
 		idPrefix: 'MlLayer-',
@@ -78,14 +52,6 @@ const MlLayer = (props: MlLayerProps) => {
 		insertBeforeLayer: props.insertBeforeLayer,
 	});
 
-
-// }, [mapHook.map, props]);
-
-	// // initial layer creation
-	// useEffect(() => {
-	// 	if (initializedRef.current) return;
-	// 	addLayer();
-	// }, []);
 
 
 	return <></>;

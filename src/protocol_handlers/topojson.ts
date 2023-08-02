@@ -3,6 +3,7 @@ import { Feature, FeatureCollection, Geometry, GeometryCollection, Properties } 
 import { feature as topojsonFeature } from 'topojson-client';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
+import  { Topology } from '../../node_modules/@types/topojson-specification';
 
 type TopoJson = {
 	type?: 'Topology';
@@ -12,9 +13,10 @@ type TopoJson = {
 };
 
 function reduceFeatures(geojson: FeatureCollection) {
-	const newFeatures: any = [];
+	const newFeatures: Feature[]  = [];
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	geojson.features.forEach((e: any) => {
-		if (!e.features) {
+		if (!e.features ) {
 			newFeatures.push({
 				type: e.type,
 				geometry: e.geometry,
@@ -34,7 +36,11 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 	 * Loads TopoJSON data and converts it into a GeoJSON FeatureCollection
 	 */
 	const geojson = await new Promise<FeatureCollection>((resolve) => {
-		let topoJsonData: TopoJson = {};
+		let topoJsonData: Topology = {
+			type: 'Topology',
+			objects: {},
+			arcs: []
+		};
 
 		getProtocolData(params.filename).then((rawData) => {
 			try {
@@ -71,7 +77,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 				result = {
 					type: 'FeatureCollection',
 					features: Object.keys(topoJsonData.objects).map((key) =>
-						topojsonFeature(topoJsonData as any, key)
+						topojsonFeature(topoJsonData as Topology, key)
 					),
 				};
 				result.features = reduceFeatures(result);

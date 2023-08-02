@@ -31,6 +31,7 @@ export default storyoptions;
 
 interface geojsonTemplateProps {
 	protocol: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable;
 	sourceId: string;
 	filePath: string;
@@ -53,18 +54,17 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 	useEffect(() => {
 		mapHook.map?.addSource(props.sourceId, {
 			type: 'geojson',
-			
-	
-	//  The url is expected to have the following Format: 
-	// 			[protocol]://[filePath -extension included-]		
-	// 	Example:'csv://csv/restaurants.csv'
 
-	//  An optional encoded options object can be added after a '?' sign at the end of the url. 
-	//  Handlers that support options are: 
+			//  The url is expected to have the following Format:
+			// 			[protocol]://[filePath -extension included-]
+			// 	Example:'csv://csv/restaurants.csv'
 
-	// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
-	// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
-	
+			//  An optional encoded options object can be added after a '?' sign at the end of the url.
+			//  Handlers that support options are:
+
+			// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
+			// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
+
 			data: props.protocol + '://' + props.filePath + optionsURL,
 		});
 		if (props.flyTo) {
@@ -79,7 +79,6 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 				options={{
 					type: props.type || 'line',
 					source: props.sourceId,
-					//source: { type: 'geojson', data: props.protocol + '://' + props.filePath, attribution: 'mapComponents'},
 					paint: props.paint || { 'line-color': '#009EE0', 'line-width': 3 },
 				}}
 				insertBeforeLayer={'waterway-name'}
