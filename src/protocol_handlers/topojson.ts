@@ -36,9 +36,9 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 	 * Loads TopoJSON data and converts it into a GeoJSON FeatureCollection
 	 */
 	const geojson = await new Promise<FeatureCollection>((resolve) => {
-		let topoJsonData: Topology = {
+		let topoJsonData: TopoJson = {
 			type: 'Topology',
-			objects: {},
+			objects: { key: ''},
 			arcs: []
 		};
 
@@ -59,6 +59,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 				// add the "fromObject" property in each topojson feature
 				Object.keys(topoJsonData.objects).map((key) => {
 					if (topoJsonData.objects?.[key].type === 'GeometryCollection') {
+						
 						topoJsonData.objects?.[key].geometries?.forEach(
 							(e: Feature) => (e.properties = { fromObject: key, ...e.properties })
 						);
@@ -77,7 +78,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 				result = {
 					type: 'FeatureCollection',
 					features: Object.keys(topoJsonData.objects).map((key) =>
-						topojsonFeature(topoJsonData as Topology, key)
+						topojsonFeature(topoJsonData as unknown as Topology, key)
 					),
 				};
 				result.features = reduceFeatures(result);
