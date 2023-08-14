@@ -68,7 +68,7 @@ export type MlGeoJsonLayerProps = {
 	 * RasterLayerSpecification
 
 	 */
-	layout?: Exclude<LayerSpecification['layout'], RasterLayerSpecification['layout']>;
+	layout?: LayerSpecification['layout'];
 
 	/**
 	 * Javascript object that is spread into the addLayer commands first parameter.
