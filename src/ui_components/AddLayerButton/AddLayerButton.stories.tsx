@@ -13,6 +13,7 @@ import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
 import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import GruvboxStyle from '../../omt_styles/gruvbox';
+import useMap from '../../hooks/useMap';
 
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
@@ -25,12 +26,21 @@ export default storyoptions;
 const FolderTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const layerContext = useContext(LayerContext);
+	const mapHook = useMap({mapId: undefined});
 
+
+	
 	useEffect(() => {
 		let _layers = localStorage.getItem('layers');
 		_layers = _layers ? JSON.parse(_layers) : [];
 		layerContext.setLayers(_layers as unknown as LayerConfig[]);
+		
 	}, []);
+
+	useEffect(() => {
+		mapHook.map?.setZoom(2)
+		
+	}, [mapHook.map]);
 
 	useEffect(() => {
 		if (layerContext.layers.length > 0) {

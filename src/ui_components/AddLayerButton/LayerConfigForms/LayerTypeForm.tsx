@@ -15,7 +15,7 @@ export interface LayerTypeFormProps {
 	onSelect: (type: string) => void;
 }
 
-const layerTypes = ['geojson', 'wms'] as const;
+const layerTypes = ['geojson', 'wms', 'csv'] as const;
 
 const LayerTypeForm = (props: LayerTypeFormProps) => {
 	return (
