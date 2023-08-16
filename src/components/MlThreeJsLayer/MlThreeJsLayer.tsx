@@ -1,7 +1,5 @@
 import React, { useContext, useRef, useEffect, useState } from 'react';
 import MapContext from '../../contexts/MapContext';
-
-import Button from '@mui/material/Button';
 import maplibregl, { CustomLayerInterface, LngLatLike, Map } from 'maplibre-gl';
 import * as THREE from 'three';
 import GLTFLoader from './lib/GLTFLoader';
@@ -16,7 +14,7 @@ import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 
 export interface MlThreeJsLayerProps {
 	mapId?: string;
-	init?: object;
+	init?: () => void;
 	onDone?: () => void;
 }
 
@@ -25,7 +23,6 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 
 	const layerName = '3d-model';
 	const [showLayer, setShowLayer] = useState(true);
-	const showLayerRef = useRef(true);
 	const initializedRef = useRef(false);
 	const mapRef = useRef<MapLibreGlWrapper>();
 	const initFuncRef = useRef(props.init);
@@ -194,6 +191,8 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 		//
 	}, [showLayer, mapContext]);
 
+	return <></>;
+	/*
 	return (
 		<>
 			<Button
@@ -207,7 +206,9 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 				3D model
 			</Button>
 		</>
+		
 	);
+	*/
 };
 
 MlThreeJsLayer.propTypes = {

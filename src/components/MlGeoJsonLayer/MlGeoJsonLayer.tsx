@@ -16,6 +16,7 @@ import {
 	LayerSpecification,
 	RasterLayerSpecification,
 } from 'maplibre-gl';
+import MlNavigationTools from '../MlNavigationTools/MlNavigationTools';
 
 export type MlGeoJsonLayerProps = {
 	/**
@@ -128,7 +129,11 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		onLeave: props.onLeave,
 	});
 
-	return <></>;
+	return (
+		<>
+			<MlNavigationTools showFollowGpsButton={false} />
+		</>
+	);
 };
 
 export default MlGeoJsonLayer;
