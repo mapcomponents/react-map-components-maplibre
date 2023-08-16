@@ -34,26 +34,31 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 		handler: CSVProtocolHandler,
 	});
 
-
 	const configIsValid = useMemo(() => {
 		if (!config?.type) return false;
-
 		return true;
 	}, [config]);
 
 	useEffect(() => {
-
-		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined' ) {
+		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {
 			if (!mapHook.map?.getSource(fileName)) {
 				mapHook.map?.addSource(fileName, {
 					type: 'geojson',
 					data: props.originType + '://' + filePath,
 				});
 			}
-			config.options = { source: fileName };			
+			config.options = { source: fileName };
 		}
-		return ()=>{};
+
+		return () => {};
 	}, [fileName, mapHook.map, filePath]);
+
+	//the temporally storage adress of the uploaded file will be revoked, after source and layer are loaded in the map  
+	useEffect(() => {
+		if (filePath && fileName && mapHook.map?.getLayer(fileName)) {
+			URL.revokeObjectURL(filePath);
+		}
+	}, [fileName, filePath, mapHook.map]);
 
 	return (
 		<>
