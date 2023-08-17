@@ -129,11 +129,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		onLeave: props.onLeave,
 	});
 
-	return (
-		<>
-			<MlNavigationTools showFollowGpsButton={false} />
-		</>
-	);
+	return <></>;
 };
 
 export default MlGeoJsonLayer;
