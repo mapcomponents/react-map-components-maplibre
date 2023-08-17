@@ -13,6 +13,9 @@ import { MlGeoJsonLayerProps } from 'src/components/MlGeoJsonLayer/MlGeoJsonLaye
 import useAddProtocol from '../../../hooks/useAddProtocol/useAddProtocol';
 import useMap from '../../../hooks/useMap';
 import { CSVProtocolHandler } from '../../../protocol_handlers/csv';
+import { TopojsonProtocolHandler } from '../../../protocol_handlers/topojson';
+import { OSMProtocolHandler } from '../../../protocol_handlers/osm';
+import { XMLProtocolHandler } from '../../../protocol_handlers/xml';
 
 export interface ProtocolHandlerLayerFormProps {
 	originType: string;
@@ -22,6 +25,16 @@ export interface ProtocolHandlerLayerFormProps {
 	onCancel: () => void;
 }
 
+
+const handlers = {
+	csv: CSVProtocolHandler,
+	topojson: TopojsonProtocolHandler, 
+	osm: OSMProtocolHandler,
+	gpx: XMLProtocolHandler, 
+	kml: XMLProtocolHandler,
+	tcx: XMLProtocolHandler,
+};
+
 const types: string[] = ['fill', 'line', 'circle'];
 export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerFormProps) {
 	const [config, setConfig] = useState<Partial<MlGeoJsonLayerProps>>({ type: 'circle' });
@@ -29,9 +42,11 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 	const [filePath, setFilePath] = useState<string>();
 	const mapHook = useMap({ mapId: props.mapId });
 
+	console.log(handlers.csv)
+
 	useAddProtocol({
 		protocol: props.originType,
-		handler: CSVProtocolHandler,
+		handler: handlers[props.originType],
 	});
 
 	const configIsValid = useMemo(() => {
@@ -89,6 +104,7 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 					<input
 						type="file"
 						hidden
+						accept={props.originType}
 						onChange={(ev) => {
 							setFileName(ev.target.files?.[0].name);
 

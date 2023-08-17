@@ -22,8 +22,9 @@ async function convertXML(params: { filename: string }): Promise<FeatureCollecti
 					) as FeatureCollection<Geometry | GeometryCollection, Properties>;
 
 				// use the projects gpxConverter function for gpx and kml files
-
+					
 				} else {
+
 					return toGeoJSON[extension](
 						new DOMParser().parseFromString(rawData, 'text/xml')
 					) as FeatureCollection<Geometry | GeometryCollection, Properties>;

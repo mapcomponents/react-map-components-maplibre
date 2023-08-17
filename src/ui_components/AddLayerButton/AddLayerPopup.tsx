@@ -14,26 +14,54 @@ export interface AddLayerPopupProps {
 	onComplete?: (config: LayerConfig) => void;
 }
 
-type validTypes=  LayerConfig['type'] | 'csv';
+type validTypes = LayerConfig['type'] | 'csv' | 'topojson';
 
-const AddLayerPopup = (props: AddLayerPopupProps) => {	
+const supportedProtocols = ['csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'];
+
+const AddLayerPopup = (props: AddLayerPopupProps) => {
 	const [layerConfig, setLayerConfig] = useState<LayerConfig | undefined>(props?.config);
 	const [originType, setOriginType] = useState<string>();
 
-	console.log(originType)
 	const updateLayerType = (type: validTypes) => {
-		setOriginType(type)
-			if (type === 'csv'){				
-				setLayerConfig({ type: 'geojson', config: {} } as LayerConfig);
-			}else {
-				setLayerConfig({ type, config: {} } as LayerConfig);
-			}		
-		
+		setOriginType(type);
+		if (supportedProtocols.includes(type)) {
+			setLayerConfig({ type: 'geojson', config: {} } as LayerConfig);
+		} else {
+			setLayerConfig({ type, config: {} } as LayerConfig);
+		}
 	};
 
 	const handleCancel = () => {
 		props.setOpen(false);
 		setLayerConfig(undefined);
+	};
+
+	const ProtocolTypeFormulars = () => {
+		return (
+			<>
+				{supportedProtocols.map((el, idx) => {
+					return (
+						<>
+							{layerConfig?.type === 'geojson' && originType === el && (
+								<ProtocolHandlerLayerForm
+									key={idx}
+									originType={el}
+									onSubmit={(config) => {
+										props?.onComplete?.({
+											...layerConfig,
+											config: config,
+											type: 'geojson',
+										});
+										handleCancel();
+									}}
+									onCancel={handleCancel}
+								/>
+							)}
+						</>
+					);
+				})}
+			</>
+		);
 	};
 
 	return (
@@ -57,16 +85,7 @@ const AddLayerPopup = (props: AddLayerPopupProps) => {
 					onCancel={handleCancel}
 				/>
 			)}
-{layerConfig?.type === 'geojson' && originType === 'csv' && (
-				<ProtocolHandlerLayerForm
-					originType='csv'
-					onSubmit={(config) => {
-						props?.onComplete?.({ ...layerConfig, config: config });
-						handleCancel();
-					}}
-					onCancel={handleCancel}
-				/>
-			)}
+			<ProtocolTypeFormulars />
 		</Dialog>
 	);
 };

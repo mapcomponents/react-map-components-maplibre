@@ -6,11 +6,17 @@ import { LayerConfig } from '../../contexts/LayerContext';
 
 export interface AddLayerButtonProps {
 	sx?: SxProps;
+	/**
+	 * An string array, to filter the supported file types that would be shown to the user
+	 * Default is:  
+	 */
+	layerTypes?: string[],
 	onComplete?: (config: LayerConfig) => void;
 }
 
 const AddLayerButton = (props: AddLayerButtonProps) => {
 	const [popupOpen, setPopupOpen] = React.useState<boolean>(false);
+	
 
 	return (
 		<>
