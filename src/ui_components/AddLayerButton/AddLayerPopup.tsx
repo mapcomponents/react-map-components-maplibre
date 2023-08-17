@@ -9,6 +9,7 @@ import ProtocolHandlerLayerForm from './LayerConfigForms/ProtocolHandlerLayerFor
 export interface AddLayerPopupProps {
 	open: boolean;
 	config?: LayerConfig;
+	layerTypes: string[]; 
 	setOpen: (open: boolean) => void;
 	onChange?: (config: LayerConfig) => void;
 	onComplete?: (config: LayerConfig) => void;
@@ -66,7 +67,7 @@ const AddLayerPopup = (props: AddLayerPopupProps) => {
 
 	return (
 		<Dialog open={props.open} onClose={handleCancel} PaperProps={{ sx: { padding: '20px' } }}>
-			{!layerConfig?.type && <LayerTypeForm onSelect={updateLayerType} />}
+			{!layerConfig?.type && <LayerTypeForm onSelect={updateLayerType} layerTypes={props.layerTypes} />}
 			{layerConfig?.type === 'geojson' && originType === 'geojson' && (
 				<GeoJsonLayerForm
 					onSubmit={(config) => {

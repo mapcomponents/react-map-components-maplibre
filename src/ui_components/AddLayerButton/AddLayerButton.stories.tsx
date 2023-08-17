@@ -64,6 +64,7 @@ const FolderTemplate = () => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
+					//layerTypes={['geojson', 'wms', 'csv', 'osm', 'gpx']}
 				/>
 				<SelectStyleButton sx={{ marginLeft: '5px' }} />
 				<LayerList>

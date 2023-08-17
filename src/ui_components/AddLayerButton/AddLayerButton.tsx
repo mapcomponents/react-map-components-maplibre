@@ -8,7 +8,7 @@ export interface AddLayerButtonProps {
 	sx?: SxProps;
 	/**
 	 * An string array, to filter the supported file types that would be shown to the user
-	 * Default is:  
+	 * Default is: ['geojson', 'wms', 'csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx']
 	 */
 	layerTypes?: string[],
 	onComplete?: (config: LayerConfig) => void;
@@ -16,7 +16,7 @@ export interface AddLayerButtonProps {
 
 const AddLayerButton = (props: AddLayerButtonProps) => {
 	const [popupOpen, setPopupOpen] = React.useState<boolean>(false);
-	
+	const layerTypes = props.layerTypes || ['geojson', 'wms', 'csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'];
 
 	return (
 		<>
@@ -27,7 +27,7 @@ const AddLayerButton = (props: AddLayerButtonProps) => {
 			>
 				<PlaylistAddIcon />
 			</Button>
-			<AddLayerPopup open={popupOpen} setOpen={setPopupOpen} onComplete={props?.onComplete} />
+			<AddLayerPopup open={popupOpen} setOpen={setPopupOpen} onComplete={props?.onComplete} layerTypes={layerTypes} />
 		</>
 	);
 };
