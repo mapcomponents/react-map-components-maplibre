@@ -42,7 +42,6 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 	const [filePath, setFilePath] = useState<string>();
 	const mapHook = useMap({ mapId: props.mapId });
 
-	console.log(handlers.csv)
 
 	useAddProtocol({
 		protocol: props.originType,

@@ -23,8 +23,8 @@ const LayerTypeForm = (props: LayerTypeFormProps) => {
 		<>
 			<DialogTitle>Select a layer type</DialogTitle>
 			<List>
-				{props.layerTypes.map((type) => (
-					<ListItem disableGutters key={type}>
+				{props.layerTypes.map((type, idx) => (
+					<ListItem disableGutters key={idx}>
 						<ListItemButton
 							autoFocus
 							onClick={() => {

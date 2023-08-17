@@ -28,13 +28,11 @@ const FolderTemplate = () => {
 	const layerContext = useContext(LayerContext);
 	const mapHook = useMap({mapId: undefined});
 
-
 	
 	useEffect(() => {
 		let _layers = localStorage.getItem('layers');
 		_layers = _layers ? JSON.parse(_layers) : [];
-		layerContext.setLayers(_layers as unknown as LayerConfig[]);
-		
+		layerContext.setLayers(_layers as unknown as LayerConfig[]);		
 	}, []);
 
 	useEffect(() => {
@@ -64,7 +62,7 @@ const FolderTemplate = () => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
-					//layerTypes={['geojson', 'wms', 'csv', 'osm', 'gpx']}
+					//layerTypes={['csv', 'gpx']}
 				/>
 				<SelectStyleButton sx={{ marginLeft: '5px' }} />
 				<LayerList>
