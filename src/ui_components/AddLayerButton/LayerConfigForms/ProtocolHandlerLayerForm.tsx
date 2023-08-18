@@ -11,11 +11,14 @@ import {
 import React, { useEffect, useMemo, useState } from 'react';
 import { MlGeoJsonLayerProps } from 'src/components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useAddProtocol from '../../../hooks/useAddProtocol/useAddProtocol';
+import CSVOptionsFormular from './utils/CSVOptionsFomular';
+import OsmOptionsFomular from './utils/OsmOptionsFomular';
 import useMap from '../../../hooks/useMap';
 import { CSVProtocolHandler } from '../../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../../protocol_handlers/xml';
+import { csvOptions } from 'csv2geojson';
 
 export interface ProtocolHandlerLayerFormProps {
 	originType: string;
@@ -40,9 +43,11 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 	const [config, setConfig] = useState<Partial<MlGeoJsonLayerProps>>({ type: 'circle' });
 	const [fileName, setFileName] = useState<string>();
 	const [filePath, setFilePath] = useState<string>();
+	const [optionsObject, setOptionsObject] = useState<csvOptions>({})
 	const mapHook = useMap({ mapId: props.mapId });
+ 	const optionsURL = '?' + new URLSearchParams(optionsObject as string).toString();
 
-
+	
 	useAddProtocol({
 		protocol: props.originType,
 		handler: handlers[props.originType],
@@ -58,7 +63,7 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 			if (!mapHook.map?.getSource(fileName)) {
 				mapHook.map?.addSource(fileName, {
 					type: 'geojson',
-					data: props.originType + '://' + filePath,
+					data: optionsObject ? props.originType + '://' + filePath + optionsURL : props.originType + '://' + filePath ,
 				});
 			}
 			config.options = { source: fileName };
@@ -73,6 +78,12 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 			URL.revokeObjectURL(filePath);
 		}
 	}, [fileName, filePath, mapHook.map]);
+
+	function addOption(newObject: JSON){
+const newOptions = {...optionsObject, ...newObject}
+
+		return setOptionsObject(newOptions)
+	}
 
 	return (
 		<>
@@ -114,6 +125,9 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 						}}
 					/>
 				</Button>
+				{props.originType === 'csv' && <CSVOptionsFormular setter={addOption}/>}
+				{props.originType === 'osm' && <OsmOptionsFomular setter={addOption} />}
+				
 			</FormControl>
 			<DialogActions>
 				<Button onClick={props.onCancel}>Cancel</Button>

@@ -164,7 +164,13 @@ OSM.args = {
 	handler: OSMProtocolHandler,
 	sourceId: 'fromOSM-Source',
 	filePath: 'osm/palma.osm',
-
+	options: {
+		completeFeature: true,
+		allFeatures: false,
+		renderTagged: false,
+		excludeWay: false,
+		suppressWay: false,
+	},
 	flyTo: { center: [2.651811, 39.571309], zoom: 15.5, speed: 4 },
 };
 

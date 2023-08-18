@@ -8,7 +8,7 @@ export default function protocolPathParser(url: string){
 	const filename = csvParts.join('/');
 
 	const optionsString = decodeURI(test[1]);
-	const options = Object.fromEntries(new URLSearchParams(optionsString))
+    const options = Object.fromEntries(new URLSearchParams(optionsString))
 
 	return {
         protocolId,
