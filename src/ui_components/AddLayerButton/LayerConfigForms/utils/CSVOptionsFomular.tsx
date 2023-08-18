@@ -3,7 +3,6 @@ import { List, ListItem, TextField, Typography, Button } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
-
 interface CSVOptionsFormulaProps {
 	setter: any;
 }
@@ -15,9 +14,9 @@ function CSVOptionsFormular(props: CSVOptionsFormulaProps) {
 
 	return (
 		<>
-			
-				<Typography> Options </Typography><Button onClick={() => setOpen(!open)}>
-				{open ? <IndeterminateCheckBoxIcon /> :  <AddBoxIcon />}
+			<Typography> Options </Typography>
+			<Button onClick={() => setOpen(!open)}>
+				{open ? <IndeterminateCheckBoxIcon /> : <AddBoxIcon />}
 			</Button>
 
 			<List>
@@ -30,6 +29,7 @@ function CSVOptionsFormular(props: CSVOptionsFormulaProps) {
 								</ListItem>
 								<ListItem>
 									<TextField
+										size="small"
 										onChange={(ev) => {
 											const newObject = {};
 											newObject[el] = ev.target.value;

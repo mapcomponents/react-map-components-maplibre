@@ -20,9 +20,9 @@ function OsmOptionsFomular(props: OsmOptionsFomularProps) {
 
 	return (
 		<>
-			
-			<Typography> Options </Typography><Button onClick={() => setOpen(!open)}>
-				{open ? <IndeterminateCheckBoxIcon /> :  <AddBoxIcon />}
+			<Typography> Options </Typography>
+			<Button onClick={() => setOpen(!open)}>
+				{open ? <IndeterminateCheckBoxIcon /> : <AddBoxIcon />}
 			</Button>
 			<List>
 				{open &&
@@ -31,7 +31,7 @@ function OsmOptionsFomular(props: OsmOptionsFomularProps) {
 							<>
 								<ListItem>
 									<Typography> {el} </Typography>
-									<Checkbox
+									<Checkbox										
 										onChange={(ev) => {
 											const newObject = {};
 											newObject[el] = ev.target.value === 'on' ? true : false;
