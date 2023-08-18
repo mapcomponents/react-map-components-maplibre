@@ -64,7 +64,7 @@ const Template = () => {
 						<Button
 							variant={openSidebar ? 'contained' : 'outlined'}
 							onClick={() => setOpenSidebar(!openSidebar)}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+							sx={{ marginRight: { xs: '0px', sm: '10px' }, maxWidth: '140px', minWidth: '140px' }}
 						>
 							Informations
 						</Button>
@@ -73,18 +73,25 @@ const Template = () => {
 						<UploadButton
 							setData={setGpxData}
 							buttonComponent={
-								<Button variant="contained" sx={{ marginRight: { xs: '0px', sm: '10px' } }}>
+								<Button
+									variant="contained"
+									sx={{
+										marginRight: { xs: '0px', sm: '10px' },
+										maxWidth: '140px',
+										minWidth: '140px',
+									}}
+								>
 									Upload
 								</Button>
 							}
-							accept='.gpx'
+							accept=".gpx"
 						/>
 						<br />
 						<br />
 						<Button
 							variant={demoLoaderOpen ? 'contained' : 'outlined'}
 							onClick={demoLoader}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+							sx={{ marginRight: { xs: '0px', sm: '10px' }, maxWidth: '140px', minWidth: '140px' }}
 						>
 							Demo Mode
 						</Button>
