@@ -16,8 +16,6 @@ export interface LayerTypeFormProps {
 	layerTypes: string[]
 }
 
-//const layerTypes = ['geojson', 'wms', 'csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'] as const;
-
 const LayerTypeForm = (props: LayerTypeFormProps) => {
 	return (
 		<>

@@ -55,8 +55,9 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 
 	const configIsValid = useMemo(() => {
 		if (!config?.type) return false;
-		return true;
-	}, [config]);
+		if(filePath && fileName) return true;
+		else return false
+	}, [config, filePath, fileName]);
 
 	useEffect(() => {
 		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {

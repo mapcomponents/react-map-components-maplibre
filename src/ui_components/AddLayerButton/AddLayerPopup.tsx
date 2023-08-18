@@ -15,13 +15,14 @@ export interface AddLayerPopupProps {
 	onComplete?: (config: LayerConfig) => void;
 }
 
-type validTypes = LayerConfig['type'] | 'csv' | 'topojson';
+type validTypes = LayerConfig['type']|'csv'|'topojson'|'osm'|'gpx'|'kml'|'tcx';
 
-const supportedProtocols = ['csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'];
 
 const AddLayerPopup = (props: AddLayerPopupProps) => {
 	const [layerConfig, setLayerConfig] = useState<LayerConfig | undefined>(props?.config);
 	const [originType, setOriginType] = useState<string>();
+	const layerTypes = props.layerTypes || ['geojosn', 'wms', 'csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'];
+	const supportedProtocols = layerTypes.filter((el)=> el!== 'wms' && el !=='geojson');
 
 	const updateLayerType = (type: validTypes) => {
 		setOriginType(type);
@@ -67,7 +68,7 @@ const AddLayerPopup = (props: AddLayerPopupProps) => {
 
 	return (
 		<Dialog open={props.open} onClose={handleCancel} PaperProps={{ sx: { padding: '20px' } }}>
-			{!layerConfig?.type && <LayerTypeForm onSelect={updateLayerType} layerTypes={props.layerTypes} />}
+			{!layerConfig?.type && <LayerTypeForm onSelect={updateLayerType} layerTypes={layerTypes} />}
 			{layerConfig?.type === 'geojson' && originType === 'geojson' && (
 				<GeoJsonLayerForm
 					onSubmit={(config) => {
