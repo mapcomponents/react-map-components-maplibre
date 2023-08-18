@@ -16,7 +16,6 @@ import {
 	LayerSpecification,
 	RasterLayerSpecification,
 } from 'maplibre-gl';
-import MlNavigationTools from '../MlNavigationTools/MlNavigationTools';
 
 export type MlGeoJsonLayerProps = {
 	/**
