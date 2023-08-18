@@ -1,37 +1,46 @@
-import React from 'react';
-import { List, ListItem, TextField, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { List, ListItem, TextField, Typography, Button } from '@mui/material';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+
 
 interface CSVOptionsFormulaProps {
-	setter: any;	
+	setter: any;
 }
 
-const optionFields=['latfield', 'lonfield', 'delimiter'];
+const optionFields = ['latfield', 'lonfield', 'delimiter'];
 
 function CSVOptionsFormular(props: CSVOptionsFormulaProps) {
+	const [open, setOpen] = useState<boolean>(false);
 
 	return (
 		<>
-			<List>
-			{optionFields?.map((el) => {
-					return (
-						<>
-							<ListItem>
-								<Typography> {el} </Typography>
-							</ListItem>
-							<ListItem>
-								<TextField
-									onChange={(ev) => {
-										const newObject = {}; 
-										newObject[el] = ev.target.value
-										props.setter(newObject);
-									}}
-								/>
-							</ListItem>
-						</>
-					);
-				})}
-			</List>
 			
+				<Typography> Options </Typography><Button onClick={() => setOpen(!open)}>
+				{open ? <IndeterminateCheckBoxIcon /> :  <AddBoxIcon />}
+			</Button>
+
+			<List>
+				{open &&
+					optionFields?.map((el) => {
+						return (
+							<>
+								<ListItem>
+									<Typography> {el} </Typography>
+								</ListItem>
+								<ListItem>
+									<TextField
+										onChange={(ev) => {
+											const newObject = {};
+											newObject[el] = ev.target.value;
+											props.setter(newObject);
+										}}
+									/>
+								</ListItem>
+							</>
+						);
+					})}
+			</List>
 		</>
 	);
 }

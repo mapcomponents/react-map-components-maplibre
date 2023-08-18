@@ -7,7 +7,7 @@ import getProtocolData from './utils/getProtocolData';
 async function convertOSM(params: { filename: string, options: osm2geojson.Options }): Promise<FeatureCollection> {
 
 	const options = params.options || {};
-console.log(options)
+
 	// Use the csv2geojson library to convert the CSV to GeoJSON
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 		getProtocolData(params.filename).then((rawData) => {
