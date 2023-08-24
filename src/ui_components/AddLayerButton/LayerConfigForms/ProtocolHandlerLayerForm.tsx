@@ -18,6 +18,7 @@ import { CSVProtocolHandler } from '../../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../../protocol_handlers/xml';
+import { mbTilesProtocolHandler } from '../../../protocol_handlers/mbtiles';
 import { csvOptions } from 'csv2geojson';
 
 export interface ProtocolHandlerLayerFormProps {
@@ -36,6 +37,7 @@ const handlers = {
 	gpx: XMLProtocolHandler, 
 	kml: XMLProtocolHandler,
 	tcx: XMLProtocolHandler,
+	mbtiles: mbTilesProtocolHandler
 };
 
 const types: string[] = ['fill', 'line', 'circle'];
@@ -61,13 +63,12 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 
 	useEffect(() => {
 		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {
-			if (!mapHook.map?.getSource(fileName)) {
-				mapHook.map?.addSource(fileName, {
+			if (!mapHook.map?.getSource(fileName)) 
+			mapHook.map?.addSource(fileName, {
 					type: 'geojson',
 					data: optionsObject ? props.originType + '://' + filePath + optionsURL : props.originType + '://' + filePath ,
 				});
-			}
-			config.options = { source: fileName };
+				config.options = { source: fileName };					
 		}
 
 		return () => {};

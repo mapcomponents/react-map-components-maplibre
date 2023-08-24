@@ -16,7 +16,7 @@ export interface AddLayerButtonProps {
 
 const AddLayerButton = (props: AddLayerButtonProps) => {
 	const [popupOpen, setPopupOpen] = React.useState<boolean>(false);
-	const layerTypes = props.layerTypes || ['geojson', 'wms', 'csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'];
+	const layerTypes = props.layerTypes || ['geojson', 'wms', 'mbtiles', 'csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'];
 
 	return (
 		<>

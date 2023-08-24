@@ -23,40 +23,44 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const FolderTemplate = () => {
-	const [openSidebar, setOpenSidebar] = useState(true);
-	const layerContext = useContext(LayerContext);
-	const mapHook = useMap({mapId: undefined});
 
+	const FolderTemplate = () => {
+		const [openSidebar, setOpenSidebar] = useState(true);
+		const layerContext = useContext(LayerContext);
 	
-	useEffect(() => {
-		let _layers = localStorage.getItem('layers');
-		_layers = _layers ? JSON.parse(_layers) : [];
-		layerContext.setLayers(_layers as unknown as LayerConfig[]);		
-	}, []);
-
-	useEffect(() => {
-		mapHook.map?.setZoom(2)
-		
-	}, [mapHook.map]);
-
-	useEffect(() => {
-		if (layerContext.layers.length > 0) {
-			localStorage.setItem('layers', JSON.stringify(layerContext.layers));
-		}
-	}, [layerContext.layers]);
+		useEffect(() => {
+			let _layers = localStorage.getItem('layers');
+			_layers = _layers ? JSON.parse(_layers) : [];
+			layerContext.setLayers(_layers as unknown as LayerConfig[]);
+		}, []);
+	
+		useEffect(() => {
+			if (layerContext.layers.length > 0) {
+				localStorage.setItem('layers', JSON.stringify(layerContext.layers));
+			}
+		}, [layerContext.layers]);
 
 	return (
 		<>
 			<TopToolbar
 				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Sidebar
-					</Button>
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Sidebar
+						</Button>
+						<Button
+							onClick={() => {
+								localStorage.clear();
+								location.reload();
+							}}
+						>
+							reset
+						</Button>
+					</>
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
@@ -130,18 +134,34 @@ const StyleJsonTemplate = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Sidebar
-					</Button>
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Sidebar
+						</Button>
+						<Button
+							onClick={() => {
+								localStorage.clear();
+								location.reload();
+							}}
+						>
+							reset
+						</Button>
+					</>
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerListItemFactory'}>
 				<AddLayerButton
-					onComplete={(config) => { layerContext.setLayers((current) => { console.log([config, ...current]); return [config, ...current]; }) }}
+					onComplete={(config) => {
+						console.log(config);
+						layerContext.setLayers((current) => {
+							console.log([config, ...current]);
+							return [config, ...current];
+						});
+					}}
 				/>
 				<SelectStyleButton sx={{ marginLeft: '5px' }} />
 				<LayerList>
