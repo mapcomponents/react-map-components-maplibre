@@ -62,6 +62,8 @@ function LayerContextProvider(props: LayerContextProps) {
 	const [symbolLayers, setSymbolLayers] = React.useState<LayerSpecification[]>([]);
 	const [tileUrl, setTileUrl] = React.useState<string>(config.sourceOptions_tiles[0]);
 
+	console.log(layers);
+
 	const vtLayerConfig = useMemo<Partial<MlVectorTileLayerProps>>(
 		() => ({
 			layerId: 'openmaptiles',

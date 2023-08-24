@@ -114,7 +114,7 @@ const AddLayerPopup = (props: AddLayerPopupProps) => {
 					onCancel={handleCancel}
 				/>
 			)}	
-			<ProtocolTypeFormulars />
+			<ProtocolTypeFormulars key={'protocol'} />
 		</Dialog>
 	);
 };

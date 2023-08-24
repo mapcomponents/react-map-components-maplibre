@@ -29,9 +29,6 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 	const [filePath, setFilePath] = useState<string>();
 	const mapHook = useMap({ mapId: props.mapId });
 
-	console.log('fileName: ', fileName, ' , path: ', filePath);
-
-
 
 	useAddProtocol({
 		protocol: 'mbtiles',
@@ -50,8 +47,9 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 
 		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {
 			setConfig({
-				...config,
-				url: props.originType + '://' + filePath + '/{z}/{x}/{y}',
+				
+				//url: 'mbtiles://' + filePath + '/{z}/{x}/{y}',
+				url: 'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}',
 				layers: [
 					{
 						id: 'countries',

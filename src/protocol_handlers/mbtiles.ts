@@ -14,6 +14,7 @@ const parseTileParams = (url: string) => {
 	const z = mbtilesParts.splice(mbtilesPartsLength - 3, 1)[0];
 	const filename = mbtilesParts.join('/');
 
+
 	return {
 		filename,
 		z,
@@ -94,6 +95,7 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mbTilesProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
 	const parsedParams = parseTileParams(params.url);
+	console.log('Hallo from mbTilesHandler')
 	
 	getBufferFromMbtiles(parsedParams).then((result) => {
 		if (result) {

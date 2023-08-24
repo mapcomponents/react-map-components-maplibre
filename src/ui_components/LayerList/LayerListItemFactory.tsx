@@ -190,6 +190,60 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 								/>
 							</>
 						);
+						case 'vt':
+						return (
+							<>
+								<LayerListItem
+									key={layer.id}
+									name={layer?.name || layer?.type + ' layer' || 'unnamed layer'}
+									layerComponent={
+										<MlVectorTileLayer 
+										layers={layer?.config?.layers || []}
+										key={layer.id}
+										mapId={layer?.config.mapId}
+										sourceOptions={layer?.config?.sourceOptions}
+										layerId={layer.id}
+										url={layer?.config?.url}										
+										/>
+									}
+									buttons={
+										<>
+											<IconButtonStyled
+												disabled={idx === layers.length - 1}
+												onClick={() => {
+													layerContext.moveDown(layer.id || '');
+												}}
+											>
+												<ArrowCircleDownIcon />
+											</IconButtonStyled>
+											<IconButtonStyled
+												disabled={idx === 0}
+												onClick={() => {
+													layerContext.moveUp(layer.id || '');
+												}}
+											>
+												<ArrowCircleUpIcon />
+											</IconButtonStyled>
+										</>
+									}
+									setLayerState={(layerConfig: MlVectorTileLayerProps | false) =>
+										setLayers?.((current: LayerConfig[]) => {
+											const _layers = [...current];
+											if (layerConfig === false) {
+												_layers.splice(idx, 1);
+											} else {
+												_layers[idx].config = layerConfig;
+											}
+
+											return _layers;
+										})
+									}
+									configurable={true}
+									showDeleteButton={true}
+								/>
+							</>
+						
+						);
 					default:
 						return null;
 				}
