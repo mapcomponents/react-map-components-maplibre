@@ -191,6 +191,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 							</>
 						);
 						case 'vt':
+							console.log(layer?.config?.url)
 						return (
 							<>
 								<LayerListItem
@@ -209,6 +210,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									buttons={
 										<>
 											<IconButtonStyled
+											key={layer.id + '_button1'}
 												disabled={idx === layers.length - 1}
 												onClick={() => {
 													layerContext.moveDown(layer.id || '');
@@ -217,6 +219,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 												<ArrowCircleDownIcon />
 											</IconButtonStyled>
 											<IconButtonStyled
+											key={layer.id + '_button2'}
 												disabled={idx === 0}
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');

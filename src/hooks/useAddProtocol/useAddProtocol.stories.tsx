@@ -105,7 +105,7 @@ const Template = () => {
 							type: 'fill',
 							'source-layer': 'countries',
 							layout: {},
-							paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
+							paint: { "fill-color": "#f9a5f5", "fill-opacity": 0.5 },							
 						},
 					] as unknown as LayerSpecification[]
 				}

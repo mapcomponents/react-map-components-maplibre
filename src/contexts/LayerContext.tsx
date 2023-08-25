@@ -61,9 +61,7 @@ function LayerContextProvider(props: LayerContextProps) {
 	const [backgroundLayers, setBackgroundLayers] = React.useState<LayerSpecification[]>([]);
 	const [symbolLayers, setSymbolLayers] = React.useState<LayerSpecification[]>([]);
 	const [tileUrl, setTileUrl] = React.useState<string>(config.sourceOptions_tiles[0]);
-
 	console.log(layers);
-
 	const vtLayerConfig = useMemo<Partial<MlVectorTileLayerProps>>(
 		() => ({
 			layerId: 'openmaptiles',
@@ -93,8 +91,7 @@ function LayerContextProvider(props: LayerContextProps) {
 	};
 
 	useEffect(() => {
-		//console.log('layers', layers);
-
+		
 		if (layers.filter((el) => !el?.id).length) {
 			const _layers = [...layers];
 			_layers.forEach((el) => {
@@ -106,32 +103,35 @@ function LayerContextProvider(props: LayerContextProps) {
 		}
 	}, [layers]);
 
-	const moveLayer = useCallback((layerId: string, getNewPos: (oldPos:number) => number) => {
-		const targetLayer = layers?.filter?.((el) => el.id === layerId);
+	const moveLayer = useCallback(
+		(layerId: string, getNewPos: (oldPos: number) => number) => {
+			const targetLayer = layers?.filter?.((el) => el.id === layerId);
 
-		if (targetLayer.length > 0) {
-			const newLayers = [...layers];
-			const element = targetLayer[0];
-			const idx = layers.indexOf(element);
-			const newPos = getNewPos(idx);
-			if (newPos >= 0 && newPos <= layers.length - 1) {
-				newLayers.splice(idx, 1);
-				newLayers.splice(newPos, 0, element);
-				setLayers(newLayers);
+			if (targetLayer.length > 0) {
+				const newLayers = [...layers];
+				const element = targetLayer[0];
+				const idx = layers.indexOf(element);
+				const newPos = getNewPos(idx);
+				if (newPos >= 0 && newPos <= layers.length - 1) {
+					newLayers.splice(idx, 1);
+					newLayers.splice(newPos, 0, element);
+					setLayers(newLayers);
+				}
 			}
-		}
-	}, [layers]);
+		},
+		[layers]
+	);
 
 	const moveDown = useCallback(
 		(layerId: string) => {
-				moveLayer(layerId, (idx) => idx + 1);
+			moveLayer(layerId, (idx) => idx + 1);
 		},
 		[moveLayer]
 	);
 
 	const moveUp = useCallback(
 		(layerId: string) => {
-				moveLayer(layerId, (idx) => idx - 1);
+			moveLayer(layerId, (idx) => idx - 1);
 		},
 		[moveLayer]
 	);

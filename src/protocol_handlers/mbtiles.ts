@@ -6,14 +6,13 @@ const loadedMbtiles = {};
 
 const parseTileParams = (url: string) => {
 	const urlParts = url.split('://');
-	const mbtilesUrl = urlParts[1];
+	const mbtilesUrl = urlParts.length >2 ? urlParts[1] + '://' + urlParts[2] : urlParts[1] ;
 	const mbtilesParts = mbtilesUrl.split('/');
 	const mbtilesPartsLength = mbtilesParts.length;
 	const y = mbtilesParts.splice(mbtilesPartsLength - 1, 1)[0];
 	const x = mbtilesParts.splice(mbtilesPartsLength - 2, 1)[0];
 	const z = mbtilesParts.splice(mbtilesPartsLength - 3, 1)[0];
 	const filename = mbtilesParts.join('/');
-
 
 	return {
 		filename,
@@ -29,6 +28,7 @@ const parseTileParams = (url: string) => {
 // add the following config to the externals prop of your webpack config
 // {externals: { fs: 'fs' }};
 const getMbtilesDbHandler = async ({ filename }: { filename: string }) => {
+
 	if (!loadedMbtiles[filename]) {
 		const SQL = await initSqlJs();
 		const fetched = await fetch(filename);
@@ -94,10 +94,9 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mbTilesProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
-	const parsedParams = parseTileParams(params.url);
-	console.log('Hallo from mbTilesHandler')
 	
-	getBufferFromMbtiles(parsedParams).then((result) => {
+	const parsedParams = parseTileParams(params.url);
+		getBufferFromMbtiles(parsedParams).then((result) => {
 		if (result) {
 			callback(null, result, null, null);
 		} else {

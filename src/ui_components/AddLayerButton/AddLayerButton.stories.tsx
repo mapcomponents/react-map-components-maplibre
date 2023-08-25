@@ -27,6 +27,7 @@ export default storyoptions;
 	const FolderTemplate = () => {
 		const [openSidebar, setOpenSidebar] = useState(true);
 		const layerContext = useContext(LayerContext);
+
 	
 		useEffect(() => {
 			let _layers = localStorage.getItem('layers');
@@ -156,7 +157,7 @@ const StyleJsonTemplate = () => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerListItemFactory'}>
 				<AddLayerButton
 					onComplete={(config) => {
-						console.log(config);
+												
 						layerContext.setLayers((current) => {
 							console.log([config, ...current]);
 							return [config, ...current];

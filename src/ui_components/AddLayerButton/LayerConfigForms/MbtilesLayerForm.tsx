@@ -3,6 +3,7 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
+	TextareaAutosize,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { mbTilesProtocolHandler } from '../../../protocol_handlers/mbtiles';
@@ -10,6 +11,7 @@ import useAddProtocol from '../../../hooks/useAddProtocol/useAddProtocol';
 import useMap from '../../../hooks/useMap';
 import { MlVectorTileLayerProps } from 'src/components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
+import MbtilesLayerPropFormular from './utils/MbtilesLayerPropFormular';
 
 export interface WmsLayerConfig {
 	url: string;
@@ -27,6 +29,7 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 	const [config, setConfig] = React.useState<MlVectorTileLayerProps>(props.config);
 	const [fileName, setFileName] = useState<string>();
 	const [filePath, setFilePath] = useState<string>();
+	const [layers, setLayers] = useState<LayerSpecification[]>([]);
 	const mapHook = useMap({ mapId: props.mapId });
 
 
@@ -47,19 +50,19 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 
 		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {
 			setConfig({
-				
-				//url: 'mbtiles://' + filePath + '/{z}/{x}/{y}',
-				url: 'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}',
-				layers: [
+				//url: 'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}',
+				url: 'mbtiles://' + filePath + '/{z}/{x}/{y}',
+			  layers: [
 					{
 						id: 'countries',
 						type: 'fill',
 						'source-layer': 'countries',
 						layout: {},
-						paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
+						paint: { "fill-color": "#f9a5f5", "fill-opacity": 0.5 },							
 					},
-				] as LayerSpecification[] , 
-				sourceOptions: {
+				] as LayerSpecification[], 
+				layerId: fileName,
+				sourceOptions: {					
 					type: 'vector',
 					minzoom: 0,
 					maxzoom: 1,
@@ -88,7 +91,8 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 						}}
 					/>
 				</Button>
-			</DialogContent>
+				<MbtilesLayerPropFormular setter={setLayers} />
+				</DialogContent>
 			<DialogActions>
 				<Button onClick={props.onCancel}>Cancel</Button>
 				<Button disabled={!configIsValid} onClick={() => props.onSubmit(config)}>
