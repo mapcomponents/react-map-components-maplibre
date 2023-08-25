@@ -3,11 +3,8 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	TextareaAutosize,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-import { mbTilesProtocolHandler } from '../../../protocol_handlers/mbtiles';
-import useAddProtocol from '../../../hooks/useAddProtocol/useAddProtocol';
 import useMap from '../../../hooks/useMap';
 import { MlVectorTileLayerProps } from 'src/components/MlVectorTileLayer/MlVectorTileLayer';
 import { LayerSpecification } from 'maplibre-gl';
@@ -53,15 +50,7 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {
 			setConfig({
 				url: 'mbtiles://' + filePath + '/{z}/{x}/{y}',
-			  layers: [
-					{
-						id: 'countries',
-						type: 'fill',
-						'source-layer': 'countries',
-						layout: {},
-						paint: { "fill-color": "#f9a5f5", "fill-opacity": 0.5 },							
-					},
-				] as LayerSpecification[], 
+			  layers: layers, 
 				layerId: fileName,
 				sourceOptions: {					
 					type: 'vector',

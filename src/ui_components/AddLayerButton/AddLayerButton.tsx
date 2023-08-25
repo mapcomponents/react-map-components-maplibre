@@ -5,7 +5,6 @@ import AddLayerPopup from './AddLayerPopup';
 import { LayerConfig } from '../../contexts/LayerContext';
 import useAddProtocol from '../../hooks/useAddProtocol/useAddProtocol';
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
-import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 
 export interface AddLayerButtonProps {
 	sx?: SxProps;
