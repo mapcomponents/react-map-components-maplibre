@@ -32,11 +32,13 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 	const [layers, setLayers] = useState<LayerSpecification[]>([]);
 	const mapHook = useMap({ mapId: props.mapId });
 
+	console.log(layers)
 
-	useAddProtocol({
-		protocol: 'mbtiles',
-		handler: mbTilesProtocolHandler,
-	});
+	/**
+	 * A Vector Tile layer configuration with a mbtile Protocol url will passed to the onComplete function of the addLayerButton. 
+	 * In order to visdualize the file content, a mbtiles ProtocolHandler must be added to the map Instanz.  
+	 * See the MapComponents AddLayerButton demo and the documentation of useAddProtocolHook to find out more about Protocol handlers.  
+	 */
 
 	const configIsValid = useMemo(() => {
 		if (!fileName) return false;
@@ -50,7 +52,6 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 
 		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {
 			setConfig({
-				//url: 'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}',
 				url: 'mbtiles://' + filePath + '/{z}/{x}/{y}',
 			  layers: [
 					{

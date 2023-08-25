@@ -51,9 +51,9 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 
 	
 	useAddProtocol({
-		protocol: props.originType,
+	 	protocol: props.originType,
 		handler: handlers[props.originType],
-	});
+	 });
 
 	const configIsValid = useMemo(() => {
 		if (!config?.type) return false;

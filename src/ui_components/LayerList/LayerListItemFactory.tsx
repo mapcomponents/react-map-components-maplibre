@@ -85,7 +85,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 				switch (layer.type) {
 					case 'geojson':
 						return (
-							<>
+							<React.Fragment key={layer?.id + '_listItem'}>
 								<LayerListItem
 									key={layer.id}
 									name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
@@ -132,11 +132,11 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									configurable={true}
 									showDeleteButton={true}
 								/>
-							</>
+							</React.Fragment>
 						);
 					case 'wms':
 						return (
-							<>
+							<React.Fragment key={layer?.id + '_listItem'} >
 								<MlWmsLoader
 									{...layer.config}
 									key={layer.id}
@@ -188,29 +188,28 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										</>
 									}
 								/>
-							</>
+							</React.Fragment>
 						);
-						case 'vt':
-							console.log(layer?.config?.url)
+					case 'vt':
 						return (
-							<>
+							<React.Fragment key={layer?.id + '_listItem'}>
 								<LayerListItem
 									key={layer.id}
 									name={layer?.name || layer?.type + ' layer' || 'unnamed layer'}
 									layerComponent={
-										<MlVectorTileLayer 
-										layers={layer?.config?.layers || []}
-										key={layer.id}
-										mapId={layer?.config.mapId}
-										sourceOptions={layer?.config?.sourceOptions}
-										layerId={layer.id}
-										url={layer?.config?.url}										
+										<MlVectorTileLayer
+											layers={layer?.config?.layers || []}
+											key={layer.id}
+											mapId={layer?.config.mapId}
+											sourceOptions={layer?.config?.sourceOptions}
+											layerId={layer.id}
+											url={layer?.config?.url}
 										/>
 									}
 									buttons={
 										<>
 											<IconButtonStyled
-											key={layer.id + '_button1'}
+												key={layer.id + '_button1'}
 												disabled={idx === layers.length - 1}
 												onClick={() => {
 													layerContext.moveDown(layer.id || '');
@@ -219,7 +218,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 												<ArrowCircleDownIcon />
 											</IconButtonStyled>
 											<IconButtonStyled
-											key={layer.id + '_button2'}
+												key={layer.id + '_button2'}
 												disabled={idx === 0}
 												onClick={() => {
 													layerContext.moveUp(layer.id || '');
@@ -244,8 +243,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 									configurable={true}
 									showDeleteButton={true}
 								/>
-							</>
-						
+							</React.Fragment>
 						);
 					default:
 						return null;

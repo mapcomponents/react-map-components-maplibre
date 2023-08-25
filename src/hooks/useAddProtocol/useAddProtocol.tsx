@@ -23,10 +23,10 @@ const useAddProtocol = (props: useAddProtocolProps) => {
 		if (!props.protocol || typeof props.handler !== 'function') return;
 
 		maplibregl.addProtocol(props.protocol, props.handler);
-return;
-		// return () => {
-		// 	maplibregl.removeProtocol(props.protocol);
-		// };
+
+		return () => {
+			maplibregl.removeProtocol(props.protocol);
+		};
 	}, []);
 
 	return {};

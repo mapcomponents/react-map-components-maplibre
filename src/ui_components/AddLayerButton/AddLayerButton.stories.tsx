@@ -13,7 +13,7 @@ import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
 import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import GruvboxStyle from '../../omt_styles/gruvbox';
-import useMap from '../../hooks/useMap';
+
 
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',

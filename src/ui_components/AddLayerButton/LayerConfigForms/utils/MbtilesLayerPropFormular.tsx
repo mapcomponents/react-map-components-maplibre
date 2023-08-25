@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Button, FormControl, InputLabel, TextField, Typography } from '@mui/material';
+import { Button, FormControl, TextField } from '@mui/material';
 import { LayerSpecification } from 'maplibre-gl';
 
 interface MbtilesLayerPropFormularProps {
@@ -20,18 +20,9 @@ const LayerSpecificationKeys = [
 export default function MbtilesLayerPropFormular(props: MbtilesLayerPropFormularProps) {
 	const [layers, setLayers] = useState<LayerSpecification[]>([]);
 	const newLayer = {
-	id: undefined ,
-	type: undefined,
-	metadata: undefined ,
-	source:undefined ,
-	'source-layer':undefined ,
-	layout: undefined,
-	paint: undefined,
-	options: undefined,
 	};
 	const toJSON = ['paint', 'layout', 'options', 'metadata'];
 
-	console.log('newLayer:  ', JSON.stringify(newLayer));
 
 	useEffect(() => {
 		props.setter(layers);
@@ -43,14 +34,14 @@ export default function MbtilesLayerPropFormular(props: MbtilesLayerPropFormular
 			<>
 				{LayerSpecificationKeys.map((key) => {
 					return (
-						<>
+						<React.Fragment key={key + '_fragment'}>
 							<TextField
 								label={key}
 								onChange={(ev) =>
 									newLayer[key] = ev.target.value
 								}
 							/>
-						</>
+						</React.Fragment>
 					);
 				})}
 			</>
