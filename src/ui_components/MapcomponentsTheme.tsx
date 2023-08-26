@@ -6,7 +6,7 @@ declare module '@mui/material' {
 	interface Palette {
 		topToolbar: { barColor: string };
 		navigation: { navColor: string; navHover: string };
-		compass: { compColor: string; compHover: string };
+		compass: { compColor: string; compHover: string; compStroke: string; compNorth: string; compSouth: string};
 	}
 }
 declare module '@mui/material/Button' {
@@ -48,7 +48,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					},
 					topToolbar: { barColor: '#000' },
 					navigation: { navColor: '#313131', navHover: '#747577' },
-					compass: { compColor: '#313131', compHover: '#747577' },
+					compass: { compColor: '#313131', compHover: '#747577', compStroke: '#d3dce1', compNorth: '#cf003f', compSouth: '#d3dcf0'},
 			  }
 			: {
 					primary: {
@@ -61,7 +61,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 					},
 					topToolbar: { barColor: '#fff' },
 					navigation: { navColor: '#fff', navHover: '#f5f5f5' },
-					compass: { compColor: '#fff', compHover: '#f5f5f5' },
+					compass: { compColor: '#fff', compHover: '#f5f5f5', compStroke: '#009ee0', compNorth: '#cf003f', compSouth: '#d3dcf0' },
 			  }),
 	},
 });
