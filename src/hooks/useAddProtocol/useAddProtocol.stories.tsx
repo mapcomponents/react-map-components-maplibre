@@ -24,7 +24,7 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import { Button } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import AddLayerButton from '../../ui_components/AddLayerButton/AddLayerButton';
-import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
+import LayerContext from '../../contexts/LayerContext';
 import LayerList from '../../ui_components/LayerList/LayerList';
 import LayerListItemFactory from '../../ui_components/LayerList/LayerListItemFactory';
 

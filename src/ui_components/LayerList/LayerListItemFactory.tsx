@@ -17,7 +17,7 @@ import MlVectorTileLayer, {
 import useLayerContext from '../../hooks/useLayerContext';
 import { LayerConfig } from '../../contexts/LayerContext';
 import useMap from '../../hooks/useMap';
-import { bbox, geometry } from '@turf/turf';
+import { bbox } from '@turf/turf';
 import { LngLatBoundsLike, FitBoundsOptions, GeoJSONSource } from 'maplibre-gl';
 
 const IconButtonStyled = styled(IconButton)({
