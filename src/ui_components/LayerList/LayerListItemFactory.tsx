@@ -84,7 +84,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 				switch (layer.type) {
 					case 'geojson':
-						return (
+				 	return (
 							<React.Fragment key={layer?.id + '_listItem'}>
 								<LayerListItem
 									key={layer.id}
@@ -246,6 +246,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 							</React.Fragment>
 						);
 					default:
+						console.log('no match')
 						return null;
 				}
 			})}

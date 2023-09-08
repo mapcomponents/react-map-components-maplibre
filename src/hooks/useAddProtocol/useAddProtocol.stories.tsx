@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import useAddProtocol from './useAddProtocol';
 
-import mapContextDecorator from '../../decorators/LowZoomDecorator';
+import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import {
 	Cancelable,
@@ -10,6 +10,7 @@ import {
 	LayerSpecification,
 	RequestParameters,
 	ResponseCallback,
+	StyleSpecification,
 } from 'maplibre-gl';
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
@@ -19,13 +20,22 @@ import { XMLProtocolHandler } from '../../protocol_handlers/xml';
 import { csvOptions } from 'csv2geojson';
 
 import useMap from '../useMap';
-import MlLayer from '../../components/MlLayer/MlLayer';
+import TopToolbar from '../../ui_components/TopToolbar';
+import { Button } from '@mui/material';
+import Sidebar from '../../ui_components/Sidebar';
+import AddLayerButton from '../../ui_components/AddLayerButton/AddLayerButton';
+import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
+import LayerList from '../../ui_components/LayerList/LayerList';
+import LayerListItemFactory from '../../ui_components/LayerList/LayerListItemFactory';
+
+import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import  bright  from '../../omt_styles/bright';
 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
 	component: useAddProtocol,
 	argTypes: {},
-	decorators: mapContextDecorator,
+	decorators: EmptyMapDecorator,
 };
 export default storyoptions;
 
@@ -45,6 +55,8 @@ interface geojsonTemplateProps {
 const geojsonTemplate = (props: geojsonTemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
 	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const layerContext = useContext(LayerContext);
 
 	useAddProtocol({
 		protocol: props.protocol,
@@ -52,37 +64,77 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 	});
 
 	useEffect(() => {
-		mapHook.map?.addSource(props.sourceId, {
-			type: 'geojson',
+		layerContext.updateStyle(bright as StyleSpecification);
 
-			//  The url is expected to have the following Format:
-			// 			[protocol]://[filePath -extension included-]
-			// 	Example:'csv://csv/restaurants.csv'
+		layerContext.setLayers([
+			{
+				type: 'geojson',
+				name: 'useAddProtocolLayer',
+				config: {
+					layerId: 'useAddProtocolLayer',
+					type: props.type || 'line',
+					options: {
+						source: props.sourceId,
+					},
+					paint: props.paint,
+				} as MlGeoJsonLayerProps, 				
+			}
+		]);
+	}, []);
 
-			//  An optional encoded options object can be added after a '?' sign at the end of the url.
-			//  Handlers that support options are:
+	useEffect(() => {
+		if (!mapHook.map?.getSource(props.sourceId)) {
+			mapHook.map?.addSource(props.sourceId, {
+				type: 'geojson',
 
-			// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
-			// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
+				//  The url is expected to have the following Format:
+				// 			[protocol]://[filePath -extension included-]
+				// 	Example:'csv://csv/restaurants.csv'
 
-			data: props.protocol + '://' + props.filePath + optionsURL,
-		});
-		if (props.flyTo) {
-			mapHook.map?.flyTo(props.flyTo as FlyToOptions);
+				//  An optional encoded options object can be added after a '?' sign at the end of the url.
+				//  Handlers that support options are:
+
+				// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
+				// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
+
+				data: props.protocol + '://' + props.filePath + optionsURL,
+			});
+			if (props.flyTo) {
+				mapHook.map?.flyTo(props.flyTo as FlyToOptions);
+			}
 		}
 	}, [mapHook.map]);
 
 	return (
 		<>
-			<MlLayer
-				layerId={'useAddProtocolLayer'}
-				options={{
-					type: props.type || 'line',
-					source: props.sourceId,
-					paint: props.paint || { 'line-color': '#009EE0', 'line-width': 3 },
-				}}
-				insertBeforeLayer={'waterway-name'}
+			<TopToolbar
+				buttons={
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Sidebar
+						</Button>
+					</>
+				}
 			/>
+
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
+				<AddLayerButton
+					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
+					layerTypes={[props.protocol]}
+				/>
+				<LayerList>
+					
+					<LayerListItemFactory
+						layers={layerContext.layers}
+						setLayers={layerContext.setLayers}
+						insertBeforeLayer="useAddProtocolLayer"
+					/>
+				</LayerList>
+			</Sidebar>
 		</>
 	);
 };
@@ -105,7 +157,7 @@ const Template = () => {
 							type: 'fill',
 							'source-layer': 'countries',
 							layout: {},
-							paint: { "fill-color": "#f9a5f5", "fill-opacity": 0.5 },							
+							paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
 						},
 					] as unknown as LayerSpecification[]
 				}

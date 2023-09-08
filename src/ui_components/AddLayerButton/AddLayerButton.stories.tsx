@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import LayerList from '../LayerList/LayerList';
 
-import mapContextDecorator from '../../decorators/EmptyMapDecorator';
+import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
 import Sidebar from '../Sidebar';
 
 import { Button } from '@mui/material';
@@ -14,32 +14,29 @@ import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
 import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import GruvboxStyle from '../../omt_styles/gruvbox';
 
-
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
 	component: AddLayerButton,
 	argTypes: {},
-	decorators: mapContextDecorator,
+	decorators: EmptyMapDecorator,
 };
 export default storyoptions;
 
+const FolderTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const layerContext = useContext(LayerContext);
 
-	const FolderTemplate = () => {
-		const [openSidebar, setOpenSidebar] = useState(true);
-		const layerContext = useContext(LayerContext);
+	useEffect(() => {
+		let _layers = localStorage.getItem('layers');
+		_layers = _layers ? JSON.parse(_layers) : [];
+		layerContext.setLayers(_layers as unknown as LayerConfig[]);
+	}, []);
 
-	
-		useEffect(() => {
-			let _layers = localStorage.getItem('layers');
-			_layers = _layers ? JSON.parse(_layers) : [];
-			layerContext.setLayers(_layers as unknown as LayerConfig[]);
-		}, []);
-	
-		useEffect(() => {
-			if (layerContext.layers.length > 0) {
-				localStorage.setItem('layers', JSON.stringify(layerContext.layers));
-			}
-		}, [layerContext.layers]);
+	useEffect(() => {
+		if (layerContext.layers.length > 0) {
+			localStorage.setItem('layers', JSON.stringify(layerContext.layers));
+		}
+	}, [layerContext.layers]);
 
 	return (
 		<>
@@ -67,7 +64,6 @@ export default storyoptions;
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
-					//layerTypes={['csv', 'gpx']}
 				/>
 				<SelectStyleButton sx={{ marginLeft: '5px' }} />
 				<LayerList>
@@ -157,7 +153,6 @@ const StyleJsonTemplate = () => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerListItemFactory'}>
 				<AddLayerButton
 					onComplete={(config) => {
-												
 						layerContext.setLayers((current) => {
 							console.log([config, ...current]);
 							return [config, ...current];
