@@ -124,7 +124,7 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
-					layerTypes={[props.protocol]}
+					//layerTypes={[props.protocol]}
 				/>
 				<LayerList>
 					
@@ -132,6 +132,7 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 						layers={layerContext.layers}
 						setLayers={layerContext.setLayers}
 						insertBeforeLayer="useAddProtocolLayer"
+						focusOptions={{padding: {top: 50, bottom: 50, left: 25, right: 25}}}
 					/>
 				</LayerList>
 			</Sidebar>

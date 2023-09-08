@@ -3,6 +3,7 @@ import { IconButton, styled } from '@mui/material';
 import {
 	ArrowCircleDown as ArrowCircleDownIcon,
 	ArrowCircleUp as ArrowCircleUpIcon,
+	CenterFocusWeak as CenterLayerIcon,
 } from '@mui/icons-material';
 import LayerListItem from './LayerListItem';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
@@ -15,6 +16,9 @@ import MlVectorTileLayer, {
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import useLayerContext from '../../hooks/useLayerContext';
 import { LayerConfig } from '../../contexts/LayerContext';
+import useMap from '../../hooks/useMap';
+import { bbox, geometry } from '@turf/turf';
+import { LngLatBoundsLike, FitBoundsOptions, GeoJSONSource } from 'maplibre-gl';
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -30,10 +34,12 @@ export interface LayerListItemFactoryProps {
 	layers: LayerConfig[];
 	setLayers?: (layers: LayerConfig[] | ((state: LayerConfig[]) => LayerConfig[])) => void;
 	insertBeforeLayer?: string;
+	focusOptions?: FitBoundsOptions
 }
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const layerContext = useLayerContext();
+	const mapHook = useMap({ mapId: undefined });
 
 	const orderLayers = useMemo(() => {
 		const layerIds = [
@@ -55,6 +61,23 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		if (props.setLayers) return props.setLayers;
 		return layerContext.setLayers;
 	}, [props.setLayers, layerContext.setLayers]);
+
+	function fitLayer(layer: LayerConfig) {
+		const layerSource = layer.id ? mapHook.map?.getLayer(layer.id).source : undefined;
+		const geojson = layerSource && (mapHook.map?.getSource(layerSource) as GeoJSONSource)._data;
+		const _geojson = layerSource && {
+			type: 'FeatureCollection',
+			features: mapHook.map?.querySourceFeatures(layerSource)
+		};
+
+		if (!layerSource) {
+			return;
+		}
+
+		mapHook.map?.fitBounds(typeof geojson === 'string' ? bbox(_geojson) as LngLatBoundsLike : bbox(geojson) as LngLatBoundsLike,
+			props.focusOptions
+		  );
+	}
 
 	return (
 		<>
@@ -84,7 +107,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 				switch (layer.type) {
 					case 'geojson':
-				 	return (
+						return (
 							<React.Fragment key={layer?.id + '_listItem'}>
 								<LayerListItem
 									key={layer.id}
@@ -115,6 +138,9 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											>
 												<ArrowCircleUpIcon />
 											</IconButtonStyled>
+											<IconButtonStyled onClick={() => fitLayer(layer)}>
+												<CenterLayerIcon />
+											</IconButtonStyled>
 										</>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
@@ -136,7 +162,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 						);
 					case 'wms':
 						return (
-							<React.Fragment key={layer?.id + '_listItem'} >
+							<React.Fragment key={layer?.id + '_listItem'}>
 								<MlWmsLoader
 									{...layer.config}
 									key={layer.id}
@@ -246,7 +272,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 							</React.Fragment>
 						);
 					default:
-						console.log('no match')
+						console.log('no match');
 						return null;
 				}
 			})}
