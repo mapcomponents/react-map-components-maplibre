@@ -36,6 +36,8 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 	const mapHook = useMap({ mapId: props.mapId });
 	const [expanded, setExpanded] = useState<boolean>(false);
 
+	console.log(layers)
+
 	const LayersToCall = () => {
 		return (
 			<>
@@ -82,7 +84,7 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 				},
 			});
 		}
-	}, [fileName, mapHook.map, filePath]);
+	}, [fileName, mapHook.map, filePath, layers]);
 
 	return (
 		<>

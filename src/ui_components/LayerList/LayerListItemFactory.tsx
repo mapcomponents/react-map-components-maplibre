@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { IconButton, styled } from '@mui/material';
 import {
 	ArrowCircleDown as ArrowCircleDownIcon,
@@ -19,6 +19,7 @@ import { LayerConfig } from '../../contexts/LayerContext';
 import useMap from '../../hooks/useMap';
 import { bbox } from '@turf/turf';
 import { LngLatBoundsLike, FitBoundsOptions, GeoJSONSource } from 'maplibre-gl';
+import useFitLayerBounds, { useFitLayerBoundsPros } from '../../hooks/useFitLayerBounds';
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -34,12 +35,13 @@ export interface LayerListItemFactoryProps {
 	layers: LayerConfig[];
 	setLayers?: (layers: LayerConfig[] | ((state: LayerConfig[]) => LayerConfig[])) => void;
 	insertBeforeLayer?: string;
-	focusOptions?: FitBoundsOptions
+	fitBoundsOptions?: FitBoundsOptions;
 }
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const layerContext = useLayerContext();
 	const mapHook = useMap({ mapId: undefined });
+	const [fitBoundArgs, setFitBoundArgs] = useState<useFitLayerBoundsPros>();
 
 	const orderLayers = useMemo(() => {
 		const layerIds = [
@@ -67,16 +69,28 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		const geojson = layerSource && (mapHook.map?.getSource(layerSource) as GeoJSONSource)._data;
 		const _geojson = layerSource && {
 			type: 'FeatureCollection',
-			features: mapHook.map?.querySourceFeatures(layerSource)
+			features: mapHook.map?.querySourceFeatures(layerSource),
 		};
 
 		if (!layerSource) {
 			return;
 		}
 
-		mapHook.map?.fitBounds(typeof geojson === 'string' ? bbox(_geojson) as LngLatBoundsLike : bbox(geojson) as LngLatBoundsLike,
-			props.focusOptions
-		  );
+		switch (layer.type) {
+			case 'geojson':
+				mapHook.map?.fitBounds(
+					typeof geojson === 'string'
+						? (bbox(_geojson) as LngLatBoundsLike)
+						: (bbox(geojson) as LngLatBoundsLike),
+					props.fitBoundsOptions
+				);
+
+			case 'vt':
+				console.log('vt');
+
+			default:
+				return;
+		}
 	}
 
 	return (
@@ -210,7 +224,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 												}}
 											>
 												<ArrowCircleUpIcon />
-											</IconButtonStyled>
+											</IconButtonStyled>									
 										</>
 									}
 								/>
@@ -252,6 +266,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											>
 												<ArrowCircleUpIcon />
 											</IconButtonStyled>
+							
 										</>
 									}
 									setLayerState={(layerConfig: MlVectorTileLayerProps | false) =>

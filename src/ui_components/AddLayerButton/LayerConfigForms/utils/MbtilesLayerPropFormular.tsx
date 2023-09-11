@@ -64,7 +64,7 @@ export default function MbtilesLayerPropFormular(props: MbtilesLayerPropFormular
 
 		setLayers((current) => {
 			if (current.length > 0) {
-				return [...current, newLayer] as LayerSpecification[];
+				return [ newLayer, ...current] as LayerSpecification[];
 			} else {
 				return [newLayer] as LayerSpecification[];
 			}

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import useAddProtocol from './useAddProtocol';
 
 import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
-import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
+import MlVectorTileLayer, { MlVectorTileLayerProps } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import {
 	Cancelable,
 	FlyToOptions,
@@ -11,6 +11,7 @@ import {
 	RequestParameters,
 	ResponseCallback,
 	StyleSpecification,
+	VectorSourceSpecification,
 } from 'maplibre-gl';
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
@@ -24,7 +25,7 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import { Button } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import AddLayerButton from '../../ui_components/AddLayerButton/AddLayerButton';
-import LayerContext from '../../contexts/LayerContext';
+import LayerContext, { LayerConfig, VtLayerConfig } from '../../contexts/LayerContext';
 import LayerList from '../../ui_components/LayerList/LayerList';
 import LayerListItemFactory from '../../ui_components/LayerList/LayerListItemFactory';
 
@@ -39,7 +40,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-interface geojsonTemplateProps {
+interface TemplateProps {
 	protocol: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable;
@@ -48,11 +49,13 @@ interface geojsonTemplateProps {
 	type?: 'circle' | 'line' | 'fill';
 	paint?: LayerSpecification['paint'];
 	flyTo?: FlyToOptions;
-
 	options?: csvOptions | osm2geojson.Options;
+	insertBeforeLayer?: string,
+	sourceOptions?: VectorSourceSpecification
+	layers?: LayerSpecification[]
 }
 
-const geojsonTemplate = (props: geojsonTemplateProps) => {
+const Template = (props: TemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
 	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
 	const [openSidebar, setOpenSidebar] = useState(true);
@@ -67,19 +70,35 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 		layerContext.updateStyle(bright as StyleSpecification);
 
 		layerContext.setLayers([
-			{
-				type: 'geojson',
-				name: 'useAddProtocolLayer',
-				config: {
+			 props.protocol === 'mbtiles' ? {
+			type: 'vt',
+			name: 'useAddProtocolLayer',
+			config: {
+					layerId: 'useAddProtocolLayer',
+					url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
+					layers: props.layers,
+					insertBeforeLayer: props.insertBeforeLayer,
+					sourceOptions: props.sourceOptions					
+				} as MlVectorTileLayerProps
+			 } 
+				:
+
+			{type: 'geojson',
+			name: 'useAddProtocolLayer',
+			config:	
+				{
 					layerId: 'useAddProtocolLayer',
 					type: props.type || 'line',
 					options: {
 						source: props.sourceId,
 					},
 					paint: props.paint,
-				} as MlGeoJsonLayerProps, 				
-			}
+				} as MlGeoJsonLayerProps
+			}				
 		]);
+
+
+		
 	}, []);
 
 	useEffect(() => {
@@ -132,7 +151,7 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 						layers={layerContext.layers}
 						setLayers={layerContext.setLayers}
 						insertBeforeLayer="useAddProtocolLayer"
-						focusOptions={{padding: {top: 50, bottom: 50, left: 25, right: 25}}}
+						fitBoundsOptions={{padding: {top: 50, bottom: 50, left: 25, right: 25}}}
 					/>
 				</LayerList>
 			</Sidebar>
@@ -140,44 +159,35 @@ const geojsonTemplate = (props: geojsonTemplateProps) => {
 	);
 };
 
-const Template = () => {
-	useAddProtocol({
-		protocol: 'mbtiles',
-		handler: mbTilesProtocolHandler,
-	});
 
-	return (
-		<>
-			<MlVectorTileLayer
-				mapId={'map_1'}
-				url={'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}'}
-				layers={
-					[
-						{
-							id: 'countries',
-							type: 'fill',
-							'source-layer': 'countries',
-							layout: {},
-							paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
-						},
-					] as unknown as LayerSpecification[]
-				}
-				insertBeforeLayer={'waterway-name'}
-				sourceOptions={{
-					type: 'vector',
-					minzoom: 0,
-					maxzoom: 1,
-				}}
-			/>
-		</>
-	);
-};
 
 export const MbTiles = Template.bind({});
 MbTiles.parameters = {};
-MbTiles.args = {};
+MbTiles.args = {
+protocol: 'mbtiles',
+handler: mbTilesProtocolHandler,
+sourceID: 'fromMBTile-source',
+filePath: 'mbtiles/countries.mbtiles',
+type: 'fill',
+layers: [
+	{
+		id: 'countries',
+		type: 'fill',
+		'source-layer': 'countries',
+		layout: {},
+		paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
+	},
+] , 
+insertBeforeLayer: 'waterway-name',
+sourceOptions: {
+	type: 'vector',
+	minzoom: 0,
+	maxzoom: 1,
+},
+flyTo: { center: [10.147049, 50.871231], zoom: 2, speed: 2 }
+};
 
-export const CSVOrTSV = geojsonTemplate.bind({});
+export const CSVOrTSV = Template.bind({});
 CSVOrTSV.parameters = {};
 CSVOrTSV.args = {
 	protocol: 'csv',
@@ -194,7 +204,7 @@ CSVOrTSV.args = {
 	flyTo: { center: [-74.914516, 38.935759], zoom: 13, speed: 2 },
 };
 
-export const CSVWithOptions = geojsonTemplate.bind({});
+export const CSVWithOptions = Template.bind({});
 CSVWithOptions.parameters = {};
 CSVWithOptions.args = {
 	protocol: 'csv',
@@ -210,7 +220,7 @@ CSVWithOptions.args = {
 	flyTo: { center: [10.147049, 50.871231], zoom: 6, speed: 2 },
 };
 
-export const OSM = geojsonTemplate.bind({});
+export const OSM = Template.bind({});
 OSM.parameters = {};
 OSM.args = {
 	protocol: 'osm',
@@ -227,7 +237,7 @@ OSM.args = {
 	flyTo: { center: [2.651811, 39.571309], zoom: 15.5, speed: 4 },
 };
 
-export const GPX = geojsonTemplate.bind({});
+export const GPX = Template.bind({});
 GPX.parameters = {};
 GPX.args = {
 	protocol: 'gpx',
@@ -237,7 +247,7 @@ GPX.args = {
 	flyTo: { center: [-5.100251, 42.887371], zoom: 7, speed: 3 },
 };
 
-export const KML = geojsonTemplate.bind({});
+export const KML = Template.bind({});
 KML.parameters = {};
 KML.args = {
 	protocol: 'kml',
@@ -247,7 +257,7 @@ KML.args = {
 	flyTo: { center: [-74.82832, 39.093526], zoom: 9, speed: 2 },
 };
 
-export const TCX = geojsonTemplate.bind({});
+export const TCX = Template.bind({});
 TCX.parameters = {};
 TCX.args = {
 	protocol: 'tcx',
@@ -257,7 +267,7 @@ TCX.args = {
 	flyTo: { center: [32.711545, 34.844962], zoom: 9, speed: 3 },
 };
 
-export const Topojson = geojsonTemplate.bind({});
+export const Topojson = Template.bind({});
 Topojson.parameters = {};
 Topojson.args = {
 	protocol: 'topojson',
