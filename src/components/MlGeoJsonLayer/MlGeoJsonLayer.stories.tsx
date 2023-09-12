@@ -68,6 +68,8 @@ const PolygonTemplate = (props: TemplateProps) => {
 };
 
 const CircleTemplate = (props: MlGeoJsonLayerProps) => {
+	//this is a test comment
+
 	const mapHook = useMap({
 		mapId: undefined,
 	});
