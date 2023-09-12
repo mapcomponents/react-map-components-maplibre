@@ -28,7 +28,7 @@ const Template = (props: MlNavigationToolsProps) => {
 	const [CenterLocationButton, setCenterLocationButton] = useState(false);
 	const [ZoomButtons, setZoomButtons] = useState(true);
 	const [FollowGpsButton, setFollowGpsButton] = useState(false);
-	const [showCustomButton, setShowCustomButton] = useState(false);
+	const [showCustomButton, setShowCustomButton] = useState<boolean>(false);
 	const [alternativePosition, setAlternativePosition] = useState(false);
 
 	const handleChange1 = () => {
@@ -62,7 +62,7 @@ const Template = (props: MlNavigationToolsProps) => {
 							onClick={() => setOpenSidebar(!openSidebar)}
 							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 						>
-							Navigation Tools
+							Options
 						</Button>
 					</>
 				}
@@ -104,11 +104,13 @@ const Template = (props: MlNavigationToolsProps) => {
 				showZoomButtons={ZoomButtons}
 				showFollowGpsButton={FollowGpsButton}
 			>
-				{showCustomButton === true ? (
+				{showCustomButton ? (
 					<Button variant="navtools" onClick={() => {}}>
 						<BuildIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 					</Button>
-				) : null}
+				) : (
+					<></>
+				)}
 			</MlNavigationTools>
 		</>
 	);
