@@ -22,16 +22,26 @@ const CompassBox = styled(Box)(({ theme }) => ({
 	},
 	circle: {
 		fill: theme.palette.compass.compColor,
+		stroke: theme.palette.compass.compStroke,
+	},
+	path: {
+		fill: theme.palette.compass.compStroke,
 	},
 	'&:hover circle': {
 		fill: theme.palette.compass.compHover,
 	},
 }));
-const NeedleBox = styled(Box)({
+const NeedleBox = styled(Box)(({ theme }) => ({
 	position: 'absolute',
 	right: '21.4px',
 	top: '6px',
-});
+	'path:nth-of-type(2)': {
+		fill: theme.palette.compass.compSouth,
+	},
+	'path:nth-of-type(1)': {
+		fill: theme.palette.compass.compNorth,
+	},
+}));
 
 interface MlNavigationCompassProps {
 	/**
