@@ -28,6 +28,8 @@ import AddLayerButton from '../../ui_components/AddLayerButton/AddLayerButton';
 import LayerContext, { LayerConfig, VtLayerConfig } from '../../contexts/LayerContext';
 import LayerList from '../../ui_components/LayerList/LayerList';
 import LayerListItemFactory from '../../ui_components/LayerList/LayerListItemFactory';
+import DemoDescriptions, { demoDescriptionObject } from '../../ui_components/DemoDescriptions';
+import protocolDescriptions from './utils/useAddProtocolTexts.json';
 
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import  bright  from '../../omt_styles/bright';
@@ -102,7 +104,7 @@ const Template = (props: TemplateProps) => {
 	}, []);
 
 	useEffect(() => {
-		if (!mapHook.map?.getSource(props.sourceId)) {
+		if (!mapHook.map?.getSource(props.sourceId) && props.protocol !== 'mbtiles') {
 			mapHook.map?.addSource(props.sourceId, {
 				type: 'geojson',
 
@@ -118,10 +120,12 @@ const Template = (props: TemplateProps) => {
 
 				data: props.protocol + '://' + props.filePath + optionsURL,
 			});
+		}
+
 			if (props.flyTo) {
 				mapHook.map?.flyTo(props.flyTo as FlyToOptions);
 			}
-		}
+		
 	}, [mapHook.map]);
 
 	return (
@@ -154,6 +158,11 @@ const Template = (props: TemplateProps) => {
 						fitBoundsOptions={{padding: {top: 50, bottom: 50, left: 25, right: 25}}}
 					/>
 				</LayerList>
+				<DemoDescriptions
+				json={protocolDescriptions as unknown as demoDescriptionObject}
+				section={props.protocol}
+				title={"Description: "}
+				/>
 			</Sidebar>
 		</>
 	);

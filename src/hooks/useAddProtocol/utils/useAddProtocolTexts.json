@@ -1,0 +1,16 @@
+[
+	{
+		"item": "mbtiles",
+		"description": "In this example, an MBtile file containing the countries of the world is loaded to the map through the useAddProtocol hook. The protocol manager registers the contents of the file as a source. We then add in the layer list a Vector tile layer that uses that source. /n See source file: <a href='https://github.com/mapcomponents/react-map-components-maplibre/blob/main/public/mbtiles/countries.mbtiles'> countries.mbtiles </a>"
+	},
+	{
+		"item": "csv",
+		"description": "The CSVProtocolHandler enables us to load a layer from a table containing the coordinates of one or more points. The table must have a 'latitude' and a 'longitude' column. Column names like 'lat' or 'long' are automatically recognized by the hook. Other names, as well as a delimiter other than the comma, can be specified in the options.This encoded options object can be added after a '?' sign at the end of the url. The url is expected to have the following Format: [protocol]://[filePath -extension included-] Example:csv://csv/restaurants.csv"
+	},
+
+	{ "item": "osm", "description": "" },
+	{ "item": "gpx", "description": "" },
+	{ "item": "kml", "description": "" },
+	{ "item": "tcx", "description": "" },
+	{ "item": "topojson", "description": "" }
+]
