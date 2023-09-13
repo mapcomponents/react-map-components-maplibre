@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import MapContext from '../../contexts/MapContext';
 import maplibregl, { CustomLayerInterface, LngLatLike, Map } from 'maplibre-gl';
 import * as THREE from 'three';
@@ -22,7 +22,6 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 	const mapContext = useContext(MapContext);
 
 	const layerName = '3d-model';
-	const [showLayer, setShowLayer] = useState(true);
 	const initializedRef = useRef(false);
 	const mapRef = useRef<MapLibreGlWrapper>();
 	const initFuncRef = useRef(props.init);
@@ -177,38 +176,7 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 		}
 	}, [mapContext.mapIds, mapContext, props]);
 
-	useEffect(() => {
-		if (!mapRef.current) return;
-
-		if (mapRef.current.getLayer(layerName)) {
-			// toggle layer visibility by changing the layout object's visibility property
-			if (showLayer) {
-				mapRef.current.setLayoutProperty(layerName, 'visibility', 'visible');
-			} else {
-				mapRef.current.setLayoutProperty(layerName, 'visibility', 'none');
-			}
-		}
-		//
-	}, [showLayer, mapContext]);
-
 	return <></>;
-	/*
-	return (
-		<>
-			<Button
-				color="primary"
-				variant={showLayer ? 'contained' : 'outlined'}
-				onClick={() => {
-					setShowLayer(!showLayer);
-					showLayerRef.current = !showLayer;
-				}}
-			>
-				3D model
-			</Button>
-		</>
-		
-	);
-	*/
 };
 
 MlThreeJsLayer.propTypes = {

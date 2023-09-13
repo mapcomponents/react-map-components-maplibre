@@ -25,6 +25,8 @@ const storyoptions = {
 };
 export default storyoptions;
 
+const buttonStyle = { marginRight: { xs: '0px', sm: '10px' }, width:'140px' };
+
 const Template = () => {
 	const [gpxData, setGpxData] = useState<string | ArrayBuffer | undefined>();
 	const [demoLoaderOpen, setDemoLoaderOpen] = useState(false);
@@ -64,7 +66,7 @@ const Template = () => {
 						<Button
 							variant={openSidebar ? 'contained' : 'outlined'}
 							onClick={() => setOpenSidebar(!openSidebar)}
-							sx={{ marginRight: { xs: '0px', sm: '10px' }, maxWidth: '140px', minWidth: '140px' }}
+							sx={buttonStyle}
 						>
 							Informations
 						</Button>
@@ -75,11 +77,7 @@ const Template = () => {
 							buttonComponent={
 								<Button
 									variant="contained"
-									sx={{
-										marginRight: { xs: '0px', sm: '10px' },
-										maxWidth: '140px',
-										minWidth: '140px',
-									}}
+									sx={buttonStyle}
 								>
 									Upload
 								</Button>
@@ -91,7 +89,7 @@ const Template = () => {
 						<Button
 							variant={demoLoaderOpen ? 'contained' : 'outlined'}
 							onClick={demoLoader}
-							sx={{ marginRight: { xs: '0px', sm: '10px' }, maxWidth: '140px', minWidth: '140px' }}
+							sx={buttonStyle}
 						>
 							Demo Mode
 						</Button>
