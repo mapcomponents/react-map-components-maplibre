@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 export interface DemoDescriptionItem {
 	item: string,
@@ -18,13 +18,14 @@ function DemoDescriptions(props: DemoDescriptionsProps) {
 
 
 	return (
-	itemToDisplay()[0].description && (
+	itemToDisplay()[0].description ? (
 			<>
-				<Typography variant="h5" marginBottom={3}>{props.title}</Typography>
-				<Typography variant="body1">{itemToDisplay()[0].description}</Typography>
+				<Typography variant="h6" marginBottom={3}>{props.title}</Typography>
+				<Typography variant="body1" dangerouslySetInnerHTML={{__html:
+          itemToDisplay()[0].description }}/>
 				
 			</>
-		)
+		) : <></>
 	);
 }
 

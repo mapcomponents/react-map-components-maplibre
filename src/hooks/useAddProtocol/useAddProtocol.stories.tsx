@@ -1,9 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-
-import useAddProtocol from './useAddProtocol';
-
-import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
-import MlVectorTileLayer, { MlVectorTileLayerProps } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import {
 	Cancelable,
 	FlyToOptions,
@@ -13,26 +8,28 @@ import {
 	StyleSpecification,
 	VectorSourceSpecification,
 } from 'maplibre-gl';
+import { Box, Button } from '@mui/material';
+
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../protocol_handlers/xml';
 import { csvOptions } from 'csv2geojson';
-
+import useAddProtocol from './useAddProtocol';
+import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
 import useMap from '../useMap';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Button } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import AddLayerButton from '../../ui_components/AddLayerButton/AddLayerButton';
-import LayerContext, { LayerConfig, VtLayerConfig } from '../../contexts/LayerContext';
+import LayerContext from '../../contexts/LayerContext';
 import LayerList from '../../ui_components/LayerList/LayerList';
 import LayerListItemFactory from '../../ui_components/LayerList/LayerListItemFactory';
-import DemoDescriptions, { demoDescriptionObject } from '../../ui_components/DemoDescriptions';
+import bright from '../../omt_styles/bright';
+import DemoDescriptions from '../../ui_components/DemoDescriptions';
 import protocolDescriptions from './utils/useAddProtocolTexts.json';
-
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import  bright  from '../../omt_styles/bright';
+import { MlVectorTileLayerProps } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
@@ -52,16 +49,22 @@ interface TemplateProps {
 	paint?: LayerSpecification['paint'];
 	flyTo?: FlyToOptions;
 	options?: csvOptions | osm2geojson.Options;
-	insertBeforeLayer?: string,
-	sourceOptions?: VectorSourceSpecification
-	layers?: LayerSpecification[]
+	insertBeforeLayer?: string;
+	sourceOptions?: VectorSourceSpecification;
+	layers?: LayerSpecification[];
 }
 
 const Template = (props: TemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
-	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
+
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const layerContext = useContext(LayerContext);
+
+	//  An optional encoded options object can be added after a '?' sign at the end of the url.
+	//  Handlers that support options are:
+	// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
+	// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
+	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
 
 	useAddProtocol({
 		protocol: props.protocol,
@@ -72,60 +75,44 @@ const Template = (props: TemplateProps) => {
 		layerContext.updateStyle(bright as StyleSpecification);
 
 		layerContext.setLayers([
-			 props.protocol === 'mbtiles' ? {
-			type: 'vt',
-			name: 'useAddProtocolLayer',
-			config: {
-					layerId: 'useAddProtocolLayer',
-					url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
-					layers: props.layers,
-					insertBeforeLayer: props.insertBeforeLayer,
-					sourceOptions: props.sourceOptions					
-				} as MlVectorTileLayerProps
-			 } 
-				:
-
-			{type: 'geojson',
-			name: 'useAddProtocolLayer',
-			config:	
-				{
-					layerId: 'useAddProtocolLayer',
-					type: props.type || 'line',
-					options: {
-						source: props.sourceId,
-					},
-					paint: props.paint,
-				} as MlGeoJsonLayerProps
-			}				
+			props.protocol === 'mbtiles'
+				? {
+						type: 'vt',
+						name: 'useAddProtocolLayer',
+						config: {
+							layerId: 'useAddProtocolLayer',
+							url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
+							layers: props.layers,
+							insertBeforeLayer: props.insertBeforeLayer,
+							sourceOptions: props.sourceOptions,
+						} as MlVectorTileLayerProps,
+				  }
+				: {
+						type: 'geojson',
+						name: 'useAddProtocolLayer',
+						config: {
+							layerId: 'useAddProtocolLayer',
+							type: props.type || 'line',
+							options: {
+								source: props.sourceId,
+							},
+							paint: props.paint,
+						} as MlGeoJsonLayerProps,
+				  },
 		]);
-
-
-		
 	}, []);
 
 	useEffect(() => {
 		if (!mapHook.map?.getSource(props.sourceId) && props.protocol !== 'mbtiles') {
 			mapHook.map?.addSource(props.sourceId, {
 				type: 'geojson',
-
-				//  The url is expected to have the following Format:
-				// 			[protocol]://[filePath -extension included-]
-				// 	Example:'csv://csv/restaurants.csv'
-
-				//  An optional encoded options object can be added after a '?' sign at the end of the url.
-				//  Handlers that support options are:
-
-				// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
-				// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
-
 				data: props.protocol + '://' + props.filePath + optionsURL,
 			});
 		}
 
-			if (props.flyTo) {
-				mapHook.map?.flyTo(props.flyTo as FlyToOptions);
-			}
-		
+		if (props.flyTo) {
+			mapHook.map?.flyTo(props.flyTo as FlyToOptions);
+		}
 	}, [mapHook.map]);
 
 	return (
@@ -147,53 +134,53 @@ const Template = (props: TemplateProps) => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<AddLayerButton
 					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
-					//layerTypes={[props.protocol]}
+					layerTypes={[props.protocol]}
 				/>
-				<LayerList>
-					
-					<LayerListItemFactory
-						layers={layerContext.layers}
-						setLayers={layerContext.setLayers}
-						insertBeforeLayer="useAddProtocolLayer"
-						fitBoundsOptions={{padding: {top: 50, bottom: 50, left: 25, right: 25}}}
-					/>
-				</LayerList>
+				<Box sx={{ height: '35%' }}>
+					<LayerList>
+						<LayerListItemFactory
+							layers={layerContext.layers}
+							setLayers={layerContext.setLayers}
+							insertBeforeLayer="useAddProtocolLayer"
+							fitBoundsOptions={{ padding: { top: 50, bottom: 50, left: 25, right: 25 } }}
+						/>
+					</LayerList>
+				</Box>
+
 				<DemoDescriptions
-				json={protocolDescriptions as unknown as demoDescriptionObject}
-				section={props.protocol}
-				title={"Description: "}
+					json={protocolDescriptions}
+					section={props.protocol}
+					title={'About this demo: '}
 				/>
 			</Sidebar>
 		</>
 	);
 };
 
-
-
 export const MbTiles = Template.bind({});
 MbTiles.parameters = {};
 MbTiles.args = {
-protocol: 'mbtiles',
-handler: mbTilesProtocolHandler,
-sourceID: 'fromMBTile-source',
-filePath: 'mbtiles/countries.mbtiles',
-type: 'fill',
-layers: [
-	{
-		id: 'countries',
-		type: 'fill',
-		'source-layer': 'countries',
-		layout: {},
-		paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
+	protocol: 'mbtiles',
+	handler: mbTilesProtocolHandler,
+	sourceID: 'fromMBTile-source',
+	filePath: 'mbtiles/countries.mbtiles',
+	type: 'fill',
+	layers: [
+		{
+			id: 'countries',
+			type: 'fill',
+			'source-layer': 'countries',
+			layout: {},
+			paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
+		},
+	],
+	insertBeforeLayer: 'waterway-name',
+	sourceOptions: {
+		type: 'vector',
+		minzoom: 0,
+		maxzoom: 1,
 	},
-] , 
-insertBeforeLayer: 'waterway-name',
-sourceOptions: {
-	type: 'vector',
-	minzoom: 0,
-	maxzoom: 1,
-},
-flyTo: { center: [10.147049, 50.871231], zoom: 2, speed: 2 }
+	flyTo: { center: [10.147049, 50.871231], zoom: 2, speed: 2 },
 };
 
 export const CSVOrTSV = Template.bind({});
