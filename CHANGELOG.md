@@ -1,4 +1,17 @@
 # Change Log
+## [v0.1.86] - 2023-09-13
+
+### Fixed
+- 6882b80: fix: LayerList deleteIcon layout
+- e5ab361: demo bugfixes
+
+### Changed
+- 7eb6dda: update xmldom ^0.6.0 to @xmldom/xmldom ^0.8.10 (#130) …
+
+### Added
+- 1a221e3: add compNorth, compSouth, compStroke compass styling options to theme
+- 75de07d: add useAddImage hook + story
+
 ## [v0.1.85] - 2023-07-14
 
 ### Fixed
