@@ -73,7 +73,5 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 
 MlCenterPosition.defaultProps = {
 	mapId: undefined,
-	onColor: '#ececec',
-	offColor: '#666',
 };
 export default MlCenterPosition;
