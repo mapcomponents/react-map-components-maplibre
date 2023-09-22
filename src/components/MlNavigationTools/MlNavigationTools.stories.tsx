@@ -10,6 +10,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 
+
 const storyoptions = {
 	title: 'MapComponents/MlNavigationTools',
 	component: MlNavigationTools,
@@ -22,7 +23,9 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = () => {
+const Template = (props: MlNavigationToolsProps ) => <MlNavigationTools {...props} />;
+
+const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [ThreeDButton, setThreeDButton] = useState(false);
 	const [CenterLocationButton, setCenterLocationButton] = useState(false);
@@ -116,6 +119,51 @@ const Template = () => {
 	);
 };
 
-export const Demo = Template.bind({});
-Demo.parameters = {};
-Demo.args = {};
+export const DefaultConfig = Template.bind({});
+DefaultConfig.parameters = {};
+DefaultConfig.args = {};
+
+export const No3dButton = Template.bind({});
+No3dButton.parameters = {};
+No3dButton.args = {
+	show3DButton: false,
+};
+
+export const ShowCenterLocationButton = Template.bind({});
+ShowCenterLocationButton.parameters = {};
+ShowCenterLocationButton.args = {
+	showFollowGpsButton: false,
+	showCenterLocationButton: true,
+};
+
+export const AlternativePosition = Template.bind({});
+AlternativePosition.parameters = {};
+AlternativePosition.args = {
+	sx: { top: '10px' },
+};
+
+export const NoZoomButtons = Template.bind({});
+NoZoomButtons.parameters = {};
+NoZoomButtons.args = {
+	showZoomButtons: false,
+};
+
+export const NoFollowGpsButton = Template.bind({});
+NoFollowGpsButton.parameters = {};
+NoFollowGpsButton.args = {
+	showFollowGpsButton: false,
+};
+
+export const CustomButton = Template.bind({});
+CustomButton.parameters = {};
+CustomButton.args = {
+	children: (
+		<Button variant="navtools" onClick={() => {}}>
+			<BuildIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+		</Button>
+	),
+};
+
+export const catalogueDemo =  catalogueTemplate.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {};
