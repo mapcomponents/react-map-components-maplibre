@@ -18,7 +18,39 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args: useFeatureEditorProps) => {
+const Template = () => {
+	const [visible, setVisible] = useState(true);
+
+	useEffect(() => {
+		if (visible === false) {
+			setTimeout(() => {
+				setVisible(true);
+			}, 750);
+		}
+	}, [visible]);
+
+	return (
+		<>
+			<TopToolbar
+				unmovableButtons={
+					<>
+						<Button
+							variant={visible ? 'contained' : 'outlined'}
+							onClick={() => {
+								setVisible(false);
+							}}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Restart
+						</Button>
+					</>
+				}
+			/>
+		</>
+	);
+};
+
+const catalogueTemplate = (args: useFeatureEditorProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [visible, setVisible] = useState(true);
 	const [editPolygonButton, setEditPolygonButton] = useState(true);
@@ -126,7 +158,7 @@ const Template = (args: useFeatureEditorProps) => {
 	);
 };
 
-const EditPolygon = Template.bind({});
+export const EditPolygon = Template.bind({});
 EditPolygon.args = {
 	mode: 'simple_select',
 	geojson: {
@@ -147,7 +179,7 @@ EditPolygon.args = {
 	},
 };
 
-const EditPoint = Template.bind({});
+export const EditPoint = Template.bind({});
 EditPoint.args = {
 	mode: 'simple_select',
 	geojson: {
@@ -159,7 +191,7 @@ EditPoint.args = {
 		},
 	},
 };
-const EditLinestring = Template.bind({});
+export const EditLinestring = Template.bind({});
 EditLinestring.args = {
 	mode: 'simple_select',
 	geojson: {
@@ -177,25 +209,24 @@ EditLinestring.args = {
 	},
 };
 
-const DrawPolygon = Template.bind({});
+export const DrawPolygon = Template.bind({});
 DrawPolygon.args = {
 	mode: 'draw_polygon',
 };
 
-const DrawPoint = Template.bind({});
+export const DrawPoint = Template.bind({});
 DrawPoint.args = {
 	mode: 'draw_point',
 };
 
-const DrawLinestring = Template.bind({});
+export const DrawLinestring = Template.bind({});
 DrawLinestring.args = {
 	mode: 'draw_line_string',
 };
 
-
-export const Demo = Template.bind({});
-Demo.parameters = {};
-Demo.args = {};
+export const catalogueDemo = catalogueTemplate.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {};
 
 
 
