@@ -4,6 +4,11 @@ import MlFeatureEditor from './MlFeatureEditor';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { useFeatureEditorProps } from 'src/hooks/useFeatureEditor/useFeatureEditor';
+import Switch from '@mui/material/Switch';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Sidebar from '../../ui_components/Sidebar';
+import { types } from '@storybook/addons';
 
 const storyoptions = {
 	title: 'MapComponents/MlFeatureEditor',
@@ -13,12 +18,41 @@ const storyoptions = {
 };
 export default storyoptions;
 
-
-
 const Template = (args: useFeatureEditorProps) => {
-
-
+	const [openSidebar, setOpenSidebar] = useState(true);
 	const [visible, setVisible] = useState(true);
+	const [editPolygonButton, setEditPolygonButton] = useState(true);
+	const [editPointButton, setEditPointButton] = useState(false);
+	const [editLineStringButton, setEditLineStringButton] = useState(false);
+	const [drawPolygonButton, setDrawPolygonButton] = useState(false);
+	const [drawPointButton, setDrawPointButton] = useState(false);
+	const [drawLineStringButton, setDrawLineStringButton] = useState(false);
+	const [setter, setSetter] = useState<number>(0);
+
+	const handleChange1 = () => {
+		setEditPolygonButton(!editPolygonButton);
+		setSetter[0];
+	};
+	const handleChange2 = () => {
+		setEditPointButton(!editPointButton);
+		setSetter[1];
+	};
+	const handleChange3 = () => {
+		setEditLineStringButton(!editLineStringButton);
+		setSetter[2];
+	};
+	const handleChange4 = () => {
+		setDrawPolygonButton(!drawPolygonButton);
+		setSetter[3];
+	};
+	const handleChange5 = () => {
+		setDrawPointButton(!drawPointButton);
+		setSetter[4];
+	};
+	const handleChange6 = () => {
+		setDrawLineStringButton(!drawLineStringButton);
+		setSetter[5];
+	};
 
 	useEffect(() => {
 		if (visible === false) {
@@ -32,17 +66,54 @@ const Template = (args: useFeatureEditorProps) => {
 		<>
 			<TopToolbar
 				unmovableButtons={
-					<Button
-						variant={ visible ? 'contained' : 'outlined'}
-						onClick={() => {
-							setVisible(false);
-						}}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Restart
-					</Button>
+					<>
+						<Button
+							variant={visible ? 'contained' : 'outlined'}
+							onClick={() => {
+								setVisible(false);
+							}}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Restart
+						</Button>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Options
+						</Button>
+					</>
 				}
 			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Feature Editor'}>
+				<FormGroup>
+					<FormControlLabel
+						control={<Switch checked={editPolygonButton} onChange={handleChange1} />}
+						label="Edit Polygon"
+					/>
+					<FormControlLabel
+						control={<Switch checked={editPointButton} onChange={handleChange2} />}
+						label="Edit Point"
+					/>
+					<FormControlLabel
+						control={<Switch checked={editLineStringButton} onChange={handleChange3} />}
+						label="Edit Linestring"
+					/>
+					<FormControlLabel
+						control={<Switch checked={drawPolygonButton} onChange={handleChange4} />}
+						label="Draw Polygon"
+					/>
+					<FormControlLabel
+						control={<Switch checked={drawPointButton} onChange={handleChange5} />}
+						label="Draw Point"
+					/>
+					<FormControlLabel
+						control={<Switch checked={drawLineStringButton} onChange={handleChange6} />}
+						label="Draw Linestring"
+					/>
+				</FormGroup>
+			</Sidebar>
 			{visible && (
 				<MlFeatureEditor
 					{...args}
@@ -55,7 +126,7 @@ const Template = (args: useFeatureEditorProps) => {
 	);
 };
 
-export const EditPolygon = Template.bind({});
+const EditPolygon = Template.bind({});
 EditPolygon.args = {
 	mode: 'simple_select',
 	geojson: {
@@ -76,7 +147,7 @@ EditPolygon.args = {
 	},
 };
 
-export const EditPoint = Template.bind({});
+const EditPoint = Template.bind({});
 EditPoint.args = {
 	mode: 'simple_select',
 	geojson: {
@@ -88,8 +159,7 @@ EditPoint.args = {
 		},
 	},
 };
-
-export const EditLinestring = Template.bind({});
+const EditLinestring = Template.bind({});
 EditLinestring.args = {
 	mode: 'simple_select',
 	geojson: {
@@ -107,17 +177,37 @@ EditLinestring.args = {
 	},
 };
 
-export const DrawPolygon = Template.bind({});
+const DrawPolygon = Template.bind({});
 DrawPolygon.args = {
 	mode: 'draw_polygon',
 };
 
-export const DrawPoint = Template.bind({});
+const DrawPoint = Template.bind({});
 DrawPoint.args = {
 	mode: 'draw_point',
 };
 
-export const DrawLinestring = Template.bind({});
+const DrawLinestring = Template.bind({});
 DrawLinestring.args = {
 	mode: 'draw_line_string',
 };
+
+
+export const Demo = Template.bind({});
+Demo.parameters = {};
+Demo.args = {};
+
+
+
+/*
+	const DemoArgOptions = () => {
+		const Options = [EditPolygon,
+			EditPoint,
+			EditLinestring,
+			DrawPolygon,
+			DrawPoint,
+			DrawLinestring,
+		];
+		return Options[setter]
+		}
+	*/
