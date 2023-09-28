@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import MlNavigationTools from './MlNavigationTools';
+import MlNavigationTools, { MlNavigationToolsProps } from './MlNavigationTools';
 import noNavToolsDecorator from '../../decorators/NoNavToolsDecorator';
 import BuildIcon from '@mui/icons-material/Build';
 import Button from '@mui/material/Button';

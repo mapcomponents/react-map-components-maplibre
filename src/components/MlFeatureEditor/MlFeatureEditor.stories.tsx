@@ -8,7 +8,6 @@ import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Sidebar from '../../ui_components/Sidebar';
-import { types } from '@storybook/addons';
 
 const storyoptions = {
 	title: 'MapComponents/MlFeatureEditor',
@@ -18,7 +17,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = () => {
+const Template = (args: useFeatureEditorProps) => {
 	const [visible, setVisible] = useState(true);
 
 	useEffect(() => {
@@ -33,57 +32,41 @@ const Template = () => {
 		<>
 			<TopToolbar
 				unmovableButtons={
-					<>
-						<Button
-							variant={visible ? 'contained' : 'outlined'}
-							onClick={() => {
-								setVisible(false);
-							}}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
-							Restart
-						</Button>
-					</>
+					<Button
+						variant={visible ? 'contained' : 'outlined'}
+						onClick={() => {
+							setVisible(false);
+						}}
+						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+					>
+						Restart
+					</Button>
 				}
 			/>
+			{visible && (
+				<MlFeatureEditor
+					{...args}
+					onChange={(features) => {
+						console.log(features);
+					}}
+				/>
+			)}
+			;
 		</>
 	);
 };
 
-const catalogueTemplate = (args: useFeatureEditorProps) => {
+const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [visible, setVisible] = useState(true);
-	const [editPolygonButton, setEditPolygonButton] = useState(true);
-	const [editPointButton, setEditPointButton] = useState(false);
-	const [editLineStringButton, setEditLineStringButton] = useState(false);
-	const [drawPolygonButton, setDrawPolygonButton] = useState(false);
-	const [drawPointButton, setDrawPointButton] = useState(false);
-	const [drawLineStringButton, setDrawLineStringButton] = useState(false);
-	const [setter, setSetter] = useState<number>(0);
+	const [selectedMode, setSelectedMode] = useState(null);
 
-	const handleChange1 = () => {
-		setEditPolygonButton(!editPolygonButton);
-		setSetter[0];
-	};
-	const handleChange2 = () => {
-		setEditPointButton(!editPointButton);
-		setSetter[1];
-	};
-	const handleChange3 = () => {
-		setEditLineStringButton(!editLineStringButton);
-		setSetter[2];
-	};
-	const handleChange4 = () => {
-		setDrawPolygonButton(!drawPolygonButton);
-		setSetter[3];
-	};
-	const handleChange5 = () => {
-		setDrawPointButton(!drawPointButton);
-		setSetter[4];
-	};
-	const handleChange6 = () => {
-		setDrawLineStringButton(!drawLineStringButton);
-		setSetter[5];
+	const handleLayerSelect = (mode) => {
+		if (mode === selectedMode) {
+			setSelectedMode(null);
+		} else {
+			setSelectedMode(mode);
+		}
 	};
 
 	useEffect(() => {
@@ -121,39 +104,73 @@ const catalogueTemplate = (args: useFeatureEditorProps) => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Feature Editor'}>
 				<FormGroup>
 					<FormControlLabel
-						control={<Switch checked={editPolygonButton} onChange={handleChange1} />}
+						control={
+							<Switch
+								checked={selectedMode === 'EditPolygon'}
+								onChange={() => handleLayerSelect('EditPolygon')}
+							/>
+						}
 						label="Edit Polygon"
 					/>
 					<FormControlLabel
-						control={<Switch checked={editPointButton} onChange={handleChange2} />}
+						control={
+							<Switch
+								checked={selectedMode === 'EditPoint'}
+								onChange={() => handleLayerSelect('EditPoint')}
+							/>
+						}
 						label="Edit Point"
 					/>
 					<FormControlLabel
-						control={<Switch checked={editLineStringButton} onChange={handleChange3} />}
+						control={
+							<Switch
+								checked={selectedMode === 'EditLinestring'}
+								onChange={() => handleLayerSelect('EditLinestring')}
+							/>
+						}
 						label="Edit Linestring"
 					/>
 					<FormControlLabel
-						control={<Switch checked={drawPolygonButton} onChange={handleChange4} />}
+						control={
+							<Switch
+								checked={selectedMode === 'DrawPolygon'}
+								onChange={() => handleLayerSelect('DrawPolygon')}
+							/>
+						}
 						label="Draw Polygon"
 					/>
 					<FormControlLabel
-						control={<Switch checked={drawPointButton} onChange={handleChange5} />}
+						control={
+							<Switch
+								checked={selectedMode === 'DrawPoint'}
+								onChange={() => handleLayerSelect('DrawPoint')}
+							/>
+						}
 						label="Draw Point"
 					/>
 					<FormControlLabel
-						control={<Switch checked={drawLineStringButton} onChange={handleChange6} />}
+						control={
+							<Switch
+								checked={selectedMode === 'DrawLinestring'}
+								onChange={() => handleLayerSelect('DrawLinestring')}
+							/>
+						}
 						label="Draw Linestring"
 					/>
 				</FormGroup>
 			</Sidebar>
-			{visible && (
-				<MlFeatureEditor
-					{...args}
-					onChange={(features) => {
-						console.log(features);
-					}}
-				/>
+			{selectedMode === 'EditPolygon' && (
+				<Template mode={EditPolygon.args.mode} geojson={EditPolygon.args.geojson} />
 			)}
+			{selectedMode === 'EditPoint' && (
+				<Template mode={EditPoint.args.mode} geojson={EditPoint.args.geojson} />
+			)}
+			{selectedMode === 'EditLinestring' && (
+				<Template mode={EditLinestring.args.mode} geojson={EditLinestring.args.geojson} />
+			)}
+			{selectedMode === 'DrawPolygon' && <Template mode={DrawPolygon.args.mode} />}
+			{selectedMode === 'DrawPoint' && <Template mode={DrawPoint.args.mode} />}
+			{selectedMode === 'DrawLinestring' && <Template mode={DrawLinestring.args.mode} />}
 		</>
 	);
 };
@@ -227,18 +244,3 @@ DrawLinestring.args = {
 export const catalogueDemo = catalogueTemplate.bind({});
 catalogueDemo.parameters = {};
 catalogueDemo.args = {};
-
-
-
-/*
-	const DemoArgOptions = () => {
-		const Options = [EditPolygon,
-			EditPoint,
-			EditLinestring,
-			DrawPolygon,
-			DrawPoint,
-			DrawLinestring,
-		];
-		return Options[setter]
-		}
-	*/
