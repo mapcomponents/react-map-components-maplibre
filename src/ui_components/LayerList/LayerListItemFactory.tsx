@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { IconButton, styled } from '@mui/material';
+import React, {useMemo} from 'react';
+import {IconButton, styled} from '@mui/material';
 import {
 	ArrowCircleDown as ArrowCircleDownIcon,
 	ArrowCircleUp as ArrowCircleUpIcon,
@@ -8,13 +8,22 @@ import LayerListItem from './LayerListItem';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
-import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import { MlWmsLoaderProps } from '../../components/MlWmsLoader/MlWmsLoader';
+import {MlGeoJsonLayerProps} from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import {MlWmsLoaderProps} from '../../components/MlWmsLoader/MlWmsLoader';
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import useLayerContext from '../../hooks/useLayerContext';
-import { LayerConfig } from '../../contexts/LayerContext';
+import {LayerConfig} from '../../contexts/LayerContext';
+import {
+	closestCenter,
+	DndContext,
+	useSensor,
+	PointerSensor,
+	MouseSensor,
+	useSensors
+} from '@dnd-kit/core';
+import {SortableContext, useSortable, verticalListSortingStrategy} from '@dnd-kit/sortable';
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -55,10 +64,12 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		if (props.setLayers) return props.setLayers;
 		return layerContext.setLayers;
 	}, [props.setLayers, layerContext.setLayers]);
+	const sensors = useSensors(useSensor(PointerSensor), useSensor(MouseSensor))
+//	const {setNodeRef, attributes} = useSortable({id: layers})
 
 	return (
 		<>
-			<MlOrderLayers layerIds={orderLayers} insertBeforeLayer="_background" />
+			<MlOrderLayers layerIds={orderLayers} insertBeforeLayer="_background"/>
 			{layerContext?.symbolLayers?.length > 0 && (
 				<LayerListItem
 					key={'background_labels'}
@@ -79,141 +90,148 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					name="Labels"
 				/>
 			)}
-			{[...layers].map((layer: LayerConfig, idx: number) => {
-				if (!layer?.id) return null;
 
-				switch (layer.type) {
-					case 'geojson':
-						return (
-							<>
-								<LayerListItem
-									key={layer.id}
-									name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
-									layerComponent={
-										<MlGeoJsonLayer
-											{...layer.config}
-											mapId={props?.mapId}
-											layerId={layer.id}
-											insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
+			<DndContext collisionDetection={closestCenter}
+									sensors={sensors}
+									onDragEnd={(event) => console.log(event)}>
+				<SortableContext items={layers} strategy={verticalListSortingStrategy}>
+					{[...layers].map((layer: LayerConfig, idx: number) => {
+						if (!layer?.id) return null;
+
+						switch (layer.type) {
+							case 'geojson':
+								return (
+									<>
+										<LayerListItem
+											key={layer.id}
+											name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
+											layerComponent={
+												<MlGeoJsonLayer
+													{...layer.config}
+													mapId={props?.mapId}
+													layerId={layer.id}
+													insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
+												/>
+											}
+											buttons={
+												<>
+													<IconButtonStyled
+														disabled={idx === layers.length - 1}
+														onClick={() => {
+															layerContext.moveDown(layer.id || '');
+														}}
+													>
+														<ArrowCircleDownIcon/>
+													</IconButtonStyled>
+													<IconButtonStyled
+														disabled={idx === 0}
+														onClick={() => {
+															layerContext.moveUp(layer.id || '');
+														}}
+													>
+														<ArrowCircleUpIcon/>
+													</IconButtonStyled>
+												</>
+											}
+											setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
+												setLayers?.((current: LayerConfig[]) => {
+													const _layers = [...current];
+													if (layerConfig === false) {
+														_layers.splice(idx, 1);
+													} else {
+														_layers[idx].config = layerConfig;
+													}
+
+													return _layers;
+												})
+											}
+											configurable={true}
+											showDeleteButton={true}
 										/>
-									}
-									buttons={
-										<>
-											<IconButtonStyled
-												disabled={idx === layers.length - 1}
-												onClick={() => {
-													layerContext.moveDown(layer.id || '');
-												}}
-											>
-												<ArrowCircleDownIcon />
-											</IconButtonStyled>
-											<IconButtonStyled
-												disabled={idx === 0}
-												onClick={() => {
-													layerContext.moveUp(layer.id || '');
-												}}
-											>
-												<ArrowCircleUpIcon />
-											</IconButtonStyled>
-										</>
-									}
-									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
-										setLayers?.((current: LayerConfig[]) => {
-											const _layers = [...current];
-											if (layerConfig === false) {
-												_layers.splice(idx, 1);
-											} else {
-												_layers[idx].config = layerConfig;
+									</>
+								);
+							case 'wms':
+								return (
+									<>
+										<MlWmsLoader
+											{...layer.config}
+											key={layer.id}
+											mapId={props?.mapId}
+											insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
+											onConfigChange={(layerConfig) => {
+												setLayers?.((current: LayerConfig[]) => {
+													const _layers = [...current];
+													if (layerConfig === false) {
+														_layers.splice(idx, 1);
+													} else {
+														(_layers[idx].config as MlWmsLoaderProps).config = layerConfig;
+													}
+													return _layers;
+												});
+											}}
+											featureInfoActive={layer?.config?.featureInfoActive || false}
+											setFeatureInfoActive={(updateFunction) => {
+												setLayers?.((current: LayerConfig[]) => {
+													const _layers = [...current];
+													if (typeof updateFunction === 'function') {
+														(_layers[idx].config as MlWmsLoaderProps).featureInfoActive =
+															updateFunction(
+																(_layers[idx].config as MlWmsLoaderProps)?.featureInfoActive || false
+															);
+													}
+													return _layers;
+												});
+											}}
+											showDeleteButton={true}
+											buttons={
+												<>
+													<IconButtonStyled
+														disabled={idx === layers.length - 1}
+														onClick={() => {
+															layerContext.moveDown(layer.id || '');
+														}}
+													>
+														<ArrowCircleDownIcon/>
+													</IconButtonStyled>
+													<IconButtonStyled
+														disabled={idx === 0}
+														onClick={() => {
+															layerContext.moveUp(layer.id || '');
+														}}
+													>
+														<ArrowCircleUpIcon/>
+													</IconButtonStyled>
+												</>
 											}
-
-											return _layers;
-										})
-									}
-									configurable={true}
-									showDeleteButton={true}
-								/>
-							</>
-						);
-					case 'wms':
-						return (
-							<>
-								<MlWmsLoader
-									{...layer.config}
-									key={layer.id}
-									mapId={props?.mapId}
-									insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
-									onConfigChange={(layerConfig) => {
-										setLayers?.((current: LayerConfig[]) => {
-											const _layers = [...current];
-											if (layerConfig === false) {
-												_layers.splice(idx, 1);
-											} else {
-												(_layers[idx].config as MlWmsLoaderProps).config = layerConfig;
-											}
-											return _layers;
-										});
-									}}
-									featureInfoActive={layer?.config?.featureInfoActive || false}
-									setFeatureInfoActive={(updateFunction) => {
-										setLayers?.((current: LayerConfig[]) => {
-											const _layers = [...current];
-											if (typeof updateFunction === 'function') {
-												(_layers[idx].config as MlWmsLoaderProps).featureInfoActive =
-													updateFunction(
-														(_layers[idx].config as MlWmsLoaderProps)?.featureInfoActive || false
-													);
-											}
-											return _layers;
-										});
-									}}
-									showDeleteButton={true}
-									buttons={
-										<>
-											<IconButtonStyled
-												disabled={idx === layers.length - 1}
-												onClick={() => {
-													layerContext.moveDown(layer.id || '');
-												}}
-											>
-												<ArrowCircleDownIcon />
-											</IconButtonStyled>
-											<IconButtonStyled
-												disabled={idx === 0}
-												onClick={() => {
-													layerContext.moveUp(layer.id || '');
-												}}
-											>
-												<ArrowCircleUpIcon />
-											</IconButtonStyled>
-										</>
-									}
-								/>
-							</>
-						);
-					default:
-						return null;
-				}
-			})}
-			{layerContext?.backgroundLayers?.length > 0 && (
-				<LayerListItem
-					key={'background_geometry'}
-					layerComponent={
-						<MlVectorTileLayer
-							{...layerContext.vtLayerConfig}
-							layers={layerContext.backgroundLayers}
-							mapId={props?.mapId}
-							insertBeforeLayer={'order-background'}
-						/>
-					}
-					setLayerState={(state: MlVectorTileLayerProps) => {
-						layerContext.setBackgroundLayers(state?.layers);
-					}}
-					visible={true}
-					configurable={true}
-					type="layer"
-					name="Background"
-				/>
-			)}
+										/>
+									</>
+								);
+							default:
+								return null;
+						}
+					})}
+				</SortableContext>
+				{layerContext?.backgroundLayers?.length > 0 && (
+					<LayerListItem
+						key={'background_geometry'}
+						layerComponent={
+							<MlVectorTileLayer
+								{...layerContext.vtLayerConfig}
+								layers={layerContext.backgroundLayers}
+								mapId={props?.mapId}
+								insertBeforeLayer={'order-background'}
+							/>
+						}
+						setLayerState={(state: MlVectorTileLayerProps) => {
+							layerContext.setBackgroundLayers(state?.layers);
+						}}
+						visible={true}
+						configurable={true}
+						type="layer"
+						name="Background"
+					/>
+				)}
+			</DndContext>
 		</>
 	);
 }
