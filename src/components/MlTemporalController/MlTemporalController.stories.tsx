@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
 import temporalControllerDecorator from '../../decorators/LowZoomDecorator';
-import { Typography } from '@mui/material';
+import { Typography, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jackobsweg.json';
+import Sidebar from '../../ui_components/Sidebar';
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
@@ -38,6 +39,105 @@ const Template = (props: MlTemporalControllerProps) => {
 			/>
 
 			<MlTemporalController {...props} />
+		</>
+	);
+};
+
+const catalogueTemplate = (props: MlTemporalControllerProps) => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const type = props.type || 'circle';
+	const [selectedConfig, setSelectedConfig] = useState(null);
+
+	const handleConfigSelect = (config) => {
+		if (config === selectedConfig) {
+			setSelectedConfig(null);
+		} else {
+			setSelectedConfig(config);
+		}
+	};
+
+	return (
+		<>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Configuration Examples'}>
+				<FormGroup>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={selectedConfig === 'Fill'}
+								onChange={() => handleConfigSelect('Fill')}
+							/>
+						}
+						label="Fill Configuration"
+					/>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={selectedConfig === 'Circle'}
+								onChange={() => handleConfigSelect('Circle')}
+							/>
+						}
+						label="Circle Configuration"
+					/>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={selectedConfig === 'Line'}
+								onChange={() => handleConfigSelect('Line')}
+							/>
+						}
+						label="Line Configuration"
+					/>
+				</FormGroup>
+			</Sidebar>
+			{selectedConfig === 'Fill' && (
+				<Template
+					geojson={FillConfig.args.geojson}
+					path={FillConfig.args.path}
+					timeField={FillConfig.args.timeField}
+					type={FillConfig.args.type}
+					labelField={FillConfig.args.labelField}
+					interval={FillConfig.args.interval}
+					accumulate={FillConfig.args.accumulate}
+					initialVal={FillConfig.args.initialVal}
+					fitBounds={FillConfig.args.fitBounds}
+					displayCurrentValue={FillConfig.args.displayCurrentValue}
+					attribution={FillConfig.args.attribution}
+				/>
+			)}
+			{selectedConfig === 'Circle' && (
+				<Template
+					geojson={CircleConfig.args.geojson}
+					type={CircleConfig.args.type}
+					timeField={CircleConfig.args.timeField}
+					labelField={CircleConfig.args.labelField}
+					accumulate={CircleConfig.args.accumulate}
+					step={CircleConfig.args.step}
+					minVal={CircleConfig.args.minVal}
+					fitBounds={CircleConfig.args.fitBounds}
+					onClick={CircleConfig.args.onClick}
+					displayCurrentValue={CircleConfig.args.displayCurrentValue}
+					attribution={CircleConfig.args.attribution}
+				/>
+			)}
+			{selectedConfig === 'Line' && (
+				<Template
+					geojson={LineConfig.args.geojson}
+					interval={LineConfig.args.interval}
+					step={LineConfig.args.step}
+					timeField={LineConfig.args.timeField}
+					fadeIn={LineConfig.args.fadeIn}
+					fadeOut={LineConfig.args.fadeOut}
+					labelFadeIn={LineConfig.args.labelFadeIn}
+					labelFadeOut={LineConfig.args.labelFadeOut}
+					type={LineConfig.args.type}
+					labelField={LineConfig.args.labelField}
+					featuresColor={LineConfig.args.featuresColor}
+					accumulate={LineConfig.args.accumulate}
+					fitBounds={LineConfig.args.fitBounds}
+					displayCurrentValue={LineConfig.args.displayCurrentValue}
+					attribution={LineConfig.args.attribution}
+				/>
+			)}
 		</>
 	);
 };
@@ -94,3 +194,7 @@ LineConfig.args = {
 	displayCurrentValue: true,
 	attribution: 'Source: deutsche-jakobswege.de ',
 };
+
+export const catalogueDemo = catalogueTemplate.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {};
