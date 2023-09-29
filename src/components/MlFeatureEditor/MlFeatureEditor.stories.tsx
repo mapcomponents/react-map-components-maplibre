@@ -79,28 +79,6 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
-			<TopToolbar
-				unmovableButtons={
-					<>
-						<Button
-							variant={visible ? 'contained' : 'outlined'}
-							onClick={() => {
-								setVisible(false);
-							}}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
-							Restart
-						</Button>
-						<Button
-							variant={openSidebar ? 'contained' : 'outlined'}
-							onClick={() => setOpenSidebar(!openSidebar)}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
-							Options
-						</Button>
-					</>
-				}
-			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Feature Editor'}>
 				<FormGroup>
 					<FormControlLabel

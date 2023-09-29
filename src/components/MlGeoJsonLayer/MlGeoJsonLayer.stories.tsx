@@ -175,19 +175,6 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
-			<TopToolbar
-				buttons={
-					<>
-						<Button
-							variant={openSidebar ? 'contained' : 'outlined'}
-							onClick={() => setOpenSidebar(!openSidebar)}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
-							Options
-						</Button>
-					</>
-				}
-			/>
 			<Sidebar
 				open={openSidebar}
 				setOpen={setOpenSidebar}
