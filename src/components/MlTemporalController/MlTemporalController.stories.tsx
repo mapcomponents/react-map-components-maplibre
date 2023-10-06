@@ -43,9 +43,9 @@ const Template = (props: MlTemporalControllerProps) => {
 	);
 };
 
-const catalogueTemplate = (props: MlTemporalControllerProps) => {
+const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const type = props.type || 'circle';
+
 	const [selectedConfig, setSelectedConfig] = useState(null);
 
 	const handleConfigSelect = (config) => {

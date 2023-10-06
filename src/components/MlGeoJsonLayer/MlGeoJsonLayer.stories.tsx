@@ -13,13 +13,9 @@ import wgLocations from './assets/wg_locations.json';
 import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
-import { Typography, Button, Switch, FormGroup, FormControlLabel } from '@mui/material';
+import { Typography, Switch, FormGroup, FormControlLabel } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import wgMarker from './assets/wgMarker.png';
-
-// To-Do:
-// adjust topbar placement for catalogueTemplate
-// FlyTo-Function for ShowPolygon&DefaultPaintOverrides legit ?
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
