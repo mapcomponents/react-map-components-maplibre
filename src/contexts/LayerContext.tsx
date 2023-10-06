@@ -52,6 +52,7 @@ export interface LayerContextType {
 	tileUrl: string;
 	moveUp: (layerId: string) => void;
 	moveDown: (layerId: string) => void;
+	moveLayer: (layerId: string,  getNewPos: (oldPos: number) => number) => void;
 }
 
 const LayerContext = React.createContext({} as LayerContextType);
@@ -147,6 +148,7 @@ function LayerContextProvider(props: LayerContextProps) {
 		setTileUrl,
 		moveUp,
 		moveDown,
+		moveLayer,
 	} as LayerContextType;
 
 	return <LayerContext.Provider value={value}>{props.children}</LayerContext.Provider>;
