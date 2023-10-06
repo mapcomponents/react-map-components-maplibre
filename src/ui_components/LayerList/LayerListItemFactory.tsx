@@ -21,9 +21,13 @@ import {
 	useSensor,
 	PointerSensor,
 	MouseSensor,
-	useSensors
+	useSensors, UniqueIdentifier, DragEndEvent
 } from '@dnd-kit/core';
-import {SortableContext, useSortable, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import SortableContainer from './util/SortableContainer';
+import {
+  restrictToVerticalAxis,
+} from '@dnd-kit/modifiers'
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -64,8 +68,23 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		if (props.setLayers) return props.setLayers;
 		return layerContext.setLayers;
 	}, [props.setLayers, layerContext.setLayers]);
-	const sensors = useSensors(useSensor(PointerSensor), useSensor(MouseSensor))
-//	const {setNodeRef, attributes} = useSortable({id: layers})
+	const pointerSensor = useSensor(PointerSensor, {
+		activationConstraint: {
+			distance: 10,
+		},
+	})
+	const mouseSensor = useSensor(MouseSensor, {
+		activationConstraint: {
+			distance: 10,
+		},
+	})
+	const sensors = useSensors(mouseSensor, pointerSensor)
+
+	function dragEnd(event: DragEndEvent) {
+		const dragLayerId = event.active.id
+		const dragLayerNewPosition = event.over?.data?.current?.sortable.index
+		layerContext.moveLayer(String(dragLayerId), () => dragLayerNewPosition)
+	}
 
 	return (
 		<>
@@ -93,15 +112,17 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 			<DndContext collisionDetection={closestCenter}
 									sensors={sensors}
-									onDragEnd={(event) => console.log(event)}>
-				<SortableContext items={layers} strategy={verticalListSortingStrategy}>
+									onDragEnd={(event) => dragEnd(event)} modifiers={[restrictToVerticalAxis]}>
+				<SortableContext
+					items={layers as { id: UniqueIdentifier; }[]}
+					strategy={verticalListSortingStrategy}>
 					{[...layers].map((layer: LayerConfig, idx: number) => {
 						if (!layer?.id) return null;
 
 						switch (layer.type) {
 							case 'geojson':
 								return (
-									<>
+									<SortableContainer layerId={layer.id}>
 										<LayerListItem
 											key={layer.id}
 											name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
@@ -148,7 +169,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											configurable={true}
 											showDeleteButton={true}
 										/>
-									</>
+									</SortableContainer>
 								);
 							case 'wms':
 								return (
