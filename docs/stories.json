@@ -215,11 +215,11 @@
       "id": "mapcomponents-mlgeojsonlayer--circle",
       "name": "Circle",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 93495,
+      "importPath": 70232,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Circle",
       "parameters": {
-        "fileName": 93495,
+        "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--circle",
         "__isArgsStory": true
@@ -229,11 +229,11 @@
       "id": "mapcomponents-mlgeojsonlayer--linestring",
       "name": "Linestring",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 93495,
+      "importPath": 70232,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Linestring",
       "parameters": {
-        "fileName": 93495,
+        "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--linestring",
         "__isArgsStory": true
@@ -243,11 +243,11 @@
       "id": "mapcomponents-mlgeojsonlayer--polygon",
       "name": "Polygon",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 93495,
+      "importPath": 70232,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Polygon",
       "parameters": {
-        "fileName": 93495,
+        "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--polygon",
         "__isArgsStory": true
@@ -257,11 +257,11 @@
       "id": "mapcomponents-mlgeojsonlayer--heat-map",
       "name": "Heat Map",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 93495,
+      "importPath": 70232,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Heat Map",
       "parameters": {
-        "fileName": 93495,
+        "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--heat-map",
         "__isArgsStory": true
@@ -271,11 +271,11 @@
       "id": "mapcomponents-mlgeojsonlayer--symbol",
       "name": "Symbol",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 93495,
+      "importPath": 70232,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Symbol",
       "parameters": {
-        "fileName": 93495,
+        "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--symbol",
         "__isArgsStory": true
@@ -285,11 +285,11 @@
       "id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
       "name": "Default Paint Overrides",
       "title": "MapComponents/MlGeoJsonLayer",
-      "importPath": 93495,
+      "importPath": 70232,
       "kind": "MapComponents/MlGeoJsonLayer",
       "story": "Default Paint Overrides",
       "parameters": {
-        "fileName": 93495,
+        "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
         "__isArgsStory": true
@@ -797,6 +797,20 @@
         "framework": "react",
         "__id": "mapcomponents-mlwmsloader--example-fixed-config",
         "__isArgsStory": false
+      }
+    },
+    "hooks-useaddimage--example-config": {
+      "id": "hooks-useaddimage--example-config",
+      "name": "Example Config",
+      "title": "hooks/useAddImage",
+      "importPath": 29975,
+      "kind": "hooks/useAddImage",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 29975,
+        "framework": "react",
+        "__id": "hooks-useaddimage--example-config",
+        "__isArgsStory": true
       }
     },
     "hooks-useaddprotocol--example-config": {
