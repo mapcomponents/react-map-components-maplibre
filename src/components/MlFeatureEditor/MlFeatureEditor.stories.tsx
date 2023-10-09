@@ -59,11 +59,11 @@ const Template = (args: useFeatureEditorProps) => {
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [visible, setVisible] = useState(true);
-	const [selectedMode, setSelectedMode] = useState(null);
+	const [selectedMode, setSelectedMode] = useState<string | undefined>();
 
-	const handleLayerSelect = (mode: any) => {
+	const handleLayerSelect = (mode: string) => {
 		if (mode === selectedMode) {
-			setSelectedMode(null);
+			setSelectedMode(undefined);
 		} else {
 			setSelectedMode(mode);
 		}

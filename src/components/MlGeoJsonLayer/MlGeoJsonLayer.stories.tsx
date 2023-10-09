@@ -159,11 +159,11 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [selectedLayer, setSelectedLayer] = useState(null);
+	const [selectedLayer, setSelectedLayer] = useState<string | undefined>();
 
-	const handleLayerSelect = (layer: any) => {
+	const handleLayerSelect = (layer: string) => {
 		if (layer === selectedLayer) {
-			setSelectedLayer(null);
+			setSelectedLayer(undefined);
 		} else {
 			setSelectedLayer(layer);
 		}

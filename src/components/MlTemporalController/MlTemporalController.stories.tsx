@@ -46,11 +46,11 @@ const Template = (props: MlTemporalControllerProps) => {
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 
-	const [selectedConfig, setSelectedConfig] = useState(null);
+	const [selectedConfig, setSelectedConfig] = useState<string | undefined>();
 
-	const handleConfigSelect = (config: any) => {
+	const handleConfigSelect = (config: string) => {
 		if (config === selectedConfig) {
-			setSelectedConfig(null);
+			setSelectedConfig(undefined);
 		} else {
 			setSelectedConfig(config);
 		}
@@ -90,9 +90,8 @@ const catalogueTemplate = () => {
 				</FormGroup>
 			</Sidebar>
 			{selectedConfig === 'Fill' && (
-				<Template
+				<MlTemporalController
 					geojson={FillConfig.args.geojson}
-					path={FillConfig.args.path}
 					timeField={FillConfig.args.timeField}
 					type={FillConfig.args.type}
 					labelField={FillConfig.args.labelField}
@@ -105,7 +104,7 @@ const catalogueTemplate = () => {
 				/>
 			)}
 			{selectedConfig === 'Circle' && (
-				<Template
+				<MlTemporalController
 					geojson={CircleConfig.args.geojson}
 					type={CircleConfig.args.type}
 					timeField={CircleConfig.args.timeField}
@@ -120,7 +119,7 @@ const catalogueTemplate = () => {
 				/>
 			)}
 			{selectedConfig === 'Line' && (
-				<Template
+				<MlTemporalController
 					geojson={LineConfig.args.geojson}
 					interval={LineConfig.args.interval}
 					step={LineConfig.args.step}
