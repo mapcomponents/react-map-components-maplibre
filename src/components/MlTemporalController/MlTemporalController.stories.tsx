@@ -48,7 +48,7 @@ const catalogueTemplate = () => {
 
 	const [selectedConfig, setSelectedConfig] = useState(null);
 
-	const handleConfigSelect = (config) => {
+	const handleConfigSelect = (config: any) => {
 		if (config === selectedConfig) {
 			setSelectedConfig(null);
 		} else {

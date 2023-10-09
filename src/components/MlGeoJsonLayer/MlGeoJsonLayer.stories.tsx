@@ -161,7 +161,7 @@ const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [selectedLayer, setSelectedLayer] = useState(null);
 
-	const handleLayerSelect = (layer) => {
+	const handleLayerSelect = (layer: any) => {
 		if (layer === selectedLayer) {
 			setSelectedLayer(null);
 		} else {

@@ -61,7 +61,7 @@ const catalogueTemplate = () => {
 	const [visible, setVisible] = useState(true);
 	const [selectedMode, setSelectedMode] = useState(null);
 
-	const handleLayerSelect = (mode) => {
+	const handleLayerSelect = (mode: any) => {
 		if (mode === selectedMode) {
 			setSelectedMode(null);
 		} else {
