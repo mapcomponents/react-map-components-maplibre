@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { IconButton, styled } from '@mui/material';
 import {
 	ArrowCircleDown as ArrowCircleDownIcon,
@@ -19,7 +19,7 @@ import { LayerConfig } from '../../contexts/LayerContext';
 import useMap from '../../hooks/useMap';
 import { bbox } from '@turf/turf';
 import { LngLatBoundsLike, FitBoundsOptions, GeoJSONSource } from 'maplibre-gl';
-import useFitLayerBounds, { useFitLayerBoundsPros } from '../../hooks/useFitLayerBounds';
+import { FeatureCollection } from 'geojson';
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -41,7 +41,7 @@ export interface LayerListItemFactoryProps {
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const layerContext = useLayerContext();
 	const mapHook = useMap({ mapId: undefined });
-	const [fitBoundArgs, setFitBoundArgs] = useState<useFitLayerBoundsPros>();
+	
 
 	const orderLayers = useMemo(() => {
 		const layerIds = [
@@ -67,7 +67,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	function fitLayer(layer: LayerConfig) {
 		const layerSource = layer.id ? mapHook.map?.getLayer(layer.id).source : undefined;
 		const geojson = layerSource && (mapHook.map?.getSource(layerSource) as GeoJSONSource)._data;
-		const _geojson = layerSource && {
+		let _geojson = layerSource && {
 			type: 'FeatureCollection',
 			features: mapHook.map?.querySourceFeatures(layerSource),
 		};
@@ -78,6 +78,9 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 
 		switch (layer.type) {
 			case 'geojson':
+				if((_geojson as FeatureCollection).features.length === 0){
+					mapHook.map?.zoomTo(1);
+				}
 				mapHook.map?.fitBounds(
 					typeof geojson === 'string'
 						? (bbox(_geojson) as LngLatBoundsLike)
@@ -86,7 +89,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 				);
 
 			case 'vt':
-				console.log('vt');
+				console.log(geojson);
 
 			default:
 				return;
@@ -265,6 +268,9 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 												}}
 											>
 												<ArrowCircleUpIcon />
+											</IconButtonStyled>											
+											<IconButtonStyled onClick={() => fitLayer(layer)}>
+												<CenterLayerIcon />
 											</IconButtonStyled>
 							
 										</>
