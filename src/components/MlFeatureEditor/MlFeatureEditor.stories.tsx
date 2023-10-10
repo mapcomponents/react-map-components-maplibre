@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import MlFeatureEditor from './MlFeatureEditor';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -7,6 +7,7 @@ import { useFeatureEditorProps } from 'src/hooks/useFeatureEditor/useFeatureEdit
 import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Sidebar from '../../ui_components/Sidebar';
 
 const storyoptions = {
@@ -79,7 +80,18 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Feature Editor'}>
+			{!openSidebar && (
+				<Tooltip title="Show Editor Configurations">
+					<Button
+						sx={{ zIndex: 2222, top: '70px', left: '95%' }}
+						variant="contained"
+						onClick={() => setOpenSidebar(true)}
+					>
+						<ArrowBackIosNewIcon />
+					</Button>
+				</Tooltip>
+			)}
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Feature Editor'} anchor={'right'}>
 				<FormGroup>
 					<FormControlLabel
 						control={

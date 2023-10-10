@@ -13,7 +13,8 @@ import wgLocations from './assets/wg_locations.json';
 import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
-import { Typography, Switch, FormGroup, FormControlLabel } from '@mui/material';
+import { Typography, Switch, FormGroup, FormControlLabel, Button, Tooltip } from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Sidebar from '../../ui_components/Sidebar';
 import wgMarker from './assets/wgMarker.png';
 
@@ -171,6 +172,17 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
+			{!openSidebar && (
+				<Tooltip title="Show Configuartion Examples">
+					<Button
+						sx={{ zIndex: 2222, top: '70px', left: '95%' }}
+						variant="contained"
+						onClick={() => setOpenSidebar(true)}
+					>
+						<ArrowBackIosNewIcon />
+					</Button>
+				</Tooltip>
+			)}
 			<Sidebar
 				open={openSidebar}
 				setOpen={setOpenSidebar}

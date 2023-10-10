@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
 import temporalControllerDecorator from '../../decorators/LowZoomDecorator';
-import { Typography, FormGroup, FormControlLabel, Switch } from '@mui/material';
+import { Typography, FormGroup, FormControlLabel, Switch, Tooltip, Button } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jackobsweg.json';
 import Sidebar from '../../ui_components/Sidebar';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
@@ -45,20 +46,60 @@ const Template = (props: MlTemporalControllerProps) => {
 
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-
 	const [selectedConfig, setSelectedConfig] = useState<string | undefined>();
+	const [titleNr, setTitleNr] = useState<number>(0);
+
+	const titels = [
+		'',
+		'African countries by independency year',
+		'Earthquakes with 5 or more magnitude',
+		'St. James Trials in the North Rhein Region by stage number',
+	];
 
 	const handleConfigSelect = (config: string) => {
 		if (config === selectedConfig) {
 			setSelectedConfig(undefined);
+			setTitleNr(0);
 		} else {
 			setSelectedConfig(config);
+			if (config === 'Fill') {
+				setTitleNr(1);
+			}
+			if (config === 'Circle') {
+				setTitleNr(2);
+			}
+			if (config === 'Line') {
+				setTitleNr(3);
+			}
 		}
 	};
 
 	return (
 		<>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Configuration Examples'}>
+			<TopToolbar
+				unmovableButtons={
+					<Typography variant="h6" color={'ButtonText'}>
+						{titels[titleNr]}
+					</Typography>
+				}
+			/>
+			{!openSidebar && (
+				<Tooltip title="Show Configuartion Examples">
+					<Button
+						sx={{ zIndex: 2222, top: '70px', left: '95%' }}
+						variant="contained"
+						onClick={() => setOpenSidebar(true)}
+					>
+						<ArrowBackIosNewIcon />
+					</Button>
+				</Tooltip>
+			)}
+			<Sidebar
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={'Configuration Examples'}
+				anchor={'right'}
+			>
 				<FormGroup>
 					<FormControlLabel
 						control={
