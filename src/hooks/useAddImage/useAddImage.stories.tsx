@@ -40,6 +40,7 @@ const Template = (props: MlGeoJsonLayerProps) => {
 							[26, 0.15],
 						],
 					} as DataDrivenPropertyValueSpecification<number>,
+					'icon-anchor': 'bottom'
 				}}
 				{...props}
 			/>
