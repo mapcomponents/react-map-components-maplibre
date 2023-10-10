@@ -188,9 +188,9 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 			const accurancyBounds = bbox(accuracyGeoJson) as LngLatBoundsLike;
 			const contained = booleanContains(
 				bboxPolygon(actualBounds as BBox),
-				bboxPolygon(accurancyBounds as BBox) 
+				bboxPolygon(accurancyBounds as BBox)
 			);
-			
+
 			if (contained === false) {
 				mapHook.map?.fitBounds(accurancyBounds, {
 					padding: { top: 25, bottom: 25 },
@@ -247,7 +247,12 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 				variant="navtools"
 				sx={{
 					zIndex: 1002,
-					color: isFollowed ? props.onColor : props.offColor,
+					color: isFollowed
+						? (theme) => theme.palette.GPS.GPSActiveColor
+						: (theme) => theme.palette.GPS.GPSInactiveColor,
+					backgroundColor: isFollowed
+						? (theme) => theme.palette.GPS.GPSActiveBackgroundColor
+						: (theme) => theme.palette.navigation.navColor,
 				}}
 				disabled={locationAccessDenied}
 				onClick={() => {
@@ -262,7 +267,6 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 
 MlFollowGps.defaultProps = {
 	mapId: undefined,
-	onColor: '#ececec',
 	offColor: '#666',
 	showAccuracyCircle: true,
 	showUserLocation: true,

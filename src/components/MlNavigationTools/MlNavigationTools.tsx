@@ -120,7 +120,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 			<MlNavigationCompass />
 			{props.show3DButton && (
 				<Button variant="navtools" onClick={adjustPitch}>
-					{pitch < 59 ? '2D' : '3D'}
+					{pitch < 59 ? '3D' : '2D'}
 				</Button>
 			)}
 			{props.showFollowGpsButton && <MlFollowGps />}
