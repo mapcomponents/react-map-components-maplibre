@@ -15,7 +15,6 @@ import { CSVProtocolHandler } from '../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../protocol_handlers/xml';
-import { csvOptions } from 'csv2geojson';
 import useAddProtocol from './useAddProtocol';
 import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
 import useMap from '../useMap';
@@ -30,7 +29,8 @@ import DemoDescriptions from '../../ui_components/DemoDescriptions';
 import protocolDescriptions from './utils/useAddProtocolTexts.json';
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { MlVectorTileLayerProps } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-
+import {csvOptions} from '../../protocol_handlers/csv2geojson.d';
+ 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
 	component: useAddProtocol,
@@ -48,7 +48,7 @@ interface TemplateProps {
 	type?: 'circle' | 'line' | 'fill';
 	paint?: LayerSpecification['paint'];
 	flyTo?: FlyToOptions;
-	options?: csvOptions | osm2geojson.Options;
+	options?: csvOptions;
 	insertBeforeLayer?: string;
 	sourceOptions?: VectorSourceSpecification;
 	layers?: LayerSpecification[];
