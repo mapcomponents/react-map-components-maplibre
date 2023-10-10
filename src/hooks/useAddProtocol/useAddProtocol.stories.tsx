@@ -60,12 +60,13 @@ const Template = (props: TemplateProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const layerContext = useContext(LayerContext);
 
+
 	//  An optional encoded options object can be added after a '?' sign at the end of the url.
 	//  Handlers that support options are:
 	// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
 	// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
 	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
-
+console.log( props.protocol + '://' + props.filePath + optionsURL)
 	useAddProtocol({
 		protocol: props.protocol,
 		handler: props.handler,
