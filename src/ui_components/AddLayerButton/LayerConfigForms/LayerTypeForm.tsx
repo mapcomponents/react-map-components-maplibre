@@ -19,7 +19,7 @@ export interface LayerTypeFormProps {
 const LayerTypeForm = (props: LayerTypeFormProps) => {
 	return (
 		<>
-			<DialogTitle>Select a layer type</DialogTitle>
+			<DialogTitle>{props.layerTypes.length > 1 ? "Select a layer type": "Load new layer"}</DialogTitle>
 			<List>
 				{props.layerTypes.map((type, idx) => (
 					<ListItem disableGutters key={idx}>
