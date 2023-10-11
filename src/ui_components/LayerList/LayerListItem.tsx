@@ -10,8 +10,9 @@ import LayerListItemVectorLayer, {
 	CheckboxStyled,
 } from './util/LayerListItemVectorLayer';
 import ConfirmDialog from '../ConfirmDialog';
-import getDefaulLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
+import getDefaultLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
+import SortableContainer from './util/SortableContainer';
 
 const TuneIconButton = styled(IconButton)({
 	padding: '4px',
@@ -32,6 +33,7 @@ interface LayerListItemProps {
 	showDeleteButton?: boolean;
 	listItemSx?: SxProps;
 	buttons?: JSX.Element;
+	layerId?: string;
 }
 
 function LayerListItem({
@@ -54,7 +56,7 @@ function LayerListItem({
 	const [paintProps, setPaintProps] = useState(
 		layerComponent?.props?.paint ||
 			getDefaultPaintPropsByType(
-				layerComponent?.props?.type || getDefaulLayerTypeByGeometry(layerComponent.props.geojson)
+				layerComponent?.props?.type || getDefaultLayerTypeByGeometry(layerComponent.props.geojson)
 			)
 	);
 
@@ -138,7 +140,7 @@ function LayerListItem({
 				return layerComponent.props.type;
 			}
 			if (layerComponent.props.geojson) {
-				return getDefaulLayerTypeByGeometry(layerComponent.props.geojson);
+				return getDefaultLayerTypeByGeometry(layerComponent.props.geojson);
 			}
 		}
 
@@ -148,43 +150,45 @@ function LayerListItem({
 	return (
 		<>
 			{!layerComponent?.props?.layers && (
-				<ListItemStyled
-					sx={{ ...props.listItemSx }}
-					secondaryAction={
-						configurable && Object.keys(paintProps)?.length > 0 ? (
-							<>
-								{props?.buttons}
-								<TuneIconButton
-									edge={'end'}
-									aria-label="settings"
-									onClick={() => {
-										setPaintPropsFormVisible((current) => {
-											return !current;
-										});
-									}}
-								>
-									<TuneIcon />
-								</TuneIconButton>
-							</>
-						) : undefined
-					}
-				>
-					<CheckboxListItemIcon>
-						<CheckboxStyled
-							disabled={!visible}
-							checked={localVisible}
-							onClick={() => {
-								setLocalVisible((val) => !val);
-							}}
+				<SortableContainer layerId={props.layerId}>
+					<ListItemStyled
+						sx={{ ...props.listItemSx }}
+						secondaryAction={
+							configurable && Object.keys(paintProps)?.length > 0 ? (
+								<>
+									{props?.buttons}
+									<TuneIconButton
+										edge={'end'}
+										aria-label="settings"
+										onClick={() => {
+											setPaintPropsFormVisible((current) => {
+												return !current;
+											});
+										}}
+									>
+										<TuneIcon />
+									</TuneIconButton>
+								</>
+							) : undefined
+						}
+					>
+						<CheckboxListItemIcon>
+							<CheckboxStyled
+								disabled={!visible}
+								checked={localVisible}
+								onClick={() => {
+									setLocalVisible((val) => !val);
+								}}
+							/>
+						</CheckboxListItemIcon>
+						<ListItemText
+							variant="layerlist"
+							primary={name}
+							secondary={description}
+							primaryTypographyProps={{ overflow: 'hidden' }}
 						/>
-					</CheckboxListItemIcon>
-					<ListItemText
-						variant="layerlist"
-						primary={name}
-						secondary={description}
-						primaryTypographyProps={{ overflow: 'hidden' }}
-					/>
-				</ListItemStyled>
+					</ListItemStyled>
+				</SortableContainer>
 			)}
 			{_layerComponent}
 			{!layerComponent?.props?.layers &&

@@ -24,7 +24,7 @@ import {
 	useSensors, UniqueIdentifier, DragEndEvent
 } from '@dnd-kit/core';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
-import SortableContainer from './util/SortableContainer';
+//import SortableContainer from './util/SortableContainer';
 import {
   restrictToVerticalAxis,
 } from '@dnd-kit/modifiers'
@@ -122,9 +122,9 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 						switch (layer.type) {
 							case 'geojson':
 								return (
-									<SortableContainer layerId={layer.id}>
 										<LayerListItem
 											key={layer.id}
+											layerId={layer.id}
 											name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
 											layerComponent={
 												<MlGeoJsonLayer
@@ -169,7 +169,6 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											configurable={true}
 											showDeleteButton={true}
 										/>
-									</SortableContainer>
 								);
 							case 'wms':
 								return (
@@ -231,7 +230,6 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 								return null;
 						}
 					})}
-				</SortableContext>
 				{layerContext?.backgroundLayers?.length > 0 && (
 					<LayerListItem
 						key={'background_geometry'}
@@ -252,6 +250,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 						name="Background"
 					/>
 				)}
+				</SortableContext>
 			</DndContext>
 		</>
 	);
