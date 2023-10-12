@@ -115,22 +115,7 @@ const LineStyler = (props) => {
 
 	return (
 		<>
-			<TopToolbar
-				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Layer options
-					</Button>
-				}
-			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'GeoJson Layer'}
-			>
+			<Sidebar open={props.openSidebar} setOpen={props.setOpenSidebar} name={'GeoJson Layer'}>
 				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 15 }} alignItems="left">
 					<Typography>Feature to show:</Typography>
 

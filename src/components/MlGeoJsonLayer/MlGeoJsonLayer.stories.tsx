@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import MlGeoJsonLayer from './MlGeoJsonLayer';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
@@ -17,6 +17,8 @@ import { Typography, Switch, FormGroup, FormControlLabel, Button, Tooltip } from
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Sidebar from '../../ui_components/Sidebar';
 import wgMarker from './assets/wgMarker.png';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -32,7 +34,17 @@ interface TemplateProps {
 	geojson: Feature<Geometry | GeometryCollection>;
 	mapId: string;
 	type: string;
+	openSidebar?: boolean;
+	setOpenSidebar?: Dispatch<SetStateAction<boolean>>;
+	title?: string;
 }
+
+const configTitles = {
+	circle: 'WhereGroup locations by number of employees',
+	symbol: 'WhereGroup locations by number of employees',
+	heatmap: 'Earthquakes by magnitude in Alaska',
+	polygon: 'Parks&Squares in Bonn',
+};
 
 const Template = (props: MlGeoJsonLayerProps) => {
 	const mapHook = useMap({
@@ -117,14 +129,6 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 
 	return (
 		<>
-			<TopToolbar
-				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
-						WhereGroup locations by number of employees
-					</Typography>
-				}
-			/>
-
 			<CircleMapStyler {...props} />
 		</>
 	);
@@ -146,13 +150,6 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 
 	return (
 		<>
-			<TopToolbar
-				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
-						Earthquakes by magnitude in Alaska
-					</Typography>
-				}
-			/>
 			<HeatMapStyler {...props} />;
 		</>
 	);
@@ -160,92 +157,74 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [selectedLayer, setSelectedLayer] = useState<string | undefined>();
+	const [selectedLayer, setSelectedLayer] = useState<string>('circle');
+
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
 	const handleLayerSelect = (layer: string) => {
-		if (layer === selectedLayer) {
-			setSelectedLayer(undefined);
-		} else {
-			setSelectedLayer(layer);
-		}
+		setSelectedLayer(layer);
 	};
 
 	return (
 		<>
-			{!openSidebar && (
-				<Tooltip title="Show Configuartion Examples">
-					<Button
-						sx={{ zIndex: 2222, top: '70px', left: '95%' }}
-						variant="contained"
-						onClick={() => setOpenSidebar(true)}
-					>
-						<ArrowBackIosNewIcon />
-					</Button>
-				</Tooltip>
-			)}
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'MlGeojson Layer'}
-				anchor={'right'}
-			>
-				<FormGroup>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedLayer === 'circle'}
-								onChange={() => handleLayerSelect('circle')}
-							/>
-						}
-						label="Show Circle Layer"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedLayer === 'line'}
-								onChange={() => handleLayerSelect('line')}
-							/>
-						}
-						label="Show Line String Layer"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedLayer === 'polygon'}
-								onChange={() => handleLayerSelect('polygon')}
-							/>
-						}
-						label="Show Polygon Layer"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedLayer === 'heatmap'}
-								onChange={() => handleLayerSelect('heatmap')}
-							/>
-						}
-						label="Show Heatmap Layer"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedLayer === 'symbol'}
-								onChange={() => handleLayerSelect('symbol')}
-							/>
-						}
-						label="Show Symbol Layer"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedLayer === 'default'}
-								onChange={() => handleLayerSelect('default')}
-							/>
-						}
-						label="Default Paint Overrides"
-					/>
-				</FormGroup>
-			</Sidebar>
+			<TopToolbar
+				unmovableButtons={
+					<>
+						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
+							{configTitles[selectedLayer]}
+						</Typography>
+						{(selectedLayer === 'polygon' || selectedLayer === 'line') && (
+							<Button
+								variant={openSidebar ? 'contained' : 'outlined'}
+								sx={{ marginRight: '10px' }}
+								onClick={() => setOpenSidebar(!openSidebar)}
+							>
+								Layer options
+							</Button>
+						)}
+						<Button
+							id="basic-button"
+							variant="contained"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={handleClick}
+						>
+							Example Configs
+						</Button>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							<MenuItem onClick={() => handleLayerSelect('circle')}>Circle Configuration</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('line')}>Line Configuration</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('polygon')}>
+								Polygon Configuration
+							</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('heatmap')}>
+								Heatmap Configuration
+							</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('symbol')}>Symbol Configuration</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('default')}>
+								Default Paint Overrides
+							</MenuItem>
+						</Menu>
+					</>
+				}
+			/>
+
 			{selectedLayer === 'circle' && (
 				<CircleTemplate
 					geojson={Circle.args.geojson}
@@ -255,6 +234,8 @@ const catalogueTemplate = () => {
 			)}
 			{selectedLayer === 'line' && (
 				<LineTemplate
+					openSidebar={openSidebar}
+					setOpenSidebar={setOpenSidebar}
 					geojson={Linestring.args.geojson}
 					type={Linestring.args.type}
 					mapId={Linestring.args.mapId}
@@ -262,6 +243,8 @@ const catalogueTemplate = () => {
 			)}
 			{selectedLayer === 'polygon' && (
 				<PolygonTemplate
+					openSidebar={openSidebar}
+					setOpenSidebar={setOpenSidebar}
 					geojson={Polygon.args.geojson}
 					mapId={Polygon.args.mapId}
 					type={Polygon.args.type}
@@ -299,6 +282,7 @@ export const Circle = CircleTemplate.bind({});
 Circle.parameters = {};
 Circle.args = {
 	geojson: wgLocations,
+	title: 'WhereGroup locations by number of employees',
 	paint: {
 		'circle-radius': {
 			property: 'Mitarbeitende',
@@ -323,12 +307,14 @@ export const Polygon = PolygonTemplate.bind({});
 
 Polygon.args = {
 	geojson: sample_geojson_1,
+	type: 'polygon',
 };
 
 export const HeatMap = HeatmapTemplate.bind({});
 HeatMap.parameters = {};
 HeatMap.args = {
 	geojson: earthquakes,
+	title: 'Earthquakes by magnitude in Alaska',
 	options: {
 		// paint examples copied from https://maplibre.org/maplibre-gl-js-docs/example/heatmap-layer/
 		paint: {
@@ -370,6 +356,7 @@ export const Symbol = CircleTemplate.bind({});
 Symbol.parameters = {};
 Symbol.args = {
 	geojson: wgLocations,
+	title: 'WhereGroup locations by number of employees',
 	options: {
 		layout: {
 			'icon-image': 'wgLogo',
