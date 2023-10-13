@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-
 import MlMeasureTool from './MlMeasureTool';
-
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
 import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Button, MenuItem, Select, Switch, FormGroup, FormControlLabel } from '@mui/material';
+import { Button, MenuItem, Select } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
+import Menu from '@mui/material/Menu';
 
 const storyoptions = {
 	title: 'MapComponents/MlMeasureTool',
@@ -28,17 +27,6 @@ const Template = () => {
 
 	return (
 		<>
-			<TopToolbar
-				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Measure Tool
-					</Button>
-				}
-			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
 				<div style={{ width: '200px', position: 'absolute', zIndex: 105 }}>
 					<Select
@@ -119,17 +107,6 @@ const LineTemplate = () => {
 
 	return (
 		<>
-			<TopToolbar
-				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Measure Tool
-					</Button>
-				}
-			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
 				<div style={{ width: '200px', position: 'absolute', zIndex: 105 }}>
 					<Select
@@ -202,58 +179,51 @@ const CLineTemplate = () => {
 };
 
 const catalogueTemplate = () => {
-	const [openSidebar2, setOpenSidebar2] = useState(true);
+	const [selectedTool, setSelectedTool] = useState('area_measure');
 
-	const [selectedTool, setSelectedTool] = useState(null);
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
 	const handleToolSelect = (tool) => {
-		if (tool === selectedTool) {
-			setSelectedTool(null);
-		} else {
-			setSelectedTool(tool);
-		}
+		setSelectedTool(tool);
 	};
 
 	return (
 		<>
 			<TopToolbar
-				buttons={
-					<Button
-						variant={openSidebar2 ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar2(!openSidebar2)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Measuring Tools
-					</Button>
+				unmovableButtons={
+					<>
+						<Button
+							id="basic-button"
+							variant="contained"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={handleClick}
+						>
+							Tools
+						</Button>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							<MenuItem onClick={() => handleToolSelect('area_measure')}>Measure Area</MenuItem>
+							<MenuItem onClick={() => handleToolSelect('line_measure')}>Measure Distance</MenuItem>
+						</Menu>
+					</>
 				}
 			/>
-			<Sidebar
-				open={openSidebar2}
-				setOpen={setOpenSidebar2}
-				name={'Measuring Tools'}
-				anchor={'right'}
-			>
-				<FormGroup>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedTool === 'line_measure'}
-								onChange={() => handleToolSelect('line_measure')}
-							/>
-						}
-						label="Measure Distance"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedTool === 'area_measure'}
-								onChange={() => handleToolSelect('area_measure')}
-							/>
-						}
-						label="Measure Area"
-					/>
-				</FormGroup>
-			</Sidebar>
 			{selectedTool === 'area_measure' && <CTemplate />}
 			{selectedTool === 'line_measure' && <CLineTemplate />}
 		</>

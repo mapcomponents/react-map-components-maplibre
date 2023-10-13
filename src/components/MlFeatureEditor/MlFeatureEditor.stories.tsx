@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Tooltip } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import MlFeatureEditor from './MlFeatureEditor';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { useFeatureEditorProps } from 'src/hooks/useFeatureEditor/useFeatureEditor';
-import Switch from '@mui/material/Switch';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import Sidebar from '../../ui_components/Sidebar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const storyoptions = {
 	title: 'MapComponents/MlFeatureEditor',
@@ -17,6 +14,15 @@ const storyoptions = {
 	decorators: mapContextDecorator,
 };
 export default storyoptions;
+
+const configTitles = {
+	EditPolygon: 'Edit Polygon',
+	EditPoint: 'Edit Point',
+	EditLinestring: 'Edit Linestring',
+	DrawPolygon: 'Draw Polygon',
+	DrawPoint: 'Draw Point',
+	DrawLinestring: 'Draw Linestring',
+};
 
 const Template = (args: useFeatureEditorProps) => {
 	const [visible, setVisible] = useState(true);
@@ -29,9 +35,8 @@ const Template = (args: useFeatureEditorProps) => {
 		}
 	}, [visible]);
 
-	return (
-		<>
-			<TopToolbar
+	/* TopToolbar:
+<TopToolbar
 				unmovableButtons={
 					<Button
 						variant={visible ? 'contained' : 'outlined'}
@@ -44,6 +49,10 @@ const Template = (args: useFeatureEditorProps) => {
 					</Button>
 				}
 			/>
+			*/
+
+	return (
+		<>
 			{visible && (
 				<MlFeatureEditor
 					{...args}
@@ -58,16 +67,20 @@ const Template = (args: useFeatureEditorProps) => {
 };
 
 const catalogueTemplate = () => {
-	const [openSidebar, setOpenSidebar] = useState(true);
 	const [visible, setVisible] = useState(true);
-	const [selectedMode, setSelectedMode] = useState<string | undefined>();
+	const [selectedMode, setSelectedMode] = useState<string>('Polygon');
+
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
 	const handleLayerSelect = (mode: string) => {
-		if (mode === selectedMode) {
-			setSelectedMode(undefined);
-		} else {
-			setSelectedMode(mode);
-		}
+		setSelectedMode(mode);
 	};
 
 	useEffect(() => {
@@ -80,75 +93,45 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
-			{!openSidebar && (
-				<Tooltip title="Show Editor Configurations">
-					<Button
-						sx={{ zIndex: 2222, top: '70px', left: '95%' }}
-						variant="contained"
-						onClick={() => setOpenSidebar(true)}
-					>
-						<ArrowBackIosNewIcon />
-					</Button>
-				</Tooltip>
-			)}
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Feature Editor'} anchor={'right'}>
-				<FormGroup>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedMode === 'EditPolygon'}
-								onChange={() => handleLayerSelect('EditPolygon')}
-							/>
-						}
-						label="Edit Polygon"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedMode === 'EditPoint'}
-								onChange={() => handleLayerSelect('EditPoint')}
-							/>
-						}
-						label="Edit Point"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedMode === 'EditLinestring'}
-								onChange={() => handleLayerSelect('EditLinestring')}
-							/>
-						}
-						label="Edit Linestring"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedMode === 'DrawPolygon'}
-								onChange={() => handleLayerSelect('DrawPolygon')}
-							/>
-						}
-						label="Draw Polygon"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedMode === 'DrawPoint'}
-								onChange={() => handleLayerSelect('DrawPoint')}
-							/>
-						}
-						label="Draw Point"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedMode === 'DrawLinestring'}
-								onChange={() => handleLayerSelect('DrawLinestring')}
-							/>
-						}
-						label="Draw Linestring"
-					/>
-				</FormGroup>
-			</Sidebar>
+			<TopToolbar
+				unmovableButtons={
+					<>
+						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
+							{configTitles[selectedMode]}
+						</Typography>
+						<Button
+							id="basic-button"
+							variant="contained"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={handleClick}
+						>
+							Example Configs
+						</Button>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							<MenuItem onClick={() => handleLayerSelect('EditPolygon')}>Edit Polygon</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('EditPoint')}>Edit Point</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('EditLinestring')}>
+								Edit Linestring
+							</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('DrawPolygon')}>Draw Polygon</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('DrawPoint')}>Draw Point</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('DrawLinestring')}>
+								Draw Linestring
+							</MenuItem>
+						</Menu>
+					</>
+				}
+			/>
 			{selectedMode === 'EditPolygon' && (
 				<Template mode={EditPolygon.args.mode} geojson={EditPolygon.args.geojson} />
 			)}

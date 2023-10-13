@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
 import temporalControllerDecorator from '../../decorators/LowZoomDecorator';
-import { Typography, FormGroup, FormControlLabel, Switch, Tooltip, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jackobsweg.json';
-import Sidebar from '../../ui_components/Sidebar';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import useMap, { useMapType } from '../../hooks/useMap';
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
@@ -45,32 +46,38 @@ const Template = (props: MlTemporalControllerProps) => {
 };
 
 const catalogueTemplate = () => {
-	const [openSidebar, setOpenSidebar] = useState(true);
-	const [selectedConfig, setSelectedConfig] = useState<string | undefined>();
+	const [selectedConfig, setSelectedConfig] = useState<string>('Fill');
 	const [titleNr, setTitleNr] = useState<number>(0);
+	const mapHook = useMap({
+		mapId: undefined,
+	});
 
 	const titels = [
-		'',
 		'African countries by independency year',
 		'Earthquakes with 5 or more magnitude',
 		'St. James Trials in the North Rhein Region by stage number',
 	];
 
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	const handleConfigSelect = (config: string) => {
-		if (config === selectedConfig) {
-			setSelectedConfig(undefined);
+		setSelectedConfig(config);
+		if (config === 'Fill') {
 			setTitleNr(0);
-		} else {
-			setSelectedConfig(config);
-			if (config === 'Fill') {
-				setTitleNr(1);
-			}
-			if (config === 'Circle') {
-				setTitleNr(2);
-			}
-			if (config === 'Line') {
-				setTitleNr(3);
-			}
+		}
+		if (config === 'Circle') {
+			setTitleNr(1);
+		}
+		if (config === 'Line') {
+			setTitleNr(2);
+			mapHook.map?.map.flyTo({ center: [7.0082, 51.1274], zoom: 7.2 });
 		}
 	};
 
@@ -78,58 +85,36 @@ const catalogueTemplate = () => {
 		<>
 			<TopToolbar
 				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
-						{titels[titleNr]}
-					</Typography>
+					<>
+						<Typography variant="h6" color={'ButtonText'} marginRight="20px">
+							{titels[titleNr]}
+						</Typography>
+						<Button
+							id="basic-button"
+							variant="contained"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={handleClick}
+						>
+							Example Configs
+						</Button>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							<MenuItem onClick={() => handleConfigSelect('Fill')}>Fill Configuration</MenuItem>
+							<MenuItem onClick={() => handleConfigSelect('Circle')}>Circle Configuration</MenuItem>
+							<MenuItem onClick={() => handleConfigSelect('Line')}>Line Configuration</MenuItem>
+						</Menu>
+					</>
 				}
 			/>
-			{!openSidebar && (
-				<Tooltip title="Show Configuartion Examples">
-					<Button
-						sx={{ zIndex: 2222, top: '70px', left: '95%' }}
-						variant="contained"
-						onClick={() => setOpenSidebar(true)}
-					>
-						<ArrowBackIosNewIcon />
-					</Button>
-				</Tooltip>
-			)}
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'Configuration Examples'}
-				anchor={'right'}
-			>
-				<FormGroup>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedConfig === 'Fill'}
-								onChange={() => handleConfigSelect('Fill')}
-							/>
-						}
-						label="Fill Configuration"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedConfig === 'Circle'}
-								onChange={() => handleConfigSelect('Circle')}
-							/>
-						}
-						label="Circle Configuration"
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={selectedConfig === 'Line'}
-								onChange={() => handleConfigSelect('Line')}
-							/>
-						}
-						label="Line Configuration"
-					/>
-				</FormGroup>
-			</Sidebar>
 			{selectedConfig === 'Fill' && (
 				<MlTemporalController
 					geojson={FillConfig.args.geojson}
@@ -230,7 +215,7 @@ LineConfig.args = {
 	labelField: 'name',
 	featuresColor: 'red',
 	accumulate: true,
-	fitBounds: true,
+	fitBounds: false,
 	displayCurrentValue: true,
 	attribution: 'Source: deutsche-jakobswege.de ',
 };
