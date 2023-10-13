@@ -70,12 +70,12 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	}, [props.setLayers, layerContext.setLayers]);
 	const pointerSensor = useSensor(PointerSensor, {
 		activationConstraint: {
-			distance: 10,
+			distance: 5,
 		},
 	})
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
-			distance: 10,
+			distance: 5,
 		},
 	})
 	const sensors = useSensors(mouseSensor, pointerSensor)
