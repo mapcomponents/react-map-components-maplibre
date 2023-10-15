@@ -176,6 +176,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										<MlWmsLoader
 											{...layer.config}
 											key={layer.id}
+											layerId={layer.id}
 											mapId={props?.mapId}
 											insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
 											onConfigChange={(layerConfig) => {
