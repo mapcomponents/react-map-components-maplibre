@@ -125,6 +125,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										<LayerListItem
 											key={layer.id}
 											layerId={layer.id}
+											sortable={true}
 											name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
 											layerComponent={
 												<MlGeoJsonLayer
@@ -177,6 +178,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											{...layer.config}
 											key={layer.id}
 											layerId={layer.id}
+											sortable={true}
 											mapId={props?.mapId}
 											insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
 											onConfigChange={(layerConfig) => {

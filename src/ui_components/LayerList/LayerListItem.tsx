@@ -34,6 +34,7 @@ interface LayerListItemProps {
 	listItemSx?: SxProps;
 	buttons?: JSX.Element;
 	layerId?: string;
+	sortable?: boolean;
 }
 
 function LayerListItem({
@@ -146,50 +147,51 @@ function LayerListItem({
 
 		return undefined;
 	}, [layerComponent]);
-
+	const listContent = (
+		<ListItemStyled
+			sx={{ ...props.listItemSx }}
+			secondaryAction={
+				configurable && Object.keys(paintProps)?.length > 0 ? (
+					<>
+						{props?.buttons}
+						<TuneIconButton
+							edge={'end'}
+							aria-label="settings"
+							onClick={() => {
+								setPaintPropsFormVisible((current) => {
+									return !current;
+								});
+							}}
+						>
+							<TuneIcon />
+						</TuneIconButton>
+					</>
+				) : undefined
+			}
+		>
+			<CheckboxListItemIcon>
+				<CheckboxStyled
+					disabled={!visible}
+					checked={localVisible}
+					onClick={() => {
+						setLocalVisible((val) => !val);
+					}}
+				/>
+			</CheckboxListItemIcon>
+			<ListItemText
+				variant="layerlist"
+				primary={name}
+				secondary={description}
+				primaryTypographyProps={{ overflow: 'hidden' }}
+			/>
+		</ListItemStyled>
+	);
 	return (
 		<>
-			{!layerComponent?.props?.layers && (
-				<SortableContainer layerId={props.layerId}>
-					<ListItemStyled
-						sx={{ ...props.listItemSx }}
-						secondaryAction={
-							configurable && Object.keys(paintProps)?.length > 0 ? (
-								<>
-									{props?.buttons}
-									<TuneIconButton
-										edge={'end'}
-										aria-label="settings"
-										onClick={() => {
-											setPaintPropsFormVisible((current) => {
-												return !current;
-											});
-										}}
-									>
-										<TuneIcon />
-									</TuneIconButton>
-								</>
-							) : undefined
-						}
-					>
-						<CheckboxListItemIcon>
-							<CheckboxStyled
-								disabled={!visible}
-								checked={localVisible}
-								onClick={() => {
-									setLocalVisible((val) => !val);
-								}}
-							/>
-						</CheckboxListItemIcon>
-						<ListItemText
-							variant="layerlist"
-							primary={name}
-							secondary={description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
-						/>
-					</ListItemStyled>
-				</SortableContainer>
+			{props.sortable && props.layerId && !layerComponent?.props?.layers && (
+				<SortableContainer layerId={props.layerId}>{listContent}</SortableContainer>
 			)}
+			{!props.sortable && !layerComponent?.props?.layers && (listContent)}
 			{_layerComponent}
 			{!layerComponent?.props?.layers &&
 				Object.keys(paintProps).length > 0 &&

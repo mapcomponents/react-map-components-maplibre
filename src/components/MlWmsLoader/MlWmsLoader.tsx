@@ -121,6 +121,7 @@ export interface MlWmsLoaderProps {
 	 * Custom buttons to display for the WMSLoader
 	 */
 	buttons?: JSX.Element;
+	sortable?: boolean;
 }
 
 export type LayerType = {
@@ -374,7 +375,101 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			}
 		}
 	}, [capabilities, mapHook.map]);
+	const listContent = (
+		<ListItem
+			secondaryAction={
+				<>
+					{props.buttons}
+					{props.featureInfoEnabled && (
+						<IconButton
+							sx={{
+								padding: '4px',
+								marginTop: '-3px',
+								marginRight: '4px',
+								background: (theme) => {
+									if (!layers?.some((layer) => layer.visible && layer.queryable)) return 'initial';
+									if (_featureInfoEventsEnabled) return theme.palette.info.light;
+									return theme.palette.grey[300];
+								},
+							}}
+							aria-label="featureinfo"
+							onClick={() => {
+								if (typeof props?.setFeatureInfoActive === 'function') {
+									props.setFeatureInfoActive((current: boolean) => !current);
+								} else {
+									setFeatureInfoEventsEnabled((current: boolean) => !current);
+								}
+							}}
+							disabled={!layers?.some((layer) => layer.visible && layer.queryable)}
+						>
+							<InfoIcon />
+						</IconButton>
+					)}
+					<IconButton
+						edge={props.showDeleteButton ? false : 'end'}
+						sx={{
+							padding: '4px',
+							marginTop: '-3px',
+							...(props.showDeleteButton ? { marginRight: '4px' } : {}),
+						}}
+						aria-label="open"
+						onClick={() => setOpen((current) => !current)}
+					>
+						{open ? <ExpandLess /> : <ExpandMore />}
+					</IconButton>
+					{props.showDeleteButton && (
+						<>
+							<IconButton
+								aria-label="delete"
+								edge="end"
+								onClick={() => {
+									if (typeof props.onConfigChange === 'function') {
+										setShowDeletionConfirmationDialog(true);
+									}
+								}}
+								sx={{ padding: '4px', marginTop: '-3px' }}
+							>
+								<DeleteIcon />
+							</IconButton>
 
+							{showDeletionConfirmationDialog && (
+								<ConfirmDialog
+									open={showDeletionConfirmationDialog}
+									onConfirm={() => {
+										if (typeof props.onConfigChange === 'function') {
+											props.onConfigChange(false);
+										}
+									}}
+									onCancel={() => {
+										setShowDeletionConfirmationDialog(false);
+									}}
+									title="Delete layer"
+									text="Are you sure you want to delete this layer?"
+								/>
+							)}
+						</>
+					)}
+				</>
+			}
+			sx={{
+				paddingRight: 0,
+				paddingLeft: 0,
+				paddingTop: 0,
+				paddingBottom: '4px',
+			}}
+		>
+			<ListItemIcon sx={{ minWidth: '30px' }}>
+				<Checkbox
+					sx={{ padding: 0 }}
+					checked={visible}
+					onClick={() => {
+						setVisible((val) => !val);
+					}}
+				/>
+			</ListItemIcon>
+			<ListItemText primary={name} variant="layerlist" />
+		</ListItem>
+	);
 	return (
 		<>
 			{error && (
@@ -384,102 +479,12 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			)}
 			{wmsUrl && (
 				<>
-					<SortableContainer layerId={props.layerId}>
-						<ListItem
-							secondaryAction={
-								<>
-									{props.buttons}
-									{props.featureInfoEnabled && (
-										<IconButton
-											sx={{
-												padding: '4px',
-												marginTop: '-3px',
-												marginRight: '4px',
-												background: (theme) => {
-													if (!layers?.some((layer) => layer.visible && layer.queryable))
-														return 'initial';
-													if (_featureInfoEventsEnabled) return theme.palette.info.light;
-													return theme.palette.grey[300];
-												},
-											}}
-											aria-label="featureinfo"
-											onClick={() => {
-												if (typeof props?.setFeatureInfoActive === 'function') {
-													props.setFeatureInfoActive((current: boolean) => !current);
-												} else {
-													setFeatureInfoEventsEnabled((current: boolean) => !current);
-												}
-											}}
-											disabled={!layers?.some((layer) => layer.visible && layer.queryable)}
-										>
-											<InfoIcon />
-										</IconButton>
-									)}
-									<IconButton
-										edge={props.showDeleteButton ? false : 'end'}
-										sx={{
-											padding: '4px',
-											marginTop: '-3px',
-											...(props.showDeleteButton ? { marginRight: '4px' } : {}),
-										}}
-										aria-label="open"
-										onClick={() => setOpen((current) => !current)}
-									>
-										{open ? <ExpandLess /> : <ExpandMore />}
-									</IconButton>
-									{props.showDeleteButton && (
-										<>
-											<IconButton
-												aria-label="delete"
-												edge="end"
-												onClick={() => {
-													if (typeof props.onConfigChange === 'function') {
-														setShowDeletionConfirmationDialog(true);
-													}
-												}}
-												sx={{ padding: '4px', marginTop: '-3px' }}
-											>
-												<DeleteIcon />
-											</IconButton>
-
-											{showDeletionConfirmationDialog && (
-												<ConfirmDialog
-													open={showDeletionConfirmationDialog}
-													onConfirm={() => {
-														if (typeof props.onConfigChange === 'function') {
-															props.onConfigChange(false);
-														}
-													}}
-													onCancel={() => {
-														setShowDeletionConfirmationDialog(false);
-													}}
-													title="Delete layer"
-													text="Are you sure you want to delete this layer?"
-												/>
-											)}
-										</>
-									)}
-								</>
-							}
-							sx={{
-								paddingRight: 0,
-								paddingLeft: 0,
-								paddingTop: 0,
-								paddingBottom: '4px',
-							}}
-						>
-							<ListItemIcon sx={{ minWidth: '30px' }}>
-								<Checkbox
-									sx={{ padding: 0 }}
-									checked={visible}
-									onClick={() => {
-										setVisible((val) => !val);
-									}}
-								/>
-							</ListItemIcon>
-							<ListItemText primary={name} variant="layerlist" />
-						</ListItem>
-					</SortableContainer>
+					{props.layerId && props.sortable && (
+						<SortableContainer layerId={props.layerId}>{listContent}</SortableContainer>
+					)}
+					{props.layerId && !props.sortable && (
+						listContent
+					)}
 					<Box sx={{ display: open ? 'block' : 'none' }}>
 						<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
 							{wmsUrl &&
