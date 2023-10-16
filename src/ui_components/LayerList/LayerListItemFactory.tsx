@@ -24,7 +24,6 @@ import {
 	useSensors, UniqueIdentifier, DragEndEvent
 } from '@dnd-kit/core';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
-//import SortableContainer from './util/SortableContainer';
 import {
   restrictToVerticalAxis,
 } from '@dnd-kit/modifiers'
@@ -43,6 +42,7 @@ export interface LayerListItemFactoryProps {
 	layers: LayerConfig[];
 	setLayers?: (layers: LayerConfig[] | ((state: LayerConfig[]) => LayerConfig[])) => void;
 	insertBeforeLayer?: string;
+	sortable?: boolean
 }
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
@@ -125,7 +125,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 										<LayerListItem
 											key={layer.id}
 											layerId={layer.id}
-											sortable={true}
+											sortable={props.sortable}
 											name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
 											layerComponent={
 												<MlGeoJsonLayer
@@ -178,7 +178,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											{...layer.config}
 											key={layer.id}
 											layerId={layer.id}
-											sortable={true}
+											sortable={props.sortable}
 											mapId={props?.mapId}
 											insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
 											onConfigChange={(layerConfig) => {
