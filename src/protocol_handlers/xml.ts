@@ -6,9 +6,8 @@ import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
 
 
-async function convertXML(params: { filename: string }): Promise<FeatureCollection> {
-
-	const extension = params.filename.substring(params.filename.length - 3);
+async function convertXML(params: { filename: string, protocolId: string }): Promise<FeatureCollection> {
+	
 
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 		getProtocolData(params.filename).then((rawData) => {
@@ -16,15 +15,15 @@ async function convertXML(params: { filename: string }): Promise<FeatureCollecti
 
 				// use an extern converter for tcx files
 
-				if (extension === 'tcx') {
-					return externParser[extension](
+				if (params.protocolId === 'tcx') {
+					return externParser[params.protocolId](
 						new DOMParser().parseFromString(rawData, 'text/xml')
 					) as FeatureCollection<Geometry | GeometryCollection, Properties>;
 
 				// use the projects gpxConverter function for gpx and kml files
 					
 				} else {
-					return toGeoJSON[extension](
+					return toGeoJSON[params.protocolId](
 						new DOMParser().parseFromString(rawData, 'text/xml')
 					) as FeatureCollection<Geometry | GeometryCollection, Properties>;
 				}
