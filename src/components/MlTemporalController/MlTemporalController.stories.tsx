@@ -8,7 +8,7 @@ import earthq_5plus from './assets/earthq_5plus.json';
 import jakobsweg from './assets/jackobsweg.json';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import useMap, { useMapType } from '../../hooks/useMap';
+import useMap from '../../hooks/useMap';
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
