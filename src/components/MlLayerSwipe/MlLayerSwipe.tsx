@@ -3,9 +3,9 @@ import React, { useContext, useCallback, useRef, useEffect, useState } from 'rea
 // @ts-ignore
 import syncMove from '@mapbox/mapbox-gl-sync-move';
 import './style.css';
+import useMap from '../../hooks/useMap';
 import MapContext, { MapContextType } from '../../contexts/MapContext';
 import { ReactComponent as CircleIcon } from './assets/circleIcon.svg';
-import { TouchEvent } from 'react';
 
 export interface MlLayerSwipeProps {
 	/**
@@ -29,11 +29,25 @@ export interface MlLayerSwipeProps {
 const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	const mapContext: MapContextType = useContext(MapContext);
 	const initializedRef = useRef(false);
+	const mapHook = useMap({
+		mapId: undefined,
+	});
 
 	const [swipeX, setSwipeX] = useState(50);
 	const swipeXRef = useRef(0);
 
 	const syncCleanupFunctionRef = useRef(() => {});
+	const symbolSize = 100;
+	const [canvasHeight, setCanvasHeight] = useState<number>(window.innerHeight);
+	// const lineHeight = canvasHeight && (canvasHeight - symbolSize) / 2;
+
+	window.onresize = () => {
+		setCanvasHeight(mapContext.maps[props.map1Id]?.getCanvas().getBoundingClientRect().height);
+	};
+
+	useEffect(() => {
+		setCanvasHeight(mapHook.map?.getCanvas().height as number);
+	}, [mapHook.map]);
 
 	const mapExists = useCallback(() => {
 		if (!props.map1Id || !props.map2Id) {
@@ -94,7 +108,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	}, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
 	const onDown = (e: React.MouseEvent | React.TouchEvent) => {
-		if (e.nativeEvent instanceof TouchEvent) {
+		if (e.nativeEvent && e.nativeEvent instanceof TouchEvent) {
 			document.addEventListener('touchmove', onMove);
 			document.addEventListener('touchend', onTouchEnd);
 		} else {
@@ -139,30 +153,47 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	}, [mapContext]);
 
 	return (
-		<div
-			style={{
-				position: 'absolute',
-				left: swipeX + '%',
-				top: '50%',
-				borderRadius: '50%',
-				width: '100px',
-				height: '100px',
-				cursor: 'pointer',
-				zIndex: '110',
-				marginLeft: '-50px',
-				marginTop: '-50px',
-				textAlign: 'center',
-				lineHeight: '91px',
-				fontSize: '2em',
-				color: '#fafafa',
-				userSelect: 'none',
-				...props.buttonStyle,
-			}}
-			onTouchStart={onDown}
-			onMouseDown={onDown}
-		>
-			<CircleIcon />
-		</div>
+		<>
+			<div
+				style={{
+					position: 'absolute',
+					left: swipeX + '%',
+					top: '50%',
+					borderRadius: '50%',
+					width: '100px',
+					height: symbolSize + 'px',
+					cursor: 'pointer',
+					zIndex: '110',
+					marginLeft: '-50px',
+					marginTop: '-50px',
+					textAlign: 'center',
+					lineHeight: '91px',
+					fontSize: '2em',
+					color: '#009EE0',
+					opacity: '50%',
+					userSelect: 'none',
+					...props.buttonStyle,
+				}}
+				onTouchStart={onDown}
+				onMouseDown={onDown}
+			>
+				<CircleIcon />
+			</div>
+			<div
+				style={{
+					position: 'absolute',
+					left: swipeX + '%',
+					width: '4px',
+					marginLeft: '-2px',
+					height: canvasHeight + 'px',
+					zIndex: '1200',
+					fontSize: '2em',
+					background: '#009ee0',
+					opacity: '50%',
+					userSelect: 'none',
+				}}
+			></div>
+		</>
 	);
 };
 
