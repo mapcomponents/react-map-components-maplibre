@@ -8,7 +8,7 @@ import {
 	StyleSpecification,
 	VectorSourceSpecification,
 } from 'maplibre-gl';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 
 import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
 import { CSVProtocolHandler } from '../../protocol_handlers/csv';
@@ -28,9 +28,12 @@ import bright from '../../omt_styles/bright';
 import DemoDescriptions from '../../ui_components/DemoDescriptions';
 import protocolDescriptions from './utils/useAddProtocolTexts.json';
 import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import { MlVectorTileLayerProps } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import {csvOptions} from '../../protocol_handlers/csv2geojson.d';
- 
+import MlVectorTileLayer, {
+	MlVectorTileLayerProps,
+} from '../../components/MlVectorTileLayer/MlVectorTileLayer';
+import { csvOptions } from '../../protocol_handlers/csv2geojson.d';
+import MlLayer from '../../components/MlLayer/MlLayer';
+
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
 	component: useAddProtocol,
@@ -57,53 +60,20 @@ interface TemplateProps {
 const Template = (props: TemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
 
-	const [openSidebar, setOpenSidebar] = useState(true);
-	const layerContext = useContext(LayerContext);
-
-
 	//  An optional encoded options object can be added after a '?' sign at the end of the url.
 	//  Handlers that support options are:
 	// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
 	// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
 	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
-console.log( props.protocol + '://' + props.filePath + optionsURL)
+
 	useAddProtocol({
 		protocol: props.protocol,
 		handler: props.handler,
 	});
 
 	useEffect(() => {
-		layerContext.updateStyle(bright as StyleSpecification);
+		mapHook.map?.setStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json');
 
-		layerContext.setLayers([
-			props.protocol === 'mbtiles'
-				? {
-						type: 'vt',
-						name: 'useAddProtocolLayer',
-						config: {
-							layerId: 'useAddProtocolLayer',
-							url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
-							layers: props.layers,
-							insertBeforeLayer: props.insertBeforeLayer,
-							sourceOptions: props.sourceOptions,
-						} as MlVectorTileLayerProps,
-				  }
-				: {
-						type: 'geojson',
-						name: 'useAddProtocolLayer',
-						config: {
-							layerId: 'useAddProtocolLayer',
-							type: props.type || 'line',
-							options: {
-								source: props.sourceId,
-							},
-							paint: props.paint,
-						} as MlGeoJsonLayerProps,
-				  },
-		]);
-	}, []);
-
-	useEffect(() => {
 		if (!mapHook.map?.getSource(props.sourceId) && props.protocol !== 'mbtiles') {
 			mapHook.map?.addSource(props.sourceId, {
 				type: 'geojson',
@@ -118,42 +88,39 @@ console.log( props.protocol + '://' + props.filePath + optionsURL)
 
 	return (
 		<>
-			<TopToolbar
-				buttons={
-					<>
-						<Button
-							variant={openSidebar ? 'contained' : 'outlined'}
-							onClick={() => setOpenSidebar(!openSidebar)}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
-							Sidebar
-						</Button>
-					</>
+			{mapHook.map?.getSource(props.sourceId) && props.protocol === 'mbtiles' ?
+			<MlVectorTileLayer
+				mapId={'map_1'}
+				url={'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}'}
+				layers={
+					[
+						{
+							id: 'countries',
+							type: 'fill',
+							'source-layer': 'countries',
+							layout: {},
+							paint: { 'fill-color': '#f9a5f5', 'fill-opacity': 0.5 },
+						},
+					] as unknown as LayerSpecification[]
 				}
+				insertBeforeLayer={'waterway-name'}
+				sourceOptions={{
+					type: 'vector',
+					minzoom: 0,
+					maxzoom: 1,
+				}}
 			/>
-
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
-				<AddLayerButton
-					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
-					layerTypes={[props.protocol]}
-				/>
-				<Box sx={{ height: '35%' }}>
-					<LayerList>
-						<LayerListItemFactory
-							layers={layerContext.layers}
-							setLayers={layerContext.setLayers}
-							insertBeforeLayer="useAddProtocolLayer"
-							fitBoundsOptions={{ padding: { top: 50, bottom: 50, left: 25, right: 25 } }}
-						/>
-					</LayerList>
-				</Box>
-
-				<DemoDescriptions
-					json={protocolDescriptions}
-					section={props.protocol}
-					title={'About this demo: '}
-				/>
-			</Sidebar>
+			:
+			 <MlLayer
+				layerId={'UseAddProtocolLayer'}
+				options={{
+					type: props.type,
+					source: props.sourceId,
+					paint: props.paint,
+				}}
+				insertBeforeLayer={'waterway-name'}
+			/>			
+			}
 		</>
 	);
 };
@@ -297,3 +264,153 @@ Topojson.args = {
 	},
 	flyTo: { center: [-99.110122, 39.827183], zoom: 4, speed: 2 },
 };
+
+const currentProps = {
+	mbtiles: MbTiles.args,
+	csv: CSVOrTSV.args,
+	csvWithOptions: CSVWithOptions.args,
+	osm: OSM.args,
+	gpx: GPX.args,
+	kml: KML.args,
+	tcx: TCX.args,
+	topojson: Topojson.args,
+};
+
+const CatalogueTemplate = () => {
+	const mapHook = useMap({ mapId: undefined });
+
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const layerContext = useContext(LayerContext);
+	const [currentDemo, setCurrentDemo] = useState<string>('osm');
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const props: TemplateProps = currentProps[currentDemo];
+
+	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
+
+	useAddProtocol({
+		protocol: props.protocol,
+		handler: props.handler,
+	});
+
+	useEffect(() => {
+		layerContext.updateStyle(bright as StyleSpecification);
+
+		layerContext.setLayers([
+			props.protocol === 'mbtiles'
+				? {
+						type: 'vt',
+						name: 'useAddProtocolLayer',
+						config: {
+							layerId: 'useAddProtocolLayer',
+							url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
+							layers: props.layers,
+							insertBeforeLayer: props.insertBeforeLayer,
+							sourceOptions: props.sourceOptions,
+						} as MlVectorTileLayerProps,
+				  }
+				: {
+						type: 'geojson',
+						name: 'useAddProtocolLayer',
+						config: {
+							layerId: 'useAddProtocolLayer',
+							type: props.type || 'line',
+							options: {
+								source: props.sourceId,
+							},
+							paint: props.paint,
+						} as MlGeoJsonLayerProps,
+				  },
+		]);
+	}, [currentDemo]);
+
+	useEffect(() => {
+		if (!mapHook.map?.getSource(props.sourceId) && props.protocol !== 'mbtiles') {
+			mapHook.map?.addSource(props.sourceId, {
+				type: 'geojson',
+				data: props.protocol + '://' + props.filePath + optionsURL,
+			});
+		}
+
+		if (props.flyTo) {
+			mapHook.map?.flyTo(props.flyTo as FlyToOptions);
+		}
+	}, [mapHook.map, currentDemo]);
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Sidebar
+						</Button>
+
+						<Button
+							id="basic-button"
+							variant="contained"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+								setAnchorEl(event.currentTarget);
+							}}
+						>
+							Example Configs
+						</Button>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={() => setAnchorEl(null)}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							{Object.keys(currentProps).map((el) => (
+								<MenuItem onClick={() => setCurrentDemo(el)}>{el}</MenuItem>
+							))}
+						</Menu>
+					</>
+				}
+			/>
+
+			<Sidebar
+				open={openSidebar}
+				setOpen={setOpenSidebar}
+				name={props.protocol.toUpperCase() + ' demo'}
+			>
+				<Tooltip title={'add a new' + props.protocol + ' to the map'}>
+					<AddLayerButton
+						onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
+						layerTypes={[props.protocol]}
+					/>
+				</Tooltip>
+
+				<Box sx={{ height: '35%' }}>
+					<Typography variant="h6">{'Layers'}</Typography>
+					<LayerList>
+						<LayerListItemFactory
+							layers={layerContext.layers}
+							setLayers={layerContext.setLayers}
+							insertBeforeLayer="useAddProtocolLayer"
+							fitBoundsOptions={{ padding: { top: 50, bottom: 50, left: 25, right: 25 } }}
+						/>
+					</LayerList>
+				</Box>
+
+				<DemoDescriptions
+					json={protocolDescriptions}
+					section={props.protocol}
+					title={'About this demo: '}
+				/>
+			</Sidebar>
+		</>
+	);
+};
+
+export const CatalogueDemo = CatalogueTemplate.bind({});

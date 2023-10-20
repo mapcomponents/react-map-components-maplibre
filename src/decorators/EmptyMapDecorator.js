@@ -10,6 +10,8 @@ import getTheme from '../ui_components/MapcomponentsTheme';
 const decorators = [
 	(Story, context) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
+		console.log(context);
+
 
 		return (
 			<div className="fullscreen_map">
@@ -20,8 +22,9 @@ const decorators = [
 							mapId="map_1"
 							options={{
 								zoom: 12.5,
-								center: [7.0851268, 50.73884],
+								center: [7.0851268, 50.73884]
 							}}
+
 						/>
 						<MlNavgiationTools showZoomButtons={false} mapId="map_1" />
 					</MUIThemeProvider>
