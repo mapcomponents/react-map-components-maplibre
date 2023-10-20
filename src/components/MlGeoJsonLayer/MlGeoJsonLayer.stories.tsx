@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import MlGeoJsonLayer from './MlGeoJsonLayer';
 import TopToolbar from '../../ui_components/TopToolbar';
 import useMap from '../../hooks/useMap';
@@ -13,8 +13,10 @@ import wgLocations from './assets/wg_locations.json';
 import { Feature, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import wgMarker from './assets/wgMarker.png';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -30,9 +32,32 @@ interface TemplateProps {
 	geojson: Feature<Geometry | GeometryCollection>;
 	mapId: string;
 	type: string;
+	openSidebar?: boolean;
+	setOpenSidebar?: Dispatch<SetStateAction<boolean>>;
+	title?: string;
 }
 
+const configTitles = {
+	circle: 'WhereGroup locations by number of employees',
+	symbol: 'WhereGroup locations by number of employees',
+	heatmap: 'Earthquakes by magnitude in Alaska',
+	polygon: 'Parks&Squares in Bonn',
+};
+
 const Template = (props: MlGeoJsonLayerProps) => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [7.105175528281227, 50.73348799274236], zoom: 15.5 });
+	}, [mapHook.map]);
+
 	return (
 		<>
 			<MlGeoJsonLayer {...props} />
@@ -60,6 +85,18 @@ const LineTemplate = (props: TemplateProps) => {
 	);
 };
 const PolygonTemplate = (props: TemplateProps) => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [7.105175528281227, 50.73348799274236], zoom: 15.5 });
+	}, [mapHook.map]);
 	return (
 		<>
 			<PolygonStyler {...props} />
@@ -90,14 +127,6 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 
 	return (
 		<>
-			<TopToolbar
-				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
-						WhereGroup locations by number of employees
-					</Typography>
-				}
-			/>
-
 			<CircleMapStyler {...props} />
 		</>
 	);
@@ -119,14 +148,130 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 
 	return (
 		<>
+			<HeatMapStyler {...props} />;
+		</>
+	);
+};
+
+const catalogueTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const [selectedLayer, setSelectedLayer] = useState<string>('circle');
+
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleLayerSelect = (layer: string) => {
+		setSelectedLayer(layer);
+	};
+
+	return (
+		<>
 			<TopToolbar
 				unmovableButtons={
-					<Typography variant="h6" color={'ButtonText'}>
-						Earthquakes by magnitude in Alaska
-					</Typography>
+					<>
+						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
+							{configTitles[selectedLayer]}
+						</Typography>
+						{(selectedLayer === 'polygon' || selectedLayer === 'line') && (
+							<Button
+								variant={openSidebar ? 'contained' : 'outlined'}
+								sx={{ marginRight: '10px' }}
+								onClick={() => setOpenSidebar(!openSidebar)}
+							>
+								Layer options
+							</Button>
+						)}
+						<Button
+							id="basic-button"
+							variant="contained"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={handleClick}
+						>
+							Example Configs
+						</Button>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							<MenuItem onClick={() => handleLayerSelect('circle')}>Circle Configuration</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('line')}>Line Configuration</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('polygon')}>
+								Polygon Configuration
+							</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('heatmap')}>
+								Heatmap Configuration
+							</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('symbol')}>Symbol Configuration</MenuItem>
+							<MenuItem onClick={() => handleLayerSelect('default')}>
+								Default Paint Overrides
+							</MenuItem>
+						</Menu>
+					</>
 				}
 			/>
-			<HeatMapStyler {...props} />;
+
+			{selectedLayer === 'circle' && (
+				<CircleTemplate
+					geojson={Circle.args.geojson}
+					paint={Circle.args.paint}
+					type={Circle.args.type}
+				/>
+			)}
+			{selectedLayer === 'line' && (
+				<LineTemplate
+					openSidebar={openSidebar}
+					setOpenSidebar={setOpenSidebar}
+					geojson={Linestring.args.geojson}
+					type={Linestring.args.type}
+					mapId={Linestring.args.mapId}
+				/>
+			)}
+			{selectedLayer === 'polygon' && (
+				<PolygonTemplate
+					openSidebar={openSidebar}
+					setOpenSidebar={setOpenSidebar}
+					geojson={Polygon.args.geojson}
+					mapId={Polygon.args.mapId}
+					type={Polygon.args.type}
+				/>
+			)}
+			{selectedLayer === 'heatmap' && (
+				<HeatmapTemplate
+					geojson={HeatMap.args.geojson}
+					mapId={HeatMap.args.mapId}
+					type={HeatMap.args.type}
+					options={HeatMap.args.options}
+				/>
+			)}
+			{selectedLayer === 'symbol' && (
+				<CircleTemplate
+					geojson={Symbol.args.geojson}
+					mapId={Symbol.args.mapId}
+					type={Symbol.args.type}
+					options={Symbol.args.options}
+				/>
+			)}
+			{selectedLayer === 'default' && (
+				<Template
+					geojson={DefaultPaintOverrides.args.geojson}
+					mapId={DefaultPaintOverrides.args.mapId}
+					type={DefaultPaintOverrides.args.type}
+					options={DefaultPaintOverrides.args.options}
+				/>
+			)}
 		</>
 	);
 };
@@ -135,6 +280,7 @@ export const Circle = CircleTemplate.bind({});
 Circle.parameters = {};
 Circle.args = {
 	geojson: wgLocations,
+	title: 'WhereGroup locations by number of employees',
 	paint: {
 		'circle-radius': {
 			property: 'Mitarbeitende',
@@ -143,7 +289,7 @@ Circle.args = {
 				[26, 35],
 			],
 		},
-		'circle-color': '#009EE0' ,
+		'circle-color': '#009EE0',
 	},
 	type: 'circle',
 };
@@ -159,12 +305,14 @@ export const Polygon = PolygonTemplate.bind({});
 
 Polygon.args = {
 	geojson: sample_geojson_1,
+	type: 'polygon',
 };
 
 export const HeatMap = HeatmapTemplate.bind({});
 HeatMap.parameters = {};
 HeatMap.args = {
 	geojson: earthquakes,
+	title: 'Earthquakes by magnitude in Alaska',
 	options: {
 		// paint examples copied from https://maplibre.org/maplibre-gl-js-docs/example/heatmap-layer/
 		paint: {
@@ -206,6 +354,7 @@ export const Symbol = CircleTemplate.bind({});
 Symbol.parameters = {};
 Symbol.args = {
 	geojson: wgLocations,
+	title: 'WhereGroup locations by number of employees',
 	options: {
 		layout: {
 			'icon-image': 'wgLogo',
@@ -238,3 +387,6 @@ DefaultPaintOverrides.args = {
 	geojson: sample_geojson_1,
 	type: '',
 };
+export const catalogueDemo = catalogueTemplate.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {};

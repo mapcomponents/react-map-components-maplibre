@@ -1,8 +1,14 @@
-import React from "react";
-import MlNavigationTools, { MlNavigationToolsProps } from "./MlNavigationTools";
-import noNavToolsDecorator from "../../decorators/NoNavToolsDecorator";
-import BuildIcon from "@mui/icons-material/Build";
-import Button from "@mui/material/Button";
+import React from 'react';
+import { useState } from 'react';
+import MlNavigationTools, { MlNavigationToolsProps } from './MlNavigationTools';
+import noNavToolsDecorator from '../../decorators/NoNavToolsDecorator';
+import BuildIcon from '@mui/icons-material/Build';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Sidebar from '../../ui_components/Sidebar';
+import TopToolbar from '../../ui_components/TopToolbar';
 
 
 const storyoptions = {
@@ -17,8 +23,101 @@ const storyoptions = {
 };
 export default storyoptions;
 
-
 const Template = (props: MlNavigationToolsProps ) => <MlNavigationTools {...props} />;
+
+const catalogueTemplate = () => {
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const [ThreeDButton, setThreeDButton] = useState(false);
+	const [CenterLocationButton, setCenterLocationButton] = useState(false);
+	const [ZoomButtons, setZoomButtons] = useState(true);
+	const [FollowGpsButton, setFollowGpsButton] = useState(false);
+	const [showCustomButton, setShowCustomButton] = useState<boolean>(false);
+	const [alternativePosition, setAlternativePosition] = useState(false);
+
+	const handleChange1 = () => {
+		setThreeDButton(!ThreeDButton);
+	};
+	const handleChange2 = () => {
+		setCenterLocationButton(!CenterLocationButton);
+	};
+	const handleChange3 = () => {
+		setZoomButtons(!ZoomButtons);
+	};
+	const handleChange4 = () => {
+		setFollowGpsButton(!FollowGpsButton);
+	};
+
+	const handleCustomButtonChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setShowCustomButton(event.target.checked);
+	};
+
+	const handleAlternativePositionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setAlternativePosition(event.target.checked);
+	};
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Options
+						</Button>
+					</>
+				}
+			/>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Navigation Tools'}>
+				<FormGroup>
+					<FormControlLabel
+						control={
+							<Switch checked={alternativePosition} onChange={handleAlternativePositionChange} />
+						}
+						label="Alternative Position"
+					/>
+					<FormControlLabel
+						control={<Switch checked={ThreeDButton} onChange={handleChange1} />}
+						label="Show 3D button"
+					/>
+					<FormControlLabel
+						control={<Switch checked={CenterLocationButton} onChange={handleChange2} />}
+						label="Show center location button"
+					/>
+					<FormControlLabel
+						control={<Switch checked={ZoomButtons} onChange={handleChange3} />}
+						label="Show zoom buttons"
+					/>
+					<FormControlLabel
+						control={<Switch checked={FollowGpsButton} onChange={handleChange4} />}
+						label="Show 'FollowGPS' Button"
+					/>
+					<FormControlLabel
+						control={<Switch checked={showCustomButton} onChange={handleCustomButtonChange} />}
+						label="Add a custom Button"
+					/>
+				</FormGroup>
+			</Sidebar>
+			<MlNavigationTools
+				sx={alternativePosition ? { top: '80px' } : undefined}
+				show3DButton={ThreeDButton}
+				showCenterLocationButton={CenterLocationButton}
+				showZoomButtons={ZoomButtons}
+				showFollowGpsButton={FollowGpsButton}
+			>
+				{showCustomButton ? (
+					<Button variant="navtools" onClick={() => {}}>
+						<BuildIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+					</Button>
+				) : (
+					<></>
+				)}
+			</MlNavigationTools>
+		</>
+	);
+};
 
 export const DefaultConfig = Template.bind({});
 DefaultConfig.parameters = {};
@@ -65,3 +164,6 @@ CustomButton.args = {
 	),
 };
 
+export const catalogueDemo =  catalogueTemplate.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {};

@@ -38,10 +38,8 @@ const OverlayTemplate = (props: MlScaleReferenceProps ) => {
 	);
 };
 
-export const Toolbar = ToolbarTemplate.bind({});
-Toolbar.args = {
-	
-};
+export const catalogueDemo = ToolbarTemplate.bind({});
+catalogueDemo.args = {};
 
 export const Overlay = OverlayTemplate.bind({});
 Overlay.args = {	
