@@ -55,7 +55,7 @@ const MlFillExtrusionLayer = (props: MlFillExtrusionLayerProps) => {
 			type: "fill-extrusion",
 			source: props.sourceId || "openmaptiles",
 			"source-layer": props.sourceLayer || "building",
-			minzoom: props.minZoom || 14,
+			minzoom: props.minZoom || 6,
 			paint: {
 				...props.paint,
 			},
