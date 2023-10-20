@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import MlFillExtrusionLayer from './MlFillExtrusionLayer';
+import MlFillExtrusionLayer, { MlFillExtrusionLayerProps } from './MlFillExtrusionLayer';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
@@ -12,7 +12,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
+const Template = (props: MlFillExtrusionLayerProps) => {
 
 		return <MlFillExtrusionLayer {...props} />;
 };
