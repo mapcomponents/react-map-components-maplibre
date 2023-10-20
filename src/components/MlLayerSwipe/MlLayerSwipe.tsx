@@ -4,6 +4,8 @@ import React, { useContext, useCallback, useRef, useEffect, useState } from 'rea
 import syncMove from '@mapbox/mapbox-gl-sync-move';
 import './style.css';
 import MapContext, { MapContextType } from '../../contexts/MapContext';
+import { ReactComponent as CircleIcon } from './assets/circleIcon.svg';
+import { TouchEvent } from 'react';
 
 export interface MlLayerSwipeProps {
 	/**
@@ -112,8 +114,10 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	};
 
 	function adjustWindowSize() {
-		
-		const clipWidth = mapContext.maps[props.map2Id].getContainer().style.clip.split(',')[1].replace('px', '');
+		const clipWidth = mapContext.maps[props.map2Id]
+			.getContainer()
+			.style.clip.split(',')[1]
+			.replace('px', '');
 		const canvasWidth = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect().width;
 
 		if (parseFloat(clipWidth) < canvasWidth) {
@@ -143,8 +147,6 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 				borderRadius: '50%',
 				width: '100px',
 				height: '100px',
-				background: '#0066ff',
-				border: '3px solid #eaebf1',
 				cursor: 'pointer',
 				zIndex: '110',
 				marginLeft: '-50px',
@@ -158,7 +160,9 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 			}}
 			onTouchStart={onDown}
 			onMouseDown={onDown}
-		></div>
+		>
+			<CircleIcon />
+		</div>
 	);
 };
 
