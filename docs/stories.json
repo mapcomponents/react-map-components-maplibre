@@ -183,15 +183,29 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlfeatureeditor--catalogue-demo": {
+      "id": "mapcomponents-mlfeatureeditor--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlFeatureEditor",
+      "importPath": 96178,
+      "kind": "MapComponents/MlFeatureEditor",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 96178,
+        "framework": "react",
+        "__id": "mapcomponents-mlfeatureeditor--catalogue-demo",
+        "__isArgsStory": false
+      }
+    },
     "mapcomponents-mlfillextrusionlayer--example-config": {
       "id": "mapcomponents-mlfillextrusionlayer--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlFillExtrusionLayer",
-      "importPath": 35431,
+      "importPath": 11015,
       "kind": "MapComponents/MlFillExtrusionLayer",
       "story": "Example Config",
       "parameters": {
-        "fileName": 35431,
+        "fileName": 11015,
         "framework": "react",
         "__id": "mapcomponents-mlfillextrusionlayer--example-config",
         "__isArgsStory": true
@@ -293,6 +307,20 @@
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
         "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlgeojsonlayer--catalogue-demo": {
+      "id": "mapcomponents-mlgeojsonlayer--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 70232,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 70232,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--catalogue-demo",
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlgeojsonlayerwithsource--example-config": {
@@ -421,17 +449,31 @@
         "__isArgsStory": false
       }
     },
-    "mapcomponents-mlnavigationcompass--standard": {
-      "id": "mapcomponents-mlnavigationcompass--standard",
-      "name": "Standard",
+    "mapcomponents-mlmeasuretool--catalogue-demo": {
+      "id": "mapcomponents-mlmeasuretool--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlMeasureTool",
+      "importPath": 4407,
+      "kind": "MapComponents/MlMeasureTool",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 4407,
+        "framework": "react",
+        "__id": "mapcomponents-mlmeasuretool--catalogue-demo",
+        "__isArgsStory": false
+      }
+    },
+    "mapcomponents-mlnavigationcompass--catalogue-demo": {
+      "id": "mapcomponents-mlnavigationcompass--catalogue-demo",
+      "name": "Catalogue Demo",
       "title": "MapComponents/MlNavigationCompass",
       "importPath": 47275,
       "kind": "MapComponents/MlNavigationCompass",
-      "story": "Standard",
+      "story": "Catalogue Demo",
       "parameters": {
         "fileName": 47275,
         "framework": "react",
-        "__id": "mapcomponents-mlnavigationcompass--standard",
+        "__id": "mapcomponents-mlnavigationcompass--catalogue-demo",
         "__isArgsStory": true
       }
     },
@@ -547,6 +589,20 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlnavigationtools--catalogue-demo": {
+      "id": "mapcomponents-mlnavigationtools--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlNavigationTools",
+      "importPath": 84870,
+      "kind": "MapComponents/MlNavigationTools",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 84870,
+        "framework": "react",
+        "__id": "mapcomponents-mlnavigationtools--catalogue-demo",
+        "__isArgsStory": false
+      }
+    },
     "mapcomponents-mlorderlayers--example-config": {
       "id": "mapcomponents-mlorderlayers--example-config",
       "name": "Example Config",
@@ -561,17 +617,17 @@
         "__isArgsStory": false
       }
     },
-    "mapcomponents-mlscalereference--toolbar": {
-      "id": "mapcomponents-mlscalereference--toolbar",
-      "name": "Toolbar",
+    "mapcomponents-mlscalereference--catalogue-demo": {
+      "id": "mapcomponents-mlscalereference--catalogue-demo",
+      "name": "Catalogue Demo",
       "title": "MapComponents/MlScaleReference",
       "importPath": 25018,
       "kind": "MapComponents/MlScaleReference",
-      "story": "Toolbar",
+      "story": "Catalogue Demo",
       "parameters": {
         "fileName": 25018,
         "framework": "react",
-        "__id": "mapcomponents-mlscalereference--toolbar",
+        "__id": "mapcomponents-mlscalereference--catalogue-demo",
         "__isArgsStory": true
       }
     },
@@ -635,11 +691,11 @@
       "id": "mapcomponents-mltemporalcontroller--fill-config",
       "name": "Fill Config",
       "title": "MapComponents/MlTemporalController",
-      "importPath": 96157,
+      "importPath": 39267,
       "kind": "MapComponents/MlTemporalController",
       "story": "Fill Config",
       "parameters": {
-        "fileName": 96157,
+        "fileName": 39267,
         "framework": "react",
         "__id": "mapcomponents-mltemporalcontroller--fill-config",
         "__isArgsStory": true
@@ -649,11 +705,11 @@
       "id": "mapcomponents-mltemporalcontroller--circle-config",
       "name": "Circle Config",
       "title": "MapComponents/MlTemporalController",
-      "importPath": 96157,
+      "importPath": 39267,
       "kind": "MapComponents/MlTemporalController",
       "story": "Circle Config",
       "parameters": {
-        "fileName": 96157,
+        "fileName": 39267,
         "framework": "react",
         "__id": "mapcomponents-mltemporalcontroller--circle-config",
         "__isArgsStory": true
@@ -663,14 +719,28 @@
       "id": "mapcomponents-mltemporalcontroller--line-config",
       "name": "Line Config",
       "title": "MapComponents/MlTemporalController",
-      "importPath": 96157,
+      "importPath": 39267,
       "kind": "MapComponents/MlTemporalController",
       "story": "Line Config",
       "parameters": {
-        "fileName": 96157,
+        "fileName": 39267,
         "framework": "react",
         "__id": "mapcomponents-mltemporalcontroller--line-config",
         "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mltemporalcontroller--catalogue-demo": {
+      "id": "mapcomponents-mltemporalcontroller--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlTemporalController",
+      "importPath": 39267,
+      "kind": "MapComponents/MlTemporalController",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 39267,
+        "framework": "react",
+        "__id": "mapcomponents-mltemporalcontroller--catalogue-demo",
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlterrainlayer--example-config": {
