@@ -9,11 +9,9 @@ import {
 	MenuItem,
 	Checkbox,
 	ListItemText,
-	Button,
 } from '@mui/material';
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
-import TopToolbar from '../../../ui_components/TopToolbar';
 
 const streetNames = [
 	'Show all',
@@ -77,7 +75,6 @@ const LineStyler = (props) => {
 	const [opacity, setOpacity] = useState(0.8);
 	const [featuresToShow, setFeaturesToShow] = useState(['Show all']);
 	const [lineWidth, setLineWidth] = useState(5);
-	const [openSidebar, setOpenSidebar] = useState(true);
 
 	const storyGeoJson = useMemo(() => {
 		if (featuresToShow[0] === 'Show all') {
@@ -95,7 +92,6 @@ const LineStyler = (props) => {
 		};
 	}, [featuresToShow, props.geojson]);
 
-	
 	const handleChange = (event) => {
 		const {
 			target: { value },
@@ -110,8 +106,6 @@ const LineStyler = (props) => {
 	const handleColorChange = (value) => {
 		setColor(value);
 	};
-
-
 
 	return (
 		<>
