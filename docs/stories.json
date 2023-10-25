@@ -663,11 +663,11 @@
       "id": "mapcomponents-mlsketchtool--example-config",
       "name": "Example Config",
       "title": "MapComponents/MlSketchTool",
-      "importPath": 73653,
+      "importPath": 30808,
       "kind": "MapComponents/MlSketchTool",
       "story": "Example Config",
       "parameters": {
-        "fileName": 73653,
+        "fileName": 30808,
         "framework": "react",
         "__id": "mapcomponents-mlsketchtool--example-config",
         "__isArgsStory": false
