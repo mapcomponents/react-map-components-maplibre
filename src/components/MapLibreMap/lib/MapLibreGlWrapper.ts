@@ -12,6 +12,16 @@ import {
 	StyleImageMetadata,
 } from 'maplibre-gl';
 import { Map as MapType, Style } from 'maplibre-gl';
+import maplibregl from 'maplibre-gl';
+
+maplibregl.setRTLTextPlugin(
+	'https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js',
+	(res) => {
+		console.log(res);
+	},
+	true // Lazy load the plugin
+);
+
 
 type WrapperEventArgArray = [string, (arg0: unknown) => void];
 type EventArgArray = [
