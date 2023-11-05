@@ -1,5 +1,16 @@
 import { IControl, MapOptions as MapOptionsType } from "!maplibre-gl";
 import { Map as MapType } from "maplibre-gl";
+import maplibreGl from "maplibre-gl";
+
+maplibreGl.setRTLTextPlugin(
+	'https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js',
+	(res) => {
+		console.log(res);
+	},
+	true // Lazy load the plugin
+);
+
+
 declare type EventArgArray = [string, string | Function, Function?];
 declare type LayerState = {
     id: string;
