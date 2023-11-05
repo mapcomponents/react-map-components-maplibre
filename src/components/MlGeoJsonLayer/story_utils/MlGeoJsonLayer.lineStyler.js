@@ -9,11 +9,9 @@ import {
 	MenuItem,
 	Checkbox,
 	ListItemText,
-	Button,
 } from '@mui/material';
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
-import TopToolbar from '../../../ui_components/TopToolbar';
 
 const streetNames = [
 	'Show all',
@@ -77,7 +75,6 @@ const LineStyler = (props) => {
 	const [opacity, setOpacity] = useState(0.8);
 	const [featuresToShow, setFeaturesToShow] = useState(['Show all']);
 	const [lineWidth, setLineWidth] = useState(5);
-	const [openSidebar, setOpenSidebar] = useState(true);
 
 	const storyGeoJson = useMemo(() => {
 		if (featuresToShow[0] === 'Show all') {
@@ -95,7 +92,6 @@ const LineStyler = (props) => {
 		};
 	}, [featuresToShow, props.geojson]);
 
-	
 	const handleChange = (event) => {
 		const {
 			target: { value },
@@ -111,26 +107,9 @@ const LineStyler = (props) => {
 		setColor(value);
 	};
 
-
-
 	return (
 		<>
-			<TopToolbar
-				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Layer options
-					</Button>
-				}
-			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'GeoJson Layer'}
-			>
+			<Sidebar open={props.openSidebar} setOpen={props.setOpenSidebar} name={'GeoJson Layer'}>
 				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 15 }} alignItems="left">
 					<Typography>Feature to show:</Typography>
 

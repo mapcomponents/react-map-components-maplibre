@@ -3,7 +3,7 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import useLayer from "../../hooks/useLayer";
 
-interface MlFillExtrusionLayerProps {
+export interface MlFillExtrusionLayerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -55,7 +55,7 @@ const MlFillExtrusionLayer = (props: MlFillExtrusionLayerProps) => {
 			type: "fill-extrusion",
 			source: props.sourceId || "openmaptiles",
 			"source-layer": props.sourceLayer || "building",
-			minzoom: props.minZoom || 14,
+			minzoom: props.minZoom || 6,
 			paint: {
 				...props.paint,
 			},
