@@ -50,10 +50,16 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				setDisplayValue({ value: result, label: getUnitLabel(props.unit) });
 			} else {
 				let label = 'm';
-				let value = result * 1000000;
+				let value = result * 1000;
+				if( props.measureType === 'polygon'){
+				  value = result * 1000000;
+				}
 				if (getUnitLabel(props.unit) === 'mi') {
 					label = 'in';
 					value = result * 63360;
+					if( props.measureType === 'polygon'){
+				  	value = result * 4014489599.4792;
+					}
 				}
 				setDisplayValue({ value: value, label: label });
 			}
