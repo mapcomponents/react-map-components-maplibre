@@ -17,9 +17,8 @@ import MlVectorTileLayer, {
 import useLayerContext from '../../hooks/useLayerContext';
 import { LayerConfig, wmsConfig } from '../../contexts/LayerContext';
 import useMap from '../../hooks/useMap';
-import { bbox } from '@turf/turf';
-import { LngLatBoundsLike, FitBoundsOptions, GeoJSONSource } from 'maplibre-gl';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, bbox } from '@turf/turf';
+import { LngLatBoundsLike, FitBoundsOptions } from 'maplibre-gl';
 
 
 const IconButtonStyled = styled(IconButton)({
@@ -44,40 +43,46 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const mapHook = useMap({ mapId: undefined });
 	
 
+	//useCallback Hook
 	function fitLayer(layer: LayerConfig) {
-		const layerSource = layer.id && mapHook.map?.getLayer(layer.id)?.source ? mapHook.map?.getLayer(layer.id).source : undefined;
+		const layerSource =
+			layer.id && mapHook.map?.getLayer(layer.id)?.source
+				? mapHook.map?.getLayer(layer.id).source
+				: undefined;
 
-	
-	switch (layer.type) {
+		switch (layer.type) {
 			case 'geojson':
 
-			if (!layerSource) {
-				return;
-			}
-			
-			const geojson = layerSource && (mapHook.map?.getSource(layerSource) as GeoJSONSource)._data;
-			let _geojson = layerSource && {
-				type: 'FeatureCollection',
-				features: mapHook.map?.querySourceFeatures(layerSource),
-			};
-				if((_geojson as FeatureCollection).features.length === 0){
-					mapHook.map?.zoomTo(1);
-				}
-				mapHook.map?.fitBounds(
-					typeof geojson === 'string'
-						? (bbox(_geojson) as LngLatBoundsLike)
-						: (bbox(geojson) as LngLatBoundsLike),
-					props.fitBoundsOptions
-				);
+				if (layer.config?.geojson) {
+					mapHook.map?.fitBounds(
+						bbox(layer.config?.geojson) as LngLatBoundsLike,
+						props.fitBoundsOptions
+					);
+				} else {
+					if (!layerSource) {
+						return;
+					}
+					let _geojson = {
+						type: 'FeatureCollection',
+						features: mapHook.map?.querySourceFeatures(layerSource),
+					};
 
+					if ((_geojson as FeatureCollection).features.length === 0) {
+						mapHook.map?.zoomTo(1);
+					_geojson.features = mapHook.map?.querySourceFeatures(layerSource)				
+					}
+
+					mapHook.map?.fitBounds(bbox(_geojson) as LngLatBoundsLike, props.fitBoundsOptions);
+				}
+				break;
 			case 'vt':
 				console.log('vt');
-			
-				case 'wms':
-					console.log(layer.config)
-					const wmsBbox: LngLatBoundsLike = (layer.config as wmsConfig).config.layers[0].EX_GeographicBoundingBox as LngLatBoundsLike;
-					mapHook.map?.fitBounds(wmsBbox)
-									
+				break;
+			case 'wms':
+				const wmsBbox: LngLatBoundsLike = (layer.config as wmsConfig).config.layers[0]
+					.EX_GeographicBoundingBox as LngLatBoundsLike;
+				mapHook.map?.fitBounds(wmsBbox);
+				break;
 
 			default:
 				return;
@@ -104,8 +109,6 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		if (props.setLayers) return props.setLayers;
 		return layerContext.setLayers;
 	}, [props.setLayers, layerContext.setLayers]);
-
-
 
 	return (
 		<>
@@ -166,9 +169,9 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 											>
 												<ArrowCircleUpIcon />
 											</IconButtonStyled>
-											<IconButtonStyled onClick={() => fitLayer(layer)}>
+										 <IconButtonStyled onClick={() => fitLayer(layer)}>
 												<CenterLayerIcon />
-											</IconButtonStyled>
+											</IconButtonStyled> 
 										</>
 									}
 									setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
@@ -189,11 +192,10 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 							</React.Fragment>
 						);
 					case 'wms':
-
 						return (
 							<React.Fragment key={layer?.id + '_listItem'}>
 								<MlWmsLoader
-									{...layer.config as unknown as MlWmsLoaderProps }
+									{...(layer.config as unknown as MlWmsLoaderProps)}
 									key={layer.id}
 									mapId={props?.mapId}
 									insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
@@ -239,10 +241,10 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 												}}
 											>
 												<ArrowCircleUpIcon />
-											</IconButtonStyled>		
+											</IconButtonStyled>
 											<IconButtonStyled onClick={() => fitLayer(layer)}>
 												<CenterLayerIcon />
-											</IconButtonStyled>							
+											</IconButtonStyled>
 										</>
 									}
 								/>
@@ -283,11 +285,10 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 												}}
 											>
 												<ArrowCircleUpIcon />
-											</IconButtonStyled>											
+											</IconButtonStyled>
 											<IconButtonStyled onClick={() => fitLayer(layer)}>
 												<CenterLayerIcon />
 											</IconButtonStyled>
-							
 										</>
 									}
 									setLayerState={(layerConfig: MlVectorTileLayerProps | false) =>
