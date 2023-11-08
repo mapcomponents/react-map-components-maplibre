@@ -15,11 +15,12 @@ import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import useLayerContext from '../../hooks/useLayerContext';
-import { LayerConfig } from '../../contexts/LayerContext';
+import { LayerConfig, wmsConfig } from '../../contexts/LayerContext';
 import useMap from '../../hooks/useMap';
 import { bbox } from '@turf/turf';
 import { LngLatBoundsLike, FitBoundsOptions, GeoJSONSource } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
+
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -43,6 +44,46 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const mapHook = useMap({ mapId: undefined });
 	
 
+	function fitLayer(layer: LayerConfig) {
+		const layerSource = layer.id && mapHook.map?.getLayer(layer.id)?.source ? mapHook.map?.getLayer(layer.id).source : undefined;
+
+	
+	switch (layer.type) {
+			case 'geojson':
+
+			if (!layerSource) {
+				return;
+			}
+			
+			const geojson = layerSource && (mapHook.map?.getSource(layerSource) as GeoJSONSource)._data;
+			let _geojson = layerSource && {
+				type: 'FeatureCollection',
+				features: mapHook.map?.querySourceFeatures(layerSource),
+			};
+				if((_geojson as FeatureCollection).features.length === 0){
+					mapHook.map?.zoomTo(1);
+				}
+				mapHook.map?.fitBounds(
+					typeof geojson === 'string'
+						? (bbox(_geojson) as LngLatBoundsLike)
+						: (bbox(geojson) as LngLatBoundsLike),
+					props.fitBoundsOptions
+				);
+
+			case 'vt':
+				console.log('vt');
+			
+				case 'wms':
+					console.log(layer.config)
+					const wmsBbox: LngLatBoundsLike = (layer.config as wmsConfig).config.layers[0].EX_GeographicBoundingBox as LngLatBoundsLike;
+					mapHook.map?.fitBounds(wmsBbox)
+									
+
+			default:
+				return;
+		}
+	}
+
 	const orderLayers = useMemo(() => {
 		const layerIds = [
 			'order-background',
@@ -64,37 +105,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		return layerContext.setLayers;
 	}, [props.setLayers, layerContext.setLayers]);
 
-	function fitLayer(layer: LayerConfig) {
-		const layerSource = layer.id ? mapHook.map?.getLayer(layer.id).source : undefined;
-		const geojson = layerSource && (mapHook.map?.getSource(layerSource) as GeoJSONSource)._data;
-		let _geojson = layerSource && {
-			type: 'FeatureCollection',
-			features: mapHook.map?.querySourceFeatures(layerSource),
-		};
 
-		if (!layerSource) {
-			return;
-		}
-
-		switch (layer.type) {
-			case 'geojson':
-				if((_geojson as FeatureCollection).features.length === 0){
-					mapHook.map?.zoomTo(1);
-				}
-				mapHook.map?.fitBounds(
-					typeof geojson === 'string'
-						? (bbox(_geojson) as LngLatBoundsLike)
-						: (bbox(geojson) as LngLatBoundsLike),
-					props.fitBoundsOptions
-				);
-
-			case 'vt':
-				console.log(geojson);
-
-			default:
-				return;
-		}
-	}
 
 	return (
 		<>
@@ -178,10 +189,11 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 							</React.Fragment>
 						);
 					case 'wms':
+
 						return (
 							<React.Fragment key={layer?.id + '_listItem'}>
 								<MlWmsLoader
-									{...layer.config}
+									{...layer.config as unknown as MlWmsLoaderProps }
 									key={layer.id}
 									mapId={props?.mapId}
 									insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
@@ -227,7 +239,10 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 												}}
 											>
 												<ArrowCircleUpIcon />
-											</IconButtonStyled>									
+											</IconButtonStyled>		
+											<IconButtonStyled onClick={() => fitLayer(layer)}>
+												<CenterLayerIcon />
+											</IconButtonStyled>							
 										</>
 									}
 								/>

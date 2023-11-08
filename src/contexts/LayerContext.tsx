@@ -2,19 +2,34 @@ import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
 import config from '../omt_styles/config';
-import { MlWmsLoaderProps } from '../components/MlWmsLoader/MlWmsLoader';
 import { MlGeoJsonLayerProps } from '../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { v4 as uuidv4 } from 'uuid';
+import { Layer } from 'wms-capabilities';
 
 export interface LayerContextProps {
-	children: React.ReactNode;
+	children: 
+	React.ReactNode;
+}
+
+export interface wmsLoaderConfigProps{
+	getFeatureInfoUrl: string,
+layers: Layer[] , 
+name: string,
+open: boolean,
+visible: boolean ,
+wmsUrl: string
+}
+export interface wmsConfig{
+featureInfoActive: boolean;
+config: wmsLoaderConfigProps,
+url: string
 }
 
 export type WmsLayerConfig = {
 	type: 'wms';
 	name?: string;
 	id?: string;
-	config: MlWmsLoaderProps;
+	config: wmsConfig;
 };
 export type GeojsonLayerConfig = {
 	type: 'geojson';

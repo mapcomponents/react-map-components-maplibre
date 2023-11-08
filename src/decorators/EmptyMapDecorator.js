@@ -10,8 +10,6 @@ import getTheme from '../ui_components/MapcomponentsTheme';
 const decorators = [
 	(Story, context) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
-		console.log(context);
-
 
 		return (
 			<div className="fullscreen_map">
