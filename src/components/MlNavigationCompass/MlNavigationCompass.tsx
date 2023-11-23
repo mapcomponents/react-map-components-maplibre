@@ -16,6 +16,12 @@ const CompassBox = styled(Box)(({ theme }) => ({
 	position: 'absolute',
 	right: '-10px',
 	top: '-52px',
+	width: '52px',
+	height: '52px',
+	display: 'flex',
+	flexDirection: 'row',
+	justifyContent: 'center',
+	alignItems: 'center',
 	[theme.breakpoints.down('md')]: {
 		right: '0px',
 		top: '-52px',
@@ -32,9 +38,8 @@ const CompassBox = styled(Box)(({ theme }) => ({
 	},
 }));
 const NeedleBox = styled(Box)(({ theme }) => ({
-	position: 'absolute',
-	right: '21.4px',
-	top: '6px',
+	display: 'flex',
+	flexDirection: 'row',
 	'path:nth-of-type(2)': {
 		fill: theme.palette.compass.compSouth,
 	},
@@ -109,7 +114,7 @@ const MlNavigationCompass = (props: MlNavigationCompassProps) => {
 		<>
 			<BoxStyled sx={{ ...props.style }}>
 				<CompassBox onClick={rotate} sx={{ ...props.backgroundStyle }}>
-					<CompassBackground />
+					<CompassBackground style={{ position: 'absolute', top: 0, left: 0 }} />
 					<NeedleBox onClick={rotate} sx={{ ...props.needleStyle }}>
 						<CompassNeedle
 							style={{
