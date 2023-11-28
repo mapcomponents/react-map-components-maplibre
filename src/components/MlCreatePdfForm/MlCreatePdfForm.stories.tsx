@@ -50,7 +50,7 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = () => {
-	const [showCreatePdfForm, setShowCreatePdfForm] = useState(false);
+	const [showCreatePdfForm, setShowCreatePdfForm] = useState(true);
 
 	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	return (
