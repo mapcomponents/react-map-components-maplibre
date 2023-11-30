@@ -91,6 +91,11 @@ const catalogueTemplate = () => {
 		}
 	}, [visible]);
 
+	useEffect(() => {
+		handleLayerSelect('EditPolygon');
+	}, []);
+
+
 	return (
 		<>
 			<TopToolbar
