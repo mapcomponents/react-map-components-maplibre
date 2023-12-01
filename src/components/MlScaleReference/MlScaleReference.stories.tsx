@@ -28,7 +28,7 @@ const catalgoueTemplate = (props: MlScaleReferenceProps) => {
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			setShowTooltip(false);
-		}, 4000);
+		}, 7000);
 		return () => clearTimeout(timeout);
 	}, []);
 
@@ -42,7 +42,8 @@ const catalgoueTemplate = (props: MlScaleReferenceProps) => {
 						color: '#009ee0',
 						backgroundColor: '#fff',
 						top: mediaIsMobile ? '20px' : '22px',
-						fontSize: '14px',
+						fontSize: '16px',
+						fontFamily: 'sans-serif',
 						display: 'flex',
 						flexDirection: 'column',
 						gap: '5px',

@@ -43,7 +43,7 @@ const catalogueTemplate = (props) => {
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			setShowTooltip(false);
-		}, 4000);
+		}, 7000);
 		return () => clearTimeout(timeout);
 	}, []);
 
@@ -59,6 +59,7 @@ const catalogueTemplate = (props) => {
 						bottom: mediaIsMobile ? '56px' : '48px',
 						fontSize: '20px',
 						display: 'flex',
+						fontFamily: 'sans-serif',
 						flexDirection: 'column',
 						gap: '5px',
 						zIndex: 1000,
