@@ -38,7 +38,7 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 		if (currentFeatures[0]) {
 			const result =
 				props.measureType === 'polygon'
-				// turf area does actually return mm^2 contrary to the documentation stating it will return m^2
+				// for "polyong" mode calculate km²
 					? (turf.area(currentFeatures[0] as Feature) / 1000000) * getUnitSquareMultiplier(props.unit)
 					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
 
