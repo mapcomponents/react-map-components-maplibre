@@ -12,6 +12,8 @@ const PaperStyled = styled(Paper)({
 	marginRight: '-21px',
 	paddingLeft: '53px',
 	borderRadius: '0px',
+	boxShadow: 'none',
+	backgroundColor: 'rgb(0, 0, 0, 0)',
 });
 const BoxStyled = styled(Box)({
 	marginLeft: '61px',

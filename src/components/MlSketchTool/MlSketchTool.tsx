@@ -20,7 +20,6 @@ import { Button, Theme, Typography } from '@mui/material';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
-
 const sketchTools = [
 	{ name: 'Point', mode: 'draw_point', icon: <ScatterPlotIcon /> },
 	{ name: 'LineString', mode: 'draw_line_string', icon: <PolylineIcon /> },
@@ -189,7 +188,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				/>
 			)}
 
-			<List sx={{ zIndex: 105 }}>
+			<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
 				{sketchState.geometries.map((el) => (
 					<>
 						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -200,6 +199,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									'&:hover': {
 										backgroundColor: 'rgb(177, 177, 177, 0.2)',
 									},
+									marginTop: '25px',
 								}}
 								onMouseOver={() => {
 									setHoveredGeometry(el);
