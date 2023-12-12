@@ -68,6 +68,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		drawMode: undefined,
 	});
 
+
 	const buttonStyle = {
 		...props.buttonStyleOverride,
 	};

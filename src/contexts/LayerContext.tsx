@@ -92,8 +92,6 @@ function LayerContextProvider(props: LayerContextProps) {
 	};
 
 	useEffect(() => {
-		console.log('layers', layers);
-
 		if (layers.filter((el) => !el?.id).length) {
 			const _layers = [...layers];
 			_layers.forEach((el) => {
