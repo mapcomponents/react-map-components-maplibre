@@ -211,17 +211,31 @@
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlfollowgps--example-config": {
-      "id": "mapcomponents-mlfollowgps--example-config",
-      "name": "Example Config",
+    "mapcomponents-mlfollowgps--standard-config": {
+      "id": "mapcomponents-mlfollowgps--standard-config",
+      "name": "Standard Config",
       "title": "MapComponents/MlFollowGps",
       "importPath": 64224,
       "kind": "MapComponents/MlFollowGps",
-      "story": "Example Config",
+      "story": "Standard Config",
       "parameters": {
         "fileName": 64224,
         "framework": "react",
-        "__id": "mapcomponents-mlfollowgps--example-config",
+        "__id": "mapcomponents-mlfollowgps--standard-config",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlfollowgps--catalogue-demo": {
+      "id": "mapcomponents-mlfollowgps--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlFollowGps",
+      "importPath": 64224,
+      "kind": "MapComponents/MlFollowGps",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 64224,
+        "framework": "react",
+        "__id": "mapcomponents-mlfollowgps--catalogue-demo",
         "__isArgsStory": true
       }
     },
@@ -617,17 +631,17 @@
         "__isArgsStory": false
       }
     },
-    "mapcomponents-mlscalereference--catalogue-demo": {
-      "id": "mapcomponents-mlscalereference--catalogue-demo",
-      "name": "Catalogue Demo",
+    "mapcomponents-mlscalereference--toolbar": {
+      "id": "mapcomponents-mlscalereference--toolbar",
+      "name": "Toolbar",
       "title": "MapComponents/MlScaleReference",
       "importPath": 25018,
       "kind": "MapComponents/MlScaleReference",
-      "story": "Catalogue Demo",
+      "story": "Toolbar",
       "parameters": {
         "fileName": 25018,
         "framework": "react",
-        "__id": "mapcomponents-mlscalereference--catalogue-demo",
+        "__id": "mapcomponents-mlscalereference--toolbar",
         "__isArgsStory": true
       }
     },
@@ -642,6 +656,20 @@
         "fileName": 25018,
         "framework": "react",
         "__id": "mapcomponents-mlscalereference--overlay",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlscalereference--catalogue-demo": {
+      "id": "mapcomponents-mlscalereference--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlScaleReference",
+      "importPath": 25018,
+      "kind": "MapComponents/MlScaleReference",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 25018,
+        "framework": "react",
+        "__id": "mapcomponents-mlscalereference--catalogue-demo",
         "__isArgsStory": true
       }
     },
