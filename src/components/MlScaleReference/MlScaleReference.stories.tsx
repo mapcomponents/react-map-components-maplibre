@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import MlScaleReference, { MlScaleReferenceProps } from './MlScaleReference';
-
+import Box from '@mui/material/Box';
 import TopToolbar from '../../ui_components/TopToolbar';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { useMediaQuery, Theme } from '@mui/material';
@@ -35,13 +35,13 @@ const catalgoueTemplate = (props: MlScaleReferenceProps) => {
 	return (
 		<>
 			{showTooltip && (
-				<div
-					style={{
+				<Box
+					sx={{
 						position: 'fixed',
-						right: mediaIsMobile ? '110px' : '175px',
+						right: { xs: '105px', md: '175px' },
 						color: '#009ee0',
 						backgroundColor: '#fff',
-						top: mediaIsMobile ? '20px' : '22px',
+						top: { xs: '20px', md: '22px' },
 						fontSize: '16px',
 						fontFamily: 'sans-serif',
 						display: 'flex',
@@ -50,8 +50,10 @@ const catalgoueTemplate = (props: MlScaleReferenceProps) => {
 						zIndex: 5000,
 					}}
 				>
-					Use Zoom to explore functionality ➤
-				</div>
+					{mediaIsMobile
+						? 'Use Zoom to view functionality ➤'
+						: 'Use Zoom to explore functionality ➤'}
+				</Box>
 			)}
 			<TopToolbar unmovableButtons={<MlScaleReference {...props} />} />;
 		</>
