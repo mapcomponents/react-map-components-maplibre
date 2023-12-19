@@ -253,6 +253,20 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlgeojsonlayer--label": {
+      "id": "mapcomponents-mlgeojsonlayer--label",
+      "name": "Label",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 70232,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Label",
+      "parameters": {
+        "fileName": 70232,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--label",
+        "__isArgsStory": true
+      }
+    },
     "mapcomponents-mlgeojsonlayer--linestring": {
       "id": "mapcomponents-mlgeojsonlayer--linestring",
       "name": "Linestring",
