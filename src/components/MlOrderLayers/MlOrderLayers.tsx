@@ -1,5 +1,6 @@
 import React from 'react';
 import MlLayer from '../MlLayer/MlLayer';
+import { useLayerProps } from '../../hooks/useLayer';
 
 export interface MlOrderLayersProps {
 	/**
@@ -22,7 +23,7 @@ const MlOrderLayers = (props: MlOrderLayersProps) => {
 					layerId={layer}
 					options={{
 						display: 'none',
-					}}
+					} as useLayerProps['options']}
 					key={layer}
 					{...(idx > 0
 						? {
