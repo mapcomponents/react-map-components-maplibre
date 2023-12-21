@@ -1,5 +1,5 @@
 export default storyoptions;
-export const Linestring: any;
+export const ExampleConfig: any;
 declare namespace storyoptions {
     export const title: string;
     export { MlTransitionGeoJsonLayer as component };

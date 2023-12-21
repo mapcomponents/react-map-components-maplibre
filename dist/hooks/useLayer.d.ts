@@ -1,27 +1,35 @@
 import { useMapType } from './useMap';
-import { SourceSpecification, LayerSpecification } from 'maplibre-gl';
+import { SourceSpecification, LayerSpecification, MapMouseEvent, GeoJSONFeature, Style, MapEventType, Map, VideoSourceSpecification, ImageSourceSpecification } from 'maplibre-gl';
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
-import { MapLayerMouseEvent } from 'maplibre-gl';
 import { GeoJSONObject } from '@turf/turf';
-declare type useLayerType = {
+type getLayerType = Style['getLayer'];
+type useLayerType = {
     map: MapLibreGlWrapper | undefined;
-    layer: LayerSpecification;
+    layer: ReturnType<getLayerType> | undefined;
     layerId: string;
     componentId: string;
     mapHook: useMapType;
 };
-interface useLayerProps {
+export type MapEventHandler = (ev: MapMouseEvent & {
+    features?: GeoJSONFeature[] | undefined;
+} & Record<string, unknown>) => void;
+export interface useLayerProps {
     mapId?: string;
     layerId?: string;
     idPrefix?: string;
     insertBeforeLayer?: string;
     insertBeforeFirstSymbolLayer?: boolean;
     geojson?: GeoJSONObject;
-    source?: SourceSpecification | string;
-    options: Partial<LayerSpecification>;
-    onHover?: MapLayerMouseEvent;
-    onClick?: MapLayerMouseEvent;
-    onLeave?: MapLayerMouseEvent;
+    options: Partial<LayerSpecification & {
+        source?: Partial<Exclude<SourceSpecification, VideoSourceSpecification | ImageSourceSpecification>>;
+        id?: string;
+    }>;
+    onHover?: (ev: MapEventType & unknown) => Map | void;
+    onClick?: (ev: MapEventType & unknown) => Map | void;
+    onLeave?: (ev: MapEventType & unknown) => Map | void;
 }
 declare function useLayer(props: useLayerProps): useLayerType;
+declare namespace useLayer {
+    var defaultProps: {};
+}
 export default useLayer;

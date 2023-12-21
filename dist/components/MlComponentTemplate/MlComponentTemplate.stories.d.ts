@@ -1,10 +1,14 @@
+/// <reference types="react" />
+declare const storyoptions: {
+    title: string;
+    component: {
+        (props: import("./MlComponentTemplate").MlComponentTemplateProps): JSX.Element;
+        defaultProps: {
+            mapId: undefined;
+        };
+    };
+    argTypes: {};
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const ExampleConfig: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlComponentTemplate as component };
-    export const argTypes: {};
-    export { mapContextDecorator as decorators };
-}
-import MlComponentTemplate from "./MlComponentTemplate";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+export declare const ExampleConfig: any;

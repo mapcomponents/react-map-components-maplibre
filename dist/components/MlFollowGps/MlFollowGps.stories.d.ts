@@ -4,7 +4,7 @@ declare namespace storyoptions {
     export const title: string;
     export { MlFollowGps as component };
     export const argTypes: {};
-    export { mapContextDecorator as decorators };
+    export { noNavToolsDecorator as decorators };
 }
 import MlFollowGps from "./MlFollowGps";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+import noNavToolsDecorator from "../../decorators/NoNavToolsDecorator";

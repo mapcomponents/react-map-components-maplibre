@@ -1,15 +1,15 @@
+import React from 'react';
+import { useFeatureEditorProps } from 'src/hooks/useFeatureEditor/useFeatureEditor';
+declare const storyoptions: {
+    title: string;
+    component: React.FC<useFeatureEditorProps>;
+    argTypes: {};
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const EditPolygon: any;
-export const EditPoint: any;
-export const EditLinestring: any;
-export const DrawPolygon: any;
-export const DrawPoint: any;
-export const DrawLinestring: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlFeatureEditor as component };
-    export const argTypes: {};
-    export { mapContextDecorator as decorators };
-}
-import MlFeatureEditor from "./MlFeatureEditor";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+export declare const EditPolygon: any;
+export declare const EditPoint: any;
+export declare const EditLinestring: any;
+export declare const DrawPolygon: any;
+export declare const DrawPoint: any;
+export declare const DrawLinestring: any;

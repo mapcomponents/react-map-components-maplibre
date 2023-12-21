@@ -1,15 +1,30 @@
-export default MlThreeJsLayer;
+/// <reference types="react" />
+import PropTypes from 'prop-types';
 /**
  * Renders obj or gltf 3D Models on the MapLibreMap referenced by props.mapId
  *
  * @component
  */
-declare function MlThreeJsLayer(props: any): JSX.Element;
-declare namespace MlThreeJsLayer {
-    namespace propTypes {
-        const mapId: PropTypes.Requireable<string>;
-        const init: PropTypes.Requireable<(...args: any[]) => any>;
-        const onDone: PropTypes.Requireable<(...args: any[]) => any>;
-    }
+export interface MlThreeJsLayerProps {
+    mapId?: string;
+    init?: () => void;
+    onDone?: () => void;
 }
-import PropTypes from "prop-types";
+declare const MlThreeJsLayer: {
+    (props: MlThreeJsLayerProps): JSX.Element;
+    propTypes: {
+        /**
+         * Id of the target MapLibre instance in mapContext
+         */
+        mapId: PropTypes.Requireable<string>;
+        /**
+         * function that gets called when initialized
+         */
+        init: PropTypes.Requireable<(...args: any[]) => any>;
+        /**
+         * function that gets called when models are loaded
+         */
+        onDone: PropTypes.Requireable<(...args: any[]) => any>;
+    };
+};
+export default MlThreeJsLayer;

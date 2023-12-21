@@ -1,3 +1,4 @@
+/// <reference types="react" />
 interface MlMarkerProps {
     /**
      * Id of the target MapLibre instance in mapContext

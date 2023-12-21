@@ -1,10 +1,17 @@
+/// <reference types="react" />
+declare const storyoptions: {
+    title: string;
+    component: {
+        (props: import("./MlShareMapState").MlShareMapStateProps): JSX.Element;
+        defaultProps: {
+            mapId: undefined;
+        };
+        propTypes: {
+            mapId: import("prop-types").Requireable<string>;
+        };
+    };
+    argTypes: {};
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const ExampleConfig: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlShareMapState as component };
-    export const argTypes: {};
-    export { mapContextDecorator as decorators };
-}
-import MlShareMapState from "./MlShareMapState";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+export declare const ExampleConfig: any;
