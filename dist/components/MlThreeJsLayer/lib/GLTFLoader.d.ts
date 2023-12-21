@@ -1,5 +1,5 @@
 export default GLTFLoader;
-declare class GLTFLoader {
+declare class GLTFLoader extends THREE.Loader {
     constructor(manager: any);
     dracoLoader: any;
     ktx2Loader: any;
@@ -15,3 +15,4 @@ declare class GLTFLoader {
     parse(data: any, path: any, onLoad: any, onError: any): void;
     parseAsync(data: any, path: any): Promise<any>;
 }
+import * as THREE from "three";

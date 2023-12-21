@@ -1,5 +1,6 @@
+/// <reference types="react" />
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-interface MlSketchToolProps {
+export interface MlSketchToolProps {
     /**
      * Id of the target MapLibre instance in mapContext
      */

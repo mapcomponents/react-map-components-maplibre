@@ -11,5 +11,10 @@ declare namespace storyoptions {
             }
         }
     }
+    export { themeDecorator as decorators };
+    export namespace parameters {
+        const sourceLink: string;
+    }
 }
 import MapLibreMap from "./MapLibreMap";
+import themeDecorator from "../../decorators/ThemeDecorator";

@@ -1,16 +1,16 @@
 import { RequestParameters, ResponseCallback } from 'maplibre-gl';
 import { FeatureCollection } from '@turf/turf';
+import * as csv2geojsonType from './csv2geojson';
 import * as csv2geojson from 'csv2geojson';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
 
-
-async function convertCsv(filename: string, options: csv2geojson.csvOptions ): Promise<FeatureCollection> {
+async function convertCsv(filename: string, options: csv2geojsonType.csvOptions ): Promise<FeatureCollection> {
 
 
 	const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
 	
-		const useOptions: csv2geojson.csvOptions= options || {};
+		const useOptions: csv2geojsonType.csvOptions= options || {};
 	   	const extension = filename.substring(filename.length -3)
 
 						

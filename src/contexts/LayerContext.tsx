@@ -20,8 +20,8 @@ visible: boolean ,
 wmsUrl: string
 }
 export interface wmsConfig{
-featureInfoActive: boolean;
-config: wmsLoaderConfigProps,
+featureInfoActive?: boolean;
+config?: wmsLoaderConfigProps,
 url: string
 }
 

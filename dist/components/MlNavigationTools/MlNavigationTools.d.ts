@@ -1,5 +1,6 @@
-import { SxProps } from "@mui/material";
-interface MlNavigationToolsProps {
+/// <reference types="react" />
+import { SxProps } from '@mui/material';
+export interface MlNavigationToolsProps {
     /**
      * Id of the target MapLibre instance in mapContext
      */
@@ -33,6 +34,10 @@ interface MlNavigationToolsProps {
      * Style attribute for NavigationTools container
      */
     sx?: SxProps;
+    /**
+     * Style attribute for NavigationTools container
+     */
+    mediaIsMobile?: boolean;
 }
 /**
  * @component
@@ -45,10 +50,6 @@ declare const MlNavigationTools: {
         showFollowGpsButton: boolean;
         showCenterLocationButton: boolean;
         showZoomButtons: boolean;
-        sx: {
-            right: string;
-            bottom: string;
-        };
     };
 };
 export default MlNavigationTools;

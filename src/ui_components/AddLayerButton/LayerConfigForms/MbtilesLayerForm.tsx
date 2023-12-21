@@ -1,7 +1,6 @@
 import {
 	Accordion,
 	AccordionSummary,
-	Box,
 	Button,
 	DialogActions,
 	DialogContent,

@@ -31,7 +31,7 @@ import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLa
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { csvOptions } from '../../protocol_handlers/csv2geojson.d';
+import { csvOptions } from '../../protocol_handlers/csv2geojson';
 import MlLayer from '../../components/MlLayer/MlLayer';
 
 const storyoptions = {

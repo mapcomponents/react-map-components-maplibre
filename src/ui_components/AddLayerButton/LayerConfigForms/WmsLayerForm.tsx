@@ -8,18 +8,19 @@ import {
 	OutlinedInput,
 } from '@mui/material';
 import React, { useMemo } from 'react';
+import { wmsConfig } from 'src/contexts/LayerContext';
 
 export interface WmsLayerConfig {
 	url: string;
 }
 
 export interface WmsLayerFormProps {
-	onSubmit: (config: WmsLayerConfig) => void;
+	onSubmit: (config: wmsConfig) => void;
 	onCancel: () => void;
 }
 
 export default function WmsLayerForm(props: WmsLayerFormProps) {
-	const [config, setConfig] = React.useState<{ url: string }>({ url: '' });
+	const [config, setConfig] = React.useState<wmsConfig>({ url: '' });
 
 	const configIsValid = useMemo(() => {
 		if (!config?.url) return false;

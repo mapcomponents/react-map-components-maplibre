@@ -19,7 +19,7 @@ import { TopojsonProtocolHandler } from '../../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../../protocol_handlers/xml';
 import { mbTilesProtocolHandler } from '../../../protocol_handlers/mbtiles';
-import { csvOptions } from 'csv2geojson';
+import * as csv2geojsonType from '../../../protocol_handlers/csv2geojson';
 
 export interface ProtocolHandlerLayerFormProps {
 	originType: string;
@@ -45,7 +45,7 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 	const [config, setConfig] = useState<Partial<MlGeoJsonLayerProps>>({ type: 'circle' });
 	const [fileName, setFileName] = useState<string>();
 	const [filePath, setFilePath] = useState<string>();
-	const [optionsObject, setOptionsObject] = useState<csvOptions>({})
+	const [optionsObject, setOptionsObject] = useState<csv2geojsonType.csvOptions>({})
 	const mapHook = useMap({ mapId: props.mapId });
  	const optionsURL = '?' + new URLSearchParams(optionsObject as string).toString();
 

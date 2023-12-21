@@ -1,5 +1,6 @@
-import "./style.css";
-interface MlLayerMagnifyProps {
+import React from 'react';
+import './style.css';
+export interface MlLayerMagnifyProps {
     /**
      * Id of the first MapLibre instance
      */
@@ -12,6 +13,10 @@ interface MlLayerMagnifyProps {
      * Size of the "magnifier"-circle
      */
     magnifierRadius?: number;
+    /**
+     * object (React.CSSProperties) that is added to the magnifier default style
+     */
+    magnifierStyle: React.CSSProperties | undefined;
 }
 /**
  *
@@ -22,6 +27,7 @@ declare const MlLayerMagnify: {
     (props: MlLayerMagnifyProps): JSX.Element;
     defaultProps: {
         magnifierRadius: number;
+        magnifierStyle: {};
     };
 };
 export default MlLayerMagnify;

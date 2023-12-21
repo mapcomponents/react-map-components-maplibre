@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import * as turf from "@turf/turf";
 interface MlMeasureToolProps {
     /**

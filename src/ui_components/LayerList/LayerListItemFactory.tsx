@@ -50,6 +50,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 				? mapHook.map?.getLayer(layer.id).source
 				: undefined;
 
+		let _bbox: LngLatBoundsLike | null = null;
 		switch (layer.type) {
 			case 'geojson':
 
@@ -62,7 +63,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					if (!layerSource) {
 						return;
 					}
-					let _geojson = {
+					const _geojson = {
 						type: 'FeatureCollection',
 						features: mapHook.map?.querySourceFeatures(layerSource),
 					};
@@ -72,21 +73,22 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					_geojson.features = mapHook.map?.querySourceFeatures(layerSource)				
 					}
 
-					mapHook.map?.fitBounds(bbox(_geojson) as LngLatBoundsLike, props.fitBoundsOptions);
+					_bbox = bbox(_geojson) as LngLatBoundsLike;
 				}
 				break;
 			case 'vt':
 				console.log('vt');
 				break;
 			case 'wms':
-				const wmsBbox: LngLatBoundsLike = (layer.config as wmsConfig).config.layers[0]
-					.EX_GeographicBoundingBox as LngLatBoundsLike;
-				mapHook.map?.fitBounds(wmsBbox);
+				_bbox = (layer?.config as wmsConfig)?.config?.layers?.[0]?.EX_GeographicBoundingBox as LngLatBoundsLike;
 				break;
 
 			default:
 				return;
 		}
+				if(_bbox){
+					mapHook.map?.fitBounds(_bbox,props.fitBoundsOptions);
+				}
 	}
 
 	const orderLayers = useMemo(() => {

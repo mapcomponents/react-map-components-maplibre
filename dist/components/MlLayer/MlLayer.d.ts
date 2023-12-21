@@ -1,4 +1,5 @@
-import { Feature, FeatureCollection } from "@turf/turf";
+/// <reference types="react" />
+import { Feature, FeatureCollection } from '@turf/turf';
 interface MlLayerProps {
     /**
      * Id of the target MapLibre instance in mapContext
