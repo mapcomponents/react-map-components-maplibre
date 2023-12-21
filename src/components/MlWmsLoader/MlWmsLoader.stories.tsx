@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MlWmsLoader, { WmsConfig } from './MlWmsLoader';
 import { Button, FormControl, List, TextField, Theme, useMediaQuery } from '@mui/material';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
@@ -7,6 +7,7 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import MlWmsLoaderInstructions from './utils/MlWmsLoaderInstructions';
 import WMSLinks from './utils/WMSLinks';
 import wmsConfig from './sample/wms_config_1.json';
+import useMap from '../../hooks/useMap';
 
 const storyoptions = {
 	title: 'MapComponents/MlWmsLoader',
@@ -23,7 +24,7 @@ interface MlWmsLoaderStoryProps {
 	url: string;
 }
 const Template = (props: MlWmsLoaderStoryProps) => {
-	const [url, setUrl] = useState(props.url || '');
+	const [url, setUrl] = useState(props.url || 'https://magosm.magellium.com/geoserver/wms');
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [openSidebar, setOpenSidebar] = useState(true);
@@ -115,6 +116,18 @@ ExampleConfig.args = {};
 const FixedConfigTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [config, setConfig] = useState(wmsConfig as unknown as WmsConfig);
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [0.4048, 47.3624], zoom: 5.08 });
+	}, [mapHook.map]);
 
 	return (
 		<>

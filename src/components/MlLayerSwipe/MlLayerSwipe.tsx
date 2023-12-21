@@ -92,7 +92,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	}, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
 	const onDown = (e: React.MouseEvent | React.TouchEvent) => {
-		if (e.nativeEvent instanceof TouchEvent) {
+		if (window?.TouchEvent && e.nativeEvent instanceof window.TouchEvent) {
 			document.addEventListener('touchmove', onMove);
 			document.addEventListener('touchend', onTouchEnd);
 		} else {

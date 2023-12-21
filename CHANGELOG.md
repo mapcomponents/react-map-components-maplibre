@@ -1,4 +1,13 @@
 # Change Log
+## [v0.1.87] - 2023-10-25
+
+### Changed
+- 27f1cb2: show measured value in m and in units if measured value is < 0.1km or 0.1mi
+- e606c7c: add catalogue specific demo storybook stories to be able to also provide more useful stories for developers not shown in the catalogue
+
+### Added
+- cb3057f: make layerlist items in layerlistitemfactory sortable via drag & drop
+
 ## [v0.1.86] - 2023-09-13
 
 ### Fixed

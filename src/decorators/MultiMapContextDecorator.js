@@ -33,6 +33,7 @@ const decorators = [
 										//center: [-87.62712, 41.89033],
 										zoom: 14.5,
 										//pitch: 45,
+										minZoom: 12.5,
 										//style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",
 										style: 'https://wms.wheregroup.com/tileserver/style/osm-liberty.json',
 										//center: [8.607, 53.1409349],
@@ -51,6 +52,7 @@ const decorators = [
 										//center: [-87.62712, 41.89033],
 										zoom: 14.5,
 										//pitch: 45,
+										minZoom: 12.5,
 										style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
 										//style: "https://wms.wheregroup.com/tileserver/style/osm-liberty.json",
 										//center: [8.607, 53.1409349],
@@ -63,10 +65,7 @@ const decorators = [
 									}}
 								/>
 
-								<MlNavgiationTools
-									showZoomButtons={false}
-									mapId="map_1"
-								/>
+								<MlNavgiationTools showZoomButtons={false} mapId="map_1" />
 							</div>
 						</div>
 					</MUIThemeProvider>

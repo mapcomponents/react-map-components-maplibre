@@ -71,6 +71,7 @@ const FolderTemplate = () => {
 						layers={layerContext.layers}
 						setLayers={layerContext.setLayers}
 						insertBeforeLayer="order-content"
+						sortable={false}
 					/>
 				</LayerList>
 			</Sidebar>

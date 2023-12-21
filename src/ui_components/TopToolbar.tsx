@@ -39,8 +39,8 @@ function TopToolbar(props: TopToolbarProps) {
 				minHeight: '62px',
 				position: 'absolute',
 				zIndex: 1300,
+				top: 0,
 			}}
-			position="static"
 		>
 			<Toolbar disableGutters>
 				{props.logo || (
@@ -100,7 +100,9 @@ function TopToolbar(props: TopToolbarProps) {
 								display: { xs: 'block', sm: 'none' },
 							}}
 						>
-							<Box sx={{ paddingLeft: '10px', paddingRight: '10px' }} onClick={handleCloseNavMenu}>{props.buttons}</Box>
+							<Box sx={{ paddingLeft: '10px', paddingRight: '10px' }} onClick={handleCloseNavMenu}>
+								{props.buttons}
+							</Box>
 						</Menu>
 					</Box>
 				) : (

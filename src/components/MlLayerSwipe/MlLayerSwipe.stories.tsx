@@ -1,5 +1,4 @@
 import React from 'react';
-
 import MlLayerSwipe from './MlLayerSwipe';
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 
@@ -13,16 +12,13 @@ const storyoptions = {
 };
 
 export default storyoptions;
+
 const Template = () => (
 	<>
 		<MlWmsLayer
 			url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
 			urlParameters={{
 				layers: 'nw_uraufnahme_rw',
-			}}
-			sourceOptions={{
-				minzoom: 13,
-				maxzoom: 20,
 			}}
 			mapId="map_2"
 		/>
@@ -33,4 +29,3 @@ const Template = () => (
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {};
-//
