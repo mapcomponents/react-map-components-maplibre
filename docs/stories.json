@@ -925,17 +925,129 @@
         "__isArgsStory": true
       }
     },
-    "hooks-useaddprotocol--example-config": {
-      "id": "hooks-useaddprotocol--example-config",
-      "name": "Example Config",
+    "hooks-useaddprotocol--mb-tiles": {
+      "id": "hooks-useaddprotocol--mb-tiles",
+      "name": "Mb Tiles",
       "title": "hooks/useAddProtocol",
-      "importPath": 15426,
+      "importPath": 44511,
       "kind": "hooks/useAddProtocol",
-      "story": "Example Config",
+      "story": "Mb Tiles",
       "parameters": {
-        "fileName": 15426,
+        "fileName": 44511,
         "framework": "react",
-        "__id": "hooks-useaddprotocol--example-config",
+        "__id": "hooks-useaddprotocol--mb-tiles",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--csv-or-tsv": {
+      "id": "hooks-useaddprotocol--csv-or-tsv",
+      "name": "CSV Or TSV",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "CSV Or TSV",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--csv-or-tsv",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--csv-with-options": {
+      "id": "hooks-useaddprotocol--csv-with-options",
+      "name": "CSV With Options",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "CSV With Options",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--csv-with-options",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--osm": {
+      "id": "hooks-useaddprotocol--osm",
+      "name": "OSM",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "OSM",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--osm",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--gpx": {
+      "id": "hooks-useaddprotocol--gpx",
+      "name": "GPX",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "GPX",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--gpx",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--kml": {
+      "id": "hooks-useaddprotocol--kml",
+      "name": "KML",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "KML",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--kml",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--tcx": {
+      "id": "hooks-useaddprotocol--tcx",
+      "name": "TCX",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "TCX",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--tcx",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--topojson": {
+      "id": "hooks-useaddprotocol--topojson",
+      "name": "Topojson",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "Topojson",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--topojson",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--catalogue-demo": {
+      "id": "hooks-useaddprotocol--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--catalogue-demo",
         "__isArgsStory": false
       }
     },
