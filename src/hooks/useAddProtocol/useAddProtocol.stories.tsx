@@ -33,6 +33,7 @@ import MlVectorTileLayer, {
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import { csvOptions } from '../../protocol_handlers/csv2geojson';
 import MlLayer from '../../components/MlLayer/MlLayer';
+import { useLayerProps } from '../useLayer';
 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
@@ -117,7 +118,7 @@ const Template = (props: TemplateProps) => {
 					type: props.type,
 					source: props.sourceId,
 					paint: props.paint,
-				}}
+				} as useLayerProps['options']}
 				insertBeforeLayer={'waterway-name'}
 			/>			
 			}
@@ -372,7 +373,7 @@ const CatalogueTemplate = () => {
 							}}
 						>
 							{Object.keys(currentProps).map((el) => (
-								<MenuItem onClick={() => setCurrentDemo(el)}>{el}</MenuItem>
+								<MenuItem onClick={() => setCurrentDemo(el)} key={el}>{el}</MenuItem>
 							))}
 						</Menu>
 					</>

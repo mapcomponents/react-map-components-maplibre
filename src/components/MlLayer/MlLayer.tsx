@@ -1,5 +1,5 @@
 import React from 'react';
-import useLayer from '../../hooks/useLayer';
+import useLayer, { useLayerProps } from '../../hooks/useLayer';
 import { Feature, FeatureCollection } from '@turf/turf';
 
 
@@ -20,7 +20,7 @@ interface MlLayerProps {
 	/**
 	 * Javascript object that is passed the addLayer command as first parameter.
 	 */
-	options?: any;
+	options?: useLayerProps['options'];
 
 	/**
 	 * GeoJSON data that is supposed to be rendered by this component.
@@ -48,7 +48,7 @@ const MlLayer = (props: MlLayerProps) => {
 				'background-color': 'rgba(0,0,0,0)',
 			},
 			...props.options,
-		},
+		} as useLayerProps['options'],
 		insertBeforeLayer: props.insertBeforeLayer,
 	});
 
