@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "0.1.87",
+	"version": "0.1.88",
 	"main": "dist/index.esm.js",
 	"license": "MIT",
 	"module": "dist/index.esm.js",
@@ -33,8 +33,8 @@
 		"@turf/turf": "^6.5.0",
 		"@types/react-color": "^3.0.6",
 		"@types/topojson-client": "^3.1.1",
-		"csv2geojson": "^5.1.2",
 		"@xmldom/xmldom": "^0.8.10",
+		"csv2geojson": "^5.1.2",
 		"d3": "^7.8.2",
 		"jspdf": "^2.5.1",
 		"maplibre-gl": "^2.4.0",
