@@ -31,3 +31,4 @@ export default storyoptions;
 export declare const FillConfig: any;
 export declare const CircleConfig: any;
 export declare const LineConfig: any;
+export declare const catalogueDemo: any;

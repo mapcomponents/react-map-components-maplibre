@@ -1,5 +1,5 @@
 /// <reference types="react" />
-interface MlFillExtrusionLayerProps {
+export interface MlFillExtrusionLayerProps {
     /**
      * Id of the target MapLibre instance in mapContext
      */

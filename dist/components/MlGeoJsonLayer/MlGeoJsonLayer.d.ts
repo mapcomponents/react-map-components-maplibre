@@ -65,14 +65,14 @@ export type MlGeoJsonLayerProps = {
         fill?: FillLayerSpecification['paint'];
         line?: LineLayerSpecification['paint'];
     };
-      /**
-	 * Property name in the GeoJSON object to be used as a label.
+    /**
+     * Property name in the GeoJSON object to be used as a label.
      */
-      labelProp?: string;
-      /**
-	 * Label configuration options.
+    labelProp?: string;
+    /**
+     * Label configuration options.
      */
-    labelOptions?:	SymbolLayerSpecification
+    labelOptions?: useLayerProps['options'];
     /**
      * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
      */

@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { MlScaleReferenceProps } from "./MlScaleReference";
+import { MlScaleReferenceProps } from './MlScaleReference';
 declare const storyoptions: {
     title: string;
     component: (props: MlScaleReferenceProps) => JSX.Element;
@@ -12,3 +12,4 @@ declare const storyoptions: {
 export default storyoptions;
 export declare const Toolbar: any;
 export declare const Overlay: any;
+export declare const catalogueDemo: any;

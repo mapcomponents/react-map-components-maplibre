@@ -13,3 +13,4 @@ export declare const EditLinestring: any;
 export declare const DrawPolygon: any;
 export declare const DrawPoint: any;
 export declare const DrawLinestring: any;
+export declare const catalogueDemo: any;

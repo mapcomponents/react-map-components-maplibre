@@ -37,6 +37,7 @@ export interface MlWmsLoaderProps {
      * Id of the target MapLibre instance in mapContext
      */
     mapId?: string;
+    layerId?: string;
     insertBeforeLayer?: string;
     /**
      * URL parameters that will be used in the getCapabilities request
@@ -88,6 +89,7 @@ export interface MlWmsLoaderProps {
      * Custom buttons to display for the WMSLoader
      */
     buttons?: JSX.Element;
+    sortable?: boolean;
 }
 export type LayerType = {
     visible: boolean;

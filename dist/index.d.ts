@@ -35,6 +35,7 @@ export { default as MlTemporalController } from "./components/MlTemporalControll
 export { default as MlBasicComponent } from "./components/MlBasicComponent.js";
 export { default as MlOrderLayers } from "./components/MlOrderLayers/MlOrderLayers";
 export { default as MlTerrainLayer } from "./components/MlTerrainLayer/MlTerrainLayer";
+export { default as MlSketchTool } from './components/MlSketchTool/MlSketchTool';
 export { default as useCameraFollowPath } from "./hooks/useCameraFollowPath/useCameraFollowPath";
 export { default as useExportMap } from "./hooks/useExportMap";
 export { default as useGpx } from "./hooks/useGpx/useGpx";

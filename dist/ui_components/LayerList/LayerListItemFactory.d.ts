@@ -6,6 +6,7 @@ export interface LayerListItemFactoryProps {
     layers: LayerConfig[];
     setLayers?: (layers: LayerConfig[] | ((state: LayerConfig[]) => LayerConfig[])) => void;
     insertBeforeLayer?: string;
+    sortable?: boolean;
     fitBoundsOptions?: FitBoundsOptions;
 }
 declare function LayerListItemFactory(props: LayerListItemFactoryProps): JSX.Element;

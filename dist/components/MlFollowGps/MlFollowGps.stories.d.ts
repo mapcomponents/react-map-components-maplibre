@@ -1,5 +1,6 @@
 export default storyoptions;
-export const ExampleConfig: any;
+export const standardConfig: any;
+export const catalogueDemo: any;
 declare namespace storyoptions {
     export const title: string;
     export { MlFollowGps as component };

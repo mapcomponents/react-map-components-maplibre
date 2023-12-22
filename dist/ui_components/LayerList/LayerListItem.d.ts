@@ -11,6 +11,8 @@ interface LayerListItemProps {
     showDeleteButton?: boolean;
     listItemSx?: SxProps;
     buttons?: JSX.Element;
+    layerId?: string;
+    sortable?: boolean;
 }
 declare function LayerListItem({ layerComponent, visible, type, name, description, configurable, setLayerState, ...props }: LayerListItemProps): JSX.Element;
 declare namespace LayerListItem {

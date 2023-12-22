@@ -42,15 +42,24 @@ var DialogActions = require('@mui/material/DialogActions');
 var DialogContent = require('@mui/material/DialogContent');
 var DialogContentText = require('@mui/material/DialogContentText');
 var DialogTitle = require('@mui/material/DialogTitle');
+var sortable = require('@dnd-kit/sortable');
+var utilities = require('@dnd-kit/utilities');
 var PlayArrowIcon = require('@mui/icons-material/PlayArrow');
 var PauseIcon = require('@mui/icons-material/Pause');
 var StopIcon = require('@mui/icons-material/Stop');
 var FastForwardIcon = require('@mui/icons-material/FastForward');
 var FastRewindIcon = require('@mui/icons-material/FastRewind');
-var d3 = require('d3');
+var PentagonIcon = require('@mui/icons-material/Pentagon');
 var system = require('@mui/system');
+var EditIcon = require('@mui/icons-material/Edit');
+var Tooltip = require('@mui/material/Tooltip');
 var reactColor = require('react-color');
 var TuneIcon = require('@mui/icons-material/Tune');
+var ScatterPlotIcon = require('@mui/icons-material/ScatterPlot');
+var PolylineIcon = require('@mui/icons-material/Polyline');
+var d3 = require('d3');
+var core = require('@dnd-kit/core');
+var modifiers = require('@dnd-kit/modifiers');
 var PlaylistAddIcon = require('@mui/icons-material/PlaylistAdd');
 var DynamicFeedIcon = require('@mui/icons-material/DynamicFeed');
 var AddBoxIcon = require('@mui/icons-material/AddBox');
@@ -138,8 +147,13 @@ var PauseIcon__default = /*#__PURE__*/_interopDefaultLegacy(PauseIcon);
 var StopIcon__default = /*#__PURE__*/_interopDefaultLegacy(StopIcon);
 var FastForwardIcon__default = /*#__PURE__*/_interopDefaultLegacy(FastForwardIcon);
 var FastRewindIcon__default = /*#__PURE__*/_interopDefaultLegacy(FastRewindIcon);
-var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
+var PentagonIcon__default = /*#__PURE__*/_interopDefaultLegacy(PentagonIcon);
+var EditIcon__default = /*#__PURE__*/_interopDefaultLegacy(EditIcon);
+var Tooltip__default = /*#__PURE__*/_interopDefaultLegacy(Tooltip);
 var TuneIcon__default = /*#__PURE__*/_interopDefaultLegacy(TuneIcon);
+var ScatterPlotIcon__default = /*#__PURE__*/_interopDefaultLegacy(ScatterPlotIcon);
+var PolylineIcon__default = /*#__PURE__*/_interopDefaultLegacy(PolylineIcon);
+var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
 var PlaylistAddIcon__default = /*#__PURE__*/_interopDefaultLegacy(PlaylistAddIcon);
 var DynamicFeedIcon__default = /*#__PURE__*/_interopDefaultLegacy(DynamicFeedIcon);
 var AddBoxIcon__default = /*#__PURE__*/_interopDefaultLegacy(AddBoxIcon);
@@ -996,6 +1010,7 @@ function LayerContextProvider(props) {
         setTileUrl: setTileUrl,
         moveUp: moveUp,
         moveDown: moveDown,
+        moveLayer: moveLayer,
     };
     return React__default["default"].createElement(LayerContext.Provider, { value: value }, props.children);
 }
@@ -2587,7 +2602,7 @@ var MlFillExtrusionLayer = function (props) {
             type: "fill-extrusion",
             source: props.sourceId || "openmaptiles",
             "source-layer": props.sourceLayer || "building",
-            minzoom: props.minZoom || 14,
+            minzoom: props.minZoom || 6,
             paint: __assign({}, props.paint),
         },
         insertBeforeFirstSymbolLayer: true,
@@ -2676,8 +2691,10 @@ var getDefaulLayerTypeByGeometry = function (geojson) {
  * @component
  */
 var MlGeoJsonLayer = function (props) {
-    var _a, _b;
+    var _a, _b, _c;
     var layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
+    var layerId = props.layerId || 'MlGeoJsonLayer-' + uuid.v4();
+    var labelLayerId = "label-".concat(layerId);
     // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
     useLayer({
         mapId: props.mapId,
@@ -2689,6 +2706,14 @@ var MlGeoJsonLayer = function (props) {
         onClick: props.onClick,
         onLeave: props.onLeave,
     });
+    if (props.labelProp) {
+        useLayer({
+            mapId: props.mapId,
+            layerId: labelLayerId,
+            geojson: props.geojson,
+            options: __assign(__assign({ type: 'symbol' }, ((props === null || props === void 0 ? void 0 : props.labelOptions) ? props.labelOptions : {})), { layout: __assign({ 'text-field': "{".concat(props.labelProp, "}") }, (((_c = props === null || props === void 0 ? void 0 : props.labelOptions) === null || _c === void 0 ? void 0 : _c.layout) ? props.labelOptions.layout : {})), paint: {} }),
+        });
+    }
     return React__default["default"].createElement(React__default["default"].Fragment, null);
 };
 
@@ -2872,52 +2897,77 @@ var MlImageMarkerLayer = function (props) {
 //	miles: 1 / 2.58998811,
 //};
 function getUnitSquareMultiplier(measureType) {
-    return measureType === "miles" ? 1 / 2.58998811 : 1;
+    return measureType === 'miles' ? 1 / 2.58998811 : 1;
 }
 function getUnitLabel(measureType) {
-    return measureType === "miles" ? 'mi' : 'km';
+    return measureType === 'miles' ? 'mi' : 'km';
 }
 var MlMeasureTool = function (props) {
-    var _a = React.useState(0), length = _a[0], setLength = _a[1];
+    var _a = React.useState({ value: 0, label: 'km' }), displayValue = _a[0], setDisplayValue = _a[1];
     var _b = React.useState([]), currentFeatures = _b[0], setCurrentFeatures = _b[1];
     React.useEffect(function () {
         if (currentFeatures[0]) {
-            setLength(props.measureType === "polygon"
+            var result = props.measureType === 'polygon'
+                // for "polyong" mode calculate km²
                 ? (turf__namespace.area(currentFeatures[0]) / 1000000) * getUnitSquareMultiplier(props.unit)
-                : turf__namespace.length(currentFeatures[0], { units: props.unit }));
+                : turf__namespace.length(currentFeatures[0], { units: props.unit });
+            if (typeof props.onChange === 'function') {
+                props.onChange({ value: result, unit: props.unit, geojson: currentFeatures[0] });
+            }
+            if (result >= 0.1) {
+                setDisplayValue({ value: result, label: getUnitLabel(props.unit) });
+            }
+            else {
+                var label = 'm';
+                var value = result * 1000;
+                if (props.measureType === 'polygon') {
+                    value = result * 1000000;
+                }
+                if (getUnitLabel(props.unit) === 'mi') {
+                    label = 'in';
+                    value = result * 63360;
+                    if (props.measureType === 'polygon') {
+                        value = result * 4014489599.4792;
+                    }
+                }
+                setDisplayValue({ value: value, label: label });
+            }
         }
     }, [props.unit, currentFeatures]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement(MlFeatureEditor, { onChange: function (features) {
                 setCurrentFeatures(features);
-            }, mode: props.measureType === "polygon" ? "draw_polygon" : "draw_line_string" }),
-        length.toFixed(2),
+            }, mode: props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string' }),
+        displayValue.value.toFixed(2),
         " ",
-        getUnitLabel(props.unit),
-        props.measureType === "polygon" ? "²" : ""));
+        displayValue.label,
+        props.measureType === 'polygon' ? '²' : ''));
 };
 MlMeasureTool.defaultProps = {
     mapId: undefined,
-    measureType: "line",
-    unit: "kilometers",
+    measureType: 'line',
+    unit: 'kilometers',
 };
 
-var _path$1, _path2$1;
+var _g;
 function _extends$1() { _extends$1 = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
 var SvgCompassNeedle = function SvgCompassNeedle(props) {
   return /*#__PURE__*/React__namespace.createElement("svg", _extends$1({
-    width: 9,
+    width: 10,
     height: 40,
-    viewBox: "0 0 9 40",
+    viewBox: "0 0 10 40",
     fill: "none",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _path$1 || (_path$1 = /*#__PURE__*/React__namespace.createElement("path", {
-    d: "M3.34715 4.52028C3.57452 3.46874 5.0746 3.46874 5.30197 4.52028L8.64912 20H0L3.34715 4.52028Z",
-    fill: "#CF003D"
-  })), _path2$1 || (_path2$1 = /*#__PURE__*/React__namespace.createElement("path", {
-    d: "M3.34715 35.4797C3.57452 36.5313 5.0746 36.5313 5.30197 35.4797L8.64912 20H0L3.34715 35.4797Z",
-    fill: "#D3DCE1"
-  })));
+    id: "svg6"
+  }, props), _g || (_g = /*#__PURE__*/React__namespace.createElement("g", {
+    id: "g14",
+    transform: "translate(0.67544,-1.25e-5)"
+  }, /*#__PURE__*/React__namespace.createElement("path", {
+    d: "m 3.34715,4.52028 c 0.22737,-1.05154 1.72745,-1.05154 1.95482,0 L 8.64912,20 H 0 Z",
+    fill: "#cf003d"
+  }), /*#__PURE__*/React__namespace.createElement("path", {
+    d: "m 3.34715,35.4797 c 0.22737,1.0516 1.72745,1.0516 1.95482,0 L 8.64912,20 H 0 Z",
+    fill: "#d3dcf0"
+  }))));
 };
 
 var _circle, _path, _path2, _path3, _path4;
@@ -2970,7 +3020,13 @@ var CompassBox = material.styled(material.Box)(function (_a) {
     return (_b = {
             position: 'absolute',
             right: '-10px',
-            top: '-52px'
+            top: '-52px',
+            width: '52px',
+            height: '52px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center'
         },
         _b[theme.breakpoints.down('md')] = {
             right: '0px',
@@ -2991,9 +3047,8 @@ var CompassBox = material.styled(material.Box)(function (_a) {
 var NeedleBox = material.styled(material.Box)(function (_a) {
     var theme = _a.theme;
     return ({
-        position: 'absolute',
-        right: '21.4px',
-        top: '6px',
+        display: 'flex',
+        flexDirection: 'row',
         'path:nth-of-type(2)': {
             fill: theme.palette.compass.compSouth,
         },
@@ -3049,7 +3104,7 @@ var MlNavigationCompass = function (props) {
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement(BoxStyled$2, { sx: __assign({}, props.style) },
             React__default["default"].createElement(CompassBox, { onClick: rotate, sx: __assign({}, props.backgroundStyle) },
-                React__default["default"].createElement(SvgCompassBackground, null),
+                React__default["default"].createElement(SvgCompassBackground, { style: { position: 'absolute', top: 0, left: 0 } }),
                 React__default["default"].createElement(NeedleBox, { onClick: rotate, sx: __assign({}, props.needleStyle) },
                     React__default["default"].createElement(SvgCompassNeedle, { style: {
                             transform: 'rotate(' + (bearing > 0 ? '-' + bearing : -1 * bearing) + 'deg)',
@@ -3099,7 +3154,7 @@ var MlNavigationTools = function (props) {
     }, [mapHook.map]);
     return (React__default["default"].createElement(Box__default["default"], { sx: __assign(__assign({ zIndex: 501, position: 'absolute', display: 'flex', flexDirection: 'column', right: mediaIsMobile ? '15px' : '25px', bottom: mediaIsMobile ? '20px' : '30px' }, (mediaIsMobile ? { margin: '80px 10px 50px 10px' } : { marginTop: '50px' })), props.sx) },
         React__default["default"].createElement(MlNavigationCompass, null),
-        props.show3DButton && (React__default["default"].createElement(Button__default["default"], { variant: "navtools", onClick: adjustPitch }, pitch < 59 ? '3D' : '2D')),
+        props.show3DButton && (React__default["default"].createElement(Button__default["default"], { variant: "navtools", onClick: adjustPitch }, pitch < 29 ? '3D' : '2D')),
         props.showFollowGpsButton && React__default["default"].createElement(MlFollowGps, null),
         props.showCenterLocationButton && React__default["default"].createElement(MlCenterPosition, null),
         React__default["default"].createElement(ButtonGroup__default["default"], { orientation: "vertical", sx: {
@@ -3419,7 +3474,7 @@ var MlLayerSwipe = function (props) {
         });
     }, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
     var onDown = function (e) {
-        if (e.nativeEvent instanceof TouchEvent) {
+        if ((window === null || window === void 0 ? void 0 : window.TouchEvent) && e.nativeEvent instanceof window.TouchEvent) {
             document.addEventListener('touchmove', onMove);
             document.addEventListener('touchend', onTouchEnd);
         }
@@ -5365,6 +5420,17 @@ ConfirmDialog.defaultProps = {
     text: 'Are you sure?',
 };
 
+function SortableContainer(_a) {
+    var children = _a.children, layerId = _a.layerId;
+    var _b = sortable.useSortable({
+        id: layerId,
+    }), attributes = _b.attributes, listeners = _b.listeners, setNodeRef = _b.setNodeRef, transform = _b.transform;
+    var style = {
+        transform: utilities.CSS.Transform.toString(transform),
+    };
+    return (React__default["default"].createElement("li", __assign({ ref: setNodeRef, style: style }, attributes, listeners), children));
+}
+
 var originShift = (2 * Math.PI * 6378137) / 2.0;
 var lngLatToMeters = function (lnglat, accuracy) {
     if (accuracy === void 0) { accuracy = { enable: true, decimal: 1 }; }
@@ -5579,57 +5645,59 @@ var MlWmsLoader = function (props) {
             }
         }
     }, [capabilities, mapHook.map]);
+    var listContent = (React__default["default"].createElement(ListItem__default["default"], { secondaryAction: React__default["default"].createElement(React__default["default"].Fragment, null,
+            props.buttons,
+            props.featureInfoEnabled && (React__default["default"].createElement(IconButton__default["default"], { sx: {
+                    padding: '4px',
+                    marginTop: '-3px',
+                    marginRight: '4px',
+                    background: function (theme) {
+                        if (!(layers === null || layers === void 0 ? void 0 : layers.some(function (layer) { return layer.visible && layer.queryable; })))
+                            return 'initial';
+                        if (_featureInfoEventsEnabled)
+                            return theme.palette.info.light;
+                        return theme.palette.grey[300];
+                    },
+                }, "aria-label": "featureinfo", onClick: function () {
+                    if (typeof (props === null || props === void 0 ? void 0 : props.setFeatureInfoActive) === 'function') {
+                        props.setFeatureInfoActive(function (current) { return !current; });
+                    }
+                    else {
+                        setFeatureInfoEventsEnabled(function (current) { return !current; });
+                    }
+                }, disabled: !(layers === null || layers === void 0 ? void 0 : layers.some(function (layer) { return layer.visible && layer.queryable; })) },
+                React__default["default"].createElement(InfoIcon__default["default"], null))),
+            React__default["default"].createElement(IconButton__default["default"], { edge: props.showDeleteButton ? false : 'end', sx: __assign({ padding: '4px', marginTop: '-3px' }, (props.showDeleteButton ? { marginRight: '4px' } : {})), "aria-label": "open", onClick: function () { return setOpen(function (current) { return !current; }); } }, open ? React__default["default"].createElement(iconsMaterial.ExpandLess, null) : React__default["default"].createElement(iconsMaterial.ExpandMore, null)),
+            props.showDeleteButton && (React__default["default"].createElement(React__default["default"].Fragment, null,
+                React__default["default"].createElement(IconButton__default["default"], { "aria-label": "delete", edge: "end", onClick: function () {
+                        if (typeof props.onConfigChange === 'function') {
+                            setShowDeletionConfirmationDialog(true);
+                        }
+                    }, sx: { padding: '4px', marginTop: '-3px' } },
+                    React__default["default"].createElement(DeleteIcon__default["default"], null)),
+                showDeletionConfirmationDialog && (React__default["default"].createElement(ConfirmDialog, { open: showDeletionConfirmationDialog, onConfirm: function () {
+                        if (typeof props.onConfigChange === 'function') {
+                            props.onConfigChange(false);
+                        }
+                    }, onCancel: function () {
+                        setShowDeletionConfirmationDialog(false);
+                    }, title: "Delete layer", text: "Are you sure you want to delete this layer?" }))))), sx: {
+            paddingRight: 0,
+            paddingLeft: 0,
+            paddingTop: 0,
+            paddingBottom: '4px',
+        } },
+        React__default["default"].createElement(material.ListItemIcon, { sx: { minWidth: '30px' } },
+            React__default["default"].createElement(material.Checkbox, { sx: { padding: 0 }, checked: visible, onClick: function () {
+                    setVisible(function (val) { return !val; });
+                } })),
+        React__default["default"].createElement(ListItemText__default["default"], { primary: name, variant: "layerlist" })));
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         error && (React__default["default"].createElement(material.Snackbar, null,
             React__default["default"].createElement(material.Box, null, error))),
         wmsUrl && (React__default["default"].createElement(React__default["default"].Fragment, null,
-            React__default["default"].createElement(ListItem__default["default"], { secondaryAction: React__default["default"].createElement(React__default["default"].Fragment, null,
-                    props.buttons,
-                    props.featureInfoEnabled && (React__default["default"].createElement(IconButton__default["default"], { sx: {
-                            padding: '4px',
-                            marginTop: '-3px',
-                            marginRight: '4px',
-                            background: function (theme) {
-                                if (!(layers === null || layers === void 0 ? void 0 : layers.some(function (layer) { return layer.visible && layer.queryable; })))
-                                    return 'initial';
-                                if (_featureInfoEventsEnabled)
-                                    return theme.palette.info.light;
-                                return theme.palette.grey[300];
-                            },
-                        }, "aria-label": "featureinfo", onClick: function () {
-                            if (typeof (props === null || props === void 0 ? void 0 : props.setFeatureInfoActive) === 'function') {
-                                props.setFeatureInfoActive(function (current) { return !current; });
-                            }
-                            else {
-                                setFeatureInfoEventsEnabled(function (current) { return !current; });
-                            }
-                        }, disabled: !(layers === null || layers === void 0 ? void 0 : layers.some(function (layer) { return layer.visible && layer.queryable; })) },
-                        React__default["default"].createElement(InfoIcon__default["default"], null))),
-                    React__default["default"].createElement(IconButton__default["default"], { edge: props.showDeleteButton ? false : 'end', sx: __assign({ padding: '4px', marginTop: '-3px' }, (props.showDeleteButton ? { marginRight: '4px' } : {})), "aria-label": "open", onClick: function () { return setOpen(function (current) { return !current; }); } }, open ? React__default["default"].createElement(iconsMaterial.ExpandLess, null) : React__default["default"].createElement(iconsMaterial.ExpandMore, null)),
-                    props.showDeleteButton && (React__default["default"].createElement(React__default["default"].Fragment, null,
-                        React__default["default"].createElement(IconButton__default["default"], { "aria-label": "delete", edge: "end", onClick: function () {
-                                if (typeof props.onConfigChange === 'function') {
-                                    setShowDeletionConfirmationDialog(true);
-                                }
-                            }, sx: { padding: '4px', marginTop: '-3px' } },
-                            React__default["default"].createElement(DeleteIcon__default["default"], null)),
-                        showDeletionConfirmationDialog && (React__default["default"].createElement(ConfirmDialog, { open: showDeletionConfirmationDialog, onConfirm: function () {
-                                if (typeof props.onConfigChange === 'function') {
-                                    props.onConfigChange(false);
-                                }
-                            }, onCancel: function () {
-                                setShowDeletionConfirmationDialog(false);
-                            }, title: "Delete layer", text: "Are you sure you want to delete this layer?" }))))), sx: {
-                    paddingRight: 0,
-                    paddingLeft: 0,
-                    paddingTop: 0,
-                    paddingBottom: '4px',
-                } },
-                React__default["default"].createElement(material.ListItemIcon, { sx: { minWidth: '30px' } },
-                    React__default["default"].createElement(material.Checkbox, { sx: { padding: 0 }, checked: visible, onClick: function () {
-                            setVisible(function (val) { return !val; });
-                        } })),
-                React__default["default"].createElement(ListItemText__default["default"], { primary: name, variant: "layerlist" })),
+            props.layerId && props.sortable && (React__default["default"].createElement(SortableContainer, { layerId: props.layerId }, listContent)),
+            props.layerId && !props.sortable && (listContent),
             React__default["default"].createElement(material.Box, { sx: { display: open ? 'block' : 'none' } },
                 React__default["default"].createElement(List__default["default"], { dense: true, component: "div", disablePadding: true, sx: { paddingLeft: '18px' } }, wmsUrl &&
                     ((_j = layers === null || layers === void 0 ? void 0 : layers.map) === null || _j === void 0 ? void 0 : _j.call(layers, function (layer, idx) {
@@ -6238,6 +6306,560 @@ MlTerrainLayer.defaultProps = {
     mapId: undefined,
 };
 
+var ListItemStyled$1 = system.styled(material.ListItem)({
+    paddingRight: 0,
+    paddingLeft: 0,
+    paddingTop: 0,
+    paddingBottom: '4px',
+});
+var ListItemIconStyled = system.styled(material.ListItemIcon)({
+    minWidth: '30px',
+});
+var IconButtonStyled$1 = system.styled(material.IconButton)({
+    marginRight: '0px',
+    padding: '0px',
+});
+var CheckboxStyled$1 = system.styled(material.Checkbox)({
+    padding: 0,
+    marginRight: '5px',
+});
+var BoxStyled$1 = system.styled(system.Box)(function (_a) {
+    var open = _a.open;
+    return ({
+        display: open ? 'block' : 'none',
+    });
+});
+var ListStyled$1 = system.styled(material.List)({
+    marginLeft: '50px',
+});
+function LayerListFolder(_a) {
+    var _b = _a.visible, visible = _b === void 0 ? true : _b, name = _a.name, children = _a.children, setVisible = _a.setVisible;
+    var _c = React.useState(false), open = _c[0], setOpen = _c[1];
+    var _d = React.useState(true), localVisible = _d[0], setLocalVisible = _d[1];
+    var _visible = React.useMemo(function () {
+        if (!visible) {
+            return false;
+        }
+        return localVisible;
+    }, [visible, localVisible]);
+    var _children = React.useMemo(function () {
+        if (children) {
+            if (Array.isArray(children)) {
+                return children.map(function (element) {
+                    return React__default["default"].cloneElement(element, {
+                        visible: _visible,
+                    });
+                });
+            }
+            return React__default["default"].cloneElement(children, {
+                visible: _visible,
+            });
+        }
+        return React__default["default"].createElement(React__default["default"].Fragment, null);
+    }, [_visible]);
+    return (React__default["default"].createElement(React__default["default"].Fragment, null,
+        React__default["default"].createElement(ListItemStyled$1, null,
+            React__default["default"].createElement(ListItemIconStyled, null,
+                React__default["default"].createElement(IconButtonStyled$1, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default["default"].createElement(iconsMaterial.ExpandMore, null) : React__default["default"].createElement(iconsMaterial.KeyboardArrowRight, null)),
+                React__default["default"].createElement(CheckboxStyled$1, { disabled: setVisible ? false : !visible, checked: setVisible ? visible : localVisible, onClick: function () {
+                        if (setVisible) {
+                            setVisible(function (val) { return !val; });
+                        }
+                        else {
+                            setLocalVisible(function (val) { return !val; });
+                        }
+                    } })),
+            React__default["default"].createElement(material.ListItemText, { primary: name, variant: "layerlist" })),
+        React__default["default"].createElement(BoxStyled$1, { open: open },
+            React__default["default"].createElement(ListStyled$1, { disablePadding: true }, _children))));
+}
+
+var converters = {
+    rgba: function (c) { return "rgba(".concat(c.rgb.r, ", ").concat(c.rgb.g, ", ").concat(c.rgb.b, ", ").concat(c.rgb.a, ")"); },
+    rgb: function (c) { return "rgb(".concat(c.rgb.r, ", ").concat(c.rgb.g, ", ").concat(c.rgb.b, ")"); },
+    hex: function (c) { return c.hex; },
+    rgba_rgb: function (c) { return c.rgb.a === 1 ? converters.rgb(c) : converters.rgba(c); },
+    rgba_hex: function (c) { return c.rgb.a === 1 ? converters.hex(c) : converters.rgba(c); }
+};
+
+var ColorPicker = function (_a) {
+    var convert = _a.convert, props = __rest(_a, ["convert"]);
+    var _b = React.useState(false), showPicker = _b[0], setShowPicker = _b[1];
+    var _c = React.useState((props === null || props === void 0 ? void 0 : props.value) || ''), value = _c[0], setValue = _c[1];
+    return (React__default["default"].createElement(React__default["default"].Fragment, null,
+        React__default["default"].createElement(material.Grid, { container: true, sx: { flexWrap: 'nowrap' } },
+            React__default["default"].createElement(material.Grid, { xs: 12, item: true },
+                React__default["default"].createElement(material.Button, { variant: "outlined", onClick: function () { return setShowPicker(true); }, sx: {
+                        minWidth: '100%',
+                        padding: '5px',
+                        marginBottom: '10px',
+                        justifyContent: 'flex-start',
+                        borderColor: function (theme) { return theme.palette.text.primary; },
+                        color: function (theme) { return theme.palette.text.primary; },
+                    } },
+                    React__default["default"].createElement("div", { style: {
+                            width: '25px',
+                            height: '25px',
+                            marginRight: '10px',
+                            backgroundColor: value,
+                        } }),
+                    value))),
+        showPicker && (React__default["default"].createElement("div", { style: { position: 'relative', marginTop: 0 } },
+            React__default["default"].createElement("div", { style: { position: 'absolute', zIndex: 1000 } },
+                React__default["default"].createElement("div", { style: { position: 'fixed', top: '0px', right: '0px', bottom: '0px', left: '0px' }, onClick: function () {
+                        setShowPicker(false);
+                    } }),
+                React__default["default"].createElement(reactColor.ChromePicker, { color: value, onChange: function (c) {
+                        var _a;
+                        var newValue = converters[convert](c);
+                        setValue(newValue);
+                        (_a = props === null || props === void 0 ? void 0 : props.onChange) === null || _a === void 0 ? void 0 : _a.call(props, newValue);
+                    } }))))));
+};
+ColorPicker.defaultProps = {
+    convert: 'rgba_hex',
+    label: 'Color',
+    name: 'color',
+};
+
+function PaintPropsColorPicker(_a) {
+    var propKey = _a.propKey, value = _a.value, setPaintProps = _a.setPaintProps;
+    return (React__default["default"].createElement(ColorPicker, { value: value, label: "Color", onChange: function (value) {
+            setPaintProps(function (current) {
+                var _a;
+                var newProps = __assign(__assign({}, current), (_a = {}, _a[propKey] = value, _a));
+                return newProps;
+            });
+        } }));
+}
+
+var PaperStyled = material.styled(material.Paper)({
+    marginLeft: '-100px',
+    marginRight: '-21px',
+    paddingLeft: '53px',
+    borderRadius: '0px',
+});
+var BoxStyled = material.styled(material.Box)({
+    marginLeft: '61px',
+});
+var mapPropKeyToFormInputType = {
+    'circle-color': 'colorpicker',
+    'circle-radius': 'slider',
+    'circle-stroke-color': 'colorpicker',
+    'circle-stroke-width': 'slider',
+    'fill-color': 'colorpicker',
+    'fill-outline-color': 'colorpicker',
+    'line-color': 'colorpicker',
+    'line-width': 'slider',
+    'line-blur': 'slider',
+};
+var mapPropKeyToFormInputTypeKeys = Object.keys(mapPropKeyToFormInputType);
+var inputPropsByPropKey = {
+    'circle-stroke-width': {
+        step: 1,
+        min: 1,
+        max: 20,
+    },
+    'circle-radius': {
+        step: 1,
+        min: 1,
+        max: 100,
+    },
+    'line-blur': {
+        step: 1,
+        min: 1,
+        max: 100,
+    },
+    'line-width': {
+        step: 1,
+        min: 1,
+        max: 100,
+    },
+};
+function LayerPropertyForm(_a) {
+    var _b = _a.paintProps, paintProps = _b === void 0 ? {} : _b, setPaintProps = _a.setPaintProps;
+    var key = React.useRef(Math.round(Math.random() * 10000000000));
+    var getFormInputByType = React.useCallback(function (key) {
+        if (mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1 &&
+            (typeof paintProps[key] === 'number' || typeof paintProps[key] === 'string')) {
+            var label = (React__default["default"].createElement(material.Typography, { id: key + '_label', gutterBottom: true }, key));
+            switch (mapPropKeyToFormInputType[key]) {
+                case 'slider':
+                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: key },
+                        label,
+                        React__default["default"].createElement(material.Slider, __assign({}, inputPropsByPropKey[key], { inputProps: { inputMode: 'decimal', pattern: '[0-9]*' }, value: paintProps[key], valueLabelDisplay: "auto", onChange: function (_ev, value) {
+                                if (value) {
+                                    setPaintProps(function (current) {
+                                        var _a;
+                                        return (__assign(__assign({}, current), (_a = {}, _a[key] = value, _a)));
+                                    });
+                                }
+                            } }))));
+                case 'numberfield':
+                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: key },
+                        label,
+                        React__default["default"].createElement(material.TextField, { inputProps: { inputMode: 'decimal', pattern: '[0-9]*' }, value: paintProps[key], onChange: function (ev) {
+                                var _a;
+                                if ((_a = ev === null || ev === void 0 ? void 0 : ev.target) === null || _a === void 0 ? void 0 : _a.value) {
+                                    setPaintProps(function (current) {
+                                        var _a;
+                                        return (__assign(__assign({}, current), (_a = {}, _a[key] = parseInt(ev.target.value), _a)));
+                                    });
+                                }
+                            } })));
+                case 'colorpicker':
+                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: key },
+                        label,
+                        React__default["default"].createElement(material.Box, { sx: { '& > div': { width: 'initial !important' } } },
+                            React__default["default"].createElement(PaintPropsColorPicker, { key: key, value: paintProps[key], propKey: key, setPaintProps: setPaintProps }))));
+            }
+        }
+        return null;
+    }, [paintProps]);
+    return (React__default["default"].createElement(React__default["default"].Fragment, null,
+        React__default["default"].createElement(PaperStyled, null,
+            React__default["default"].createElement(material.ListItem, { key: key + '_paintPropForm' },
+                React__default["default"].createElement(BoxStyled, null, Object.keys(paintProps).map(function (el) { return getFormInputByType(el); }))))));
+}
+
+var ListItemStyled = material.styled(material.ListItem)(function (configurable) { return ({
+    paddingRight: configurable ? '56px' : 0,
+    paddingLeft: 0,
+    paddingTop: 0,
+    paddingBottom: '4px',
+}); });
+var TuneIconButton$1 = material.styled(material.IconButton)({
+    padding: '4px',
+    marginTop: '-3px',
+});
+var CheckboxListItemIcon = material.styled(material.ListItemIcon)({
+    minWidth: '30px',
+});
+var CheckboxStyled = material.styled(material.Checkbox)({
+    padding: 0,
+});
+function LayerListItemVectorLayer(_a) {
+    var configurable = _a.configurable, vtProps = _a.vtProps, setVtProps = _a.setVtProps, id = _a.id, props = __rest(_a, ["configurable", "vtProps", "setVtProps", "id"]);
+    var _b = React.useState(false), paintPropsFormVisible = _b[0], setPaintPropsFormVisible = _b[1];
+    var _c = React.useState(true), visible = _c[0], setVisible = _c[1];
+    var _d = React.useState(vtProps.layers[id].paint), paintProps = _d[0], setPaintProps = _d[1];
+    React.useEffect(function () {
+        var _a, _b, _c, _d, _e, _f;
+        if (!setVtProps ||
+            (typeof ((_b = (_a = vtProps.layers[id]) === null || _a === void 0 ? void 0 : _a.layout) === null || _b === void 0 ? void 0 : _b.visibility) === 'undefined' && visible) ||
+            (!visible && ((_d = (_c = vtProps.layers[id]) === null || _c === void 0 ? void 0 : _c.layout) === null || _d === void 0 ? void 0 : _d.visibility) === 'none') ||
+            (visible && ((_f = (_e = vtProps.layers[id]) === null || _e === void 0 ? void 0 : _e.layout) === null || _f === void 0 ? void 0 : _f.visibility) === 'visible'))
+            return;
+        var _layers = __spreadArray([], vtProps.layers, true);
+        if (!_layers[id].layout) {
+            _layers[id].layout = { visibility: visible ? 'visible' : 'none' };
+        }
+        else {
+            _layers[id].layout.visibility = visible ? 'visible' : 'none';
+        }
+        setVtProps(__assign(__assign({}, vtProps), { layers: _layers }));
+    }, [visible, id, setVtProps, vtProps]);
+    React.useEffect(function () {
+        setVisible(!!props.visibleMaster);
+    }, [props.visibleMaster]);
+    React.useEffect(function () {
+        if (!setVtProps)
+            return;
+        if (JSON.stringify(paintProps) !== JSON.stringify(vtProps.layers[id].paint)) {
+            var _paintProps = __assign({}, paintProps);
+            var _layers = __spreadArray([], vtProps.layers, true);
+            _layers[id].paint = _paintProps;
+            setVtProps(__assign(__assign({}, vtProps), { layers: _layers }));
+        }
+    }, [paintProps, id, setVtProps, vtProps]);
+    return (React__default["default"].createElement(React__default["default"].Fragment, null,
+        React__default["default"].createElement(ListItemStyled, { key: id, secondaryAction: configurable ? (React__default["default"].createElement(TuneIconButton$1, { edge: "end", "aria-label": "comments", onClick: function () {
+                    setPaintPropsFormVisible(function (current) {
+                        return !current;
+                    });
+                } },
+                React__default["default"].createElement(TuneIcon__default["default"], null))) : undefined },
+            React__default["default"].createElement(CheckboxListItemIcon, null,
+                React__default["default"].createElement(CheckboxStyled, { checked: visible, onClick: function () {
+                        setVisible(function (val) { return !val; });
+                    } })),
+            React__default["default"].createElement(material.ListItemText, { primary: vtProps.layers[id].id, variant: "layerlist" })),
+        configurable && paintPropsFormVisible && (React__default["default"].createElement(LayerPropertyForm, { paintProps: paintProps, setPaintProps: setPaintProps, layerType: vtProps.layers[id].type }))));
+}
+LayerListItemVectorLayer.defaultProps = {
+    configurable: true,
+};
+
+var TuneIconButton = material.styled(material.IconButton)({
+    padding: '4px',
+    marginTop: '-3px',
+});
+var DeleteIconButton = material.styled(material.IconButton)({
+    marginLeft: '20px',
+});
+function LayerListItem(_a) {
+    var _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+    var layerComponent = _a.layerComponent, visible = _a.visible, type = _a.type, name = _a.name, description = _a.description, configurable = _a.configurable, setLayerState = _a.setLayerState, props = __rest(_a, ["layerComponent", "visible", "type", "name", "description", "configurable", "setLayerState"]);
+    var _p = React.useState(true), localVisible = _p[0], setLocalVisible = _p[1];
+    var _q = React.useState(false), paintPropsFormVisible = _q[0], setPaintPropsFormVisible = _q[1];
+    var _r = React.useState(false), showDeletionConfirmationDialog = _r[0], setShowDeletionConfirmationDialog = _r[1];
+    var deletedRef = React.useRef(false);
+    var visibleRef = React.useRef(visible);
+    // this state variable is used for layer components that provide a paint attribute
+    var _s = React.useState(((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint) ||
+        getDefaultPaintPropsByType(((_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.type) || getDefaulLayerTypeByGeometry(layerComponent.props.geojson))), paintProps = _s[0], setPaintProps = _s[1];
+    var _visible = React.useMemo(function () {
+        if (!visible) {
+            return false;
+        }
+        return localVisible;
+    }, [visible, localVisible]);
+    React.useEffect(function () {
+        var _a, _b, _c;
+        if (!setLayerState || !((_a = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _a === void 0 ? void 0 : _a.layers) || _visible === visibleRef.current)
+            return;
+        visibleRef.current = _visible;
+        var state = __assign({}, layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props);
+        switch (layerComponent.type.name) {
+            case 'MlWmsLayer':
+                break;
+            case 'MlVectorTileLayer':
+                if (((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.layers) && !deletedRef.current) {
+                    state.layers = (_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.layers.map(function (el) {
+                        if (el.layout) {
+                            el.layout['visibility'] = _visible ? 'visible' : 'none';
+                        }
+                        else {
+                            el.layout = { visibility: _visible ? 'visible' : 'none' };
+                        }
+                        return el;
+                    });
+                    console.log('setLayerState', state.layers);
+                    setLayerState(state);
+                }
+                break;
+        }
+    }, [_visible, setLayerState, layerComponent]);
+    React.useEffect(function () {
+        var _a, _b;
+        if (!setLayerState || deletedRef.current || !paintProps || ((_a = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _a === void 0 ? void 0 : _a.layers))
+            return;
+        if (JSON.stringify(paintProps) === JSON.stringify((_b = layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint))
+            return;
+        setLayerState(__assign(__assign({}, layerComponent.props), { paint: paintProps }));
+    }, [paintProps, setLayerState, (_d = layerComponent.props) === null || _d === void 0 ? void 0 : _d.paint]);
+    var _layerComponent = React.useMemo(function () {
+        if (layerComponent && type === 'layer') {
+            switch (layerComponent.type.name) {
+                case 'MlWmsLayer':
+                    return React__default["default"].cloneElement(layerComponent, __assign(__assign({}, layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props), { visible: _visible }));
+                case 'MlVectorTileLayer':
+                    return React__default["default"].cloneElement(layerComponent, __assign({}, layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props));
+                default:
+                case 'MlGeoJsonLayer':
+                    return React__default["default"].cloneElement(layerComponent, __assign({ layout: {
+                            visibility: _visible ? 'visible' : 'none',
+                        } }, (setLayerState ? {} : { paint: paintProps })));
+            }
+        }
+        return React__default["default"].createElement(React__default["default"].Fragment, null);
+    }, [type, layerComponent, paintProps, _visible, (_e = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _e === void 0 ? void 0 : _e.layers, setLayerState]);
+    var layerType = React.useMemo(function () {
+        if (layerComponent && type === 'layer') {
+            if (layerComponent.props.type) {
+                return layerComponent.props.type;
+            }
+            if (layerComponent.props.geojson) {
+                return getDefaulLayerTypeByGeometry(layerComponent.props.geojson);
+            }
+        }
+        return undefined;
+    }, [layerComponent]);
+    var listContent = (React__default["default"].createElement(ListItemStyled, { sx: __assign({}, props.listItemSx), secondaryAction: configurable && ((_f = Object.keys(paintProps)) === null || _f === void 0 ? void 0 : _f.length) > 0 ? (React__default["default"].createElement(React__default["default"].Fragment, null, props === null || props === void 0 ? void 0 :
+            props.buttons,
+            React__default["default"].createElement(TuneIconButton, { edge: 'end', "aria-label": "settings", onClick: function () {
+                    setPaintPropsFormVisible(function (current) {
+                        return !current;
+                    });
+                } },
+                React__default["default"].createElement(iconsMaterial.Tune, null)))) : undefined },
+        React__default["default"].createElement(CheckboxListItemIcon, null,
+            React__default["default"].createElement(CheckboxStyled, { disabled: !visible, checked: localVisible, onClick: function () {
+                    setLocalVisible(function (val) { return !val; });
+                } })),
+        React__default["default"].createElement(material.ListItemText, { variant: "layerlist", primary: name, secondary: description, primaryTypographyProps: { overflow: 'hidden' } })));
+    return (React__default["default"].createElement(React__default["default"].Fragment, null,
+        props.sortable && props.layerId && !((_g = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _g === void 0 ? void 0 : _g.layers) && (React__default["default"].createElement(SortableContainer, { layerId: props.layerId }, listContent)),
+        !props.sortable && !((_h = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _h === void 0 ? void 0 : _h.layers) && (listContent),
+        _layerComponent,
+        !((_j = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _j === void 0 ? void 0 : _j.layers) &&
+            Object.keys(paintProps).length > 0 &&
+            configurable &&
+            paintPropsFormVisible && (React__default["default"].createElement(React__default["default"].Fragment, null,
+            props.showDeleteButton && (React__default["default"].createElement(React__default["default"].Fragment, null,
+                React__default["default"].createElement(DeleteIconButton, { edge: "end", "aria-label": "delete", onClick: function () {
+                        if (typeof setLayerState === 'function') {
+                            setShowDeletionConfirmationDialog(true);
+                        }
+                    } },
+                    React__default["default"].createElement(iconsMaterial.Delete, null)),
+                showDeletionConfirmationDialog && (React__default["default"].createElement(ConfirmDialog, { open: showDeletionConfirmationDialog, onConfirm: function () {
+                        if (typeof setLayerState === 'function') {
+                            deletedRef.current = true;
+                            setLayerState(false);
+                            setShowDeletionConfirmationDialog(false);
+                        }
+                    }, onCancel: function () {
+                        setShowDeletionConfirmationDialog(false);
+                    }, title: "Delete layer", text: "Are you sure you want to delete this layer?" })))),
+            React__default["default"].createElement(LayerPropertyForm, { paintProps: paintProps, setPaintProps: setPaintProps, layerType: layerType }))),
+        ((_k = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _k === void 0 ? void 0 : _k.layers) && (React__default["default"].createElement(LayerListFolder, { visible: localVisible, setVisible: setLocalVisible, name: name }, (_o = (_m = (_l = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _l === void 0 ? void 0 : _l.layers) === null || _m === void 0 ? void 0 : _m.map) === null || _o === void 0 ? void 0 : _o.call(_m, function (_el, idx) { return (React__default["default"].createElement(LayerListItemVectorLayer, { vtProps: layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props, setVtProps: setLayerState, id: '' + idx, key: '' + idx, visibleMaster: _visible })); })))));
+}
+LayerListItem.defaultProps = {
+    type: 'layer',
+    visible: true,
+    showDeleteButton: false,
+    buttons: React__default["default"].createElement(React__default["default"].Fragment, null),
+};
+
+var sketchTools = [
+    { name: 'Point', mode: 'draw_point', icon: React__default["default"].createElement(ScatterPlotIcon__default["default"], null) },
+    { name: 'LineString', mode: 'draw_line_string', icon: React__default["default"].createElement(PolylineIcon__default["default"], null) },
+    { name: 'Polygon', mode: 'draw_polygon', icon: React__default["default"].createElement(PentagonIcon__default["default"], null) },
+];
+/**
+ * Component template
+ *
+ */
+var MlSketchTool = function (props) {
+    var _a, _b;
+    var mapHook = useMap({
+        mapId: props.mapId,
+        waitForLayer: props.insertBeforeLayer,
+    });
+    var _c = React.useState(), hoveredGeometry = _c[0], setHoveredGeometry = _c[1];
+    var _d = React.useState({
+        activeGeometryIndex: undefined,
+        selectedGeoJson: undefined,
+        geometries: [],
+        drawMode: undefined,
+    }), sketchState = _d[0], setSketchState = _d[1];
+    var buttonStyle = __assign({}, props.buttonStyleOverride);
+    var buttonClickHandler = function (buttonDrawMode) {
+        setSketchState(function (_state) { return ({
+            drawMode: _state.drawMode !== buttonDrawMode ? buttonDrawMode : undefined,
+            geometries: _state.geometries,
+            activeGeometryIndex: undefined,
+            selectedGeoJson: undefined,
+        }); });
+    };
+    var removeGeoJson = function (geoJson) {
+        setSketchState(function (_sketchState) {
+            var _geometries = __spreadArray([], _sketchState.geometries, true);
+            _geometries.splice(_geometries.indexOf(geoJson), 1);
+            return __assign(__assign({}, _sketchState), { geometries: _geometries, activeGeometryIndex: _sketchState.activeGeometryIndex
+                    ? _sketchState.activeGeometryIndex - 1
+                    : undefined });
+        });
+    };
+    var SketchToolButtons = function () {
+        return (React__default["default"].createElement(React__default["default"].Fragment, null, sketchTools.map(function (el) {
+            var stateColor = function (theme) {
+                if (sketchState.drawMode === el.mode) {
+                    return theme.palette.primary.main;
+                }
+                else {
+                    return theme.palette.navigation.navColor;
+                }
+            };
+            var stateIconColor = function (theme) {
+                if (sketchState.drawMode !== el.mode) {
+                    return theme.palette.primary.main;
+                }
+                else {
+                    return theme.palette.navigation.navColor;
+                }
+            };
+            return (React__default["default"].createElement(React__default["default"].Fragment, null,
+                React__default["default"].createElement(Tooltip__default["default"], { title: el.name },
+                    React__default["default"].createElement(material.Button, { sx: __assign({ color: stateIconColor, backgroundColor: stateColor, '&:hover': {
+                                backgroundColor: stateColor,
+                            } }, buttonStyle), onClick: function () { return buttonClickHandler(el.mode); } }, el.icon))));
+        })));
+    };
+    return (React__default["default"].createElement(React__default["default"].Fragment, null,
+        React__default["default"].createElement(system.Box, { sx: {
+                zIndex: 104,
+            } },
+            React__default["default"].createElement(ButtonGroup__default["default"], null,
+                React__default["default"].createElement(SketchToolButtons, null))),
+        sketchState.drawMode && (React__default["default"].createElement(MlFeatureEditor, { mode: sketchState.drawMode, geojson: sketchState.selectedGeoJson, onChange: function (feature) {
+                if (!(feature === null || feature === void 0 ? void 0 : feature[0]))
+                    return;
+                setSketchState(function (_sketchState) {
+                    var _geometries = __spreadArray([], sketchState.geometries, true);
+                    if (typeof _sketchState.activeGeometryIndex === 'undefined') {
+                        var tempFeature = feature[0];
+                        tempFeature.properties.id = tempFeature.id;
+                        _sketchState.activeGeometryIndex = _geometries.length;
+                        _geometries.push(tempFeature);
+                    }
+                    else {
+                        _geometries[_sketchState.activeGeometryIndex] = feature[0];
+                    }
+                    return __assign(__assign({}, _sketchState), { geometries: _geometries });
+                });
+            }, onFinish: function () {
+                setSketchState(function (_sketchState) { return (__assign(__assign({}, _sketchState), { drawMode: undefined, activeGeometryIndex: undefined, selectedGeoJson: undefined })); });
+            } })),
+        React__default["default"].createElement(List__default["default"], { sx: { zIndex: 105 } },
+            sketchState.geometries.map(function (el) { return (React__default["default"].createElement(React__default["default"].Fragment, null,
+                React__default["default"].createElement(system.Box, { key: el.id, sx: { display: 'flex', flexDirection: 'column' } },
+                    React__default["default"].createElement("br", null),
+                    React__default["default"].createElement(system.Box, { flexDirection: 'row', sx: {
+                            '&:hover': {
+                                backgroundColor: 'rgb(177, 177, 177, 0.2)',
+                            },
+                        }, onMouseOver: function () {
+                            setHoveredGeometry(el);
+                        }, onMouseLeave: function () {
+                            setHoveredGeometry(undefined);
+                        } },
+                        React__default["default"].createElement(LayerListItem, { listItemSx: buttonStyle, configurable: true, layerComponent: React__default["default"].createElement(MlGeoJsonLayer, { mapId: props.mapId, geojson: el, layerId: String(el.id) }), type: 'layer', name: String(el.id), description: el.geometry.type }),
+                        React__default["default"].createElement(system.Box, { sx: {
+                                padding: '3px 30px',
+                            } },
+                            React__default["default"].createElement(ButtonGroup__default["default"], { size: "small" },
+                                React__default["default"].createElement(material.Button, { onClick: function () {
+                                        var _a;
+                                        (_a = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _a === void 0 ? void 0 : _a.map.setCenter(el.geometry.type === 'Point'
+                                            ? el.geometry.coordinates
+                                            : turf__namespace.centerOfMass(el).geometry.coordinates);
+                                    } },
+                                    React__default["default"].createElement(GpsFixedIcon__default["default"], null)),
+                                React__default["default"].createElement(material.Button, { sx: buttonStyle, onClick: function () {
+                                        setSketchState(function (_sketchState) { return (__assign(__assign({}, _sketchState), { selectedGeoJson: el, activeGeometryIndex: _sketchState.geometries.indexOf(el), drawMode: 'simple_select' })); });
+                                    } },
+                                    React__default["default"].createElement(EditIcon__default["default"], null)),
+                                React__default["default"].createElement(material.Button, { sx: buttonStyle, onClick: function () {
+                                        removeGeoJson(el);
+                                        setHoveredGeometry(undefined);
+                                    } },
+                                    React__default["default"].createElement(DeleteIcon__default["default"], null)))))))); }),
+            hoveredGeometry && (React__default["default"].createElement(MlGeoJsonLayer, { mapId: props.mapId, geojson: { type: 'FeatureCollection', features: [hoveredGeometry] }, type: 'line', layerId: 'highlightBorder', paint: {
+                    'line-color': '#dd9900',
+                    'line-opacity': 0.4,
+                    'line-width': 10,
+                } }))),
+        sketchState.drawMode === 'simple_select' && (React__default["default"].createElement(material.Typography, { sx: { fontSize: '0.6em' } },
+            "Edit ", (_b = (_a = sketchState.selectedGeoJson) === null || _a === void 0 ? void 0 : _a.geometry) === null || _b === void 0 ? void 0 :
+            _b.type))));
+};
+MlSketchTool.defaultProps = {
+    mapId: undefined,
+    buttonStyleOverride: {},
+};
+
 /**
  * Component template
  *
@@ -6473,7 +7095,7 @@ var useAddProtocol = function (props) {
         return function () {
             maplibregl__default["default"].removeProtocol(props.protocol);
         };
-    }, []);
+    }, [props]);
     return {};
 };
 useAddProtocol.defaultProps = {
@@ -6536,426 +7158,12 @@ SimpleDataProvider.propTypes = {
   children: PropTypes__default["default"].node.isRequired
 };
 
-var ListStyled$1 = material.styled(material.List)({
+var ListStyled = material.styled(material.List)({
     marginTop: '15px',
 });
 function LayerList(props) {
-    return React__default["default"].createElement(ListStyled$1, null, props === null || props === void 0 ? void 0 : props.children);
+    return React__default["default"].createElement(ListStyled, null, props === null || props === void 0 ? void 0 : props.children);
 }
-
-var ListItemStyled$1 = system.styled(material.ListItem)({
-    paddingRight: 0,
-    paddingLeft: 0,
-    paddingTop: 0,
-    paddingBottom: '4px',
-});
-var ListItemIconStyled = system.styled(material.ListItemIcon)({
-    minWidth: '30px',
-});
-var IconButtonStyled$1 = system.styled(material.IconButton)({
-    marginRight: '0px',
-    padding: '0px',
-});
-var CheckboxStyled$1 = system.styled(material.Checkbox)({
-    padding: 0,
-    marginRight: '5px',
-});
-var BoxStyled$1 = system.styled(system.Box)(function (_a) {
-    var open = _a.open;
-    return ({
-        display: open ? 'block' : 'none',
-    });
-});
-var ListStyled = system.styled(material.List)({
-    marginLeft: '50px',
-});
-function LayerListFolder(_a) {
-    var _b = _a.visible, visible = _b === void 0 ? true : _b, name = _a.name, children = _a.children, setVisible = _a.setVisible;
-    var _c = React.useState(false), open = _c[0], setOpen = _c[1];
-    var _d = React.useState(true), localVisible = _d[0], setLocalVisible = _d[1];
-    var _visible = React.useMemo(function () {
-        if (!visible) {
-            return false;
-        }
-        return localVisible;
-    }, [visible, localVisible]);
-    var _children = React.useMemo(function () {
-        if (children) {
-            if (Array.isArray(children)) {
-                return children.map(function (element) {
-                    return React__default["default"].cloneElement(element, {
-                        visible: _visible,
-                    });
-                });
-            }
-            return React__default["default"].cloneElement(children, {
-                visible: _visible,
-            });
-        }
-        return React__default["default"].createElement(React__default["default"].Fragment, null);
-    }, [_visible]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement(ListItemStyled$1, null,
-            React__default["default"].createElement(ListItemIconStyled, null,
-                React__default["default"].createElement(IconButtonStyled$1, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default["default"].createElement(iconsMaterial.ExpandMore, null) : React__default["default"].createElement(iconsMaterial.KeyboardArrowRight, null)),
-                React__default["default"].createElement(CheckboxStyled$1, { disabled: setVisible ? false : !visible, checked: setVisible ? visible : localVisible, onClick: function () {
-                        if (setVisible) {
-                            setVisible(function (val) { return !val; });
-                        }
-                        else {
-                            setLocalVisible(function (val) { return !val; });
-                        }
-                    } })),
-            React__default["default"].createElement(material.ListItemText, { primary: name, variant: "layerlist" })),
-        React__default["default"].createElement(BoxStyled$1, { open: open },
-            React__default["default"].createElement(ListStyled, { disablePadding: true }, _children))));
-}
-
-var converters = {
-    rgba: function (c) { return "rgba(".concat(c.rgb.r, ", ").concat(c.rgb.g, ", ").concat(c.rgb.b, ", ").concat(c.rgb.a, ")"); },
-    rgb: function (c) { return "rgb(".concat(c.rgb.r, ", ").concat(c.rgb.g, ", ").concat(c.rgb.b, ")"); },
-    hex: function (c) { return c.hex; },
-    rgba_rgb: function (c) { return c.rgb.a === 1 ? converters.rgb(c) : converters.rgba(c); },
-    rgba_hex: function (c) { return c.rgb.a === 1 ? converters.hex(c) : converters.rgba(c); }
-};
-
-var ColorPicker = function (_a) {
-    var convert = _a.convert, props = __rest(_a, ["convert"]);
-    var _b = React.useState(false), showPicker = _b[0], setShowPicker = _b[1];
-    var _c = React.useState((props === null || props === void 0 ? void 0 : props.value) || ''), value = _c[0], setValue = _c[1];
-    return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement(material.Grid, { container: true, sx: { flexWrap: 'nowrap' } },
-            React__default["default"].createElement(material.Grid, { xs: 12, item: true },
-                React__default["default"].createElement(material.Button, { variant: "outlined", onClick: function () { return setShowPicker(true); }, sx: {
-                        minWidth: '100%',
-                        padding: '5px',
-                        marginBottom: '10px',
-                        justifyContent: 'flex-start',
-                        borderColor: function (theme) { return theme.palette.text.primary; },
-                        color: function (theme) { return theme.palette.text.primary; },
-                    } },
-                    React__default["default"].createElement("div", { style: {
-                            width: '25px',
-                            height: '25px',
-                            marginRight: '10px',
-                            backgroundColor: value,
-                        } }),
-                    value))),
-        showPicker && (React__default["default"].createElement("div", { style: { position: 'relative', marginTop: 0 } },
-            React__default["default"].createElement("div", { style: { position: 'absolute', zIndex: 1000 } },
-                React__default["default"].createElement("div", { style: { position: 'fixed', top: '0px', right: '0px', bottom: '0px', left: '0px' }, onClick: function () {
-                        setShowPicker(false);
-                    } }),
-                React__default["default"].createElement(reactColor.ChromePicker, { color: value, onChange: function (c) {
-                        var _a;
-                        var newValue = converters[convert](c);
-                        setValue(newValue);
-                        (_a = props === null || props === void 0 ? void 0 : props.onChange) === null || _a === void 0 ? void 0 : _a.call(props, newValue);
-                    } }))))));
-};
-ColorPicker.defaultProps = {
-    convert: 'rgba_hex',
-    label: 'Color',
-    name: 'color',
-};
-
-function PaintPropsColorPicker(_a) {
-    var propKey = _a.propKey, value = _a.value, setPaintProps = _a.setPaintProps;
-    return (React__default["default"].createElement(ColorPicker, { value: value, label: "Color", onChange: function (value) {
-            setPaintProps(function (current) {
-                var _a;
-                var newProps = __assign(__assign({}, current), (_a = {}, _a[propKey] = value, _a));
-                return newProps;
-            });
-        } }));
-}
-
-var PaperStyled = material.styled(material.Paper)({
-    marginLeft: '-100px',
-    marginRight: '-21px',
-    paddingLeft: '53px',
-    borderRadius: '0px',
-});
-var BoxStyled = material.styled(material.Box)({
-    marginLeft: '61px',
-});
-var mapPropKeyToFormInputType = {
-    'circle-color': 'colorpicker',
-    'circle-radius': 'slider',
-    'circle-stroke-color': 'colorpicker',
-    'circle-stroke-width': 'slider',
-    'fill-color': 'colorpicker',
-    'fill-outline-color': 'colorpicker',
-    'line-color': 'colorpicker',
-    'line-width': 'slider',
-    'line-blur': 'slider',
-};
-var mapPropKeyToFormInputTypeKeys = Object.keys(mapPropKeyToFormInputType);
-var inputPropsByPropKey = {
-    'circle-stroke-width': {
-        step: 1,
-        min: 1,
-        max: 20,
-    },
-    'circle-radius': {
-        step: 1,
-        min: 1,
-        max: 100,
-    },
-    'line-blur': {
-        step: 1,
-        min: 1,
-        max: 100,
-    },
-    'line-width': {
-        step: 1,
-        min: 1,
-        max: 100,
-    },
-};
-function LayerPropertyForm(_a) {
-    var _b = _a.paintProps, paintProps = _b === void 0 ? {} : _b, setPaintProps = _a.setPaintProps;
-    var key = React.useRef(Math.round(Math.random() * 10000000000));
-    var getFormInputByType = React.useCallback(function (key) {
-        if (mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1 &&
-            (typeof paintProps[key] === 'number' || typeof paintProps[key] === 'string')) {
-            var label = (React__default["default"].createElement(material.Typography, { id: key + '_label', gutterBottom: true }, key));
-            switch (mapPropKeyToFormInputType[key]) {
-                case 'slider':
-                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: key },
-                        label,
-                        React__default["default"].createElement(material.Slider, __assign({}, inputPropsByPropKey[key], { inputProps: { inputMode: 'decimal', pattern: '[0-9]*' }, value: paintProps[key], valueLabelDisplay: "auto", onChange: function (_ev, value) {
-                                if (value) {
-                                    setPaintProps(function (current) {
-                                        var _a;
-                                        return (__assign(__assign({}, current), (_a = {}, _a[key] = value, _a)));
-                                    });
-                                }
-                            } }))));
-                case 'numberfield':
-                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: key },
-                        label,
-                        React__default["default"].createElement(material.TextField, { inputProps: { inputMode: 'decimal', pattern: '[0-9]*' }, value: paintProps[key], onChange: function (ev) {
-                                var _a;
-                                if ((_a = ev === null || ev === void 0 ? void 0 : ev.target) === null || _a === void 0 ? void 0 : _a.value) {
-                                    setPaintProps(function (current) {
-                                        var _a;
-                                        return (__assign(__assign({}, current), (_a = {}, _a[key] = parseInt(ev.target.value), _a)));
-                                    });
-                                }
-                            } })));
-                case 'colorpicker':
-                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: key },
-                        label,
-                        React__default["default"].createElement(material.Box, { sx: { '& > div': { width: 'initial !important' } } },
-                            React__default["default"].createElement(PaintPropsColorPicker, { key: key, value: paintProps[key], propKey: key, setPaintProps: setPaintProps }))));
-            }
-        }
-        return null;
-    }, [paintProps]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement(PaperStyled, null,
-            React__default["default"].createElement(material.ListItem, { key: key + '_paintPropForm' },
-                React__default["default"].createElement(BoxStyled, null, Object.keys(paintProps).map(function (el) { return getFormInputByType(el); }))))));
-}
-
-var ListItemStyled = material.styled(material.ListItem)(function (configurable) { return ({
-    paddingRight: configurable ? '56px' : 0,
-    paddingLeft: 0,
-    paddingTop: 0,
-    paddingBottom: '4px',
-}); });
-var TuneIconButton$1 = material.styled(material.IconButton)({
-    padding: '4px',
-    marginTop: '-3px',
-});
-var CheckboxListItemIcon = material.styled(material.ListItemIcon)({
-    minWidth: '30px',
-});
-var CheckboxStyled = material.styled(material.Checkbox)({
-    padding: 0,
-});
-function LayerListItemVectorLayer(_a) {
-    var configurable = _a.configurable, vtProps = _a.vtProps, setVtProps = _a.setVtProps, id = _a.id, props = __rest(_a, ["configurable", "vtProps", "setVtProps", "id"]);
-    var _b = React.useState(false), paintPropsFormVisible = _b[0], setPaintPropsFormVisible = _b[1];
-    var _c = React.useState(true), visible = _c[0], setVisible = _c[1];
-    var _d = React.useState(vtProps.layers[id].paint), paintProps = _d[0], setPaintProps = _d[1];
-    React.useEffect(function () {
-        var _a, _b, _c, _d, _e, _f;
-        if (!setVtProps ||
-            (typeof ((_b = (_a = vtProps.layers[id]) === null || _a === void 0 ? void 0 : _a.layout) === null || _b === void 0 ? void 0 : _b.visibility) === 'undefined' && visible) ||
-            (!visible && ((_d = (_c = vtProps.layers[id]) === null || _c === void 0 ? void 0 : _c.layout) === null || _d === void 0 ? void 0 : _d.visibility) === 'none') ||
-            (visible && ((_f = (_e = vtProps.layers[id]) === null || _e === void 0 ? void 0 : _e.layout) === null || _f === void 0 ? void 0 : _f.visibility) === 'visible'))
-            return;
-        var _layers = __spreadArray([], vtProps.layers, true);
-        if (!_layers[id].layout) {
-            _layers[id].layout = { visibility: visible ? 'visible' : 'none' };
-        }
-        else {
-            _layers[id].layout.visibility = visible ? 'visible' : 'none';
-        }
-        setVtProps(__assign(__assign({}, vtProps), { layers: _layers }));
-    }, [visible, id, setVtProps, vtProps]);
-    React.useEffect(function () {
-        setVisible(!!props.visibleMaster);
-    }, [props.visibleMaster]);
-    React.useEffect(function () {
-        if (!setVtProps)
-            return;
-        if (JSON.stringify(paintProps) !== JSON.stringify(vtProps.layers[id].paint)) {
-            var _paintProps = __assign({}, paintProps);
-            var _layers = __spreadArray([], vtProps.layers, true);
-            _layers[id].paint = _paintProps;
-            setVtProps(__assign(__assign({}, vtProps), { layers: _layers }));
-        }
-    }, [paintProps, id, setVtProps, vtProps]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement(ListItemStyled, { key: id, secondaryAction: configurable ? (React__default["default"].createElement(TuneIconButton$1, { edge: "end", "aria-label": "comments", onClick: function () {
-                    setPaintPropsFormVisible(function (current) {
-                        return !current;
-                    });
-                } },
-                React__default["default"].createElement(TuneIcon__default["default"], null))) : undefined },
-            React__default["default"].createElement(CheckboxListItemIcon, null,
-                React__default["default"].createElement(CheckboxStyled, { checked: visible, onClick: function () {
-                        setVisible(function (val) { return !val; });
-                    } })),
-            React__default["default"].createElement(material.ListItemText, { primary: vtProps.layers[id].id, variant: "layerlist" })),
-        configurable && paintPropsFormVisible && (React__default["default"].createElement(LayerPropertyForm, { paintProps: paintProps, setPaintProps: setPaintProps, layerType: vtProps.layers[id].type }))));
-}
-LayerListItemVectorLayer.defaultProps = {
-    configurable: true,
-};
-
-var TuneIconButton = material.styled(material.IconButton)({
-    padding: '4px',
-    marginTop: '-3px',
-});
-var DeleteIconButton = material.styled(material.IconButton)({
-    marginLeft: '20px',
-});
-function LayerListItem(_a) {
-    var _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
-    var layerComponent = _a.layerComponent, visible = _a.visible, type = _a.type, name = _a.name, description = _a.description, configurable = _a.configurable, setLayerState = _a.setLayerState, props = __rest(_a, ["layerComponent", "visible", "type", "name", "description", "configurable", "setLayerState"]);
-    var _o = React.useState(true), localVisible = _o[0], setLocalVisible = _o[1];
-    var _p = React.useState(false), paintPropsFormVisible = _p[0], setPaintPropsFormVisible = _p[1];
-    var _q = React.useState(false), showDeletionConfirmationDialog = _q[0], setShowDeletionConfirmationDialog = _q[1];
-    var deletedRef = React.useRef(false);
-    var visibleRef = React.useRef(visible);
-    // this state variable is used for layer components that provide a paint attribute
-    var _r = React.useState(((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint) ||
-        getDefaultPaintPropsByType(((_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.type) || getDefaulLayerTypeByGeometry(layerComponent.props.geojson))), paintProps = _r[0], setPaintProps = _r[1];
-    var _visible = React.useMemo(function () {
-        if (!visible) {
-            return false;
-        }
-        return localVisible;
-    }, [visible, localVisible]);
-    React.useEffect(function () {
-        var _a, _b, _c;
-        if (!setLayerState || !((_a = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _a === void 0 ? void 0 : _a.layers) || _visible === visibleRef.current)
-            return;
-        visibleRef.current = _visible;
-        var state = __assign({}, layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props);
-        switch (layerComponent.type.name) {
-            case 'MlWmsLayer':
-                break;
-            case 'MlVectorTileLayer':
-                if (((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.layers) && !deletedRef.current) {
-                    state.layers = (_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.layers.map(function (el) {
-                        if (el.layout) {
-                            el.layout['visibility'] = _visible ? 'visible' : 'none';
-                        }
-                        else {
-                            el.layout = { visibility: _visible ? 'visible' : 'none' };
-                        }
-                        return el;
-                    });
-                    console.log('setLayerState', state.layers);
-                    setLayerState(state);
-                }
-                break;
-        }
-    }, [_visible, setLayerState, layerComponent]);
-    React.useEffect(function () {
-        var _a, _b;
-        if (!setLayerState || deletedRef.current || !paintProps || ((_a = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _a === void 0 ? void 0 : _a.layers))
-            return;
-        if (JSON.stringify(paintProps) === JSON.stringify((_b = layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint))
-            return;
-        setLayerState(__assign(__assign({}, layerComponent.props), { paint: paintProps }));
-    }, [paintProps, setLayerState, (_d = layerComponent.props) === null || _d === void 0 ? void 0 : _d.paint]);
-    var _layerComponent = React.useMemo(function () {
-        if (layerComponent && type === 'layer') {
-            switch (layerComponent.type.name) {
-                case 'MlWmsLayer':
-                    return React__default["default"].cloneElement(layerComponent, __assign(__assign({}, layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props), { visible: _visible }));
-                case 'MlVectorTileLayer':
-                    return React__default["default"].cloneElement(layerComponent, __assign({}, layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props));
-                default:
-                case 'MlGeoJsonLayer':
-                    return React__default["default"].cloneElement(layerComponent, __assign({ layout: {
-                            visibility: _visible ? 'visible' : 'none',
-                        } }, (setLayerState ? {} : { paint: paintProps })));
-            }
-        }
-        return React__default["default"].createElement(React__default["default"].Fragment, null);
-    }, [type, layerComponent, paintProps, _visible, (_e = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _e === void 0 ? void 0 : _e.layers, setLayerState]);
-    var layerType = React.useMemo(function () {
-        if (layerComponent && type === 'layer') {
-            if (layerComponent.props.type) {
-                return layerComponent.props.type;
-            }
-            if (layerComponent.props.geojson) {
-                return getDefaulLayerTypeByGeometry(layerComponent.props.geojson);
-            }
-        }
-        return undefined;
-    }, [layerComponent]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        !((_f = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _f === void 0 ? void 0 : _f.layers) && (React__default["default"].createElement(ListItemStyled, { sx: __assign({}, props.listItemSx), secondaryAction: configurable && ((_g = Object.keys(paintProps)) === null || _g === void 0 ? void 0 : _g.length) > 0 ? (React__default["default"].createElement(React__default["default"].Fragment, null, props === null || props === void 0 ? void 0 :
-                props.buttons,
-                React__default["default"].createElement(TuneIconButton, { edge: 'end', "aria-label": "settings", onClick: function () {
-                        setPaintPropsFormVisible(function (current) {
-                            return !current;
-                        });
-                    } },
-                    React__default["default"].createElement(iconsMaterial.Tune, null)))) : undefined },
-            React__default["default"].createElement(CheckboxListItemIcon, null,
-                React__default["default"].createElement(CheckboxStyled, { disabled: !visible, checked: localVisible, onClick: function () {
-                        setLocalVisible(function (val) { return !val; });
-                    } })),
-            React__default["default"].createElement(material.ListItemText, { variant: "layerlist", primary: name, secondary: description, primaryTypographyProps: { overflow: 'hidden' } }))),
-        _layerComponent,
-        !((_h = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _h === void 0 ? void 0 : _h.layers) &&
-            Object.keys(paintProps).length > 0 &&
-            configurable &&
-            paintPropsFormVisible && (React__default["default"].createElement(React__default["default"].Fragment, null,
-            props.showDeleteButton && (React__default["default"].createElement(React__default["default"].Fragment, null,
-                React__default["default"].createElement(DeleteIconButton, { edge: "end", "aria-label": "delete", onClick: function () {
-                        if (typeof setLayerState === 'function') {
-                            setShowDeletionConfirmationDialog(true);
-                        }
-                    } },
-                    React__default["default"].createElement(iconsMaterial.Delete, null)),
-                showDeletionConfirmationDialog && (React__default["default"].createElement(ConfirmDialog, { open: showDeletionConfirmationDialog, onConfirm: function () {
-                        if (typeof setLayerState === 'function') {
-                            deletedRef.current = true;
-                            setLayerState(false);
-                            setShowDeletionConfirmationDialog(false);
-                        }
-                    }, onCancel: function () {
-                        setShowDeletionConfirmationDialog(false);
-                    }, title: "Delete layer", text: "Are you sure you want to delete this layer?" })))),
-            React__default["default"].createElement(LayerPropertyForm, { paintProps: paintProps, setPaintProps: setPaintProps, layerType: layerType }))),
-        ((_j = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _j === void 0 ? void 0 : _j.layers) && (React__default["default"].createElement(LayerListFolder, { visible: localVisible, setVisible: setLocalVisible, name: name }, (_m = (_l = (_k = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _k === void 0 ? void 0 : _k.layers) === null || _l === void 0 ? void 0 : _l.map) === null || _m === void 0 ? void 0 : _m.call(_l, function (_el, idx) { return (React__default["default"].createElement(LayerListItemVectorLayer, { vtProps: layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props, setVtProps: setLayerState, id: '' + idx, key: '' + idx, visibleMaster: _visible })); })))));
-}
-LayerListItem.defaultProps = {
-    type: 'layer',
-    visible: true,
-    showDeleteButton: false,
-    buttons: React__default["default"].createElement(React__default["default"].Fragment, null),
-};
 
 var IconButtonStyled = material.styled(material.IconButton)({
     padding: '4px',
@@ -7029,106 +7237,124 @@ function LayerListItemFactory(props) {
             return props.setLayers;
         return layerContext.setLayers;
     }, [props.setLayers, layerContext.setLayers]);
+    var pointerSensor = core.useSensor(core.PointerSensor, {
+        activationConstraint: {
+            distance: 5,
+        },
+    });
+    var mouseSensor = core.useSensor(core.MouseSensor, {
+        activationConstraint: {
+            distance: 5,
+        },
+    });
+    var sensors = core.useSensors(mouseSensor, pointerSensor);
+    function dragEnd(event) {
+        var _a, _b, _c;
+        var dragLayerId = event.active.id;
+        var dragLayerNewPosition = (_c = (_b = (_a = event.over) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.current) === null || _c === void 0 ? void 0 : _c.sortable.index;
+        layerContext.moveLayer(String(dragLayerId), function () { return dragLayerNewPosition; });
+    }
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement(MlOrderLayers, { layerIds: orderLayers, insertBeforeLayer: "_background" }),
         ((_a = layerContext === null || layerContext === void 0 ? void 0 : layerContext.symbolLayers) === null || _a === void 0 ? void 0 : _a.length) > 0 && (React__default["default"].createElement(LayerListItem, { key: 'background_labels', layerComponent: React__default["default"].createElement(MlVectorTileLayer, __assign({}, layerContext.vtLayerConfig, { layers: layerContext.symbolLayers, mapId: props === null || props === void 0 ? void 0 : props.mapId, insertBeforeLayer: 'order-labels' })), setLayerState: function (state) {
                 return layerContext.setSymbolLayers(state === null || state === void 0 ? void 0 : state.layers);
             }, visible: true, configurable: true, type: "layer", name: "Labels" })),
-        __spreadArray([], layers, true).map(function (layer, idx) {
-            var _a, _b, _c, _d, _e;
-            if (!(layer === null || layer === void 0 ? void 0 : layer.id))
-                return null;
-            switch (layer.type) {
-                case 'geojson':
-                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: (layer === null || layer === void 0 ? void 0 : layer.id) + '_listItem' },
-                        React__default["default"].createElement(LayerListItem, { key: layer.id, name: (layer === null || layer === void 0 ? void 0 : layer.name) || ((_a = layer === null || layer === void 0 ? void 0 : layer.config) === null || _a === void 0 ? void 0 : _a.type) + ' layer' || 'unnamed layer', layerComponent: React__default["default"].createElement(MlGeoJsonLayer, __assign({}, layer.config, { mapId: props === null || props === void 0 ? void 0 : props.mapId, layerId: layer.id, insertBeforeLayer: 'content_order_' + (layers.length - 1 - idx) })), buttons: React__default["default"].createElement(React__default["default"].Fragment, null,
-                                React__default["default"].createElement(IconButtonStyled, { disabled: idx === layers.length - 1, onClick: function () {
-                                        layerContext.moveDown(layer.id || '');
-                                    } },
-                                    React__default["default"].createElement(iconsMaterial.ArrowCircleDown, null)),
-                                React__default["default"].createElement(IconButtonStyled, { disabled: idx === 0, onClick: function () {
-                                        layerContext.moveUp(layer.id || '');
-                                    } },
-                                    React__default["default"].createElement(iconsMaterial.ArrowCircleUp, null)),
-                                React__default["default"].createElement(IconButtonStyled, { onClick: function () { return fitLayer(layer); } },
-                                    React__default["default"].createElement(iconsMaterial.CenterFocusWeak, null))), setLayerState: function (layerConfig) {
-                                return setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
-                                    var _layers = __spreadArray([], current, true);
-                                    if (layerConfig === false) {
-                                        _layers.splice(idx, 1);
-                                    }
-                                    else {
-                                        _layers[idx].config = layerConfig;
-                                    }
-                                    return _layers;
-                                });
-                            }, configurable: true, showDeleteButton: true })));
-                case 'wms':
-                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: (layer === null || layer === void 0 ? void 0 : layer.id) + '_listItem' },
-                        React__default["default"].createElement(MlWmsLoader, __assign({}, layer.config, { key: layer.id, mapId: props === null || props === void 0 ? void 0 : props.mapId, insertBeforeLayer: 'content_order_' + (layers.length - 1 - idx), onConfigChange: function (layerConfig) {
-                                setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
-                                    var _layers = __spreadArray([], current, true);
-                                    if (layerConfig === false) {
-                                        _layers.splice(idx, 1);
-                                    }
-                                    else {
-                                        _layers[idx].config.config = layerConfig;
-                                    }
-                                    return _layers;
-                                });
-                            }, featureInfoActive: ((_b = layer === null || layer === void 0 ? void 0 : layer.config) === null || _b === void 0 ? void 0 : _b.featureInfoActive) || false, setFeatureInfoActive: function (updateFunction) {
-                                setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
-                                    var _a;
-                                    var _layers = __spreadArray([], current, true);
-                                    if (typeof updateFunction === 'function') {
-                                        _layers[idx].config.featureInfoActive =
-                                            updateFunction(((_a = _layers[idx].config) === null || _a === void 0 ? void 0 : _a.featureInfoActive) || false);
-                                    }
-                                    return _layers;
-                                });
-                            }, showDeleteButton: true, buttons: React__default["default"].createElement(React__default["default"].Fragment, null,
-                                React__default["default"].createElement(IconButtonStyled, { disabled: idx === layers.length - 1, onClick: function () {
-                                        layerContext.moveDown(layer.id || '');
-                                    } },
-                                    React__default["default"].createElement(iconsMaterial.ArrowCircleDown, null)),
-                                React__default["default"].createElement(IconButtonStyled, { disabled: idx === 0, onClick: function () {
-                                        layerContext.moveUp(layer.id || '');
-                                    } },
-                                    React__default["default"].createElement(iconsMaterial.ArrowCircleUp, null)),
-                                React__default["default"].createElement(IconButtonStyled, { onClick: function () { return fitLayer(layer); } },
-                                    React__default["default"].createElement(iconsMaterial.CenterFocusWeak, null))) }))));
-                case 'vt':
-                    return (React__default["default"].createElement(React__default["default"].Fragment, { key: (layer === null || layer === void 0 ? void 0 : layer.id) + '_listItem' },
-                        React__default["default"].createElement(LayerListItem, { key: layer.id, name: (layer === null || layer === void 0 ? void 0 : layer.name) || (layer === null || layer === void 0 ? void 0 : layer.type) + ' layer' || 'unnamed layer', layerComponent: React__default["default"].createElement(MlVectorTileLayer, { layers: ((_c = layer === null || layer === void 0 ? void 0 : layer.config) === null || _c === void 0 ? void 0 : _c.layers) || [], key: layer.id, mapId: layer === null || layer === void 0 ? void 0 : layer.config.mapId, sourceOptions: (_d = layer === null || layer === void 0 ? void 0 : layer.config) === null || _d === void 0 ? void 0 : _d.sourceOptions, layerId: layer.id, url: (_e = layer === null || layer === void 0 ? void 0 : layer.config) === null || _e === void 0 ? void 0 : _e.url }), buttons: React__default["default"].createElement(React__default["default"].Fragment, null,
-                                React__default["default"].createElement(IconButtonStyled, { key: layer.id + '_button1', disabled: idx === layers.length - 1, onClick: function () {
-                                        layerContext.moveDown(layer.id || '');
-                                    } },
-                                    React__default["default"].createElement(iconsMaterial.ArrowCircleDown, null)),
-                                React__default["default"].createElement(IconButtonStyled, { key: layer.id + '_button2', disabled: idx === 0, onClick: function () {
-                                        layerContext.moveUp(layer.id || '');
-                                    } },
-                                    React__default["default"].createElement(iconsMaterial.ArrowCircleUp, null)),
-                                React__default["default"].createElement(IconButtonStyled, { onClick: function () { return fitLayer(layer); } },
-                                    React__default["default"].createElement(iconsMaterial.CenterFocusWeak, null))), setLayerState: function (layerConfig) {
-                                return setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
-                                    var _layers = __spreadArray([], current, true);
-                                    if (layerConfig === false) {
-                                        _layers.splice(idx, 1);
-                                    }
-                                    else {
-                                        _layers[idx].config = layerConfig;
-                                    }
-                                    return _layers;
-                                });
-                            }, configurable: true, showDeleteButton: true })));
-                default:
-                    console.log('no match');
-                    return null;
-            }
-        }),
-        ((_b = layerContext === null || layerContext === void 0 ? void 0 : layerContext.backgroundLayers) === null || _b === void 0 ? void 0 : _b.length) > 0 && (React__default["default"].createElement(LayerListItem, { key: 'background_geometry', layerComponent: React__default["default"].createElement(MlVectorTileLayer, __assign({}, layerContext.vtLayerConfig, { layers: layerContext.backgroundLayers, mapId: props === null || props === void 0 ? void 0 : props.mapId, insertBeforeLayer: 'order-background' })), setLayerState: function (state) {
-                layerContext.setBackgroundLayers(state === null || state === void 0 ? void 0 : state.layers);
-            }, visible: true, configurable: true, type: "layer", name: "Background" }))));
+        React__default["default"].createElement(core.DndContext, { collisionDetection: core.closestCenter, sensors: sensors, onDragEnd: function (event) { return dragEnd(event); }, modifiers: [modifiers.restrictToVerticalAxis] },
+            React__default["default"].createElement(sortable.SortableContext, { items: layers, strategy: sortable.verticalListSortingStrategy },
+                __spreadArray([], layers, true).map(function (layer, idx) {
+                    var _a, _b, _c, _d, _e;
+                    if (!(layer === null || layer === void 0 ? void 0 : layer.id))
+                        return null;
+                    switch (layer.type) {
+                        case 'geojson':
+                            return (React__default["default"].createElement(LayerListItem, { key: layer.id, layerId: layer.id, sortable: props.sortable, name: (layer === null || layer === void 0 ? void 0 : layer.name) || ((_a = layer === null || layer === void 0 ? void 0 : layer.config) === null || _a === void 0 ? void 0 : _a.type) + ' layer' || 'unnamed layer', layerComponent: React__default["default"].createElement(MlGeoJsonLayer, __assign({}, layer.config, { mapId: props === null || props === void 0 ? void 0 : props.mapId, layerId: layer.id, insertBeforeLayer: 'content_order_' + (layers.length - 1 - idx) })), buttons: React__default["default"].createElement(React__default["default"].Fragment, null,
+                                    React__default["default"].createElement(IconButtonStyled, { disabled: idx === layers.length - 1, onClick: function () {
+                                            layerContext.moveDown(layer.id || '');
+                                        } },
+                                        React__default["default"].createElement(iconsMaterial.ArrowCircleDown, null)),
+                                    React__default["default"].createElement(IconButtonStyled, { disabled: idx === 0, onClick: function () {
+                                            layerContext.moveUp(layer.id || '');
+                                        } },
+                                        React__default["default"].createElement(iconsMaterial.ArrowCircleUp, null)),
+                                    React__default["default"].createElement(IconButtonStyled, { onClick: function () { return fitLayer(layer); } },
+                                        React__default["default"].createElement(iconsMaterial.CenterFocusWeak, null))), setLayerState: function (layerConfig) {
+                                    return setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
+                                        var _layers = __spreadArray([], current, true);
+                                        if (layerConfig === false) {
+                                            _layers.splice(idx, 1);
+                                        }
+                                        else {
+                                            _layers[idx].config = layerConfig;
+                                        }
+                                        return _layers;
+                                    });
+                                }, configurable: true, showDeleteButton: true }));
+                        case 'wms':
+                            return (React__default["default"].createElement(React__default["default"].Fragment, null,
+                                React__default["default"].createElement(MlWmsLoader, __assign({}, layer.config, { key: layer.id, layerId: layer.id, sortable: props.sortable, mapId: props === null || props === void 0 ? void 0 : props.mapId, insertBeforeLayer: 'content_order_' + (layers.length - 1 - idx), onConfigChange: function (layerConfig) {
+                                        setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
+                                            var _layers = __spreadArray([], current, true);
+                                            if (layerConfig === false) {
+                                                _layers.splice(idx, 1);
+                                            }
+                                            else {
+                                                _layers[idx].config.config = layerConfig;
+                                            }
+                                            return _layers;
+                                        });
+                                    }, featureInfoActive: ((_b = layer === null || layer === void 0 ? void 0 : layer.config) === null || _b === void 0 ? void 0 : _b.featureInfoActive) || false, setFeatureInfoActive: function (updateFunction) {
+                                        setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
+                                            var _a;
+                                            var _layers = __spreadArray([], current, true);
+                                            if (typeof updateFunction === 'function') {
+                                                _layers[idx].config.featureInfoActive =
+                                                    updateFunction(((_a = _layers[idx].config) === null || _a === void 0 ? void 0 : _a.featureInfoActive) ||
+                                                        false);
+                                            }
+                                            return _layers;
+                                        });
+                                    }, showDeleteButton: true, buttons: React__default["default"].createElement(React__default["default"].Fragment, null,
+                                        React__default["default"].createElement(IconButtonStyled, { disabled: idx === layers.length - 1, onClick: function () {
+                                                layerContext.moveDown(layer.id || '');
+                                            } },
+                                            React__default["default"].createElement(iconsMaterial.ArrowCircleDown, null)),
+                                        React__default["default"].createElement(IconButtonStyled, { disabled: idx === 0, onClick: function () {
+                                                layerContext.moveUp(layer.id || '');
+                                            } },
+                                            React__default["default"].createElement(iconsMaterial.ArrowCircleUp, null)),
+                                        React__default["default"].createElement(IconButtonStyled, { onClick: function () { return fitLayer(layer); } },
+                                            React__default["default"].createElement(iconsMaterial.CenterFocusWeak, null))) }))));
+                        case 'vt':
+                            return (React__default["default"].createElement(React__default["default"].Fragment, { key: (layer === null || layer === void 0 ? void 0 : layer.id) + '_listItem' },
+                                React__default["default"].createElement(LayerListItem, { key: layer.id, name: (layer === null || layer === void 0 ? void 0 : layer.name) || (layer === null || layer === void 0 ? void 0 : layer.type) + ' layer' || 'unnamed layer', layerComponent: React__default["default"].createElement(MlVectorTileLayer, { layers: ((_c = layer === null || layer === void 0 ? void 0 : layer.config) === null || _c === void 0 ? void 0 : _c.layers) || [], key: layer.id, mapId: layer === null || layer === void 0 ? void 0 : layer.config.mapId, sourceOptions: (_d = layer === null || layer === void 0 ? void 0 : layer.config) === null || _d === void 0 ? void 0 : _d.sourceOptions, layerId: layer.id, url: (_e = layer === null || layer === void 0 ? void 0 : layer.config) === null || _e === void 0 ? void 0 : _e.url }), buttons: React__default["default"].createElement(React__default["default"].Fragment, null,
+                                        React__default["default"].createElement(IconButtonStyled, { key: layer.id + '_button1', disabled: idx === layers.length - 1, onClick: function () {
+                                                layerContext.moveDown(layer.id || '');
+                                            } },
+                                            React__default["default"].createElement(iconsMaterial.ArrowCircleDown, null)),
+                                        React__default["default"].createElement(IconButtonStyled, { key: layer.id + '_button2', disabled: idx === 0, onClick: function () {
+                                                layerContext.moveUp(layer.id || '');
+                                            } },
+                                            React__default["default"].createElement(iconsMaterial.ArrowCircleUp, null)),
+                                        React__default["default"].createElement(IconButtonStyled, { onClick: function () { return fitLayer(layer); } },
+                                            React__default["default"].createElement(iconsMaterial.CenterFocusWeak, null))), setLayerState: function (layerConfig) {
+                                        return setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
+                                            var _layers = __spreadArray([], current, true);
+                                            if (layerConfig === false) {
+                                                _layers.splice(idx, 1);
+                                            }
+                                            else {
+                                                _layers[idx].config = layerConfig;
+                                            }
+                                            return _layers;
+                                        });
+                                    }, configurable: true, showDeleteButton: true })));
+                        default:
+                            return null;
+                    }
+                }),
+                ((_b = layerContext === null || layerContext === void 0 ? void 0 : layerContext.backgroundLayers) === null || _b === void 0 ? void 0 : _b.length) > 0 && (React__default["default"].createElement(LayerListItem, { key: 'background_geometry', layerComponent: React__default["default"].createElement(MlVectorTileLayer, __assign({}, layerContext.vtLayerConfig, { layers: layerContext.backgroundLayers, mapId: props === null || props === void 0 ? void 0 : props.mapId, insertBeforeLayer: 'order-background' })), setLayerState: function (state) {
+                        layerContext.setBackgroundLayers(state === null || state === void 0 ? void 0 : state.layers);
+                    }, visible: true, configurable: true, type: "layer", name: "Background" }))))));
 }
 LayerListItemFactory.defaultProps = {
     mapId: undefined,
@@ -7911,7 +8137,8 @@ function TopToolbar(props) {
             minHeight: '62px',
             position: 'absolute',
             zIndex: 1300,
-        }, position: "static" },
+            top: 0,
+        } },
         React__namespace.createElement(Toolbar__default["default"], { disableGutters: true },
             props.logo || (React__namespace.createElement(React__namespace.Fragment, null,
                 React__namespace.createElement(Box__default["default"], { sx: {
@@ -20963,6 +21190,7 @@ exports.MlOsmLayer = MlOsmLayer;
 exports.MlPdfPreview = PdfPreview;
 exports.MlScaleReference = MlScaleReference;
 exports.MlShareMapState = MlShareMapState;
+exports.MlSketchTool = MlSketchTool;
 exports.MlSpatialElevationProfile = MlSpatialElevationProfile;
 exports.MlTemporalController = MlTemporalController;
 exports.MlTerrainLayer = MlTerrainLayer;

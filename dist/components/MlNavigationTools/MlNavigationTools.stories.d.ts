@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { MlNavigationToolsProps } from "./MlNavigationTools";
+import { MlNavigationToolsProps } from './MlNavigationTools';
 declare const storyoptions: {
     title: string;
     component: {
@@ -26,3 +26,4 @@ export declare const AlternativePosition: any;
 export declare const NoZoomButtons: any;
 export declare const NoFollowGpsButton: any;
 export declare const CustomButton: any;
+export declare const catalogueDemo: any;

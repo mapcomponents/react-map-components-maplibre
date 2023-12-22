@@ -8,8 +8,10 @@ declare const storyoptions: {
 };
 export default storyoptions;
 export declare const Circle: any;
+export declare const Label: any;
 export declare const Linestring: any;
 export declare const Polygon: any;
 export declare const HeatMap: any;
 export declare const Symbol: any;
 export declare const DefaultPaintOverrides: any;
+export declare const catalogueDemo: any;
