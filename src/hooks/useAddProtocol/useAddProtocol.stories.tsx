@@ -57,14 +57,35 @@ interface TemplateProps {
 	sourceOptions?: VectorSourceSpecification;
 	layers?: LayerSpecification[];
 }
+const BackgroundLayers = ()=>{
+	const layerContext = useContext(LayerContext);
+useEffect(()=>{
+	layerContext.updateStyle(bright as StyleSpecification);
+}, [])
+	
+
+	return (
+	<LayerList>
+<LayerListItemFactory
+	layers={layerContext.layers}
+	setLayers={layerContext.setLayers}
+	insertBeforeLayer="useAddProtocolLayer"
+	fitBoundsOptions={{ padding: { top: 50, bottom: 50, left: 25, right: 25 } }}
+/>
+</LayerList>)
+
+}
+
 
 const Template = (props: TemplateProps) => {
 	const mapHook = useMap({ mapId: undefined });
 
+	
 	//  An optional encoded options object can be added after a '?' sign at the end of the url.
 	//  Handlers that support options are:
 	// -OSM Handler Options: https://github.com/tibetty/osm2geojson-lite#osm2geojsonosm-opts
 	// -CSV Handler Options: https://github.com/mapbox/csv2geojson/blob/gh-pages/README.md
+
 	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
 
 	useAddProtocol({
@@ -73,14 +94,16 @@ const Template = (props: TemplateProps) => {
 	});
 
 	useEffect(() => {
-		mapHook.map?.setStyle('https://wms.wheregroup.com/tileserver/style/osm-bright.json');
-
+		
+	
 		if (!mapHook.map?.getSource(props.sourceId) && props.protocol !== 'mbtiles') {
+		
 			mapHook.map?.addSource(props.sourceId, {
 				type: 'geojson',
 				data: props.protocol + '://' + props.filePath + optionsURL,
-			});
+			});			
 		}
+
 
 		if (props.flyTo) {
 			mapHook.map?.flyTo(props.flyTo as FlyToOptions);
@@ -88,8 +111,10 @@ const Template = (props: TemplateProps) => {
 	}, [mapHook.map]);
 
 	return (
-		<>
-			{mapHook.map?.getSource(props.sourceId) && props.protocol === 'mbtiles' ?
+		<>			
+				
+
+				{mapHook.map?.getSource(props.sourceId) && props.protocol === 'mbtiles' ?
 			<MlVectorTileLayer
 				mapId={'map_1'}
 				url={'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}'}
@@ -122,6 +147,9 @@ const Template = (props: TemplateProps) => {
 				insertBeforeLayer={'waterway-name'}
 			/>			
 			}
+
+		<BackgroundLayers />
+			
 		</>
 	);
 };
@@ -174,7 +202,7 @@ CSVWithOptions.parameters = {};
 CSVWithOptions.args = {
 	protocol: 'csv',
 	handler: CSVProtocolHandler,
-	sourceId: 'fromCSV-Source',
+	sourceId: 'fromCSV-options-Source',
 	filePath: 'csv/gemany_100_postcodes.csv',
 	options: { latfield: 'Axe-y', lonfield: 'Axe-x', delimiter: ':' },
 	type: 'circle',
@@ -282,7 +310,7 @@ const CatalogueTemplate = () => {
 
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const layerContext = useContext(LayerContext);
-	const [currentDemo, setCurrentDemo] = useState<string>('osm');
+	const [currentDemo, setCurrentDemo] = useState<string>('csv');
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const props: TemplateProps = currentProps[currentDemo];
@@ -373,7 +401,9 @@ const CatalogueTemplate = () => {
 							}}
 						>
 							{Object.keys(currentProps).map((el) => (
-								<MenuItem onClick={() => setCurrentDemo(el)} key={el}>{el}</MenuItem>
+								<MenuItem onClick={() => setCurrentDemo(el)} key={el}>
+									{el}
+								</MenuItem>
 							))}
 						</Menu>
 					</>
