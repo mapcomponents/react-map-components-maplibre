@@ -1,20 +1,40 @@
-export default MlSpatialElevationProfile;
+/// <reference types="react" />
+import { Feature, FeatureCollection } from '@turf/turf';
 /**
  * MlSpatialElevationProfile returns a Button that will add a standard OSM tile layer to the maplibre-gl instance.
  *
  * @component
  */
-declare function MlSpatialElevationProfile(props: any): JSX.Element;
-declare namespace MlSpatialElevationProfile {
-    namespace defaultProps {
-        const elevationFactor: number;
-    }
-    namespace propTypes {
-        export const mapId: PropTypes.Requireable<string>;
-        export const idPrefix: PropTypes.Requireable<string>;
-        const elevationFactor_1: PropTypes.Requireable<number>;
-        export { elevationFactor_1 as elevationFactor };
-        export const insertBeforeLayer: PropTypes.Requireable<string>;
-    }
+interface geojson {
+    features: Feature | FeatureCollection | undefined;
 }
-import PropTypes from "prop-types";
+export interface MlSpatialElevationProfileProps {
+    /**
+     * Id of the target MapLibre instance in mapContext
+     */
+    mapId?: string;
+    /**
+     * GeoJSON data that is supposed to be rendered by this component.
+     */
+    geojson: geojson | FeatureCollection | undefined;
+    /**
+     * Prefix of the component id this component uses when adding elements to the MapLibreGl-instance
+     */
+    idPrefix?: string;
+    /**
+     * Number describes the factor of the height of the elevation
+     */
+    elevationFactor?: number;
+    /**
+     * The layerId of an existing layer this layer should be rendered visually beneath
+     * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
+     */
+    insertBeforeLayer?: string;
+}
+declare const MlSpatialElevationProfile: {
+    (props: MlSpatialElevationProfileProps): JSX.Element;
+    defaultProps: {
+        elevationFactor: number;
+    };
+};
+export default MlSpatialElevationProfile;

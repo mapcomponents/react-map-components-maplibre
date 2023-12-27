@@ -1,1 +1,4 @@
-export default function MlGpxViewerInstructions(props: any): JSX.Element;
+/// <reference types="react" />
+export default function MlGpxViewerInstructions(props: {
+    open: boolean;
+}): JSX.Element;

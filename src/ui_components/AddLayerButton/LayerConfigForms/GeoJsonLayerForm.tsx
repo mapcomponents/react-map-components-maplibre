@@ -24,6 +24,7 @@ const types: string[] = [
 	'circle',
 ];
 export default function GeoJsonLayerForm(props: GeoJsonLayerFormProps) {
+
 	const [config, setConfig] = React.useState<Partial<MlGeoJsonLayerProps>>({ type: 'circle' });
 
 	const configIsValid = useMemo(() => {

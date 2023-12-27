@@ -1,10 +1,15 @@
+/// <reference types="react" />
+declare const storyoptions: {
+    title: string;
+    component: {
+        (props: import("./MlLayerMagnify").MlLayerMagnifyProps): JSX.Element;
+        defaultProps: {
+            magnifierRadius: number;
+            magnifierStyle: {};
+        };
+    };
+    argTypes: {};
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const ExampleConfig: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlLayerMagnify as component };
-    export const argTypes: {};
-    export { multiMapContextDecorator as decorators };
-}
-import MlLayerMagnify from "./MlLayerMagnify";
-import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
+export declare const ExampleConfig: any;

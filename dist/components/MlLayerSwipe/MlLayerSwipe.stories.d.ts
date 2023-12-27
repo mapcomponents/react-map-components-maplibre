@@ -1,11 +1,14 @@
+/// <reference types="react" />
+declare const storyoptions: {
+    title: string;
+    component: {
+        (props: import("./MlLayerSwipe").MlLayerSwipeProps): JSX.Element;
+        defaultProps: {
+            buttonStyle: {};
+        };
+    };
+    argTypes: {};
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const ExampleConfig: any;
-declare namespace storyoptions {
-    export const title: string;
-    export const name: string;
-    export { MlLayerSwipe as component };
-    export const argTypes: {};
-    export { multiMapContextDecorator as decorators };
-}
-import MlLayerSwipe from "./MlLayerSwipe";
-import multiMapContextDecorator from "../../decorators/MultiMapContextDecorator";
+export declare const ExampleConfig: any;

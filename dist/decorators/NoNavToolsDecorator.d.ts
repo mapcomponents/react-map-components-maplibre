@@ -1,2 +1,2 @@
 export default decorators;
-declare const decorators: ((Story: any) => JSX.Element)[];
+declare const decorators: ((Story: any, context: any) => JSX.Element)[];

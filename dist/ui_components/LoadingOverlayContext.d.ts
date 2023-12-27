@@ -1,11 +1,10 @@
-export const LoadingOverlayContext: React.Context<{}>;
-export function LoadingOverlayProvider({ children }: {
-    children: any;
-}): JSX.Element;
-export namespace LoadingOverlayProvider {
-    namespace propTypes {
-        const children: PropTypes.Validator<string | number | boolean | {} | PropTypes.ReactElementLike | PropTypes.ReactNodeArray>;
-    }
-}
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
+declare const LoadingOverlayContext: React.Context<{}>;
+declare const LoadingOverlayProvider: {
+    (children: JsxChildren): JSX.Element;
+    propTypes: {
+        children: PropTypes.Validator<NonNullable<PropTypes.ReactNodeLike>>;
+    };
+};
+export { LoadingOverlayContext, LoadingOverlayProvider };

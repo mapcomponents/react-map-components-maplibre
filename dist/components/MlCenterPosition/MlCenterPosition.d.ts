@@ -1,4 +1,6 @@
-interface MlCenterPositionProps {
+/// <reference types="react" />
+import { SxProps, Theme } from '@mui/material';
+export interface MlCenterPositionProps {
     /**
      * Id of the target MapLibre instance in mapContext
      */
@@ -19,7 +21,7 @@ interface MlCenterPositionProps {
     /**
      * CSS style object that is applied to the button component
      */
-    style?: any;
+    style?: SxProps<Theme> | undefined;
 }
 /**
  * Component template
@@ -29,22 +31,6 @@ declare const MlCenterPosition: {
     (props: MlCenterPositionProps): JSX.Element;
     defaultProps: {
         mapId: undefined;
-        style: {
-            minWidth: string;
-            minHeight: string;
-            width: string;
-            height: string;
-            backgroundColor: string;
-            borderRadius: string;
-            margin: number;
-            fontSize: string;
-            ":hover": {
-                backgroundColor: string;
-                color: string;
-            };
-        };
-        onColor: string;
-        offColor: string;
     };
 };
 export default MlCenterPosition;

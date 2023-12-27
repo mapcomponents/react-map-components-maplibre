@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import LayerList from '../LayerList/LayerList';
 
-import mapContextDecorator from '../../decorators/EmptyMapDecorator';
+import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
 import Sidebar from '../Sidebar';
 
 import { Button } from '@mui/material';
@@ -18,7 +18,7 @@ const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
 	component: AddLayerButton,
 	argTypes: {},
-	decorators: mapContextDecorator,
+	decorators: EmptyMapDecorator,
 };
 export default storyoptions;
 
@@ -42,13 +42,23 @@ const FolderTemplate = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Sidebar
-					</Button>
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Sidebar
+						</Button>
+						<Button
+							onClick={() => {
+								localStorage.clear();
+								location.reload();
+							}}
+						>
+							reset
+						</Button>
+					</>
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
@@ -122,18 +132,33 @@ const StyleJsonTemplate = () => {
 		<>
 			<TopToolbar
 				buttons={
-					<Button
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Sidebar
-					</Button>
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							Sidebar
+						</Button>
+						<Button
+							onClick={() => {
+								localStorage.clear();
+								location.reload();
+							}}
+						>
+							reset
+						</Button>
+					</>
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerListItemFactory'}>
 				<AddLayerButton
-					onComplete={(config) => { layerContext.setLayers((current) => { console.log([config, ...current]); return [config, ...current]; }) }}
+					onComplete={(config) => {
+						layerContext.setLayers((current) => {
+							console.log([config, ...current]);
+							return [config, ...current];
+						});
+					}}
 				/>
 				<SelectStyleButton sx={{ marginLeft: '5px' }} />
 				<LayerList>

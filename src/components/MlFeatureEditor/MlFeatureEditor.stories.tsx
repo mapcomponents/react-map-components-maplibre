@@ -40,7 +40,7 @@ const Template = (args: useFeatureEditorProps) => {
 
 const catalogueTemplate = () => {
 	const [visible, setVisible] = useState(true);
-	const [selectedMode, setSelectedMode] = useState<string>('Polygon');
+	const [selectedMode, setSelectedMode] = useState<string>('EditPolygon');
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -49,10 +49,6 @@ const catalogueTemplate = () => {
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
-	};
-
-	const handleLayerSelect = (mode: string) => {
-		setSelectedMode(mode);
 	};
 
 	useEffect(() => {
@@ -90,16 +86,12 @@ const catalogueTemplate = () => {
 								'aria-labelledby': 'basic-button',
 							}}
 						>
-							<MenuItem onClick={() => handleLayerSelect('EditPolygon')}>Edit Polygon</MenuItem>
-							<MenuItem onClick={() => handleLayerSelect('EditPoint')}>Edit Point</MenuItem>
-							<MenuItem onClick={() => handleLayerSelect('EditLinestring')}>
-								Edit Linestring
-							</MenuItem>
-							<MenuItem onClick={() => handleLayerSelect('DrawPolygon')}>Draw Polygon</MenuItem>
-							<MenuItem onClick={() => handleLayerSelect('DrawPoint')}>Draw Point</MenuItem>
-							<MenuItem onClick={() => handleLayerSelect('DrawLinestring')}>
-								Draw Linestring
-							</MenuItem>
+							<MenuItem onClick={() => setSelectedMode('EditPolygon')}>Edit Polygon</MenuItem>
+							<MenuItem onClick={() => setSelectedMode('EditPoint')}>Edit Point</MenuItem>
+							<MenuItem onClick={() => setSelectedMode('EditLinestring')}>Edit Linestring</MenuItem>
+							<MenuItem onClick={() => setSelectedMode('DrawPolygon')}>Draw Polygon</MenuItem>
+							<MenuItem onClick={() => setSelectedMode('DrawPoint')}>Draw Point</MenuItem>
+							<MenuItem onClick={() => setSelectedMode('DrawLinestring')}>Draw Linestring</MenuItem>
 						</Menu>
 					</>
 				}

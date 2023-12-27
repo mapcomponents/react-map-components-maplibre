@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
+import useLayer, { useLayerProps } from '../../hooks/useLayer';
+import { Feature, FeatureCollection } from '@turf/turf';
 
-import useLayer from "../../hooks/useLayer";
-import { Feature, FeatureCollection } from "@turf/turf";
 
 interface MlLayerProps {
 	/**
@@ -20,7 +20,8 @@ interface MlLayerProps {
 	/**
 	 * Javascript object that is passed the addLayer command as first parameter.
 	 */
-	options?: any;
+	options?: useLayerProps['options'];
+
 	/**
 	 * GeoJSON data that is supposed to be rendered by this component.
 	 */
@@ -29,24 +30,29 @@ interface MlLayerProps {
 
 /**
  * Basic layer component that create a layer in a MapLibre-gl instance and keeps it updated according to it attribute configuration.
- * 
- * @category Map components 
+ *
+ * @category Map components
  */
 const MlLayer = (props: MlLayerProps) => {
+	
+
+
 	useLayer({
 		idPrefix: 'MlLayer-',
 		layerId: props.layerId,
 		mapId: props.mapId,
-		geojson: props.geojson,
+		geojson: props.geojson || undefined,
 		options: {
-			type: "background",
+			type: 'background',
 			paint: {
-				"background-color": "rgba(0,0,0,0)",
+				'background-color': 'rgba(0,0,0,0)',
 			},
 			...props.options,
-		},
+		} as useLayerProps['options'],
 		insertBeforeLayer: props.insertBeforeLayer,
 	});
+
+
 
 	return <></>;
 };

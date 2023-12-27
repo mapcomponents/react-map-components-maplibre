@@ -1,14 +1,15 @@
+/// <reference types="react" />
+import { MlScaleReferenceProps } from './MlScaleReference';
+declare const storyoptions: {
+    title: string;
+    component: (props: MlScaleReferenceProps) => JSX.Element;
+    argTypes: {
+        url: {};
+        layer: {};
+    };
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const Toolbar: any;
-export const Overlay: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlScaleReference as component };
-    export namespace argTypes {
-        const url: {};
-        const layer: {};
-    }
-    export { mapContextDecorator as decorators };
-}
-import MlScaleReference from "./MlScaleReference";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+export declare const Toolbar: any;
+export declare const Overlay: any;
+export declare const catalogueDemo: any;

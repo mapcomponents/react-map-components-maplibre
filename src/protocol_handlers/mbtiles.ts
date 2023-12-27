@@ -4,15 +4,16 @@ import { RequestParameters, ResponseCallback } from 'maplibre-gl';
 
 const loadedMbtiles = {};
 
-const parseParams = (url: string) => {
+const parseTileParams = (url: string) => {
 	const urlParts = url.split('://');
-	const mbtilesUrl = urlParts[1];
+	const mbtilesUrl = urlParts.length >2 ? urlParts[1] + '://' + urlParts[2] : urlParts[1] ;
 	const mbtilesParts = mbtilesUrl.split('/');
 	const mbtilesPartsLength = mbtilesParts.length;
 	const y = mbtilesParts.splice(mbtilesPartsLength - 1, 1)[0];
 	const x = mbtilesParts.splice(mbtilesPartsLength - 2, 1)[0];
 	const z = mbtilesParts.splice(mbtilesPartsLength - 3, 1)[0];
 	const filename = mbtilesParts.join('/');
+
 	return {
 		filename,
 		z,
@@ -27,6 +28,7 @@ const parseParams = (url: string) => {
 // add the following config to the externals prop of your webpack config
 // {externals: { fs: 'fs' }};
 const getMbtilesDbHandler = async ({ filename }: { filename: string }) => {
+
 	if (!loadedMbtiles[filename]) {
 		const SQL = await initSqlJs();
 		const fetched = await fetch(filename);
@@ -59,11 +61,13 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
 			// some of the logic here was heavily inspired by
 			// https://github.com/IsraelHikingMap/Site/blob/6aa2ec0cfb8891fa048b1d9e2a4fc7d4cbcc8c97/IsraelHiking.Web/src/application/services/database.service.ts
 			const result = db.exec(query);
+		
 			if (result.length !== 1) {
 				reject(new Error('Tile not found.'));
 				return;
 			}
 			const resultData = result[0].values[0][0] as Uint8Array;
+			
 			let binData: Uint8Array;
 			const isGzipped = resultData[0] === 0x1f && resultData[1] === 0x8b;
 			if (isGzipped) {
@@ -90,15 +94,17 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mbTilesProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
-	const parsedParams = parseParams(params.url);
-	getBufferFromMbtiles(parsedParams).then((result) => {
+	
+	const parsedParams = parseTileParams(params.url);
+		getBufferFromMbtiles(parsedParams).then((result) => {
 		if (result) {
 			callback(null, result, null, null);
 		} else {
 			callback(new Error('Tile not found'));
 		}
 	});
+
 	return { cancel: () => {} };
 };
 
-export { mbTilesProtocolHandler, parseParams, getBufferFromMbtiles, getMbtilesDbHandler };
+export { mbTilesProtocolHandler, parseTileParams, getBufferFromMbtiles, getMbtilesDbHandler };
