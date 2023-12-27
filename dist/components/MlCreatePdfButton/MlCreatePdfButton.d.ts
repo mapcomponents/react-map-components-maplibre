@@ -1,13 +1,14 @@
-interface MlCreatePdfButtonProps {
+/// <reference types="react" />
+import { createExportOptions } from 'src/hooks/useExportMap/lib';
+export interface MlCreatePdfButtonProps {
     /**
      * Id of the target MapLibre instance in mapContext
      */
     mapId?: string;
     /**
-     * Id of an existing layer in the mapLibre instance to help specify the layer order
-     * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
+     * Option overrides for the createExport function
      */
-    insertBeforeLayer?: string;
+    exportOptions?: createExportOptions;
 }
 /**
  * Renders a button that will create a PDF version of the current map view (dimensions adjusted to fit Din A4 Paper).

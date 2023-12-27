@@ -27,7 +27,7 @@ const useAddProtocol = (props: useAddProtocolProps) => {
 		return () => {
 			maplibregl.removeProtocol(props.protocol);
 		};
-	}, []);
+	}, [props]);
 
 	return {};
 };

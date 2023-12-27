@@ -6,6 +6,7 @@ import {
 	SymbolLayoutProps,
 } from 'maplibre-gl';
 import { FeatureCollection } from '@turf/turf';
+import { useLayerProps } from '../../../hooks/useLayer';
 
 
 interface MlTemporalControllerLabelsProps {
@@ -85,7 +86,7 @@ const defaultPaint: SymbolLayerSpecification["paint"] = {
 				type: 'symbol',
 				layout: props.labelLayout || defaultLayout,
 				paint: props.labelPaint || currentPaint(),
-			}}
+			} as useLayerProps['options']}
 			geojson={props.data}
 			layerId={'timeControllerLabels'}
 		/>

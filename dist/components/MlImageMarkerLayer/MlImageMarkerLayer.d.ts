@@ -1,4 +1,7 @@
-interface MlImageMarkerLayerProps {
+/// <reference types="react" />
+import { SymbolLayerSpecification } from 'maplibre-gl';
+import { Feature, FeatureCollection } from '@turf/turf';
+export interface MlImageMarkerLayerProps {
     /**
      * Id of the target MapLibre instance in mapContext
      */
@@ -23,7 +26,14 @@ interface MlImageMarkerLayerProps {
     /**
      * Javascript object that is passed the addLayer command as first parameter.
      */
-    options?: any;
+    options?: {
+        source?: {
+            type?: string | undefined;
+            data: Feature | FeatureCollection | undefined;
+        };
+        layout?: SymbolLayerSpecification['layout'];
+        paint?: SymbolLayerSpecification['paint'];
+    };
 }
 declare const MlImageMarkerLayer: (props: MlImageMarkerLayerProps) => JSX.Element;
 export default MlImageMarkerLayer;

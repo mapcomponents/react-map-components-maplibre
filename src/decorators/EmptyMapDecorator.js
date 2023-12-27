@@ -20,8 +20,9 @@ const decorators = [
 							mapId="map_1"
 							options={{
 								zoom: 12.5,
-								center: [7.0851268, 50.73884],
+								center: [7.0851268, 50.73884]
 							}}
+
 						/>
 						<MlNavgiationTools showZoomButtons={false} mapId="map_1" />
 					</MUIThemeProvider>

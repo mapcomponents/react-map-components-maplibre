@@ -1,16 +1,20 @@
+/// <reference types="react" />
+declare const storyoptions: {
+    title: string;
+    component: {
+        (props: import("./MlSpatialElevationProfile").MlSpatialElevationProfileProps): JSX.Element;
+        defaultProps: {
+            elevationFactor: number;
+        };
+    };
+    argTypes: {
+        options: {
+            control: {
+                type: string;
+            };
+        };
+    };
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const ExampleConfig: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlSpatialElevationProfile as component };
-    export namespace argTypes {
-        namespace options {
-            namespace control {
-                const type: string;
-            }
-        }
-    }
-    export { mapContextDecorator as decorators };
-}
-import MlSpatialElevationProfile from "./MlSpatialElevationProfile";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+export declare const ExampleConfig: any;

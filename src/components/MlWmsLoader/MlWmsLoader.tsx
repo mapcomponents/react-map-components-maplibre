@@ -137,6 +137,7 @@ export type LayerType = {
  * @component
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
+
 	const {
 		capabilities: _capabilities,
 		error,

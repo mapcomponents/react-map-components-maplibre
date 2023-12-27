@@ -1,17 +1,21 @@
+/// <reference types="react" />
+declare const storyoptions: {
+    title: string;
+    component: {
+        (props: import("./MlCenterPosition").MlCenterPositionProps): JSX.Element;
+        defaultProps: {
+            mapId: undefined;
+        };
+    };
+    argTypes: {};
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+    parameters: {
+        docs: {
+            source: {
+                type: string;
+            };
+        };
+    };
+};
 export default storyoptions;
-export const ExampleConfig: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlCenterPosition as component };
-    export const argTypes: {};
-    export { mapContextDecorator as decorators };
-    export namespace parameters {
-        namespace docs {
-            namespace source {
-                const type: string;
-            }
-        }
-    }
-}
-import MlCenterPosition from "./MlCenterPosition";
-import mapContextDecorator from "../../decorators/MapContextDecorator";
+export declare const ExampleConfig: any;

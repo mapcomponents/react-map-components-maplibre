@@ -211,17 +211,31 @@
         "__isArgsStory": true
       }
     },
-    "mapcomponents-mlfollowgps--example-config": {
-      "id": "mapcomponents-mlfollowgps--example-config",
-      "name": "Example Config",
+    "mapcomponents-mlfollowgps--standard-config": {
+      "id": "mapcomponents-mlfollowgps--standard-config",
+      "name": "Standard Config",
       "title": "MapComponents/MlFollowGps",
       "importPath": 64224,
       "kind": "MapComponents/MlFollowGps",
-      "story": "Example Config",
+      "story": "Standard Config",
       "parameters": {
         "fileName": 64224,
         "framework": "react",
-        "__id": "mapcomponents-mlfollowgps--example-config",
+        "__id": "mapcomponents-mlfollowgps--standard-config",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlfollowgps--catalogue-demo": {
+      "id": "mapcomponents-mlfollowgps--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlFollowGps",
+      "importPath": 64224,
+      "kind": "MapComponents/MlFollowGps",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 64224,
+        "framework": "react",
+        "__id": "mapcomponents-mlfollowgps--catalogue-demo",
         "__isArgsStory": true
       }
     },
@@ -236,6 +250,20 @@
         "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--circle",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlgeojsonlayer--label": {
+      "id": "mapcomponents-mlgeojsonlayer--label",
+      "name": "Label",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 70232,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Label",
+      "parameters": {
+        "fileName": 70232,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--label",
         "__isArgsStory": true
       }
     },
@@ -617,17 +645,17 @@
         "__isArgsStory": false
       }
     },
-    "mapcomponents-mlscalereference--catalogue-demo": {
-      "id": "mapcomponents-mlscalereference--catalogue-demo",
-      "name": "Catalogue Demo",
+    "mapcomponents-mlscalereference--toolbar": {
+      "id": "mapcomponents-mlscalereference--toolbar",
+      "name": "Toolbar",
       "title": "MapComponents/MlScaleReference",
       "importPath": 25018,
       "kind": "MapComponents/MlScaleReference",
-      "story": "Catalogue Demo",
+      "story": "Toolbar",
       "parameters": {
         "fileName": 25018,
         "framework": "react",
-        "__id": "mapcomponents-mlscalereference--catalogue-demo",
+        "__id": "mapcomponents-mlscalereference--toolbar",
         "__isArgsStory": true
       }
     },
@@ -642,6 +670,20 @@
         "fileName": 25018,
         "framework": "react",
         "__id": "mapcomponents-mlscalereference--overlay",
+        "__isArgsStory": true
+      }
+    },
+    "mapcomponents-mlscalereference--catalogue-demo": {
+      "id": "mapcomponents-mlscalereference--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "MapComponents/MlScaleReference",
+      "importPath": 25018,
+      "kind": "MapComponents/MlScaleReference",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 25018,
+        "framework": "react",
+        "__id": "mapcomponents-mlscalereference--catalogue-demo",
         "__isArgsStory": true
       }
     },
@@ -883,17 +925,129 @@
         "__isArgsStory": true
       }
     },
-    "hooks-useaddprotocol--example-config": {
-      "id": "hooks-useaddprotocol--example-config",
-      "name": "Example Config",
+    "hooks-useaddprotocol--mb-tiles": {
+      "id": "hooks-useaddprotocol--mb-tiles",
+      "name": "Mb Tiles",
       "title": "hooks/useAddProtocol",
-      "importPath": 15426,
+      "importPath": 44511,
       "kind": "hooks/useAddProtocol",
-      "story": "Example Config",
+      "story": "Mb Tiles",
       "parameters": {
-        "fileName": 15426,
+        "fileName": 44511,
         "framework": "react",
-        "__id": "hooks-useaddprotocol--example-config",
+        "__id": "hooks-useaddprotocol--mb-tiles",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--csv-or-tsv": {
+      "id": "hooks-useaddprotocol--csv-or-tsv",
+      "name": "CSV Or TSV",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "CSV Or TSV",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--csv-or-tsv",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--csv-with-options": {
+      "id": "hooks-useaddprotocol--csv-with-options",
+      "name": "CSV With Options",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "CSV With Options",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--csv-with-options",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--osm": {
+      "id": "hooks-useaddprotocol--osm",
+      "name": "OSM",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "OSM",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--osm",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--gpx": {
+      "id": "hooks-useaddprotocol--gpx",
+      "name": "GPX",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "GPX",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--gpx",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--kml": {
+      "id": "hooks-useaddprotocol--kml",
+      "name": "KML",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "KML",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--kml",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--tcx": {
+      "id": "hooks-useaddprotocol--tcx",
+      "name": "TCX",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "TCX",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--tcx",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--topojson": {
+      "id": "hooks-useaddprotocol--topojson",
+      "name": "Topojson",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "Topojson",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--topojson",
+        "__isArgsStory": true
+      }
+    },
+    "hooks-useaddprotocol--catalogue-demo": {
+      "id": "hooks-useaddprotocol--catalogue-demo",
+      "name": "Catalogue Demo",
+      "title": "hooks/useAddProtocol",
+      "importPath": 44511,
+      "kind": "hooks/useAddProtocol",
+      "story": "Catalogue Demo",
+      "parameters": {
+        "fileName": 44511,
+        "framework": "react",
+        "__id": "hooks-useaddprotocol--catalogue-demo",
         "__isArgsStory": false
       }
     },

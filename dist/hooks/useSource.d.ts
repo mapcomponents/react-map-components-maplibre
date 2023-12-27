@@ -1,9 +1,9 @@
 import { useMapType } from "./useMap";
 import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-import { SourceSpecification } from "maplibre-gl";
-declare type useSourceType = {
+import { Source, SourceSpecification } from "maplibre-gl";
+type useSourceType = {
     map: MapLibreGlWrapper | undefined;
-    source: SourceSpecification;
+    source: Source | undefined;
     componentId: string;
     mapHook: useMapType;
 };

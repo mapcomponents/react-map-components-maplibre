@@ -24,7 +24,7 @@ interface MlWmsLoaderStoryProps {
 	url: string;
 }
 const Template = (props: MlWmsLoaderStoryProps) => {
-	const [url, setUrl] = useState(props.url || '');
+	const [url, setUrl] = useState(props.url || 'https://magosm.magellium.com/geoserver/wms');
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [openSidebar, setOpenSidebar] = useState(true);

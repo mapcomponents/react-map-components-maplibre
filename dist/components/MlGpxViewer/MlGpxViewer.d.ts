@@ -1,6 +1,7 @@
+/// <reference types="react" />
 import { FeatureCollection } from '@turf/turf';
 import { MetadataType } from '../../hooks/useGpx/useGpx';
-interface MlGpxViewerProps {
+export interface MlGpxViewerProps {
     /**
      * Id of the target MapLibre instance in mapHook
      */

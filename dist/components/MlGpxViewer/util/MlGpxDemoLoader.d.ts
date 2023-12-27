@@ -1,7 +1,8 @@
+/// <reference types="react" />
 interface MlGpxDemoLoaderProps {
     open: boolean;
-    setOpen: (open: boolean) => void;
-    setGpx: (gpx: string | ArrayBuffer) => void;
+    close: () => void;
+    setGpx: (gpx: string | undefined) => void;
 }
 /**
  * MlGpxDemoLoader returns a button to load a Demo GPX Track into the map.

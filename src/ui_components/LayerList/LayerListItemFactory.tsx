@@ -1,32 +1,36 @@
-import React, {useMemo} from 'react';
-import {IconButton, styled} from '@mui/material';
+import React, { useMemo } from 'react';
+import { IconButton, styled } from '@mui/material';
 import {
 	ArrowCircleDown as ArrowCircleDownIcon,
 	ArrowCircleUp as ArrowCircleUpIcon,
+	CenterFocusWeak as CenterLayerIcon,
 } from '@mui/icons-material';
 import LayerListItem from './LayerListItem';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
-import {MlGeoJsonLayerProps} from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import {MlWmsLoaderProps} from '../../components/MlWmsLoader/MlWmsLoader';
+import { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import { MlWmsLoaderProps } from '../../components/MlWmsLoader/MlWmsLoader';
 import MlVectorTileLayer, {
 	MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import useLayerContext from '../../hooks/useLayerContext';
-import {LayerConfig} from '../../contexts/LayerContext';
+import { LayerConfig, wmsConfig } from '../../contexts/LayerContext';
 import {
 	closestCenter,
 	DndContext,
 	useSensor,
 	PointerSensor,
 	MouseSensor,
-	useSensors, UniqueIdentifier, DragEndEvent
+	useSensors,
+	UniqueIdentifier,
+	DragEndEvent,
 } from '@dnd-kit/core';
-import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
-import {
-  restrictToVerticalAxis,
-} from '@dnd-kit/modifiers'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import useMap from '../../hooks/useMap';
+import { FeatureCollection, bbox } from '@turf/turf';
+import { LngLatBoundsLike, FitBoundsOptions } from 'maplibre-gl';
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -42,11 +46,61 @@ export interface LayerListItemFactoryProps {
 	layers: LayerConfig[];
 	setLayers?: (layers: LayerConfig[] | ((state: LayerConfig[]) => LayerConfig[])) => void;
 	insertBeforeLayer?: string;
-	sortable?: boolean
+	sortable?: boolean;
+	fitBoundsOptions?: FitBoundsOptions;
 }
 
 function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	const layerContext = useLayerContext();
+	const mapHook = useMap({ mapId: undefined });
+
+	//useCallback Hook
+	function fitLayer(layer: LayerConfig) {
+		const layerSource =
+			layer.id && mapHook.map?.getLayer(layer.id)?.source
+				? mapHook.map?.getLayer(layer.id).source
+				: undefined;
+
+		let _bbox: LngLatBoundsLike | null = null;
+		switch (layer.type) {
+			case 'geojson':
+				if (layer.config?.geojson) {
+					mapHook.map?.fitBounds(
+						bbox(layer.config?.geojson) as LngLatBoundsLike,
+						props.fitBoundsOptions
+					);
+				} else {
+					if (!layerSource) {
+						return;
+					}
+					const _geojson = {
+						type: 'FeatureCollection',
+						features: mapHook.map?.querySourceFeatures(layerSource),
+					};
+
+					if ((_geojson as FeatureCollection).features.length === 0) {
+						mapHook.map?.zoomTo(1);
+						_geojson.features = mapHook.map?.querySourceFeatures(layerSource);
+					}
+
+					_bbox = bbox(_geojson) as LngLatBoundsLike;
+				}
+				break;
+			case 'vt':
+				console.log('vt');
+				break;
+			case 'wms':
+				_bbox = (layer?.config as wmsConfig)?.config?.layers?.[0]
+					?.EX_GeographicBoundingBox as LngLatBoundsLike;
+				break;
+
+			default:
+				return;
+		}
+		if (_bbox) {
+			mapHook.map?.fitBounds(_bbox, props.fitBoundsOptions);
+		}
+	}
 
 	const orderLayers = useMemo(() => {
 		const layerIds = [
@@ -72,23 +126,23 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 		activationConstraint: {
 			distance: 5,
 		},
-	})
+	});
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
 			distance: 5,
 		},
-	})
-	const sensors = useSensors(mouseSensor, pointerSensor)
+	});
+	const sensors = useSensors(mouseSensor, pointerSensor);
 
 	function dragEnd(event: DragEndEvent) {
-		const dragLayerId = event.active.id
-		const dragLayerNewPosition = event.over?.data?.current?.sortable.index
-		layerContext.moveLayer(String(dragLayerId), () => dragLayerNewPosition)
+		const dragLayerId = event.active.id;
+		const dragLayerNewPosition = event.over?.data?.current?.sortable.index;
+		layerContext.moveLayer(String(dragLayerId), () => dragLayerNewPosition);
 	}
 
 	return (
 		<>
-			<MlOrderLayers layerIds={orderLayers} insertBeforeLayer="_background"/>
+			<MlOrderLayers layerIds={orderLayers} insertBeforeLayer="_background" />
 			{layerContext?.symbolLayers?.length > 0 && (
 				<LayerListItem
 					key={'background_labels'}
@@ -110,72 +164,79 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 				/>
 			)}
 
-			<DndContext collisionDetection={closestCenter}
-									sensors={sensors}
-									onDragEnd={(event) => dragEnd(event)} modifiers={[restrictToVerticalAxis]}>
+			<DndContext
+				collisionDetection={closestCenter}
+				sensors={sensors}
+				onDragEnd={(event) => dragEnd(event)}
+				modifiers={[restrictToVerticalAxis]}
+			>
 				<SortableContext
-					items={layers as { id: UniqueIdentifier; }[]}
-					strategy={verticalListSortingStrategy}>
+					items={layers as { id: UniqueIdentifier }[]}
+					strategy={verticalListSortingStrategy}
+				>
 					{[...layers].map((layer: LayerConfig, idx: number) => {
 						if (!layer?.id) return null;
 
 						switch (layer.type) {
 							case 'geojson':
 								return (
-										<LayerListItem
-											key={layer.id}
-											layerId={layer.id}
-											sortable={props.sortable}
-											name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
-											layerComponent={
-												<MlGeoJsonLayer
-													{...layer.config}
-													mapId={props?.mapId}
-													layerId={layer.id}
-													insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
-												/>
-											}
-											buttons={
-												<>
-													<IconButtonStyled
-														disabled={idx === layers.length - 1}
-														onClick={() => {
-															layerContext.moveDown(layer.id || '');
-														}}
-													>
-														<ArrowCircleDownIcon/>
-													</IconButtonStyled>
-													<IconButtonStyled
-														disabled={idx === 0}
-														onClick={() => {
-															layerContext.moveUp(layer.id || '');
-														}}
-													>
-														<ArrowCircleUpIcon/>
-													</IconButtonStyled>
-												</>
-											}
-											setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
-												setLayers?.((current: LayerConfig[]) => {
-													const _layers = [...current];
-													if (layerConfig === false) {
-														_layers.splice(idx, 1);
-													} else {
-														_layers[idx].config = layerConfig;
-													}
+									<LayerListItem
+										key={layer.id}
+										layerId={layer.id}
+										sortable={props.sortable}
+										name={layer?.name || layer?.config?.type + ' layer' || 'unnamed layer'}
+										layerComponent={
+											<MlGeoJsonLayer
+												{...layer.config}
+												mapId={props?.mapId}
+												layerId={layer.id}
+												insertBeforeLayer={'content_order_' + (layers.length - 1 - idx)}
+											/>
+										}
+										buttons={
+											<>
+												<IconButtonStyled
+													disabled={idx === layers.length - 1}
+													onClick={() => {
+														layerContext.moveDown(layer.id || '');
+													}}
+												>
+													<ArrowCircleDownIcon />
+												</IconButtonStyled>
+												<IconButtonStyled
+													disabled={idx === 0}
+													onClick={() => {
+														layerContext.moveUp(layer.id || '');
+													}}
+												>
+													<ArrowCircleUpIcon />
+												</IconButtonStyled>
+												<IconButtonStyled onClick={() => fitLayer(layer)}>
+													<CenterLayerIcon />
+												</IconButtonStyled>
+											</>
+										}
+										setLayerState={(layerConfig: MlGeoJsonLayerProps | false) =>
+											setLayers?.((current: LayerConfig[]) => {
+												const _layers = [...current];
+												if (layerConfig === false) {
+													_layers.splice(idx, 1);
+												} else {
+													_layers[idx].config = layerConfig;
+												}
 
-													return _layers;
-												})
-											}
-											configurable={true}
-											showDeleteButton={true}
-										/>
+												return _layers;
+											})
+										}
+										configurable={true}
+										showDeleteButton={true}
+									/>
 								);
 							case 'wms':
 								return (
 									<>
 										<MlWmsLoader
-											{...layer.config}
+											{...(layer.config as unknown as MlWmsLoaderProps)}
 											key={layer.id}
 											layerId={layer.id}
 											sortable={props.sortable}
@@ -199,7 +260,8 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 													if (typeof updateFunction === 'function') {
 														(_layers[idx].config as MlWmsLoaderProps).featureInfoActive =
 															updateFunction(
-																(_layers[idx].config as MlWmsLoaderProps)?.featureInfoActive || false
+																(_layers[idx].config as MlWmsLoaderProps)?.featureInfoActive ||
+																	false
 															);
 													}
 													return _layers;
@@ -214,7 +276,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 															layerContext.moveDown(layer.id || '');
 														}}
 													>
-														<ArrowCircleDownIcon/>
+														<ArrowCircleDownIcon />
 													</IconButtonStyled>
 													<IconButtonStyled
 														disabled={idx === 0}
@@ -222,37 +284,98 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 															layerContext.moveUp(layer.id || '');
 														}}
 													>
-														<ArrowCircleUpIcon/>
+														<ArrowCircleUpIcon />
+													</IconButtonStyled>
+													<IconButtonStyled onClick={() => fitLayer(layer)}>
+														<CenterLayerIcon />
 													</IconButtonStyled>
 												</>
 											}
 										/>
 									</>
 								);
+							case 'vt':
+								return (
+									<React.Fragment key={layer?.id + '_listItem'}>
+										<LayerListItem
+											key={layer.id}
+											name={layer?.name || layer?.type + ' layer' || 'unnamed layer'}
+											layerComponent={
+												<MlVectorTileLayer
+													layers={layer?.config?.layers || []}
+													key={layer.id}
+													mapId={layer?.config.mapId}
+													sourceOptions={layer?.config?.sourceOptions}
+													layerId={layer.id}
+													url={layer?.config?.url}
+												/>
+											}
+											buttons={
+												<>
+													<IconButtonStyled
+														key={layer.id + '_button1'}
+														disabled={idx === layers.length - 1}
+														onClick={() => {
+															layerContext.moveDown(layer.id || '');
+														}}
+													>
+														<ArrowCircleDownIcon />
+													</IconButtonStyled>
+													<IconButtonStyled
+														key={layer.id + '_button2'}
+														disabled={idx === 0}
+														onClick={() => {
+															layerContext.moveUp(layer.id || '');
+														}}
+													>
+														<ArrowCircleUpIcon />
+													</IconButtonStyled>
+													<IconButtonStyled onClick={() => fitLayer(layer)}>
+														<CenterLayerIcon />
+													</IconButtonStyled>
+												</>
+											}
+											setLayerState={(layerConfig: MlVectorTileLayerProps | false) =>
+												setLayers?.((current: LayerConfig[]) => {
+													const _layers = [...current];
+													if (layerConfig === false) {
+														_layers.splice(idx, 1);
+													} else {
+														_layers[idx].config = layerConfig;
+													}
+
+													return _layers;
+												})
+											}
+											configurable={true}
+											showDeleteButton={true}
+										/>
+									</React.Fragment>
+								);
 							default:
 								return null;
 						}
 					})}
-				{layerContext?.backgroundLayers?.length > 0 && (
-					<LayerListItem
-						key={'background_geometry'}
-						layerComponent={
-							<MlVectorTileLayer
-								{...layerContext.vtLayerConfig}
-								layers={layerContext.backgroundLayers}
-								mapId={props?.mapId}
-								insertBeforeLayer={'order-background'}
-							/>
-						}
-						setLayerState={(state: MlVectorTileLayerProps) => {
-							layerContext.setBackgroundLayers(state?.layers);
-						}}
-						visible={true}
-						configurable={true}
-						type="layer"
-						name="Background"
-					/>
-				)}
+					{layerContext?.backgroundLayers?.length > 0 && (
+						<LayerListItem
+							key={'background_geometry'}
+							layerComponent={
+								<MlVectorTileLayer
+									{...layerContext.vtLayerConfig}
+									layers={layerContext.backgroundLayers}
+									mapId={props?.mapId}
+									insertBeforeLayer={'order-background'}
+								/>
+							}
+							setLayerState={(state: MlVectorTileLayerProps) => {
+								layerContext.setBackgroundLayers(state?.layers);
+							}}
+							visible={true}
+							configurable={true}
+							type="layer"
+							name="Background"
+						/>
+					)}
 				</SortableContext>
 			</DndContext>
 		</>
