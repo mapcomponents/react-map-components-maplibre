@@ -35,22 +35,6 @@ const Template = (args: useFeatureEditorProps) => {
 		}
 	}, [visible]);
 
-	/* TopToolbar:
-<TopToolbar
-				unmovableButtons={
-					<Button
-						variant={visible ? 'contained' : 'outlined'}
-						onClick={() => {
-							setVisible(false);
-						}}
-						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-					>
-						Restart
-					</Button>
-				}
-			/>
-			*/
-
 	return <>{visible && <MlFeatureEditor {...args} />};</>;
 };
 
