@@ -1,32 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
+import * as turf from '@turf/turf';
+import { Feature, GeoJSONObject } from '@turf/turf';
 import PentagonIcon from '@mui/icons-material/Pentagon';
 import { Box } from '@mui/system';
-import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import List from '@mui/material/List';
 import EditIcon from '@mui/icons-material/Edit';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import DeleteIcon from '@mui/icons-material/Delete';
-import * as turf from '@turf/turf';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
 import LayerListItem from '../../ui_components/LayerList/LayerListItem';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import { Feature } from '@turf/turf';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Button, Theme, Typography } from '@mui/material';
-import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
-
-const sketchTools = [
-	{ name: 'Point', mode: 'draw_point', icon: <ScatterPlotIcon /> },
+const measureTools = [
 	{ name: 'LineString', mode: 'draw_line_string', icon: <PolylineIcon /> },
 	{ name: 'Polygon', mode: 'draw_polygon', icon: <PentagonIcon /> },
 ];
 
-export interface MlSketchToolProps {
+export interface MlMultiMeasureToolProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -41,27 +38,78 @@ export interface MlSketchToolProps {
 	 * https://mui.com/system/getting-started/the-sx-prop/
 	 */
 	buttonStyleOverride?: SxProps;
+	/**
+	 * String that specify if the Tool measures an area ("polygon") or length ("line")
+	 */
+	measureType?: 'polygon' | 'line';
+	/**
+	 * String that dictates which unit of measurement is used
+	 */
+	unit?: turf.Units;
+	/**
+	 * Callback function that is called each time measurment geometry within has changed within MlMeasureTool.
+	 * First parameter is the new GeoJson feature.
+	 */
+	onChange?: (options: { value: number; unit: string | undefined; geojson: GeoJSONObject }) => void;
 }
 
-type SketchStateType = {
+type MeasureStateType = {
 	selectedGeoJson?: Feature;
 	activeGeometryIndex?: number;
 	geometries: Feature[];
 	drawMode?: keyof MapboxDraw.Modes;
 };
 
-/**
- * Component template
- *
- */
+function getUnitSquareMultiplier(measureType: string | undefined) {
+	return measureType === 'miles' ? 1 / 2.58998811 : 1;
+}
+function getUnitLabel(measureType: string | undefined) {
+	return measureType === 'miles' ? 'mi' : 'km';
+}
 
-const MlSketchTool = (props: MlSketchToolProps) => {
+const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
+	const [displayValue, setDisplayValue] = useState({ value: 0, label: 'km' });
+	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
+
+	useEffect(() => {
+		if (currentFeatures[0]) {
+			const result =
+				props.measureType === 'polygon'
+					? // for "polyong" mode calculate km²
+					  (turf.area(currentFeatures[0] as Feature) / 1000000) *
+					  getUnitSquareMultiplier(props.unit)
+					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
+
+			if (typeof props.onChange === 'function') {
+				props.onChange({ value: result, unit: props.unit, geojson: currentFeatures[0] });
+			}
+
+			if (result >= 0.1) {
+				setDisplayValue({ value: result, label: getUnitLabel(props.unit) });
+			} else {
+				let label = 'm';
+				let value = result * 1000;
+				if (props.measureType === 'polygon') {
+					value = result * 1000000;
+				}
+				if (getUnitLabel(props.unit) === 'mi') {
+					label = 'in';
+					value = result * 63360;
+					if (props.measureType === 'polygon') {
+						value = result * 4014489599.4792;
+					}
+				}
+				setDisplayValue({ value: value, label: label });
+			}
+		}
+	}, [props.unit, currentFeatures]);
+
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
-	const [sketchState, setSketchState] = useState<SketchStateType>({
+	const [measureState, setMeasureState] = useState<MeasureStateType>({
 		activeGeometryIndex: undefined,
 		selectedGeoJson: undefined,
 		geometries: [],
@@ -73,7 +121,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	};
 
 	const buttonClickHandler = (buttonDrawMode: keyof MapboxDraw.Modes) => {
-		setSketchState((_state) => ({
+		setMeasureState((_state) => ({
 			drawMode: _state.drawMode !== buttonDrawMode ? buttonDrawMode : undefined,
 			geometries: _state.geometries,
 			activeGeometryIndex: undefined,
@@ -82,7 +130,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	};
 
 	const removeGeoJson = (geoJson: Feature): void => {
-		setSketchState((_sketchState) => {
+		setMeasureState((_sketchState) => {
 			const _geometries = [..._sketchState.geometries];
 			_geometries.splice(_geometries.indexOf(geoJson), 1);
 
@@ -96,12 +144,12 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		});
 	};
 
-	const SketchToolButtons = () => {
+	const MeasureToolButtons = () => {
 		return (
 			<>
-				{sketchTools.map((el) => {
+				{measureTools.map((el) => {
 					const stateColor = (theme: Theme) => {
-						if (sketchState.drawMode === el.mode) {
+						if (measureState.drawMode === el.mode) {
 							return theme.palette.primary.main;
 						} else {
 							return theme.palette.navigation.navColor;
@@ -109,7 +157,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					};
 
 					const stateIconColor = (theme: Theme) => {
-						if (sketchState.drawMode !== el.mode) {
+						if (measureState.drawMode !== el.mode) {
 							return theme.palette.primary.main;
 						} else {
 							return theme.palette.navigation.navColor;
@@ -149,19 +197,19 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				}}
 			>
 				<ButtonGroup>
-					<SketchToolButtons />
+					<MeasureToolButtons />
 				</ButtonGroup>
 			</Box>
 
-			{sketchState.drawMode && (
+			{measureState.drawMode && (
 				<MlFeatureEditor
-					mode={sketchState.drawMode}
-					geojson={sketchState.selectedGeoJson}
+					mode={measureState.drawMode || ''}
+					geojson={measureState.selectedGeoJson}
 					onChange={(feature: object) => {
 						if (!feature?.[0]) return;
 
-						setSketchState((_sketchState) => {
-							const _geometries = [...sketchState.geometries];
+						setMeasureState((_sketchState) => {
+							const _geometries = [...measureState.geometries];
 							if (typeof _sketchState.activeGeometryIndex === 'undefined') {
 								const tempFeature = feature[0];
 								tempFeature.properties.id = tempFeature.id;
@@ -178,7 +226,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						});
 					}}
 					onFinish={() => {
-						setSketchState((_sketchState) => ({
+						setMeasureState((_sketchState) => ({
 							..._sketchState,
 							drawMode: undefined,
 							activeGeometryIndex: undefined,
@@ -189,9 +237,19 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			)}
 
 			<List sx={{ zIndex: 105 }}>
-				{sketchState.geometries.map((el) => (
+				{measureState.geometries.map((el) => (
 					<>
 						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
+							<>
+								<MlFeatureEditor
+									onChange={(features) => {
+										setCurrentFeatures(features);
+									}}
+									mode={props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string'}
+								/>
+								{displayValue.value.toFixed(2)} {displayValue.label}
+								{props.measureType === 'polygon' ? '²' : ''}
+							</>
 							<br />
 							<Box
 								flexDirection={'row'}
@@ -207,8 +265,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									setHoveredGeometry(undefined);
 								}}
 							>
-								{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-								{/* @ts-ignore-next-line */}
 								<LayerListItem
 									listItemSx={buttonStyle}
 									configurable={true}
@@ -239,7 +295,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 										<Button
 											sx={buttonStyle}
 											onClick={() => {
-												setSketchState((_sketchState) => ({
+												setMeasureState((_sketchState) => ({
 													..._sketchState,
 													selectedGeoJson: el,
 													activeGeometryIndex: _sketchState.geometries.indexOf(el),
@@ -278,17 +334,19 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					/>
 				)}
 			</List>
-			{sketchState.drawMode === 'simple_select' && (
+			{measureState.drawMode === 'simple_select' && (
 				<Typography sx={{ fontSize: '0.6em' }}>
-					Edit {sketchState.selectedGeoJson?.geometry?.type}
+					Edit {measureState.selectedGeoJson?.geometry?.type}
 				</Typography>
 			)}
 		</>
 	);
 };
 
-MlSketchTool.defaultProps = {
+MlMultiMeasureTool.defaultProps = {
 	mapId: undefined,
 	buttonStyleOverride: {},
+	measureType: 'line',
+	unit: 'kilometers',
 };
-export default MlSketchTool;
+export default MlMultiMeasureTool;
