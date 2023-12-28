@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
+import { number } from 'yargs';
 
 interface MlMeasureToolProps {
 	/**
@@ -16,7 +17,11 @@ interface MlMeasureToolProps {
 	 * Callback function that is called each time measurment geometry within has changed within MlMeasureTool.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onChange?: (options: { value: number, unit: string | undefined, geojson: GeoJSONObject }) => void;
+	onChange?: (options: { value: number; unit: string | undefined; geojson: GeoJSONObject }) => void;
+	/**
+	 * Callback function that is called by the end of drawing geometries.
+	 */
+	onFinish?: () => void;
 }
 
 //const unitSquareConvert = {
@@ -33,13 +38,16 @@ function getUnitLabel(measureType: string | undefined) {
 const MlMeasureTool = (props: MlMeasureToolProps) => {
 	const [displayValue, setDisplayValue] = useState({ value: 0, label: 'km' });
 	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
+	const [lastFeature, setLastFeature] = useState<GeoJSONObject>();
+	console.log(currentFeatures);
 
 	useEffect(() => {
 		if (currentFeatures[0]) {
 			const result =
 				props.measureType === 'polygon'
-				// for "polyong" mode calculate km²
-					? (turf.area(currentFeatures[0] as Feature) / 1000000) * getUnitSquareMultiplier(props.unit)
+					? // for "polyong" mode calculate km²
+					  (turf.area(currentFeatures[0] as Feature) / 1000000) *
+					  getUnitSquareMultiplier(props.unit)
 					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
 
 			if (typeof props.onChange === 'function') {
@@ -51,14 +59,14 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 			} else {
 				let label = 'm';
 				let value = result * 1000;
-				if( props.measureType === 'polygon'){
-				  value = result * 1000000;
+				if (props.measureType === 'polygon') {
+					value = result * 1000000;
 				}
 				if (getUnitLabel(props.unit) === 'mi') {
 					label = 'in';
 					value = result * 63360;
-					if( props.measureType === 'polygon'){
-				  	value = result * 4014489599.4792;
+					if (props.measureType === 'polygon') {
+						value = result * 4014489599.4792;
 					}
 				}
 				setDisplayValue({ value: value, label: label });
@@ -70,9 +78,10 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 		<>
 			<MlFeatureEditor
 				onChange={(features) => {
-					setCurrentFeatures(features);
+					features && setCurrentFeatures(features);
 				}}
 				mode={props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string'}
+				onFinish={props.onFinish}
 			/>
 			{displayValue.value.toFixed(2)} {displayValue.label}
 			{props.measureType === 'polygon' ? '²' : ''}

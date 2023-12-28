@@ -75,8 +75,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 		if (currentFeatures[0]) {
 			const result =
 				props.measureType === 'polygon'
-					? // for "polyong" mode calculate km²
-					  (turf.area(currentFeatures[0] as Feature) / 1000000) *
+					? (turf.area(currentFeatures[0] as Feature) / 1000000) *
 					  getUnitSquareMultiplier(props.unit)
 					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
 
