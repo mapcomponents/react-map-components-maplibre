@@ -936,7 +936,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--mb-tiles",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--csv-or-tsv": {
@@ -950,7 +950,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--csv-or-tsv",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--csv-with-options": {
@@ -964,7 +964,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--csv-with-options",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--osm": {
@@ -978,7 +978,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--osm",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--gpx": {
@@ -992,7 +992,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--gpx",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--kml": {
@@ -1006,7 +1006,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--kml",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--tcx": {
@@ -1020,7 +1020,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--tcx",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--topojson": {
@@ -1034,7 +1034,7 @@
         "fileName": 44511,
         "framework": "react",
         "__id": "hooks-useaddprotocol--topojson",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "hooks-useaddprotocol--catalogue-demo": {
