@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.89] - 2024-01-02
+
+### Fixed
+
+- ca2fe4e: fix AddLayerButton mbtiles useAddProtocol
+
 ## [v0.1.88] - 2023-12-22
 
 ### Added
