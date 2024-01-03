@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
-import { number } from 'yargs';
 
 interface MlMeasureToolProps {
 	/**
@@ -17,7 +16,12 @@ interface MlMeasureToolProps {
 	 * Callback function that is called each time measurment geometry within has changed within MlMeasureTool.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onChange?: (options: { value: number; unit: string | undefined; geojson: GeoJSONObject }) => void;
+	onChange?: (options: {
+		value: number;
+		unit: string | undefined;
+		geojson: GeoJSONObject;
+		geometries?: [];
+	}) => void;
 	/**
 	 * Callback function that is called by the end of drawing geometries.
 	 */
@@ -38,8 +42,6 @@ function getUnitLabel(measureType: string | undefined) {
 const MlMeasureTool = (props: MlMeasureToolProps) => {
 	const [displayValue, setDisplayValue] = useState({ value: 0, label: 'km' });
 	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
-	const [lastFeature, setLastFeature] = useState<GeoJSONObject>();
-	console.log(currentFeatures);
 
 	useEffect(() => {
 		if (currentFeatures[0]) {

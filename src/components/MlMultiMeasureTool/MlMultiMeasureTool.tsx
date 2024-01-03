@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Button, SxProps, Tooltip } from '@mui/material';
 import * as turf from '@turf/turf';
-import { Feature, GeoJSONObject } from '@turf/turf';
-import PentagonIcon from '@mui/icons-material/Pentagon';
-import { Box } from '@mui/system';
-import List from '@mui/material/List';
-import EditIcon from '@mui/icons-material/Edit';
-import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import useMap from '../../hooks/useMap';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Tooltip from '@mui/material/Tooltip';
-import LayerListItem from '../../ui_components/LayerList/LayerListItem';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import { LngLatLike } from 'maplibre-gl';
-import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Button, Theme, Typography } from '@mui/material';
 import PolylineIcon from '@mui/icons-material/Polyline';
-
-const measureTools = [
-	{ name: 'LineString', mode: 'draw_line_string', icon: <PolylineIcon /> },
-	{ name: 'Polygon', mode: 'draw_polygon', icon: <PentagonIcon /> },
-];
+import PentagonIcon from '@mui/icons-material/Pentagon';
+import { Feature, GeoJSONObject, Geometry, GeometryCollection, Properties } from '@turf/turf';
+import MlMeasureTool from '../MlMeasureTool/MlMeasureTool';
+import LayerList from '../../ui_components/LayerList/LayerList';
+import LayerListItem from '../../ui_components/LayerList/LayerListItem';
+import Sidebar from '../../ui_components/Sidebar';
+import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export interface MlMultiMeasureToolProps {
 	/**
@@ -43,6 +31,10 @@ export interface MlMultiMeasureToolProps {
 	 */
 	measureType?: 'polygon' | 'line';
 	/**
+	 * Boolean which decides if the user can switch between measure modes
+	 */
+	multiType?: boolean;
+	/**
 	 * String that dictates which unit of measurement is used
 	 */
 	unit?: turf.Units;
@@ -50,302 +42,170 @@ export interface MlMultiMeasureToolProps {
 	 * Callback function that is called each time measurment geometry within has changed within MlMeasureTool.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onChange?: (options: { value: number; unit: string | undefined; geojson: GeoJSONObject }) => void;
+	onChange?: (options: {
+		value: number;
+		unit: string | undefined;
+		geojson: GeoJSONObject;
+		geometries?: [];
+	}) => void;
+
+	/**
+	 * Callback function that is called by the end of drawing geometries.
+	 */
+	onFinish?: () => void;
 }
 
 type MeasureStateType = {
+	measure: number | undefined;
+	unit: string | undefined;
 	selectedGeoJson?: Feature;
 	activeGeometryIndex?: number;
-	geometries: Feature[];
+	geometries?: Feature[];
+	geojson: GeoJSONObject | undefined;
 	drawMode?: keyof MapboxDraw.Modes;
 };
 
 function getUnitSquareMultiplier(measureType: string | undefined) {
 	return measureType === 'miles' ? 1 / 2.58998811 : 1;
 }
-function getUnitLabel(measureType: string | undefined) {
-	return measureType === 'miles' ? 'mi' : 'km';
-}
+
+// function getUnitLabel(measureType: string | undefined) {
+//	return measureType === 'miles' ? 'mi' : 'km'; }
 
 const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
-	const [displayValue, setDisplayValue] = useState({ value: 0, label: 'km' });
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const [selectedMode, setSelectedMode] = useState(props.measureType);
 	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
+
+	const buttonStyle = {
+		...props.buttonStyleOverride,
+	};
 
 	useEffect(() => {
 		if (currentFeatures[0]) {
 			const result =
 				props.measureType === 'polygon'
-					? (turf.area(currentFeatures[0] as Feature) / 1000000) *
+					? // for "polyong" mode calculate km²
+					  (turf.area(currentFeatures[0] as Feature) / 1000000) *
 					  getUnitSquareMultiplier(props.unit)
 					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
 
 			if (typeof props.onChange === 'function') {
 				props.onChange({ value: result, unit: props.unit, geojson: currentFeatures[0] });
 			}
-
-			if (result >= 0.1) {
-				setDisplayValue({ value: result, label: getUnitLabel(props.unit) });
-			} else {
-				let label = 'm';
-				let value = result * 1000;
-				if (props.measureType === 'polygon') {
-					value = result * 1000000;
-				}
-				if (getUnitLabel(props.unit) === 'mi') {
-					label = 'in';
-					value = result * 63360;
-					if (props.measureType === 'polygon') {
-						value = result * 4014489599.4792;
-					}
-				}
-				setDisplayValue({ value: value, label: label });
-			}
 		}
 	}, [props.unit, currentFeatures]);
 
-	const mapHook = useMap({
-		mapId: props.mapId,
-		waitForLayer: props.insertBeforeLayer,
-	});
-	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
-	const [measureState, setMeasureState] = useState<MeasureStateType>({
-		activeGeometryIndex: undefined,
-		selectedGeoJson: undefined,
-		geometries: [],
-		drawMode: undefined,
-	});
+	const [measureState, setMeasureState] = useState<MeasureStateType | undefined>();
 
-	const buttonStyle = {
-		...props.buttonStyleOverride,
-	};
+	const [measureList, setMeasureList] = useState<any>([]);
+	console.log(measureList);
 
-	const buttonClickHandler = (buttonDrawMode: keyof MapboxDraw.Modes) => {
-		setMeasureState((_state) => ({
-			drawMode: _state.drawMode !== buttonDrawMode ? buttonDrawMode : undefined,
-			geometries: _state.geometries,
-			activeGeometryIndex: undefined,
-			selectedGeoJson: undefined,
-		}));
-	};
+	const [reload, setReload] = useState(false);
 
-	const removeGeoJson = (geoJson: Feature): void => {
-		setMeasureState((_sketchState) => {
-			const _geometries = [..._sketchState.geometries];
-			_geometries.splice(_geometries.indexOf(geoJson), 1);
-
-			return {
-				..._sketchState,
-				geometries: _geometries,
-				activeGeometryIndex: _sketchState.activeGeometryIndex
-					? _sketchState.activeGeometryIndex - 1
-					: undefined,
-			};
+	const handleDelete = (Index: number) => {
+		setMeasureList((current: any) => {
+			const newList = [...current];
+			newList.splice(Index, 1);
+			return newList;
 		});
 	};
 
-	const MeasureToolButtons = () => {
-		return (
-			<>
-				{measureTools.map((el) => {
-					const stateColor = (theme: Theme) => {
-						if (measureState.drawMode === el.mode) {
-							return theme.palette.primary.main;
-						} else {
-							return theme.palette.navigation.navColor;
-						}
-					};
-
-					const stateIconColor = (theme: Theme) => {
-						if (measureState.drawMode !== el.mode) {
-							return theme.palette.primary.main;
-						} else {
-							return theme.palette.navigation.navColor;
-						}
-					};
-
-					return (
-						<>
-							<Tooltip title={el.name}>
-								<Button
-									sx={{
-										color: stateIconColor,
-										backgroundColor: stateColor,
-
-										'&:hover': {
-											backgroundColor: stateColor,
-										},
-										...buttonStyle,
-									}}
-									onClick={() => buttonClickHandler(el.mode as keyof MapboxDraw.Modes)}
-								>
-									{el.icon}
-								</Button>
-							</Tooltip>
-						</>
-					);
-				})}
-			</>
-		);
+	const handleMeasureChange = (options: {
+		value: number;
+		unit: string | undefined;
+		geojson: GeoJSONObject | undefined;
+	}) => {
+		setMeasureState({
+			measure: options.value,
+			unit: options.unit,
+			geojson: options.geojson,
+		});
 	};
+
+	useEffect(() => {
+		reload && setReload(false);
+		reload &&
+			measureState &&
+			setMeasureList((current: any) => {
+				const newList = [...current];
+				newList.push(measureState);
+				return newList;
+			});
+	}, [reload]);
 
 	return (
 		<>
-			<Box
-				sx={{
-					zIndex: 104,
-				}}
-			>
-				<ButtonGroup>
-					<MeasureToolButtons />
-				</ButtonGroup>
-			</Box>
-
-			{measureState.drawMode && (
-				<MlFeatureEditor
-					mode={measureState.drawMode || ''}
-					geojson={measureState.selectedGeoJson}
-					onChange={(feature: object) => {
-						if (!feature?.[0]) return;
-
-						setMeasureState((_sketchState) => {
-							const _geometries = [...measureState.geometries];
-							if (typeof _sketchState.activeGeometryIndex === 'undefined') {
-								const tempFeature = feature[0];
-								tempFeature.properties.id = tempFeature.id;
-
-								_sketchState.activeGeometryIndex = _geometries.length;
-								_geometries.push(tempFeature);
-							} else {
-								_geometries[_sketchState.activeGeometryIndex] = feature[0];
-							}
-							return {
-								..._sketchState,
-								geometries: _geometries,
-							};
-						});
-					}}
-					onFinish={() => {
-						setMeasureState((_sketchState) => ({
-							..._sketchState,
-							drawMode: undefined,
-							activeGeometryIndex: undefined,
-							selectedGeoJson: undefined,
-						}));
-					}}
-				/>
-			)}
-
-			<List sx={{ zIndex: 105 }}>
-				{measureState.geometries.map((el) => (
-					<>
-						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
-							<>
-								<MlFeatureEditor
-									onChange={(features) => {
-										setCurrentFeatures(features);
-									}}
-									mode={props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string'}
-								/>
-								{displayValue.value.toFixed(2)} {displayValue.label}
-								{props.measureType === 'polygon' ? '²' : ''}
-							</>
-							<br />
-							<Box
-								flexDirection={'row'}
-								sx={{
-									'&:hover': {
-										backgroundColor: 'rgb(177, 177, 177, 0.2)',
-									},
-								}}
-								onMouseOver={() => {
-									setHoveredGeometry(el);
-								}}
-								onMouseLeave={() => {
-									setHoveredGeometry(undefined);
-								}}
-							>
-								<LayerListItem
-									listItemSx={buttonStyle}
-									configurable={true}
-									layerComponent={
-										<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={String(el.id)} />
-									}
-									type={'layer'}
-									name={String(el.id)}
-									description={el.geometry.type}
-								></LayerListItem>
-								<Box
-									sx={{
-										padding: '3px 30px',
-									}}
-								>
-									<ButtonGroup size="small">
-										<Button
-											onClick={() => {
-												mapHook?.map?.map.setCenter(
-													el.geometry.type === 'Point'
-														? (el.geometry.coordinates as LngLatLike)
-														: (turf.centerOfMass(el).geometry.coordinates as LngLatLike)
-												);
-											}}
-										>
-											<GpsFixedIcon />
-										</Button>
-										<Button
-											sx={buttonStyle}
-											onClick={() => {
-												setMeasureState((_sketchState) => ({
-													..._sketchState,
-													selectedGeoJson: el,
-													activeGeometryIndex: _sketchState.geometries.indexOf(el),
-													drawMode: 'simple_select',
-												}));
-											}}
-										>
-											<EditIcon />
-										</Button>
-										<Button
-											sx={buttonStyle}
-											onClick={() => {
-												removeGeoJson(el);
-												setHoveredGeometry(undefined);
-											}}
-										>
-											<DeleteIcon />
-										</Button>
-									</ButtonGroup>
-								</Box>
-							</Box>
-						</Box>
-					</>
-				))}
-				{hoveredGeometry && (
-					<MlGeoJsonLayer
-						mapId={props.mapId}
-						geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
-						type={'line'}
-						layerId={'highlightBorder'}
-						paint={{
-							'line-color': '#dd9900',
-							'line-opacity': 0.4,
-							'line-width': 10,
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Multi Measure Tool'}>
+				<Tooltip title="Measure Area">
+					<Button
+						variant="outlined"
+						sx={{ ...buttonStyle }}
+						onClick={() => {
+							setSelectedMode('polygon');
+							setMeasureState(undefined);
+							setReload(true);
+						}}
+					>
+						<PentagonIcon />
+					</Button>
+				</Tooltip>
+				<Tooltip title="Measure Distance">
+					<Button
+						variant="outlined"
+						sx={{ ...buttonStyle }}
+						onClick={() => {
+							setSelectedMode('line');
+							setMeasureState(undefined);
+							setReload(true);
+						}}
+					>
+						<PolylineIcon />
+					</Button>
+				</Tooltip>
+				{!reload && (
+					<MlMeasureTool
+						measureType={selectedMode}
+						onChange={handleMeasureChange}
+						onFinish={() => {
+							setReload(true);
 						}}
 					/>
 				)}
-			</List>
-			{measureState.drawMode === 'simple_select' && (
-				<Typography sx={{ fontSize: '0.6em' }}>
-					Edit {measureState.selectedGeoJson?.geometry?.type}
-				</Typography>
-			)}
+				<LayerList>
+					{measureList?.map(
+						(measure: { measure: number; unit?: string; geojson: Feature }, Index: number) => (
+							<Fragment key={measure.measure + '-' + Index}>
+								<LayerListItem
+									key={measure.measure}
+									layerComponent={
+										<MlGeoJsonLayer
+											mapId={props.mapId}
+											geojson={
+												measure.geojson as Feature<Geometry | GeometryCollection, Properties>
+											}
+										/>
+									}
+									visible={true}
+									configurable={true}
+									type="layer"
+									name={
+										measure.geojson.geometry?.type === 'LineString'
+											? measure.measure.toFixed(3).toString() + ' ' + measure.unit
+											: measure.measure.toFixed(3).toString() + ' ' + measure.unit + '²'
+									}
+								/>
+								<Button onClick={() => handleDelete(Index)}>
+									{' '}
+									<DeleteIcon />{' '}
+								</Button>
+							</Fragment>
+						)
+					)}
+				</LayerList>
+			</Sidebar>
 		</>
 	);
 };
 
-MlMultiMeasureTool.defaultProps = {
-	mapId: undefined,
-	buttonStyleOverride: {},
-	measureType: 'line',
-	unit: 'kilometers',
-};
 export default MlMultiMeasureTool;
