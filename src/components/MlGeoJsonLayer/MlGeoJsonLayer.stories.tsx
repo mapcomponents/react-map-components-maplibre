@@ -294,6 +294,34 @@ Circle.args = {
 	type: 'circle',
 };
 
+export const Label = CircleTemplate.bind({});
+Label.parameters = {};
+Label.args = {
+	geojson: wgLocations,
+	paint: {
+		'circle-radius': {
+			property: 'Mitarbeitende',
+			stops: [
+				[3, 6],
+				[26, 35],
+			],
+		},
+		'circle-color': '#009EE0',
+	},
+	type: 'circle',
+
+	labelProp: 'Mitarbeitende',
+
+	labelOptions: {
+		minzoom: 5,
+		maxzoom: 20,
+		layout: {
+			'text-font': ['Open Sans Regular'],
+			'text-size': 20,
+		},
+	},
+};
+
 export const Linestring = LineTemplate.bind({});
 Linestring.parameters = {};
 Linestring.args = {

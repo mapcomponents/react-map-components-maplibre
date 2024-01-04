@@ -1,5 +1,5 @@
-import { SxProps } from "@mui/material";
-import { CircleLayerSpecification, FillLayerSpecification } from "maplibre-gl";
+/// <reference types="react" />
+import { CircleLayerSpecification, FillLayerSpecification } from 'maplibre-gl';
 interface MlFollowGpsProps {
     /**
      * Id of the target MapLibre instance in mapContext
@@ -39,13 +39,13 @@ interface MlFollowGpsProps {
      * Use any available paint prop from layer type "fill".
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
      */
-    orientationConePaint?: FillLayerSpecification["paint"];
+    orientationConePaint?: FillLayerSpecification['paint'];
     /**
      * Position circle paint property object, that is passed to the MlGeoJsonLayer responsible for drawing the position circle.
      * Use any available paint prop from layer type "circle".
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
      */
-    circlePaint?: CircleLayerSpecification["paint"];
+    circlePaint?: CircleLayerSpecification['paint'];
     /**
      * Active button font color
      */
@@ -59,11 +59,7 @@ interface MlFollowGpsProps {
      * Use any available paint prop from layer type "fill".
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
      */
-    accuracyPaint?: FillLayerSpecification["paint"];
-    /**
-     * CSS style object that is applied to the button component
-     */
-    buttonSx?: SxProps | any;
+    accuracyPaint?: FillLayerSpecification['paint'];
 }
 /**
  * Adds a button that makes the map follow the users GPS position using
@@ -74,21 +70,6 @@ declare const MlFollowGps: {
     (props: MlFollowGpsProps): JSX.Element;
     defaultProps: {
         mapId: undefined;
-        buttonSx: {
-            minWidth: string;
-            minHeight: string;
-            width: string;
-            height: string;
-            backgroundColor: string;
-            borderRadius: string;
-            margin: number;
-            fontSize: string;
-            ":hover": {
-                backgroundColor: string;
-                color: string;
-            };
-        };
-        onColor: string;
         offColor: string;
         showAccuracyCircle: boolean;
         showUserLocation: boolean;

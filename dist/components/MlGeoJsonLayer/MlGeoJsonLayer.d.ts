@@ -1,6 +1,8 @@
-import { Feature, FeatureCollection } from "@turf/turf";
-import { LineLayerSpecification, CircleLayerSpecification, FillLayerSpecification, MapLayerMouseEvent } from "maplibre-gl";
-declare type MlGeoJsonLayerProps = {
+/// <reference types="react" />
+import { Feature, FeatureCollection } from '@turf/turf';
+import { useLayerProps } from '../../hooks/useLayer';
+import { LineLayerSpecification, CircleLayerSpecification, FillLayerSpecification, LayerSpecification, RasterLayerSpecification } from 'maplibre-gl';
+export type MlGeoJsonLayerProps = {
     /**
      * Id of the target MapLibre instance in mapContext
      */
@@ -22,29 +24,39 @@ declare type MlGeoJsonLayerProps = {
     geojson: Feature | FeatureCollection | undefined;
     /**
      * Type of the layer that will be added to the MapLibre instance.
-     * Possible values: "line", "circle", "fill"
+     * All types from LayerSpecification union type are supported except the type from
+     * RasterLayerSpecification
      */
-    type?: "fill" | "line" | "circle";
+    type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
     /**
      * Paint property object, that is passed to the addLayer call.
      * Possible props depend on the layer type.
+     * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+     * Some examples are:
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+     * All paint types from LayerSpecification union type are supported except the paint type from
+     * RasterLayerSpecification
      */
-    paint?: CircleLayerSpecification['paint'] | FillLayerSpecification['paint'] | LineLayerSpecification['paint'];
+    paint?: Exclude<LayerSpecification['paint'], RasterLayerSpecification['paint']>;
     /**
      * Layout property object, that is passed to the addLayer call.
      * Possible props depend on the layer type.
+     * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+     * Some examples are:
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#line
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#circle
      * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill
+     * All layout types from LayerSpecification union type are supported except the layout type from
+     * RasterLayerSpecification
+
      */
-    layout?: CircleLayerSpecification['layout'] | FillLayerSpecification['layout'] | LineLayerSpecification['layout'];
+    layout?: LayerSpecification['layout'];
     /**
      * Javascript object that is spread into the addLayer commands first parameter.
      */
-    options?: CircleLayerSpecification | FillLayerSpecification | LineLayerSpecification;
+    options?: useLayerProps['options'];
     /**
      * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
      */
@@ -54,21 +66,29 @@ declare type MlGeoJsonLayerProps = {
         line?: LineLayerSpecification['paint'];
     };
     /**
+     * Property name in the GeoJSON object to be used as a label.
+     */
+    labelProp?: string;
+    /**
+     * Label configuration options.
+     */
+    labelOptions?: useLayerProps['options'];
+    /**
      * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
      */
-    onHover?: MapLayerMouseEvent;
+    onHover?: useLayerProps['onHover'];
     /**
      * Click event handler that is executed whenever a geometry rendered by this component is clicked.
      */
-    onClick?: MapLayerMouseEvent;
+    onClick?: useLayerProps['onClick'];
     /**
      * Leave event handler that is executed whenever a geometry rendered by this component is
      * left/unhovered.
      */
-    onLeave?: MapLayerMouseEvent;
+    onLeave?: useLayerProps['onLeave'];
 };
 /**
- * Adds source and layer of types "line", "fill" or "circle" to display GeoJSON data on the map.
+ * Adds source and layer to display GeoJSON data on the map.
  *
  * @component
  */

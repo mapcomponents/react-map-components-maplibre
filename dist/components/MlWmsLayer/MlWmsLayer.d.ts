@@ -1,12 +1,16 @@
-import PropTypes from "prop-types";
+/// <reference types="react" />
+import PropTypes from 'prop-types';
+import { RasterLayerSpecification, RasterSourceSpecification } from 'maplibre-gl';
 interface MlWmsLayerProps {
-    urlParameters?: any;
+    urlParameters?: {
+        [key: string]: string;
+    };
     url: string;
     visible?: boolean;
     attribution?: string;
     mapId?: string;
-    sourceOptions?: any;
-    layerOptions?: any;
+    sourceOptions?: RasterSourceSpecification;
+    layerOptions?: RasterLayerSpecification;
     insertBeforeLayer?: string;
     layerId?: string;
 }

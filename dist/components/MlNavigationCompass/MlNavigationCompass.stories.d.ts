@@ -1,5 +1,5 @@
 export default storyoptions;
-export const Standard: any;
+export const catalogueDemo: any;
 export const StyleExample: any;
 declare namespace storyoptions {
     export const title: string;

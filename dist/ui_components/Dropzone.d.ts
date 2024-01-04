@@ -1,5 +1,6 @@
+/// <reference types="react" />
 type Props = {
-    setData: (data: any) => void;
+    setData: (data: string) => void;
 };
 export default function Dropzone(props: Props): JSX.Element;
 export {};

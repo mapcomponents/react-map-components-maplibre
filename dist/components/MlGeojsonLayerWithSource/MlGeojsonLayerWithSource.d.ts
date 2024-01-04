@@ -1,4 +1,5 @@
-interface MlGeojsonLayerWithSourceProps {
+/// <reference types="react" />
+export interface MlGeojsonLayerWithSourceProps {
     /**
      * Id of the target MapLibre instance in mapContext
      */
