@@ -1,4 +1,22 @@
 # Change Log
+
+## [v0.1.89] - 2024-01-02
+
+### Fixed
+
+- ca2fe4e: fix AddLayerButton mbtiles useAddProtocol
+
+## [v0.1.88] - 2023-12-22
+
+### Added
+- e45ff67: add labelProp and labelOptions to MlGeojsonLayer
+- 5f7d750: add useAddProtocol handlers new formats (csv, osm, tcx, kml, gpx, Topojson)
+
+### Fixed
+- a5b9d87: fix MlMeasureTool conversion
+- 90befdb: fix compass needle aligment 
+- ecb1c48: fix Storybook demos
+
 ## [v0.1.87] - 2023-10-25
 
 ### Changed

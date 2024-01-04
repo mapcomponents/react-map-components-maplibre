@@ -1,19 +1,29 @@
+/// <reference types="react" />
+import { MlNavigationToolsProps } from './MlNavigationTools';
+declare const storyoptions: {
+    title: string;
+    component: {
+        (props: MlNavigationToolsProps): JSX.Element;
+        defaultProps: {
+            mapId: undefined;
+            show3DButton: boolean;
+            showFollowGpsButton: boolean;
+            showCenterLocationButton: boolean;
+            showZoomButtons: boolean;
+        };
+    };
+    argTypes: {
+        url: {};
+        layer: {};
+    };
+    decorators: ((Story: any, context: any) => JSX.Element)[];
+};
 export default storyoptions;
-export const DefaultConfig: any;
-export const No3dButton: any;
-export const ShowCenterLocationButton: any;
-export const AlterToolPosition: any;
-export const NoZoomButtons: any;
-export const NoFollowGpsButton: any;
-export const CustomButton: any;
-declare namespace storyoptions {
-    export const title: string;
-    export { MlNavigationTools as component };
-    export namespace argTypes {
-        const url: {};
-        const layer: {};
-    }
-    export { noNavToolsDecorator as decorators };
-}
-import MlNavigationTools from "./MlNavigationTools";
-import noNavToolsDecorator from "../../decorators/NoNavToolsDecorator";
+export declare const DefaultConfig: any;
+export declare const No3dButton: any;
+export declare const ShowCenterLocationButton: any;
+export declare const AlternativePosition: any;
+export declare const NoZoomButtons: any;
+export declare const NoFollowGpsButton: any;
+export declare const CustomButton: any;
+export declare const catalogueDemo: any;

@@ -2,19 +2,34 @@ import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
 import config from '../omt_styles/config';
-import { MlWmsLoaderProps } from '../components/MlWmsLoader/MlWmsLoader';
 import { MlGeoJsonLayerProps } from '../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { v4 as uuidv4 } from 'uuid';
+import { Layer } from 'wms-capabilities';
 
 export interface LayerContextProps {
-	children: React.ReactNode;
+	children: 
+	React.ReactNode;
+}
+
+export interface wmsLoaderConfigProps{
+	getFeatureInfoUrl: string,
+layers: Layer[] , 
+name: string,
+open: boolean,
+visible: boolean ,
+wmsUrl: string
+}
+export interface wmsConfig{
+featureInfoActive?: boolean;
+config?: wmsLoaderConfigProps,
+url: string
 }
 
 export type WmsLayerConfig = {
 	type: 'wms';
 	name?: string;
 	id?: string;
-	config: MlWmsLoaderProps;
+	config: wmsConfig;
 };
 export type GeojsonLayerConfig = {
 	type: 'geojson';
@@ -92,8 +107,7 @@ function LayerContextProvider(props: LayerContextProps) {
 	};
 
 	useEffect(() => {
-		console.log('layers', layers);
-
+		
 		if (layers.filter((el) => !el?.id).length) {
 			const _layers = [...layers];
 			_layers.forEach((el) => {
@@ -105,32 +119,35 @@ function LayerContextProvider(props: LayerContextProps) {
 		}
 	}, [layers]);
 
-	const moveLayer = useCallback((layerId: string, getNewPos: (oldPos:number) => number) => {
-		const targetLayer = layers?.filter?.((el) => el.id === layerId);
+	const moveLayer = useCallback(
+		(layerId: string, getNewPos: (oldPos: number) => number) => {
+			const targetLayer = layers?.filter?.((el) => el.id === layerId);
 
-		if (targetLayer.length > 0) {
-			const newLayers = [...layers];
-			const element = targetLayer[0];
-			const idx = layers.indexOf(element);
-			const newPos = getNewPos(idx);
-			if (newPos >= 0 && newPos <= layers.length - 1) {
-				newLayers.splice(idx, 1);
-				newLayers.splice(newPos, 0, element);
-				setLayers(newLayers);
+			if (targetLayer.length > 0) {
+				const newLayers = [...layers];
+				const element = targetLayer[0];
+				const idx = layers.indexOf(element);
+				const newPos = getNewPos(idx);
+				if (newPos >= 0 && newPos <= layers.length - 1) {
+					newLayers.splice(idx, 1);
+					newLayers.splice(newPos, 0, element);
+					setLayers(newLayers);
+				}
 			}
-		}
-	}, [layers]);
+		},
+		[layers]
+	);
 
 	const moveDown = useCallback(
 		(layerId: string) => {
-				moveLayer(layerId, (idx) => idx + 1);
+			moveLayer(layerId, (idx) => idx + 1);
 		},
 		[moveLayer]
 	);
 
 	const moveUp = useCallback(
 		(layerId: string) => {
-				moveLayer(layerId, (idx) => idx - 1);
+			moveLayer(layerId, (idx) => idx - 1);
 		},
 		[moveLayer]
 	);

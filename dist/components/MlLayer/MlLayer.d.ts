@@ -1,4 +1,6 @@
-import { Feature, FeatureCollection } from "@turf/turf";
+/// <reference types="react" />
+import { useLayerProps } from '../../hooks/useLayer';
+import { Feature, FeatureCollection } from '@turf/turf';
 interface MlLayerProps {
     /**
      * Id of the target MapLibre instance in mapContext
@@ -16,7 +18,7 @@ interface MlLayerProps {
     /**
      * Javascript object that is passed the addLayer command as first parameter.
      */
-    options?: any;
+    options?: useLayerProps['options'];
     /**
      * GeoJSON data that is supposed to be rendered by this component.
      */

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { GeoJSONFeature } from 'maplibre-gl';
 interface useLayerHoverPopupProps {
     /**

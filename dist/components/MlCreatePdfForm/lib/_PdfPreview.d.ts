@@ -1,3 +1,4 @@
+/// <reference types="react" />
 interface PdfPreviewProps {
     /**
      * Id of the target MapLibre instance in mapContext

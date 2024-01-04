@@ -1,3 +1,4 @@
+/// <reference types="react" />
 declare const storyoptions: {
     title: string;
     component: {
@@ -11,7 +12,7 @@ declare const storyoptions: {
         };
     };
     argTypes: {};
-    decorators: ((Story: any) => JSX.Element)[];
+    decorators: ((Story: any, context: any) => JSX.Element)[];
 };
 export default storyoptions;
 export declare const ExampleConfig: any;

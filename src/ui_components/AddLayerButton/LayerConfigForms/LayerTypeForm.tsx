@@ -13,17 +13,16 @@ import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 export interface LayerTypeFormProps {
 	onSelect: (type: string) => void;
+	layerTypes: string[]
 }
-
-const layerTypes = ['geojson', 'wms'] as const;
 
 const LayerTypeForm = (props: LayerTypeFormProps) => {
 	return (
 		<>
-			<DialogTitle>Select a layer type</DialogTitle>
+			<DialogTitle>{props.layerTypes.length > 1 ? "Select a layer type": "Load new layer"}</DialogTitle>
 			<List>
-				{layerTypes.map((type) => (
-					<ListItem disableGutters key={type}>
+				{props.layerTypes.map((type, idx) => (
+					<ListItem disableGutters key={idx}>
 						<ListItemButton
 							autoFocus
 							onClick={() => {

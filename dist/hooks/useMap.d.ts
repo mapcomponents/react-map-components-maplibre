@@ -1,12 +1,12 @@
 import MapLibreGlWrapper, { LayerState } from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-declare type useMapType = {
+type useMapType = {
     map: MapLibreGlWrapper | undefined;
     mapIsReady: boolean;
     componentId: string;
     layers: (LayerState | undefined)[];
     cleanup: () => void;
 };
-declare function useMap(props: {
+declare function useMap(props?: {
     mapId?: string;
     waitForLayer?: string;
 }): useMapType;

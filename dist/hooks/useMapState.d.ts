@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { LayerState, ViewportState } from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-declare type useMapStateType = {
+type useMapStateType = {
     layers: (LayerState | undefined)[];
     viewport: ViewportState | undefined;
 };
@@ -54,8 +54,8 @@ declare namespace useMapState {
          */
         filter: PropTypes.Requireable<PropTypes.InferProps<{
             includeBaseLayers: PropTypes.Requireable<boolean>;
-            matchLayerIds: PropTypes.Requireable<string | RegExp>;
-            matchSourceIds: PropTypes.Requireable<string | RegExp>;
+            matchLayerIds: PropTypes.Requireable<NonNullable<string | RegExp | null | undefined>>;
+            matchSourceIds: PropTypes.Requireable<NonNullable<string | RegExp | null | undefined>>;
         }>>;
     };
 }

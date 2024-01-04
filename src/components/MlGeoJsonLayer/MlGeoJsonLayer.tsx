@@ -83,6 +83,15 @@ export type MlGeoJsonLayerProps = {
 		line?: LineLayerSpecification['paint'];
 	};
 	/**
+	 * Property name in the GeoJSON object to be used as a label.
+	 */
+	labelProp?: string;
+	/**
+	 * Label configuration options.
+	 */
+	labelOptions?: useLayerProps['options'];
+
+	/**
 	 * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
 	 */
 	onHover?: useLayerProps['onHover'];
@@ -105,6 +114,9 @@ export type MlGeoJsonLayerProps = {
 
 const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 	const layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
+	const layerId = props.layerId || 'MlGeoJsonLayer-' + uuidv4();
+	const labelLayerId = `label-${layerId}`;
+
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	useLayer({
 		mapId: props.mapId,
@@ -127,6 +139,23 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		onClick: props.onClick,
 		onLeave: props.onLeave,
 	});
+
+	if (props.labelProp) {
+		useLayer({
+			mapId: props.mapId,
+			layerId: labelLayerId,
+			geojson: props.geojson,
+			options: {
+				type: 'symbol',
+				...(props?.labelOptions ? props.labelOptions : {}),
+				layout: {
+					'text-field': `{${props.labelProp}}`,
+					...(props?.labelOptions?.layout ? props.labelOptions.layout : {}),
+				},
+				paint: {},
+			} as useLayerProps['options'],
+		});
+	}
 
 	return <></>;
 };
