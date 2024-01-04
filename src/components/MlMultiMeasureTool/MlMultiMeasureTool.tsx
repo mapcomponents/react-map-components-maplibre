@@ -9,7 +9,10 @@ import LayerList from '../../ui_components/LayerList/LayerList';
 import LayerListItem from '../../ui_components/LayerList/LayerListItem';
 import Sidebar from '../../ui_components/Sidebar';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import useMap from '../../hooks/useMap';
 import DeleteIcon from '@mui/icons-material/Delete';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import { LngLatLike } from 'maplibre-gl';
 
 export interface MlMultiMeasureToolProps {
 	/**
@@ -76,6 +79,10 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [selectedMode, setSelectedMode] = useState(props.measureType);
 	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
+	const mapHook = useMap({
+		mapId: props.mapId,
+		waitForLayer: props.insertBeforeLayer,
+	});
 
 	const buttonStyle = {
 		...props.buttonStyleOverride,
@@ -195,10 +202,25 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 											: measure.measure.toFixed(3).toString() + ' ' + measure.unit + '²'
 									}
 								/>
-								<Button onClick={() => handleDelete(Index)}>
-									{' '}
-									<DeleteIcon />{' '}
-								</Button>
+								<Tooltip title="Delete">
+									<Button onClick={() => handleDelete(Index)}>
+										{' '}
+										<DeleteIcon />{' '}
+									</Button>
+								</Tooltip>
+								<Tooltip title="Center Location">
+									<Button
+										onClick={() => {
+											mapHook?.map?.map.setCenter(
+												measure.geojson.geometry.type === 'Point'
+													? (measure.geojson.geometry.coordinates as LngLatLike)
+													: (turf.centerOfMass(measure.geojson).geometry.coordinates as LngLatLike)
+											);
+										}}
+									>
+										<GpsFixedIcon />
+									</Button>
+								</Tooltip>
 							</Fragment>
 						)
 					)}
@@ -206,6 +228,12 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 			</Sidebar>
 		</>
 	);
+};
+
+MlMultiMeasureTool.defaultProps = {
+	mapId: undefined,
+	measureType: 'polygon',
+	buttonStyleOverride: {},
 };
 
 export default MlMultiMeasureTool;
