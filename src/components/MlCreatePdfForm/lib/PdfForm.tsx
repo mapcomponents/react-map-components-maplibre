@@ -146,7 +146,9 @@ export default function PdfForm(props: PdfFormProps) {
 	return (
 		<>
 			<FormControl fullWidth sx={formControlStyles}>
-				<InputLabel id="format-select-label">Format</InputLabel>
+				<InputLabel sx={{ marginTop: '3px' }} id="format-select-label">
+					Format
+				</InputLabel>
 				<Select
 					labelId="format-select-label"
 					id="format-select"
@@ -232,18 +234,18 @@ export default function PdfForm(props: PdfFormProps) {
 					create PDF
 				</Button>
 				{loading && (
-          <CircularProgress
-            size={24}
-            sx={{
-              color: 'primary.main',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              marginTop: '-12px',
-              marginLeft: '-12px',
-            }}
-          />
-        )}
+					<CircularProgress
+						size={24}
+						sx={{
+							color: 'primary.main',
+							position: 'absolute',
+							top: '50%',
+							left: '50%',
+							marginTop: '-12px',
+							marginLeft: '-12px',
+						}}
+					/>
+				)}
 			</FormControl>
 			{pdfContext.options && pdfContext.setOptions && (
 				<PdfPreview
