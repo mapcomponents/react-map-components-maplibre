@@ -4,7 +4,7 @@ import React, { useContext, useCallback, useRef, useEffect, useState } from 'rea
 import syncMove from '@mapbox/mapbox-gl-sync-move';
 import './style.css';
 import MapContext, { MapContextType } from '../../contexts/MapContext';
-import { ReactComponent as SwipeIcon } from './assets/icon nur mit arrow.svg';
+import { ReactComponent as SwipeIcon } from './assets/icononlyarrow.svg';
 
 export interface MlLayerSwipeProps {
 	/**
