@@ -68,12 +68,10 @@ type MeasureStateType = {
 	drawMode?: keyof MapboxDraw.Modes;
 };
 
+
 function getUnitSquareMultiplier(measureType: string | undefined) {
 	return measureType === 'miles' ? 1 / 2.58998811 : 1;
 }
-
-// function getUnitLabel(measureType: string | undefined) {
-//	return measureType === 'miles' ? 'mi' : 'km'; }
 
 const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
@@ -104,11 +102,21 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	}, [props.unit, currentFeatures]);
 
 	const [measureState, setMeasureState] = useState<MeasureStateType | undefined>();
+	const [selectedUnit, setSelectedUnit] = useState<turf.Units>('kilometers');
 
 	const [measureList, setMeasureList] = useState<any>([]);
 	console.log(measureList);
 
 	const [reload, setReload] = useState(false);
+
+	const unitSwitch = () => {
+		if (selectedUnit === 'kilometers') {
+			setSelectedUnit('miles');
+		}
+		if (selectedUnit === 'miles') {
+			setSelectedUnit('kilometers');
+		}
+	};
 
 	const handleDelete = (Index: number) => {
 		setMeasureList((current: any) => {
@@ -141,6 +149,10 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 			});
 	}, [reload]);
 
+	useEffect(() => {
+		setMeasureState(undefined);
+	}, [selectedUnit]);
+
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Multi Measure Tool'}>
@@ -170,10 +182,29 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 						<PolylineIcon />
 					</Button>
 				</Tooltip>
+
+				<div>
+					<label htmlFor="unitDropdown">Select Unit: </label>
+					<select
+						id="unitDropdown"
+						value={selectedUnit}
+						onChange={(e) => {
+							setSelectedUnit(e.target.value as turf.Units);
+							setMeasureState(undefined);
+							setReload(true);
+						}}
+					>
+						<option value="kilometers">Kilometers</option>
+						<option value="miles">Miles</option>
+					</select>
+				</div>
+
 				{!reload && (
 					<MlMeasureTool
 						measureType={selectedMode}
+						unit={selectedUnit}
 						onChange={handleMeasureChange}
+						{...unitSwitch}
 						onFinish={() => {
 							setReload(true);
 						}}
