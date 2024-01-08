@@ -4,6 +4,7 @@ import React, { useContext, useCallback, useRef, useEffect, useState } from 'rea
 import syncMove from '@mapbox/mapbox-gl-sync-move';
 import './style.css';
 import MapContext, { MapContextType } from '../../contexts/MapContext';
+import { ReactComponent as SwipeIcon } from './assets/icononlyarrow.svg';
 
 export interface MlLayerSwipeProps {
 	/**
@@ -112,8 +113,10 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	};
 
 	function adjustWindowSize() {
-		
-		const clipWidth = mapContext.maps[props.map2Id].getContainer().style.clip.split(',')[1].replace('px', '');
+		const clipWidth = mapContext.maps[props.map2Id]
+			.getContainer()
+			.style.clip.split(',')[1]
+			.replace('px', '');
 		const canvasWidth = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect().width;
 
 		if (parseFloat(clipWidth) < canvasWidth) {
@@ -141,15 +144,16 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 				left: swipeX + '%',
 				top: '50%',
 				borderRadius: '50%',
-				width: '100px',
-				height: '100px',
-				background: '#0066ff',
-				border: '3px solid #eaebf1',
+				width: '65px',
+				height: '65px',
+				background: 'rgba(234, 235, 241, 0.75)',
+				border: '2px solid rgba(0, 158, 224, 0.75)',
 				cursor: 'pointer',
 				zIndex: '110',
-				marginLeft: '-50px',
+				marginLeft: '-35px',
 				marginTop: '-50px',
 				textAlign: 'center',
+
 				lineHeight: '91px',
 				fontSize: '2em',
 				color: '#fafafa',
@@ -158,7 +162,17 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 			}}
 			onTouchStart={onDown}
 			onMouseDown={onDown}
-		></div>
+		>
+			<SwipeIcon
+				color="#0066ff"
+				style={{
+					width: '65px',
+					height: '65px',
+					justifyContent: 'center',
+					zIndex: 1100,
+				}}
+			/>
+		</div>
 	);
 };
 
