@@ -37,7 +37,7 @@ const Template = () => {
 				setOpen={setOpenSidebar}
 				name={'Sketch Tool'}
 			>
-				<MlSketchTool />
+				<MlSketchTool onChange={(state) => console.log(state)} />
 			</Sidebar>
 		</>
 	);
