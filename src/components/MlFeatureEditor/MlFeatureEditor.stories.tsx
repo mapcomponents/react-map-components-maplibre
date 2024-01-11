@@ -35,7 +35,19 @@ const Template = (args: useFeatureEditorProps) => {
 		}
 	}, [visible]);
 
-	return <>{visible && <MlFeatureEditor {...args} />};</>;
+	return (
+		<>
+			{visible && (
+				<MlFeatureEditor
+					{...args}
+					onChange={(features) => {
+						console.log(features);
+					}}
+				/>
+			)}
+			;
+		</>
+	);
 };
 
 const catalogueTemplate = () => {
