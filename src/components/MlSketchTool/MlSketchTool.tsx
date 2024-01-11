@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PentagonIcon from '@mui/icons-material/Pentagon';
 import { Box } from '@mui/system';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
@@ -18,7 +18,6 @@ import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Button, Theme, Typography } from '@mui/material';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
-
 
 const sketchTools = [
 	{ name: 'Point', mode: 'draw_point', icon: <ScatterPlotIcon /> },
@@ -41,6 +40,11 @@ export interface MlSketchToolProps {
 	 * https://mui.com/system/getting-started/the-sx-prop/
 	 */
 	buttonStyleOverride?: SxProps;
+	/**
+	 * Callback function that is called each time GeoJson data has changed within MlSketchTool.
+	 * First parameter contains all geometries in the `geometries` prop.
+	 */
+	onChange?: (para: SketchStateType) => void;
 }
 
 type SketchStateType = {
@@ -67,6 +71,12 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		geometries: [],
 		drawMode: undefined,
 	});
+
+	useEffect(() => {
+		if(!(typeof props.onChange === 'function'))return;
+
+		props.onChange(sketchState)
+	}, [sketchState, props.onChange])
 
 	const buttonStyle = {
 		...props.buttonStyleOverride,
@@ -188,7 +198,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				/>
 			)}
 
-			<List sx={{ zIndex: 105 }}>
+			<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
 				{sketchState.geometries.map((el) => (
 					<>
 						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -199,6 +209,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									'&:hover': {
 										backgroundColor: 'rgb(177, 177, 177, 0.2)',
 									},
+									marginTop: '25px',
 								}}
 								onMouseOver={() => {
 									setHoveredGeometry(el);
@@ -268,12 +279,22 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					<MlGeoJsonLayer
 						mapId={props.mapId}
 						geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
-						type={'line'}
 						layerId={'highlightBorder'}
-						paint={{
+						defaultPaintOverrides={{
+							circle:{
+							'circle-color': '#dd9900',
+							'circle-opacity': 0.4,
+							'circle-radius': 10,
+						},
+							line:{
 							'line-color': '#dd9900',
 							'line-opacity': 0.4,
 							'line-width': 10,
+						},
+							fill:{
+							'fill-color': '#dd9900',
+							'fill-opacity': 0.4
+						},
 						}}
 					/>
 				)}
