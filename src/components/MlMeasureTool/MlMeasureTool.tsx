@@ -3,6 +3,7 @@ import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
 
+
 interface MlMeasureToolProps {
 	/**
 	 * String that specify if the Tool measures an area ("polygon") or length ("line")
@@ -85,8 +86,9 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				mode={props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string'}
 				onFinish={props.onFinish}
 			/>
-			{displayValue.value.toFixed(2)} {displayValue.label}
-			{props.measureType === 'polygon' ? '²' : ''}
+			{displayValue.value.toFixed(2)} {''}
+			<span style={{ fontFamily: 'sans-serif' }}>{displayValue.label}</span>
+			{props.measureType === 'polygon' ? ' ²' : ''}
 		</>
 	);
 };

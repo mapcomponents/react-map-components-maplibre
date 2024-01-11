@@ -1,5 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Button, SxProps, Tooltip } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, SxProps, Tooltip } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 import * as turf from '@turf/turf';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import PentagonIcon from '@mui/icons-material/Pentagon';
@@ -68,15 +72,10 @@ type MeasureStateType = {
 	drawMode?: keyof MapboxDraw.Modes;
 };
 
-
-function getUnitSquareMultiplier(measureType: string | undefined) {
-	return measureType === 'miles' ? 1 / 2.58998811 : 1;
-}
-
 const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [selectedMode, setSelectedMode] = useState(props.measureType);
-	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
+	//	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
@@ -86,21 +85,6 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 		...props.buttonStyleOverride,
 	};
 
-	useEffect(() => {
-		if (currentFeatures[0]) {
-			const result =
-				props.measureType === 'polygon'
-					? // for "polyong" mode calculate km²
-					  (turf.area(currentFeatures[0] as Feature) / 1000000) *
-					  getUnitSquareMultiplier(props.unit)
-					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
-
-			if (typeof props.onChange === 'function') {
-				props.onChange({ value: result, unit: props.unit, geojson: currentFeatures[0] });
-			}
-		}
-	}, [props.unit, currentFeatures]);
-
 	const [measureState, setMeasureState] = useState<MeasureStateType | undefined>();
 	const [selectedUnit, setSelectedUnit] = useState<turf.Units>('kilometers');
 
@@ -108,6 +92,14 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	console.log(measureList);
 
 	const [reload, setReload] = useState(false);
+
+	const Item = styled(Paper)(({ theme }) => ({
+		backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+		...theme.typography.body2,
+		padding: theme.spacing(1),
+		textAlign: 'center',
+		color: theme.palette.text.secondary,
+	}));
 
 	const unitSwitch = () => {
 		if (selectedUnit === 'kilometers') {
@@ -156,48 +148,65 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Multi Measure Tool'}>
-				<Tooltip title="Measure Area">
-					<Button
-						variant="outlined"
-						sx={{ ...buttonStyle }}
-						onClick={() => {
-							setSelectedMode('polygon');
-							setMeasureState(undefined);
-							setReload(true);
-						}}
-					>
-						<PentagonIcon />
-					</Button>
-				</Tooltip>
-				<Tooltip title="Measure Distance">
-					<Button
-						variant="outlined"
-						sx={{ ...buttonStyle }}
-						onClick={() => {
-							setSelectedMode('line');
-							setMeasureState(undefined);
-							setReload(true);
-						}}
-					>
-						<PolylineIcon />
-					</Button>
-				</Tooltip>
+				<Box sx={{ flexGrow: 1 }}>
+					<br />
+					<Grid container spacing={4} justifyContent="flex-start">
+						<Grid item xs={3}>
+							<Tooltip title="Measure Area">
+								<Button
+									variant="outlined"
+									sx={{ ...buttonStyle }}
+									onClick={() => {
+										setSelectedMode('polygon');
+										setMeasureState(undefined);
+										setReload(true);
+									}}
+								>
+									<PentagonIcon />
+								</Button>
+							</Tooltip>
+						</Grid>
+						<Grid item xs={3}>
+							<Tooltip title="Measure Distance">
+								<Button
+									variant="outlined"
+									sx={{ ...buttonStyle }}
+									onClick={() => {
+										setSelectedMode('line');
+										setMeasureState(undefined);
+										setReload(true);
+									}}
+								>
+									<PolylineIcon />
+								</Button>
+							</Tooltip>
+						</Grid>
+					</Grid>
+				</Box>
 
-				<div>
-					<label htmlFor="unitDropdown">Select Unit: </label>
-					<select
-						id="unitDropdown"
-						value={selectedUnit}
-						onChange={(e) => {
-							setSelectedUnit(e.target.value as turf.Units);
-							setMeasureState(undefined);
-							setReload(true);
-						}}
-					>
-						<option value="kilometers">Kilometers</option>
-						<option value="miles">Miles</option>
-					</select>
-				</div>
+				<br />
+
+				<Grid item xs={4}>
+					<FormControl>
+						<InputLabel id="unit-select-label">Unit</InputLabel>
+						<Select
+							labelId="unit-select-label"
+							id="unit-select"
+							value={selectedUnit}
+							label="Unit"
+							onChange={(e) => {
+								setSelectedUnit(e.target.value as turf.Units);
+								setMeasureState(undefined);
+								setReload(true);
+							}}
+						>
+							<MenuItem value="kilometers">kilometers</MenuItem>
+							<MenuItem value="miles">miles</MenuItem>
+						</Select>
+					</FormControl>
+				</Grid>
+
+				<br />
 
 				{!reload && (
 					<MlMeasureTool
