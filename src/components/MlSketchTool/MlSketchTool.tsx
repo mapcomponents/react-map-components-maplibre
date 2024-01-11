@@ -270,12 +270,22 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					<MlGeoJsonLayer
 						mapId={props.mapId}
 						geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
-						type={'line'}
 						layerId={'highlightBorder'}
-						paint={{
+						defaultPaintOverrides={{
+							circle:{
+							'circle-color': '#dd9900',
+							'circle-opacity': 0.4,
+							'circle-radius': 10,
+						},
+							line:{
 							'line-color': '#dd9900',
 							'line-opacity': 0.4,
 							'line-width': 10,
+						},
+							fill:{
+							'fill-color': '#dd9900',
+							'fill-opacity': 0.4
+						},
 						}}
 					/>
 				)}
