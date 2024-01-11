@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, FormControl, InputLabel, MenuItem, Select, SxProps, Tooltip } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import * as turf from '@turf/turf';
 import PolylineIcon from '@mui/icons-material/Polyline';
@@ -75,15 +73,12 @@ type MeasureStateType = {
 const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [selectedMode, setSelectedMode] = useState(props.measureType);
-	//	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
+	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
+
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
-
-	const buttonStyle = {
-		...props.buttonStyleOverride,
-	};
 
 	const [measureState, setMeasureState] = useState<MeasureStateType | undefined>();
 	const [selectedUnit, setSelectedUnit] = useState<turf.Units>('kilometers');
@@ -92,14 +87,6 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	console.log(measureList);
 
 	const [reload, setReload] = useState(false);
-
-	const Item = styled(Paper)(({ theme }) => ({
-		backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-		...theme.typography.body2,
-		padding: theme.spacing(1),
-		textAlign: 'center',
-		color: theme.palette.text.secondary,
-	}));
 
 	const unitSwitch = () => {
 		if (selectedUnit === 'kilometers') {
@@ -155,7 +142,10 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 							<Tooltip title="Measure Area">
 								<Button
 									variant="outlined"
-									sx={{ ...buttonStyle }}
+									sx={{
+										backgroundColor: selectedMode === 'polygon' ? '#009ee0' : '#fff',
+										color: selectedMode === 'polygon' ? '#fff' : '#009ee0',
+									}}
 									onClick={() => {
 										setSelectedMode('polygon');
 										setMeasureState(undefined);
@@ -170,7 +160,10 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 							<Tooltip title="Measure Distance">
 								<Button
 									variant="outlined"
-									sx={{ ...buttonStyle }}
+									sx={{
+										backgroundColor: selectedMode === 'line' ? '#009ee0' : '#fff',
+										color: selectedMode === 'line' ? '#fff' : '#009ee0',
+									}}
 									onClick={() => {
 										setSelectedMode('line');
 										setMeasureState(undefined);
@@ -200,8 +193,8 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 								setReload(true);
 							}}
 						>
-							<MenuItem value="kilometers">kilometers</MenuItem>
-							<MenuItem value="miles">miles</MenuItem>
+							<MenuItem value="kilometers">Kilometers</MenuItem>
+							<MenuItem value="miles">Miles</MenuItem>
 						</Select>
 					</FormControl>
 				</Grid>
@@ -222,47 +215,92 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 				<LayerList>
 					{measureList?.map(
 						(measure: { measure: number; unit?: string; geojson: Feature }, Index: number) => (
-							<Fragment key={measure.measure + '-' + Index}>
-								<LayerListItem
-									key={measure.measure}
-									layerComponent={
-										<MlGeoJsonLayer
-											mapId={props.mapId}
-											geojson={
-												measure.geojson as Feature<Geometry | GeometryCollection, Properties>
-											}
-										/>
-									}
-									visible={true}
-									configurable={true}
-									type="layer"
-									name={
-										measure.geojson.geometry?.type === 'LineString'
-											? measure.measure.toFixed(3).toString() + ' ' + measure.unit
-											: measure.measure.toFixed(3).toString() + ' ' + measure.unit + '²'
-									}
-								/>
-								<Tooltip title="Delete">
-									<Button onClick={() => handleDelete(Index)}>
-										{' '}
-										<DeleteIcon />{' '}
-									</Button>
-								</Tooltip>
-								<Tooltip title="Center Location">
-									<Button
-										onClick={() => {
-											mapHook?.map?.map.setCenter(
-												measure.geojson.geometry.type === 'Point'
-													? (measure.geojson.geometry.coordinates as LngLatLike)
-													: (turf.centerOfMass(measure.geojson).geometry.coordinates as LngLatLike)
-											);
+							<>
+								<Box key={measure.measure} sx={{ display: 'flex', flexDirection: 'column' }}>
+									<br />
+									<Box
+										flexDirection={'row'}
+										sx={{
+											'&:hover': {
+												backgroundColor: 'rgb(177, 177, 177, 0.2)',
+											},
+											marginTop: '25px',
+										}}
+										onMouseOver={() => {
+											setHoveredGeometry(measure.geojson);
+										}}
+										onMouseLeave={() => {
+											setHoveredGeometry(undefined);
 										}}
 									>
-										<GpsFixedIcon />
-									</Button>
-								</Tooltip>
-							</Fragment>
+										<Fragment key={measure.measure + '-' + Index}>
+											<LayerListItem
+												key={measure.measure}
+												layerComponent={
+													<MlGeoJsonLayer
+														mapId={props.mapId}
+														geojson={
+															measure.geojson as Feature<Geometry | GeometryCollection, Properties>
+														}
+													/>
+												}
+												visible={true}
+												configurable={true}
+												type="layer"
+												name={
+													measure.geojson.geometry?.type === 'LineString'
+														? measure.measure.toFixed(3).toString() + ' ' + measure.unit
+														: measure.measure.toFixed(3).toString() + ' ' + measure.unit + '²'
+												}
+											/>
+											<Tooltip title="Delete">
+												<Button onClick={() => handleDelete(Index)}>
+													{' '}
+													<DeleteIcon />{' '}
+												</Button>
+											</Tooltip>
+											<Tooltip title="Center Location">
+												<Button
+													onClick={() => {
+														mapHook?.map?.map.setCenter(
+															measure.geojson.geometry.type === 'Point'
+																? (measure.geojson.geometry.coordinates as LngLatLike)
+																: (turf.centerOfMass(measure.geojson).geometry
+																		.coordinates as LngLatLike)
+														);
+													}}
+												>
+													<GpsFixedIcon />
+												</Button>
+											</Tooltip>
+										</Fragment>
+									</Box>
+								</Box>
+							</>
 						)
+					)}
+					{hoveredGeometry && (
+						<MlGeoJsonLayer
+							mapId={props.mapId}
+							geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
+							layerId={'highlightBorder'}
+							defaultPaintOverrides={{
+								circle: {
+									'circle-color': '#dd9900',
+									'circle-opacity': 0.4,
+									'circle-radius': 10,
+								},
+								line: {
+									'line-color': '#dd9900',
+									'line-opacity': 0.4,
+									'line-width': 10,
+								},
+								fill: {
+									'fill-color': '#dd9900',
+									'fill-opacity': 0.4,
+								},
+							}}
+						/>
 					)}
 				</LayerList>
 			</Sidebar>
