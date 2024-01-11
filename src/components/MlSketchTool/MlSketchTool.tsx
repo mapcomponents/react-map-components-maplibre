@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PentagonIcon from '@mui/icons-material/Pentagon';
 import { Box } from '@mui/system';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
@@ -41,6 +41,11 @@ export interface MlSketchToolProps {
 	 * https://mui.com/system/getting-started/the-sx-prop/
 	 */
 	buttonStyleOverride?: SxProps;
+	/**
+	 * Callback function that is called each time GeoJson data has changed within MlSketchTool.
+	 * First parameter contains all geometries in the `geometries` prop.
+	 */
+	onChange?: (para: SketchStateType) => void;
 }
 
 type SketchStateType = {
@@ -68,6 +73,11 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		drawMode: undefined,
 	});
 
+	useEffect(() => {
+		if(!(typeof props.onChange === 'function'))return;
+
+		props.onChange(sketchState)
+	}, [sketchState, props.onChange])
 
 	const buttonStyle = {
 		...props.buttonStyleOverride,
