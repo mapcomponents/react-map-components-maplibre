@@ -491,6 +491,20 @@
         "__isArgsStory": false
       }
     },
+    "mapcomponents-mlmultimeasuretool--example-config": {
+      "id": "mapcomponents-mlmultimeasuretool--example-config",
+      "name": "Example Config",
+      "title": "MapComponents/MlMultiMeasureTool",
+      "importPath": 85266,
+      "kind": "MapComponents/MlMultiMeasureTool",
+      "story": "Example Config",
+      "parameters": {
+        "fileName": 85266,
+        "framework": "react",
+        "__id": "mapcomponents-mlmultimeasuretool--example-config",
+        "__isArgsStory": false
+      }
+    },
     "mapcomponents-mlnavigationcompass--catalogue-demo": {
       "id": "mapcomponents-mlnavigationcompass--catalogue-demo",
       "name": "Catalogue Demo",
