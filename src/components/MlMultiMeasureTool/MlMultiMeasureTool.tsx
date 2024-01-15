@@ -143,8 +143,14 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 								<Button
 									variant="outlined"
 									sx={{
-										backgroundColor: selectedMode === 'polygon' ? '#009ee0' : '#fff',
-										color: selectedMode === 'polygon' ? '#fff' : '#009ee0',
+										backgroundColor:
+											selectedMode === 'polygon'
+												? (theme) => theme.palette.GPS.GPSActiveColor
+												: (theme) => theme.palette.GPS.GPSActiveBackgroundColor,
+										color:
+											selectedMode === 'polygon'
+												? (theme) => theme.palette.GPS.GPSActiveBackgroundColor
+												: (theme) => theme.palette.GPS.GPSActiveColor,
 									}}
 									onClick={() => {
 										setSelectedMode('polygon');
@@ -161,8 +167,14 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 								<Button
 									variant="outlined"
 									sx={{
-										backgroundColor: selectedMode === 'line' ? '#009ee0' : '#fff',
-										color: selectedMode === 'line' ? '#fff' : '#009ee0',
+										backgroundColor:
+											selectedMode === 'line'
+												? (theme) => theme.palette.GPS.GPSActiveColor
+												: (theme) => theme.palette.GPS.GPSActiveBackgroundColor,
+										color:
+											selectedMode === 'line'
+												? (theme) => theme.palette.GPS.GPSActiveBackgroundColor
+												: (theme) => theme.palette.GPS.GPSActiveColor,
 									}}
 									onClick={() => {
 										setSelectedMode('line');
