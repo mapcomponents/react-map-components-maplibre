@@ -2,10 +2,13 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import useMap from '../../hooks/useMap';
 
 export interface MlScaleReferenceProps {
+	style?: string | undefined;
 	mapId?: string;
 	insertBeforeLayer?: string | undefined;
 	maxWidth?: number;
 	unit?: string;
+	verticalOffset?: string;
+	horizontalOffset?: string;
 }
 
 const MlScaleReference = (props: MlScaleReferenceProps) => {
@@ -90,6 +93,9 @@ const MlScaleReference = (props: MlScaleReferenceProps) => {
 		<>
 			<div
 				style={{
+					position: 'absolute',
+					top: props.verticalOffset || '8px',
+					right: props.horizontalOffset || '10px',
 					backgroundColor: 'hsla(0,0%,100%,.75)',
 					fontSize: '10px',
 					border: '2px solid #333',
@@ -99,6 +105,7 @@ const MlScaleReference = (props: MlScaleReferenceProps) => {
 					boxSizing: 'border-box',
 					width: pxWidth + 'px',
 					fontFamily: 'sans-serif',
+					zIndex: 1010,
 				}}
 				dangerouslySetInnerHTML={{ __html: text }}
 			></div>

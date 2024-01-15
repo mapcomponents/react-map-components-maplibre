@@ -6,6 +6,7 @@ import './style.css';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
 import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools';
+import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 
 
 
@@ -29,6 +30,7 @@ const storyCenter = context.name === "Heat Map" || context.name === "Circle" || 
 							mapId="map_1"
 						/>
 						<MlNavigationTools showFollowGpsButton={false} />
+						<MlScaleReference />
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

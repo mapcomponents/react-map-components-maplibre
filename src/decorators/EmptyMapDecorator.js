@@ -4,6 +4,7 @@ import { MapComponentsProvider } from '../index';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import './style.css';
 import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools';
+import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
 
@@ -20,11 +21,11 @@ const decorators = [
 							mapId="map_1"
 							options={{
 								zoom: 12.5,
-								center: [7.0851268, 50.73884]
+								center: [7.0851268, 50.73884],
 							}}
-
 						/>
 						<MlNavgiationTools showZoomButtons={false} mapId="map_1" />
+						<MlScaleReference mapId="map_1" />
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

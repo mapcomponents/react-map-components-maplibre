@@ -18,7 +18,13 @@ const storyoptions = {
 export default storyoptions;
 
 const ToolbarTemplate = (props: MlScaleReferenceProps) => {
-	return <TopToolbar unmovableButtons={<MlScaleReference {...props} />} />;
+	return (
+		<TopToolbar
+			unmovableButtons={
+				<MlScaleReference {...props} verticalOffset="24px" horizontalOffset="40px" />
+			}
+		/>
+	);
 };
 
 const catalgoueTemplate = (props: MlScaleReferenceProps) => {
@@ -55,26 +61,18 @@ const catalgoueTemplate = (props: MlScaleReferenceProps) => {
 						: 'Use Zoom to explore functionality ➤'}
 				</Box>
 			)}
-			<TopToolbar unmovableButtons={<MlScaleReference {...props} />} />;
+			<TopToolbar
+				unmovableButtons={
+					<MlScaleReference {...props} verticalOffset="24px" horizontalOffset="40px" />
+				}
+			/>
+			;
 		</>
 	);
 };
 
 const OverlayTemplate = (props: MlScaleReferenceProps) => {
-	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
-
-	return (
-		<div
-			style={{
-				position: 'absolute',
-				zIndex: 1000,
-				bottom: mediaIsMobile ? '38px' : '8px',
-				left: '10px',
-			}}
-		>
-			<MlScaleReference {...props} />
-		</div>
-	);
+	return <MlScaleReference {...props} />;
 };
 
 export const Toolbar = ToolbarTemplate.bind({});
