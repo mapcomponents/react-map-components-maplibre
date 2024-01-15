@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import MlShareMapState from './MlShareMapState';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
@@ -44,6 +44,11 @@ const Template = () => {
 		},
 	});
 	const [openSidebar, setOpenSidebar] = useState(true);
+
+	useEffect(() => {
+		if (!mapHook.map) return;
+		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73348799274236], zoom: 15.5 });
+	}, [mapHook.map]);
 
 	return (
 		<>
