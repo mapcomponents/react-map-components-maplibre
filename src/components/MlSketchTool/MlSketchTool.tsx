@@ -16,7 +16,6 @@ import { Feature } from '@turf/turf';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Button, Theme, Typography } from '@mui/material';
-
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
