@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
-
+import { Typography } from '@mui/material';
 
 interface MlMeasureToolProps {
 	/**
@@ -87,8 +87,10 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				onFinish={props.onFinish}
 			/>
 			{displayValue.value.toFixed(2)} {''}
-			<span style={{ fontFamily: 'sans-serif' }}>{displayValue.label}</span>
-			{props.measureType === 'polygon' ? ' ²' : ''}
+			<Typography>
+				{displayValue.label}
+				{props.measureType === 'polygon' ? ' ²' : ''}
+			</Typography>
 		</>
 	);
 };
