@@ -1,5 +1,11 @@
 # Change Log
 
+## [v0.1.90] - 2024-01-16
+
+### Fixed
+
+- f40622f: fix build error suggesting marking sql.js as external
+
 ## [v0.1.89] - 2024-01-02
 
 ### Fixed
