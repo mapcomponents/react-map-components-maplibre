@@ -3,15 +3,15 @@ import React from 'react';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import AddLayerPopup from './AddLayerPopup';
 import { LayerConfig } from '../../contexts/LayerContext';
-import useAddProtocol, { useAddProtocolProps } from '../../hooks/useAddProtocol/useAddProtocol';
+//import useAddProtocol, { useAddProtocolProps } from '../../hooks/useAddProtocol/useAddProtocol';
 
-function AddProtocol(props: useAddProtocolProps) {
-	useAddProtocol({
-		protocol: props.protocol,
-		handler: props.handler,
-	});
-	return <></>;
-}
+//function AddProtocol(props: useAddProtocolProps) {
+//	useAddProtocol({
+//		protocol: props.protocol,
+//		handler: props.handler,
+//	});
+//	return <></>;
+//}
 export interface AddLayerButtonProps {
 	sx?: SxProps;
 	/**

@@ -18,7 +18,7 @@ import { CSVProtocolHandler } from '../../../protocol_handlers/csv';
 import { TopojsonProtocolHandler } from '../../../protocol_handlers/topojson';
 import { OSMProtocolHandler } from '../../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../../protocol_handlers/xml';
-import { mbTilesProtocolHandler } from '../../../protocol_handlers/mbtiles';
+//import { mbTilesProtocolHandler } from '../../../protocol_handlers/mbtiles';
 import * as csv2geojsonType from '../../../protocol_handlers/csv2geojson';
 
 export interface ProtocolHandlerLayerFormProps {
@@ -37,7 +37,7 @@ const handlers = {
 	gpx: XMLProtocolHandler, 
 	kml: XMLProtocolHandler,
 	tcx: XMLProtocolHandler,
-	mbtiles: mbTilesProtocolHandler
+	//mbtiles: mbTilesProtocolHandler
 };
 
 const types: string[] = ['fill', 'line', 'circle'];
