@@ -1,7 +1,7 @@
-import { useEffect, useRef, useCallback, useState } from "react";
-import useMap, { useMapType } from "./useMap";
-import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-import { Source, SourceSpecification } from "maplibre-gl";
+import { useEffect, useRef, useCallback, useState } from 'react';
+import useMap, { useMapType } from './useMap';
+import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
+import { Source, SourceSpecification } from 'maplibre-gl';
 
 type useSourceType = {
 	map: MapLibreGlWrapper | undefined;
@@ -24,7 +24,7 @@ function useSource(props: useSourceProps): useSourceType {
 	const initializedRef = useRef<boolean>(false);
 	const [source, setSource] = useState<Source>();
 	const sourceId = useRef(
-		props.sourceId || (props.idPrefix ? props.idPrefix : "Source-") + mapHook.componentId
+		props.sourceId || (props.idPrefix ? props.idPrefix : 'Source-') + mapHook.componentId
 	);
 
 	const createSource = useCallback(() => {
@@ -35,17 +35,16 @@ function useSource(props: useSourceProps): useSourceType {
 			mapHook.cleanup();
 		}
 
-		mapHook.map?.addSource(sourceId.current, {
-			...props.source,
-		}, mapHook.componentId);
+		mapHook.map?.addSource(
+			sourceId.current,
+			{
+				...props.source,
+			},
+			mapHook.componentId
+		);
 
 		setSource(mapHook.map.map.getSource(sourceId.current));
 	}, [props, mapHook.map]);
-
-	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-		createSource();
-	}, [mapHook.map, props, createSource]);
 
 	useEffect(() => {
 		if (!initializedRef.current || !mapHook.map?.map?.getSource(props.sourceId)) return;
@@ -56,6 +55,14 @@ function useSource(props: useSourceProps): useSourceType {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore data only exists on GeoJsonSource
 	}, [props.source?.data]);
+
+	useEffect(() => {
+		if (mapHook?.map?.map?.getSource?.(props.sourceId) && props.sourceId === sourceId.current)
+			return;
+
+		sourceId.current = props.sourceId;
+		createSource();
+	}, [mapHook.map, props, createSource]);
 
 	//cleanup
 	useEffect(() => {
