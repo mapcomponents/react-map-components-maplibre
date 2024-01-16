@@ -89,7 +89,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (mapHook.map.map.getLayer(layerId.current)) {
 			mapHook.cleanup();
 		}
-		if (mapHook.map.map.getSource(layerId.current)) {
+		if (typeof props?.options?.source !== 'string' && mapHook.map.map.getSource(layerId.current)) {
 			mapHook.map.map.removeSource(layerId.current);
 		}
 
@@ -184,7 +184,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		}
 
 		createLayer();
-	}, [mapHook.map, props.options, createLayer]);
+	}, [mapHook.map, mapHook.mapIsReady, props.options, createLayer]);
 
 	useEffect(() => {
 		if (
@@ -244,7 +244,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		)
 			return;
 
-		mapHook.map.moveLayer(layerId.current, props.insertBeforeLayer)
+		mapHook.map.moveLayer(layerId.current, props.insertBeforeLayer);
 	}, [mapHook.map, props.insertBeforeLayer]);
 
 	useEffect(() => {
@@ -253,6 +253,35 @@ function useLayer(props: useLayerProps): useLayerType {
 			mapHook.cleanup();
 		};
 	}, []);
+
+	useEffect(() => {
+		if (
+			typeof props?.options?.source !== 'string' ||
+			!mapHook.map ||
+			(typeof props?.options?.source === 'string' &&
+				mapHook?.map?.getLayer?.(layerId.current) &&
+				mapHook?.map?.getSource?.(props.options.source))
+		) {
+			return;
+		}
+
+		const findSourceHandler = () => {
+			if (
+				typeof props?.options?.source === 'string' &&
+				mapHook?.map?.getSource?.(props.options.source)
+			) {
+				createLayer();
+			}
+		};
+
+		mapHook.map.on('sourcedata', findSourceHandler);
+
+		return () => {
+			if (mapHook?.map) {
+				mapHook.map.off('sourcedata', findSourceHandler);
+			}
+		};
+	}, [mapHook.map, props.options?.source]);
 
 	return {
 		map: mapHook.map,
