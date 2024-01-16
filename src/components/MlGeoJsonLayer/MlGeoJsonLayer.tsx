@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import useLayer from '../../hooks/useLayer';
 
@@ -8,6 +8,7 @@ import getDefaultPaintPropsByType from './util/getDefaultPaintPropsByType';
 import getDefaulLayerTypeByGeometry from './util/getDefaultLayerTypeByGeometry';
 import { Feature, FeatureCollection } from '@turf/turf';
 import { useLayerProps } from '../../hooks/useLayer';
+import useSource from '../../hooks/useSource';
 
 import {
 	LineLayerSpecification,
@@ -36,7 +37,7 @@ export type MlGeoJsonLayerProps = {
 	/**
 	 * GeoJSON data that is supposed to be rendered by this component.
 	 */
-	geojson: Feature | FeatureCollection | undefined;
+	geojson?: Feature | FeatureCollection | undefined;
 	/**
 	 * Type of the layer that will be added to the MapLibre instance.
 	 * All types from LayerSpecification union type are supported except the type from
@@ -44,6 +45,7 @@ export type MlGeoJsonLayerProps = {
 	 */
 	type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
 	/**
+	 * @deprecated The property should not be used. Please use the options.paint property instead. This will be removed in the next major release.
 	 * Paint property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
 	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
@@ -57,6 +59,7 @@ export type MlGeoJsonLayerProps = {
 
 	paint?: Exclude<LayerSpecification['paint'], RasterLayerSpecification['paint']>;
 	/**
+	 * @deprecated The property should not be used. Please use the options.layout property instead. This will be removed in the next major release.
 	 * Layout property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
 	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
@@ -114,15 +117,31 @@ export type MlGeoJsonLayerProps = {
 
 const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 	const layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-	const layerId = props.layerId || 'MlGeoJsonLayer-' + uuidv4();
-	const labelLayerId = `label-${layerId}`;
+	const layerId = useRef(props.layerId || 'MlGeoJsonLayer-' + uuidv4());
+	const labelLayerId = `label-${layerId.current}`;
 
-	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+	useEffect(() => {
+		if (!props.layerId) {
+			layerId.current = 'MlGeoJsonLayer-' + uuidv4();
+		} else {
+			layerId.current = props.layerId;
+		}
+	}, [props.layerId]);
+
+	useSource({
+		mapId: props.mapId,
+		sourceId: layerId.current,
+		source: {
+			type: 'geojson',
+			data: props.geojson,
+		},
+	});
+
 	useLayer({
 		mapId: props.mapId,
-		layerId: props.layerId || 'MlGeoJsonLayer-' + uuidv4(),
-		geojson: props.geojson,
+		layerId: layerId.current,
 		options: {
+			source: layerId.current,
 			...props.options,
 			paint: {
 				...(props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides)),
@@ -143,16 +162,23 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 	if (props.labelProp) {
 		useLayer({
 			mapId: props.mapId,
-			layerId: labelLayerId,
-			geojson: props.geojson,
 			options: {
+				source: props.labelProp ? layerId.current : undefined,
+				id: labelLayerId,
 				type: 'symbol',
+				maxzoom: 24,
+				minzoom: 1,
 				...(props?.labelOptions ? props.labelOptions : {}),
 				layout: {
+					'text-font': ['Open Sans Regular'],
 					'text-field': `{${props.labelProp}}`,
 					...(props?.labelOptions?.layout ? props.labelOptions.layout : {}),
 				},
-				paint: {},
+				paint: {
+					'text-halo-width': 1,
+					'text-halo-color': '#121212',
+					'text-color': '#fbfbfb',
+				},
 			} as useLayerProps['options'],
 		});
 	}
