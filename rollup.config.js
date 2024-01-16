@@ -66,6 +66,7 @@ const config = defineConfig([
 			'react',
 			'react-dom',
 			'd3',
+			'sql.js',
 			...Object.keys(pkg.dependencies),
 			...Object.keys(pkg.peerDependencies),
 			...Object.keys(pkg.devDependencies),
