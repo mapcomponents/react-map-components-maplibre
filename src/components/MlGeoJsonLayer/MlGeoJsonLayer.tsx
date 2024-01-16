@@ -177,7 +177,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 				paint: {
 					'text-halo-width': 1,
 					'text-halo-color': '#121212',
-					'text-color': '#fbfbfb',
+					'text-color': '#fefefe',
 				},
 			} as useLayerProps['options'],
 		});
