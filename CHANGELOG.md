@@ -1,5 +1,20 @@
 # Change Log
 
+## [v0.1.92] - 2024-01-16
+
+### Fixed
+
+- fe33641: fix useSource hook to dynamically adjust to props.sourceId changes
+- fe33641: fix useMap hook to use less setState calls
+- fe33641: fix useLayer hook options.source prop to wait for the source to be added
+
+### Changed
+
+- fe33641: add MlGeoJsonLayer labelProp defaults to enable simply passing the property name to props.labelProp to get labels. 
+- fe33641: make label layer use the same source as the main layer.
+- fe33641: adjust MlGeoJsonLayer labelProp storybook demo to show the actual use of the property
+
+
 ## [v0.1.91] - 2024-01-16
 
 ### Fixed
