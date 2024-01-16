@@ -1,12 +1,18 @@
 # Change Log
 
-## [v0.1.90] - 2024-01-16
+## [v0.1.91] - 2024-01-16
+
+### Fixed
+
+- 4775728: remove mbtiles protocol handler from build to fix sql.js error
+
+## [v0.1.90] - 2024-01-16 (broken)
 
 ### Fixed
 
 - f40622f: fix build error suggesting marking sql.js as external
 
-## [v0.1.89] - 2024-01-02
+## [v0.1.89] - 2024-01-02 (broken)
 
 ### Fixed
 
