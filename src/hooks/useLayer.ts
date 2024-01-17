@@ -10,7 +10,7 @@ import {
 	Style,
 	MapEventType,
 	Map,
-	FilterSpecification
+	FilterSpecification,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -42,7 +42,7 @@ export interface useLayerProps {
 	geojson?: GeoJSONObject;
 	options: Partial<
 		LayerSpecification & {
-			source?: GeoJSONSourceSpecification;
+			source?: GeoJSONSourceSpecification | string;
 			id?: string;
 			filter?: FilterSpecification;
 		}
@@ -96,7 +96,11 @@ function useLayer(props: useLayerProps): useLayerType {
 				return;
 			}
 		}
-		if(typeof props?.options?.source !== 'string' && !props.geojson && !props?.options?.source?.data){
+		if (
+			typeof props?.options?.source !== 'string' &&
+			!props.geojson &&
+			!props?.options?.source?.data
+		) {
 			return;
 		}
 
@@ -112,22 +116,24 @@ function useLayer(props: useLayerProps): useLayerType {
 					...props.options,
 					...(props.geojson &&
 					(!props.options?.source ||
-						(props.options?.source?.attribution && !props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
+						(typeof props?.options?.source !== 'string' &&
+							props.options?.source?.attribution &&
+							!props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
 						? {
 								source: {
 									type: 'geojson',
 									data: props.geojson,
-									attribution: props.options.source?.attribution
+									attribution: typeof props?.options?.source !== 'string' && props.options.source?.attribution
 										? props.options.source?.attribution
 										: '',
 								},
-						// eslint-disable-next-line no-mixed-spaces-and-tabs
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
 						  }
 						: {}),
 					...(typeof props.options?.source === 'string'
 						? {
 								source: props.options.source,
-						// eslint-disable-next-line no-mixed-spaces-and-tabs
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
 						  }
 						: {}),
 					id: layerId.current,
