@@ -1,5 +1,13 @@
 # Change Log
 
+## [v0.1.93] - 2024-01-17
+
+### Fixed
+
+- 0af148b: remove conditional use of useLayer hook for label layer in MlGeoJsonLayer
+- 718afe6: fix useSource cleanup error
+- c6856e6: fix MlTemporalController to work with useLayer, MlGeoJsonLayer adjustments
+
 ## [v0.1.92] - 2024-01-16
 
 ### Fixed
