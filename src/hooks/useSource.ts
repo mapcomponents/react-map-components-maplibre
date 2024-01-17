@@ -21,37 +21,46 @@ function useSource(props: useSourceProps): useSourceType {
 		mapId: props.mapId,
 	});
 
-	const initializedRef = useRef<boolean>(false);
 	const [source, setSource] = useState<Source>();
 	const sourceId = useRef(
 		props.sourceId || (props.idPrefix ? props.idPrefix : 'Source-') + mapHook.componentId
 	);
 
+	const removeSource = useCallback(() => {
+		if (mapHook.map && mapHook.map?.map?.style?._layers) {
+			for (const [layerId, layer] of Object.entries(mapHook.map.map.style._layers)) {
+				if (layer.source === sourceId.current) {
+					mapHook.map.map.removeLayer(layerId);
+				}
+			}
+
+			if (mapHook.map.getSource(sourceId.current)) {
+				mapHook.map.map.removeSource(sourceId.current);
+			}
+		}
+	}, [mapHook.map]);
+
 	const createSource = useCallback(() => {
 		if (!mapHook.map) return;
-		initializedRef.current = true;
+		if (props.source.type === 'geojson' && !props.source.data) return;
 
 		if (mapHook.map.map.getSource(sourceId.current)) {
-			mapHook.cleanup();
+			removeSource();
 		}
 
-		mapHook.map?.addSource(
-			sourceId.current,
-			{
-				...props.source,
-			},
-			mapHook.componentId
-		);
+		mapHook.map?.addSource(sourceId.current, {
+			...props.source,
+		});
 
 		setSource(mapHook.map.map.getSource(sourceId.current));
-	}, [props, mapHook.map]);
+	}, [props, mapHook, removeSource]);
 
 	useEffect(() => {
-		if (!initializedRef.current || !mapHook.map?.map?.getSource(props.sourceId)) return;
+		if (!mapHook.map?.map?.getSource(sourceId.current)) return;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore setData only exists on GeoJsonSource
-		mapHook.map.map.getSource(props.sourceId)?.setData?.(props.source.data);
+		mapHook.map.map.getSource(sourceId.current)?.setData?.(props.source.data);
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore data only exists on GeoJsonSource
 	}, [props.source?.data]);
@@ -67,18 +76,9 @@ function useSource(props: useSourceProps): useSourceType {
 	//cleanup
 	useEffect(() => {
 		return () => {
-			initializedRef.current = false;
-			if (mapHook.map && mapHook.map?.map?.style?._layers) {
-				for (const [layerId, layer] of Object.entries(mapHook.map.map.style._layers)) {
-					if (layer.source === sourceId.current) {
-						mapHook.map.map.removeLayer(layerId);
-					}
-				}
-
-				mapHook.map.map.removeSource(sourceId.current);
-			}
+			removeSource();
 		};
-	}, [mapHook.map]);
+	}, [removeSource]);
 
 	return {
 		map: mapHook.map,
