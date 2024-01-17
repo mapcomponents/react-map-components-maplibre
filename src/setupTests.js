@@ -96,7 +96,7 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 				setZoom: jest.fn(),
 				setPitch: jest.fn(),
 				setCenter: jest.fn(),
-				style: { ...styleFunctions },
+				style: { ...styleFunctions, '_layers': this.layers },
 				layers: this.layers,
 				sources: this.sources,
 				_update: jest.fn(),

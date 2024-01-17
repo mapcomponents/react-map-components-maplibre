@@ -27,15 +27,15 @@ function useSource(props: useSourceProps): useSourceType {
 	);
 
 	const removeSource = useCallback(() => {
-		if (mapHook.map && mapHook.map?.map?.style?._layers) {
+		if (mapHook.map && mapHook.map?.style?._layers) {
 			for (const [layerId, layer] of Object.entries(mapHook.map.map.style._layers)) {
 				if (layer.source === sourceId.current) {
-					mapHook.map.map.removeLayer(layerId);
+					mapHook.map.removeLayer(layerId);
 				}
 			}
 
 			if (mapHook.map.getSource(sourceId.current)) {
-				mapHook.map.map.removeSource(sourceId.current);
+				mapHook.map.removeSource(sourceId.current);
 			}
 		}
 	}, [mapHook.map]);
