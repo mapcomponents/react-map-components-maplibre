@@ -3,15 +3,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import useMap, { useMapType } from './useMap';
 
 import {
-	SourceSpecification,
+	GeoJSONSourceSpecification,
 	LayerSpecification,
 	MapMouseEvent,
 	GeoJSONFeature,
 	Style,
 	MapEventType,
 	Map,
-	VideoSourceSpecification,
-	ImageSourceSpecification,
+	FilterSpecification
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -43,10 +42,9 @@ export interface useLayerProps {
 	geojson?: GeoJSONObject;
 	options: Partial<
 		LayerSpecification & {
-			source?: Partial<
-				Exclude<SourceSpecification, VideoSourceSpecification | ImageSourceSpecification>
-			>;
+			source?: GeoJSONSourceSpecification;
 			id?: string;
+			filter?: FilterSpecification;
 		}
 	>;
 	onHover?: (ev: MapEventType & unknown) => Map | void;
@@ -98,6 +96,10 @@ function useLayer(props: useLayerProps): useLayerType {
 				return;
 			}
 		}
+		if(typeof props?.options?.source !== 'string' && !props.geojson && !props?.options?.source?.data){
+			return;
+		}
+
 		if (typeof props.options.type === 'undefined') {
 			return;
 		}
@@ -119,11 +121,13 @@ function useLayer(props: useLayerProps): useLayerType {
 										? props.options.source?.attribution
 										: '',
 								},
+						// eslint-disable-next-line no-mixed-spaces-and-tabs
 						  }
 						: {}),
 					...(typeof props.options?.source === 'string'
 						? {
 								source: props.options.source,
+						// eslint-disable-next-line no-mixed-spaces-and-tabs
 						  }
 						: {}),
 					id: layerId.current,
@@ -157,7 +161,6 @@ function useLayer(props: useLayerProps): useLayerType {
 			'styledata',
 			() => {
 				if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
-					console.log('Recreate Layer');
 					createLayer();
 				}
 			},
@@ -167,10 +170,11 @@ function useLayer(props: useLayerProps): useLayerType {
 		layerPaintConfRef.current = JSON.stringify(props.options?.paint);
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
-	}, [props, mapHook.map]);
+	}, [props, mapHook]);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
+		if (!props.geojson && !props.options.source) return;
 
 		if (
 			mapHook.map?.cancelled === false &&
@@ -184,7 +188,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		}
 
 		createLayer();
-	}, [mapHook.map, mapHook.mapIsReady, props.options, createLayer]);
+	}, [mapHook.map, mapHook.mapIsReady, props, createLayer]);
 
 	useEffect(() => {
 		if (
