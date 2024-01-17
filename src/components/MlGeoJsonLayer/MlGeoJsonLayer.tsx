@@ -130,7 +130,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 
 	useSource({
 		mapId: props.mapId,
-		sourceId: layerId.current,
+		sourceId: "source-" + layerId.current,
 		source: {
 			type: 'geojson',
 			data: props.geojson,
@@ -141,7 +141,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		mapId: props.mapId,
 		layerId: layerId.current,
 		options: {
-			source: layerId.current,
+			source: "source-" + layerId.current,
 			...props.options,
 			paint: {
 				...(props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides)),
@@ -159,29 +159,33 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		onLeave: props.onLeave,
 	});
 
-	if (props.labelProp) {
-		useLayer({
-			mapId: props.mapId,
-			options: {
-				source: props.labelProp ? layerId.current : undefined,
-				id: labelLayerId,
-				type: 'symbol',
-				maxzoom: 24,
-				minzoom: 1,
-				...(props?.labelOptions ? props.labelOptions : {}),
-				layout: {
-					'text-font': ['Open Sans Regular'],
-					'text-field': `{${props.labelProp}}`,
-					...(props?.labelOptions?.layout ? props.labelOptions.layout : {}),
-				},
-				paint: {
-					'text-halo-width': 1,
-					'text-halo-color': '#121212',
-					'text-color': '#fefefe',
-				},
-			} as useLayerProps['options'],
-		});
-	}
+	// Label useLayer hook can't be called conditionally.
+	// Using it with geojson and options.source undefined will cause it to return without creating a layer.
+	useLayer({
+		mapId: props.mapId,
+		options: {
+			source: props.labelProp ? "source-" + layerId.current : undefined,
+			id: labelLayerId,
+			type: 'symbol',
+			maxzoom: 24,
+			minzoom: 1,
+			...(props?.labelOptions ? props.labelOptions : {}),
+				...(props?.options?.filter ? {filter: props.options.filter }: {}),
+			layout: {
+				'text-font': ['Open Sans Regular'],
+				'text-field': `{${props.labelProp}}`,
+				'text-size': 12,
+				'text-anchor': 'top',
+				...(props?.labelOptions?.layout ? props.labelOptions.layout : {}),
+				...(props?.layout?.visibility ? {visibility: props.layout.visibility }: {})
+			},
+			paint: {
+				'text-halo-width': 1,
+				'text-halo-color': '#fefefe',
+				'text-color': '#121212',
+			},
+		} as useLayerProps['options'],
+	});
 
 	return <></>;
 };
