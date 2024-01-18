@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import useLayer from '../../hooks/useLayer';
 
@@ -8,6 +8,7 @@ import getDefaultPaintPropsByType from './util/getDefaultPaintPropsByType';
 import getDefaulLayerTypeByGeometry from './util/getDefaultLayerTypeByGeometry';
 import { Feature, FeatureCollection } from '@turf/turf';
 import { useLayerProps } from '../../hooks/useLayer';
+import useSource from '../../hooks/useSource';
 
 import {
 	LineLayerSpecification,
@@ -36,7 +37,7 @@ export type MlGeoJsonLayerProps = {
 	/**
 	 * GeoJSON data that is supposed to be rendered by this component.
 	 */
-	geojson: Feature | FeatureCollection | undefined;
+	geojson?: Feature | FeatureCollection | undefined;
 	/**
 	 * Type of the layer that will be added to the MapLibre instance.
 	 * All types from LayerSpecification union type are supported except the type from
@@ -44,6 +45,7 @@ export type MlGeoJsonLayerProps = {
 	 */
 	type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
 	/**
+	 * @deprecated The property should not be used. Please use the options.paint property instead. This will be removed in the next major release.
 	 * Paint property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
 	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
@@ -57,6 +59,7 @@ export type MlGeoJsonLayerProps = {
 
 	paint?: Exclude<LayerSpecification['paint'], RasterLayerSpecification['paint']>;
 	/**
+	 * @deprecated The property should not be used. Please use the options.layout property instead. This will be removed in the next major release.
 	 * Layout property object, that is passed to the addLayer call.
 	 * Possible props depend on the layer type.
 	 * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
@@ -114,15 +117,31 @@ export type MlGeoJsonLayerProps = {
 
 const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 	const layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-	const layerId = props.layerId || 'MlGeoJsonLayer-' + uuidv4();
-	const labelLayerId = `label-${layerId}`;
+	const layerId = useRef(props.layerId || 'MlGeoJsonLayer-' + uuidv4());
+	const labelLayerId = `label-${layerId.current}`;
 
-	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+	useEffect(() => {
+		if (!props.layerId) {
+			layerId.current = 'MlGeoJsonLayer-' + uuidv4();
+		} else {
+			layerId.current = props.layerId;
+		}
+	}, [props.layerId]);
+
+	useSource({
+		mapId: props.mapId,
+		sourceId: "source-" + layerId.current,
+		source: {
+			type: 'geojson',
+			data: props.geojson,
+		},
+	});
+
 	useLayer({
 		mapId: props.mapId,
-		layerId: props.layerId || 'MlGeoJsonLayer-' + uuidv4(),
-		geojson: props.geojson,
+		layerId: layerId.current,
 		options: {
+			source: "source-" + layerId.current,
 			...props.options,
 			paint: {
 				...(props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides)),
@@ -140,22 +159,33 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		onLeave: props.onLeave,
 	});
 
-	if (props.labelProp) {
-		useLayer({
-			mapId: props.mapId,
-			layerId: labelLayerId,
-			geojson: props.geojson,
-			options: {
-				type: 'symbol',
-				...(props?.labelOptions ? props.labelOptions : {}),
-				layout: {
-					'text-field': `{${props.labelProp}}`,
-					...(props?.labelOptions?.layout ? props.labelOptions.layout : {}),
-				},
-				paint: {},
-			} as useLayerProps['options'],
-		});
-	}
+	// Label useLayer hook can't be called conditionally.
+	// Using it with geojson and options.source undefined will cause it to return without creating a layer.
+	useLayer({
+		mapId: props.mapId,
+		options: {
+			source: props.labelProp ? "source-" + layerId.current : undefined,
+			id: labelLayerId,
+			type: 'symbol',
+			maxzoom: 24,
+			minzoom: 1,
+			...(props?.labelOptions ? props.labelOptions : {}),
+				...(props?.options?.filter ? {filter: props.options.filter }: {}),
+			layout: {
+				'text-font': ['Open Sans Regular'],
+				'text-field': `{${props.labelProp}}`,
+				'text-size': 12,
+				'text-anchor': 'top',
+				...(props?.labelOptions?.layout ? props.labelOptions.layout : {}),
+				...(props?.layout?.visibility ? {visibility: props.layout.visibility }: {})
+			},
+			paint: {
+				'text-halo-width': 1,
+				'text-halo-color': '#fefefe',
+				'text-color': '#121212',
+			},
+		} as useLayerProps['options'],
+	});
 
 	return <></>;
 };

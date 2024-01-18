@@ -264,7 +264,7 @@
         "fileName": 70232,
         "framework": "react",
         "__id": "mapcomponents-mlgeojsonlayer--label",
-        "__isArgsStory": true
+        "__isArgsStory": false
       }
     },
     "mapcomponents-mlgeojsonlayer--linestring": {

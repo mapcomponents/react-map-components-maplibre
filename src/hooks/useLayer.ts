@@ -3,15 +3,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import useMap, { useMapType } from './useMap';
 
 import {
-	SourceSpecification,
+	GeoJSONSourceSpecification,
 	LayerSpecification,
 	MapMouseEvent,
 	GeoJSONFeature,
 	Style,
 	MapEventType,
 	Map,
-	VideoSourceSpecification,
-	ImageSourceSpecification,
+	FilterSpecification,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -43,10 +42,9 @@ export interface useLayerProps {
 	geojson?: GeoJSONObject;
 	options: Partial<
 		LayerSpecification & {
-			source?: Partial<
-				Exclude<SourceSpecification, VideoSourceSpecification | ImageSourceSpecification>
-			>;
+			source?: GeoJSONSourceSpecification | string;
 			id?: string;
+			filter?: FilterSpecification;
 		}
 	>;
 	onHover?: (ev: MapEventType & unknown) => Map | void;
@@ -89,7 +87,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (mapHook.map.map.getLayer(layerId.current)) {
 			mapHook.cleanup();
 		}
-		if (mapHook.map.map.getSource(layerId.current)) {
+		if (typeof props?.options?.source !== 'string' && mapHook.map.map.getSource(layerId.current)) {
 			mapHook.map.map.removeSource(layerId.current);
 		}
 
@@ -98,6 +96,15 @@ function useLayer(props: useLayerProps): useLayerType {
 				return;
 			}
 		}
+		if (
+			typeof props?.options?.source !== 'string' &&
+			!props.geojson &&
+			!props?.options?.source?.data &&
+			props?.options?.type !== 'background'
+		) {
+			return;
+		}
+
 		if (typeof props.options.type === 'undefined') {
 			return;
 		}
@@ -110,20 +117,24 @@ function useLayer(props: useLayerProps): useLayerType {
 					...props.options,
 					...(props.geojson &&
 					(!props.options?.source ||
-						(props.options?.source?.attribution && !props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
+						(typeof props?.options?.source !== 'string' &&
+							props.options?.source?.attribution &&
+							!props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
 						? {
 								source: {
 									type: 'geojson',
 									data: props.geojson,
-									attribution: props.options.source?.attribution
+									attribution: typeof props?.options?.source !== 'string' && props.options.source?.attribution
 										? props.options.source?.attribution
 										: '',
 								},
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
 						  }
 						: {}),
 					...(typeof props.options?.source === 'string'
 						? {
 								source: props.options.source,
+								// eslint-disable-next-line no-mixed-spaces-and-tabs
 						  }
 						: {}),
 					id: layerId.current,
@@ -157,7 +168,6 @@ function useLayer(props: useLayerProps): useLayerType {
 			'styledata',
 			() => {
 				if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
-					console.log('Recreate Layer');
 					createLayer();
 				}
 			},
@@ -167,10 +177,11 @@ function useLayer(props: useLayerProps): useLayerType {
 		layerPaintConfRef.current = JSON.stringify(props.options?.paint);
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
-	}, [props, mapHook.map]);
+	}, [props, mapHook]);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
+		if (!props.geojson && !props.options.source && props?.options?.type !== 'background') return;
 
 		if (
 			mapHook.map?.cancelled === false &&
@@ -184,7 +195,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		}
 
 		createLayer();
-	}, [mapHook.map, props.options, createLayer]);
+	}, [mapHook.map, mapHook.mapIsReady, props, createLayer]);
 
 	useEffect(() => {
 		if (
@@ -244,7 +255,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		)
 			return;
 
-		mapHook.map.moveLayer(layerId.current, props.insertBeforeLayer)
+		mapHook.map.moveLayer(layerId.current, props.insertBeforeLayer);
 	}, [mapHook.map, props.insertBeforeLayer]);
 
 	useEffect(() => {
@@ -253,6 +264,35 @@ function useLayer(props: useLayerProps): useLayerType {
 			mapHook.cleanup();
 		};
 	}, []);
+
+	useEffect(() => {
+		if (
+			typeof props?.options?.source !== 'string' ||
+			!mapHook.map ||
+			(typeof props?.options?.source === 'string' &&
+				mapHook?.map?.getLayer?.(layerId.current) &&
+				mapHook?.map?.getSource?.(props.options.source))
+		) {
+			return;
+		}
+
+		const findSourceHandler = () => {
+			if (
+				typeof props?.options?.source === 'string' &&
+				mapHook?.map?.getSource?.(props.options.source)
+			) {
+				createLayer();
+			}
+		};
+
+		mapHook.map.on('sourcedata', findSourceHandler);
+
+		return () => {
+			if (mapHook?.map) {
+				mapHook.map.off('sourcedata', findSourceHandler);
+			}
+		};
+	}, [mapHook.map, props.options?.source]);
 
 	return {
 		map: mapHook.map,

@@ -14,7 +14,7 @@ type useMapType = {
 
 function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 	const mapContext: MapContextType = useContext(MapContext);
-	const [map, setMap] = useState<MapLibreGlWrapper>();
+	const [state, setState] = useState<{map:MapLibreGlWrapper | undefined, ready: boolean}>({map:undefined,ready:false});
 
 	const mapState = useMapState({
 		mapId: props?.mapId,
@@ -32,7 +32,6 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 
 	const componentId = useRef(uuidv4());
 
-	const [mapIsReady, setMapIsReady] = useState(false);
 
 	const cleanup = () => {
 		if (mapRef.current) {
@@ -43,7 +42,6 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 	useEffect(() => {
 		return () => {
 			cleanup();
-			setMapIsReady(false);
 			mapRef.current = undefined;
 		};
 	}, []);
@@ -51,8 +49,7 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 	useEffect(() => {
 		if(mapRef.current && mapRef.current.cancelled === true){
 			mapRef.current = undefined
-			setMap(undefined)
-			setMapIsReady(false)
+			setState({map:undefined, ready: false})
 		}
 		if (mapRef.current || !mapContext.mapExists(props?.mapId)) return;
 
@@ -71,13 +68,12 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 			}
 		}
 		mapRef.current = mapContext.getMap(props?.mapId);
-		setMap(mapRef.current);
-		setMapIsReady(true);
+		setState({map:mapRef.current, ready: true});
 	}, [mapContext.mapIds, mapState.layers, mapContext, props]);
 
 	return {
-		map: map,
-		mapIsReady,
+		map: state.map,
+		mapIsReady: state.ready,
 		componentId: componentId.current,
 		layers: mapState.layers,
 		cleanup,

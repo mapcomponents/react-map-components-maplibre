@@ -292,9 +292,8 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 				<MlGeoJsonLayer
 					type={props.type}
 					mapId={props.mapId}
-					layerId="timeController"
-					insertBeforeLayer={props.insertBeforeLayer || 'timeControllerLabels'}
-					geojson={filteredData}
+					//layerId="timeController"
+					//insertBeforeLayer={props.insertBeforeLayer || 'timeControllerLabels'}
 					paint={
 						props.paint ||
 						(paint as
@@ -304,13 +303,15 @@ const MlTemporalController = (props: MlTemporalControllerProps) => {
 					}
 					options={{
 						source: {
+							type: 'geojson',
 							attribution: props.attribution as string,
+							data: filteredData
 						} as useLayerProps['options']['source'],
 					}}
 				/>
 			)}
 
-			{props.label && (
+			{filteredData && props.label && (
 				<MlTemporalControllerLabels
 					data={(filteredData as FeatureCollection)}
 					currentVal={currentVal}
