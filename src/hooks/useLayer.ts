@@ -99,7 +99,8 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (
 			typeof props?.options?.source !== 'string' &&
 			!props.geojson &&
-			!props?.options?.source?.data
+			!props?.options?.source?.data &&
+			props?.options?.type !== 'background'
 		) {
 			return;
 		}
@@ -180,7 +181,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	useEffect(() => {
 		if (!mapHook.map) return;
-		if (!props.geojson && !props.options.source) return;
+		if (!props.geojson && !props.options.source && props?.options?.type !== 'background') return;
 
 		if (
 			mapHook.map?.cancelled === false &&
