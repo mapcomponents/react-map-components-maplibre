@@ -132,7 +132,7 @@ function rootReducer(state: AppState = { mapConfigs: {} }, action: MapActionType
 					[action.payload.key]: action.payload.instance,
 				},
 			};
-		case UPDATE_LAYER_CONFIG:
+		case UPDATE_LAYER_CONFIG: {
 			const { instanceKey, layerUuid, newConfig } = action.payload;
 			const instance = state.mapConfigs[instanceKey];
 			if (!instance) {
@@ -148,7 +148,8 @@ function rootReducer(state: AppState = { mapConfigs: {} }, action: MapActionType
 					[instanceKey]: { ...instance, layers: updatedLayers },
 				},
 			};
-		case ADD_LAYER:
+		}
+		case ADD_LAYER: {
 			const { instanceKey: addKey, newLayer } = action.payload;
 			const addInstance = state.mapConfigs[addKey];
 			if (!addInstance) {
@@ -164,6 +165,7 @@ function rootReducer(state: AppState = { mapConfigs: {} }, action: MapActionType
 					},
 				},
 			};
+		}
 		default:
 			return state;
 	}
