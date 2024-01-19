@@ -57,25 +57,31 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				props.onChange({ value: result, unit: props.unit, geojson: currentFeatures[0] });
 			}
 
-			if (result >= 0.1) {
-				setDisplayValue({ value: result, label: getUnitLabel(props.unit) });
-			} else {
-				let label = 'm';
-				let value = result * 1000;
-				if (props.measureType === 'polygon') {
-					value = result * 1000000;
+			let label = getUnitLabel(props.unit);
+			let value = result;
+
+			if (props.measureType === 'line') {
+				if (result < 1 && props.unit === 'kilometers') {
+					label = 'm';
+					value *= 1000;
+				} else if (result < 1 && props.unit === 'miles') {
+					label = 'yards';
+					value *= 1760;
 				}
-				if (getUnitLabel(props.unit) === 'mi') {
-					label = 'Yard';
-					value = result * 1760;
-					if (props.measureType === 'polygon') {
-						value = result * 3097600;
-					}
+			} else if (props.measureType === 'polygon') {
+				if (result < 1 && props.unit === 'kilometers') {
+					label = 'm²';
+					value *= 1000000;
+				} else if (result < 1 && props.unit === 'miles') {
+					label = 'yards²';
+					value *= 3097600;
 				}
-				setDisplayValue({ value: value, label: label });
 			}
+
+			setDisplayValue({ value, label });
 		}
-	}, [props.unit, currentFeatures]);
+	}, [props.unit, currentFeatures, props.measureType]);
+
 
 	return (
 		<>

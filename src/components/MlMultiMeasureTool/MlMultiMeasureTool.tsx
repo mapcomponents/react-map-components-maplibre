@@ -49,8 +49,8 @@ export interface MlMultiMeasureToolProps {
 	 */
 	onChange?: (options: {
 		value: number;
-		unit: string | undefined;
-		geojson: GeoJSONObject;
+		unit: string;
+		geojson?: GeoJSONObject;
 		geometries?: [];
 	}) => void;
 
@@ -61,7 +61,7 @@ export interface MlMultiMeasureToolProps {
 }
 
 type MeasureStateType = {
-	measure: number | undefined;
+	measure: number;
 	unit: string | undefined;
 	selectedGeoJson?: Feature;
 	activeGeometryIndex?: number;
@@ -84,7 +84,6 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	const [selectedUnit, setSelectedUnit] = useState<turf.Units>('kilometers');
 
 	const [measureList, setMeasureList] = useState<any>([]);
-	console.log(measureList);
 
 	const [reload, setReload] = useState(false);
 
@@ -94,6 +93,36 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 		}
 		if (selectedUnit === 'miles') {
 			setSelectedUnit('kilometers');
+		}
+	};
+
+	const formatDistance = (measureState: MeasureStateType | undefined) => {
+		if (!measureState) {
+			return '';
+		}
+
+		const { measure } = measureState;
+
+		if (props.measureType === 'line') {
+			if (selectedUnit === 'kilometers' && measure >= 1.0) {
+				return measure.toFixed(2) + ' km';
+			} else if (selectedUnit === 'miles' && measure >= 0.5) {
+				return measure.toFixed(2) + ' miles';
+			} else if (selectedUnit === 'kilometers' && measure < 1.0) {
+				return (measure * 1000).toFixed(1) + ' meters';
+			} else if (selectedUnit === 'miles' && measure < 0.5) {
+				return (measure * 1760).toFixed(1) + ' yd';
+			}
+		} else if (props.measureType == 'polygon') {
+			if (selectedUnit === 'kilometers' && measure > 0.1) {
+				return measure.toFixed(2) + ' km²';
+			} else if (selectedUnit === 'miles' && measure > 0.05) {
+				return measure.toFixed(2) + ' miles²';
+			} else if (selectedUnit === 'kilometers' && measure <= 0.1) {
+				return (measure * 1000000).toFixed(1) + ' meters²';
+			} else if (selectedUnit === 'miles' && measure <= 0.05) {
+				return (measure * 3097600).toFixed(1) + ' yd²';
+			}
 		}
 	};
 
@@ -124,7 +153,8 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 			measureState &&
 			setMeasureList((current: any) => {
 				const newList = [...current];
-				newList.push(measureState);
+				newList.push(formatDistance(measureState));
+				console.log(measureState);
 				return newList;
 			});
 	}, [reload]);
@@ -261,9 +291,9 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 												configurable={true}
 												type="layer"
 												name={
-													measure.geojson.geometry?.type === 'LineString'
-														? measure.measure.toFixed(3).toString() + ' ' + measure.unit
-														: measure.measure.toFixed(3).toString() + ' ' + measure.unit + '²'
+													(measureState?.geojson?.geometry?.type ?? '') === 'LineString'
+														? measureState?.measure.toString() + ' ' + measureState?.unit
+														: measureState?.measure.toString() + ' ' + measureState?.unit + '²'
 												}
 											/>
 											<Tooltip title="Delete">

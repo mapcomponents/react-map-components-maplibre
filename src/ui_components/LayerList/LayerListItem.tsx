@@ -27,7 +27,7 @@ interface LayerListItemProps {
 	visible: boolean;
 	configurable: boolean;
 	type?: 'background' | 'background-labels' | 'layer' | 'wms-layer' | 'vector-tile-layer';
-	name: string;
+	name?: string;
 	description?: string;
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
