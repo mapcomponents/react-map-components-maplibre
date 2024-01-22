@@ -101,6 +101,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 		setMeasureList((current: any) => {
 			const newList = [...current];
 			newList.splice(Index, 1);
+			setHoveredGeometry(undefined);
 			return newList;
 		});
 	};

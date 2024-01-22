@@ -1,12 +1,41 @@
 # Change Log
 
-## [v0.1.90] - 2024-01-16
+## [v0.1.93] - 2024-01-17
+
+### Fixed
+
+- 0af148b: remove conditional use of useLayer hook for label layer in MlGeoJsonLayer
+- 718afe6: fix useSource cleanup error
+- c6856e6: fix MlTemporalController to work with useLayer, MlGeoJsonLayer adjustments
+
+## [v0.1.92] - 2024-01-16
+
+### Fixed
+
+- fe33641: fix useSource hook to dynamically adjust to props.sourceId changes
+- fe33641: fix useMap hook to use less setState calls
+- fe33641: fix useLayer hook options.source prop to wait for the source to be added
+
+### Changed
+
+- fe33641: add MlGeoJsonLayer labelProp defaults to enable simply passing the property name to props.labelProp to get labels. 
+- fe33641: make label layer use the same source as the main layer.
+- fe33641: adjust MlGeoJsonLayer labelProp storybook demo to show the actual use of the property
+
+
+## [v0.1.91] - 2024-01-16
+
+### Fixed
+
+- 4775728: remove mbtiles protocol handler from build to fix sql.js error
+
+## [v0.1.90] - 2024-01-16 (broken)
 
 ### Fixed
 
 - f40622f: fix build error suggesting marking sql.js as external
 
-## [v0.1.89] - 2024-01-02
+## [v0.1.89] - 2024-01-02 (broken)
 
 ### Fixed
 

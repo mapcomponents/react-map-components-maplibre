@@ -10,13 +10,14 @@ import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 import earthquakes from './assets/earthquake.json';
 import wgLocations from './assets/wg_locations.json';
-import { Feature, Geometry, GeometryCollection } from '@turf/turf';
+import { Feature, FeatureCollection, Geometry, GeometryCollection } from '@turf/turf';
 import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
 import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
 import { Typography, Button } from '@mui/material';
 import wgMarker from './assets/wgMarker.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -84,6 +85,7 @@ const LineTemplate = (props: TemplateProps) => {
 		</>
 	);
 };
+
 const PolygonTemplate = (props: TemplateProps) => {
 	const mapHook = useMap({
 		mapId: undefined,
@@ -294,33 +296,47 @@ Circle.args = {
 	type: 'circle',
 };
 
-export const Label = CircleTemplate.bind({});
-Label.parameters = {};
-Label.args = {
-	geojson: wgLocations,
-	paint: {
-		'circle-radius': {
-			property: 'Mitarbeitende',
-			stops: [
-				[3, 6],
-				[26, 35],
-			],
-		},
-		'circle-color': '#009EE0',
-	},
-	type: 'circle',
+const LabelSbDemo = () => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
 
-	labelProp: 'Mitarbeitende',
+	useEffect(() => {
+		if (!mapHook.map) return;
 
-	labelOptions: {
-		minzoom: 5,
-		maxzoom: 20,
-		layout: {
-			'text-font': ['Open Sans Regular'],
-			'text-size': 20,
-		},
-	},
+		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
+	}, [mapHook.map]);
+
+	return (
+		<>
+			<MlGeoJsonLayer
+				type="circle"
+				geojson={wgLocations as FeatureCollection}
+				options={{
+					paint: {
+						'circle-radius': {
+							property: 'Mitarbeitende',
+							stops: [
+								[3, 6],
+								[26, 35],
+							],
+						} as DataDrivenPropertyValueSpecification<number>,
+						'circle-color': '#009EE0',
+					},
+				}}
+				labelProp="Mitarbeitende"
+				labelOptions={{
+					minzoom: 5,
+					maxzoom: 18,
+				}}
+			/>
+		</>
+	);
 };
+
+export const Label = LabelSbDemo.bind({});
+Label.parameters = {};
+Label.args = {};
 
 export const Linestring = LineTemplate.bind({});
 Linestring.parameters = {};
