@@ -18,6 +18,8 @@ import wgMarker from './assets/wgMarker.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
+import useAddProtocol from '../../hooks/useAddProtocol/useAddProtocol';
+import { OSMProtocolHandler } from '../../protocol_handlers/osm';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -295,6 +297,46 @@ Circle.args = {
 	},
 	type: 'circle',
 };
+
+const OsmProtocolSourceDemo = () => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+	useAddProtocol({
+		protocol: 'osm',
+		handler: OSMProtocolHandler,
+	});
+	useEffect(() => {
+		if (!mapHook.map) return;
+
+		mapHook.map?.jumpTo({ center: [2.651811, 39.571309], zoom: 16.5 } as JumpToOptions);
+	}, [mapHook.map]);
+
+	return (
+		<>
+			<MlGeoJsonLayer
+				type="line"
+				options={{
+					source: {
+						type: 'geojson',
+						data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
+					},
+					paint: {
+						'line-color': '#009EE0',
+					},
+				}}
+				labelOptions={{
+					minzoom: 5,
+					maxzoom: 18,
+				}}
+			/>
+		</>
+	);
+};
+
+export const OsmProtocol = OsmProtocolSourceDemo.bind({});
+OsmProtocol.parameters = {};
+OsmProtocol.args = {};
 
 const LabelSbDemo = () => {
 	const mapHook = useMap({
