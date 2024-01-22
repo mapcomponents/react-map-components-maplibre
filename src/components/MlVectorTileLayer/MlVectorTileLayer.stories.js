@@ -38,9 +38,9 @@ const Template = (args) => {
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {
+export const catalogueDemo = Template.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {
 	mapId: 'map_1',
 	url: 'https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf',
 	layers: [

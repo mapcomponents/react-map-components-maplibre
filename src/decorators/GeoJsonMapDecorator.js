@@ -8,13 +8,17 @@ import getTheme from '../ui_components/MapcomponentsTheme';
 import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools';
 import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 
-
-
 const decorators = [
 	(Story, context) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
-const storyZoom = context.name === "Heat Map" || context.name === "Circle" || context.name === "Symbol" ? 3 : 15;
-const storyCenter = context.name === "Heat Map" || context.name === "Circle" || context.name === "Symbol" ? [4.542400, 39.44518] : [7.104418060409521, 50.73394661255866];
+		const storyZoom =
+			context.name === 'Heat Map' || context.name === 'Circle' || context.name === 'Symbol'
+				? 3
+				: 15;
+		const storyCenter =
+			context.name === 'Heat Map' || context.name === 'Circle' || context.name === 'Symbol'
+				? [4.5424, 39.44518]
+				: [7.104418060409521, 50.73394661255866];
 
 		return (
 			<div className="fullscreen_map">
@@ -30,7 +34,9 @@ const storyCenter = context.name === "Heat Map" || context.name === "Circle" || 
 							mapId="map_1"
 						/>
 						<MlNavigationTools showFollowGpsButton={false} />
-						<MlScaleReference />
+						{context.name == 'Catalogue Demo' && (
+							<MlScaleReference horizontalOffset="12px" verticalOffset="70px" />
+						)}
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

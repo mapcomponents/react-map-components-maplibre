@@ -11,8 +11,8 @@ export default storyoptions;
 
 const Template = (props) => <MlNavigationCompass {...props} />;
 
-export const catalogueDemo = Template.bind({});
-catalogueDemo.args = {
+export const ExampleConfig = Template.bind({});
+ExampleConfig.args = {
 	style: {
 		position: { xs: 'absolute' },
 		transform: { xs: 'scale(4)' },

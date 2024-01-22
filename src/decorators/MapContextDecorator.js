@@ -7,11 +7,12 @@ import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools
 import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
+import { catalogueDemo } from 'src/components/MlCreatePdfButton/MlCreatePdfButton.stories';
 
 const decorators = [
 	(Story, context) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
-
+		console.log(context);
 		return (
 			<div className="fullscreen_map">
 				<MapComponentsProvider>
@@ -26,7 +27,12 @@ const decorators = [
 							mapId="map_1"
 						/>
 						<MlNavgiationTools showZoomButtons={false} mapId="map_1" />
-						<MlScaleReference mapId="map_1" />
+						{(context.name == 'Catalogue Demo' || context.name == 'Example Config') && (
+							<MlScaleReference
+								horizontalOffset="12px"
+								verticalOffset={context.name == 'Catalogue Demo' ? '70px' : '6px'}
+							/>
+						)}
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

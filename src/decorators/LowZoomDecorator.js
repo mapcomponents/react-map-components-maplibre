@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-
+import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 import { MapComponentsProvider } from '../index';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import './style.css';
@@ -19,10 +19,16 @@ const decorators = [
 							options={{
 								zoom: 3,
 								style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
-								center: [4.542400, 39.44518],
+								center: [4.5424, 39.44518],
 							}}
 							mapId="map_1"
 						/>
+						{(context.name == 'Catalogue Demo' || context.name == 'Example Config') && (
+							<MlScaleReference
+								horizontalOffset="12px"
+								verticalOffset={context.name == 'Catalogue Demo' ? '70px' : '6px'}
+							/>
+						)}
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

@@ -81,5 +81,5 @@ Toolbar.args = {};
 export const Overlay = OverlayTemplate.bind({});
 Overlay.args = {};
 
-export const catalogueDemo = catalgoueTemplate.bind({});
-catalogueDemo.args = {};
+export const exampleConfig = catalgoueTemplate.bind({});
+exampleConfig.args = {};

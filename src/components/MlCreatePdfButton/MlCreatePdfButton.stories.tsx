@@ -17,7 +17,7 @@ export default storyoptions;
 const Template = () => <TopToolbar unmovableButtons={<MlCreatePdfButton />} />;
 
 // <MapLibreMap options={args.options} />
-export const ExampleConfig = Template.bind({});
+export const catalogueDemo = Template.bind({});
 //ExampleConfig.args = {
 //	//	options: {
 //	//		style: "https://wms.wheregroup.com/tileserver/style/osm-bright.json",

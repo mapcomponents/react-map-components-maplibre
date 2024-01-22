@@ -92,8 +92,8 @@ standardConfig.args = {
 	followUserPosition: false,
 };
 
-export const catalogueDemo = catalogueTemplate.bind({});
-catalogueDemo.parameters = {};
-catalogueDemo.args = {
+export const exampleConfig = catalogueTemplate.bind({});
+exampleConfig.parameters = {};
+exampleConfig.args = {
 	followUserPosition: false,
 };

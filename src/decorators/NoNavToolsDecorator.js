@@ -4,6 +4,7 @@ import { MapComponentsProvider } from '../index';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import './style.css';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
+import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 import getTheme from '../ui_components/MapcomponentsTheme';
 
 const decorators = [
@@ -23,6 +24,12 @@ const decorators = [
 							}}
 							mapId="map_1"
 						/>
+						{(context.name == 'Catalogue Demo' || context.name == 'Example Config') && (
+							<MlScaleReference
+								horizontalOffset="12px"
+								verticalOffset={context.name == 'Catalogue Demo' ? '70px' : '6px'}
+							/>
+						)}
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

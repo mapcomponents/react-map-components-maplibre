@@ -40,12 +40,12 @@ const Template = (props) => {
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {
-	url: "https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme",
+export const catalogueDemo = Template.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {
+	url: 'https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme',
 	urlParameters: {
-		layers: "nw_uraufnahme_rw",
+		layers: 'nw_uraufnahme_rw',
 	},
 };
 //
