@@ -134,7 +134,10 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		source: {
 			type: 'geojson',
 			data: props.geojson,
-			...(typeof props?.options?.source !== 'undefined' && typeof props?.options?.source !== 'string' ? props.options.source : {}),
+			...(typeof props?.options?.source !== 'undefined' &&
+			typeof props?.options?.source !== 'string'
+				? props.options.source
+				: {}),
 		},
 	});
 
@@ -184,6 +187,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 				'text-halo-width': 1,
 				'text-halo-color': '#fefefe',
 				'text-color': '#121212',
+				...(props?.labelOptions?.paint ? props.labelOptions.paint : {}),
 			},
 		} as useLayerProps['options'],
 	});

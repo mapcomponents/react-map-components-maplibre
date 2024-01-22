@@ -325,7 +325,11 @@ const OsmProtocolSourceDemo = () => {
 						'line-color': '#009EE0',
 					},
 				}}
+				labelProp='name'
 				labelOptions={{
+					paint:{
+						"text-color":'#ff0000'
+					},
 					minzoom: 5,
 					maxzoom: 18,
 				}}
