@@ -1,6 +1,14 @@
 # Change Log
 
-## [v0.1.93] - 2024-01-17
+## [v0.1.95] - 2024-01-23
+
+### Fixed
+
+- 7eb14fa: fix MlOrderLayers component unable to create layers using useLayer hook after useLayer hook changes (#152) …
+- 16d834d: MlMultiMeasureTool: properly remove hovered geometries from map when object is deleted
+- a65d703: fix MlGeoJsonLayer: enable source with type "geojson" and a protocol url in the data property
+
+## [v0.1.94] - 2024-01-17
 
 ### Fixed
 
