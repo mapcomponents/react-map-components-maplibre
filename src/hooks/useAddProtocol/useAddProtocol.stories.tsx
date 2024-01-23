@@ -35,6 +35,7 @@ import MlVectorTileLayer, {
 import { csvOptions } from '../../protocol_handlers/csv2geojson';
 import MlLayer from '../../components/MlLayer/MlLayer';
 import { useLayerProps } from '../useLayer';
+import useSource from '../useSource';
 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
@@ -122,7 +123,7 @@ const MbtilesTemplate = () => {
 };
 export const MbTiles = MbtilesTemplate.bind({});
 MbTiles.parameters = {
-	name: 'MBTiles'
+	name: 'MBTiles',
 };
 MbTiles.args = {};
 
@@ -239,15 +240,22 @@ const OsmTemplate = () => {
 		handler: OSMProtocolHandler,
 	});
 
+	const options =
+		'?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false';
+	useSource({
+		sourceId: 'osm-source',
+		source: {
+			type: 'geojson',
+			data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
+		},
+	});
+
 	useEffect(() => {
 		if (!mapHook.map?.getSource('osm-source')) {
-			const options =
-				'?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false';
-
-			mapHook.map?.addSource('osm-source', {
-				type: 'geojson',
-				data: `osm://osm/palma.osm${options}`,
-			});
+			//mapHook.map?.addSource('osm-source', {
+			//	type: 'geojson',
+			//	data: `osm://osm/palma.osm${options}`,
+			//});
 		}
 		mapHook.map?.jumpTo({ center: [2.651811, 39.571309], zoom: 16.5 } as JumpToOptions);
 	}, [mapHook.map]);
@@ -258,13 +266,10 @@ const OsmTemplate = () => {
 				layerId={'UseAddProtocolLayer'}
 				options={
 					{
-						type: 'circle',
+						type: 'line',
 						source: 'osm-source',
 						paint: {
-							'circle-color': '#9a00ff',
-							'circle-stroke-color': '#fefefe',
-							'circle-stroke-width': 2,
-							'circle-radius': 4,
+							'line-color': '#9a00ff',
 						},
 					} as useLayerProps['options']
 				}
