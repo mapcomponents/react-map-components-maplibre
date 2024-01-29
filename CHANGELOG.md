@@ -1,5 +1,12 @@
 # Change Log
 
+
+## [v0.1.96] - 2024-01-29
+
+### Fixed
+
+- 2925672: fix overwrite options.paint in LayerListItem
+
 ## [v0.1.95] - 2024-01-23
 
 ### Fixed
