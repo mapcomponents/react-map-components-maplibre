@@ -8,7 +8,7 @@ import LayerListItemFactory from '../ui_components/LayerList/LayerListItemFactor
 import LayerList from '../ui_components/LayerList/LayerList';
 import SelectStyleButton from '../ui_components/SelectStyleButton/SelectStyleButton';
 import { useSelector, useDispatch } from 'react-redux';
-import { addLayer, LayerConfig } from './layerconfig.store';
+import { addLayer, addMapConfig, AppState, LayerConfig } from './layerconfig.store';
 
 const storyoptions = {
 	title: 'ReduxExample/LayerList',
@@ -22,19 +22,20 @@ export default storyoptions;
 const FolderTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 
-	const layerConfigStore = useSelector((state) => state);
-	console.log(layerConfigStore);
-	const layers = layerConfigStore.mapConfig.layers;
+	const AppState = useSelector((state: AppState) => state);
+	console.log(AppState);
+	const layers = AppState.mapConfigs;
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		dispatch(addMapConfig('test'));
 		const _layersString = localStorage.getItem('layers');
 		const _layers: LayerConfig[] = _layersString ? JSON.parse(_layersString) : [];
-		_layers.forEach((layer) => dispatch(addLayer('layerKey', layer)));
+		_layers.forEach((layer) => dispatch(addLayer('test', layer)));
 	}, []);
 
 	useEffect(() => {
-		if (layers.length > 0) {
+		if (layers?.length > 0) {
 			localStorage.setItem('layers', JSON.stringify(layers));
 		}
 	}, [layers]);
