@@ -55,7 +55,7 @@ function LayerListItem({
 
 	// this state variable is used for layer components that provide a paint attribute
 	const [paintProps, setPaintProps] = useState(
-		layerComponent?.props?.paint ||
+		layerComponent?.props?.paint || layerComponent?.props?.options?.paint ||
 			getDefaultPaintPropsByType(
 				layerComponent?.props?.type || getDefaultLayerTypeByGeometry(layerComponent.props.geojson)
 			)
@@ -127,7 +127,11 @@ function LayerListItem({
 						layout: {
 							visibility: _visible ? 'visible' : 'none',
 						},
-						...(setLayerState ? {} : { paint: paintProps }),
+						options:{
+							...layerComponent?.props?.options,
+							...(setLayerState ? {} : { paint: paintProps }),
+						}
+						
 					});
 					break;
 			}
