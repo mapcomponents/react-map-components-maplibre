@@ -253,6 +253,20 @@
         "__isArgsStory": true
       }
     },
+    "mapcomponents-mlgeojsonlayer--osm-protocol": {
+      "id": "mapcomponents-mlgeojsonlayer--osm-protocol",
+      "name": "Osm Protocol",
+      "title": "MapComponents/MlGeoJsonLayer",
+      "importPath": 70232,
+      "kind": "MapComponents/MlGeoJsonLayer",
+      "story": "Osm Protocol",
+      "parameters": {
+        "fileName": 70232,
+        "framework": "react",
+        "__id": "mapcomponents-mlgeojsonlayer--osm-protocol",
+        "__isArgsStory": false
+      }
+    },
     "mapcomponents-mlgeojsonlayer--label": {
       "id": "mapcomponents-mlgeojsonlayer--label",
       "name": "Label",
@@ -929,11 +943,11 @@
       "id": "hooks-useaddimage--example-config",
       "name": "Example Config",
       "title": "hooks/useAddImage",
-      "importPath": 29975,
+      "importPath": 34144,
       "kind": "hooks/useAddImage",
       "story": "Example Config",
       "parameters": {
-        "fileName": 29975,
+        "fileName": 34144,
         "framework": "react",
         "__id": "hooks-useaddimage--example-config",
         "__isArgsStory": true
