@@ -3,7 +3,6 @@ import PdfForm from './lib/PdfForm';
 import { PdfContextProvider } from './lib/PdfContext';
 import { createPdfResolverParams } from '../../hooks/useExportMap/lib';
 import { SxProps } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface MlCreatePdfFormProps {
 	/**
@@ -28,7 +27,7 @@ export type { MlCreatePdfFormProps };
  *
  */
 
-const MlCreatePdfForm = (props: MlCreatePdfFormProps) => {
+const MlCreatePdfForm = (_props: MlCreatePdfFormProps) => {
 	return (
 		<>
 			<PdfContextProvider>
