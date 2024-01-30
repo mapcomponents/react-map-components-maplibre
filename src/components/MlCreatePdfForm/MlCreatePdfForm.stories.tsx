@@ -4,11 +4,11 @@ import MlCreatePdfForm from './MlCreatePdfForm';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Button } from '@mui/material';
+import { Button, Drawer, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
-
 import TopToolbar from '../../ui_components/TopToolbar';
+import Sidebar from '../../ui_components/Sidebar';
 
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
@@ -21,8 +21,22 @@ const PaperComponent = (props: object) => {
 	);
 };
 
-const MlDialog = ({ title, children }: { title: string; children: React.ReactNode }) => {
-	return (
+const MlDialog = ({
+	title,
+	children,
+}: {
+	title: string;
+	children: React.ReactNode;
+	mediaIsMobile?: boolean;
+	allowSwipeInChildren?: boolean;
+}) => {
+	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
+
+	return mediaIsMobile ? (
+		<Sidebar anchor="bottom" open={true} title={title} drawerBleeding={26}>
+			<DialogContent>{children}</DialogContent>
+		</Sidebar>
+	) : (
 		<Dialog
 			open={true}
 			hideBackdrop={true}
@@ -51,6 +65,7 @@ export default storyoptions;
 
 const Template = () => {
 	const [showCreatePdfForm, setShowCreatePdfForm] = useState(true);
+	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
 	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	return (
@@ -67,7 +82,7 @@ const Template = () => {
 				}
 			/>
 			{showCreatePdfForm && (
-				<MlDialog title="Create PDF">
+				<MlDialog title="Create PDF" mediaIsMobile={mediaIsMobile}>
 					<MlCreatePdfForm
 						onCreatePdf={(options) => {
 							const pdf = options.pdf;
