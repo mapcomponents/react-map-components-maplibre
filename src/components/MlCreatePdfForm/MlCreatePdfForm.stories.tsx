@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import MlCreatePdfForm from './MlCreatePdfForm';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Button, Drawer, useMediaQuery } from '@mui/material';
+import { Box, Button, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper';
+import PdfContext from './lib/PdfContext';
+import PdfPreview from './lib/PdfPreview';
 import Draggable from 'react-draggable';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Sidebar from '../../ui_components/Sidebar';
-
+import CreatePdfButton from './lib/PdfButton';
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
@@ -32,18 +34,18 @@ const MlDialog = ({
 }) => {
 	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
-	/*
-	const [drawerHeight, setDrawerHeight] = useState<Number>(200);
-
-	const handleHeightChange = (newHeight: number) => {
-		setDrawerHeight(newHeight)};
-
-<Button onClick={() => handleHeightChange(drawerHeight === 200 ? 100 : 200)}></Button>
-*/
-
 	return mediaIsMobile ? (
-		<Sidebar anchor="bottom" open={true} title={title} drawerBleeding={26}>
-			<DialogContent>{children}</DialogContent>
+		<Sidebar anchor="bottom" open={true} title={title} drawerBleeding={24}>
+			<Box
+				sx={{
+					position: 'absolute',
+					top: 8,
+					background: 'white',
+					marginTop: '10px',
+				}}
+			>
+				<DialogContent>{children}</DialogContent>
+			</Box>
 		</Sidebar>
 	) : (
 		<Dialog
@@ -75,6 +77,7 @@ export default storyoptions;
 
 const Template = () => {
 	const [showCreatePdfForm, setShowCreatePdfForm] = useState(true);
+	const pdfContext = useContext(PdfContext);
 	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
 	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
@@ -82,13 +85,33 @@ const Template = () => {
 		<>
 			<TopToolbar
 				unmovableButtons={
-					<Button
-						variant={showCreatePdfForm ? 'contained' : 'outlined'}
-						className="pdfFormButton"
-						onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}
-					>
-						PDF
-					</Button>
+					mediaIsMobile ? (
+						<>
+							<Box
+								sx={{
+									marginTop: '15px',
+									marginRight: '15px',
+								}}
+							>
+								<CreatePdfButton />
+							</Box>
+							{pdfContext.options && pdfContext.setOptions && (
+								<PdfPreview
+									options={pdfContext.options}
+									setOptions={pdfContext.setOptions}
+									geojsonRef={pdfContext.geojsonRef}
+								/>
+							)}
+						</>
+					) : (
+						<Button
+							variant={showCreatePdfForm ? 'contained' : 'outlined'}
+							className="pdfFormButton"
+							onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}
+						>
+							PDF
+						</Button>
+					)
 				}
 			/>
 			{showCreatePdfForm && (
@@ -184,7 +207,6 @@ const Template = () => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {};
-
 
 //const SidebarTemplate = function() {
 //

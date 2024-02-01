@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import PdfContext from './PdfContext';
 import PdfPreview from './PdfPreview';
-import CreatePdfButton from './PdfButton';
 import {
 	FormControl,
 	MenuItem,
@@ -14,7 +13,6 @@ import {
 	useMediaQuery,
 } from '@mui/material';
 import { createPdfResolverParams } from '../../../hooks/useExportMap/lib';
-
 import templates from './pdf.templates';
 import { PdfPreviewOptions } from './pdfContext';
 
@@ -81,6 +79,7 @@ interface PdfFormProps {
 
 export default function PdfForm(props: PdfFormProps) {
 	const pdfContext = useContext(PdfContext);
+
 	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
 	const formControlStyles = useMemo(
@@ -177,7 +176,6 @@ export default function PdfForm(props: PdfFormProps) {
 						))}
 					</Select>
 				</FormControl>
-				{mediaIsMobile ? <></> : <CreatePdfButton />}
 			</>
 			{pdfContext.options && pdfContext.setOptions && (
 				<PdfPreview
