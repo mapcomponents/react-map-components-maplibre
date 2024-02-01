@@ -32,6 +32,15 @@ const MlDialog = ({
 }) => {
 	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
+	/*
+	const [drawerHeight, setDrawerHeight] = useState<Number>(200);
+
+	const handleHeightChange = (newHeight: number) => {
+		setDrawerHeight(newHeight)};
+
+<Button onClick={() => handleHeightChange(drawerHeight === 200 ? 100 : 200)}></Button>
+*/
+
 	return mediaIsMobile ? (
 		<Sidebar anchor="bottom" open={true} title={title} drawerBleeding={26}>
 			<DialogContent>{children}</DialogContent>
@@ -44,6 +53,7 @@ const MlDialog = ({
 			aria-labelledby="draggable-dialog-title"
 			sx={{
 				justifyContent: 'flex-start',
+				minHeight: '40px',
 				maxWidth: '300px',
 			}}
 		>
