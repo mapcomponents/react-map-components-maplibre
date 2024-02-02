@@ -18,7 +18,12 @@ interface MlMeasureToolProps {
         value: number;
         unit: string | undefined;
         geojson: GeoJSONObject;
+        geometries?: [];
     }) => void;
+    /**
+     * Callback function that is called by the end of drawing geometries.
+     */
+    onFinish?: () => void;
 }
 declare const MlMeasureTool: {
     (props: MlMeasureToolProps): JSX.Element;

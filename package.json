@@ -37,7 +37,7 @@
 		"csv2geojson": "^5.1.2",
 		"d3": "^7.8.2",
 		"jspdf": "^2.5.1",
-		"maplibre-gl": "^2.4.0",
+		"maplibre-gl": "^4.0.0",
 		"osm2geojson-lite": "^0.9.2",
 		"pako": "^2.1.0",
 		"react-color": "^2.19.3",

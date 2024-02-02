@@ -16,7 +16,7 @@ export interface useFeatureEditorProps {
      */
     geojson?: Feature;
     /**
-     * Callback function that is called each time the GeoJson data within has changed within MlFeatureEditor.
+     * Callback function that is called each time the GeoJson data has changed within MlFeatureEditor.
      * First parameter is the new GeoJson feature.
      */
     onChange?: (para: GeoJSONObject[]) => void;

@@ -8,6 +8,7 @@ declare const storyoptions: {
 };
 export default storyoptions;
 export declare const Circle: any;
+export declare const OsmProtocol: any;
 export declare const Label: any;
 export declare const Linestring: any;
 export declare const Polygon: any;

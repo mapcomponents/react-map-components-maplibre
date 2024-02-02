@@ -1,6 +1,6 @@
-import { useMapType } from "./useMap";
-import MapLibreGlWrapper from "../components/MapLibreMap/lib/MapLibreGlWrapper";
-import { Source, SourceSpecification } from "maplibre-gl";
+import { useMapType } from './useMap';
+import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
+import { Source, SourceSpecification } from 'maplibre-gl';
 type useSourceType = {
     map: MapLibreGlWrapper | undefined;
     source: Source | undefined;

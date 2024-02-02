@@ -57,6 +57,10 @@ var reactColor = require('react-color');
 var TuneIcon = require('@mui/icons-material/Tune');
 var ScatterPlotIcon = require('@mui/icons-material/ScatterPlot');
 var PolylineIcon = require('@mui/icons-material/Polyline');
+var csv2geojson = require('csv2geojson');
+var osm2geojson = require('osm2geojson-lite');
+var topojsonClient = require('topojson-client');
+var externParser = require('@tmcw/togeojson');
 var d3 = require('d3');
 var core = require('@dnd-kit/core');
 var modifiers = require('@dnd-kit/modifiers');
@@ -64,12 +68,6 @@ var PlaylistAddIcon = require('@mui/icons-material/PlaylistAdd');
 var DynamicFeedIcon = require('@mui/icons-material/DynamicFeed');
 var AddBoxIcon = require('@mui/icons-material/AddBox');
 var IndeterminateCheckBoxIcon = require('@mui/icons-material/IndeterminateCheckBox');
-var csv2geojson = require('csv2geojson');
-var topojsonClient = require('topojson-client');
-var osm2geojson = require('osm2geojson-lite');
-var externParser = require('@tmcw/togeojson');
-var initSqlJs = require('sql.js');
-var pako = require('pako');
 var KeyboardArrowDownIcon = require('@mui/icons-material/KeyboardArrowDown');
 var KeyboardArrowUpIcon = require('@mui/icons-material/KeyboardArrowUp');
 var AppBar = require('@mui/material/AppBar');
@@ -153,16 +151,14 @@ var Tooltip__default = /*#__PURE__*/_interopDefaultLegacy(Tooltip);
 var TuneIcon__default = /*#__PURE__*/_interopDefaultLegacy(TuneIcon);
 var ScatterPlotIcon__default = /*#__PURE__*/_interopDefaultLegacy(ScatterPlotIcon);
 var PolylineIcon__default = /*#__PURE__*/_interopDefaultLegacy(PolylineIcon);
+var csv2geojson__namespace = /*#__PURE__*/_interopNamespace(csv2geojson);
+var osm2geojson__default = /*#__PURE__*/_interopDefaultLegacy(osm2geojson);
+var externParser__namespace = /*#__PURE__*/_interopNamespace(externParser);
 var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
 var PlaylistAddIcon__default = /*#__PURE__*/_interopDefaultLegacy(PlaylistAddIcon);
 var DynamicFeedIcon__default = /*#__PURE__*/_interopDefaultLegacy(DynamicFeedIcon);
 var AddBoxIcon__default = /*#__PURE__*/_interopDefaultLegacy(AddBoxIcon);
 var IndeterminateCheckBoxIcon__default = /*#__PURE__*/_interopDefaultLegacy(IndeterminateCheckBoxIcon);
-var csv2geojson__namespace = /*#__PURE__*/_interopNamespace(csv2geojson);
-var osm2geojson__default = /*#__PURE__*/_interopDefaultLegacy(osm2geojson);
-var externParser__namespace = /*#__PURE__*/_interopNamespace(externParser);
-var initSqlJs__default = /*#__PURE__*/_interopDefaultLegacy(initSqlJs);
-var pako__namespace = /*#__PURE__*/_interopNamespace(pako);
 var KeyboardArrowDownIcon__default = /*#__PURE__*/_interopDefaultLegacy(KeyboardArrowDownIcon);
 var KeyboardArrowUpIcon__default = /*#__PURE__*/_interopDefaultLegacy(KeyboardArrowUpIcon);
 var AppBar__default = /*#__PURE__*/_interopDefaultLegacy(AppBar);
@@ -1324,7 +1320,7 @@ useMapState.propTypes = {
 
 function useMap(props) {
     var mapContext = React.useContext(MapContext);
-    var _a = React.useState(), map = _a[0], setMap = _a[1];
+    var _a = React.useState({ map: undefined, ready: false }), state = _a[0], setState = _a[1];
     var mapState = useMapState({
         mapId: props === null || props === void 0 ? void 0 : props.mapId,
         watch: {
@@ -1338,7 +1334,6 @@ function useMap(props) {
     });
     var mapRef = React.useRef();
     var componentId = React.useRef(uuid.v4());
-    var _b = React.useState(false), mapIsReady = _b[0], setMapIsReady = _b[1];
     var cleanup = function () {
         if (mapRef.current) {
             mapRef.current.cleanup(componentId.current);
@@ -1347,7 +1342,6 @@ function useMap(props) {
     React.useEffect(function () {
         return function () {
             cleanup();
-            setMapIsReady(false);
             mapRef.current = undefined;
         };
     }, []);
@@ -1355,8 +1349,7 @@ function useMap(props) {
         var _a;
         if (mapRef.current && mapRef.current.cancelled === true) {
             mapRef.current = undefined;
-            setMap(undefined);
-            setMapIsReady(false);
+            setState({ map: undefined, ready: false });
         }
         if (mapRef.current || !mapContext.mapExists(props === null || props === void 0 ? void 0 : props.mapId))
             return;
@@ -1374,12 +1367,11 @@ function useMap(props) {
             }
         }
         mapRef.current = mapContext.getMap(props === null || props === void 0 ? void 0 : props.mapId);
-        setMap(mapRef.current);
-        setMapIsReady(true);
+        setState({ map: mapRef.current, ready: true });
     }, [mapContext.mapIds, mapState.layers, mapContext, props]);
     return {
-        map: map,
-        mapIsReady: mapIsReady,
+        map: state.map,
+        mapIsReady: state.ready,
         componentId: componentId.current,
         layers: mapState.layers,
         cleanup: cleanup,
@@ -2036,7 +2028,7 @@ function PdfForm(props) {
     ]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement(material.FormControl, { fullWidth: true, sx: formControlStyles },
-            React__default["default"].createElement(material.InputLabel, { id: "format-select-label" }, "Format"),
+            React__default["default"].createElement(material.InputLabel, { sx: { marginTop: '3px' }, id: "format-select-label" }, "Format"),
             React__default["default"].createElement(material.Select, { labelId: "format-select-label", id: "format-select", label: "Format", value: pdfContext.format, onChange: function (event) {
                     var _a;
                     (_a = pdfContext.setFormat) === null || _a === void 0 ? void 0 : _a.call(pdfContext, event.target.value);
@@ -2319,7 +2311,6 @@ function featureEditorStyle() {
  * GeoJson Feature editor that allows to create or manipulate GeoJson data
  */
 var useFeatureEditor = function (props) {
-    console.log(featureEditorStyle());
     var draw = React.useRef();
     var mapHook = useMap({
         mapId: props.mapId,
@@ -2434,6 +2425,7 @@ var legalLayerTypes = [
     'background',
 ];
 function useLayer(props) {
+    var _a;
     var mapHook = useMap({
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
@@ -2441,17 +2433,17 @@ function useLayer(props) {
     var layerTypeRef = React.useRef('');
     var layerPaintConfRef = React.useRef('');
     var layerLayoutConfRef = React.useRef('');
-    var _a = React.useState(), layer = _a[0], setLayer = _a[1];
+    var _b = React.useState(), layer = _b[0], setLayer = _b[1];
     var initializedRef = React.useRef(false);
     var layerId = React.useRef(props.layerId || (props.idPrefix ? props.idPrefix : 'Layer-') + mapHook.componentId);
     var createLayer = React.useCallback(function () {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
         if (!mapHook.map || (mapHook === null || mapHook === void 0 ? void 0 : mapHook.map.cancelled))
             return;
         if (mapHook.map.map.getLayer(layerId.current)) {
             mapHook.cleanup();
         }
-        if (mapHook.map.map.getSource(layerId.current)) {
+        if (typeof ((_a = props === null || props === void 0 ? void 0 : props.options) === null || _a === void 0 ? void 0 : _a.source) !== 'string' && mapHook.map.map.getSource(layerId.current)) {
             mapHook.map.map.removeSource(layerId.current);
         }
         if (typeof props.options.source === 'string') {
@@ -2459,26 +2451,36 @@ function useLayer(props) {
                 return;
             }
         }
+        if (typeof ((_b = props === null || props === void 0 ? void 0 : props.options) === null || _b === void 0 ? void 0 : _b.source) !== 'string' &&
+            !props.geojson &&
+            !((_d = (_c = props === null || props === void 0 ? void 0 : props.options) === null || _c === void 0 ? void 0 : _c.source) === null || _d === void 0 ? void 0 : _d.data) &&
+            ((_e = props === null || props === void 0 ? void 0 : props.options) === null || _e === void 0 ? void 0 : _e.type) !== 'background') {
+            return;
+        }
         if (typeof props.options.type === 'undefined') {
             return;
         }
         initializedRef.current = true;
         try {
             mapHook.map.addLayer(__assign(__assign(__assign(__assign({}, props.options), (props.geojson &&
-                (!((_a = props.options) === null || _a === void 0 ? void 0 : _a.source) ||
-                    (((_c = (_b = props.options) === null || _b === void 0 ? void 0 : _b.source) === null || _c === void 0 ? void 0 : _c.attribution) && !((_e = (_d = props.options) === null || _d === void 0 ? void 0 : _d.source) === null || _e === void 0 ? void 0 : _e.type))) // if either options.source isn't defined or only options.source.attribution is defined
+                (!((_f = props.options) === null || _f === void 0 ? void 0 : _f.source) ||
+                    (typeof ((_g = props === null || props === void 0 ? void 0 : props.options) === null || _g === void 0 ? void 0 : _g.source) !== 'string' &&
+                        ((_j = (_h = props.options) === null || _h === void 0 ? void 0 : _h.source) === null || _j === void 0 ? void 0 : _j.attribution) &&
+                        !((_l = (_k = props.options) === null || _k === void 0 ? void 0 : _k.source) === null || _l === void 0 ? void 0 : _l.type))) // if either options.source isn't defined or only options.source.attribution is defined
                 ? {
                     source: {
                         type: 'geojson',
                         data: props.geojson,
-                        attribution: ((_f = props.options.source) === null || _f === void 0 ? void 0 : _f.attribution)
-                            ? (_g = props.options.source) === null || _g === void 0 ? void 0 : _g.attribution
+                        attribution: typeof ((_m = props === null || props === void 0 ? void 0 : props.options) === null || _m === void 0 ? void 0 : _m.source) !== 'string' && ((_o = props.options.source) === null || _o === void 0 ? void 0 : _o.attribution)
+                            ? (_p = props.options.source) === null || _p === void 0 ? void 0 : _p.attribution
                             : '',
                     },
+                    // eslint-disable-next-line no-mixed-spaces-and-tabs
                 }
-                : {})), (typeof ((_h = props.options) === null || _h === void 0 ? void 0 : _h.source) === 'string'
+                : {})), (typeof ((_q = props.options) === null || _q === void 0 ? void 0 : _q.source) === 'string'
                 ? {
                     source: props.options.source,
+                    // eslint-disable-next-line no-mixed-spaces-and-tabs
                 }
                 : {})), { id: layerId.current }), props.insertBeforeLayer
                 ? props.insertBeforeLayer
@@ -2503,28 +2505,29 @@ function useLayer(props) {
         mapHook.map.on('styledata', function () {
             var _a;
             if (initializedRef.current && !((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map.getLayer(layerId.current))) {
-                console.log('Recreate Layer');
                 createLayer();
             }
         }, mapHook.componentId);
-        layerPaintConfRef.current = JSON.stringify((_j = props.options) === null || _j === void 0 ? void 0 : _j.paint);
-        layerLayoutConfRef.current = JSON.stringify((_k = props.options) === null || _k === void 0 ? void 0 : _k.layout);
+        layerPaintConfRef.current = JSON.stringify((_r = props.options) === null || _r === void 0 ? void 0 : _r.paint);
+        layerLayoutConfRef.current = JSON.stringify((_s = props.options) === null || _s === void 0 ? void 0 : _s.layout);
         layerTypeRef.current = props.options.type;
-    }, [props, mapHook.map]);
+    }, [props, mapHook]);
     React.useEffect(function () {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         if (!mapHook.map)
             return;
-        if (((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.cancelled) === false &&
+        if (!props.geojson && !props.options.source && ((_a = props === null || props === void 0 ? void 0 : props.options) === null || _a === void 0 ? void 0 : _a.type) !== 'background')
+            return;
+        if (((_b = mapHook.map) === null || _b === void 0 ? void 0 : _b.cancelled) === false &&
             initializedRef.current &&
-            ((_d = (_c = (_b = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _b === void 0 ? void 0 : _b.map) === null || _c === void 0 ? void 0 : _c.getLayer) === null || _d === void 0 ? void 0 : _d.call(_c, layerId.current)) &&
+            ((_e = (_d = (_c = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _c === void 0 ? void 0 : _c.map) === null || _d === void 0 ? void 0 : _d.getLayer) === null || _e === void 0 ? void 0 : _e.call(_d, layerId.current)) &&
             (legalLayerTypes.indexOf(props.options.type) === -1 ||
                 (legalLayerTypes.indexOf(props.options.type) !== -1 &&
                     props.options.type === layerTypeRef.current))) {
             return;
         }
         createLayer();
-    }, [mapHook.map, props.options, createLayer]);
+    }, [mapHook.map, mapHook.mapIsReady, props, createLayer]);
     React.useEffect(function () {
         var _a, _b, _c, _d, _e, _f;
         if (((_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.cancelled) === true ||
@@ -2579,6 +2582,29 @@ function useLayer(props) {
             mapHook.cleanup();
         };
     }, []);
+    React.useEffect(function () {
+        var _a, _b, _c, _d, _e, _f;
+        if (typeof ((_a = props === null || props === void 0 ? void 0 : props.options) === null || _a === void 0 ? void 0 : _a.source) !== 'string' ||
+            !mapHook.map ||
+            (typeof ((_b = props === null || props === void 0 ? void 0 : props.options) === null || _b === void 0 ? void 0 : _b.source) === 'string' &&
+                ((_d = (_c = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _c === void 0 ? void 0 : _c.getLayer) === null || _d === void 0 ? void 0 : _d.call(_c, layerId.current)) &&
+                ((_f = (_e = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _e === void 0 ? void 0 : _e.getSource) === null || _f === void 0 ? void 0 : _f.call(_e, props.options.source)))) {
+            return;
+        }
+        var findSourceHandler = function () {
+            var _a, _b, _c;
+            if (typeof ((_a = props === null || props === void 0 ? void 0 : props.options) === null || _a === void 0 ? void 0 : _a.source) === 'string' &&
+                ((_c = (_b = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _b === void 0 ? void 0 : _b.getSource) === null || _c === void 0 ? void 0 : _c.call(_b, props.options.source))) {
+                createLayer();
+            }
+        };
+        mapHook.map.on('sourcedata', findSourceHandler);
+        return function () {
+            if (mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) {
+                mapHook.map.off('sourcedata', findSourceHandler);
+            }
+        };
+    }, [mapHook.map, (_a = props.options) === null || _a === void 0 ? void 0 : _a.source]);
     return {
         map: mapHook.map,
         layer: layer,
@@ -2685,35 +2711,111 @@ var getDefaulLayerTypeByGeometry = function (geojson) {
     return "fill";
 };
 
+function useSource(props) {
+    var _a;
+    var mapHook = useMap({
+        mapId: props.mapId,
+    });
+    var _b = React.useState(), source = _b[0], setSource = _b[1];
+    var sourceId = React.useRef(props.sourceId || (props.idPrefix ? props.idPrefix : 'Source-') + mapHook.componentId);
+    var removeSource = React.useCallback(function () {
+        var _a, _b;
+        if (mapHook.map && ((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.style) === null || _b === void 0 ? void 0 : _b._layers)) {
+            for (var _i = 0, _c = Object.entries(mapHook.map.map.style._layers); _i < _c.length; _i++) {
+                var _d = _c[_i], layerId = _d[0], layer = _d[1];
+                if (layer.source === sourceId.current) {
+                    mapHook.map.removeLayer(layerId);
+                }
+            }
+            if (mapHook.map.getSource(sourceId.current)) {
+                mapHook.map.removeSource(sourceId.current);
+            }
+        }
+    }, [mapHook.map]);
+    var createSource = React.useCallback(function () {
+        var _a;
+        if (!mapHook.map)
+            return;
+        if (props.source.type === 'geojson' && !props.source.data)
+            return;
+        if (mapHook.map.map.getSource(sourceId.current)) {
+            removeSource();
+        }
+        (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.addSource(sourceId.current, __assign({}, props.source));
+        setSource(mapHook.map.map.getSource(sourceId.current));
+    }, [props, mapHook, removeSource]);
+    React.useEffect(function () {
+        var _a, _b, _c, _d;
+        if (!((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getSource(sourceId.current)))
+            return;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore setData only exists on GeoJsonSource
+        (_d = (_c = mapHook.map.map.getSource(sourceId.current)) === null || _c === void 0 ? void 0 : _c.setData) === null || _d === void 0 ? void 0 : _d.call(_c, props.source.data);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore data only exists on GeoJsonSource
+    }, [(_a = props.source) === null || _a === void 0 ? void 0 : _a.data]);
+    React.useEffect(function () {
+        var _a, _b, _c;
+        if (((_c = (_b = (_a = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getSource) === null || _c === void 0 ? void 0 : _c.call(_b, props.sourceId)) && props.sourceId === sourceId.current)
+            return;
+        sourceId.current = props.sourceId;
+        createSource();
+    }, [mapHook.map, props, createSource]);
+    //cleanup
+    React.useEffect(function () {
+        return function () {
+            removeSource();
+        };
+    }, [removeSource]);
+    return {
+        map: mapHook.map,
+        source: source,
+        componentId: mapHook.componentId,
+        mapHook: mapHook,
+    };
+}
+
 /**
  * Adds source and layer to display GeoJSON data on the map.
  *
  * @component
  */
 var MlGeoJsonLayer = function (props) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     var layerType = props.type || getDefaulLayerTypeByGeometry(props.geojson);
-    var layerId = props.layerId || 'MlGeoJsonLayer-' + uuid.v4();
-    var labelLayerId = "label-".concat(layerId);
-    // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+    var layerId = React.useRef(props.layerId || 'MlGeoJsonLayer-' + uuid.v4());
+    var labelLayerId = "label-".concat(layerId.current);
+    React.useEffect(function () {
+        if (!props.layerId) {
+            layerId.current = 'MlGeoJsonLayer-' + uuid.v4();
+        }
+        else {
+            layerId.current = props.layerId;
+        }
+    }, [props.layerId]);
+    useSource({
+        mapId: props.mapId,
+        sourceId: 'source-' + layerId.current,
+        source: __assign({ type: 'geojson', data: props.geojson }, (typeof ((_a = props === null || props === void 0 ? void 0 : props.options) === null || _a === void 0 ? void 0 : _a.source) !== 'undefined' &&
+            typeof ((_b = props === null || props === void 0 ? void 0 : props.options) === null || _b === void 0 ? void 0 : _b.source) !== 'string'
+            ? props.options.source
+            : {})),
+    });
     useLayer({
         mapId: props.mapId,
-        layerId: props.layerId || 'MlGeoJsonLayer-' + uuid.v4(),
-        geojson: props.geojson,
-        options: __assign(__assign({}, props.options), { paint: __assign(__assign({}, (props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides))), (_a = props === null || props === void 0 ? void 0 : props.options) === null || _a === void 0 ? void 0 : _a.paint), layout: __assign(__assign({}, ((props === null || props === void 0 ? void 0 : props.layout) || {})), (_b = props === null || props === void 0 ? void 0 : props.options) === null || _b === void 0 ? void 0 : _b.layout), type: layerType }),
+        layerId: layerId.current,
+        options: __assign(__assign({}, props.options), { source: 'source-' + layerId.current, paint: __assign(__assign({}, (props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides))), (_c = props === null || props === void 0 ? void 0 : props.options) === null || _c === void 0 ? void 0 : _c.paint), layout: __assign(__assign({}, ((props === null || props === void 0 ? void 0 : props.layout) || {})), (_d = props === null || props === void 0 ? void 0 : props.options) === null || _d === void 0 ? void 0 : _d.layout), type: layerType }),
         insertBeforeLayer: props.insertBeforeLayer,
         onHover: props.onHover,
         onClick: props.onClick,
         onLeave: props.onLeave,
     });
-    if (props.labelProp) {
-        useLayer({
-            mapId: props.mapId,
-            layerId: labelLayerId,
-            geojson: props.geojson,
-            options: __assign(__assign({ type: 'symbol' }, ((props === null || props === void 0 ? void 0 : props.labelOptions) ? props.labelOptions : {})), { layout: __assign({ 'text-field': "{".concat(props.labelProp, "}") }, (((_c = props === null || props === void 0 ? void 0 : props.labelOptions) === null || _c === void 0 ? void 0 : _c.layout) ? props.labelOptions.layout : {})), paint: {} }),
-        });
-    }
+    // Label useLayer hook can't be called conditionally.
+    // Using it with geojson and options.source undefined will cause it to return without creating a layer.
+    useLayer({
+        mapId: props.mapId,
+        options: __assign(__assign(__assign({ source: props.labelProp ? 'source-' + layerId.current : undefined, id: labelLayerId, type: 'symbol', maxzoom: 24, minzoom: 1 }, ((props === null || props === void 0 ? void 0 : props.labelOptions) ? props.labelOptions : {})), (((_e = props === null || props === void 0 ? void 0 : props.options) === null || _e === void 0 ? void 0 : _e.filter) ? { filter: props.options.filter } : {})), { layout: __assign(__assign({ 'text-font': ['Open Sans Regular'], 'text-field': "{".concat(props.labelProp, "}"), 'text-size': 12, 'text-anchor': 'top' }, (((_f = props === null || props === void 0 ? void 0 : props.labelOptions) === null || _f === void 0 ? void 0 : _f.layout) ? props.labelOptions.layout : {})), (((_g = props === null || props === void 0 ? void 0 : props.layout) === null || _g === void 0 ? void 0 : _g.visibility) ? { visibility: props.layout.visibility } : {})), paint: __assign({ 'text-halo-width': 1, 'text-halo-color': '#fefefe', 'text-color': '#121212' }, (((_h = props === null || props === void 0 ? void 0 : props.labelOptions) === null || _h === void 0 ? void 0 : _h.paint) ? props.labelOptions.paint : {})) }),
+    });
     return React__default["default"].createElement(React__default["default"].Fragment, null);
 };
 
@@ -2908,8 +3010,9 @@ var MlMeasureTool = function (props) {
     React.useEffect(function () {
         if (currentFeatures[0]) {
             var result = props.measureType === 'polygon'
-                // for "polyong" mode calculate km²
-                ? (turf__namespace.area(currentFeatures[0]) / 1000000) * getUnitSquareMultiplier(props.unit)
+                ? // for "polyong" mode calculate km²
+                    (turf__namespace.area(currentFeatures[0]) / 1000000) *
+                        getUnitSquareMultiplier(props.unit)
                 : turf__namespace.length(currentFeatures[0], { units: props.unit });
             if (typeof props.onChange === 'function') {
                 props.onChange({ value: result, unit: props.unit, geojson: currentFeatures[0] });
@@ -2924,10 +3027,10 @@ var MlMeasureTool = function (props) {
                     value = result * 1000000;
                 }
                 if (getUnitLabel(props.unit) === 'mi') {
-                    label = 'in';
-                    value = result * 63360;
+                    label = 'Yard';
+                    value = result * 1760;
                     if (props.measureType === 'polygon') {
-                        value = result * 4014489599.4792;
+                        value = result * 3097600;
                     }
                 }
                 setDisplayValue({ value: value, label: label });
@@ -2936,12 +3039,14 @@ var MlMeasureTool = function (props) {
     }, [props.unit, currentFeatures]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement(MlFeatureEditor, { onChange: function (features) {
-                setCurrentFeatures(features);
-            }, mode: props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string' }),
+                features && setCurrentFeatures(features);
+            }, mode: props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string', onFinish: props.onFinish }),
         displayValue.value.toFixed(2),
         " ",
-        displayValue.label,
-        props.measureType === 'polygon' ? '²' : ''));
+        '',
+        React__default["default"].createElement(material.Typography, null,
+            displayValue.label,
+            props.measureType === 'polygon' ? ' ²' : '')));
 };
 MlMeasureTool.defaultProps = {
     mapId: undefined,
@@ -2950,9 +3055,9 @@ MlMeasureTool.defaultProps = {
 };
 
 var _g;
-function _extends$1() { _extends$1 = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
+function _extends$2() { _extends$2 = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
 var SvgCompassNeedle = function SvgCompassNeedle(props) {
-  return /*#__PURE__*/React__namespace.createElement("svg", _extends$1({
+  return /*#__PURE__*/React__namespace.createElement("svg", _extends$2({
     width: 10,
     height: 40,
     viewBox: "0 0 10 40",
@@ -2970,10 +3075,10 @@ var SvgCompassNeedle = function SvgCompassNeedle(props) {
   }))));
 };
 
-var _circle, _path, _path2, _path3, _path4;
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+var _circle, _path$1, _path2$1, _path3, _path4;
+function _extends$1() { _extends$1 = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
 var SvgCompassBackground = function SvgCompassBackground(props) {
-  return /*#__PURE__*/React__namespace.createElement("svg", _extends({
+  return /*#__PURE__*/React__namespace.createElement("svg", _extends$1({
     width: 52,
     height: 53,
     viewBox: "0 0 52 53",
@@ -2986,10 +3091,10 @@ var SvgCompassBackground = function SvgCompassBackground(props) {
     fill: "white",
     stroke: "#009EE0",
     strokeWidth: 2
-  })), _path || (_path = /*#__PURE__*/React__namespace.createElement("path", {
+  })), _path$1 || (_path$1 = /*#__PURE__*/React__namespace.createElement("path", {
     d: "M26.4915 7.59161C26.3524 8.07338 25.6698 8.07338 25.5307 7.59161L24.2998 3.3276C24.2075 3.0079 24.4474 2.68893 24.7802 2.68893H27.242C27.5748 2.68893 27.8147 3.0079 27.7224 3.3276L26.4915 7.59161Z",
     fill: "#009EE0"
-  })), _path2 || (_path2 = /*#__PURE__*/React__namespace.createElement("path", {
+  })), _path2$1 || (_path2$1 = /*#__PURE__*/React__namespace.createElement("path", {
     d: "M25.5085 44.7598C25.6476 44.278 26.3302 44.278 26.4693 44.7598L27.7002 49.0238C27.7925 49.3435 27.5526 49.6625 27.2198 49.6625H24.758C24.4252 49.6625 24.1853 49.3435 24.2776 49.0238L25.5085 44.7598Z",
     fill: "#009EE0"
   })), _path3 || (_path3 = /*#__PURE__*/React__namespace.createElement("path", {
@@ -3423,6 +3528,22 @@ MlLayerMagnify.defaultProps = {
     magnifierStyle: {},
 };
 
+var _path, _path2;
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+var SvgIcononlyarrow = function SvgIcononlyarrow(props) {
+  return /*#__PURE__*/React__namespace.createElement("svg", _extends({
+    viewBox: "0 0 47 30",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg"
+  }, props), _path || (_path = /*#__PURE__*/React__namespace.createElement("path", {
+    d: "M29.5 21.25L35.75 15L29.5 8.75V21.25Z",
+    fill: "#009EE0"
+  })), _path2 || (_path2 = /*#__PURE__*/React__namespace.createElement("path", {
+    d: "M17.5 8.75L11.25 15L17.5 21.25V8.75Z",
+    fill: "#009EE0"
+  })));
+};
+
 /**
  *	creates a split view of 2 synchronised maplibre instances
  */
@@ -3492,7 +3613,10 @@ var MlLayerSwipe = function (props) {
         document.removeEventListener('mouseup', onMouseUp);
     };
     function adjustWindowSize() {
-        var clipWidth = mapContext.maps[props.map2Id].getContainer().style.clip.split(',')[1].replace('px', '');
+        var clipWidth = mapContext.maps[props.map2Id]
+            .getContainer()
+            .style.clip.split(',')[1]
+            .replace('px', '');
         var canvasWidth = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect().width;
         if (parseFloat(clipWidth) < canvasWidth) {
             var newPosition = parseFloat(((clipWidth / canvasWidth) * 100).toFixed(2));
@@ -3510,7 +3634,13 @@ var MlLayerSwipe = function (props) {
             window.removeEventListener('resize', adjustWindowSize);
         };
     }, [mapContext]);
-    return (React__default["default"].createElement("div", { style: __assign({ position: 'absolute', left: swipeX + '%', top: '50%', borderRadius: '50%', width: '100px', height: '100px', background: '#0066ff', border: '3px solid #eaebf1', cursor: 'pointer', zIndex: '110', marginLeft: '-50px', marginTop: '-50px', textAlign: 'center', lineHeight: '91px', fontSize: '2em', color: '#fafafa', userSelect: 'none' }, props.buttonStyle), onTouchStart: onDown, onMouseDown: onDown }));
+    return (React__default["default"].createElement("div", { style: __assign({ position: 'absolute', left: swipeX + '%', top: '50%', borderRadius: '50%', width: '65px', height: '65px', background: 'rgba(234, 235, 241, 0.75)', border: '2px solid rgba(0, 158, 224, 0.75)', cursor: 'pointer', zIndex: '110', marginLeft: '-35px', marginTop: '-50px', textAlign: 'center', lineHeight: '91px', fontSize: '2em', color: '#fafafa', userSelect: 'none' }, props.buttonStyle), onTouchStart: onDown, onMouseDown: onDown },
+        React__default["default"].createElement(SvgIcononlyarrow, { color: "#0066ff", style: {
+                width: '65px',
+                height: '65px',
+                justifyContent: 'center',
+                zIndex: 1100,
+            } })));
 };
 MlLayerSwipe.defaultProps = {
     buttonStyle: {},
@@ -4555,64 +4685,6 @@ var useLayerHoverPopup = function (props) {
 useLayerHoverPopup.defaultProps = {
     mapId: undefined,
 };
-
-function useSource(props) {
-    var _a;
-    var mapHook = useMap({
-        mapId: props.mapId,
-    });
-    var initializedRef = React.useRef(false);
-    var _b = React.useState(), source = _b[0], setSource = _b[1];
-    var sourceId = React.useRef(props.sourceId || (props.idPrefix ? props.idPrefix : "Source-") + mapHook.componentId);
-    var createSource = React.useCallback(function () {
-        var _a;
-        if (!mapHook.map)
-            return;
-        initializedRef.current = true;
-        if (mapHook.map.map.getSource(sourceId.current)) {
-            mapHook.cleanup();
-        }
-        (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.addSource(sourceId.current, __assign({}, props.source), mapHook.componentId);
-        setSource(mapHook.map.map.getSource(sourceId.current));
-    }, [props, mapHook.map]);
-    React.useEffect(function () {
-        if (!mapHook.map || initializedRef.current)
-            return;
-        createSource();
-    }, [mapHook.map, props, createSource]);
-    React.useEffect(function () {
-        var _a, _b, _c, _d;
-        if (!initializedRef.current || !((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.getSource(props.sourceId)))
-            return;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore setData only exists on GeoJsonSource
-        (_d = (_c = mapHook.map.map.getSource(props.sourceId)) === null || _c === void 0 ? void 0 : _c.setData) === null || _d === void 0 ? void 0 : _d.call(_c, props.source.data);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore data only exists on GeoJsonSource
-    }, [(_a = props.source) === null || _a === void 0 ? void 0 : _a.data]);
-    //cleanup
-    React.useEffect(function () {
-        return function () {
-            var _a, _b, _c;
-            initializedRef.current = false;
-            if (mapHook.map && ((_c = (_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.style) === null || _c === void 0 ? void 0 : _c._layers)) {
-                for (var _i = 0, _d = Object.entries(mapHook.map.map.style._layers); _i < _d.length; _i++) {
-                    var _e = _d[_i], layerId = _e[0], layer = _e[1];
-                    if (layer.source === sourceId.current) {
-                        mapHook.map.map.removeLayer(layerId);
-                    }
-                }
-                mapHook.map.map.removeSource(sourceId.current);
-            }
-        };
-    }, [mapHook.map]);
-    return {
-        map: mapHook.map,
-        source: source,
-        componentId: mapHook.componentId,
-        mapHook: mapHook,
-    };
-}
 
 /**
  * MlGpxViewer visualizes a given GPX Track on the map
@@ -6192,13 +6264,18 @@ var MlTemporalController = function (props) {
         };
     }, [mapHook.map, props.onClick, props.onHover, props.onLeave]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        filteredData && props.ownLayer && (React__default["default"].createElement(MlGeoJsonLayer, { type: props.type, mapId: props.mapId, layerId: "timeController", insertBeforeLayer: props.insertBeforeLayer || 'timeControllerLabels', geojson: filteredData, paint: props.paint ||
+        filteredData && props.ownLayer && (React__default["default"].createElement(MlGeoJsonLayer, { type: props.type, mapId: props.mapId, 
+            //layerId="timeController"
+            //insertBeforeLayer={props.insertBeforeLayer || 'timeControllerLabels'}
+            paint: props.paint ||
                 paint, options: {
                 source: {
+                    type: 'geojson',
                     attribution: props.attribution,
+                    data: filteredData
                 },
             } })),
-        props.label && (React__default["default"].createElement(MlTemporalControllerLabels, { data: filteredData, currentVal: currentVal, fadeIn: props.labelFadeIn, fadeOut: props.labelFadeOut, step: props.step, labelField: labelField, labelColor: labelColor, timeField: props.timeField, minVal: minVal, accumulate: props.accumulate, isPlaying: isPlaying })),
+        filteredData && props.label && (React__default["default"].createElement(MlTemporalControllerLabels, { data: filteredData, currentVal: currentVal, fadeIn: props.labelFadeIn, fadeOut: props.labelFadeOut, step: props.step, labelField: labelField, labelColor: labelColor, timeField: props.timeField, minVal: minVal, accumulate: props.accumulate, isPlaying: isPlaying })),
         React__default["default"].createElement(TemporalControllerPlayer, { currentVal: currentVal, isPlaying: isPlaying, step: props.step, interval: props.interval, minVal: minVal, maxVal: maxVal, returnCurrent: setCurrentVal, returnPlaying: setIsPlaying, open: false, fadeIn: props.fadeIn, fadeOut: props.fadeOut, featuresColor: featuresColor, labels: props.label, labelColor: labelColor, labelFadeIn: props.labelFadeIn, labelFadeOut: props.labelFadeOut, accumulate: props.accumulate, display: props.displayCurrentValue })));
 };
 MlTemporalController.defaultProps = {
@@ -6438,6 +6515,8 @@ var PaperStyled = material.styled(material.Paper)({
     marginRight: '-21px',
     paddingLeft: '53px',
     borderRadius: '0px',
+    boxShadow: 'none',
+    backgroundColor: 'rgb(0, 0, 0, 0)',
 });
 var BoxStyled = material.styled(material.Box)({
     marginLeft: '61px',
@@ -6598,16 +6677,16 @@ var DeleteIconButton = material.styled(material.IconButton)({
     marginLeft: '20px',
 });
 function LayerListItem(_a) {
-    var _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+    var _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     var layerComponent = _a.layerComponent, visible = _a.visible, type = _a.type, name = _a.name, description = _a.description, configurable = _a.configurable, setLayerState = _a.setLayerState, props = __rest(_a, ["layerComponent", "visible", "type", "name", "description", "configurable", "setLayerState"]);
-    var _p = React.useState(true), localVisible = _p[0], setLocalVisible = _p[1];
-    var _q = React.useState(false), paintPropsFormVisible = _q[0], setPaintPropsFormVisible = _q[1];
-    var _r = React.useState(false), showDeletionConfirmationDialog = _r[0], setShowDeletionConfirmationDialog = _r[1];
+    var _r = React.useState(true), localVisible = _r[0], setLocalVisible = _r[1];
+    var _s = React.useState(false), paintPropsFormVisible = _s[0], setPaintPropsFormVisible = _s[1];
+    var _t = React.useState(false), showDeletionConfirmationDialog = _t[0], setShowDeletionConfirmationDialog = _t[1];
     var deletedRef = React.useRef(false);
     var visibleRef = React.useRef(visible);
     // this state variable is used for layer components that provide a paint attribute
-    var _s = React.useState(((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint) ||
-        getDefaultPaintPropsByType(((_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.type) || getDefaulLayerTypeByGeometry(layerComponent.props.geojson))), paintProps = _s[0], setPaintProps = _s[1];
+    var _u = React.useState(((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint) || ((_d = (_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.options) === null || _d === void 0 ? void 0 : _d.paint) ||
+        getDefaultPaintPropsByType(((_e = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _e === void 0 ? void 0 : _e.type) || getDefaulLayerTypeByGeometry(layerComponent.props.geojson))), paintProps = _u[0], setPaintProps = _u[1];
     var _visible = React.useMemo(function () {
         if (!visible) {
             return false;
@@ -6647,8 +6726,9 @@ function LayerListItem(_a) {
         if (JSON.stringify(paintProps) === JSON.stringify((_b = layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint))
             return;
         setLayerState(__assign(__assign({}, layerComponent.props), { paint: paintProps }));
-    }, [paintProps, setLayerState, (_d = layerComponent.props) === null || _d === void 0 ? void 0 : _d.paint]);
+    }, [paintProps, setLayerState, (_f = layerComponent.props) === null || _f === void 0 ? void 0 : _f.paint]);
     var _layerComponent = React.useMemo(function () {
+        var _a;
         if (layerComponent && type === 'layer') {
             switch (layerComponent.type.name) {
                 case 'MlWmsLayer':
@@ -6657,13 +6737,16 @@ function LayerListItem(_a) {
                     return React__default["default"].cloneElement(layerComponent, __assign({}, layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props));
                 default:
                 case 'MlGeoJsonLayer':
-                    return React__default["default"].cloneElement(layerComponent, __assign({ layout: {
+                    return React__default["default"].cloneElement(layerComponent, {
+                        layout: {
                             visibility: _visible ? 'visible' : 'none',
-                        } }, (setLayerState ? {} : { paint: paintProps })));
+                        },
+                        options: __assign(__assign({}, (_a = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _a === void 0 ? void 0 : _a.options), (setLayerState ? {} : { paint: paintProps }))
+                    });
             }
         }
         return React__default["default"].createElement(React__default["default"].Fragment, null);
-    }, [type, layerComponent, paintProps, _visible, (_e = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _e === void 0 ? void 0 : _e.layers, setLayerState]);
+    }, [type, layerComponent, paintProps, _visible, (_g = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _g === void 0 ? void 0 : _g.layers, setLayerState]);
     var layerType = React.useMemo(function () {
         if (layerComponent && type === 'layer') {
             if (layerComponent.props.type) {
@@ -6675,7 +6758,7 @@ function LayerListItem(_a) {
         }
         return undefined;
     }, [layerComponent]);
-    var listContent = (React__default["default"].createElement(ListItemStyled, { sx: __assign({}, props.listItemSx), secondaryAction: configurable && ((_f = Object.keys(paintProps)) === null || _f === void 0 ? void 0 : _f.length) > 0 ? (React__default["default"].createElement(React__default["default"].Fragment, null, props === null || props === void 0 ? void 0 :
+    var listContent = (React__default["default"].createElement(ListItemStyled, { sx: __assign({}, props.listItemSx), secondaryAction: configurable && ((_h = Object.keys(paintProps)) === null || _h === void 0 ? void 0 : _h.length) > 0 ? (React__default["default"].createElement(React__default["default"].Fragment, null, props === null || props === void 0 ? void 0 :
             props.buttons,
             React__default["default"].createElement(TuneIconButton, { edge: 'end', "aria-label": "settings", onClick: function () {
                     setPaintPropsFormVisible(function (current) {
@@ -6689,10 +6772,10 @@ function LayerListItem(_a) {
                 } })),
         React__default["default"].createElement(material.ListItemText, { variant: "layerlist", primary: name, secondary: description, primaryTypographyProps: { overflow: 'hidden' } })));
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        props.sortable && props.layerId && !((_g = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _g === void 0 ? void 0 : _g.layers) && (React__default["default"].createElement(SortableContainer, { layerId: props.layerId }, listContent)),
-        !props.sortable && !((_h = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _h === void 0 ? void 0 : _h.layers) && (listContent),
+        props.sortable && props.layerId && !((_j = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _j === void 0 ? void 0 : _j.layers) && (React__default["default"].createElement(SortableContainer, { layerId: props.layerId }, listContent)),
+        !props.sortable && !((_k = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _k === void 0 ? void 0 : _k.layers) && (listContent),
         _layerComponent,
-        !((_j = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _j === void 0 ? void 0 : _j.layers) &&
+        !((_l = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _l === void 0 ? void 0 : _l.layers) &&
             Object.keys(paintProps).length > 0 &&
             configurable &&
             paintPropsFormVisible && (React__default["default"].createElement(React__default["default"].Fragment, null,
@@ -6713,7 +6796,7 @@ function LayerListItem(_a) {
                         setShowDeletionConfirmationDialog(false);
                     }, title: "Delete layer", text: "Are you sure you want to delete this layer?" })))),
             React__default["default"].createElement(LayerPropertyForm, { paintProps: paintProps, setPaintProps: setPaintProps, layerType: layerType }))),
-        ((_k = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _k === void 0 ? void 0 : _k.layers) && (React__default["default"].createElement(LayerListFolder, { visible: localVisible, setVisible: setLocalVisible, name: name }, (_o = (_m = (_l = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _l === void 0 ? void 0 : _l.layers) === null || _m === void 0 ? void 0 : _m.map) === null || _o === void 0 ? void 0 : _o.call(_m, function (_el, idx) { return (React__default["default"].createElement(LayerListItemVectorLayer, { vtProps: layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props, setVtProps: setLayerState, id: '' + idx, key: '' + idx, visibleMaster: _visible })); })))));
+        ((_m = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _m === void 0 ? void 0 : _m.layers) && (React__default["default"].createElement(LayerListFolder, { visible: localVisible, setVisible: setLocalVisible, name: name }, (_q = (_p = (_o = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _o === void 0 ? void 0 : _o.layers) === null || _p === void 0 ? void 0 : _p.map) === null || _q === void 0 ? void 0 : _q.call(_p, function (_el, idx) { return (React__default["default"].createElement(LayerListItemVectorLayer, { vtProps: layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props, setVtProps: setLayerState, id: '' + idx, key: '' + idx, visibleMaster: _visible })); })))));
 }
 LayerListItem.defaultProps = {
     type: 'layer',
@@ -6744,6 +6827,11 @@ var MlSketchTool = function (props) {
         geometries: [],
         drawMode: undefined,
     }), sketchState = _d[0], setSketchState = _d[1];
+    React.useEffect(function () {
+        if (!(typeof props.onChange === 'function'))
+            return;
+        props.onChange(sketchState);
+    }, [sketchState, props.onChange]);
     var buttonStyle = __assign({}, props.buttonStyleOverride);
     var buttonClickHandler = function (buttonDrawMode) {
         setSketchState(function (_state) { return ({
@@ -6812,7 +6900,7 @@ var MlSketchTool = function (props) {
             }, onFinish: function () {
                 setSketchState(function (_sketchState) { return (__assign(__assign({}, _sketchState), { drawMode: undefined, activeGeometryIndex: undefined, selectedGeoJson: undefined })); });
             } })),
-        React__default["default"].createElement(List__default["default"], { sx: { zIndex: 105 } },
+        React__default["default"].createElement(List__default["default"], { sx: { zIndex: 105, marginBottom: '-10px' } },
             sketchState.geometries.map(function (el) { return (React__default["default"].createElement(React__default["default"].Fragment, null,
                 React__default["default"].createElement(system.Box, { key: el.id, sx: { display: 'flex', flexDirection: 'column' } },
                     React__default["default"].createElement("br", null),
@@ -6820,6 +6908,7 @@ var MlSketchTool = function (props) {
                             '&:hover': {
                                 backgroundColor: 'rgb(177, 177, 177, 0.2)',
                             },
+                            marginTop: '25px',
                         }, onMouseOver: function () {
                             setHoveredGeometry(el);
                         }, onMouseLeave: function () {
@@ -6846,10 +6935,21 @@ var MlSketchTool = function (props) {
                                         setHoveredGeometry(undefined);
                                     } },
                                     React__default["default"].createElement(DeleteIcon__default["default"], null)))))))); }),
-            hoveredGeometry && (React__default["default"].createElement(MlGeoJsonLayer, { mapId: props.mapId, geojson: { type: 'FeatureCollection', features: [hoveredGeometry] }, type: 'line', layerId: 'highlightBorder', paint: {
-                    'line-color': '#dd9900',
-                    'line-opacity': 0.4,
-                    'line-width': 10,
+            hoveredGeometry && (React__default["default"].createElement(MlGeoJsonLayer, { mapId: props.mapId, geojson: { type: 'FeatureCollection', features: [hoveredGeometry] }, layerId: 'highlightBorder', defaultPaintOverrides: {
+                    circle: {
+                        'circle-color': '#dd9900',
+                        'circle-opacity': 0.4,
+                        'circle-radius': 10,
+                    },
+                    line: {
+                        'line-color': '#dd9900',
+                        'line-opacity': 0.4,
+                        'line-width': 10,
+                    },
+                    fill: {
+                        'fill-color': '#dd9900',
+                        'fill-opacity': 0.4
+                    },
                 } }))),
         sketchState.drawMode === 'simple_select' && (React__default["default"].createElement(material.Typography, { sx: { fontSize: '0.6em' } },
             "Edit ", (_b = (_a = sketchState.selectedGeoJson) === null || _a === void 0 ? void 0 : _a.geometry) === null || _b === void 0 ? void 0 :
@@ -7099,6 +7199,290 @@ var useAddProtocol = function (props) {
     return {};
 };
 useAddProtocol.defaultProps = {
+    mapId: undefined,
+};
+
+function protocolPathParser(url) {
+    var test = url.split('?');
+    var urlParts = test[0].split('://');
+    var protocolId = urlParts[0];
+    var csvUrl = urlParts.length > 2 ? urlParts[1] + '://' + urlParts[2] : urlParts[1];
+    var csvParts = csvUrl.split('/');
+    var filename = csvParts.join('/');
+    var optionsString = decodeURI(test[1]);
+    var options = Object.fromEntries(new URLSearchParams(optionsString));
+    return {
+        protocolId: protocolId,
+        filename: filename,
+        options: options,
+    };
+}
+
+function getProtocolData(path) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, rawData, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, fetch(path)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.text()];
+                case 2:
+                    rawData = _a.sent();
+                    return [2 /*return*/, rawData];
+                case 3:
+                    error_1 = _a.sent();
+                    console.error('File could not be loaded: ', error_1);
+                    return [2 /*return*/, error_1];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+
+function convertCsv(filename, options) {
+    return __awaiter(this, void 0, void 0, function () {
+        var geojson;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
+                        var useOptions = options || {};
+                        var extension = filename.substring(filename.length - 3);
+                        if (extension === 'tsv') {
+                            options.delimiter = '\t';
+                        }
+                        getProtocolData(filename).then(function (rawData) {
+                            // Use the csv2geojson library to convert the CSV to GeoJSON	
+                            csv2geojson__namespace.csv2geojson(rawData, useOptions, function (err, data) {
+                                if (err) {
+                                    reject(err);
+                                }
+                                else {
+                                    resolve(data);
+                                }
+                            });
+                        });
+                    })];
+                case 1:
+                    geojson = _a.sent();
+                    return [2 /*return*/, geojson];
+            }
+        });
+    });
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+var CSVProtocolHandler = function (params, callback) {
+    var parsedParams = protocolPathParser(params.url);
+    convertCsv(parsedParams.filename, parsedParams.options).then(function (data) {
+        if (data !== undefined) {
+            callback(null, data, null, null);
+        }
+        else {
+            callback(new Error('CSV not found'));
+        }
+    });
+    return { cancel: function () { } };
+};
+
+function convertOSM(params) {
+    return __awaiter(this, void 0, void 0, function () {
+        var options, geojson;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    options = params.options || {};
+                    return [4 /*yield*/, new Promise(function (resolve, reject) {
+                            getProtocolData(params.filename).then(function (rawData) {
+                                var newData = osm2geojson__default["default"](rawData, options);
+                                if (!newData) {
+                                    reject('Conversion failed');
+                                }
+                                else {
+                                    resolve(newData);
+                                }
+                            });
+                        })];
+                case 1:
+                    geojson = _a.sent();
+                    return [2 /*return*/, geojson];
+            }
+        });
+    });
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+var OSMProtocolHandler = function (params, callback) {
+    var parsedParams = protocolPathParser(params.url);
+    convertOSM(parsedParams).then(function (data) {
+        if (data !== undefined) {
+            callback(null, data, null, null);
+        }
+        else {
+            callback(new Error('OSM File not found'));
+        }
+    });
+    return { cancel: function () { } };
+};
+
+function reduceFeatures(geojson) {
+    var newFeatures = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    geojson.features.forEach(function (e) {
+        if (!e.features) {
+            newFeatures.push({
+                type: e.type,
+                geometry: e.geometry,
+                properties: e.properties,
+            });
+        }
+        else {
+            e.features.forEach(function (el) {
+                newFeatures.push({ type: el.type, geometry: el.geometry, properties: el.properties });
+            });
+        }
+    });
+    return newFeatures;
+}
+function convertTopojson(params) {
+    return __awaiter(this, void 0, void 0, function () {
+        var geojson;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new Promise(function (resolve) {
+                        var topoJsonData = {
+                            type: 'Topology',
+                            objects: { key: '' },
+                            arcs: []
+                        };
+                        getProtocolData(params.filename).then(function (rawData) {
+                            try {
+                                topoJsonData = JSON.parse(rawData);
+                            }
+                            catch (e) {
+                                throw 'Invalid TopoJson';
+                            }
+                            // Convert the data
+                            var result = {
+                                type: 'FeatureCollection',
+                                features: [],
+                            };
+                            if (topoJsonData.type === 'Topology' && topoJsonData.objects !== undefined) {
+                                // add the "fromObject" property in each topojson feature
+                                Object.keys(topoJsonData.objects).map(function (key) {
+                                    var _a, _b, _c, _d, _e, _f, _g;
+                                    if (((_a = topoJsonData.objects) === null || _a === void 0 ? void 0 : _a[key].type) === 'GeometryCollection') {
+                                        (_c = (_b = topoJsonData.objects) === null || _b === void 0 ? void 0 : _b[key].geometries) === null || _c === void 0 ? void 0 : _c.forEach(function (e) { return (e.properties = __assign({ fromObject: key }, e.properties)); });
+                                    }
+                                    else if (((_d = topoJsonData === null || topoJsonData === void 0 ? void 0 : topoJsonData.objects) === null || _d === void 0 ? void 0 : _d[key]) &&
+                                        ((_f = (_e = topoJsonData === null || topoJsonData === void 0 ? void 0 : topoJsonData.objects) === null || _e === void 0 ? void 0 : _e[key]) === null || _f === void 0 ? void 0 : _f.type) !== 'GeometryCollection') {
+                                        topoJsonData.objects[key].properties = __assign({ fromObject: key }, (_g = topoJsonData.objects) === null || _g === void 0 ? void 0 : _g[key].properties);
+                                    }
+                                });
+                                //convert the data into a geoJson object
+                                result = {
+                                    type: 'FeatureCollection',
+                                    features: Object.keys(topoJsonData.objects).map(function (key) {
+                                        return topojsonClient.feature(topoJsonData, key);
+                                    }),
+                                };
+                                result.features = reduceFeatures(result);
+                            }
+                            resolve(result);
+                        });
+                    })];
+                case 1:
+                    geojson = _a.sent();
+                    return [2 /*return*/, geojson];
+            }
+        });
+    });
+}
+var TopojsonProtocolHandler = function (params, callback) {
+    var parsedParams = protocolPathParser(params.url);
+    convertTopojson(parsedParams).then(function (data) {
+        if (data !== undefined) {
+            callback(null, data, null, null);
+        }
+        else {
+            callback(new Error('Topojson not found'));
+        }
+    });
+    return { cancel: function () { } };
+};
+
+function convertXML(params) {
+    return __awaiter(this, void 0, void 0, function () {
+        var geojson;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
+                        getProtocolData(params.filename).then(function (rawData) {
+                            var newData = function () {
+                                // use an extern converter for tcx files
+                                if (params.protocolId === 'tcx') {
+                                    return externParser__namespace[params.protocolId](new DOMParser().parseFromString(rawData, 'text/xml'));
+                                    // use the projects gpxConverter function for gpx and kml files
+                                }
+                                else {
+                                    return toGeoJSON[params.protocolId](new DOMParser().parseFromString(rawData, 'text/xml'));
+                                }
+                            };
+                            if (!newData()) {
+                                reject('Conversion failed');
+                            }
+                            else {
+                                resolve(newData());
+                            }
+                        });
+                    })];
+                case 1:
+                    geojson = _a.sent();
+                    return [2 /*return*/, geojson];
+            }
+        });
+    });
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+var XMLProtocolHandler = function (params, callback) {
+    var parsedParams = protocolPathParser(params.url);
+    convertXML(parsedParams).then(function (data) {
+        if (data !== undefined) {
+            callback(null, data, null, null);
+        }
+        else {
+            callback(new Error('XML not found'));
+        }
+    });
+    return { cancel: function () { } };
+};
+
+/**
+ *
+ */
+var useAddImage = function (props) {
+    var mapHook = useMap({
+        mapId: undefined,
+    });
+    var initializedRef = React.useRef(false);
+    React.useEffect(function () {
+        var _a;
+        if (!mapHook.map || initializedRef.current)
+            return;
+        (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.loadImage(props.imagePath, function (error, image) {
+            var _a;
+            if (error)
+                throw error;
+            (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.addImage(props.imageId, image);
+            return function () {
+                var _a;
+                (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.removeImage(props.imageId);
+            };
+        });
+    }, [mapHook.map, props]);
+    return;
+};
+useAddImage.defaultProps = {
     mapId: undefined,
 };
 
@@ -7476,383 +7860,6 @@ function OsmOptionsFomular(props) {
             })))));
 }
 
-function protocolPathParser(url) {
-    var test = url.split('?');
-    var urlParts = test[0].split('://');
-    var protocolId = urlParts[0];
-    var csvUrl = urlParts.length > 2 ? urlParts[1] + '://' + urlParts[2] : urlParts[1];
-    var csvParts = csvUrl.split('/');
-    var filename = csvParts.join('/');
-    var optionsString = decodeURI(test[1]);
-    var options = Object.fromEntries(new URLSearchParams(optionsString));
-    return {
-        protocolId: protocolId,
-        filename: filename,
-        options: options,
-    };
-}
-
-function getProtocolData(path) {
-    return __awaiter(this, void 0, void 0, function () {
-        var response, rawData, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, fetch(path)];
-                case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, response.text()];
-                case 2:
-                    rawData = _a.sent();
-                    return [2 /*return*/, rawData];
-                case 3:
-                    error_1 = _a.sent();
-                    console.error('File could not be loaded: ', error_1);
-                    return [2 /*return*/, error_1];
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-
-function convertCsv(filename, options) {
-    return __awaiter(this, void 0, void 0, function () {
-        var geojson;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
-                        var useOptions = options || {};
-                        var extension = filename.substring(filename.length - 3);
-                        if (extension === 'tsv') {
-                            options.delimiter = '\t';
-                        }
-                        getProtocolData(filename).then(function (rawData) {
-                            // Use the csv2geojson library to convert the CSV to GeoJSON	
-                            csv2geojson__namespace.csv2geojson(rawData, useOptions, function (err, data) {
-                                if (err) {
-                                    reject(err);
-                                }
-                                else {
-                                    resolve(data);
-                                }
-                            });
-                        });
-                    })];
-                case 1:
-                    geojson = _a.sent();
-                    return [2 /*return*/, geojson];
-            }
-        });
-    });
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-var CSVProtocolHandler = function (params, callback) {
-    var parsedParams = protocolPathParser(params.url);
-    convertCsv(parsedParams.filename, parsedParams.options).then(function (data) {
-        if (data !== undefined) {
-            callback(null, data, null, null);
-        }
-        else {
-            callback(new Error('CSV not found'));
-        }
-    });
-    return { cancel: function () { } };
-};
-
-function reduceFeatures(geojson) {
-    var newFeatures = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    geojson.features.forEach(function (e) {
-        if (!e.features) {
-            newFeatures.push({
-                type: e.type,
-                geometry: e.geometry,
-                properties: e.properties,
-            });
-        }
-        else {
-            e.features.forEach(function (el) {
-                newFeatures.push({ type: el.type, geometry: el.geometry, properties: el.properties });
-            });
-        }
-    });
-    return newFeatures;
-}
-function convertTopojson(params) {
-    return __awaiter(this, void 0, void 0, function () {
-        var geojson;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new Promise(function (resolve) {
-                        var topoJsonData = {
-                            type: 'Topology',
-                            objects: { key: '' },
-                            arcs: []
-                        };
-                        getProtocolData(params.filename).then(function (rawData) {
-                            try {
-                                topoJsonData = JSON.parse(rawData);
-                            }
-                            catch (e) {
-                                throw 'Invalid TopoJson';
-                            }
-                            // Convert the data
-                            var result = {
-                                type: 'FeatureCollection',
-                                features: [],
-                            };
-                            if (topoJsonData.type === 'Topology' && topoJsonData.objects !== undefined) {
-                                // add the "fromObject" property in each topojson feature
-                                Object.keys(topoJsonData.objects).map(function (key) {
-                                    var _a, _b, _c, _d, _e, _f, _g;
-                                    if (((_a = topoJsonData.objects) === null || _a === void 0 ? void 0 : _a[key].type) === 'GeometryCollection') {
-                                        (_c = (_b = topoJsonData.objects) === null || _b === void 0 ? void 0 : _b[key].geometries) === null || _c === void 0 ? void 0 : _c.forEach(function (e) { return (e.properties = __assign({ fromObject: key }, e.properties)); });
-                                    }
-                                    else if (((_d = topoJsonData === null || topoJsonData === void 0 ? void 0 : topoJsonData.objects) === null || _d === void 0 ? void 0 : _d[key]) &&
-                                        ((_f = (_e = topoJsonData === null || topoJsonData === void 0 ? void 0 : topoJsonData.objects) === null || _e === void 0 ? void 0 : _e[key]) === null || _f === void 0 ? void 0 : _f.type) !== 'GeometryCollection') {
-                                        topoJsonData.objects[key].properties = __assign({ fromObject: key }, (_g = topoJsonData.objects) === null || _g === void 0 ? void 0 : _g[key].properties);
-                                    }
-                                });
-                                //convert the data into a geoJson object
-                                result = {
-                                    type: 'FeatureCollection',
-                                    features: Object.keys(topoJsonData.objects).map(function (key) {
-                                        return topojsonClient.feature(topoJsonData, key);
-                                    }),
-                                };
-                                result.features = reduceFeatures(result);
-                            }
-                            resolve(result);
-                        });
-                    })];
-                case 1:
-                    geojson = _a.sent();
-                    return [2 /*return*/, geojson];
-            }
-        });
-    });
-}
-var TopojsonProtocolHandler = function (params, callback) {
-    var parsedParams = protocolPathParser(params.url);
-    convertTopojson(parsedParams).then(function (data) {
-        if (data !== undefined) {
-            callback(null, data, null, null);
-        }
-        else {
-            callback(new Error('Topojson not found'));
-        }
-    });
-    return { cancel: function () { } };
-};
-
-function convertOSM(params) {
-    return __awaiter(this, void 0, void 0, function () {
-        var options, geojson;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    options = params.options || {};
-                    return [4 /*yield*/, new Promise(function (resolve, reject) {
-                            getProtocolData(params.filename).then(function (rawData) {
-                                var newData = osm2geojson__default["default"](rawData, options);
-                                if (!newData) {
-                                    reject('Conversion failed');
-                                }
-                                else {
-                                    resolve(newData);
-                                }
-                            });
-                        })];
-                case 1:
-                    geojson = _a.sent();
-                    return [2 /*return*/, geojson];
-            }
-        });
-    });
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-var OSMProtocolHandler = function (params, callback) {
-    var parsedParams = protocolPathParser(params.url);
-    convertOSM(parsedParams).then(function (data) {
-        if (data !== undefined) {
-            callback(null, data, null, null);
-        }
-        else {
-            callback(new Error('OSM File not found'));
-        }
-    });
-    return { cancel: function () { } };
-};
-
-function convertXML(params) {
-    return __awaiter(this, void 0, void 0, function () {
-        var geojson;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
-                        getProtocolData(params.filename).then(function (rawData) {
-                            var newData = function () {
-                                // use an extern converter for tcx files
-                                if (params.protocolId === 'tcx') {
-                                    return externParser__namespace[params.protocolId](new DOMParser().parseFromString(rawData, 'text/xml'));
-                                    // use the projects gpxConverter function for gpx and kml files
-                                }
-                                else {
-                                    return toGeoJSON[params.protocolId](new DOMParser().parseFromString(rawData, 'text/xml'));
-                                }
-                            };
-                            if (!newData()) {
-                                reject('Conversion failed');
-                            }
-                            else {
-                                resolve(newData());
-                            }
-                        });
-                    })];
-                case 1:
-                    geojson = _a.sent();
-                    return [2 /*return*/, geojson];
-            }
-        });
-    });
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-var XMLProtocolHandler = function (params, callback) {
-    var parsedParams = protocolPathParser(params.url);
-    convertXML(parsedParams).then(function (data) {
-        if (data !== undefined) {
-            callback(null, data, null, null);
-        }
-        else {
-            callback(new Error('XML not found'));
-        }
-    });
-    return { cancel: function () { } };
-};
-
-var loadedMbtiles = {};
-var parseTileParams = function (url) {
-    var urlParts = url.split('://');
-    var mbtilesUrl = urlParts.length > 2 ? urlParts[1] + '://' + urlParts[2] : urlParts[1];
-    var mbtilesParts = mbtilesUrl.split('/');
-    var mbtilesPartsLength = mbtilesParts.length;
-    var y = mbtilesParts.splice(mbtilesPartsLength - 1, 1)[0];
-    var x = mbtilesParts.splice(mbtilesPartsLength - 2, 1)[0];
-    var z = mbtilesParts.splice(mbtilesPartsLength - 3, 1)[0];
-    var filename = mbtilesParts.join('/');
-    return {
-        filename: filename,
-        z: z,
-        x: x,
-        y: y,
-    };
-};
-// mbtiles files are sqlite databases. This function loads the database and returns a handler
-// to work with sqlite databases in javascript we need to use sql.js.
-// to make this work in your project make sure to copy sql-wasm.wasm to the file root of your public folder and
-// add the following config to the externals prop of your webpack config
-// {externals: { fs: 'fs' }};
-var getMbtilesDbHandler = function (_a) {
-    var filename = _a.filename;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var SQL, fetched, buf, db;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    if (!!loadedMbtiles[filename]) return [3 /*break*/, 4];
-                    return [4 /*yield*/, initSqlJs__default["default"]()];
-                case 1:
-                    SQL = _b.sent();
-                    return [4 /*yield*/, fetch(filename)];
-                case 2:
-                    fetched = _b.sent();
-                    return [4 /*yield*/, fetched.arrayBuffer()];
-                case 3:
-                    buf = _b.sent();
-                    db = new SQL.Database(new Uint8Array(buf));
-                    loadedMbtiles[filename] = db;
-                    _b.label = 4;
-                case 4: return [2 /*return*/, loadedMbtiles[filename]];
-            }
-        });
-    });
-};
-/**
- * Example usage:
- * getBufferFromMbtiles({ filename: 'mbtiles/countries.mbtiles', z: '0', x: '0', y: '0' }).then(
- * 	(result) => {
- * 		console.log(result);
- * 	}
- * );
- */
-function getBufferFromMbtiles(params) {
-    return __awaiter(this, void 0, void 0, function () {
-        var db, query;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, getMbtilesDbHandler(params)];
-                case 1:
-                    db = _a.sent();
-                    query = 'SELECT tile_data FROM tiles WHERE zoom_level = ' +
-                        params.z +
-                        ' AND tile_column = ' +
-                        params.x +
-                        ' AND tile_row = ' +
-                        (Math.pow(2, parseInt(params.z)) - parseInt(params.y) - 1);
-                    return [2 /*return*/, new Promise(function (resolve, reject) {
-                            try {
-                                // some of the logic here was heavily inspired by
-                                // https://github.com/IsraelHikingMap/Site/blob/6aa2ec0cfb8891fa048b1d9e2a4fc7d4cbcc8c97/IsraelHiking.Web/src/application/services/database.service.ts
-                                var result = db.exec(query);
-                                if (result.length !== 1) {
-                                    reject(new Error('Tile not found.'));
-                                    return;
-                                }
-                                var resultData = result[0].values[0][0];
-                                var binData = void 0;
-                                var isGzipped = resultData[0] === 0x1f && resultData[1] === 0x8b;
-                                if (isGzipped) {
-                                    binData = pako__namespace.inflate(resultData);
-                                }
-                                else {
-                                    binData = resultData;
-                                }
-                                if (binData === null || binData === void 0 ? void 0 : binData.buffer) {
-                                    resolve(binData.buffer);
-                                }
-                                else {
-                                    reject(new Error('Tile not found.'));
-                                    return;
-                                }
-                            }
-                            catch (error) {
-                                reject(error);
-                            }
-                        })];
-            }
-        });
-    });
-}
-/**
- * Expects a tile url in the following format:
- *
- * 'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}'
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-var mbTilesProtocolHandler = function (params, callback) {
-    var parsedParams = parseTileParams(params.url);
-    getBufferFromMbtiles(parsedParams).then(function (result) {
-        if (result) {
-            callback(null, result, null, null);
-        }
-        else {
-            callback(new Error('Tile not found'));
-        }
-    });
-    return { cancel: function () { } };
-};
-
 var handlers = {
     csv: CSVProtocolHandler,
     topojson: TopojsonProtocolHandler,
@@ -7860,7 +7867,7 @@ var handlers = {
     gpx: XMLProtocolHandler,
     kml: XMLProtocolHandler,
     tcx: XMLProtocolHandler,
-    mbtiles: mbTilesProtocolHandler
+    //mbtiles: mbTilesProtocolHandler
 };
 var types = ['fill', 'line', 'circle'];
 function ProtocolHandlerLayerForm(props) {
@@ -8108,11 +8115,17 @@ AddLayerPopup.defaultProps = {};
 
 var AddLayerButton = function (props) {
     var _a = React__default["default"].useState(false), popupOpen = _a[0], setPopupOpen = _a[1];
-    var layerTypes = props.layerTypes || ['geojson', 'wms', 'mbtiles', 'csv', 'topojson', 'osm', 'gpx', 'kml', 'tcx'];
-    layerTypes.includes('mbtiles') && useAddProtocol({
-        protocol: 'mbtiles',
-        handler: mbTilesProtocolHandler,
-    });
+    var layerTypes = props.layerTypes || [
+        'geojson',
+        'wms',
+        //'mbtiles',
+        'csv',
+        'topojson',
+        'osm',
+        'gpx',
+        'kml',
+        'tcx',
+    ];
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement(material.Button, { variant: "contained", sx: __assign({ marginTop: '10px' }, props.sx), onClick: function () { return setPopupOpen(true); } },
             React__default["default"].createElement(PlaylistAddIcon__default["default"], null)),
@@ -21147,6 +21160,7 @@ SpeedDial.defaultProps = {
 
 exports.AddLayerButton = AddLayerButton;
 exports.AddLayerPopup = AddLayerPopup;
+exports.CSVProtocolHandler = CSVProtocolHandler;
 exports.ColorPicker = PaintPropsColorPicker;
 exports.ConfirmDialog = ConfirmDialog;
 exports.GeoJsonContext = GeoJsonContext;
@@ -21200,6 +21214,7 @@ exports.MlWmsFeatureInfoPopup = MlWmsFeatureInfoPopup;
 exports.MlWmsLayer = MlWmsLayer;
 exports.MlWmsLoader = MlWmsLoader;
 exports.MonokaiStyle = MonokaiStyle;
+exports.OSMProtocolHandler = OSMProtocolHandler;
 exports.OceanicNextStyle = OceanicNextStyle;
 exports.PdfContext = PdfContext;
 exports.PdfForm = PdfForm;
@@ -21211,9 +21226,16 @@ exports.SimpleDataProvider = SimpleDataProvider;
 exports.SolarizedStyle = SolarizedStyle;
 exports.SpeedDial = SpeedDial;
 exports.TopToolbar = TopToolbar;
+exports.TopojsonProtocolHandler = TopojsonProtocolHandler;
 exports.UploadButton = UploadButton;
 exports.WmsLayerForm = WmsLayerForm;
+exports.XMLProtocolHandler = XMLProtocolHandler;
+exports.convertCsv = convertCsv;
+exports.convertOSM = convertOSM;
+exports.convertTopojson = convertTopojson;
+exports.convertXML = convertXML;
 exports.getTheme = getTheme;
+exports.useAddImage = useAddImage;
 exports.useAddProtocol = useAddProtocol;
 exports.useCameraFollowPath = useCameraFollowPath;
 exports.useExportMap = useExportMap;
