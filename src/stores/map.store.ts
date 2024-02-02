@@ -1,7 +1,7 @@
 import { MlGeoJsonLayerProps } from 'src/components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { MlVectorTileLayerProps } from 'src/components/MlVectorTileLayer/MlVectorTileLayer';
 import { Layer } from 'wms-capabilities';
-import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface wmsLoaderConfigProps {
 	getFeatureInfoUrl: string;
@@ -52,85 +52,78 @@ export type FolderLayerConfig = {
 
 export type LayerConfig = WmsLayerConfig | GeojsonLayerConfig | VtLayerConfig | FolderLayerConfig;
 
-export interface MapState {
+interface MapState {
 	center: [number, number];
 	zoom: number;
+}
+
+interface LayerOrderItem {
+	uuid: string;
+	layers?: LayerOrderItem[];
 }
 
 interface MapConfig {
 	uuid: string;
 	name: string;
-	layers: { [uuid: string]: LayerConfig };
 	mapState: MapState;
+	layers: { [uuid: string]: LayerConfig };
+	layerOrder: LayerOrderItem[];
 }
 
 export type AppState = {
-	layers: { [key: string]: LayerConfig };
 	mapConfigs: { [key: string]: MapConfig };
 };
 
-const layersSlice = createSlice({
-  name: 'layers',
-  initialState: {} as { [key: string]: LayerConfig },
-  reducers: {
-    addOrUpdateLayer(state, action) {
-      const { uuid } = action.payload;
-      state[uuid] = action.payload;
-    },
-    removeLayer(state, action) {
-      delete state[action.payload];
-    },
-  },
+const initialState: AppState = {
+	mapConfigs: {},
+};
+const mapConfigSlice = createSlice({
+	name: 'mapConfig',
+	initialState,
+	reducers: {
+		// Add or update a MapConfig
+		setMapConfig: (state, action: PayloadAction<MapConfig>) => {
+			const mapConfig = action.payload;
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			state.mapConfigs[mapConfig.uuid] = mapConfig;
+		},
+		// Remove a MapConfig by its uuid
+		removeMapConfig: (state, action: PayloadAction<{ uuid: string }>) => {
+			delete state.mapConfigs[action.payload.uuid];
+		},
+		// Add or update a layer within a MapConfig
+		setLayerInMapConfig: (
+			state,
+			action: PayloadAction<{
+				mapConfigUuid: string;
+				layer: LayerConfig;
+			}>
+		) => {
+			const { mapConfigUuid, layer } = action.payload;
+			const mapConfig = state.mapConfigs[mapConfigUuid];
+			if (mapConfig) {
+				mapConfig.layers[layer.uuid] = layer;
+			}
+		},
+		// Remove a layer from a MapConfig
+		removeLayerFromMapConfig: (
+			state,
+			action: PayloadAction<{
+				mapConfigUuid: string;
+				layerUuid: string;
+			}>
+		) => {
+			const { mapConfigUuid, layerUuid } = action.payload;
+			const mapConfig = state.mapConfigs[mapConfigUuid];
+			if (mapConfig && mapConfig.layers[layerUuid]) {
+				delete mapConfig.layers[layerUuid];
+			}
+		},
+	},
 });
 
-// Map Config Slice
-const mapConfigsSlice = createSlice({
-  name: 'mapConfigs',
-  initialState: {} as { [key: string]: MapConfig },
-  reducers: {
-    addOrUpdateMapConfig(state, action) {
-      const { uuid } = action.payload;
-      // Update the entire MapConfig object, including layers and mapState
-      state[uuid] = action.payload;
-    },
-    removeMapConfig(state, action) {
-      delete state[action.payload];
-    },
-    addOrUpdateLayerInMapConfig(state, action) {
-      const { mapConfigUuid, layerConfig } = action.payload;
-      const mapConfig = state[mapConfigUuid];
-      if (mapConfig) {
-        mapConfig.layers[layerConfig.uuid] = layerConfig;
-      }
-    },
-    removeLayerFromMapConfig(state, action) {
-      const { mapConfigUuid, layerUuid } = action.payload;
-      const mapConfig = state[mapConfigUuid];
-      if (mapConfig && mapConfig.layers[layerUuid]) {
-        delete mapConfig.layers[layerUuid];
-      }
-    }
-  },
-});
+export const { setMapConfig, removeMapConfig, setLayerInMapConfig, removeLayerFromMapConfig } =
+	mapConfigSlice.actions;
 
-const store = configureStore({
-  reducer: {
-    layers: layersSlice.reducer,
-    mapConfigs: mapConfigsSlice.reducer,
-  },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-});
-
-export const {
-  addOrUpdateLayer,
-  removeLayer
-} = layersSlice.actions;
-
-export const {
-  addOrUpdateMapConfig,
-  removeMapConfig,
-  addOrUpdateLayerInMapConfig,
-  removeLayerFromMapConfig
-} = mapConfigsSlice.actions;
-
-export { store };
+export default mapConfigSlice.reducer;
