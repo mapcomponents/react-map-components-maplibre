@@ -4,12 +4,12 @@ import MlCreatePdfForm from './MlCreatePdfForm';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Button, Drawer, useMediaQuery } from '@mui/material';
+import { Box, Button, Drawer, SwipeableDrawer, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Sidebar from '../../ui_components/Sidebar';
-
+import ArticleIcon from '@mui/icons-material/Article';
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
@@ -32,19 +32,45 @@ const MlDialog = ({
 }) => {
 	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
-	/*
-	const [drawerHeight, setDrawerHeight] = useState<Number>(200);
+	const [state, setState] = React.useState({
+		top: false,
+		left: false,
+		bottom: false,
+		right: false,
+	});
 
-	const handleHeightChange = (newHeight: number) => {
-		setDrawerHeight(newHeight)};
+	const toggleDrawer =
+		(side: string, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+			if (
+				event &&
+				event.type === 'keydown' &&
+				((event as React.KeyboardEvent).key === 'Tab' ||
+					(event as React.KeyboardEvent).key === 'Shift')
+			) {
+				return;
+			}
 
-<Button onClick={() => handleHeightChange(drawerHeight === 200 ? 100 : 200)}></Button>
-*/
+			setState({ ...state, [side]: open });
+		};
 
 	return mediaIsMobile ? (
-		<Sidebar anchor="bottom" open={true} title={title} drawerBleeding={26}>
-			<DialogContent>{children}</DialogContent>
-		</Sidebar>
+		<>
+			<Button onClick={toggleDrawer('bottom', true)}>
+				<ArticleIcon />
+			</Button>
+			<SwipeableDrawer
+				anchor="bottom"
+				open={state.bottom}
+				onClose={toggleDrawer('bottom', false)}
+				onOpen={toggleDrawer('bottom', true)}
+				ModalProps={{
+					keepMounted: true,
+				}}
+				swipeAreaWidth={56}
+			>
+				<DialogContent>{children}</DialogContent>
+			</SwipeableDrawer>
+		</>
 	) : (
 		<Dialog
 			open={true}
