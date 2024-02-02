@@ -65,7 +65,7 @@ interface MapConfig {
 }
 
 export type AppState = {
-	layers: { [uuid: string]: LayerConfig }[];
+	layers: { [uuid: string]: LayerConfig };
 	mapConfigs: { [key: string]: MapConfig };
 };
 
@@ -126,16 +126,20 @@ type AppActionTypes = LayerActionTypes | MapActionTypes;
 // Reducer
 // Reducers for layersState
 function layersReducer(
-	state: { [uuid: string]: LayerConfig }[] = [],
+	state: { [uuid: string]: LayerConfig } = {},
 	action: LayerActionTypes
-): { [uuid: string]: LayerConfig }[] {
+): { [uuid: string]: LayerConfig } {
 	switch (action.type) {
 		case ADD_UPDATE_LAYER: {
-			const updatedState = state.filter((layer) => Object.keys(layer)[0] !== action.payload.uuid);
-			return [...updatedState, { [action.payload.uuid]: action.payload }];
+			const { uuid } = action.payload;
+			return {
+				...state,
+				[uuid]: action.payload,
+			};
 		}
 		case REMOVE_LAYER: {
-			return state.filter((layer) => Object.keys(layer)[0] !== action.payload);
+			const { [action.payload]: _, ...newState } = state;
+			return newState;
 		}
 		default:
 			return state;
@@ -169,7 +173,6 @@ const rootReducer: Reducer<AppState, AppActionTypes> = combineReducers({
 	layers: layersReducer,
 	mapConfigs: mapsReducer,
 });
-
 const store = configureStore({
 	reducer: rootReducer,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(),
