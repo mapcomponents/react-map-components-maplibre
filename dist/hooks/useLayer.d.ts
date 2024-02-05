@@ -1,5 +1,5 @@
 import { useMapType } from './useMap';
-import { GeoJSONSourceSpecification, LayerSpecification, MapMouseEvent, GeoJSONFeature, Style, MapEventType, Map, FilterSpecification } from 'maplibre-gl';
+import { SourceSpecification, LayerSpecification, MapMouseEvent, GeoJSONFeature, Style, MapEventType, Map, VideoSourceSpecification, ImageSourceSpecification } from 'maplibre-gl';
 import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 import { GeoJSONObject } from '@turf/turf';
 type getLayerType = Style['getLayer'];
@@ -21,9 +21,8 @@ export interface useLayerProps {
     insertBeforeFirstSymbolLayer?: boolean;
     geojson?: GeoJSONObject;
     options: Partial<LayerSpecification & {
-        source?: GeoJSONSourceSpecification | string;
+        source?: Partial<Exclude<SourceSpecification, VideoSourceSpecification | ImageSourceSpecification>>;
         id?: string;
-        filter?: FilterSpecification;
     }>;
     onHover?: (ev: MapEventType & unknown) => Map | void;
     onClick?: (ev: MapEventType & unknown) => Map | void;

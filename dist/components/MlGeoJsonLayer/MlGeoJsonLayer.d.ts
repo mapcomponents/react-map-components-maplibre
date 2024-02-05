@@ -21,7 +21,7 @@ export type MlGeoJsonLayerProps = {
     /**
      * GeoJSON data that is supposed to be rendered by this component.
      */
-    geojson?: Feature | FeatureCollection | undefined;
+    geojson: Feature | FeatureCollection | undefined;
     /**
      * Type of the layer that will be added to the MapLibre instance.
      * All types from LayerSpecification union type are supported except the type from
@@ -29,7 +29,6 @@ export type MlGeoJsonLayerProps = {
      */
     type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
     /**
-     * @deprecated The property should not be used. Please use the options.paint property instead. This will be removed in the next major release.
      * Paint property object, that is passed to the addLayer call.
      * Possible props depend on the layer type.
      * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
@@ -42,7 +41,6 @@ export type MlGeoJsonLayerProps = {
      */
     paint?: Exclude<LayerSpecification['paint'], RasterLayerSpecification['paint']>;
     /**
-     * @deprecated The property should not be used. Please use the options.layout property instead. This will be removed in the next major release.
      * Layout property object, that is passed to the addLayer call.
      * Possible props depend on the layer type.
      * See https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/

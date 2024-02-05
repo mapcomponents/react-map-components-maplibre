@@ -1,4 +1,4 @@
-import { RequestParameters } from 'maplibre-gl';
+import { RequestParameters, ResponseCallback } from 'maplibre-gl';
 declare const parseTileParams: (url: string) => {
     filename: string;
     z: string;
