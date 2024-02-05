@@ -32,7 +32,7 @@ const Template = () => (
 				'icon-offset': [0, -180],
 			},
 		}}
-		imgSrc={'/assets/wg-marker.png'}
+		imgSrc={'/assets/marker.png'}
 	/>
 );
 
