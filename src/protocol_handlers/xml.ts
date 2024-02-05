@@ -42,7 +42,7 @@ async function convertXML(params: {
 const XMLProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 
-	const data = convertXML(parsedParams);
+	const data = await convertXML(parsedParams);
 	if (data !== undefined) {
 		return { data: data };
 	}

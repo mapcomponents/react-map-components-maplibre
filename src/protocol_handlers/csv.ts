@@ -38,7 +38,7 @@ async function convertCsv(filename: string, options: csv2geojsonType.csvOptions 
 const CSVProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 
-	const data = convertCsv(parsedParams.filename, parsedParams.options);
+	const data = await convertCsv(parsedParams.filename, parsedParams.options);
 		if (data !== undefined) {
 			return {data:data}
 		}

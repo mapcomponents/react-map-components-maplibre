@@ -33,7 +33,7 @@ async function convertOSM(params: {
 const OSMProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 
-	const data = convertOSM(parsedParams);
+	const data = await convertOSM(parsedParams);
 	if (data !== undefined) {
 		return { data: data };
 	}
