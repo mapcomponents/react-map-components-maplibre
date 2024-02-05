@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import useMap from '../../hooks/useMap';
-import { GeoJSONFeature } from 'maplibre-gl';
 import {
 	LngLatLike,
 	Popup,
@@ -16,7 +15,7 @@ interface useLayerHoverPopupProps {
 	 * Id of an existing layer in the mapLibre instance this event will be registered to
 	 */
 	layerId?: string;
-	getPopupContent: (feature: GeoJSONFeature) => string;
+	getPopupContent: (feature: GeoJSON.Feature) => string;
 }
 
 /**
@@ -53,7 +52,7 @@ const useLayerHoverPopup = (props: useLayerHoverPopupProps) => {
 				//const description = e.features[0].properties.desc;
 				let content = '';
 				if (e?.features?.[0] && typeof props.getPopupContent === 'function') {
-					content = props.getPopupContent(e.features[0] as unknown as GeoJSONFeature);
+					content = props.getPopupContent(e.features[0] as unknown as GeoJSON.Feature);
 				}
 
 				if (coordinates?.[0]) {
