@@ -4,12 +4,11 @@ import MlCreatePdfForm from './MlCreatePdfForm';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, Button, Drawer, SwipeableDrawer, useMediaQuery } from '@mui/material';
+import { Box, Button, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Sidebar from '../../ui_components/Sidebar';
-import ArticleIcon from '@mui/icons-material/Article';
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
@@ -32,44 +31,22 @@ const MlDialog = ({
 }) => {
 	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
-	const [state, setState] = React.useState({
-		top: false,
-		left: false,
-		bottom: false,
-		right: false,
-	});
-
-	const toggleDrawer =
-		(side: string, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-			if (
-				event &&
-				event.type === 'keydown' &&
-				((event as React.KeyboardEvent).key === 'Tab' ||
-					(event as React.KeyboardEvent).key === 'Shift')
-			) {
-				return;
-			}
-
-			setState({ ...state, [side]: open });
-		};
-
 	return mediaIsMobile ? (
 		<>
-			<Button onClick={toggleDrawer('bottom', true)}>
-				<ArticleIcon />
-			</Button>
-			<SwipeableDrawer
-				anchor="bottom"
-				open={state.bottom}
-				onClose={toggleDrawer('bottom', false)}
-				onOpen={toggleDrawer('bottom', true)}
-				ModalProps={{
-					keepMounted: true,
-				}}
-				swipeAreaWidth={56}
-			>
-				<DialogContent>{children}</DialogContent>
-			</SwipeableDrawer>
+			<Sidebar anchor="bottom" open={true} title={title} drawerBleeding={75}>
+				<Box
+					sx={{
+						position: 'absolute',
+						top: -60,
+						background: 'white',
+						marginTop: '0px',
+						left: -20,
+						paddingLeft: '20px',
+					}}
+				>
+					<DialogContent>{children}</DialogContent>
+				</Box>
+			</Sidebar>
 		</>
 	) : (
 		<Dialog
@@ -210,13 +187,3 @@ const Template = () => {
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {};
-
-
-//const SidebarTemplate = function() {
-//
-//	return <>
-//	</>;
-//}
-//export const SidebarExample = SidebarTemplate.bind({});
-//SidebarExample.parameters = {};
-//SidebarExample.args = {};

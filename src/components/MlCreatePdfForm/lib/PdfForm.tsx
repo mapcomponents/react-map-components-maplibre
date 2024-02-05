@@ -148,142 +148,109 @@ export default function PdfForm(props: PdfFormProps) {
 
 	return (
 		<>
-			<>
-				{mediaIsMobile ? (
-					<FormControl fullWidth sx={formControlStyles}>
-						<Button
-							variant="contained"
-							className="createPdfButton"
-							onClick={createPdfHandler}
-							disabled={loading}
-							sx={{ marginBottom: '16px', marginTop: '-20px' }}
-						>
-							create PDF
-						</Button>
-						{loading && (
-							<CircularProgress
-								size={24}
-								sx={{
-									color: 'primary.main',
-									position: 'absolute',
-									top: '25%',
-									left: '50%',
-									marginTop: '-12px',
-									marginLeft: '-12px',
-								}}
-							/>
-						)}
-					</FormControl>
-				) : (
-					<></>
-				)}
-				<FormControl fullWidth sx={formControlStyles}>
-					<InputLabel sx={{ marginTop: '3px' }} id="format-select-label">
-						Format
-					</InputLabel>
-					<Select
-						labelId="format-select-label"
-						id="format-select"
-						label="Format"
-						value={pdfContext.format}
-						onChange={(event) => {
-							pdfContext.setFormat?.(event.target.value);
+			<FormControl fullWidth sx={formControlStyles}>
+				<Button
+					variant="contained"
+					className="createPdfButton"
+					onClick={createPdfHandler}
+					disabled={loading}
+					sx={{ marginBottom: '16px' }}
+				>
+					create PDF
+				</Button>
+				{loading && (
+					<CircularProgress
+						size={24}
+						sx={{
+							color: 'primary.main',
+							position: 'absolute',
+							top: '25%',
+							left: '50%',
+							marginTop: '-12px',
+							marginLeft: '-12px',
 						}}
-					>
-						{Object.keys(templates).map((el) => (
-							<MenuItem key={el} value={el}>
-								{el}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<FormControl fullWidth sx={formControlStyles}>
-					<FormLabel id="orientation-radio-buttons-group-label">Orientation</FormLabel>
-					<RadioGroup
-						row
-						aria-labelledby="orientation-radio-buttons-group-label"
-						name="orientation-radio-buttons-group"
-						value={pdfContext.options?.orientation}
-						onChange={(event) => {
-							if (!pdfContext.setOptions) return;
+					/>
+				)}
+			</FormControl>
+			<FormControl fullWidth sx={formControlStyles}>
+				<InputLabel sx={{ marginTop: '3px' }} id="format-select-label">
+					Format
+				</InputLabel>
+				<Select
+					labelId="format-select-label"
+					id="format-select"
+					label="Format"
+					value={pdfContext.format}
+					onChange={(event) => {
+						pdfContext.setFormat?.(event.target.value);
+					}}
+				>
+					{Object.keys(templates).map((el) => (
+						<MenuItem key={el} value={el}>
+							{el}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<FormControl fullWidth sx={formControlStyles}>
+				<FormLabel id="orientation-radio-buttons-group-label">Orientation</FormLabel>
+				<RadioGroup
+					row
+					aria-labelledby="orientation-radio-buttons-group-label"
+					name="orientation-radio-buttons-group"
+					value={pdfContext.options?.orientation}
+					onChange={(event) => {
+						if (!pdfContext.setOptions) return;
 
-							pdfContext.setOptions((val: PdfPreviewOptions) => ({
-								...val,
-								orientation: event.target.value as 'landscape' | 'portrait',
-							}));
-						}}
-					>
-						<FormControlLabel value="portrait" control={<Radio />} label="Portrait" />
-						<FormControlLabel value="landscape" control={<Radio />} label="Landscape" />
-					</RadioGroup>
-				</FormControl>
-				<FormControl fullWidth sx={formControlStyles}>
-					<InputLabel id="quality-select-label">Quality</InputLabel>
-					<Select
-						labelId="quality-select-label"
-						id="quality-select"
-						label="Quality"
-						value={pdfContext.quality}
-						onChange={(event) => {
-							pdfContext.setQuality?.(event.target.value);
-						}}
-					>
-						{qualityOptions.map((el) => (
-							<MenuItem key={el.value} value={el.value}>
-								{el.label}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<FormControl fullWidth sx={formControlStyles}>
-					<InputLabel id="scale-select-label">Scale</InputLabel>
-					<Select
-						labelId="scale-select-label"
-						id="scale-select"
-						label="Scale"
-						value={pdfContext?.options?.fixedScale}
-						onChange={(event) => {
-							pdfContext.setOptions?.((val) => ({
-								...val,
-								fixedScale: event.target.value as number,
-							}));
-						}}
-					>
-						{scaleOptions.map((el, idx) => (
-							<MenuItem key={idx} value={el.value}>
-								{el.label}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				{mediaIsMobile ? (
-					<></>
-				) : (
-					<FormControl fullWidth sx={formControlStyles}>
-						<Button
-							variant="contained"
-							className="createPdfButton"
-							onClick={createPdfHandler}
-							disabled={loading}
-						>
-							create PDF
-						</Button>
-						{loading && (
-							<CircularProgress
-								size={24}
-								sx={{
-									color: 'primary.main',
-									position: 'absolute',
-									top: '50%',
-									left: '50%',
-									marginTop: '-12px',
-									marginLeft: '-12px',
-								}}
-							/>
-						)}
-					</FormControl>
-				)}
-			</>
+						pdfContext.setOptions((val: PdfPreviewOptions) => ({
+							...val,
+							orientation: event.target.value as 'landscape' | 'portrait',
+						}));
+					}}
+				>
+					<FormControlLabel value="portrait" control={<Radio />} label="Portrait" />
+					<FormControlLabel value="landscape" control={<Radio />} label="Landscape" />
+				</RadioGroup>
+			</FormControl>
+			<FormControl fullWidth sx={formControlStyles}>
+				<InputLabel id="quality-select-label">Quality</InputLabel>
+				<Select
+					labelId="quality-select-label"
+					id="quality-select"
+					label="Quality"
+					value={pdfContext.quality}
+					onChange={(event) => {
+						pdfContext.setQuality?.(event.target.value);
+					}}
+				>
+					{qualityOptions.map((el) => (
+						<MenuItem key={el.value} value={el.value}>
+							{el.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<FormControl fullWidth sx={formControlStyles}>
+				<InputLabel id="scale-select-label">Scale</InputLabel>
+				<Select
+					labelId="scale-select-label"
+					id="scale-select"
+					label="Scale"
+					value={pdfContext?.options?.fixedScale}
+					onChange={(event) => {
+						pdfContext.setOptions?.((val) => ({
+							...val,
+							fixedScale: event.target.value as number,
+						}));
+					}}
+				>
+					{scaleOptions.map((el, idx) => (
+						<MenuItem key={idx} value={el.value}>
+							{el.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
 			{pdfContext.options && pdfContext.setOptions && (
 				<PdfPreview
 					options={pdfContext.options}
