@@ -58,7 +58,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 	function fitLayer(layer: LayerConfig) {
 		const layerSource =
 			layer.id && mapHook.map?.getLayer(layer.id)?.source
-				? mapHook.map?.getLayer(layer.id).source
+				? mapHook.map?.getLayer(layer.id)?.source
 				: undefined;
 
 		let _bbox: LngLatBoundsLike | null = null;

@@ -1,4 +1,4 @@
-import { RequestParameters, ResponseCallback } from 'maplibre-gl';
+import { RequestParameters } from 'maplibre-gl';
 import { FeatureCollection } from '@turf/turf';
 import * as csv2geojsonType from './csv2geojson';
 import * as csv2geojson from 'csv2geojson';
@@ -35,17 +35,14 @@ async function convertCsv(filename: string, options: csv2geojsonType.csvOptions 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CSVProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
+const CSVProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 
-	convertCsv(parsedParams.filename, parsedParams.options).then((data) => {
+	const data = convertCsv(parsedParams.filename, parsedParams.options);
 		if (data !== undefined) {
-			callback(null, data, null, null);
-		} else {
-			callback(new Error('CSV not found'));
+			return {data:data}
 		}
-	});
-	return { cancel: () => {} };
+			throw new Error('CSV not found ' + parsedParams.filename);
 };
 
 export { CSVProtocolHandler, convertCsv };
