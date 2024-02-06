@@ -97,6 +97,7 @@ const Template = () => {
 				<MlDialog title="Create PDF" mediaIsMobile={mediaIsMobile}>
 					<MlCreatePdfForm
 						onCreatePdf={(options) => {
+							console.log(options);
 							const pdf = options.pdf;
 							const offsetX = 2.5;
 							const offsetY = 2.5;
@@ -205,7 +206,26 @@ const additionalInfoTemplate = () => {
 			{showAdditionalPdfForm && (
 				<MlDialog title="Create PDF" mediaIsMobile={mediaIsMobile}>
 					<MlCreatePdfForm
+						additionalFields={
+							<>
+								<TextField
+									name="title"
+									id="optional-title"
+									label="Add a title"
+									variant="outlined"
+									sx={{ paddingBottom: '15px' }}
+								/>
+								<TextField
+									name="description"
+									id="optional-comment"
+									label="Add description"
+									variant="outlined"
+									multiline
+								/>
+							</>
+						}
 						onCreatePdf={(options) => {
+							console.log(options);
 							const pdf = options.pdf;
 							const offsetX = 2.5;
 							const offsetY = 2.5;
@@ -267,7 +287,7 @@ const additionalInfoTemplate = () => {
 							//Add WG Url
 							pdf.setFontSize(10);
 							pdf.text(
-								'wheregroup.com',
+								options.formData.get('title') + 'wheregroup.com',
 								40,
 								offsetY +
 									marginTop +
@@ -287,40 +307,6 @@ const additionalInfoTemplate = () => {
 							return options;
 						}}
 					/>
-					{mediaIsMobile ? (
-						<>
-							<div style={{ display: 'flex', flexDirection: 'row' }}>
-								<TextField
-									id="optional-title"
-									label="Add a title"
-									variant="outlined"
-									sx={{ width: '50%', paddingRight: '2px' }}
-								/>
-								<TextField
-									id="optional-comment"
-									label="Add description"
-									variant="outlined"
-									multiline
-									sx={{ width: '50%', paddingLeft: '2px' }}
-								/>
-							</div>
-						</>
-					) : (
-						<>
-							<TextField
-								id="optional-title"
-								label="Add a title"
-								variant="outlined"
-								sx={{ paddingBottom: '15px' }}
-							/>
-							<TextField
-								id="optional-comment"
-								label="Add description"
-								variant="outlined"
-								multiline
-							/>
-						</>
-					)}
 				</MlDialog>
 			)}
 		</>
@@ -334,3 +320,43 @@ ExampleConfig.args = {};
 export const AdditionalInfo = additionalInfoTemplate.bind({});
 AdditionalInfo.parameters = {};
 AdditionalInfo.args = {};
+
+/*	{mediaIsMobile ? (
+						<>
+							<div style={{ display: 'flex', flexDirection: 'row' }}>
+								<TextField
+									name="title"
+									id="optional-title"
+									label="Add a title"
+									variant="outlined"
+									sx={{ width: '50%', paddingRight: '2px' }}
+								/>
+								<TextField
+									name="description"
+									id="optional-comment"
+									label="Add description"
+									variant="outlined"
+									multiline
+									sx={{ width: '50%', paddingLeft: '2px' }}
+								/>
+							</div>
+						</>
+					) : (
+						<>
+							<TextField
+								name="title"
+								id="optional-title"
+								label="Add a title"
+								variant="outlined"
+								sx={{ paddingBottom: '15px' }}
+							/>
+							<TextField
+								name="description"
+								id="optional-comment"
+								label="Add description"
+								variant="outlined"
+								multiline
+							/>
+						</>
+					)}
+					*/

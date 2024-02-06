@@ -7,8 +7,6 @@ export interface PdfPreviewOptions {
 	height: number;
 	fixedScale?: number | false;
 	orientation: 'portrait' | 'landscape';
-	title: string | undefined;
-	comment: string | undefined;
 }
 
 export interface PdfContextInterface {
@@ -18,10 +16,6 @@ export interface PdfContextInterface {
 	setFormat: (format: string) => void;
 	quality: string;
 	setQuality: (quality: string) => void;
-	title: string;
-	setTitle: (title: string) => void;
-	comment: string;
-	setComment: (comment: string) => void;
 
 	geojsonRef: MutableRefObject<Feature | undefined>;
 	template: { width: number; height: number };

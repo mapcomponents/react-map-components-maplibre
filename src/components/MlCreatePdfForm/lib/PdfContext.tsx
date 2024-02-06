@@ -9,8 +9,6 @@ const defaultTemplate = templates['A4']['72dpi'];
 const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const [format, setFormat] = useState('A4');
 	const [quality, setQuality] = useState('72dpi');
-	const [title, setTitle] = useState<string>('');
-	const [comment, setComment] = useState<string>('');
 	const [options, setOptions] = useState<PdfPreviewOptions>({
 		center: undefined,
 		scale: undefined,
@@ -19,8 +17,6 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 		height: 297,
 		orientation: 'portrait',
 		fixedScale: 0,
-		title: undefined,
-		comment: undefined,
 	});
 
 	const geojsonRef = useRef();
@@ -46,10 +42,6 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 		setQuality,
 		geojsonRef,
 		template,
-		title,
-		setTitle,
-		comment,
-		setComment,
 	};
 
 	return <PdfContext.Provider value={value}>{children}</PdfContext.Provider>;

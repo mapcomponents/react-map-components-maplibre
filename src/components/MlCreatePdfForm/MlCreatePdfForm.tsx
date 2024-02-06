@@ -27,11 +27,11 @@ export type { MlCreatePdfFormProps };
  *
  */
 
-const MlCreatePdfForm = (_props: MlCreatePdfFormProps) => {
+const MlCreatePdfForm = (props: MlCreatePdfFormProps) => {
 	return (
 		<>
 			<PdfContextProvider>
-				<PdfForm />
+				<PdfForm {...props} />
 			</PdfContextProvider>
 		</>
 	);
