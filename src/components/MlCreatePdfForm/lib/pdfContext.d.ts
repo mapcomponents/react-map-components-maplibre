@@ -7,6 +7,8 @@ export interface PdfPreviewOptions {
 	height: number;
 	fixedScale?: number | false;
 	orientation: 'portrait' | 'landscape';
+	title: string | undefined;
+	comment: string | undefined;
 }
 
 export interface PdfContextInterface {

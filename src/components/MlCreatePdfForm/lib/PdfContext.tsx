@@ -19,6 +19,8 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 		height: 297,
 		orientation: 'portrait',
 		fixedScale: 0,
+		title: undefined,
+		comment: undefined,
 	});
 
 	const geojsonRef = useRef();
