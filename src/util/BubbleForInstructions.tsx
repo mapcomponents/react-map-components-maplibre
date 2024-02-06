@@ -2,9 +2,22 @@ import React from 'react';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import { Box, Typography } from '@mui/material';
 
-function BubbleForInstruction(props) {
+export interface BubbleForInstructionProps {
+bubbleRight: string;
+bubbleLeft: string;
+bubbleTop: string;
+bubbleBottom: string;
+zIndex: string;
+textMarginTop:string;
+textMarginLeft:string;
+iconTransform:string;
+iconMarginTop:string;
+iconMarginLeft:string;
+children: React.ReactNode;
+}
+
+function BubbleForInstruction(props:BubbleForInstructionProps) {
 	return (
-		<>
 			<Box
 				sx={{
 					width: '475px',
@@ -36,13 +49,12 @@ function BubbleForInstruction(props) {
 						color: '#fff',
 						fontSize: '80px',
 						position: 'absolute',
-						transform: props.iconTransform,
-						marginTop: props.iconMarginTop,
+						transform:  props.iconTransform,
+						marginTop:  props.iconMarginTop,
 						marginLeft: props.iconMarginLeft,
 					}}
 				/>
 			</Box>
-		</>
 	);
 }
 export default BubbleForInstruction;

@@ -94,8 +94,11 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 			  }),
 	},
 });
-const getTheme = (mode: 'light' | 'dark') => {
-	const theme: Theme = getDesignTokens(mode);
+const getTheme = (mode: 'light' | 'dark' | undefined) => {
+	const theme: Theme = getDesignTokens(
+		mode && ['light', 'dark'].includes(mode as string) ?
+		(mode) :
+		'light');
 
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore

@@ -37,7 +37,7 @@ export type MlGeoJsonLayerProps = {
 	/**
 	 * GeoJSON data that is supposed to be rendered by this component.
 	 */
-	geojson?: Feature | FeatureCollection | undefined;
+	geojson?: GeoJSON.Feature | GeoJSON.FeatureCollection | Feature | FeatureCollection | undefined;
 	/**
 	 * Type of the layer that will be added to the MapLibre instance.
 	 * All types from LayerSpecification union type are supported except the type from
