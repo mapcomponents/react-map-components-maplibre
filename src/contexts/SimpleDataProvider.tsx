@@ -3,8 +3,19 @@ import PropTypes from "prop-types";
 import { SimpleDataContextProvider } from "./SimpleDataContext";
 import * as d3 from "d3";
 
-const SimpleDataProvider = (props) => {
-	const [data, setData] = useState(null);
+
+export interface SimpleDataProviderProps{
+url: string;
+format: 'json' | 'csv' | 'xml';
+nodeType:string;
+data_property:string;
+formatData?:(data:any) => any;
+onData: () => void;
+children: React.ReactNode
+}
+
+const SimpleDataProvider = (props:SimpleDataProviderProps) => {
+	const [data, setData] = useState<any[] | undefined>();
 	useEffect(() => {
 		if (!props.url) return;
 
@@ -21,21 +32,24 @@ const SimpleDataProvider = (props) => {
 			data_promise.then((received_data) => {
 				if (props.format === "xml") {
 					if (props.nodeType) {
-						let dataTmp = [];
-						received_data.querySelectorAll(props.nodeType).forEach((el) => {
+						const dataTmp:any[] = [];
+						(received_data as XMLDocument).querySelectorAll(props.nodeType).forEach((el) => {
 
+					if (typeof props.formatData === "function") {
 							dataTmp.push(props.formatData(el));
+					}
 						});
 						setData(dataTmp);
 					}
 				} else {
+					let dataTmp:any[] = received_data as any[];
 					if (props.data_property) {
-						received_data = received_data[props.data_property];
+						dataTmp = (received_data as any)[props.data_property] as any[];
 					}
 					if (typeof props.formatData === "function") {
-						setData(received_data.map(props.formatData));
+						setData(dataTmp.map(props.formatData));
 					} else {
-						setData(received_data);
+						setData(dataTmp);
 					}
 				}
 				if (typeof props.onData === "function") {

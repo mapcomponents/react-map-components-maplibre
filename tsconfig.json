@@ -8,7 +8,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": false,
-		"types": ["node", "jest", "geojson", "cypress"],
+		"types": ["node", "jest", "geojson"/*, "cypress"*/],
 		"typeRoots": ["./src/@types", "./node_modules/@types"],
 		"outDir": "build/esm",
 		"module": "esnext",
@@ -25,6 +25,7 @@
 		"noImplicitAny": true,
 		"strictNullChecks": true,
 		"suppressImplicitAnyIndexErrors": true,
+		"ignoreDeprecations": "5.0",
 		"allowSyntheticDefaultImports": true,
 		"allowJs": true,
 		"baseUrl": "."

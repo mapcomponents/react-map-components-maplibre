@@ -40,7 +40,7 @@ const MlOsmLayer = (props) => {
 		);
 	}, [props, mapHook.map]);
 
-	return <></>;
+return (<></>);
 };
 
 MlOsmLayer.propTypes = {

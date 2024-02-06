@@ -34,7 +34,7 @@ export { default as MlLayerSwipe } from './components/MlLayerSwipe/MlLayerSwipe'
 export { default as MlTransitionGeoJsonLayer } from './components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer';
 export { default as MlMarker } from './components/MlMarker/MlMarker';
 
-export { default as MlOsmLayer } from './components/MlOsmLayer/MlOsmLayer.js';
+//export { default as MlOsmLayer } from './components/MlOsmLayer/MlOsmLayer.js';
 
 export { default as MlGpxViewer } from './components/MlGpxViewer/MlGpxViewer';
 export { default as GeoJsonProvider } from './components/MlGpxViewer/util/GeoJsonProvider';
@@ -50,7 +50,6 @@ export { default as MlWmsLayer } from './components/MlWmsLayer/MlWmsLayer';
 export { default as MlWmsLoader } from './components/MlWmsLoader/MlWmsLoader';
 
 export { default as MlTemporalController } from './components/MlTemporalController/MlTemporalController';
-export { default as MlBasicComponent } from './components/MlBasicComponent.js';
 export { default as MlOrderLayers } from './components/MlOrderLayers/MlOrderLayers';
 export { default as MlTerrainLayer } from './components/MlTerrainLayer/MlTerrainLayer';
 export { default as MlSketchTool } from './components/MlSketchTool/MlSketchTool';

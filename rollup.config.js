@@ -10,7 +10,7 @@ import css from 'rollup-plugin-import-css';
 import del from 'rollup-plugin-delete';
 import svgr from '@svgr/rollup';
 
-import pkg from './package.json';
+import pkg from './package.json' assert {type:"json"};
 
 const externalsConfig = {
 	deps: true,
@@ -58,7 +58,8 @@ const config = defineConfig([
 			}),
 			externals(externalsConfig),
 			commonjs(),
-			typescript({ declarationDir: 'dist/types', sourceMap: true }),
+			typescript({ declarationDir: 'dist/types', sourceMap: true
+			,exclude: ["**/*.cy.tsx", "**/*.stories.tsx", "**/*.test.tsx"] }),
 			css(),
 			del({ targets: ['dist/*'] }),
 		],
@@ -68,7 +69,6 @@ const config = defineConfig([
 			'd3',
 			'sql.js',
 			...Object.keys(pkg.dependencies),
-			...Object.keys(pkg.peerDependencies),
 			...Object.keys(pkg.devDependencies),
 		],
 	},

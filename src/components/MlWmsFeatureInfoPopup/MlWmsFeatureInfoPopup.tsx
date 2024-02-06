@@ -3,7 +3,14 @@ import PropTypes from "prop-types";
 
 import MapContext from "../../contexts/MapContext";
 import { v4 as uuidv4 } from "uuid";
+import MapLibreGlWrapper from "../MapLibreMap/lib/MapLibreGlWrapper";
 
+export interface MlWmsFeatureInfoPopupProps {
+	/**
+	 * Id of the target MapLibre instance in mapContext
+	 */
+	mapId?: string;
+}
 /**
  * TODO: Add short & useful description
  *
@@ -12,16 +19,16 @@ import { v4 as uuidv4 } from "uuid";
  *
  * @component
  */
-const MlWmsFeatureInfoPopup = (props) => {
+const MlWmsFeatureInfoPopup = (props:MlWmsFeatureInfoPopupProps) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	const mapContext = useContext(MapContext);
 
 	const initializedRef = useRef(false);
-	const mapRef = useRef(undefined);
-	const componentId = useRef((props.idPrefix ? props.idPrefix : "MlWmsFeatureInfoPopup-") + uuidv4());
+	const mapRef = useRef<MapLibreGlWrapper | undefined>(undefined);
+	const componentId = useRef(("MlWmsFeatureInfoPopup-") + uuidv4());
 
 	useEffect(() => {
-		let _componentId = componentId.current;
+		const _componentId = componentId.current;
 
 		return () => {
 			// This is the cleanup function, it is called when this react component is removed from react-dom

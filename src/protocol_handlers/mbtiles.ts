@@ -1,6 +1,6 @@
 import initSqlJs from 'sql.js';
 import * as pako from 'pako';
-import { RequestParameters, ResponseCallback } from 'maplibre-gl';
+import { RequestParameters} from 'maplibre-gl';
 
 const loadedMbtiles = {};
 
