@@ -53,8 +53,6 @@
 		"@bahmutov/cy-rollup": "^2.0.0",
 		"@cypress/react": "^7.0.2",
 		"@cypress/webpack-preprocessor": "^5.16.1",
-		"@fontsource/material-icons": "^4.5.4",
-		"@fontsource/roboto": "^4.5.8",
 		"@rollup/plugin-babel": "^6.0.4",
 		"@rollup/plugin-commonjs": "^24.0.1",
 		"@rollup/plugin-url": "^8.0.2",
