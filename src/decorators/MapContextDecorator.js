@@ -10,10 +10,9 @@ import getTheme from '../ui_components/MapcomponentsTheme';
 const decorators = [
 	(Story, context) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
-		
 
-		return (
-			<div className="fullscreen_map">
+
+		return (<div className="fullscreen_map">
 				<MapComponentsProvider>
 					<MUIThemeProvider theme={theme}>
 						<Story />
