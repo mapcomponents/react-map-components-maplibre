@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-
 import MlCreatePdfForm from './MlCreatePdfForm';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, Button, Grid, TextField, useMediaQuery } from '@mui/material';
+import { Box, Button, TextField, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -185,8 +184,8 @@ const Template = () => {
 	);
 };
 
-const additinoalInfoTemplate = () => {
-	const [showCreatePdfForm, setShowCreatePdfForm] = useState(true);
+const additionalInfoTemplate = () => {
+	const [showAdditionalPdfForm, setShowAdditionalPdfForm] = useState(true);
 	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
 
 	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
@@ -195,15 +194,15 @@ const additinoalInfoTemplate = () => {
 			<TopToolbar
 				unmovableButtons={
 					<Button
-						variant={showCreatePdfForm ? 'contained' : 'outlined'}
+						variant={showAdditionalPdfForm ? 'contained' : 'outlined'}
 						className="pdfFormButton"
-						onClick={() => setShowCreatePdfForm(!showCreatePdfForm)}
+						onClick={() => setShowAdditionalPdfForm(!showAdditionalPdfForm)}
 					>
 						PDF
 					</Button>
 				}
 			/>
-			{showCreatePdfForm && (
+			{showAdditionalPdfForm && (
 				<MlDialog title="Create PDF" mediaIsMobile={mediaIsMobile}>
 					<MlCreatePdfForm
 						onCreatePdf={(options) => {
@@ -295,13 +294,14 @@ const additinoalInfoTemplate = () => {
 									id="optional-title"
 									label="Add a title"
 									variant="outlined"
-									sx={{ width: '75%' }}
+									sx={{ width: '50%', paddingRight: '2px' }}
 								/>
 								<TextField
 									id="optional-comment"
-									label="Add a comment"
+									label="Add description"
 									variant="outlined"
-									sx={{ width: '75%' }}
+									multiline
+									sx={{ width: '50%', paddingLeft: '2px' }}
 								/>
 							</div>
 						</>
@@ -313,7 +313,12 @@ const additinoalInfoTemplate = () => {
 								variant="outlined"
 								sx={{ paddingBottom: '15px' }}
 							/>
-							<TextField id="optional-comment" label="Add a comment" variant="outlined" />
+							<TextField
+								id="optional-comment"
+								label="Add description"
+								variant="outlined"
+								multiline
+							/>
 						</>
 					)}
 				</MlDialog>
@@ -322,11 +327,10 @@ const additinoalInfoTemplate = () => {
 	);
 };
 
-
 export const ExampleConfig = Template.bind({});
 ExampleConfig.parameters = {};
 ExampleConfig.args = {};
 
-export const AdditionalInfo = additinoalInfoTemplate.bind({});
+export const AdditionalInfo = additionalInfoTemplate.bind({});
 AdditionalInfo.parameters = {};
 AdditionalInfo.args = {};

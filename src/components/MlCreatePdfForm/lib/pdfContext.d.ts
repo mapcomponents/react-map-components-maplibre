@@ -16,9 +16,11 @@ export interface PdfContextInterface {
 	setFormat: (format: string) => void;
 	quality: string;
 	setQuality: (quality: string) => void;
-	geojsonRef: MutableRefObject<
-		| Feature
-		| undefined
-	>;
+	title: string;
+	setTitle: (title: string) => void;
+	comment: string;
+	setComment: (comment: string) => void;
+
+	geojsonRef: MutableRefObject<Feature | undefined>;
 	template: { width: number; height: number };
 }
