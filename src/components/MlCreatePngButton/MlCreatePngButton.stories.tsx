@@ -16,4 +16,4 @@ export default storyoptions;
 
 const Template = () => <TopToolbar unmovableButtons={<MlCreatePngButton />} />;
 
-export const ExampleConfig = Template.bind({});
+export const catalogueDemo = Template.bind({});

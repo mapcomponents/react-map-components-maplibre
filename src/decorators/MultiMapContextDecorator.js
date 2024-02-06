@@ -5,6 +5,7 @@ import './style.css';
 import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
+import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 
 const decorators = [
 	(Story, context) => {
@@ -64,6 +65,9 @@ const decorators = [
 										//],
 									}}
 								/>
+								{context.name == 'Example Config' && (
+									<MlScaleReference horizontalOffset="12px" verticalOffset="6px" />
+								)}
 
 								<MlNavgiationTools showZoomButtons={false} mapId="map_1" />
 							</div>

@@ -52,6 +52,6 @@ const Template = () => {
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+export const catalogueDemo = Template.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {};

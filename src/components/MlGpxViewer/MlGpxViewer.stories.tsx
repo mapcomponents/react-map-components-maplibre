@@ -113,5 +113,5 @@ const Template = () => {
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
+export const catalogueDemo = Template.bind({});
+catalogueDemo.parameters = {};

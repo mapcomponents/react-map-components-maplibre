@@ -109,9 +109,9 @@ const Template = (props: MlWmsLoaderStoryProps) => {
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+export const catalogueDemo = Template.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {};
 
 const FixedConfigTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);

@@ -78,9 +78,9 @@ const Template = (args) => {
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {
+export const catalogueDemo = Template.bind({});
+catalogueDemo.parameters = {};
+catalogueDemo.args = {
 	url: 'https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme',
 	layer: 'nw_uraufnahme_rw',
 	layerVisible: true,
