@@ -49,7 +49,7 @@ const MlGpxViewer = (props: MlGpxViewerProps) => {
 		sourceId: sourceName.current,
 		source: {
 			type: 'geojson',
-			data: parsedGpx.geojson || featureCollection([]),
+			data: (parsedGpx.geojson || featureCollection([])) as (string | GeoJSON.GeoJSON),
 		},
 	});
 

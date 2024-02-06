@@ -70,14 +70,17 @@ const MlImageMarkerLayer = (props: MlImageMarkerLayerProps) => {
 		}
 
 		if (props.imgSrc && !mapHook.map.map.hasImage(imageIdRef.current)) {
-			mapHook.map.map.loadImage(props.imgSrc, function (error, image) {
-				if (error) throw error;
+			mapHook.map.map.loadImage(props.imgSrc).then(function (res) {
+				if (!res?.data){
+					console.log('image ' + props.imgSrc + 'could not be loaded');
+					return;
+				}
 
 				if (!mapHook.map || mapHook.map.map.hasImage(imageIdRef.current)) return;
 
 				mapHook.map.addImage(
 					imageIdRef.current,
-					image as unknown as ImageData,
+					res.data as unknown as ImageData,
 					mapHook.componentId
 				);
 

@@ -1,9 +1,9 @@
-import { LngLatLike, RequestParameters, ResponseCallback } from 'maplibre-gl';
+import { LngLatLike, RequestParameters } from 'maplibre-gl';
 import { Feature, FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
 import { feature as topojsonFeature } from 'topojson-client';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
-import  { Topology } from '../../node_modules/@types/topojson-specification';
+import { Topology } from '../../node_modules/@types/topojson-specification';
 
 type TopoJson = {
 	type?: 'Topology';
@@ -13,10 +13,10 @@ type TopoJson = {
 };
 
 function reduceFeatures(geojson: FeatureCollection) {
-	const newFeatures: Feature[]  = [];
+	const newFeatures: Feature[] = [];
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	geojson.features.forEach((e: any) => {
-		if (!e.features ) {
+		if (!e.features) {
 			newFeatures.push({
 				type: e.type,
 				geometry: e.geometry,
@@ -38,8 +38,8 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 	const geojson = await new Promise<FeatureCollection>((resolve) => {
 		let topoJsonData: TopoJson = {
 			type: 'Topology',
-			objects: { key: ''},
-			arcs: []
+			objects: { key: '' },
+			arcs: [],
 		};
 
 		getProtocolData(params.filename).then((rawData) => {
@@ -55,11 +55,9 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 			};
 
 			if (topoJsonData.type === 'Topology' && topoJsonData.objects !== undefined) {
-				
 				// add the "fromObject" property in each topojson feature
 				Object.keys(topoJsonData.objects).map((key) => {
 					if (topoJsonData.objects?.[key].type === 'GeometryCollection') {
-						
 						topoJsonData.objects?.[key].geometries?.forEach(
 							(e: Feature) => (e.properties = { fromObject: key, ...e.properties })
 						);
@@ -91,17 +89,14 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 	return geojson;
 }
 
-const TopojsonProtocolHandler = (params: RequestParameters, callback: ResponseCallback<any>) => {
+const TopojsonProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 
-	convertTopojson(parsedParams).then((data) => {
-		if (data !== undefined) {
-			callback(null, data, null, null);
-		} else {
-			callback(new Error('Topojson not found'));
-		}
-	});
-	return { cancel: () => {} };
+	const data = await convertTopojson(parsedParams);
+	if (data !== undefined) {
+		return { data: data };
+	}
+	throw new Error('Topojson not found ' + parsedParams.filename);
 };
 
 export { TopojsonProtocolHandler, convertTopojson };

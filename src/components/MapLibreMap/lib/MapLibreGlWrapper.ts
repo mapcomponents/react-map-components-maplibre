@@ -103,7 +103,7 @@ class MapLibreGlWrapper {
 		layerState: LayerState[];
 		layerStateString: string;
 		oldLayerStateStrings: object;
-		buildLayerObject: (layer: ReturnType<Style['getLayer']>) => LayerState;
+		buildLayerObject: (layer: ReturnType<Style['getLayer']>) => LayerState | undefined;
 		buildLayerObjects: () => LayerState[];
 		refreshLayerState: () => void;
 		viewportState: ViewportState;
@@ -269,6 +269,7 @@ class MapLibreGlWrapper {
 				//			? values[propName].value.value
 				//			: values[propName];
 				//});
+				if(!layer)return;
 				return {
 					id: layer.id,
 					type: layer.type,
@@ -293,11 +294,11 @@ class MapLibreGlWrapper {
 			 * @returns array
 			 */
 			buildLayerObjects: () => {
-				return self.map.style._order
+				return (self.map.style._order
 					.map((layerId: string) => {
 						return self.wrapper.buildLayerObject(self.map.style._layers[layerId]);
 					})
-					.filter((n) => typeof n !== 'undefined');
+					.filter((n) => typeof n !== 'undefined')) as LayerState[];
 			},
 			/**
 			 * Updates layer state info objects

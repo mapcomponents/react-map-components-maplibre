@@ -133,7 +133,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		sourceId: 'source-' + layerId.current,
 		source: {
 			type: 'geojson',
-			data: props.geojson,
+			data: props.geojson as unknown as (string | GeoJSON.GeoJSON),
 			...(typeof props?.options?.source !== 'undefined' &&
 			typeof props?.options?.source !== 'string'
 				? props.options.source
