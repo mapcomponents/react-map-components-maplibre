@@ -1,7 +1,7 @@
 import { MlGeoJsonLayerProps } from 'src/components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { MlVectorTileLayerProps } from 'src/components/MlVectorTileLayer/MlVectorTileLayer';
 import { Layer } from 'wms-capabilities';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface wmsLoaderConfigProps {
 	getFeatureInfoUrl: string;
@@ -120,10 +120,30 @@ const mapConfigSlice = createSlice({
 				delete mapConfig.layers[layerUuid];
 			}
 		},
+		updateLayerOrder: (
+			state,
+			action: PayloadAction<{ mapConfigUuid: string; newOrder: LayerOrderItem[] }>
+		) => {
+			const { mapConfigUuid, newOrder } = action.payload;
+			const mapConfig = state.mapConfigs[mapConfigUuid];
+			if (mapConfig) {
+				mapConfig.layerOrder = newOrder;
+			}
+		},
+	},
+});
+const store = configureStore({
+	reducer: {
+		mapConfig: mapConfigSlice.reducer,
 	},
 });
 
-export const { setMapConfig, removeMapConfig, setLayerInMapConfig, removeLayerFromMapConfig } =
-	mapConfigSlice.actions;
+export const {
+	setMapConfig,
+	removeMapConfig,
+	setLayerInMapConfig,
+	removeLayerFromMapConfig,
+	updateLayerOrder,
+} = mapConfigSlice.actions;
 
-export default mapConfigSlice.reducer;
+export default store;

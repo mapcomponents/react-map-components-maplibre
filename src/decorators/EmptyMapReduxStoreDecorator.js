@@ -7,7 +7,7 @@ import MlNavgiationTools from '../components/MlNavigationTools/MlNavigationTools
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
 import { Provider as ReduxStoreProvider } from 'react-redux';
-import { store } from '../stores/layerconfig.store';
+import store from '../stores/map.store';
 
 const decorators = [
 	(Story, context) => {
