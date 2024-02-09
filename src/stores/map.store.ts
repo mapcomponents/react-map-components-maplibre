@@ -74,7 +74,7 @@ export type AppState = {
 	mapConfigs: { [key: string]: MapConfig };
 };
 
-const initialState: AppState = {
+export const initialState: AppState = {
 	mapConfigs: {},
 };
 const mapConfigSlice = createSlice({
@@ -145,5 +145,4 @@ export const {
 	removeLayerFromMapConfig,
 	updateLayerOrder,
 } = mapConfigSlice.actions;
-
 export default store;

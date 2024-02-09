@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { updateLayerOrder, AppState } from '../../stores/map.store';
+import { AppState, updateLayerOrder } from '../../stores/map.store';
 
 interface LayerOrderListProps {
 	mapConfigUuid: string;
@@ -10,17 +9,15 @@ interface LayerOrderListProps {
 function LayerOrderList(props: LayerOrderListProps) {
 	const dispatch = useDispatch();
 	const layerOrder = useSelector(
-		(state: AppState) => state.mapConfigs[props.mapConfigUuid].layerOrder || []
+		(state: AppState) => state.mapConfigs[props.mapConfigUuid].layerOrder
 	);
-
+	//const layerOrder = store.getState().mapConfig.mapConfigs[props.mapConfigUuid].layerOrder;
 	const reorder = (startIndex: number, endIndex: number) => {
-		const result = Array.from(layerOrder);
+		const result = [...layerOrder];
 		const [removed] = result.splice(startIndex, 1);
 		result.splice(endIndex, 0, removed);
 
-		// Dispatch the action to update the layer order in the Redux store
 		dispatch(updateLayerOrder({ mapConfigUuid: props.mapConfigUuid, newOrder: result }));
-
 	};
 
 	return (
