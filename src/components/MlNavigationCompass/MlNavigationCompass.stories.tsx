@@ -1,5 +1,5 @@
 import React from 'react';
-import MlNavigationCompass from './MlNavigationCompass';
+import MlNavigationCompass, { MlNavigationCompassProps } from './MlNavigationCompass';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
 const storyoptions = {
@@ -9,7 +9,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => <MlNavigationCompass {...props} />;
+const Template = (props:MlNavigationCompassProps) => <MlNavigationCompass {...props} />;
 
 export const catalogueDemo = Template.bind({});
 catalogueDemo.args = {

@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
-import useMap from '../../hooks/useMap';
+import useMap from '../useMap';
 import {
 	LngLatLike,
 	Popup,
 	MapEventType,
 } from 'maplibre-gl';
 
-interface useLayerHoverPopupProps {
+export interface LayerHoverPopupProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -22,7 +22,7 @@ interface useLayerHoverPopupProps {
  * useLayerHoverPopup hook registers a mouseenter event to display feature properties in a MapLibre popup if a feature on the configured layer is hovered
  *
  */
-const useLayerHoverPopup = (props: useLayerHoverPopupProps) => {
+const LayerHoverPopup = (props: LayerHoverPopupProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.layerId,
@@ -76,7 +76,7 @@ const useLayerHoverPopup = (props: useLayerHoverPopupProps) => {
 	return <></>;
 };
 
-useLayerHoverPopup.defaultProps = {
+LayerHoverPopup.defaultProps = {
 	mapId: undefined,
 };
-export default useLayerHoverPopup;
+export default LayerHoverPopup;

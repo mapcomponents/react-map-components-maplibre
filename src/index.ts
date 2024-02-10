@@ -58,7 +58,7 @@ export { default as useCameraFollowPath } from './hooks/useCameraFollowPath/useC
 export { default as useExportMap } from './hooks/useExportMap';
 export { default as useGpx } from './hooks/useGpx/useGpx';
 export { default as useLayerFilter } from './hooks/useLayerFilter/useLayerFilter';
-export { default as useLayerHoverPopup } from './hooks/useLayerHoverPopup/useLayerHoverPopup';
+export { default as useLayerHoverPopup } from './hooks/useLayerHoverPopup/LayerHoverPopup';
 export { default as useLayer } from './hooks/useLayer';
 export { default as useLayerEvent } from './hooks/useLayerEvent';
 export { default as useMap } from './hooks/useMap';

@@ -6,7 +6,7 @@ import MapLibreGlWrapper from './lib/MapLibreGlWrapper';
 import { MapOptions as MapOptionsType, Map } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-type MapLibreMapProps = {
+export type MapLibreMapProps = {
 	/**
 	 * Id of the MapLibreGl(Wrapper) instance in mapContext
 	 */

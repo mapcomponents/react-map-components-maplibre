@@ -3,15 +3,21 @@ import PropTypes from "prop-types";
 
 import useMapState from "../../hooks/useMapState";
 
+export interface MlUseMapDebuggerProps {
+	mapId?: string;
+	watch?: string[];
+	filter?: {[key: string]: any};
+}
+
 /**
- * Renders a collapsable top-drawer containing live map debug information
+ * Renders a collapsible top-drawer containing live map debug information
  *
- * @param {object} props
+ * @param {MlUseMapDebuggerProps} props
  * @param {string} props.mapId Id of the target MapLibre instance in mapContext
  *
  * @component
  */
-const MlUseMapDebugger = (props) => {
+const MlUseMapDebugger: React.FC<MlUseMapDebuggerProps> = (props) => {
 	const map = useMapState({
 		mapId: props.mapId,
 		watch: {
@@ -72,4 +78,5 @@ MlUseMapDebugger.propTypes = {
 	 */
 	mapId: PropTypes.string,
 };
+
 export default MlUseMapDebugger;

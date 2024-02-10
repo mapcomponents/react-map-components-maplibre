@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import MlWmsLayer from "./MlWmsLayer";
+import MlWmsLayer, { MlWmsLayerProps } from "./MlWmsLayer";
 import TopToolbar from "../../ui_components/TopToolbar";
 import Button from "@mui/material/Button";
 
@@ -19,7 +19,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
+const Template = (props:MlWmsLayerProps) => {
 	const [showLayer, setShowLayer] = useState(true);
 
 	return (

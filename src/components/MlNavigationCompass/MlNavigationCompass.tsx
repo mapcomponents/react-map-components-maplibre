@@ -48,7 +48,7 @@ const NeedleBox = styled(Box)(({ theme }) => ({
 	},
 }));
 
-interface MlNavigationCompassProps {
+export interface MlNavigationCompassProps {
 	/**
 	 * Id of the target MapLibre instance in mapHook
 	 */

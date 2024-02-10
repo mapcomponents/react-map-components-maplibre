@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import MapLibreMap from './MapLibreMap';
+import MapLibreMap, { MapLibreMapProps } from './MapLibreMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import { Button } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -25,7 +25,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => {
+const Template = (args:MapLibreMapProps) => {
 	return <MapLibreMap options={{ ...args.options }} />;
 };
 
@@ -46,7 +46,7 @@ const styles = [
 	},
 ];
 
-const StyleChangeTemplate = (args) => {
+const StyleChangeTemplate = (args:MapLibreMapProps) => {
 	const [activeStyle, setActiveStyle] = useState(styles[1].url);
 
 	return (
@@ -73,7 +73,7 @@ const StyleChangeTemplate = (args) => {
 				}
 			/>
 			<MapLibreMap options={{ ...args.options, style: activeStyle }} />
-			<MlGeoJsonLayer type="line" geojson={sample_geojson_1} />
+			<MlGeoJsonLayer type="line" geojson={sample_geojson_1 as GeoJSON.FeatureCollection} />
 		</>
 	);
 };

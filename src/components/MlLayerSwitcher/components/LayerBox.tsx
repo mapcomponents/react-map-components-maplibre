@@ -1,14 +1,18 @@
 import React from 'react';
-import { css } from '@emotion/css';
+import { css, CSSObject } from '@emotion/css';
 import { Box } from '@mui/system';
 import ImageLoader from '../../../ui_components/ImageLoader';
 import useMapState from '../../../hooks/useMapState';
 
-/**
- * @component
- *
- */
-const LayerBox = (props) => {
+interface LayerBoxProps {
+	mapId?: string;
+	layerId: string;
+	thumbnail?: string;
+	label: string;
+	handleLayerBoxClick?: (layerId: string) => void;
+}
+
+const LayerBox: React.FC<LayerBoxProps> = (props) => {
 	const { layers } = useMapState({
 		mapId: props.mapId,
 		watch: {
@@ -26,6 +30,13 @@ const LayerBox = (props) => {
 		& img:hover {
 		}
 	`;
+
+	const imageLoaderStyle: CSSObject = {
+		border: `2px solid ${layers?.[0]?.visible ? '#64c864' : '#fd720f'}`,
+		borderRadius: '8px',
+		height: '40px',
+		width: '40px',
+	};
 
 	return (
 		<>
@@ -47,15 +58,10 @@ const LayerBox = (props) => {
 					props?.handleLayerBoxClick?.(props.layerId);
 				}}
 			>
-				<ImageLoader
-					sx={{
-						border: '2px solid ' + (layers?.[0]?.visible ? '#64c864' : '#fd720f'),
-						borderRadius: '8px',
-						height: '40px',
-						width: '40px',
-					}}
+				{props?.thumbnail && <ImageLoader
+					sx={imageLoaderStyle}
 					src={props.thumbnail}
-				/>
+				/>}
 
 				<div
 					className="mllayerswitcher-layer-text"

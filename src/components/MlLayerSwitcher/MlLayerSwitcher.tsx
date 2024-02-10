@@ -1,20 +1,44 @@
-import "./MlLayerSwitcher.css";
+import './MlLayerSwitcher.css';
 //External
-import React, { useEffect, useContext, useState } from "react";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 //Internal
-import MapContext from "../../contexts/MapContext";
-import LayerBox from "./components/LayerBox";
-import Divider from "@mui/material/Divider";
-import useMapState from "../../hooks/useMapState";
+import MapContext from '../../contexts/MapContext';
+import LayerBox from './components/LayerBox';
+import Divider from '@mui/material/Divider';
+import useMapState from '../../hooks/useMapState';
+
+type LayerConfig = {
+	layerId: string;
+	src?: string;
+	label: string;
+	linkedTo?: string;
+};
+
+type BaseSourceConfig = {
+	label?: string;
+	active?: boolean;
+	layers: LayerConfig[];
+};
+
+type DetailLayerConfig = {
+	label?: string;
+	layers: LayerConfig[];
+};
+
+export type MlLayerSwitcherProps = {
+	baseSourceConfig: BaseSourceConfig;
+	detailLayerConfig: DetailLayerConfig;
+	mapId?: string;
+};
+
 /**
  * @component
  *
  *
  */
-const MlLayerSwitcher = (props) => {
+const MlLayerSwitcher: React.FC<MlLayerSwitcherProps> = (props) => {
 	const mapContext = useContext(MapContext);
 	const showBaseSources = !!props.baseSourceConfig?.layers?.length;
 	const showDetailLayer = !!props.detailLayerConfig?.layers?.length;
@@ -27,16 +51,16 @@ const MlLayerSwitcher = (props) => {
 		},
 		filter: {},
 	});
-	const [activeLayers, setActiveLayers] = useState([]);
-	const [activeDetailLayers, setActiveDetailLayers] = useState([]);
+	const [activeLayers, setActiveLayers] = useState<string[]>([]);
+	const [activeDetailLayers, setActiveDetailLayers] = useState<string[]>([]);
 	const { t } = useTranslation();
 
 	useEffect(() => {
 		//Set base state to activate only the first layer
 		if (mapContext.map) {
-			const disableAllButFirst = (config, i) => {
+			const disableAllButFirst = (config: LayerConfig, i: number) => {
 				const layers = getLayerListFromId(config.layerId);
-				const visible = i === 0 ? "visible" : "none";
+				const visible = i === 0 ? 'visible' : 'none';
 
 				layers.forEach((layer) => {
 					if (layer) {
@@ -59,25 +83,27 @@ const MlLayerSwitcher = (props) => {
 
 	useEffect(() => {
 		if (mapContext.map?.style?._layers) {
-			let newactiveLayers = [];
-			let newactiveDetailLayers = [];
+			let newactiveLayers: string[] = [];
+			let newactiveDetailLayers: string[] = [];
 			props.baseSourceConfig.layers.forEach((layerConfig) => {
 				const layers = getLayerListFromId(layerConfig.layerId);
 
 				layers.forEach((layer) => {
-					const visibilty = mapContext.map?.getLayoutProperty(layer, "visibility");
+					if (!mapContext?.map) return;
+
+					const visibilty = layer && mapContext.map?.getLayoutProperty(layer, 'visibility');
 					if (mapContext.map.baseLayers.indexOf(layer) !== -1) {
-						layer = "styleBase";
+						layer = 'styleBase';
 					}
 
-					if (newactiveLayers.indexOf(layer) === -1 && visibilty === "visible") {
+					if (layer && newactiveLayers.indexOf(layer) === -1 && visibilty === 'visible') {
 						newactiveLayers.push(layer);
 					}
 				});
 			});
 			props.detailLayerConfig.layers.forEach(({ layerId }) => {
-				const visibilty = mapContext.map?.getLayoutProperty(layerId, "visibility");
-				if (newactiveDetailLayers.indexOf(layerId) === -1 && visibilty === "visible") {
+				const visibilty = mapContext.map?.getLayoutProperty(layerId, 'visibility');
+				if (newactiveDetailLayers.indexOf(layerId) === -1 && visibilty === 'visible') {
 					newactiveDetailLayers.push(layerId);
 				}
 			});
@@ -87,50 +113,50 @@ const MlLayerSwitcher = (props) => {
 		}
 	}, [layers]);
 
-	const getLayerListFromId = (id) => {
-		return id === "styleBase" ? mapContext?.map.baseLayers : [id];
+	const getLayerListFromId = (id: string) => {
+		return id === 'styleBase' && mapContext?.map ? mapContext?.map.baseLayers : [id];
 	};
 
-	const handleDetailLayerBoxClick = (layerId) => {
+	const handleDetailLayerBoxClick = (layerId: string) => {
 		const cfg = props.detailLayerConfig.layers.find((e) => e.layerId === layerId);
-		if (cfg.linkedTo) {
+		if (cfg?.linkedTo) {
 			handleLayerBoxClick(cfg.linkedTo);
 		}
 		const nextVisiblityClickedLayer =
-			mapContext?.map.getLayer(layerId)?.getLayoutProperty("visibility") === "visible"
-				? "none"
-				: "visible";
+			mapContext?.map && mapContext?.map.getLayer(layerId)?.getLayoutProperty('visibility') === 'visible'
+				? 'none'
+				: 'visible';
 		changeLayerState(layerId, nextVisiblityClickedLayer);
 	};
 
-	const handleLayerBoxClick = (id) => {
+	const handleLayerBoxClick = (id: string) => {
 		let layers = getLayerListFromId(id);
 		const nextVisiblityClickedLayer =
-			mapContext?.map.getLayer(layers[0])?.getLayoutProperty("visibility") === "visible"
-				? "none"
-				: "visible";
+			mapContext?.map && layers?.[0] && mapContext?.map.getLayer(layers[0])?.getLayoutProperty('visibility') === 'visible'
+				? 'none'
+				: 'visible';
 
 		props.baseSourceConfig.layers.forEach((config, i) => {
 			let layers = getLayerListFromId(config.layerId);
-			let visible = "none";
+			let visible:'visible' | 'none' = 'none';
 			if (config.layerId === id) {
 				visible = nextVisiblityClickedLayer;
 			}
 
 			//To avoid disabling all base layers we activate the first one
-			if (nextVisiblityClickedLayer === "none" && i === 0) {
-				visible = "visible";
+			if (nextVisiblityClickedLayer === 'none' && i === 0) {
+				visible = 'visible';
 			}
 			layers.forEach((layer) => {
-				if (layer) {
+				if (layer && ['visible', 'none'].includes(visible)) {
 					changeLayerState(layer, visible);
 				}
 			});
 		});
 	};
 
-	const changeLayerState = (layer, visible = "none") => {
-		mapContext.map?.setLayoutProperty(layer, "visibility", visible);
+	const changeLayerState = (layer: string, visible: 'none' | 'visible' = 'none') => {
+		mapContext.map?.setLayoutProperty(layer, 'visibility', visible);
 	};
 
 	return (
@@ -145,7 +171,6 @@ const MlLayerSwitcher = (props) => {
 								<LayerBox
 									mapId={props.mapId}
 									key={layerId}
-									activeLayers={activeLayers}
 									label={t(label)}
 									layerId={layerId}
 									thumbnail={src}
@@ -167,7 +192,6 @@ const MlLayerSwitcher = (props) => {
 							return (
 								<LayerBox
 									mapId={props.mapId}
-									activeLayers={activeDetailLayers}
 									label={t(label)}
 									layerId={layerId}
 									key={layerId}
@@ -183,31 +207,6 @@ const MlLayerSwitcher = (props) => {
 			)}
 		</>
 	);
-};
-
-MlLayerSwitcher.propTypes = {
-	baseSourceConfig: PropTypes.shape({
-		label: PropTypes.string,
-		layers: PropTypes.arrayOf(
-			PropTypes.shape({
-				layerId: PropTypes.string.isRequired,
-				src: PropTypes.string,
-				label: PropTypes.string.isRequired,
-			})
-		),
-	}),
-	detailLayerConfig: PropTypes.shape({
-		label: PropTypes.string,
-		layers: PropTypes.arrayOf(
-			PropTypes.shape({
-				layerId: PropTypes.string.isRequired,
-				src: PropTypes.string,
-				label: PropTypes.string.isRequired,
-				linkedTo: PropTypes.string,
-			})
-		),
-	}),
-	mapId: PropTypes.string,
 };
 
 export default MlLayerSwitcher;

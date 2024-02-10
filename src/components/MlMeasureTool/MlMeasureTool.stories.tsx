@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import MlMeasureTool from './MlMeasureTool';
+import React, { MouseEvent, useState } from 'react';
+import MlMeasureTool, { MlMeasureToolProps } from './MlMeasureTool';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
 import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Button, MenuItem, Select } from '@mui/material';
+import { Button, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Menu from '@mui/material/Menu';
@@ -22,9 +22,9 @@ export default storyoptions;
 
 const Template = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [unit, setUnit] = useState('kilometers');
-	const handleChange = (event) => {
-		setUnit(event.target.value);
+	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
+	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
@@ -62,9 +62,9 @@ const Template = () => {
 
 const CTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [unit, setUnit] = useState('kilometers');
-	const handleChange = (event) => {
-		setUnit(event.target.value);
+	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
+	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
@@ -102,9 +102,9 @@ const CTemplate = () => {
 
 const LineTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [unit, setUnit] = useState('kilometers');
-	const handleChange = (event) => {
-		setUnit(event.target.value);
+	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
+	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
@@ -142,9 +142,9 @@ const LineTemplate = () => {
 
 const CLineTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [unit, setUnit] = useState('kilometers');
-	const handleChange = (event) => {
-		setUnit(event.target.value);
+	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
+	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
@@ -181,18 +181,18 @@ const CLineTemplate = () => {
 };
 
 const catalogueTemplate = () => {
-	const [selectedTool, setSelectedTool] = useState('area_measure');
+	const [selectedTool, setSelectedTool] = useState<string>('area_measure');
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
-	const handleClick = (event) => {
+	const handleClick = (event:MouseEvent<any>) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
 
-	const handleToolSelect = (tool) => {
+	const handleToolSelect = (tool:string) => {
 		setSelectedTool(tool);
 	};
 

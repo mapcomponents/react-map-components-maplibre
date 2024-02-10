@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { useEffect, useState } from 'react';
-import MlFollowGps from './MlFollowGps';
+import MlFollowGps, { MlFollowGpsProps } from './MlFollowGps';
 
 import noNavToolsDecorator from '../../decorators/NoNavToolsDecorator';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { Theme, useMediaQuery } from '@mui/material';
 
 const storyoptions = {
 	title: 'MapComponents/MlFollowGps',
@@ -14,8 +14,8 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
-	const mediaIsMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
+const Template = (props:MlFollowGpsProps) => {
+	const mediaIsMobile = useMediaQuery((theme:Theme) => theme.breakpoints.down('md'));
 
 	return (
 		<>
@@ -36,8 +36,8 @@ const Template = (props) => {
 	);
 };
 
-const catalogueTemplate = (props) => {
-	const mediaIsMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
+const catalogueTemplate = (props:MlFollowGpsProps) => {
+	const mediaIsMobile = useMediaQuery((theme:Theme) => theme.breakpoints.down('md'));
 
 	const [showTooltip, setShowTooltip] = useState(true);
 	useEffect(() => {
@@ -73,7 +73,7 @@ const catalogueTemplate = (props) => {
 				style={{
 					position: 'fixed',
 					right: '11px',
-					bottom: props.mediaIsMobile ? '130px' : '45px',
+					bottom: mediaIsMobile ? '130px' : '45px',
 					display: 'flex',
 					flexDirection: 'column',
 					gap: '5px',

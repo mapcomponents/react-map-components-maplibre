@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import toGeoJSON from './lib/gpxConverter';
 import { FeatureCollection } from '@turf/turf';
 
-interface useGpxProps {
+export interface useGpxProps {
 	/**
 	 * a string containing GPX data that is supposed to be parsed and converted to GeoJSON by this hook
 	 */

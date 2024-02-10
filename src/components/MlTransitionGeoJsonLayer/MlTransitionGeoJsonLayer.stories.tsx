@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import MlTransitionGeoJsonLayer from './MlTransitionGeoJsonLayer';
+import MlTransitionGeoJsonLayer, { MlTransitionGeoJsonLayerProps } from './MlTransitionGeoJsonLayer';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import useMap from '../../hooks/useMap';
@@ -22,9 +22,9 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const LinestringTransitionTemplate = (props) => {
+const LinestringTransitionTemplate = (props:MlTransitionGeoJsonLayerProps) => {
 	const mapHook = useMap({ mapId: 'map_1' });
-	const [geojson, setGeojson] = useState(sample_geojson_1);
+	const [geojson, setGeojson] = useState<GeoJSON.Feature>(sample_geojson_1 as GeoJSON.Feature);
 	const initializedRef = useRef(false);
 	const [disabled, setDisabled] = useState(true);
 
@@ -45,14 +45,14 @@ const LinestringTransitionTemplate = (props) => {
 	}, [geojson, mapHook.map]);
 
 	function toogleSource() {
-		if (geojson?.properties.name === 'sample1') {
-			setGeojson(sample_geojson_2);
-		} else if (geojson?.properties.name === 'sample2') {
-			setGeojson(sample_geojson_1);
+		if (geojson?.properties?.name === 'sample1') {
+			setGeojson(sample_geojson_2 as GeoJSON.Feature);
+		} else if (geojson?.properties?.name === 'sample2') {
+			setGeojson(sample_geojson_1 as GeoJSON.Feature);
 		}
 	}
 
-	function enableButton(time) {
+	function enableButton(time:number) {
 		setTimeout(()=>{setDisabled(false)}, time);
 	}
 

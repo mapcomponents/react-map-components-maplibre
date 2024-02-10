@@ -1,28 +1,35 @@
-import React, { useEffect } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 
 import useMapState from "./useMapState";
 
 import mapContextDecoratorHooks from "../decorators/MapContextDecoratorHooks";
 
-const storyoptions = {
+interface StoryOptions {
+	title: string;
+	component: React.ComponentType<any>;
+	argTypes: any;
+	decorators: any;
+}
+
+const storyOptions: StoryOptions = {
 	title: "Hooks/useMapState",
-	component: useMapState,
+	component: useMapState as unknown as FunctionComponent<any>,
 	argTypes: {},
 	decorators: mapContextDecoratorHooks,
 };
-export default storyoptions;
 
-const Template = (props) => {
+export default storyOptions;
+
+const Template: React.FC<any> = (props) => {
 	const mapState = useMapState({ ...props });
 
 	useEffect(() => {
-
-	
-	}, [mapState.layers])
+		// Your useEffect logic here
+	}, [mapState.layers]);
 
 	return (
 		<>
-		<div
+			<div
 				style={{
 					position: "fixed",
 					zIndex: 10000,
@@ -32,20 +39,17 @@ const Template = (props) => {
 					left: 0,
 					right: 0,
 					bottom: 0,
-					maxHeight:'100VH',
+					maxHeight: '100VH',
 					backgroundColor: "rgba(80,80,80,.8)",
 					padding: "50px",
 					fontSize: "20px",
 					color: "#51ff09",
-					overflow:'hidden',
+					overflow: 'hidden',
 					pointerEvents: "none",
 				}}
-		>
-
-				<pre>{JSON.stringify(mapState, null, "	")}</pre>
-
-
-		</div>
+			>
+				<pre>{JSON.stringify(mapState, null, "\t")}</pre>
+			</div>
 		</>
 	);
 };
@@ -101,7 +105,7 @@ MatchLayerIdRegexp.args = {
 	},
 	filter: {
 		includeBaseLayers: true,
-		matchLayerIds: /water/,
+		matchLayerIds: "water",
 	},
 };
 

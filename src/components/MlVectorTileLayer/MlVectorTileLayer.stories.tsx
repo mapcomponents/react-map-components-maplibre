@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import MlVectorTileLayer from './MlVectorTileLayer';
+import MlVectorTileLayer, { MlVectorTileLayerProps } from './MlVectorTileLayer';
 import TopToolbar from '../../ui_components/TopToolbar';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
@@ -17,7 +17,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => {
+const Template = (args:MlVectorTileLayerProps) => {
 	const [showLayer, setShowLayer] = useState(true);
 
 	return (

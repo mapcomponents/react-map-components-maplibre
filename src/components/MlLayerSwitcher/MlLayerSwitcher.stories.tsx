@@ -6,7 +6,7 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 import Sidebar from '../../ui_components/Sidebar';
-import TopToolbar from '../..//ui_components/TopToolbar';
+import TopToolbar from '../../ui_components/TopToolbar';
 import { Button } from '@mui/material';
 
 const storyoptions = {
@@ -20,7 +20,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => {
+const Template = (args:any) => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	return (
 		<>
@@ -56,14 +56,14 @@ const Template = (args) => {
 				/>
 				<MlGeoJsonLayer
 					type="line"
-					layout={{ visibility: args.geojsonLayerVisible ? 'visible' : 'none' }}
-					geojson={sample_geojson_1}
+					options={{layout:{ visibility: args.geojsonLayerVisible ? 'visible' : 'none' }}}
+					geojson={sample_geojson_1 as GeoJSON.Feature}
 					layerId="geojson1"
 				/>
 				<MlGeoJsonLayer
 					type="line"
-					layout={{ visibility: args.geojson2LayerVisible ? 'visible' : 'none' }}
-					geojson={sample_geojson_2}
+					options={{layout:{ visibility: args.geojson2LayerVisible ? 'visible' : 'none' }}}
+					geojson={sample_geojson_2 as GeoJSON.Feature}
 					layerId="geojson2"
 				/>
 				<MlLayerSwitcher

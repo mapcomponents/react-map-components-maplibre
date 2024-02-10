@@ -1,6 +1,6 @@
 import React from "react";
 
-import MlUseMapDebugger from "./MlUseMapDebugger";
+import MlUseMapDebugger, { MlUseMapDebuggerProps } from "./MlUseMapDebugger";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
@@ -15,7 +15,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props) => {
+const Template = (props:MlUseMapDebuggerProps) => {
 	return (
 		<>
 			<MlUseMapDebugger {...props} />

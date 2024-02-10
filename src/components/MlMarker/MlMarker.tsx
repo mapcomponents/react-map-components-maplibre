@@ -6,7 +6,7 @@ import useMap from "../../hooks/useMap";
 
 import Point from "@mapbox/point-geometry";
 
-interface MlMarkerProps {
+export interface MlMarkerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */

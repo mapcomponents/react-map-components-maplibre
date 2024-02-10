@@ -1,6 +1,6 @@
 import React from "react";
 
-import MlMarker from "./MlMarker";
+import MlMarker, { MlMarkerProps } from "./MlMarker";
 
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
@@ -11,7 +11,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args) => <MlMarker {...args}/>;
+const Template = (args:MlMarkerProps) => <MlMarker {...args}/>;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.args = {

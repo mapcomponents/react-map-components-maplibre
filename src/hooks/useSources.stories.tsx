@@ -12,7 +12,7 @@ import wg_geojson from './assets/pointWG.json';
 const vectorUrl =
 	'https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf';
 
-const storyoptions = {
+const storyoptions: any = {
 	title: 'Hooks/useSource',
 	component: useSource,
 	argTypes: {},
@@ -20,14 +20,14 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const GeojsonExample = (args) => {
+const GeojsonExample = (args: any) => {
 	const { source } = useSource({ ...args });
 
 	useLayer({
 		mapId: args.mapId,
 		layerId: 'layer1',
 		options: {
-		source: source?.id ? source.id : '',
+			source: source?.id ? source.id : '',
 			type: 'circle',
 			paint: {
 				'circle-radius': 6,
@@ -39,7 +39,7 @@ const GeojsonExample = (args) => {
 		mapId: args.mapId,
 		layerId: 'layer2',
 		options: {
-		source: source?.id ? source.id : '',
+			source: source?.id ? source.id : '',
 			type: 'circle',
 			paint: {
 				'circle-radius': 4,
@@ -50,7 +50,7 @@ const GeojsonExample = (args) => {
 	return <></>;
 };
 
-const VectorExample = (args) => {
+const VectorExample = (args: any) => {
 	useSource({ ...args });
 	const mapHook = useMap({
 		mapId: args.mapId,
@@ -94,7 +94,7 @@ const VectorExample = (args) => {
 	return <></>;
 };
 
-const RasterExample = (args) => {
+const RasterExample = (args: any) => {
 	useSource({ ...args });
 	const mapHook = useMap({
 		mapId: args.mapId,
@@ -116,9 +116,9 @@ const RasterExample = (args) => {
 	return <></>;
 };
 
-const removeExample = (args) => {
+const removeExample = (args: any) => {
 	const [sourceStatus, setSourceStatus] = useState(true);
-	const [activeSources, setActiveSources] = useState([]);
+	const [activeSources, setActiveSources] = useState<string[]>([]);
 	const mapHook = useMap({
 		mapId: args.mapId,
 	});
