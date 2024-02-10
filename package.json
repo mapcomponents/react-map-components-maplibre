@@ -14,7 +14,7 @@
     "test": "node scripts/test.cjs --watchAll=false --coverage",
     "test:noninteractive": "node scripts/test.cjs --verbose --watchAll=false --coverage",
     "test:generate-output": "node scripts/test.cjs --watchAll=false --json --outputFile=./src/.jest-test-results.json || true",
-    "build-storybook": "storybook build -o docs-build -s public",
+    "build-storybook": "storybook build -o docs-build",
     "storybook-docs": "storybook dev --docs --no-manager-cache",
     "build-catalogue-meta": "node scripts/build-catalogue-meta.js",
     "create-component": "./scripts/create-map-component.sh"
@@ -29,8 +29,8 @@
     "@emotion/styled": "^11.11.0",
     "@mapbox/mapbox-gl-draw": "^1.4.3",
     "@mapbox/mapbox-gl-sync-move": "^0.3.1",
-    "@mui/icons-material": "^5.15.7",
-    "@mui/material": "^5.15.7",
+    "@mui/icons-material": "^5.15.9",
+    "@mui/material": "^5.15.9",
     "@tmcw/togeojson": "^5.8.1",
     "@turf/turf": "^6.5.0",
     "@types/d3": "^7.4.3",
@@ -78,7 +78,7 @@
     "@types/mapbox__vector-tile": "^1.3.4",
     "@types/pako": "^2.0.3",
     "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.18",
+    "@types/react-dom": "^18.2.19",
     "@types/sql.js": "^1.4.9",
     "@types/three": "^0.161.2",
     "@types/uuid": "^9.0.8",
@@ -102,15 +102,15 @@
     "jest-resolve": "29.7.0",
     "jest-watch-typeahead": "2.2.2",
     "node-fetch": "^3.3.2",
-    "postcss": "^8.4.34",
+    "postcss": "^8.4.35",
     "prettier": "3.2.5",
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",
     "react-dev-utils": "^12.0.1",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
-    "react-i18next": "^14.0.4",
-    "rollup": "^4.9.6",
+    "react-i18next": "^14.0.5",
+    "rollup": "^4.10.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-import-css": "^3.4.0",
     "rollup-plugin-node-externals": "^7.0.1",
@@ -206,6 +206,5 @@
     ]
   },
   "resolutions": {
-    "jackspeak": "2.1.1"
   }
 }

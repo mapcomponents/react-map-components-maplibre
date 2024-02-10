@@ -2,14 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Fade } from '@mui/material';
 import BubbleStyle, { BubbleForInstructionProps } from './BubbleForInstructions';
 
-interface StepObject {
+export interface StepObject {
 	duration: number;
 	props: BubbleForInstructionProps;
 	content: JSX.Element;
 }
 
-interface InstructionProps {
-	steps: Array<StepObject>;
+export interface InstructionProps {
+	steps: StepObject[];
 	open: boolean;
 	callback?: () => void;
 }

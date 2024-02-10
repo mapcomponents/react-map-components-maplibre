@@ -3,17 +3,17 @@ import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import { Box, Typography } from '@mui/material';
 
 export interface BubbleForInstructionProps {
-	bubbleRight: string;
-	bubbleLeft: string;
-	bubbleTop: string;
-	bubbleBottom: string;
+	bubbleRight?: string;
+	bubbleLeft?: string;
+	bubbleTop?: string;
+	bubbleBottom?: string;
 	zIndex: string;
 	textMarginTop: string;
 	textMarginLeft: string;
 	iconTransform: string;
 	iconMarginTop: string;
 	iconMarginLeft: string;
-	children: React.ReactNode;
+	children?: React.ReactNode;
 }
 
 function BubbleForInstruction(props: BubbleForInstructionProps) {
