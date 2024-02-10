@@ -4,7 +4,7 @@ import MapContext, { MapContextType } from '../../contexts/MapContext';
 import MapLibreGlWrapper from './lib/MapLibreGlWrapper';
 
 import { MapOptions as MapOptionsType, Map } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+//import 'maplibre-gl/dist/maplibre-gl.css';
 
 export type MapLibreMapProps = {
 	/**

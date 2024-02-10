@@ -47,6 +47,7 @@ const Instructions = (props: InstructionProps) => {
 			{typeof activeStep !== 'undefined' && (
 				<Fade in={true} timeout={150}>
 					<div>
+						{/* @ts-ignore */}
 						<BubbleStyle {...props.steps[activeStep].props}>
 							{props.steps[activeStep].content}
 						</BubbleStyle>

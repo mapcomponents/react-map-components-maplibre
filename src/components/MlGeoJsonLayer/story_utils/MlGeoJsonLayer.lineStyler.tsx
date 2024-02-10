@@ -121,7 +121,7 @@ const LineStyler: React.FC<LineStylerProps> = ({ geojson, openSidebar, setOpenSi
 						min={0}
 						step={0.1}
 						marks={marks}
-						onChange={(e, v) => {
+						onChange={(_e, v) => {
 							setOpacity(v as number);
 						}}
 					/>
@@ -133,7 +133,7 @@ const LineStyler: React.FC<LineStylerProps> = ({ geojson, openSidebar, setOpenSi
 						min={0}
 						step={1}
 						marks={widthMarks}
-						onChange={(e, v) => {
+						onChange={(_e, v) => {
 							setLineWidth(v as number);
 						}}
 					/>
