@@ -1,4 +1,4 @@
-const glob = require('glob');
+const { glob } = require('glob');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const Ajv = require('ajv');
 const ajv = new Ajv();
