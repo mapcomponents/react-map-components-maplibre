@@ -6,15 +6,14 @@
   "module": "dist/index.esm.js",
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
-  "type": "module",
   "scripts": {
     "build": "rollup -c",
     "start": "storybook dev",
     "cypress-test": "npx cypress run --component",
     "cypress": "npx cypress open",
-    "test": "node scripts/test.js --watchAll=false --coverage",
-    "test:noninteractive": "node scripts/test.js --verbose --watchAll=false --coverage",
-    "test:generate-output": "node scripts/test.js --watchAll=false --json --outputFile=./src/.jest-test-results.json || true",
+    "test": "node scripts/test.cjs --watchAll=false --coverage",
+    "test:noninteractive": "node scripts/test.cjs --verbose --watchAll=false --coverage",
+    "test:generate-output": "node scripts/test.cjs --watchAll=false --json --outputFile=./src/.jest-test-results.json || true",
     "build-storybook": "storybook build -o docs-build -s public",
     "storybook-docs": "storybook dev --docs --no-manager-cache",
     "build-catalogue-meta": "node scripts/build-catalogue-meta.js",
@@ -146,7 +145,8 @@
     "transform": {
       "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js",
+      "^.+\\.svg$": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
