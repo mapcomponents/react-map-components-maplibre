@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {Fade, SxProps} from '@mui/material';
-import BubbleStyle from './BubbleForInstructions';
+import { Fade } from '@mui/material';
+import BubbleStyle, { BubbleForInstructionProps } from './BubbleForInstructions';
 
 interface StepObject {
 	duration: number;
-	props: SxProps;
+	props: BubbleForInstructionProps;
 	content: JSX.Element;
 }
 
@@ -47,7 +47,6 @@ const Instructions = (props: InstructionProps) => {
 			{typeof activeStep !== 'undefined' && (
 				<Fade in={true} timeout={150}>
 					<div>
-						{/* @ts-ignore */}
 						<BubbleStyle {...props.steps[activeStep].props}>
 							{props.steps[activeStep].content}
 						</BubbleStyle>
