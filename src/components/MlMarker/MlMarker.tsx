@@ -68,13 +68,13 @@ const MlMarker = (props: MlMarkerProps) => {
 		)
 			return;
 
-		let mapHeight = mapHook.map.map._container.clientHeight;
+		const mapHeight = mapHook.map.map._container.clientHeight;
 
 		const _pixelPos = mapHook.map.map.project([props.lng, props.lat]);
-		let pixelToBottom = mapHeight - _pixelPos.y;
-		let iframeHeight =
+		const pixelToBottom = mapHeight - _pixelPos.y;
+		const iframeHeight =
 			iframe.current?.contentWindow?.document?.body?.scrollHeight;
-		let iframeWidth =
+		const iframeWidth =
 			iframe.current?.contentWindow?.document?.body?.scrollWidth;
 
 		setIframeDimensions({

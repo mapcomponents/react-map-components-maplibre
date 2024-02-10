@@ -22,6 +22,7 @@ module.exports = {
 		'react/prop-types': 'off',
 		// empty functions can sometimes be set intentionally. e.g. with useRef/useState, if we want an empty function first
 		'@typescript-eslint/no-empty-function': 'off',
+		"@typescript-eslint/no-explicit-any": "off"
 	},
 	settings: {
 		react: {

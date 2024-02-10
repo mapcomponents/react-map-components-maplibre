@@ -192,8 +192,8 @@ const removeExample = (args: any) => {
 	);
 };
 
-export const useGeojsonSourceExample = GeojsonExample.bind({});
-useGeojsonSourceExample.args = {
+export const UseGeojsonSourceExample = GeojsonExample.bind({});
+UseGeojsonSourceExample.args = {
 	mapId: 'map_1',
 	sourceId: 'geojson-source',
 	source: {
@@ -202,8 +202,8 @@ useGeojsonSourceExample.args = {
 	},
 };
 
-export const useVectorSourceExample = VectorExample.bind({});
-useVectorSourceExample.args = {
+export const UseVectorSourceExample = VectorExample.bind({});
+UseVectorSourceExample.args = {
 	mapId: 'map_1',
 	sourceId: 'vector-source',
 	source: {
@@ -214,8 +214,8 @@ useVectorSourceExample.args = {
 	},
 };
 
-export const useRasterSourceExample = RasterExample.bind({});
-useRasterSourceExample.args = {
+export const UseRasterSourceExample = RasterExample.bind({});
+UseRasterSourceExample.args = {
 	mapId: 'map_1',
 	sourceId: 'raster-source',
 	source: {
@@ -228,7 +228,7 @@ useRasterSourceExample.args = {
 	},
 };
 
-export const removeSourceExample = removeExample.bind({});
-removeSourceExample.args = {
+export const RemoveSourceExample = removeExample.bind({});
+RemoveSourceExample.args = {
 	mapId: 'map_1',
 };

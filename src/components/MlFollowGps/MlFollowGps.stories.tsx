@@ -86,14 +86,14 @@ const catalogueTemplate = (props:MlFollowGpsProps) => {
 	);
 };
 
-export const standardConfig = Template.bind({});
-standardConfig.parameters = {};
-standardConfig.args = {
+export const StandardConfig = Template.bind({});
+StandardConfig.parameters = {};
+StandardConfig.args = {
 	followUserPosition: false,
 };
 
-export const catalogueDemo = catalogueTemplate.bind({});
-catalogueDemo.parameters = {};
-catalogueDemo.args = {
+export const CatalogueDemo = catalogueTemplate.bind({});
+CatalogueDemo.parameters = {};
+CatalogueDemo.args = {
 	followUserPosition: false,
 };

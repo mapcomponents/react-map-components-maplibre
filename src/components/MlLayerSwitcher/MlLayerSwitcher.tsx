@@ -1,6 +1,6 @@
 import './MlLayerSwitcher.css';
 //External
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 //Internal
@@ -51,8 +51,6 @@ const MlLayerSwitcher: React.FC<MlLayerSwitcherProps> = (props) => {
 		},
 		filter: {},
 	});
-	const [activeLayers, setActiveLayers] = useState<string[]>([]);
-	const [activeDetailLayers, setActiveDetailLayers] = useState<string[]>([]);
 	const { t } = useTranslation();
 
 	useEffect(() => {
@@ -83,8 +81,8 @@ const MlLayerSwitcher: React.FC<MlLayerSwitcherProps> = (props) => {
 
 	useEffect(() => {
 		if (mapContext.map?.style?._layers) {
-			let newactiveLayers: string[] = [];
-			let newactiveDetailLayers: string[] = [];
+			const newactiveLayers: string[] = [];
+			const newactiveDetailLayers: string[] = [];
 			props.baseSourceConfig.layers.forEach((layerConfig) => {
 				const layers = getLayerListFromId(layerConfig.layerId);
 
@@ -107,9 +105,7 @@ const MlLayerSwitcher: React.FC<MlLayerSwitcherProps> = (props) => {
 					newactiveDetailLayers.push(layerId);
 				}
 			});
-			setActiveLayers(newactiveLayers);
 
-			setActiveDetailLayers(newactiveDetailLayers);
 		}
 	}, [layers]);
 
@@ -130,23 +126,16 @@ const MlLayerSwitcher: React.FC<MlLayerSwitcherProps> = (props) => {
 	};
 
 	const handleLayerBoxClick = (id: string) => {
-		let layers = getLayerListFromId(id);
+		const layers = getLayerListFromId(id);
 		const nextVisiblityClickedLayer =
 			mapContext?.map && layers?.[0] && mapContext?.map.getLayer(layers[0])?.getLayoutProperty('visibility') === 'visible'
 				? 'none'
 				: 'visible';
 
 		props.baseSourceConfig.layers.forEach((config, i) => {
-			let layers = getLayerListFromId(config.layerId);
-			let visible:'visible' | 'none' = 'none';
-			if (config.layerId === id) {
-				visible = nextVisiblityClickedLayer;
-			}
+			const layers = getLayerListFromId(config.layerId);
+			const visible:'visible' | 'none' = nextVisiblityClickedLayer === 'none' && i === 0 ? 'visible' : config.layerId === id ? nextVisiblityClickedLayer : 'none';
 
-			//To avoid disabling all base layers we activate the first one
-			if (nextVisiblityClickedLayer === 'none' && i === 0) {
-				visible = 'visible';
-			}
 			layers.forEach((layer) => {
 				if (layer && ['visible', 'none'].includes(visible)) {
 					changeLayerState(layer, visible);

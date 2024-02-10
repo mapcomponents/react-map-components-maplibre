@@ -1,4 +1,4 @@
-import React, { useState, useMemo, ChangeEvent } from 'react';
+import React, { useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import {
   Select,

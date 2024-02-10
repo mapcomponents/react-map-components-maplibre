@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import * as turf from '@turf/turf';
+import React from 'react';
 import MlMultiMeasureTool from './MlMultiMeasureTool';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
@@ -12,11 +11,10 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = () => {
-	const [unit, setUnit] = useState<turf.Units>('kilometers');
 
 	return (
 		<>
-			<MlMultiMeasureTool unit={unit} multiType={true} />
+			<MlMultiMeasureTool multiType={true} />
 		</>
 	);
 };

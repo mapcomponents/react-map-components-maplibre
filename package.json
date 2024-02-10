@@ -21,7 +21,6 @@
     "create-component": "./scripts/create-map-component.sh"
   },
   "dependencies": {
-    "@babel/preset-flow": "^7.23.3",
     "@cypress/react": "^8.0.0",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/modifiers": "^7.0.0",

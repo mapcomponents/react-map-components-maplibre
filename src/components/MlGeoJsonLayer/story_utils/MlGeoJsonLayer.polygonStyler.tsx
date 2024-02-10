@@ -1,4 +1,4 @@
-import React, { useState, useMemo, ChangeEvent } from 'react';
+import React, { useState, useMemo } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
@@ -42,20 +42,12 @@ const PolygonStyler: React.FC<PolygonStylerProps> = ({ geojson, openSidebar, set
     }
     return {
       type: 'FeatureCollection',
-      features: geojson.features.filter((item: any) => item.properties.name === featureToShow),
+      features: geojson.features.filter((item: GeoJSON.Feature) => item.properties?.name === featureToShow),
     };
   }, [featureToShow, geojson]);
 
   const handleColorChange = (value: string) => {
     setColor(value);
-  };
-
-  const handleOpacityChange = (event: Event, newValue: number | number[]) => {
-    setOpacity(newValue as number);
-  };
-
-  const handleLineWidthChange = (event: Event, newValue: number | number[]) => {
-    setLineWidth(newValue as number);
   };
 
   return (
@@ -131,7 +123,7 @@ const PolygonStyler: React.FC<PolygonStylerProps> = ({ geojson, openSidebar, set
 						min={0}
 						step={1}
 						marks={widthMarks}
-						onChange={(e, v) => {
+						onChange={(_e, v) => {
 							setLineWidth(v as number);
 						}}
 						disabled={geomType !== 'line'}
