@@ -61,15 +61,15 @@ const createWrapper = () =>
 	);
 
 describe("<MlLayer>", () => {
-	it("should add a Layer with the id 'MlLayer-{uuid}' to the MapLibre instance", async () => {
+	it("should make a Source with the id 'MlLayer-{uuid}' invisible in the MapLibre instance", async () => {
 		const wrapper = createWrapper();
 
+		wrapper.find('.trigger_refresh').simulate('click');
 		wrapper.find('.trigger_refresh').simulate('click');
 
 		expect(
 			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.layers_json').text())
 		).toEqual(true);
-	});
 
 	it("should remove a Layer with the id 'MlLayer-{uuid}' from the MapLibre instance", async () => {
 		const wrapper = createWrapper();
@@ -78,8 +78,11 @@ describe("<MlLayer>", () => {
 
 		expect(
 			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.layers_json').text())
+			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.layers_json').text())
 		).toEqual(true);
 
+		wrapper.find('.toggle_layer_visible').simulate('click');
+		wrapper.find('.trigger_refresh').simulate('click');
 		wrapper.find('.toggle_layer_visible').simulate('click');
 		wrapper.find('.trigger_refresh').simulate('click');
 
