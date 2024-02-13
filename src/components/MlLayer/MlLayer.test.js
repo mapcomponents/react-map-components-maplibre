@@ -15,12 +15,11 @@ const MlLayerTestComponent = (props) => {
 	return (
 		<>
 			<MapLibreMap />
-
 			{layerVisible && (
 				<MlLayer
 					options={{
 						source: {
-							type: "geojson",
+							type: 'geojson',
 							data: {},
 						},
 					}}
