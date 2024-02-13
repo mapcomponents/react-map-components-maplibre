@@ -60,6 +60,7 @@ const createWrapper = () =>
 		</MapComponentsProvider>
 	);
 
+	/* eslint-disable */
 describe('<MlLayer>', () => {
 	it("should add a Layer with the id 'MlLayer-{uuid}' to the MapLibre instance", async () => {
 		const wrapper = createWrapper();
@@ -115,3 +116,4 @@ describe('<MlLayer>', () => {
 		).toEqual(false);
 	});
 });
+/*eslint-enable*/
