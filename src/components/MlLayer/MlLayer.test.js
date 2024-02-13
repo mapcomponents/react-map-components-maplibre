@@ -18,6 +18,7 @@ const MlLayerTestComponent = (props) => {
 
 			{layerVisible && (
 				<MlLayer
+					layerId={'MlLayer-' + uuid_regex}
 					options={{
 						source: {
 							type: 'geojson',
