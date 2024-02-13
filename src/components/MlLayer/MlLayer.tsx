@@ -46,9 +46,9 @@ const MlLayer = (props: MlLayerProps) => {
 		options:
 			props.options ||
 			({
-				type: 'fill',
+				type: 'background',
 				paint: {
-					'fill-color': 'rgba(0,0,0,0)',
+					'background-color': 'rgba(0,0,0,0)',
 				},
 			} as useLayerProps['options']),
 		insertBeforeLayer: props.insertBeforeLayer,
