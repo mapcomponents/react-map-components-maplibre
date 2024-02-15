@@ -41,6 +41,6 @@ jobs:
         uses: DukeManh/scoped-actions@v1
         with:
           files: ${{ steps.files.outputs.added_modified}}
-          eslintTarget: "**/*.{jsx,tsx,ts,js}"
+          eslintTarget: "src/**/*.{jsx,tsx,ts,js}"
           s0: "yarn run eslint"
           s1: "yarn run prettier --check"

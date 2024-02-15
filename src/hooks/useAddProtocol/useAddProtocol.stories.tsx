@@ -240,8 +240,6 @@ const OsmTemplate = () => {
 		handler: OSMProtocolHandler,
 	});
 
-	const options =
-		'?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false';
 	useSource({
 		sourceId: 'osm-source',
 		source: {

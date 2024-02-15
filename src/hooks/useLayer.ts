@@ -38,7 +38,7 @@ export interface useLayerProps {
 	idPrefix?: string;
 	insertBeforeLayer?: string;
 	insertBeforeFirstSymbolLayer?: boolean;
-	geojson?: GeoJSONObject;
+	geojson?: GeoJSONObject | GeoJSON.Feature | GeoJSON.FeatureCollection;
 	options: Partial<
 		LayerSpecification & {
 			source?: GeoJSONSourceSpecification | string;
