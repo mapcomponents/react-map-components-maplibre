@@ -164,6 +164,6 @@ CustomButton.args = {
 	),
 };
 
-export const catalogueDemo =  catalogueTemplate.bind({});
-catalogueDemo.parameters = {};
-catalogueDemo.args = {};
+export const CatalogueDemo =  catalogueTemplate.bind({});
+CatalogueDemo.parameters = {};
+CatalogueDemo.args = {};

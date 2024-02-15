@@ -20,8 +20,9 @@ export interface MlGeojsonLayerWithSourceProps {
  *
  */
 const MlGeojsonLayerWithSource = (props: MlGeojsonLayerWithSourceProps) => {
-  const Spiekeroog = {
+  const Spiekeroog:GeoJSON.Feature = {
     type: "Feature",
+		properties:{},
     geometry: {
       type: "Polygon",
       coordinates: [

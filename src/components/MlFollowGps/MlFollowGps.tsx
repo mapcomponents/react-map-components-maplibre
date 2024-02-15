@@ -18,7 +18,7 @@ import {
 } from '@turf/turf';
 import { CircleLayerSpecification, FillLayerSpecification, LngLatBoundsLike } from 'maplibre-gl';
 
-interface MlFollowGpsProps {
+export interface MlFollowGpsProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */

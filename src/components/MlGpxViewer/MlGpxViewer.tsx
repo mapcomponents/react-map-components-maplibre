@@ -3,7 +3,7 @@ import { bbox, featureCollection, FeatureCollection } from '@turf/turf';
 import { LngLatBoundsLike } from 'maplibre-gl';
 import useMap from '../../hooks/useMap';
 import useGpx, { MetadataType } from '../../hooks/useGpx/useGpx';
-import useLayerHoverPopup from '../../hooks/useLayerHoverPopup/useLayerHoverPopup';
+import useLayerHoverPopup from '../../hooks/useLayerHoverPopup/LayerHoverPopup';
 import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
 import { v4 as uuidv4 } from 'uuid';
