@@ -49,5 +49,8 @@ module.exports = {
     },
 	staticDirs: [
 		'../public',
-	]
+	],
+	features: {
+    buildStoriesJson: true,
+  }
 };
