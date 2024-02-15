@@ -1,6 +1,12 @@
 # Change Log
 
 
+## [v1.0.0] - 2024-02-15
+
+### Changed
+- 5500815: upgrade to maplibre v4.0.0
+- 7629f88: upgrade storybook and all dependencies to the latest major release
+
 ## [v0.1.96] - 2024-01-29
 
 ### Fixed
