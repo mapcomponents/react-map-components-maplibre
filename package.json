@@ -1,7 +1,7 @@
 {
   "name": "@mapcomponents/react-maplibre",
   "version": "1.0.0",
-  "main": "dist/index.esm.js",
+  "main": "dist/index.cjs.js",
   "license": "MIT",
   "module": "dist/index.esm.js",
   "source": "src/index.ts",
@@ -110,7 +110,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
     "react-i18next": "^14.0.5",
-    "rollup": "^4.10.0",
+    "rollup": "^4.11.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-import-css": "^3.4.0",
     "rollup-plugin-node-externals": "^7.0.1",
