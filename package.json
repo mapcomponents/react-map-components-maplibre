@@ -1,6 +1,6 @@
 {
   "name": "@mapcomponents/react-maplibre",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/index.cjs.js",
   "license": "MIT",
   "module": "dist/index.esm.js",
@@ -53,6 +53,7 @@
     "@babel/preset-react": "^7.23.3",
     "@bahmutov/cy-rollup": "^2.0.0",
     "@cfaester/enzyme-adapter-react-18": "^0.7.1",
+    "@cypress/react": "^8.0.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-url": "^8.0.2",
@@ -87,6 +88,7 @@
     "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-styled-components": "^2.1.4",
     "babel-preset-react-app": "^10.0.1",
+    "cypress": "^13.6.4",
     "enzyme": "^3.11.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
@@ -118,8 +120,6 @@
     "storybook": "^7.6.13",
     "storybook-source-link": "^4.0.1",
     "ts-jest": "^29.1.2",
-    "cypress": "^13.6.4",
-    "@cypress/react": "^8.0.0",
     "typescript": "^5.3.3"
   },
   "jest": {
