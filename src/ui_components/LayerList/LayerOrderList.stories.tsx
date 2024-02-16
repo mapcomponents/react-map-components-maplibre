@@ -5,7 +5,7 @@ import emptyMapReduxStoreDecorator from '../../decorators/EmptyMapReduxStoreDeco
 import sample_points_1 from './assets/sample_points_1.json';
 import sample_polygon_1 from './assets/sample_polygon_1.json';
 import { FeatureCollection } from '@turf/turf';
-import { AppState, setMapConfig } from '../../stores/map.store';
+import { MapState, setMapConfig } from '../../stores/map.store';
 import { useDispatch } from 'react-redux';
 
 const storyoptions = {
@@ -19,17 +19,17 @@ const LayerOrder = () => {
 	const mapConfigUuid = 'dc272150-8f04-44e2-97c5-d8f266a04cf8';
 	const layerUuid1 = 'fec837fa-1d5d-432b-89c2-b416c9773523';
 	const layerUuid2 = '0587c0ed-aaa0-4315-bb77-a40937a684d7';
-	const demoData: AppState = {
+	const demoData: MapState = {
 		mapConfigs: {
 			mapConfig1: {
 				uuid: mapConfigUuid,
 				name: 'Demo Map',
-				mapState: {
+				mapProps: {
 					center: [7.0851268, 50.73884],
 					zoom: 14,
 				},
 				layers: {
-					'layer-1': {
+					layer1: {
 						type: 'geojson',
 						uuid: layerUuid1,
 						name: 'point',
@@ -37,7 +37,7 @@ const LayerOrder = () => {
 							geojson: sample_points_1 as FeatureCollection,
 						},
 					},
-					'layer-2': {
+					layer2: {
 						type: 'geojson',
 						uuid: layerUuid2,
 						name: 'Polygon',

@@ -52,7 +52,7 @@ export type FolderLayerConfig = {
 
 export type LayerConfig = WmsLayerConfig | GeojsonLayerConfig | VtLayerConfig | FolderLayerConfig;
 
-interface MapState {
+interface MapProps {
 	center: [number, number];
 	zoom: number;
 }
@@ -65,20 +65,20 @@ interface LayerOrderItem {
 interface MapConfig {
 	uuid: string;
 	name: string;
-	mapState: MapState;
+	mapProps: MapProps;
 	layers: { [uuid: string]: LayerConfig };
 	layerOrder: LayerOrderItem[];
 }
 
-export type AppState = {
+export type MapState = {
 	mapConfigs: { [key: string]: MapConfig };
 };
 
 export type RootState = {
-	mapConfig: AppState;
+	mapConfig: MapState;
 };
 
-export const initialState: AppState = {
+export const initialState: MapState = {
 	mapConfigs: {},
 };
 const mapConfigSlice = createSlice({
