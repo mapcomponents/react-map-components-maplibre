@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import LayerOrderList from './LayerOrderList';
 import Sidebar from '../Sidebar';
 import emptyMapReduxStoreDecorator from '../../decorators/EmptyMapReduxStoreDecorator';
@@ -51,9 +51,9 @@ const LayerOrder = () => {
 		},
 	};
 	const dispatch = useDispatch();
-	useEffect(() => {
-		dispatch(setMapConfig(demoData.mapConfigs['mapConfig1']));
-	}, [dispatch]);
+	//useEffect(() => {
+	dispatch(setMapConfig(demoData.mapConfigs['mapConfig1']));
+	//}, [dispatch, demoData]);
 
 	return (
 		<Sidebar open={true}>

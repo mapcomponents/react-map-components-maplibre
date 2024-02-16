@@ -74,6 +74,10 @@ export type AppState = {
 	mapConfigs: { [key: string]: MapConfig };
 };
 
+export type RootState = {
+	mapConfig: AppState;
+};
+
 export const initialState: AppState = {
 	mapConfigs: {},
 };
