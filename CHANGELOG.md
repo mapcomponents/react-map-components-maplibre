@@ -1,7 +1,11 @@
 # Change Log
 
 
-## [v1.0.0] - 2024-02-15
+## [v1.0.1] - 2024-02-16
+
+- 5c37664: fix npm package
+
+## [v1.0.0] - 2024-02-15 (broken)
 
 ### Changed
 - 5500815: upgrade to maplibre v4.0.0
