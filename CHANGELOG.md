@@ -3,6 +3,12 @@
 
 ## [v1.0.1] - 2024-02-16
 
+### Changed
+- 56eb640: move cypress dependencies to devDependencies
+
+## [v1.0.1] - 2024-02-16
+
+### Fixed
 - 5c37664: fix npm package
 
 ## [v1.0.0] - 2024-02-15 (broken)
