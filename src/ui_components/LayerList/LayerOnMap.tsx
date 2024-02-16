@@ -12,13 +12,18 @@ function LayerOnMap(props: LayerOnMapProps) {
 	const layers = useSelector(
 		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigUuid].layers
 	);
-	console.log(layers);
-
 	return (
 		<>
-			{Object.entries(layers).map(([key, layer]) => (
-				<MlGeoJsonLayer key={key} geojson={layer.config.geojson as Feature}></MlGeoJsonLayer>
-			))}
+			{Object.entries(layers).map(([key, layer]) => {
+				if (layer.type === 'geojson') {
+					return (
+						<MlGeoJsonLayer key={key} geojson={layer.config.geojson as Feature}></MlGeoJsonLayer>
+					);
+				} else {
+					//TODO: handle all other layer types
+					return null;
+				}
+			})}
 		</>
 	);
 }
