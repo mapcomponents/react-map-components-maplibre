@@ -19,34 +19,20 @@ const externalsConfig = {
 };
 
 const config = defineConfig([
-	// CJS config
-	//{
-	//	input: ['src/index.ts'],
-	//	output: {
-	//		file: 'dist/index.js',
-	//		format: 'cjs',
-	//		sourcemap: true,
-	//	},
-	//	plugins: [
-	//		svgr({
-	//			svgo: false,
-	//		}),
-	//		url(),
-	//		babel(),
-	//		externals(externalsConfig),
-	//		typescript({ declarationDir: 'dist/types', sourceMap: true }),
-	//		css(),
-	//		del({ targets: ['dist/*'] }),
-	//	],
-	//},
-	// ESM config
 	{
 		input: ['src/index.ts'],
-		output: {
-			file: 'dist/index.esm.js',
+		output: [
+			{
+			file: 'dist/index.cjs.js',
 			format: 'cjs',
 			sourcemap: true,
-		},
+			},
+			{
+			file: 'dist/index.esm.js',
+			format: 'es',
+			sourcemap: true,
+		}
+	],
 		plugins: [
 			svgr({
 				svgo: false,
