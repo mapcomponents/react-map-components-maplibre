@@ -1,5 +1,6 @@
 import React from 'react';
 import LayerOrderList from './LayerOrderList';
+import LayerOnMap from './LayerOnMap';
 import Sidebar from '../Sidebar';
 import emptyMapReduxStoreDecorator from '../../decorators/EmptyMapReduxStoreDecorator';
 import sample_points_1 from './assets/sample_points_1.json';
@@ -56,9 +57,12 @@ const LayerOrder = () => {
 	//}, [dispatch, demoData]);
 
 	return (
-		<Sidebar open={true}>
-			<LayerOrderList mapConfigUuid={mapConfigUuid}></LayerOrderList>
-		</Sidebar>
+		<>
+			<Sidebar open={true}>
+				<LayerOrderList mapConfigUuid={mapConfigUuid}></LayerOrderList>
+			</Sidebar>
+			<LayerOnMap mapConfigUuid={mapConfigUuid}></LayerOnMap>
+		</>
 	);
 };
 export const LayerOrderExample = LayerOrder.bind({});

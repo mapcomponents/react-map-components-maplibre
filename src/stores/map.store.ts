@@ -48,6 +48,7 @@ export type FolderLayerConfig = {
 	name?: string;
 	id?: string;
 	layers: LayerConfig[];
+	config: undefined;
 };
 
 export type LayerConfig = WmsLayerConfig | GeojsonLayerConfig | VtLayerConfig | FolderLayerConfig;
