@@ -78,6 +78,7 @@ const qualityOptions = [
 ];
 
 interface PdfFormProps {
+	additionalFields: boolean;
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
