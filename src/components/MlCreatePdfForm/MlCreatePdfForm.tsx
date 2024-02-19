@@ -31,7 +31,7 @@ const MlCreatePdfForm = (props: MlCreatePdfFormProps) => {
 	return (
 		<>
 			<PdfContextProvider>
-				<PdfForm {...props} />
+				<PdfForm additionalFields={false} {...props} />
 			</PdfContextProvider>
 		</>
 	);

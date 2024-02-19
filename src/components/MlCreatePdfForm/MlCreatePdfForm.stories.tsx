@@ -230,9 +230,7 @@ const additionalInfoTemplate = () => {
 					const pageWidth = pdf.internal.pageSize.getWidth();
 					const pageHeight = pdf.internal.pageSize.getHeight();
 					const isLandscape = pageWidth > pageHeight;
-					// @ts-ignore --> formData needs to be correctly defined
 					const title = options.formData.get('title') as string;
-					// @ts-ignore
 					const text = options.formData.get('description') as string;
 					const centerY = pageWidth / 2;
 					const fontSizes = {
