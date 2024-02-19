@@ -190,6 +190,6 @@ DrawLinestring.args = {
 	mode: 'draw_line_string',
 };
 
-export const catalogueDemo = catalogueTemplate.bind({});
-catalogueDemo.parameters = {};
-catalogueDemo.args = {};
+export const CatalogueDemo = catalogueTemplate.bind({});
+CatalogueDemo.parameters = {};
+CatalogueDemo.args = {};

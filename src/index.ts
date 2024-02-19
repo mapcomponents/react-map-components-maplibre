@@ -34,7 +34,6 @@ export { default as MlLayerSwipe } from './components/MlLayerSwipe/MlLayerSwipe'
 export { default as MlTransitionGeoJsonLayer } from './components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer';
 export { default as MlMarker } from './components/MlMarker/MlMarker';
 
-export { default as MlOsmLayer } from './components/MlOsmLayer/MlOsmLayer.js';
 
 export { default as MlGpxViewer } from './components/MlGpxViewer/MlGpxViewer';
 export { default as GeoJsonProvider } from './components/MlGpxViewer/util/GeoJsonProvider';
@@ -50,7 +49,6 @@ export { default as MlWmsLayer } from './components/MlWmsLayer/MlWmsLayer';
 export { default as MlWmsLoader } from './components/MlWmsLoader/MlWmsLoader';
 
 export { default as MlTemporalController } from './components/MlTemporalController/MlTemporalController';
-export { default as MlBasicComponent } from './components/MlBasicComponent.js';
 export { default as MlOrderLayers } from './components/MlOrderLayers/MlOrderLayers';
 export { default as MlTerrainLayer } from './components/MlTerrainLayer/MlTerrainLayer';
 export { default as MlSketchTool } from './components/MlSketchTool/MlSketchTool';
@@ -59,7 +57,7 @@ export { default as useCameraFollowPath } from './hooks/useCameraFollowPath/useC
 export { default as useExportMap } from './hooks/useExportMap';
 export { default as useGpx } from './hooks/useGpx/useGpx';
 export { default as useLayerFilter } from './hooks/useLayerFilter/useLayerFilter';
-export { default as useLayerHoverPopup } from './hooks/useLayerHoverPopup/useLayerHoverPopup';
+export { default as useLayerHoverPopup } from './hooks/useLayerHoverPopup/LayerHoverPopup';
 export { default as useLayer } from './hooks/useLayer';
 export { default as useLayerEvent } from './hooks/useLayerEvent';
 export { default as useMap } from './hooks/useMap';

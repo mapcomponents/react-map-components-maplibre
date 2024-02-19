@@ -12,7 +12,7 @@ export interface useFitLayerBoundsPros {
  function useFitLayerBounds(props: useFitLayerBoundsPros){
 
 	const mapHook = useMap({ mapId: undefined });
-	const layerSource = props.layerId ? mapHook.map?.getLayer(props.layerId).source : undefined;
+	const layerSource = props.layerId ? mapHook?.map?.getLayer?.(props.layerId)?.source : undefined;
 	const geojson = layerSource && (mapHook.map?.getSource(layerSource) as GeoJSONSource)._data;
 	const _geojson = layerSource && {
 		type: 'FeatureCollection',

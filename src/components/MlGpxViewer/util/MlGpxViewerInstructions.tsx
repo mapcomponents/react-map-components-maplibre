@@ -1,5 +1,5 @@
 import React from 'react';
-import Instructions from '../../../util/Instructions';
+import Instructions, { InstructionProps } from '../../../util/Instructions';
 import { Theme, useMediaQuery } from '@mui/material';
 
 const bubbleBottomRightStyle = {
@@ -8,17 +8,17 @@ const bubbleBottomRightStyle = {
 	textMarginLeft: '75px',
 	iconTransform: 'rotate(90deg)',
 	iconMarginLeft: '280px',
-	zIndex: 400,
+	zIndex: '400',
 };
 
-const getSteps = (mediaIsMobile: boolean) => [
+const getSteps = (mediaIsMobile: boolean):InstructionProps['steps'] => [
 	{
 		duration: 3000,
 		props: {
 			...bubbleBottomRightStyle,
 			bubbleLeft: '595px',
 			iconMarginTop: '-130px',
-			bubbleBottom: mediaIsMobile ? '90px' : 0,
+			bubbleBottom: mediaIsMobile ? '90px' : '0',
 		},
 		content: (
 			<>
@@ -34,7 +34,7 @@ const getSteps = (mediaIsMobile: boolean) => [
 			...bubbleBottomRightStyle,
 			bubbleLeft: '705px',
 			iconMarginTop: '-100px',
-			bubbleBottom: mediaIsMobile ? '90px' : 0,
+			bubbleBottom: mediaIsMobile ? '90px' : '0',
 		},
 		content: (
 			<>
@@ -50,7 +50,7 @@ const getSteps = (mediaIsMobile: boolean) => [
 			...bubbleBottomRightStyle,
 			bubbleLeft: '820px',
 			iconMarginTop: '-130px',
-			bubbleBottom: mediaIsMobile ? '90px' : 0,
+			bubbleBottom: mediaIsMobile ? '90px' : '0',
 		},
 		content: (
 			<>

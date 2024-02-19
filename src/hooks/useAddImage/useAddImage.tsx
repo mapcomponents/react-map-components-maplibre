@@ -3,43 +3,44 @@ import useMap from '../useMap';
 
 export interface useAddImageProps {
 	/**
-	 * 
+	 *
 	 */
 	imageId: string;
 	/**
-	 * 
-	*/
-	imagePath: string
+	 *
+	 */
+	imagePath: string;
 }
 
 /**
  *
  */
 const useAddImage = (props: useAddImageProps) => {
-
 	const mapHook = useMap({
 		mapId: undefined,
 	});
 
 	const initializedRef = useRef(false);
 
-	useEffect(()=>{
-
+	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
 
-		mapHook.map?.loadImage(props.imagePath, function (error, image: HTMLImageElement) {
-			if (error) throw error;
-			mapHook.map?.addImage(props.imageId, image);
-		
-			return () => {
-				mapHook.map?.removeImage(props.imageId);
-			};
-		});
-	}, [mapHook.map, props]);
-	
-return; 
+		mapHook.map?.loadImage(props.imagePath).then(function (res) {
+			if (!res?.data) {
+				console.log('image ' + props.imagePath + 'could not be loaded');
+				return; 
+			}
 
-	};
+			mapHook.map?.addImage(props.imageId, res.data);
+			return; 
+		});
+		return () => {
+			mapHook.map?.removeImage(props.imageId);
+		};
+	}, [mapHook.map, props]);
+
+	return;
+};
 
 useAddImage.defaultProps = {
 	mapId: undefined,

@@ -6,7 +6,6 @@ import {
 	GeoJSONSourceSpecification,
 	LayerSpecification,
 	MapMouseEvent,
-	GeoJSONFeature,
 	Style,
 	MapEventType,
 	Map,
@@ -29,7 +28,7 @@ type useLayerType = {
 
 export type MapEventHandler = (
 	ev: MapMouseEvent & {
-		features?: GeoJSONFeature[] | undefined;
+		features?: GeoJSON.Feature[] | undefined;
 	} & Record<string, unknown>
 ) => void;
 
@@ -39,7 +38,7 @@ export interface useLayerProps {
 	idPrefix?: string;
 	insertBeforeLayer?: string;
 	insertBeforeFirstSymbolLayer?: boolean;
-	geojson?: GeoJSONObject;
+	geojson?: GeoJSONObject | GeoJSON.Feature | GeoJSON.FeatureCollection;
 	options: Partial<
 		LayerSpecification & {
 			source?: GeoJSONSourceSpecification | string;

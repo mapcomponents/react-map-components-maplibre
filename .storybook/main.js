@@ -1,11 +1,9 @@
 module.exports = {
-	core: {
-		builder: '@storybook/builder-webpack5',
-	},
-	stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-	addons: [
+    stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+
+    addons: [
 		'storybook-source-link',
-		'@storybook/addon-storysource',
+		//'@storybook/addon-storysource',
 		'@storybook/addon-links',
 		'@storybook/addon-essentials',
 		{
@@ -15,8 +13,13 @@ module.exports = {
 			},
 		},
 	],
-	framework: '@storybook/react',
-	webpackFinal: async (config, { configType }) => {
+
+    framework: {
+        name: "@storybook/react-webpack5",
+        options: {}
+    },
+
+    webpackFinal: async (config, { configType }) => {
 		// split into more chunks
 		config.optimization = {
 			splitChunks: {
@@ -30,7 +33,8 @@ module.exports = {
 
 		return config;
 	},
-	typescript: {
+
+    typescript: {
 		check: false,
 		checkOptions: {},
 		reactDocgen: 'react-docgen-typescript',
@@ -39,4 +43,14 @@ module.exports = {
 			propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
 		},
 	},
+
+    docs: {
+        autodocs: false
+    },
+	staticDirs: [
+		'../public',
+	],
+	features: {
+    buildStoriesJson: true,
+  }
 };

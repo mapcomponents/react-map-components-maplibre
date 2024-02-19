@@ -4,7 +4,7 @@ import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
 import { Typography } from '@mui/material';
 
-interface MlMeasureToolProps {
+export interface MlMeasureToolProps {
 	/**
 	 * String that specify if the Tool measures an area ("polygon") or length ("line")
 	 */
