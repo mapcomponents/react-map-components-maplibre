@@ -200,7 +200,7 @@ const additionalInfoTemplate = () => {
 	const PdfFormLong = () => {
 		return (
 			<MlCreatePdfForm
-				//@ts-ignore
+				//@ts-expect-error
 				additionalFields={
 					<>
 						<TextField
