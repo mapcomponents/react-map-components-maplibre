@@ -1,6 +1,12 @@
 # Change Log
 
 
+## [v1.0.3] - 2024-02-22
+
+### Fixed
+- a80667a: import missing maplibre-gl.css again in MapLibreMap component (#164)
+
+
 ## [v1.0.1] - 2024-02-16
 
 ### Changed
