@@ -13,6 +13,7 @@ import {
 	RadioGroup,
 	CircularProgress,
 	useMediaQuery,
+	SxProps,
 } from '@mui/material';
 
 import useMap from '../../../hooks/useMap';
@@ -77,13 +78,21 @@ const qualityOptions = [
 	},
 ];
 
-interface PdfFormProps {
-	additionalFields: boolean;
+export interface PdfFormProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
+	/**
+	 * Function that will be called before the PDF is created.
+	 * Allowing to access and manipulate the jspdf instance before the PDF is created.
+	 */
 	onCreatePdf?: (options: createPdfResolverParams) => createPdfResolverParams;
+	/**
+	 * sx props that will be applied to the form control components
+	 */
+	formControlStyles?: SxProps;
+	additionalFields?: React.ReactNode;
 }
 
 export default function PdfForm(props: PdfFormProps) {
@@ -143,11 +152,12 @@ export default function PdfForm(props: PdfFormProps) {
 		() => {
 			return {
 				margin: mediaIsMobile ? '1px 0 8px 0 ' : '5px 0 15px 0 ',
-				//...props.formControlStyles,
+				...(props?.formControlStyles?{...props.formControlStyles}:{}),
 			};
 		},
 		[
-			/*props.formControlStyles*/
+			mediaIsMobile,
+			props.formControlStyles
 		]
 	);
 

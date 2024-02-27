@@ -147,7 +147,6 @@ const Template = () => {
 		);
 	};
 
-	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	return (
 		<>
 			<TopToolbar
@@ -182,11 +181,9 @@ const additionalInfoTemplate = () => {
 	const [showAdditionalPdfForm, setShowAdditionalPdfForm] = useState(true);
 	const mediaIsMobile = useMediaQuery('(max-width: 600px)');
 
-	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	const PdfFormLong = () => {
 		return (
 			<MlCreatePdfForm
-				//@ts-expect-error avoiding typescript error
 				additionalFields={
 					<>
 						<TextField
