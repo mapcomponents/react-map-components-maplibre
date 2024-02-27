@@ -58,7 +58,7 @@ export default storyoptions;
 
 const Template = () => {
 	const [showCreatePdfForm, setShowCreatePdfForm] = useState(true);
-	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
+	const mediaIsMobile = useMediaQuery('(max-width: 600px)');
 	const PdfForm = () => {
 		return (
 			<MlCreatePdfForm
@@ -180,7 +180,7 @@ const Template = () => {
 
 const additionalInfoTemplate = () => {
 	const [showAdditionalPdfForm, setShowAdditionalPdfForm] = useState(true);
-	const mediaIsMobile = useMediaQuery('(max-width: 950px)');
+	const mediaIsMobile = useMediaQuery('(max-width: 600px)');
 
 	// <MlWmsLayer url='https://geo.stat.fi/geoserver/vaestoruutu/wms' urlParameters={{layers:'vaki2005_1km_kp'}}/>
 	const PdfFormLong = () => {
