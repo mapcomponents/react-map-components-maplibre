@@ -367,22 +367,8 @@ const additionalInfoTemplate = () => {
 			/>
 			{showAdditionalPdfForm ? (
 				mediaIsMobile ? (
-					<Sidebar anchor="bottom" open={true} title={'Create PDF'} drawerBleeding={75}>
-						<Box
-							sx={{
-								position: 'absolute',
-								top: -60,
-								background: 'white',
-								marginTop: '0px',
-								left: -20,
-								paddingLeft: '20px',
-							}}
-						>
-							<DialogContent>
-								{' '}
-								<PdfFormLong />
-							</DialogContent>
-						</Box>
+					<Sidebar anchor="bottom" open={true} title={'Create PDF'} drawerBleeding={25}>
+						<PdfFormLong />
 					</Sidebar>
 				) : (
 					<MlDialog title="Create PDF">
