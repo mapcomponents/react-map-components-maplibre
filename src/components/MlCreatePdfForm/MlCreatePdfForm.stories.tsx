@@ -164,21 +164,7 @@ const Template = () => {
 			{showCreatePdfForm ? (
 				mediaIsMobile ? (
 					<Sidebar anchor="bottom" open={true} title={'Create PDF'} drawerBleeding={75}>
-						<Box
-							sx={{
-								position: 'absolute',
-								top: -60,
-								background: 'white',
-								marginTop: '0px',
-								left: -20,
-								paddingLeft: '20px',
-							}}
-						>
-							<DialogContent>
-								{' '}
-								<PdfForm />
-							</DialogContent>
-						</Box>
+						<PdfForm />
 					</Sidebar>
 				) : (
 					<MlDialog title="Create PDF">
