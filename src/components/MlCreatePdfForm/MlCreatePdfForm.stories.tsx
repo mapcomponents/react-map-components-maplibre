@@ -163,7 +163,7 @@ const Template = () => {
 			/>
 			{showCreatePdfForm ? (
 				mediaIsMobile ? (
-					<Sidebar anchor="bottom" open={true} title={'Create PDF'} drawerBleeding={75}>
+					<Sidebar anchor="bottom" open={true} title={'Create PDF'} drawerBleeding={25}>
 						<PdfForm />
 					</Sidebar>
 				) : (
