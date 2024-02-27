@@ -162,7 +162,7 @@ const Template = () => {
 			/>
 			{showCreatePdfForm ? (
 				mediaIsMobile ? (
-					<Sidebar anchor="bottom" open={true} title={'Create PDF'} drawerBleeding={25}>
+					<Sidebar anchor="bottom" open={true} name={'Create PDF'}>
 						<PdfForm />
 					</Sidebar>
 				) : (
@@ -364,7 +364,7 @@ const additionalInfoTemplate = () => {
 			/>
 			{showAdditionalPdfForm ? (
 				mediaIsMobile ? (
-					<Sidebar anchor="bottom" open={true} title={'Create PDF'} drawerBleeding={25}>
+					<Sidebar anchor="bottom" open={true} name={'Create PDF'}>
 						<PdfFormLong />
 					</Sidebar>
 				) : (
