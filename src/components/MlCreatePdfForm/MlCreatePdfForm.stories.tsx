@@ -3,7 +3,7 @@ import MlCreatePdfForm from './MlCreatePdfForm';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, Button, TextField, useMediaQuery } from '@mui/material';
+import { Button, TextField, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import TopToolbar from '../../ui_components/TopToolbar';
