@@ -45,7 +45,7 @@ module.exports = {
 	},
 
     docs: {
-        autodocs: false
+        autodocs: true
     },
 	staticDirs: [
 		'../public',
