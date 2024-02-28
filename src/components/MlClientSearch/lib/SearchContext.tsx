@@ -12,6 +12,7 @@ interface SearchContextProviderProps {
 	searchIndex: SearchContextInterface['searchIndex'];
 	fields: SearchContextInterface['fields'];
 	renderOption?: SearchContextInterface['renderOption'];
+	searchFieldLabel?: SearchContextInterface['searchFieldLabel'];
 }
 
 const SearchContext = React.createContext<SearchContextInterface>({} as SearchContextInterface);
@@ -20,6 +21,7 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 	children,
 	searchIndex,
 	renderOption,
+	searchFieldLabel,
 	fields,
 }) => {
 	const [searchIndexInstance, setSearchIndexInstance] = useState<any | undefined>(undefined);
@@ -91,6 +93,7 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 		fields,
 		searchIndexInstance,
 		renderOption,
+		searchFieldLabel,
 	};
 
 	return (

@@ -13,6 +13,6 @@ export interface SearchContextInterface {
 				state: AutocompleteRenderOptionState
 		  ) => React.ReactNode)
 		| undefined;
-
+	searchFieldLabel: string | undefined;
 	searchIndex: any;
 }

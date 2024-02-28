@@ -16,6 +16,10 @@ interface MlClientSearchProps {
 	 * Docs: 	https://mui.com/material-ui/api/autocomplete/
 	 */
 	renderOption?: SearchContextInterface['renderOption'];
+	/**
+	 * Label search field
+	 */
+	searchFieldLabel?: SearchContextInterface['searchFieldLabel'];
 }
 
 export type { MlClientSearchProps };
@@ -25,10 +29,20 @@ export type { MlClientSearchProps };
  *
  */
 
-const MlClientSearch = ({ searchIndex, fields, renderOption }: MlClientSearchProps) => {
+const MlClientSearch = ({
+	searchIndex,
+	fields,
+	renderOption,
+	searchFieldLabel,
+}: MlClientSearchProps) => {
 	return (
 		<>
-			<SearchContextProvider searchIndex={searchIndex} fields={fields} renderOption={renderOption}>
+			<SearchContextProvider
+				searchIndex={searchIndex}
+				fields={fields}
+				renderOption={renderOption}
+				searchFieldLabel={searchFieldLabel}
+			>
 				<SearchForm />
 			</SearchContextProvider>
 		</>

@@ -48,6 +48,7 @@ const Template = () => {
 							{option.CITY}, {option.POPULATION}
 						</Box>
 					)}
+					searchFieldLabel="German cities"
 				/>
 				<Typography>
 					<Link

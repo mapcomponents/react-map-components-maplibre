@@ -74,7 +74,7 @@ export default function SearchForm() {
 				renderOption={searchContext?.renderOption}
 				sx={{ width: 250 }}
 				renderInput={(params: any) => {
-					return <TextField {...params} label="German cities" />;
+					return <TextField {...params} label={searchContext?.searchFieldLabel} />;
 				}}
 			/>
 		</>
