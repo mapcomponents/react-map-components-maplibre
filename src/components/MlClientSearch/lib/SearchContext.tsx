@@ -70,8 +70,8 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 	useEffect(() => {
 		if (selectedResult && mapHook.map) {
 			if (typeof selectedResult === 'object' && 'COORDINATES' in selectedResult) {
-				let createdFeature = createGeoJSONFeature(selectedResult.COORDINATES as Coordinates);
-				let bbox = getBoundingBox(createdFeature);
+				const createdFeature = createGeoJSONFeature(selectedResult.COORDINATES as Coordinates);
+				const bbox = getBoundingBox(createdFeature);
 				setFeature(createdFeature);
 				mapHook.map.fitBounds(bbox as LngLatBoundsLike);
 			}
