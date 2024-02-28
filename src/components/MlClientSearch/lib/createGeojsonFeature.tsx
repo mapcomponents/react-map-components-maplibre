@@ -1,16 +1,14 @@
-type Coordinates = number[] | number[][] | number[][][];
-type FeatureType = 'Point' | 'LineString' | 'MultiLineString' | 'Polygon' | 'Unknown';
-
-interface GeoJSONFeature {
-	type: 'Feature';
-	geometry: {
-		type: FeatureType;
-		coordinates: Coordinates;
-	};
-}
+type FeatureType = 'Point' | 'MultiPoint' | 'LineString' | 'MultiLineString' | 'Polygon';
+// Exclude 'GeometryCollection' from the GeoJSON geometry types
+type ExcludedGeometryCollection =
+	| GeoJSON.Point
+	| GeoJSON.MultiPoint
+	| GeoJSON.LineString
+	| GeoJSON.MultiLineString
+	| GeoJSON.Polygon;
 
 // Determine the GeoJSON-Feature-Type
-function determineFeatureType(coordinates: number[] | number[][] | number[][][]): FeatureType {
+function determineFeatureType(coordinates: ExcludedGeometryCollection['coordinates']): FeatureType {
 	if (Array.isArray(coordinates)) {
 		if (
 			coordinates.length === 2 &&
@@ -47,13 +45,16 @@ function determineFeatureType(coordinates: number[] | number[][] | number[][][])
 }
 
 // Create GeoJSON-Features
-export function createGeoJSONFeature(coordinates: Coordinates): GeoJSONFeature {
-	const featureType = determineFeatureType(coordinates);
+export function createGeoJSONFeature(
+	coordinates: ExcludedGeometryCollection['coordinates']
+): GeoJSON.Feature<ExcludedGeometryCollection> {
+	const featureType: FeatureType = determineFeatureType(coordinates);
 	return {
 		type: 'Feature',
 		geometry: {
 			type: featureType,
-			coordinates,
-		},
+			coordinates: coordinates as ExcludedGeometryCollection['coordinates'],
+		} as ExcludedGeometryCollection,
+		properties: {},
 	};
 }

@@ -4,8 +4,8 @@ import { SearchContextInterface } from './searchContext.js';
 import * as turf from '@turf/turf';
 import useMap from '../../../hooks/useMap';
 import MlGeoJsonLayer from '../../MlGeoJsonLayer/MlGeoJsonLayer';
-import { Feature } from '@turf/turf';
 import { createGeoJSONFeature } from './createGeojsonFeature';
+import { Coordinates, LngLatBoundsLike } from 'maplibre-gl';
 
 interface SearchContextProviderProps {
 	children: React.ReactNode;
@@ -27,7 +27,7 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 	const [searchResults, setSearchResults] = useState<string[]>([]);
 	const [searchResultsArray, setSearchResultsArray] = useState<string[]>([]);
 	const [selectedResult, setSelectedResult] = useState<string | object | undefined>(undefined);
-	const [feature, setFeature] = useState<Feature>();
+	const [feature, setFeature] = useState<GeoJSON.Feature>();
 
 	const mapHook = useMap({
 		mapId: undefined,
@@ -48,14 +48,14 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 
 	useEffect(() => {
 		if (searchTerm && searchIndexInstance) {
-			let results = searchIndexInstance.search(searchTerm.toString(), { fields });
-			let maxResults = 10;
+			const results = searchIndexInstance.search(searchTerm.toString(), { fields });
+			const maxResults = 10;
 
-			let resultsLimited = results
+			const resultsLimited = results
 				.filter((result: any) => result !== undefined)
 				.slice(0, maxResults)
 				.map((result: any) => {
-					let propertyNames = Object.keys(fields);
+					const propertyNames = Object.keys(fields);
 					propertyNames.forEach(() => {
 						if (searchIndexInstance.documentStore.getDoc(result.ref)) {
 							result = searchIndexInstance.documentStore.getDoc(result.ref);
@@ -70,13 +70,10 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 	useEffect(() => {
 		if (selectedResult && mapHook.map) {
 			if (typeof selectedResult === 'object' && 'COORDINATES' in selectedResult) {
-				// @ts-ignore
-				let createdFeature = createGeoJSONFeature(selectedResult.COORDINATES);
+				let createdFeature = createGeoJSONFeature(selectedResult.COORDINATES as Coordinates);
 				let bbox = getBoundingBox(createdFeature);
-				// @ts-ignore
 				setFeature(createdFeature);
-				// @ts-ignore
-				mapHook.map.fitBounds(bbox);
+				mapHook.map.fitBounds(bbox as LngLatBoundsLike);
 			}
 		}
 	}, [selectedResult, mapHook.map]);
