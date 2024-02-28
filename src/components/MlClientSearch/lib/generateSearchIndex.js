@@ -1,8 +1,8 @@
 // Create a search index with elasticlunr
 // Example data from: https://public.opendatasoft.com/explore/dataset/geonames-all-cities-with-a-population-500
 
-require('fs');
-require('elasticlunr');
+import * as fs from 'fs';
+import * as elasticlunr from 'elasticlunr';
 
 const geoJsonSources = ['cities.geojson'];
 const searchIndex = elasticlunr(function () {

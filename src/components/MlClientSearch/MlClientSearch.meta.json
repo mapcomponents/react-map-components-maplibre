@@ -11,6 +11,5 @@
 	"tags": [],
 	"category": "",
 	"type": "component",
-	"components": ["MlGeojsonLayer"],
-	"price": 12000
+	"components": ["MlGeojsonLayer"]
 }
