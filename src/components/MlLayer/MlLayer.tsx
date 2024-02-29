@@ -43,14 +43,14 @@ const MlLayer = (props: MlLayerProps) => {
 		mapId: props.mapId,
 		geojson: props.geojson || undefined,
 
-		options:
-			props.options ||
-			({
-				type: 'background',
-				paint: {
-					'background-color': 'rgba(0,0,0,0)',
-				},
-			} as useLayerProps['options']),
+		options: {
+			type: 'background',
+			paint: {
+				...(props?.options?.type ? {} : { 'background-color': 'rgba(0,0,0,0)' }),
+			},
+			...props.options,
+		} as useLayerProps['options'],
+
 		insertBeforeLayer: props.insertBeforeLayer,
 	});
 
