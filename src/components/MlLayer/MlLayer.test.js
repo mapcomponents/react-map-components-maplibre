@@ -18,10 +18,9 @@ const MlLayerTestComponent = (props) => {
 
 			{layerVisible && (
 				<MlLayer
-					layerId={'MlLayer-' + uuid_regex}
 					options={{
 						source: {
-							type: 'geojson',
+							type: "geojson",
 							data: {},
 						},
 					}}
@@ -61,60 +60,58 @@ const createWrapper = () =>
 		</MapComponentsProvider>
 	);
 
-	/* eslint-disable */
-describe('<MlLayer>', () => {
+describe("<MlLayer>", () => {
 	it("should add a Layer with the id 'MlLayer-{uuid}' to the MapLibre instance", async () => {
 		const wrapper = createWrapper();
 
-		wrapper.find('.trigger_refresh').simulate('click');
+		wrapper.find(".trigger_refresh").simulate("click");
 
 		expect(
-			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.layers_json').text())
+			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".layers_json").text())
 		).toEqual(true);
 	});
 
 	it("should remove a Layer with the id 'MlLayer-{uuid}' from the MapLibre instance", async () => {
 		const wrapper = createWrapper();
 
-		wrapper.find('.trigger_refresh').simulate('click');
+		wrapper.find(".trigger_refresh").simulate("click");
 
 		expect(
-			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.layers_json').text())
+			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".layers_json").text())
 		).toEqual(true);
 
-		wrapper.find('.toggle_layer_visible').simulate('click');
-		wrapper.find('.trigger_refresh').simulate('click');
+		wrapper.find(".toggle_layer_visible").simulate("click");
+		wrapper.find(".trigger_refresh").simulate("click");
 
 		expect(
-			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.layers_json').text())
+			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".layers_json").text())
 		).toEqual(false);
 	});
 
 	it("should add a Source with the id 'MlLayer-{uuid}' to the MapLibre instance", async () => {
 		const wrapper = createWrapper();
 
-		wrapper.find('.trigger_refresh').simulate('click');
+		wrapper.find(".trigger_refresh").simulate("click");
 
 		expect(
-			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.sources_json').text())
+			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".sources_json").text())
 		).toEqual(true);
 	});
 
 	it("should remove a Source with the id 'MlLayer-{uuid}' from the MapLibre instance", async () => {
 		const wrapper = createWrapper();
 
-		wrapper.find('.trigger_refresh').simulate('click');
+		wrapper.find(".trigger_refresh").simulate("click");
 
 		expect(
-			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.sources_json').text())
+			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".sources_json").text())
 		).toEqual(true);
 
-		wrapper.find('.toggle_layer_visible').simulate('click');
-		wrapper.find('.trigger_refresh').simulate('click');
+		wrapper.find(".toggle_layer_visible").simulate("click");
+		wrapper.find(".trigger_refresh").simulate("click");
 
 		expect(
-			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find('.sources_json').text())
+			new RegExp('^.*"MlLayer-' + uuid_regex + '".*$').test(wrapper.find(".sources_json").text())
 		).toEqual(false);
 	});
 });
-/*eslint-enable*/

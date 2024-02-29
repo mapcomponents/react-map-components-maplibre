@@ -2,7 +2,6 @@ import React from 'react';
 import useLayer, { useLayerProps } from '../../hooks/useLayer';
 import { Feature, FeatureCollection } from '@turf/turf';
 
-
 interface MlLayerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
@@ -34,9 +33,6 @@ interface MlLayerProps {
  * @category Map components
  */
 const MlLayer = (props: MlLayerProps) => {
-	
-
-
 	useLayer({
 		idPrefix: 'MlLayer-',
 		layerId: props.layerId,
@@ -46,15 +42,14 @@ const MlLayer = (props: MlLayerProps) => {
 		options: {
 			type: 'background',
 			paint: {
-				...(props?.options?.type ? {} : { 'background-color': 'rgba(0,0,0,0)' }),
+				...(props?.options?.type && props.options.type !== 'background'
+					? {}
+					: { 'background-color': 'rgba(0,0,0,0)' }),
 			},
 			...props.options,
 		} as useLayerProps['options'],
-
 		insertBeforeLayer: props.insertBeforeLayer,
 	});
-
-
 
 	return <></>;
 };
