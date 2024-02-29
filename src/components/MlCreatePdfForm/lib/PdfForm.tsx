@@ -93,7 +93,9 @@ export interface PdfFormProps {
 	 */
 	formControlStyles?: SxProps;
 	/**
-	 * returns two additional text fields within the PDF Form to provide the option to add a title and a description onto the PDF document
+	 * Define additional form fields that will be added to the bottom of the create-PDF form.
+	 * Values of form elements added this way are accessible inside the function passed to the onCreatePdf property using options.formData.get('{form_el_name}').
+	 * Make sure all form elements added this way have a name property defined to be able to access the value when rendering the PDF.
 	 */
 	additionalFields?: React.ReactNode;
 }
