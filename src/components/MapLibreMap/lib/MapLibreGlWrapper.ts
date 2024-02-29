@@ -17,7 +17,7 @@ type WrapperEventArgArray = [string, (arg0: unknown) => void];
 type EventArgArray = [
 	keyof MapLayerEventType | keyof MapEventType,
 	string | ((arg0: unknown) => void),
-	((arg0: unknown) => void)?
+	((arg0: unknown) => void)?,
 ];
 type LayerState = {
 	id: string;
@@ -40,7 +40,8 @@ type ViewportState = {
  * @class
  */
 
-interface MapLibreGlWrapper extends MapType {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+interface MapLibreGlWrapper extends MapType  {
 	addImage: (
 		id: string,
 		image:
@@ -69,6 +70,26 @@ interface MapLibreGlWrapper extends MapType {
 	) => this;
 	cancelled: boolean;
 }
+
+interface MapLibreGlWrapperEventHandlers {
+		layerchange: {
+			handler: (ev: unknown) => void;
+			options?: object | string;
+		}[];
+		viewportchange: {
+			handler: (ev: unknown) => void;
+		}[];
+		addsource: {
+			handler: (ev: unknown) => void;
+		}[];
+		addlayer: {
+			handler: (ev: unknown) => void;
+		}[];
+	}
+
+type MapLibreGlWrapperEventName = keyof MapLayerEventType | keyof MapEventType | keyof MapLibreGlWrapperEventHandlers;
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 class MapLibreGlWrapper {
 	registeredElements: {
 		[key: string]: {
@@ -82,18 +103,10 @@ class MapLibreGlWrapper {
 	};
 	baseLayers: [string?];
 	firstSymbolLayer: string | undefined;
-	eventHandlers: {
-		layerchange: {
-			handler: (ev: unknown) => void;
-			options?: object | string;
-		}[];
-		viewportchange: {
-			handler: (ev: unknown) => void;
-		}[];
-	};
+	eventHandlers: MapLibreGlWrapperEventHandlers;
 	wrapper: {
 		on: (
-			eventName: string,
+			eventName: MapLibreGlWrapperEventName,
 			handler: (ev: unknown) => void,
 			options?: object | string,
 			componentId?: string
@@ -130,7 +143,7 @@ class MapLibreGlWrapper {
 		componentId?: string | undefined
 	) => this;
 	on: (
-		type: keyof MapLayerEventType | keyof MapEventType | string,
+		type: MapLibreGlWrapperEventName,
 		layerId: string | ((ev: unknown) => void),
 		handler?: ((ev: MapEventType & unknown) => Map | void) | string,
 		componentId?: string | undefined
@@ -158,6 +171,8 @@ class MapLibreGlWrapper {
 		this.eventHandlers = {
 			layerchange: [],
 			viewportchange: [],
+			addsource: [],
+			addlayer: [],
 		};
 
 		// functions and properties provided by the wrapper
@@ -173,7 +188,7 @@ class MapLibreGlWrapper {
 			 * @returns {undefined}
 			 */
 			on: (
-				eventName: string,
+				eventName: MapLibreGlWrapperEventName,
 				handler: (ev: unknown) => void,
 				options?: object | string,
 				componentId?: string
@@ -229,6 +244,8 @@ class MapLibreGlWrapper {
 					item:
 						| MapLibreGlWrapper['eventHandlers']['layerchange'][0]
 						| MapLibreGlWrapper['eventHandlers']['viewportchange'][0]
+						| MapLibreGlWrapper['eventHandlers']['addsource'][0]
+						| MapLibreGlWrapper['eventHandlers']['addlayer'][0]
 				) {
 					item.handler.call(scope, event, self);
 				});
@@ -269,7 +286,7 @@ class MapLibreGlWrapper {
 				//			? values[propName].value.value
 				//			: values[propName];
 				//});
-				if(!layer)return;
+				if (!layer) return;
 				return {
 					id: layer.id,
 					type: layer.type,
@@ -294,11 +311,11 @@ class MapLibreGlWrapper {
 			 * @returns array
 			 */
 			buildLayerObjects: () => {
-				return (self.map.style._order
+				return self.map.style._order
 					.map((layerId: string) => {
 						return self.wrapper.buildLayerObject(self.map.style._layers[layerId]);
 					})
-					.filter((n) => typeof n !== 'undefined')) as LayerState[];
+					.filter((n) => typeof n !== 'undefined') as LayerState[];
 			},
 			/**
 			 * Updates layer state info objects
@@ -334,13 +351,13 @@ class MapLibreGlWrapper {
 							zoom: self.map.getZoom(),
 							bearing: self.map.getBearing(),
 							pitch: self.map.getPitch(),
-					  }
+						}
 					: {
 							center: { lng: 0, lat: 0 },
 							zoom: 0,
 							bearing: 0,
 							pitch: 0,
-					  },
+						},
 			refreshViewport: () => {
 				self.wrapper.viewportState = self.wrapper.getViewport();
 			},
@@ -391,6 +408,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map.addLayer(layer, beforeId);
+			self.wrapper.fire('layeradd', { layer_id: layer.id });
 			return this;
 		};
 
@@ -413,6 +431,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map.addSource(sourceId, source);
+			self.wrapper.fire('addsource', { source_id: sourceId });
 			return this;
 		};
 
@@ -449,7 +468,7 @@ class MapLibreGlWrapper {
 		 * @param {string} componentId
 		 */
 		this.on = (
-			type: keyof MapLayerEventType | keyof MapEventType,
+			type: MapLibreGlWrapperEventName,
 			layerId: string | ((ev: unknown) => void),
 			handler: (ev: MapEventType & unknown) => Map | void,
 			componentId?: string
@@ -458,9 +477,9 @@ class MapLibreGlWrapper {
 				return self.on.call(self, type, undefined, layerId, handler);
 			}
 
-			let _arguments: EventArgArray = [type, layerId, handler];
+			let _arguments:EventArgArray = [type as EventArgArray[0], layerId, handler];
 			if (!layerId) {
-				_arguments = [type, handler];
+				_arguments = [type, handler] as EventArgArray;
 			}
 
 			if (componentId && typeof componentId === 'string') {
@@ -663,7 +682,6 @@ class MapLibreGlWrapper {
 			}
 
 			self.map = new Map(props.mapOptions) as MapType;
-			
 
 			self.addNativeMaplibreFunctionsAndProps();
 			self.wrapper.refreshViewport();
