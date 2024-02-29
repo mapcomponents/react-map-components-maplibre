@@ -3,6 +3,8 @@ export { default as MapLibreMap } from './components/MapLibreMap/MapLibreMap';
 
 export { default as MlCenterPosition } from './components/MlCenterPosition/MlCenterPosition';
 
+export { default as MlClientSearch } from './components/MlClientSearch/MlClientSearch';
+
 export { default as MlComponentTemplate } from './components/MlComponentTemplate/MlComponentTemplate';
 
 export { default as MlCreatePdfButton } from './components/MlCreatePdfButton/MlCreatePdfButton';
@@ -33,7 +35,6 @@ export { default as MlLayerSwipe } from './components/MlLayerSwipe/MlLayerSwipe'
 
 export { default as MlTransitionGeoJsonLayer } from './components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer';
 export { default as MlMarker } from './components/MlMarker/MlMarker';
-
 
 export { default as MlGpxViewer } from './components/MlGpxViewer/MlGpxViewer';
 export { default as GeoJsonProvider } from './components/MlGpxViewer/util/GeoJsonProvider';
