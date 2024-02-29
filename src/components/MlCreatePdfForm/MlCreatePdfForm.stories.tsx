@@ -208,7 +208,6 @@ const additionalInfoTemplate = () => {
 					</>
 				}
 				onCreatePdf={(options) => {
-					console.log(options);
 					const pdf = options.pdf;
 					const pageWidth = pdf.internal.pageSize.getWidth();
 					const pageHeight = pdf.internal.pageSize.getHeight();

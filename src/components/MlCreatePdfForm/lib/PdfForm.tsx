@@ -92,6 +92,9 @@ export interface PdfFormProps {
 	 * sx props that will be applied to the form control components
 	 */
 	formControlStyles?: SxProps;
+	/**
+	 * returns two additional text fields within the PDF Form to provide the option to add a title and a description onto the PDF document
+	 */
 	additionalFields?: React.ReactNode;
 }
 
