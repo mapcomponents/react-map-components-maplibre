@@ -11,5 +11,5 @@
 	"tags": [],
 	"category": "",
 	"type": "component",
-	"components": ["MlGeojsonLayer"]
+	"components": ["MlGeoJsonLayer"]
 }
