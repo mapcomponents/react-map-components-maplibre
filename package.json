@@ -1,6 +1,6 @@
 {
   "name": "@mapcomponents/react-maplibre",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "dist/index.cjs.js",
   "license": "MIT",
   "module": "dist/index.esm.js",
@@ -206,6 +206,6 @@
     ]
   },
   "resolutions": {
-		"jackspeak": "2.1.1"
-	}
+    "jackspeak": "2.1.1"
+  }
 }
