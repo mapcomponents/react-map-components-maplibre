@@ -4995,6 +4995,11 @@
   resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.1.5.tgz#49d738257cc73bafe45c13cb8ff240683b4d5117"
   integrity sha512-nv+GSx77ZtXiJzwKdsASqi+YQ5Z7vwHsTP0JY2SiQgjGckkBRKZnk8nIM+7oUZ1VCtuTz0+By4qVR7fqzp/Dfg==
 
+"@types/elasticlunr@^0.9.5":
+  version "0.9.9"
+  resolved "https://registry.yarnpkg.com/@types/elasticlunr/-/elasticlunr-0.9.9.tgz#3cdf945e3eaf28fd18f8fd8fcfadbbfa6babcce3"
+  integrity sha512-59TMY+u8jKLqSg0AZStCz4n8A7l/nVenmum6fFQa9bUOH26GNMEgDseiN813IxXmTQ0AivefnMlbileBggCf5g==
+
 "@types/emscripten@*", "@types/emscripten@^1.39.6":
   version "1.39.10"
   resolved "https://registry.yarnpkg.com/@types/emscripten/-/emscripten-1.39.10.tgz#da6e58a6171b46a41d3694f812d845d515c77e18"
@@ -8216,6 +8221,11 @@ ejs@^3.1.8:
   integrity sha512-rC+QVNMJWv+MtPgkt0y+0rVEIdbtxVADApW9JXrUVlzHetgcyczP/E7DJmWJ4fJCZF2cPcBk0laWO9ZHMG3DmQ==
   dependencies:
     jake "^10.8.5"
+
+elasticlunr@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/elasticlunr/-/elasticlunr-0.9.5.tgz#65541bb309dddd0cf94f2d1c8861b2be651bb0d5"
+  integrity sha512-5YM9LFQgVYfuLNEoqMqVWIBuF2UNCA+xu/jz1TyryLN/wmBcQSb+GNAwvLKvEpGESwgGN8XA1nbLAt6rKlyHYQ==
 
 electron-to-chromium@^1.4.668:
   version "1.4.672"

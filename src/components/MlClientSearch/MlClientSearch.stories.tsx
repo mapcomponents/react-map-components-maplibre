@@ -4,7 +4,7 @@ import index from './lib/searchIndex.json';
 import { makeMapContextDecorators } from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { SearchContextInterface } from './lib/searchContext';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
@@ -40,6 +40,8 @@ const Template = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Client-side search'}>
+        <Stack paddingTop={5} spacing={3} direction="column" alignItems="left">
+
 				<MlClientSearch
 					searchIndex={index as unknown as SearchContextInterface['searchIndex']}
 					fields={{ CITY: { expand: true }, POPULATION: { expand: true } }}
@@ -50,14 +52,16 @@ const Template = () => {
 					)}
 					searchFieldLabel="German cities"
 				/>
-				<Typography>
+				<Typography variant="body2" sx={{wordBreak: "break-all"}}>
 					<Link
 						href="https://public.opendatasoft.com/explore/dataset/geonames-all-cities-with-a-population-500"
 						underline="always"
+						target="_blank"
 					>
 						{'Sample data'}
-					</Link>
+					</Link> - public.opendatasoft.com
 				</Typography>
+				</Stack>
 			</Sidebar>
 		</>
 	);
