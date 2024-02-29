@@ -2,6 +2,7 @@ export { default as MapLibreGlWrapper } from './components/MapLibreMap/lib/MapLi
 export { default as MapLibreMap } from "./components/MapLibreMap/MapLibreMap";
 export { default as MlCenterPosition } from "./components/MlCenterPosition/MlCenterPosition";
 export { default as MlComponentTemplate } from "./components/MlComponentTemplate/MlComponentTemplate";
+export { default as MlClientSearch } from "./components/MlClientSearch/MlClientSearch";
 export { default as MlCreatePdfButton } from "./components/MlCreatePdfButton/MlCreatePdfButton";
 export { default as MlCreatePdfForm } from "./components/MlCreatePdfForm/MlCreatePdfForm";
 export { default as MlPdfPreview } from "./components/MlCreatePdfForm/lib/PdfPreview";
