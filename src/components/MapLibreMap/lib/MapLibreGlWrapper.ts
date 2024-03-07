@@ -100,7 +100,7 @@ export type MapLibreGlWrapperEventHandlerType =
 	| MapLibreGlWrapperEventHandlers['addsource'][number]['handler']
 	| MapLibreGlWrapperEventHandlers['addlayer'][number]['handler'];
 
-export type MapLibreGlEventName = keyof MapLayerEventType | keyof MapEventType;
+export type MapLibreGlEventName = keyof MapLayerEventType | keyof MapEventType | string;
 
 export type MapLibreGlWrapperEventName = keyof MapLibreGlWrapperEventHandlers;
 

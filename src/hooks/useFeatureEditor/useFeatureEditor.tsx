@@ -8,6 +8,7 @@ import useMap from '../useMap';
 import { GeoJSONObject, Feature } from '@turf/turf';
 import { MapEventType } from 'maplibre-gl';
 import featureEditorStyle from './utils/FeatureEditorStyle';
+import { MapLibreGlEventName } from 'src/components/MapLibreMap/lib/MapLibreGlWrapper';
 
 export interface useFeatureEditorProps {
 	/**
@@ -97,7 +98,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 
 			mapHook.map.addControl(draw.current, 'top-left', mapHook.componentId);
 
-			mapHook.map.on('draw.modechange', modeChangeHandler, mapHook.componentId);
+			mapHook.map.on('draw.modechange' as MapLibreGlEventName, modeChangeHandler, mapHook.componentId);
 
 			setDrawToolsReady(true);
 		}

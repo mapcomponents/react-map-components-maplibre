@@ -1,5 +1,4 @@
 import { useContext, useCallback, useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 import MapContext, { MapContextType } from "../contexts/MapContext";
 import MapLibreGlWrapper, {
@@ -152,31 +151,6 @@ useMapState.defaultProps = {
 	filter: {
 		includeBaseLayers: false,
 	},
-};
-
-useMapState.propTypes = {
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
-	mapId: PropTypes.string,
-	/**
-	 * Defines map Resources to watch
-	 */
-	watch: PropTypes.shape({
-		layers: PropTypes.bool,
-		sources: PropTypes.bool,
-		viewport: PropTypes.bool,
-	}),
-	/**
-	 * Filter string or RegExp to more explicitly define the elements watched and increase performance
-	 * strings will be matched using layerId.includes(matchString)
-	 * RegExps will be matched using matchRegExp.test(layerId)
-	 */
-	filter: PropTypes.shape({
-		includeBaseLayers: PropTypes.bool,
-		matchLayerIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
-		matchSourceIds: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]),
-	}),
 };
 
 export default useMapState;
