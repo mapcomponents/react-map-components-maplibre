@@ -52,6 +52,7 @@ export interface useLayerProps {
 	onClick?: (ev: MapEventType & unknown) => Map | void;
 	onLeave?: (ev: MapEventType & unknown) => Map | void;
 }
+type PaintPropsKeyType = keyof useLayerProps['options']['paint'];
 
 const legalLayerTypes = [
 	'fill',
@@ -201,7 +202,7 @@ function useLayer(props: useLayerProps): useLayerType {
 				'addsource',
 				addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
 			);
-			mapHook.map.on('styledata', styledataEventHandler);
+			mapHook.map.off('styledata', styledataEventHandler);
 		};
 	}, [props, mapHook]);
 
@@ -253,8 +254,15 @@ function useLayer(props: useLayerProps): useLayerType {
 			const oldLayout = JSON.parse(layerLayoutConfRef.current);
 
 			for (key in props.options.layout) {
-				if (props.options.layout?.[key] && props.options.layout[key] !== oldLayout[key]) {
-					mapHook.map.map.setLayoutProperty(layerId.current, key, props.options.layout[key]);
+				if (
+					props.options.layout?.[key as PaintPropsKeyType] &&
+					props.options.layout[key as PaintPropsKeyType] !== oldLayout[key]
+				) {
+					mapHook.map.map.setLayoutProperty(
+						layerId.current,
+						key,
+						props.options.layout[key as PaintPropsKeyType]
+					);
 				}
 			}
 			layerLayoutConfRef.current = layoutString;
@@ -264,8 +272,8 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (paintString !== layerPaintConfRef.current) {
 			const oldPaint = JSON.parse(layerPaintConfRef.current);
 			for (key in props.options.paint) {
-				if (props.options.paint?.[key] && props.options.paint[key] !== oldPaint[key]) {
-					mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key]);
+				if (props.options.paint?.[key as PaintPropsKeyType] && props.options.paint[key as PaintPropsKeyType] !== oldPaint[key]) {
+					mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key as PaintPropsKeyType]);
 				}
 			}
 			layerPaintConfRef.current = paintString;
