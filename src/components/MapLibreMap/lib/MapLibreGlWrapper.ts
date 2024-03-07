@@ -41,7 +41,7 @@ type ViewportState = {
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-interface MapLibreGlWrapper extends MapType  {
+interface MapLibreGlWrapper extends MapType {
 	addImage: (
 		id: string,
 		image:
@@ -72,22 +72,34 @@ interface MapLibreGlWrapper extends MapType  {
 }
 
 interface MapLibreGlWrapperEventHandlers {
-		layerchange: {
-			handler: (ev: unknown) => void;
-			options?: object | string;
-		}[];
-		viewportchange: {
-			handler: (ev: unknown) => void;
-		}[];
-		addsource: {
-			handler: (ev: unknown) => void;
-		}[];
-		addlayer: {
-			handler: (ev: unknown) => void;
-		}[];
-	}
+	layerchange: {
+		handler: (ev: unknown) => void;
+		options?: object | string;
+	}[];
+	viewportchange: {
+		handler: (ev: unknown) => void;
+	}[];
+	addsource: {
+		handler: (
+			ev: unknown,
+			wrapper: MapLibreGlWrapper,
+			data: { [source_id: string]: string }
+		) => void;
+	}[];
+	addlayer: {
+		handler: (ev: unknown) => void;
+	}[];
+}
 
-type MapLibreGlWrapperEventName = keyof MapLayerEventType | keyof MapEventType | keyof MapLibreGlWrapperEventHandlers;
+export type MapLibreGlWrapperEventHandlerType =
+	| MapLibreGlWrapperEventHandlers['layerchange']
+	| MapLibreGlWrapperEventHandlers['viewportchange']
+	| MapLibreGlWrapperEventHandlers['addsource']
+	| MapLibreGlWrapperEventHandlers['addlayer'];
+
+export type MapLibreGlEventName = keyof MapLayerEventType | keyof MapEventType;
+
+export type MapLibreGlWrapperEventName = keyof MapLibreGlWrapperEventHandlers;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 class MapLibreGlWrapper {
@@ -107,11 +119,11 @@ class MapLibreGlWrapper {
 	wrapper: {
 		on: (
 			eventName: MapLibreGlWrapperEventName,
-			handler: (ev: unknown) => void,
+			handler: MapLibreGlWrapperEventHandlerType,
 			options?: object | string,
 			componentId?: string
 		) => void;
-		off: (type: string, listener: (ev: unknown) => void) => void;
+		off: (type: string, handler: MapLibreGlWrapperEventHandlerType) => void;
 		fire: (eventName: string, context?: unknown) => void;
 		layerState: LayerState[];
 		layerStateString: string;
@@ -143,7 +155,7 @@ class MapLibreGlWrapper {
 		componentId?: string | undefined
 	) => this;
 	on: (
-		type: MapLibreGlWrapperEventName,
+		type: MapLibreGlEventName,
 		layerId: string | ((ev: unknown) => void),
 		handler?: ((ev: MapEventType & unknown) => Map | void) | string,
 		componentId?: string | undefined
@@ -189,7 +201,7 @@ class MapLibreGlWrapper {
 			 */
 			on: (
 				eventName: MapLibreGlWrapperEventName,
-				handler: (ev: unknown) => void,
+				handler: MapLibreGlWrapperEventHandlerType,
 				options?: object | string,
 				componentId?: string
 			) => {
@@ -235,6 +247,8 @@ class MapLibreGlWrapper {
 			 * @returns {undefined}
 			 */
 			fire: (eventName, context) => {
+				console.log(eventName)
+				console.log(self.eventHandlers)
 				if (!self.eventHandlers[eventName]) return;
 
 				const scope = context || window;
@@ -247,7 +261,7 @@ class MapLibreGlWrapper {
 						| MapLibreGlWrapper['eventHandlers']['addsource'][0]
 						| MapLibreGlWrapper['eventHandlers']['addlayer'][0]
 				) {
-					item.handler.call(scope, event, self);
+					item.handler.call(scope, event, self, context);
 				});
 			},
 			/**
@@ -407,8 +421,9 @@ class MapLibreGlWrapper {
 				}
 			}
 
+			console.log('add layer called')
 			self.map.addLayer(layer, beforeId);
-			self.wrapper.fire('layeradd', { layer_id: layer.id });
+			self.wrapper.fire('addlayer', { layer_id: layer.id });
 			return this;
 		};
 
@@ -431,6 +446,7 @@ class MapLibreGlWrapper {
 			}
 
 			self.map.addSource(sourceId, source);
+			console.log('fire addsource')
 			self.wrapper.fire('addsource', { source_id: sourceId });
 			return this;
 		};
@@ -470,14 +486,14 @@ class MapLibreGlWrapper {
 		this.on = (
 			type: MapLibreGlWrapperEventName,
 			layerId: string | ((ev: unknown) => void),
-			handler: (ev: MapEventType & unknown) => Map | void,
+			handler: (ev: unknown) => void,
 			componentId?: string
 		) => {
 			if (typeof handler === 'string' && typeof layerId === 'function') {
 				return self.on.call(self, type, undefined, layerId, handler);
 			}
 
-			let _arguments:EventArgArray = [type as EventArgArray[0], layerId, handler];
+			let _arguments: EventArgArray = [type as EventArgArray[0], layerId, handler];
 			if (!layerId) {
 				_arguments = [type, handler] as EventArgArray;
 			}

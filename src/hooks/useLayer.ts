@@ -12,7 +12,9 @@ import {
 	FilterSpecification,
 } from 'maplibre-gl';
 
-import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
+import MapLibreGlWrapper, {
+	MapLibreGlWrapperEventHandlerType,
+} from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 
 import { GeoJSONObject } from '@turf/turf';
 
@@ -123,26 +125,27 @@ function useLayer(props: useLayerProps): useLayerType {
 								source: {
 									type: 'geojson',
 									data: props.geojson,
-									attribution: typeof props?.options?.source !== 'string' && props.options.source?.attribution
-										? props.options.source?.attribution
-										: '',
+									attribution:
+										typeof props?.options?.source !== 'string' && props.options.source?.attribution
+											? props.options.source?.attribution
+											: '',
 								},
 								// eslint-disable-next-line no-mixed-spaces-and-tabs
-						  }
+							}
 						: {}),
 					...(typeof props.options?.source === 'string'
 						? {
 								source: props.options.source,
 								// eslint-disable-next-line no-mixed-spaces-and-tabs
-						  }
+							}
 						: {}),
 					id: layerId.current,
 				} as LayerSpecification,
 				props.insertBeforeLayer
 					? props.insertBeforeLayer
 					: props.insertBeforeFirstSymbolLayer
-					? mapHook.map.firstSymbolLayer
-					: undefined,
+						? mapHook.map.firstSymbolLayer
+						: undefined,
 				mapHook.componentId
 			);
 		} catch (e) {
@@ -163,19 +166,43 @@ function useLayer(props: useLayerProps): useLayerType {
 		}
 
 		// recreate layer if style has changed
-		mapHook.map.on(
-			'styledata',
-			() => {
-				if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
-					createLayer();
-				}
-			},
-			mapHook.componentId
+		const styledataEventHandler = () => {
+			if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
+				createLayer();
+			}
+		};
+		mapHook.map.on('styledata', styledataEventHandler);
+		const addSourceHandler = (
+			_ev: any,
+			_wrapper: MapLibreGlWrapper,
+			{ source_id }: { source_id: string }
+		) => {
+			if (
+				mapHook.map &&
+				typeof props?.options?.source === 'string' &&
+				props.options.source === source_id
+			) {
+				createLayer();
+			}
+		};
+		mapHook.map.wrapper.on(
+			'addsource',
+			addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
 		);
 
 		layerPaintConfRef.current = JSON.stringify(props.options?.paint);
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
+
+		return () => {
+			if (!mapHook.map) return;
+
+			mapHook.map.wrapper.off(
+				'addsource',
+				addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
+			);
+			mapHook.map.on('styledata', styledataEventHandler);
+		};
 	}, [props, mapHook]);
 
 	useEffect(() => {
@@ -286,9 +313,30 @@ function useLayer(props: useLayerProps): useLayerType {
 
 		mapHook.map.on('sourcedata', findSourceHandler);
 
+		const addSourceHandler = (
+			_ev: any,
+			_wrapper: MapLibreGlWrapper,
+			{ source_id }: { source_id: string }
+		) => {
+			if (
+				mapHook.map &&
+				typeof props?.options?.source === 'string' &&
+				props.options.source === source_id
+			) {
+				createLayer();
+			}
+		};
+		mapHook.map.wrapper.on(
+			'addsource',
+			addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
+		);
 		return () => {
 			if (mapHook?.map) {
 				mapHook.map.off('sourcedata', findSourceHandler);
+				mapHook.map.wrapper.off(
+					'addsource',
+					addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
+				);
 			}
 		};
 	}, [mapHook.map, props.options?.source]);

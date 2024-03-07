@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { mount } from 'enzyme';
 import { MapComponentsProvider } from '../contexts/MapContext';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
+import { waitFor } from '@testing-library/react';
 
-import useSource from './useLayer';
+import useMap from './useMap';
+import useSource from './useSource';
+import useLayer from './useLayer'
 
 const UseSourceTestComponent = (props) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -23,8 +26,41 @@ const UseSourceTestComponent = (props) => {
 	return <></>;
 };
 
+const UseLayerTestComponent = (props) => {
+	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+	useLayer({
+		mapId: props.mapId,
+		layerId: props.layerId || 'TestComponent',
+		options: {
+			source: 'geojson-source',
+			paint: props.paint,
+			layout: props.layout || {},
+			type: 'fill',
+			...props.options,
+		},
+		insertBeforeLayer: props.insertBeforeLayer,
+		onHover: props.onHover,
+		onClick: props.onClick,
+		onLeave: props.onLeave,
+	});
+
+	return <></>;
+};
+
+const sourceAddEventHandler = jest.fn();
+const layerAddEventHandler = jest.fn();
+
 const TestComponent = (props) => {
-	const [includeComponent, setIncludeComponent] = useState(true);
+	const mapHook = useMap();
+
+	const [includeComponent, setIncludeComponent] = useState(false);
+
+	useEffect(() => {
+		if(!mapHook.map) return;
+
+		mapHook.map.wrapper.on('addsource', sourceAddEventHandler)
+		mapHook.map.wrapper.on('addlayer', layerAddEventHandler)
+	}, [mapHook.map])
 
 	return (
 		<>
@@ -36,7 +72,7 @@ const TestComponent = (props) => {
 			>
 				toggle
 			</button>
-			{includeComponent && <UseSourceTestComponent {...props} type={testType} />}
+			{includeComponent && <UseSourceTestComponent {...props} />}
 			<MapLibreMap />
 		</>
 	);
@@ -57,5 +93,27 @@ describe('useSource hook', () => {
 		);
 
 		wrapper.find('.toggle_includeComponent').simulate('click');
+		await waitFor(() => expect(sourceAddEventHandler).toHaveBeenCalledTimes(1));
+		wrapper.find('.toggle_includeComponent').simulate('click');
+		wrapper.find('.toggle_includeComponent').simulate('click');
+		await waitFor(() => expect(sourceAddEventHandler).toHaveBeenCalledTimes(2));
+	});
+
+	it("should fire a 'addlayer' event in MapLibreGlWrapper", async () => {
+		var testAttributes = {
+			on: {
+				addsource: () => {},
+			},
+		};
+
+		const wrapper = mount(
+			<MapComponentsProvider>
+				<TestComponent {...testAttributes} />
+				<UseLayerTestComponent />
+			</MapComponentsProvider>
+		);
+
+		wrapper.find('.toggle_includeComponent').simulate('click');
+		await waitFor(() => expect(layerAddEventHandler).toHaveBeenCalledTimes(1));
 	});
 });
