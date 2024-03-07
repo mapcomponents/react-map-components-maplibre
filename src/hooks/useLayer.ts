@@ -172,7 +172,7 @@ function useLayer(props: useLayerProps): useLayerType {
 				createLayer();
 			}
 		};
-		mapHook.map.on('styledata', styledataEventHandler);
+		mapHook.map.on('styledata', styledataEventHandler,mapHook.componentId);
 		const addSourceHandler = (
 			_ev: any,
 			_wrapper: MapLibreGlWrapper,
@@ -189,21 +189,12 @@ function useLayer(props: useLayerProps): useLayerType {
 		mapHook.map.wrapper.on(
 			'addsource',
 			addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
-		);
+		,mapHook.componentId);
 
 		layerPaintConfRef.current = JSON.stringify(props.options?.paint);
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
 
-		return () => {
-			if (!mapHook.map) return;
-
-			mapHook.map.wrapper.off(
-				'addsource',
-				addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
-			);
-			mapHook.map.off('styledata', styledataEventHandler);
-		};
 	}, [props, mapHook]);
 
 	useEffect(() => {
