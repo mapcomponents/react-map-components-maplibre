@@ -1,12 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { LayerConfig, RootState } from '../../stores/map.store';
+import { RootState } from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from '@turf/turf';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
+import useMap from '../../hooks/useMap';
 
 interface LayerOnMapProps {
 	mapConfigUuid: string;
+	mapId: string;
 }
 
 function LayerOnMap(props: LayerOnMapProps) {
@@ -28,26 +30,46 @@ function LayerOnMap(props: LayerOnMapProps) {
 		return layerIds.reverse();
 	}, [layerStoreOrder]);
 
-	const sortedLayers = useMemo(() => {
-		const sorted: { [key: string]: LayerConfig } = {};
-		layerStoreOrder.forEach((orderItem) => {
-			Object.entries(layers).forEach(([key, layer]) => {
-				if (layer.uuid === orderItem.uuid) {
-					sorted[key] = layer;
+	const mapHook = useMap({
+		mapId: props.mapId,
+	});
+
+	//	const sortedLayers = useMemo(() => {
+	//		const sorted: { [key: string]: LayerConfig } = {};
+	//		layerStoreOrder.forEach((orderItem) => {
+	//			Object.entries(layers).forEach(([key, layer]) => {
+	//				if (layer.uuid === orderItem.uuid) {
+	//					sorted[key] = layer;
+	//				}
+	//			});
+	//		});
+	//		return sorted;
+	//	}, [layers, layerStoreOrder]);
+
+	useEffect(() => {
+		if (mapHook.map && layerStoreOrder.length > 0) {
+			// Temporarily hold the layers in the new order
+			const newOrder = [...layerStoreOrder];
+
+			// Iterate through the new order array
+			newOrder.forEach((layerId, index) => {
+				const nextLayerId = index < newOrder.length - 1 ? newOrder[index + 1] : undefined;
+				if (mapHook.map?.getLayer(layerId.uuid)) {
+					mapHook.map.moveLayer(layerId.uuid, nextLayerId?.uuid);
 				}
 			});
-		});
-		return sorted;
-	}, [layers, layerStoreOrder]);
+		}
+	}, [layerStoreOrder, mapHook.map]);
 
 	return (
 		<>
 			<MlOrderLayers layerIds={orderLayers}></MlOrderLayers>
-			{Object.entries(sortedLayers).map(([key, layer], index) => {
+			{Object.entries(layers).map(([key, layer], index) => {
 				if (layer.type === 'geojson') {
 					return (
 						<MlGeoJsonLayer
 							key={key}
+							layerId={layer.uuid}
 							geojson={layer.config.geojson as Feature}
 							insertBeforeLayer={'layer_number_' + (layerStoreLength - 1 - index)}
 						></MlGeoJsonLayer>
