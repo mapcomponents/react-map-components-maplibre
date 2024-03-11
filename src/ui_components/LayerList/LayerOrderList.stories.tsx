@@ -34,7 +34,7 @@ const LayerOrder = () => {
 					layer1: {
 						type: 'geojson',
 						uuid: layerUuid1,
-						name: 'point',
+						name: 'Example Point Layer',
 						config: {
 							geojson: sample_points_inside_polygon as FeatureCollection,
 						},
@@ -42,7 +42,7 @@ const LayerOrder = () => {
 					layer2: {
 						type: 'geojson',
 						uuid: layerUuid2,
-						name: 'Polygon',
+						name: 'Example Polygon Layer',
 						config: {
 							geojson: sample_polygon_1 as FeatureCollection,
 						},
