@@ -137,6 +137,21 @@ const mapConfigSlice = createSlice({
 		},
 	},
 });
+export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | null => {
+	const mapConfigs = state.mapConfigs;
+	for (const key in mapConfigs) {
+		const mapConfig = mapConfigs[key];
+		const layers = mapConfig.layers;
+		for (const layerKey in layers) {
+			const layer = layers[layerKey];
+			if (layer.uuid === uuid) {
+				return layer;
+			}
+		}
+	}
+	return null;
+};
+
 const store = configureStore({
 	reducer: {
 		mapConfig: mapConfigSlice.reducer,

@@ -5,6 +5,8 @@ import {
 	CheckboxStyled,
 	ListItemStyled,
 } from './util/LayerListItemVectorLayer';
+import { getLayerByUuid, RootState } from '../../stores/map.store';
+import { useSelector } from 'react-redux';
 
 interface LayerTreeListItemProps {
 	visible: boolean;
@@ -16,21 +18,26 @@ interface LayerTreeListItemProps {
 	showDeleteButton?: boolean;
 	listItemSx?: SxProps;
 	buttons?: JSX.Element;
-	layerId?: string;
+	layerId: string;
 	sortable?: boolean;
 }
 
 function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const [localVisible, setLocalVisible] = useState(true);
+	const layer = getLayerByUuid(useSelector((state: RootState) => state.mapConfig), props.layerId)
+	function toggleVisible() {
+		setLocalVisible((val) => !val);
+		//TODO: set layer (un)visible
+		console.log(layer)
+
+	}
 	return (
 		<ListItemStyled sx={{ ...props.listItemSx }}>
 			<CheckboxListItemIcon>
 				<CheckboxStyled
 					disabled={!props.visible}
 					checked={localVisible}
-					onClick={() => {
-						setLocalVisible((val) => !val);
-					}}
+					onClick={toggleVisible}
 				/>
 			</CheckboxListItemIcon>
 			<ListItemText
