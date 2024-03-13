@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
-import { Typography } from '@mui/material';
 
 export interface MlMeasureToolProps {
 	/**

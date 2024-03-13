@@ -3,7 +3,6 @@ import MlMeasureTool, { MlMeasureToolProps } from './MlMeasureTool';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
 import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Button, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
@@ -39,7 +38,7 @@ const Template = () => {
 					</Select>
 
 					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+						<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
 						<Typography variant="h5">Measure Polygon</Typography>
 					</Box>
 					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
@@ -71,7 +70,7 @@ const CTemplate = () => {
 					</Select>
 
 					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+						<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
 						<Typography variant="h5">Measure Polygon</Typography>
 					</Box>
 					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
