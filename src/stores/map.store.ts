@@ -105,10 +105,17 @@ const mapConfigSlice = createSlice({
 				layer: LayerConfig;
 			}>
 		) => {
-			const { mapConfigUuid, layer } = action.payload;
+			const { mapConfigUuid, layer: updatedLayer } = action.payload;
 			const mapConfig = state.mapConfigs[mapConfigUuid];
 			if (mapConfig) {
-				mapConfig.layers[layer.uuid] = layer;
+				const layerKeys = Object.keys(mapConfig.layers);
+				for (const key of layerKeys) {
+					const layer = mapConfig.layers[key];
+					if (layer.uuid === updatedLayer.uuid) {
+						mapConfig.layers[key] = updatedLayer;
+						break;
+					}
+				}
 			}
 		},
 		// Remove a layer from a MapConfig

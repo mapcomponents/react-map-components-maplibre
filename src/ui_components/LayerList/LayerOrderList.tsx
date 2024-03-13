@@ -12,7 +12,7 @@ function LayerOrderList(props: LayerOrderListProps) {
 	const layerOrder = useSelector(
 		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigUuid].layerOrder
 	);
-
+	const mapState = useSelector((state: RootState) => state.mapConfig);
 
 	function reorder(startIndex: number, endIndex: number) {
 		const result = [...layerOrder];
@@ -27,14 +27,13 @@ function LayerOrderList(props: LayerOrderListProps) {
 			<h2>Layer Order</h2>
 			<ul>
 				{layerOrder.map((item) => (
-						<LayerTreeListItem
-							key={item.uuid}
-							visible={true}
-							configurable={true}
-							//name={getLayerByUuid(state, item.uuid)?.name || "" }
-							name={getLayerByUuid(useSelector((state: RootState) => state.mapConfig), item.uuid)?.name || ""}
-							layerId={item.uuid}
-						></LayerTreeListItem>
+					<LayerTreeListItem
+						key={item.uuid}
+						visible={true}
+						configurable={true}
+						name={getLayerByUuid(mapState, item.uuid)?.name || ''}
+						layerId={item.uuid}
+					></LayerTreeListItem>
 				))}
 			</ul>
 			<button onClick={() => reorder(0, 1)}>Example reorder first and second</button>

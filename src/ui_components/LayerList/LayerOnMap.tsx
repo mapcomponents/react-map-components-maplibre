@@ -48,10 +48,8 @@ function LayerOnMap(props: LayerOnMapProps) {
 
 	useEffect(() => {
 		if (mapHook.map && layerStoreOrder.length > 0) {
-			// Temporarily hold the layers in the new order
 			const newOrder = [...layerStoreOrder];
 
-			// Iterate through the new order array
 			newOrder.forEach((layerId, index) => {
 				const nextLayerId = index < newOrder.length - 1 ? newOrder[index + 1] : undefined;
 				if (mapHook.map?.getLayer(layerId.uuid)) {
@@ -72,6 +70,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 							layerId={layer.uuid}
 							geojson={layer.config.geojson as Feature}
 							insertBeforeLayer={'layer_number_' + (layerStoreLength - 1 - index)}
+							layout={layer.config.layout}
 						></MlGeoJsonLayer>
 					);
 				} else {
