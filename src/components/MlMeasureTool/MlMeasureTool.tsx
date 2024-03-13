@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
-import { Typography } from '@mui/material';
 
 export interface MlMeasureToolProps {
 	/**
@@ -41,7 +40,7 @@ function getUnitLabel(measureType: string | undefined) {
 }
 
 const MlMeasureTool = (props: MlMeasureToolProps) => {
-	const [displayValue, setDisplayValue] = useState({ value: 0, label: 'km' });
+	const [displayValue, setDisplayValue] = useState({ value: 0, label: '' });
 	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
 
 	useEffect(() => {
@@ -49,8 +48,8 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 			const result =
 				props.measureType === 'polygon'
 					? // for "polyong" mode calculate km²
-					  (turf.area(currentFeatures[0] as Feature) / 1000000) *
-					  getUnitSquareMultiplier(props.unit)
+						(turf.area(currentFeatures[0] as Feature) / 1000000) *
+						getUnitSquareMultiplier(props.unit)
 					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
 
 			if (typeof props.onChange === 'function') {
@@ -87,10 +86,8 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				onFinish={props.onFinish}
 			/>
 			{displayValue.value.toFixed(2)} {''}
-			<Typography>
-				{displayValue.label}
-				{props.measureType === 'polygon' ? ' ²' : ''}
-			</Typography>
+			{displayValue.label}
+			{displayValue.label && props.measureType === 'polygon' ? ' ²' : ''}
 		</>
 	);
 };

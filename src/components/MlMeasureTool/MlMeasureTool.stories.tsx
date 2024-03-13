@@ -3,14 +3,11 @@ import MlMeasureTool, { MlMeasureToolProps } from './MlMeasureTool';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
 import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Button, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Button, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Menu from '@mui/material/Menu';
-
-
 
 const storyoptions = {
 	title: 'MapComponents/MlMeasureTool',
@@ -23,14 +20,13 @@ export default storyoptions;
 const Template = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
-	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+	const handleChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
 		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-				<div style={{ width: '200px', position: 'absolute', zIndex: 105 }}>
 					<Select
 						name={'units'}
 						onChange={handleChange}
@@ -40,21 +36,14 @@ const Template = () => {
 						<MenuItem value={'kilometers'}>Kilometers</MenuItem>
 						<MenuItem value={'miles'}>Miles</MenuItem>
 					</Select>
-					<Grid
-						container
-						style={{
-							textAlign: 'left',
-							alignItems: 'center',
-						}}
-					>
-						<SquareFootOutlinedIcon />
-						<h4 style={{ margin: '0px' }}>Measure Polygon</h4>
-					</Grid>
 
-					<Box m={2} style={{ textAlign: 'left' }}>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+						<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+						<Typography variant="h5">Measure Polygon</Typography>
+					</Box>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
 						Area: <MlMeasureTool measureType={'polygon'} unit={unit} />
 					</Box>
-				</div>
 			</Sidebar>
 		</>
 	);
@@ -63,14 +52,13 @@ const Template = () => {
 const CTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
-	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+	const handleChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
 		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-				<div style={{ width: '200px', position: 'absolute', zIndex: 105 }}>
 					<Select
 						name={'units'}
 						onChange={handleChange}
@@ -80,21 +68,14 @@ const CTemplate = () => {
 						<MenuItem value={'kilometers'}>Kilometers</MenuItem>
 						<MenuItem value={'miles'}>Miles</MenuItem>
 					</Select>
-					<Grid
-						container
-						style={{
-							textAlign: 'left',
-							alignItems: 'center',
-						}}
-					>
-						<SquareFootOutlinedIcon />
-						<h4 style={{ margin: '0px' }}>Measure Polygon</h4>
-					</Grid>
 
-					<Box m={2} style={{ textAlign: 'left' }}>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+						<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+						<Typography variant="h5">Measure Polygon</Typography>
+					</Box>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
 						Area: <MlMeasureTool measureType={'polygon'} unit={unit} />
 					</Box>
-				</div>
 			</Sidebar>
 		</>
 	);
@@ -103,14 +84,13 @@ const CTemplate = () => {
 const LineTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
-	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+	const handleChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
 		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-				<div style={{ width: '200px', position: 'absolute', zIndex: 105 }}>
 					<Select
 						name={'units'}
 						onChange={handleChange}
@@ -120,21 +100,14 @@ const LineTemplate = () => {
 						<MenuItem value={'kilometers'}> Kilometers</MenuItem>
 						<MenuItem value={'miles'}> Miles</MenuItem>
 					</Select>
-					<Grid
-						container
-						style={{
-							textAlign: 'left',
-							alignItems: 'center',
-						}}
-					>
-						<StraightenOutlinedIcon />
-						<h4 style={{ margin: '0px' }}>Measure Line</h4>
-					</Grid>
 
-					<Box m={2} style={{ textAlign: 'left' }}>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+						<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+						<Typography variant="h5">Measure Line</Typography>
+					</Box>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
 						Length: <MlMeasureTool measureType={'line'} unit={unit} />
 					</Box>
-				</div>
 			</Sidebar>
 		</>
 	);
@@ -143,14 +116,13 @@ const LineTemplate = () => {
 const CLineTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
-	const handleChange = (event:SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+	const handleChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
 		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
 
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-				<div style={{ width: '200px', position: 'absolute', zIndex: 105 }}>
 					<Select
 						name={'units'}
 						onChange={handleChange}
@@ -160,21 +132,14 @@ const CLineTemplate = () => {
 						<MenuItem value={'kilometers'}> Kilometers</MenuItem>
 						<MenuItem value={'miles'}> Miles</MenuItem>
 					</Select>
-					<Grid
-						container
-						style={{
-							textAlign: 'left',
-							alignItems: 'center',
-						}}
-					>
-						<StraightenOutlinedIcon />
-						<h4 style={{ margin: '0px' }}>Measure Line</h4>
-					</Grid>
 
-					<Box m={2} style={{ textAlign: 'left' }}>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+						<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+						<Typography variant="h5">Measure Line</Typography>
+					</Box>
+					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
 						Length: <MlMeasureTool measureType={'line'} unit={unit} />
 					</Box>
-				</div>
 			</Sidebar>
 		</>
 	);
@@ -185,14 +150,14 @@ const catalogueTemplate = () => {
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
-	const handleClick = (event:MouseEvent<any>) => {
+	const handleClick = (event: MouseEvent<any>) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
 
-	const handleToolSelect = (tool:string) => {
+	const handleToolSelect = (tool: string) => {
 		setSelectedTool(tool);
 	};
 

@@ -123,9 +123,12 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 	}, [mapHook.map]);
 
 	if (props.type === 'symbol') {
-		mapHook.map?.loadImage(wgMarker, function (error, image: HTMLImageElement) {
-			if (error) throw error;
-			mapHook.map?.addImage('wgLogo', image);
+		mapHook.map?.loadImage(wgMarker).then(function (res) {
+			if (!res?.data){
+				console.log('image WG Marker could not be loaded');
+				return;
+			}
+			mapHook.map?.addImage('wgLogo', res.data);
 		});
 	}
 
