@@ -25,6 +25,7 @@ export { default as MlGeoJsonLayer } from './components/MlGeoJsonLayer/MlGeoJson
 export { default as MlImageMarkerLayer } from './components/MlImageMarkerLayer/MlImageMarkerLayer';
 
 export { default as MlMeasureTool } from './components/MlMeasureTool/MlMeasureTool';
+export { default as MlMultiMeasureTool } from './components/MlMultiMeasureTool/MlMultiMeasureTool';
 export { default as MlNavigationTools } from './components/MlNavigationTools/MlNavigationTools';
 export { default as MlNavigationCompass } from './components/MlNavigationCompass/MlNavigationCompass';
 export { default as MlLayer } from './components/MlLayer/MlLayer';
