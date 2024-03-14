@@ -4,7 +4,7 @@ import {
 	CheckboxListItemIcon,
 	CheckboxStyled,
 	ListItemStyled,
-} from './util/LayerListItemVectorLayer';
+} from '../LayerList/util/LayerListItemVectorLayer';
 import {
 	getLayerByUuid,
 	LayerConfig,
