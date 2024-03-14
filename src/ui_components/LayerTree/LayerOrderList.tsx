@@ -24,7 +24,6 @@ function LayerOrderList(props: LayerOrderListProps) {
 
 	return (
 		<div>
-			<h2>Layer Order</h2>
 			<ul>
 				{layerOrder.map((item) => (
 					<LayerTreeListItem

@@ -53,14 +53,14 @@ const LayerOrder = () => {
 		},
 	};
 	const dispatch = useDispatch();
-	//useEffect(() => {
 	dispatch(setMapConfig(demoData.mapConfigs['mapConfig1']));
-	//}, [dispatch, demoData]);
 
 	return (
 		<>
 			<Sidebar open={true}>
+				<h2>Layertree 1</h2>
 				<LayerOrderList mapConfigUuid={mapConfigUuid}></LayerOrderList>
+				<h2>Layertree 2</h2>
 				<LayerOrderList mapConfigUuid={mapConfigUuid}></LayerOrderList>
 			</Sidebar>
 			<LayerOnMap mapConfigUuid={mapConfigUuid} mapId={mapId}></LayerOnMap>
