@@ -29,12 +29,19 @@ The easiest way to start a new project using this framework is to bootstrap a re
 
 Run the following commands in the terminal:
 
-1. `npx degit mapcomponents/template {your-app-name}`
-2. `cd {your-app-name}`
-3. `yarn`
-4. `yarn dev`
+```
+npx degit mapcomponents/template {your-app-name}
+cd {your-app-name}
+yarn
+yarn dev
+```
+
+<img src="docs_md/initial_0.gif" />
+
 
 This will start a development server that serves the mapcomponents app on port 5174 of your local machine as well as a browser tab with live reload enabled. This reloads the affected parts of the application if changes are detected to the corresponding files in the filesystem. Open the project folder in the IDE of your choice and start building your map client.
+
+<img src="docs_md/initial_3.gif" width="200" />
 
 ### **... an existing react project**
 
@@ -44,70 +51,44 @@ In this case, navigate to your project folder in a terminal and execute the foll
 2. Add the MapComponentsProvider (named export of this module) to your applications react-DOM where it makes sense. Only children of this component will be able to render a map canvas or interact with a maplibre-gl instance. Place it in the index.js entrypoint if your application is a dedicated map app and all components have a high probability to interact with the maplibre-gl instance. Place it somewhere higher in the JSX tree if the map constitutes only a small portion of your app and components outside of the MapComponentsProvider have no need to interact with the map instance.
 3. Add a MapLibreMap component to the react-DOM wherever the map canvas is supposed to be placed.
 
-## How it works
-### Anatomy of a MapComponent
+## Adding data to the map
 
-A MapComponent is a react component that accepts at least 1 attribute "mapId" (there are some exceptions) and is expected to retrieve a maplibre-gl instance from mapContext and directly manipulate it or watch its state. 
-An example implementation of basic required functions for the maplibre instance retrieval process using the useMap hook, can be seen in [./components/MlComponentTemplate/MlComponentTemplate.tsx](https://github.com/mapcomponents/react-map-components-maplibre/blob/main/src/components/MlComponentTemplate/MlComponentTemplate.tsx)
-If no attribute mapId is provided the map component is expected to work with the map instance provided by mapContext at ```mapContext.map``` (the first maplibre instance that is registered in MapContext).
+The easiest way to add data to the map is using GeoJSON data and the MlGeoJsonLayer component. The MlGeoJsonLayer component is designed to require only the `geojson` property to be set, while it provides properties to fully customize it to your needs.
 
+Insert the following code in your app below index.tsx to add a GeoJSON layer to your map.
 
-### Cleanup functions
+```JSX
+import MlGeoJsonLayer from '@mapcomponents/react-maplibre';
 
-Once a component is removed from reactDOM we need to make sure everything it has added to the maplibre-gl instance is removed with it. The mapHook offers a convenient way to do this. 
-
-**- Retrieve the maplibre instance using the useMap hook**
-
-Add `mapHook.map` to the dependency array of e.g. a useEffect hook to trigger it once the map instance becomes available.
-
-```js
-
-  const mapHook = useMap({
-    mapId: props.mapId,
-    waitForLayer: props.insertBeforeLayer,
-  });
-
-  useEffect(() => {
-    if (!mapHook.map) return;
-    // the MapLibre-gl instance (mapHook.map) is accessible here
-    // initialize the layer and add it to the MapLibre-gl instance 
-
-    // optionally add layers, sources, event listeners, controls, images to the MapLibre instance that are required by this component
-    mapHook.map.addLayer(
-        {/*layer-config*/},
-        props.insertBeforeLayer,
-        mapHook.componentId)
-
-    return () => {
-      mapHook.cleanup();
-    }
-
-  }, [mapHook.map]);
-
-```
-**- Component cleanup function**
-
-`mapHook.cleanup()` will remove all ressources from the maplibre-gl instance that have been added using `mapHook.componentId` as additional parameter in `map.addLayer`, `map.addSource`, `map.on`, `map.addImage` or `map.addControl` calls.
-
-```js
-
-  useEffect(() => {
-
-    return () => {
-      // This is the cleanup function, it is called when this react component is removed from react-dom
-        mapHook.cleanup();
-    };
-  }, []);
-
+const geojson_data = {
+	"type": "Feature",
+	"properties": {},
+	"geometry": {
+		"coordinates": [
+			[
+				[0.7415817264899545, 56.91203727013931],
+				[0.7743616447289128, 55.2757658775181],
+				[4.609612078732766, 55.23840364745948],
+				[4.642391996971725, 56.91203727013931],
+				[0.7415817264899545, 56.91203727013931]
+			]
+		],
+		"type": "Polygon"
+	}
+}
 ```
 
-**- addLayer, addSource, addImage, addControls, on**
+And add the following within the JSX.
 
-The functions mentioned above have been overridden in the MapLibreGlWrapper instance that is referenced by mapHook.map.
-All five functions expect an additional optional parameter "component_id" (string) as their last or optional parameter (except for the beforeLayerId parameter of the addLayer function, which should be defined as props.beforeLayerId to make sure the parent component is able to control the layer order).
-A uuid `componentId` property is generated and available on the object returned by mapHook.
-MapLibreGlWrapper uses the component_id to keep track of everything that has been added by a specific component (including implicitly added sources), enabling a safe and simple cleanup by calling ```mapHook.cleanup()``` as shown in the cleanup function example above.
+```JSX
+<MlGeoJsonLayer geojson={geojson_data} />
+```
+
+<img src="docs_md/sample_screenshot.png" />
+
+Please take a look at our storybooks and the code examples provided in the {ComponentName}.stories.tsx files next to the Components in the `./src/components/` folder.
 
 ## more links
 
+- @mapcomponents/react-maplibre storybook: https://mapcomponents.github.io/react-map-components-maplibre
 - @mapcomponents/react-maplibre-lab storybook: https://mapcomponents.github.io/react-map-components-maplibre-lab
