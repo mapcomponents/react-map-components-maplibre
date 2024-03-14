@@ -73,6 +73,23 @@ function useSource(props: useSourceProps): useSourceType {
 		createSource();
 	}, [mapHook.map, props, createSource]);
 
+	useEffect(() => {
+		if (!mapHook.map) return;
+
+		const checkSourceHandler = () => {
+			if (!mapHook?.map?.getSource?.(props.sourceId)) {
+				createSource();
+			}
+		};
+
+		mapHook.map.on('styledata', checkSourceHandler);
+
+		return () => {
+			if (mapHook?.map) {
+				mapHook.map.off('styledata', checkSourceHandler);
+			}
+		};
+	}, [mapHook.map, createSource]);
 	//cleanup
 	useEffect(() => {
 		return () => {

@@ -172,7 +172,7 @@ function useLayer(props: useLayerProps): useLayerType {
 				createLayer();
 			}
 		};
-		mapHook.map.on('styledata', styledataEventHandler,mapHook.componentId);
+		mapHook.map.on('styledata', styledataEventHandler, mapHook.componentId);
 		const addSourceHandler = (
 			_ev: any,
 			_wrapper: MapLibreGlWrapper,
@@ -188,13 +188,13 @@ function useLayer(props: useLayerProps): useLayerType {
 		};
 		mapHook.map.wrapper.on(
 			'addsource',
-			addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
-		,mapHook.componentId);
+			addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType,
+			mapHook.componentId
+		);
 
 		layerPaintConfRef.current = JSON.stringify(props.options?.paint);
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
-
 	}, [props, mapHook]);
 
 	useEffect(() => {
@@ -263,8 +263,15 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (paintString !== layerPaintConfRef.current) {
 			const oldPaint = JSON.parse(layerPaintConfRef.current);
 			for (key in props.options.paint) {
-				if (props.options.paint?.[key as PaintPropsKeyType] && props.options.paint[key as PaintPropsKeyType] !== oldPaint[key]) {
-					mapHook.map.map.setPaintProperty(layerId.current, key, props.options.paint[key as PaintPropsKeyType]);
+				if (
+					props.options.paint?.[key as PaintPropsKeyType] &&
+					props.options.paint[key as PaintPropsKeyType] !== oldPaint[key]
+				) {
+					mapHook.map.map.setPaintProperty(
+						layerId.current,
+						key,
+						props.options.paint[key as PaintPropsKeyType]
+					);
 				}
 			}
 			layerPaintConfRef.current = paintString;
@@ -291,13 +298,7 @@ function useLayer(props: useLayerProps): useLayerType {
 	}, []);
 
 	useEffect(() => {
-		if (
-			typeof props?.options?.source !== 'string' ||
-			!mapHook.map ||
-			(typeof props?.options?.source === 'string' &&
-				mapHook?.map?.getLayer?.(layerId.current) &&
-				mapHook?.map?.getSource?.(props.options.source))
-		) {
+		if (typeof props?.options?.source !== 'string' || !mapHook.map) {
 			return;
 		}
 
@@ -310,7 +311,7 @@ function useLayer(props: useLayerProps): useLayerType {
 			}
 		};
 
-		mapHook.map.on('sourcedata', findSourceHandler);
+		mapHook.map.on('sourcedataloading', findSourceHandler);
 
 		const addSourceHandler = (
 			_ev: any,
@@ -331,7 +332,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		);
 		return () => {
 			if (mapHook?.map) {
-				mapHook.map.off('sourcedata', findSourceHandler);
+				mapHook.map.off('sourcedataloading', findSourceHandler);
 				mapHook.map.wrapper.off(
 					'addsource',
 					addSourceHandler as unknown as MapLibreGlWrapperEventHandlerType
