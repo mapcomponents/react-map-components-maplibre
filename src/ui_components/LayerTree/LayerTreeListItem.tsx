@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ListItemText, SxProps } from '@mui/material';
 import {
 	CheckboxListItemIcon,
@@ -29,19 +29,22 @@ interface LayerTreeListItemProps {
 }
 
 function LayerTreeListItem(props: LayerTreeListItemProps) {
-	const [localVisible, setLocalVisible] = useState(true);
 	const layer = getLayerByUuid(
 		useSelector((state: RootState) => state.mapConfig),
 		props.layerId
 	);
+
+	let visible = true;
+	if (layer?.type === 'geojson') {
+		visible = layer?.config?.layout?.visibility !== 'none';
+	}
 	const dispatch = useDispatch();
 
 	function toggleVisible() {
-		const nextVisible = !localVisible;
-		setLocalVisible(nextVisible);
 		//TODO: get rid of localvisible and just use the visibility of the layer from the store
 		//TODO: update layout for all layer types
 		if (layer?.type === 'geojson') {
+			const nextVisible = !visible;
 			const updatedLayer = {
 				...layer,
 				config: {
@@ -64,7 +67,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	return (
 		<ListItemStyled sx={{ ...props.listItemSx }}>
 			<CheckboxListItemIcon>
-				<CheckboxStyled disabled={!props.visible} checked={localVisible} onClick={toggleVisible} />
+				<CheckboxStyled disabled={!props.visible} checked={visible} onClick={toggleVisible} />
 			</CheckboxListItemIcon>
 			<ListItemText
 				variant="layerlist"

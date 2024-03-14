@@ -61,6 +61,7 @@ const LayerOrder = () => {
 		<>
 			<Sidebar open={true}>
 				<LayerOrderList mapConfigUuid={mapConfigUuid}></LayerOrderList>
+				<LayerOrderList mapConfigUuid={mapConfigUuid}></LayerOrderList>
 			</Sidebar>
 			<LayerOnMap mapConfigUuid={mapConfigUuid} mapId={mapId}></LayerOnMap>
 		</>
