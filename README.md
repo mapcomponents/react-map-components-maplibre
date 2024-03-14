@@ -41,7 +41,7 @@ yarn dev
 
 This will start a development server that serves the mapcomponents app on port 5174 of your local machine as well as a browser tab with live reload enabled. This reloads the affected parts of the application if changes are detected to the corresponding files in the filesystem. Open the project folder in the IDE of your choice and start building your map client.
 
-<img src="docs_md/initial_3.gif" width="200" />
+<img src="docs_md/initial_3.gif" width="400" />
 
 ### **... an existing react project**
 
