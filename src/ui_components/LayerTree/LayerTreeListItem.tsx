@@ -25,6 +25,7 @@ interface LayerTreeListItemProps {
 	buttons?: JSX.Element;
 	layerId: string;
 	sortable?: boolean;
+	mapConfigId: string;
 }
 
 function LayerTreeListItem(props: LayerTreeListItemProps) {
@@ -53,7 +54,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 			} as LayerConfig;
 			dispatch(
 				setLayerInMapConfig({
-					mapConfigUuid: 'dc272150-8f04-44e2-97c5-d8f266a04cf8',
+					mapConfigUuid: props.mapConfigId,
 					layer: updatedLayer,
 				})
 			);

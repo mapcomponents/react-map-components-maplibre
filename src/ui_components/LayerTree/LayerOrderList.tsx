@@ -33,6 +33,7 @@ function LayerOrderList(props: LayerOrderListProps) {
 						configurable={true}
 						name={getLayerByUuid(mapState, item.uuid)?.name || ''}
 						layerId={item.uuid}
+						mapConfigId={props.mapConfigUuid}
 					></LayerTreeListItem>
 				))}
 			</ul>
