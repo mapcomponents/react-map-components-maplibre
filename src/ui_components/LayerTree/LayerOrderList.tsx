@@ -25,13 +25,13 @@ function LayerOrderList(props: LayerOrderListProps) {
 	return (
 		<div>
 			<ul>
-				{layerOrder.map((item) => (
+				{layerOrder.map((layer) => (
 					<LayerTreeListItem
-						key={item.uuid}
+						key={layer.uuid}
 						visible={true}
 						configurable={true}
-						name={getLayerByUuid(mapState, item.uuid)?.name || ''}
-						layerId={item.uuid}
+						name={getLayerByUuid(mapState, layer.uuid)?.name || ''}
+						layerId={layer.uuid}
 						mapConfigId={props.mapConfigUuid}
 					></LayerTreeListItem>
 				))}

@@ -38,14 +38,17 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	if (layer?.type === 'geojson') {
 		visible = layer?.config?.layout?.visibility !== 'none';
 	}
+	if (layer?.type === 'vt') {
+		visible = layer.config.layers.every((l) => l.layout?.visibility !== 'none');
+	}
 	const dispatch = useDispatch();
 
 	function toggleVisible() {
-		//TODO: get rid of localvisible and just use the visibility of the layer from the store
 		//TODO: update layout for all layer types
+		const nextVisible = !visible;
+		let updatedLayer = layer;
 		if (layer?.type === 'geojson') {
-			const nextVisible = !visible;
-			const updatedLayer = {
+			updatedLayer = {
 				...layer,
 				config: {
 					...layer?.config,
@@ -55,6 +58,24 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					},
 				},
 			} as LayerConfig;
+		}
+		if (layer?.type === 'vt') {
+			const updatedLayers = layer.config.layers.map((layer) => ({
+				...layer,
+				layout: {
+					...layer.layout,
+					visibility: nextVisible ? 'visible' : 'none',
+				},
+			}));
+			updatedLayer = {
+				...layer,
+				config: {
+					...layer.config,
+					layers: updatedLayers,
+				},
+			} as LayerConfig;
+		}
+		if (updatedLayer) {
 			dispatch(
 				setLayerInMapConfig({
 					mapConfigUuid: props.mapConfigId,
