@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItemText, SxProps } from '@mui/material';
+import { ListItemText, SxProps, List } from '@mui/material';
 import {
 	CheckboxListItemIcon,
 	CheckboxStyled,
@@ -34,70 +34,110 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		props.layerId
 	);
 
-	let visible = true;
-	if (layer?.type === 'geojson') {
-		visible = layer?.config?.layout?.visibility !== 'none';
-	}
-	if (layer?.type === 'vt') {
-		visible = layer.config.layers.every((l) => l.layout?.visibility !== 'none');
-	}
 	const dispatch = useDispatch();
 
-	function toggleVisible() {
-		//TODO: update layout for all layer types
+	function handleToggleVisibility(visible: boolean) {
 		const nextVisible = !visible;
+		if (layer) {
+			toggleVisible(layer, nextVisible);
+		}
+	}
+
+	function toggleVisible(layer: LayerConfig, nextVisible: boolean): LayerConfig {
+		//TODO: update layout for all layer types
 		let updatedLayer = layer;
-		if (layer?.type === 'geojson') {
+		if (layer.type === 'folder') {
 			updatedLayer = {
 				...layer,
-				config: {
-					...layer?.config,
-					layout: {
-						...layer?.config?.layout,
-						visibility: nextVisible ? 'visible' : 'none',
-					},
-				},
-			} as LayerConfig;
+				layers: layer.layers.map((subLayer) => toggleVisible(subLayer, nextVisible)),
+			};
+		} else {
+			switch (layer?.type) {
+				case 'geojson': {
+					updatedLayer = {
+						...layer,
+						config: {
+							...layer?.config,
+							layout: {
+								...layer?.config?.layout,
+								visibility: nextVisible ? 'visible' : 'none',
+							},
+						},
+					} as LayerConfig;
+					break;
+				}
+				case 'vt': {
+					const updatedLayers = layer.config.layers.map((layer) => ({
+						...layer,
+						layout: {
+							...layer.layout,
+							visibility: nextVisible ? 'visible' : 'none',
+						},
+					}));
+					updatedLayer = {
+						...layer,
+						config: {
+							...layer.config,
+							layers: updatedLayers,
+						},
+					} as LayerConfig;
+					break;
+				}
+			}
+		}
+		dispatch(
+			setLayerInMapConfig({
+				mapConfigUuid: props.mapConfigId,
+				layer: updatedLayer,
+			})
+		);
+		return updatedLayer;
+	}
+
+	function renderLayerItem(layer: LayerConfig): React.ReactNode {
+		let visible = true;
+		if (layer?.type === 'geojson') {
+			visible = layer?.config?.layout?.visibility !== 'none';
 		}
 		if (layer?.type === 'vt') {
-			const updatedLayers = layer.config.layers.map((layer) => ({
-				...layer,
-				layout: {
-					...layer.layout,
-					visibility: nextVisible ? 'visible' : 'none',
-				},
-			}));
-			updatedLayer = {
-				...layer,
-				config: {
-					...layer.config,
-					layers: updatedLayers,
-				},
-			} as LayerConfig;
+			visible = layer.config.layers.every((l) => l.layout?.visibility !== 'none');
 		}
-		if (updatedLayer) {
-			dispatch(
-				setLayerInMapConfig({
-					mapConfigUuid: props.mapConfigId,
-					layer: updatedLayer,
-				})
+		if (layer?.type === 'wms') {
+			//TODO: handle wms
+		}
+		if (layer.type === 'folder') {
+			return (
+				<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx, pl: 4 }}>
+					<CheckboxListItemIcon>
+						<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
+					</CheckboxListItemIcon>
+					<ListItemText
+						primary={layer.name}
+						secondary={props.description}
+						primaryTypographyProps={{ overflow: 'hidden' }}
+					/>
+					<List>{layer.layers.map((subLayer) => renderLayerItem(subLayer))}</List>
+				</ListItemStyled>
+			);
+		} else {
+			return (
+				<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }}>
+					<CheckboxListItemIcon>
+						<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
+					</CheckboxListItemIcon>
+					<ListItemText
+						variant="layerlist"
+						primary={layer.name || ''}
+						secondary={props.description}
+						primaryTypographyProps={{ overflow: 'hidden' }}
+					/>
+					{props.buttons}
+				</ListItemStyled>
 			);
 		}
 	}
 
-	return (
-		<ListItemStyled sx={{ ...props.listItemSx }}>
-			<CheckboxListItemIcon>
-				<CheckboxStyled disabled={!props.visible} checked={visible} onClick={toggleVisible} />
-			</CheckboxListItemIcon>
-			<ListItemText
-				variant="layerlist"
-				primary={props.name}
-				secondary={props.description}
-				primaryTypographyProps={{ overflow: 'hidden' }}
-			/>
-		</ListItemStyled>
-	);
+	return <>{layer && renderLayerItem(layer)}</>;
 }
 
 export default LayerTreeListItem;

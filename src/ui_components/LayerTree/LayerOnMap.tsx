@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../stores/map.store';
+import { LayerConfig, RootState } from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from '@turf/turf';
 import useMap from '../../hooks/useMap';
@@ -36,35 +36,37 @@ function LayerOnMap(props: LayerOnMapProps) {
 		});
 	}, [layerStoreOrder, mapHook.map]);
 
-	return (
-		<>
-			{Object.entries(layers).map(([key, layer]) => {
-				if (layer.type === 'geojson') {
-					return (
-						<MlGeoJsonLayer
-							key={key}
-							layerId={layer.uuid}
-							geojson={layer.config.geojson as Feature}
-							layout={layer.config.layout}
-						></MlGeoJsonLayer>
-					);
-				}
-				if (layer.type === 'vt') {
-					return (
-						<MlVectorTileLayer
-							key={key}
-							layerId={layer.uuid}
-							url={layer.config.url}
-							layers={layer.config.layers}
-						></MlVectorTileLayer>
-					);
-				} else {
-					//TODO: handle all other layer types
-					return null;
-				}
-			})}
-		</>
-	);
+	function renderLayer(layer: LayerConfig): React.ReactNode {
+		switch (layer.type) {
+			case 'geojson':
+				return (
+					<MlGeoJsonLayer
+						key={layer.uuid}
+						layerId={layer.uuid}
+						geojson={layer.config.geojson as Feature}
+						layout={layer.config.layout}
+					/>
+				);
+			case 'vt':
+				return (
+					<MlVectorTileLayer
+						key={layer.uuid}
+						layerId={layer.uuid}
+						url={layer.config.url}
+						layers={layer.config.layers}
+					/>
+				);
+			case 'wms':
+				//TODO: Handle WMS
+				return <></>;
+			case 'folder':
+				return layer.layers.map((subLayer: LayerConfig) => renderLayer(subLayer));
+			default:
+				return null;
+		}
+	}
+
+	return <>{Object.values(layers).map((layer) => renderLayer(layer))}</>;
 }
 
 export default LayerOnMap;

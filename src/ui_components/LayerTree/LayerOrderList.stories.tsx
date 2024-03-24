@@ -20,7 +20,8 @@ const LayerOrder = () => {
 	const mapConfigUuid = 'dc272150-8f04-44e2-97c5-d8f266a04cf8';
 	const layerUuid1 = 'fec837fa-1d5d-432b-89c2-b416c9773523';
 	const layerUuid2 = '0587c0ed-aaa0-4315-bb77-a40937a684d7';
-	const layerUuid3 = '71d0f136-786b-414b-ad61-178cc5dfd96c';
+	//const layerUuid3 = '71d0f136-786b-414b-ad61-178cc5dfd96c';
+	const layerUuid4 = '346ced38-142c-4b57-8193-d689ffc7dfc2';
 	const mapId = 'map_1';
 	const demoData: MapState = {
 		mapConfigs: {
@@ -50,13 +51,13 @@ const LayerOrder = () => {
 					},
 					layer3: {
 						type: 'vt',
-						uuid: layerUuid3,
+						uuid: layerUuid4,
 						name: 'Example Vectoretile Layer',
 						config: {
 							mapId: mapId,
 							layers: [
 								//{
-								//	id: 'river',
+								//	id: layerUuid3,
 								//	type: 'fill',
 								//	'source-layer': 'water',
 								//	source: 'openmaptiles',
@@ -67,7 +68,7 @@ const LayerOrder = () => {
 								//	maxzoom: 20,
 								//},
 								{
-									id: layerUuid3,
+									id: layerUuid4,
 									type: 'fill',
 									'source-layer': 'building',
 									source: 'openmaptiles',
@@ -84,7 +85,12 @@ const LayerOrder = () => {
 						},
 					},
 				},
-				layerOrder: [{ uuid: layerUuid3 }, { uuid: layerUuid2 }, { uuid: layerUuid1 }],
+				layerOrder: [
+					{ uuid: layerUuid4 },
+					//{ uuid: layerUuid3 },
+					{ uuid: layerUuid2 },
+					{ uuid: layerUuid1 },
+				],
 			},
 		},
 	};
@@ -107,3 +113,65 @@ export const LayerOrderExample = LayerOrder.bind({});
 
 LayerOrderExample.parameters = {};
 LayerOrderExample.args = {};
+const LayerOrderFolder = () => {
+	const mapConfigUuid = 'dc272150-8f04-44e2-97c5-d8f266a04cf8';
+	const folderUuid1 = 'acd3d99f-2f82-40a5-a5c9-f303d54f5606';
+	const layerUuid1 = 'fec837fa-1d5d-432b-89c2-b416c9773523';
+	const layerUuid2 = '0587c0ed-aaa0-4315-bb77-a40937a684d7';
+	const mapId = 'map_1';
+	const demoData: MapState = {
+		mapConfigs: {
+			mapConfig1: {
+				uuid: mapConfigUuid,
+				name: 'Demo Map',
+				mapProps: {
+					center: [7.0851268, 50.73884],
+					zoom: 12,
+				},
+				layers: {
+					folder1: {
+						type: 'folder',
+						uuid: folderUuid1,
+						name: 'layers in a folder',
+						config: undefined,
+						layers: [
+							{
+								type: 'geojson',
+								uuid: layerUuid1,
+								name: 'Example Point Layer',
+								config: {
+									geojson: sample_points_inside_polygon as FeatureCollection,
+								},
+							},
+							{
+								type: 'geojson',
+								uuid: layerUuid2,
+								name: 'Example Polygon Layer',
+								config: {
+									geojson: sample_polygon_1 as FeatureCollection,
+								},
+							},
+						],
+					},
+				},
+				layerOrder: [{ uuid: folderUuid1, layers: [{ uuid: layerUuid2 }, { uuid: layerUuid1 }] }],
+			},
+		},
+	};
+	const dispatch = useDispatch();
+	dispatch(setMapConfig(demoData.mapConfigs['mapConfig1']));
+
+	return (
+		<>
+			<Sidebar open={true}>
+				<h2>Layertree 1</h2>
+				<LayerOrderList mapConfigUuid={mapConfigUuid}></LayerOrderList>
+			</Sidebar>
+			<LayerOnMap mapConfigUuid={mapConfigUuid} mapId={mapId}></LayerOnMap>
+		</>
+	);
+};
+export const LayerOrderFolderExample = LayerOrderFolder.bind({});
+
+LayerOrderFolderExample.parameters = {};
+LayerOrderFolderExample.args = {};

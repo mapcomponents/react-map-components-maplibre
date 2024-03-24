@@ -146,15 +146,24 @@ const mapConfigSlice = createSlice({
 });
 export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | null => {
 	const mapConfigs = state.mapConfigs;
-	for (const key in mapConfigs) {
-		const mapConfig = mapConfigs[key];
-		const layers = mapConfig.layers;
+	const findLayer = (layers: LayerConfig | Record<string, LayerConfig>): LayerConfig | null => {
 		for (const layerKey in layers) {
 			const layer = layers[layerKey];
 			if (layer.uuid === uuid) {
 				return layer;
 			}
+			if (layer.type === 'folder') {
+				const found = findLayer(layer.layers);
+				if (found) return found;
+			}
 		}
+		return null;
+	};
+
+	for (const key in mapConfigs) {
+		const mapConfig = mapConfigs[key];
+		const foundLayer = findLayer(mapConfig.layers);
+		if (foundLayer) return foundLayer;
 	}
 	return null;
 };
