@@ -10,6 +10,7 @@
 .jest-test-results.json
 /test-coverage
 /.yarn
+doctor-storybook.log
 
 # testing
 /coverage

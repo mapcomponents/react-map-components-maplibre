@@ -1,18 +1,13 @@
 module.exports = {
-    stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
 
-    addons: [
-		'storybook-source-link',
-		//'@storybook/addon-storysource',
-		'@storybook/addon-links',
-		'@storybook/addon-essentials',
-		{
-			name: '@storybook/addon-docs',
-			options: {
-				configureJSX: true,
-			},
-		},
-	],
+    addons: ['storybook-source-link', //'@storybook/addon-storysource',
+    '@storybook/addon-links', '@storybook/addon-essentials', {
+        name: '@storybook/addon-docs',
+        options: {
+            configureJSX: true,
+        },
+    }, '@storybook/addon-webpack5-compiler-babel'],
 
     framework: {
         name: "@storybook/react-webpack5",
