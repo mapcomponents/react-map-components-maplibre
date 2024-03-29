@@ -66,6 +66,39 @@ const legalLayerTypes = [
 	'background',
 ];
 
+function determineSource(props: useLayerProps) {
+	if (typeof props.options.source === 'string') {
+		return {
+			source: props.options.source,
+		};
+	} else if (
+		props.geojson &&
+		(!props.options?.source ||
+			(typeof props?.options?.source !== 'string' &&
+				props.options?.source?.attribution &&
+				!props.options?.source?.type))
+	) {
+		return {
+			source: {
+				type: 'geojson',
+				data: props.geojson || '',
+				attribution:
+					typeof props?.options?.source !== 'string' && props.options.source?.attribution
+						? props.options.source?.attribution
+						: '',
+			},
+		};
+	}
+
+	return {};
+}
+
+function determineInsertionPoint(props: useLayerProps, mapHook: useMapType) {
+	if (props?.insertBeforeLayer) return props.insertBeforeLayer;
+	if (props?.insertBeforeFirstSymbolLayer) return mapHook?.map?.firstSymbolLayer;
+	return undefined;
+}
+
 function useLayer(props: useLayerProps): useLayerType {
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -78,7 +111,6 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	const [layer, setLayer] = useState<ReturnType<getLayerType>>();
 
-	const initializedRef = useRef<boolean>(false);
 	const layerId = useRef(
 		props.layerId || (props.idPrefix ? props.idPrefix : 'Layer-') + mapHook.componentId
 	);
@@ -111,46 +143,18 @@ function useLayer(props: useLayerProps): useLayerType {
 			return;
 		}
 
-		initializedRef.current = true;
-
 		try {
 			mapHook.map.addLayer(
 				{
 					...props.options,
-					...(props.geojson &&
-					(!props.options?.source ||
-						(typeof props?.options?.source !== 'string' &&
-							props.options?.source?.attribution &&
-							!props.options?.source?.type)) // if either options.source isn't defined or only options.source.attribution is defined
-						? {
-								source: {
-									type: 'geojson',
-									data: props.geojson,
-									attribution:
-										typeof props?.options?.source !== 'string' && props.options.source?.attribution
-											? props.options.source?.attribution
-											: '',
-								},
-								// eslint-disable-next-line no-mixed-spaces-and-tabs
-							}
-						: {}),
-					...(typeof props.options?.source === 'string'
-						? {
-								source: props.options.source,
-								// eslint-disable-next-line no-mixed-spaces-and-tabs
-							}
-						: {}),
+					...determineSource(props),
 					id: layerId.current,
 				} as LayerSpecification,
-				props.insertBeforeLayer
-					? props.insertBeforeLayer
-					: props.insertBeforeFirstSymbolLayer
-						? mapHook.map.firstSymbolLayer
-						: undefined,
+				determineInsertionPoint(props, mapHook),
 				mapHook.componentId
 			);
-		} catch (e) {
-			console.log(e);
+		} catch (error) {
+			console.error('Failed to add layer:', error);
 		}
 		setLayer(() => mapHook.map?.map.getLayer(layerId.current));
 
@@ -168,7 +172,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 		// recreate layer if style has changed
 		const styledataEventHandler = () => {
-			if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
+			if (!mapHook.map?.map.getLayer(layerId.current)) {
 				createLayer();
 			}
 		};
@@ -203,7 +207,6 @@ function useLayer(props: useLayerProps): useLayerType {
 
 		if (
 			mapHook.map?.cancelled === false &&
-			initializedRef.current &&
 			mapHook?.map?.map?.getLayer?.(layerId.current) &&
 			(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) === -1 ||
 				(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) !== -1 &&
@@ -216,12 +219,7 @@ function useLayer(props: useLayerProps): useLayerType {
 	}, [mapHook.map, mapHook.mapIsReady, props, createLayer]);
 
 	useEffect(() => {
-		if (
-			mapHook.map?.cancelled === true ||
-			!initializedRef.current ||
-			!mapHook.map?.map?.getSource?.(layerId.current)
-		)
-			return;
+		if (mapHook.map?.cancelled === true || !mapHook.map?.map?.getSource?.(layerId.current)) return;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		//@ts-ignore setData only exists on GeoJsonSource
@@ -233,7 +231,6 @@ function useLayer(props: useLayerProps): useLayerType {
 			mapHook.map?.cancelled === true ||
 			!mapHook.map ||
 			!mapHook.map?.map?.getLayer?.(layerId.current) ||
-			!initializedRef.current ||
 			props.options.type !== layerTypeRef.current
 		)
 			return;
@@ -292,7 +289,6 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	useEffect(() => {
 		return () => {
-			initializedRef.current = false;
 			mapHook.cleanup();
 		};
 	}, []);
@@ -305,7 +301,8 @@ function useLayer(props: useLayerProps): useLayerType {
 		const findSourceHandler = () => {
 			if (
 				typeof props?.options?.source === 'string' &&
-				mapHook?.map?.getSource?.(props.options.source)
+				mapHook?.map?.getSource?.(props.options.source) &&
+				!mapHook.map.getLayer(layerId.current)
 			) {
 				createLayer();
 			}
