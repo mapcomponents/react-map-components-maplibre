@@ -78,7 +78,6 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	const [layer, setLayer] = useState<ReturnType<getLayerType>>();
 
-	const initializedRef = useRef<boolean>(false);
 	const layerId = useRef(
 		props.layerId || (props.idPrefix ? props.idPrefix : 'Layer-') + mapHook.componentId
 	);
@@ -110,8 +109,6 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (typeof props.options.type === 'undefined') {
 			return;
 		}
-
-		initializedRef.current = true;
 
 		try {
 			mapHook.map.addLayer(
@@ -168,7 +165,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 		// recreate layer if style has changed
 		const styledataEventHandler = () => {
-			if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
+			if (!mapHook.map?.map.getLayer(layerId.current)) {
 				createLayer();
 			}
 		};
@@ -203,7 +200,6 @@ function useLayer(props: useLayerProps): useLayerType {
 
 		if (
 			mapHook.map?.cancelled === false &&
-			initializedRef.current &&
 			mapHook?.map?.map?.getLayer?.(layerId.current) &&
 			(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) === -1 ||
 				(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) !== -1 &&
@@ -218,7 +214,6 @@ function useLayer(props: useLayerProps): useLayerType {
 	useEffect(() => {
 		if (
 			mapHook.map?.cancelled === true ||
-			!initializedRef.current ||
 			!mapHook.map?.map?.getSource?.(layerId.current)
 		)
 			return;
@@ -233,7 +228,6 @@ function useLayer(props: useLayerProps): useLayerType {
 			mapHook.map?.cancelled === true ||
 			!mapHook.map ||
 			!mapHook.map?.map?.getLayer?.(layerId.current) ||
-			!initializedRef.current ||
 			props.options.type !== layerTypeRef.current
 		)
 			return;
@@ -292,7 +286,6 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	useEffect(() => {
 		return () => {
-			initializedRef.current = false;
 			mapHook.cleanup();
 		};
 	}, []);
@@ -305,7 +298,8 @@ function useLayer(props: useLayerProps): useLayerType {
 		const findSourceHandler = () => {
 			if (
 				typeof props?.options?.source === 'string' &&
-				mapHook?.map?.getSource?.(props.options.source)
+				mapHook?.map?.getSource?.(props.options.source) &&
+				!mapHook.map.getLayer(layerId.current)
 			) {
 				createLayer();
 			}
