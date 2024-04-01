@@ -1,5 +1,5 @@
 import React from 'react';
-import LayerOrderList from './LayerOrderList';
+import LayerTree from './LayerTree';
 import LayerOnMap from './LayerOnMap';
 import Sidebar from '../Sidebar';
 import MapContextReduxStoreDecorator from '../../decorators/MapContextReduxStoreDecorator';
@@ -8,10 +8,11 @@ import sample_points_inside_polygon from '../LayerList/assets/sample_points_insi
 import { FeatureCollection } from '@turf/turf';
 import { MapState, setMapConfig } from '../../stores/map.store';
 import { useDispatch } from 'react-redux';
+import { Typography } from '@mui/material';
 
 const storyoptions = {
-	title: 'UiComponents/LayerOrderList',
-	component: LayerOrderList,
+	title: 'UiComponents/LayerTree',
+	component: LayerTree,
 	argTypes: {},
 	decorators: MapContextReduxStoreDecorator,
 };
@@ -70,10 +71,10 @@ const LayerOrder = () => {
 	return (
 		<>
 			<Sidebar open={true}>
-				<h2>Layertree 1</h2>
-				<LayerOrderList mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOrderList>
-				<h2>Layertree 2</h2>
-				<LayerOrderList mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOrderList>
+				<Typography variant='h4'>Layertree 1</Typography>
+				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
+				<Typography variant='h4'>Layertree 2</Typography>
+				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
 			</Sidebar>
 			<LayerOnMap mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOnMap>
 		</>
@@ -136,8 +137,8 @@ const LayerOrderFolder = () => {
 	return (
 		<>
 			<Sidebar open={true}>
-				<h2>Layertree 1</h2>
-				<LayerOrderList mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOrderList>
+				<Typography variant='h2'>Layertree 1</Typography>
+				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
 			</Sidebar>
 			<LayerOnMap mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOnMap>
 		</>

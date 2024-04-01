@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { ListItemText, SxProps, List, styled, Box, IconButton } from '@mui/material';
+import { ListItemText, SxProps, List, styled, Box, IconButton, ListItem, ListItemIcon } from '@mui/material';
 import {
 	CheckboxListItemIcon,
 	CheckboxStyled,
-	ListItemStyled,
 } from '../LayerList/util/LayerListItemVectorLayer';
 import {
 	getLayerByUuid,
@@ -30,6 +29,15 @@ interface LayerTreeListItemProps {
 	layerOrderConfig: LayerOrderItem;
 }
 
+const ListItemStyled = styled(ListItem)({
+	paddingRight: 0,
+	paddingLeft: 0,
+	paddingTop: 0,
+	paddingBottom: '4px',
+});
+const ListItemIconStyled = styled(ListItemIcon)({
+	minWidth: '30px',
+});
 const IconButtonStyled = styled(IconButton)({
 	marginRight: '0px',
 	padding: '0px',
@@ -63,7 +71,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		if (layer?.type === 'folder') {
 			updatedLayer = {
 				...layer,
-				visible: !layer.visible
+				visible: !layer.visible,
 			};
 		} else {
 			switch (layer?.type) {
@@ -122,13 +130,15 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		if (layer.type === 'folder') {
 			return (
 				<>
-					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx, pl: 4 }}>
-					<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
-						{open ? <ExpandMore /> : <ExpandLess />}
-					</IconButtonStyled>
-						<CheckboxListItemIcon>
-							<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
-						</CheckboxListItemIcon>
+					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }}>
+						<ListItemIconStyled>
+							<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
+								{open ? <ExpandMore /> : <ExpandLess />}
+							</IconButtonStyled>
+							<CheckboxListItemIcon>
+								<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
+							</CheckboxListItemIcon>
+						</ListItemIconStyled>
 						<ListItemText
 							primary={layer.name}
 							secondary={props.description}
