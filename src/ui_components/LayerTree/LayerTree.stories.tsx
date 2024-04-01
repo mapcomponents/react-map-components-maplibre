@@ -75,7 +75,6 @@ const LayerOrder = () => {
 	const dispatch = useDispatch();
 	dispatch(setMapConfig({ key: 'mapConfig1', mapConfig: demoData.mapConfigs['mapConfig1'] }));
 
-	console.log(Object.keys(demoData.mapConfigs)[0]);
 	return (
 		<>
 			<Sidebar open={true}>
@@ -142,7 +141,6 @@ const LayerOrderFolder = () => {
 	const dispatch = useDispatch();
 	dispatch(setMapConfig({ key: 'mapConfig1', mapConfig: demoData.mapConfigs['mapConfig1'] }));
 
-	console.log(Object.keys(demoData.mapConfigs)[0]);
 	return (
 		<>
 			<Sidebar open={true}>

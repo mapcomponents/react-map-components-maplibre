@@ -194,9 +194,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 									)}
 								</>
 							)}
-							<LayerPropertyForm
-								layerUuid={layer.uuid}
-							/>
+							<LayerPropertyForm layerUuid={layer.uuid} mapConfigKey={props.mapConfigKey} />
 						</>
 					)}
 				</>
@@ -217,7 +215,10 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 								{open ? <ExpandMore /> : <ExpandLess />}
 							</IconButtonStyled>
 							<CheckboxListItemIcon>
-								<CheckboxStyled checked={layer?.visible} onClick={() => handleToggleVisibility(visible)} />
+								<CheckboxStyled
+									checked={layer?.visible}
+									onClick={() => handleToggleVisibility(visible)}
+								/>
 							</CheckboxListItemIcon>
 						</ListItemIconStyled>
 						<ListItemText

@@ -45,6 +45,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 				return (
 					<MlGeoJsonLayer
 						key={layerConfig.uuid}
+						layerId={layerConfig.uuid}
 						{...layerConfig.config}
 					/>
 				);
