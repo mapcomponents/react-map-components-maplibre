@@ -4,13 +4,13 @@ import { RootState, updateLayerOrder, getLayerByUuid } from '../../stores/map.st
 import LayerTreeListItem from './LayerTreeListItem';
 
 interface LayerOrderListProps {
-	mapConfigUuid: string;
+	mapConfigKey: string;
 }
 
 function LayerOrderList(props: LayerOrderListProps) {
 	const dispatch = useDispatch();
 	const layerOrder = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigUuid].layerOrder
+		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layerOrder
 	);
 	const mapState = useSelector((state: RootState) => state.mapConfig);
 
@@ -19,20 +19,21 @@ function LayerOrderList(props: LayerOrderListProps) {
 		const [removed] = result.splice(startIndex, 1);
 		result.splice(endIndex, 0, removed);
 
-		dispatch(updateLayerOrder({ mapConfigUuid: props.mapConfigUuid, newOrder: result }));
+		dispatch(updateLayerOrder({ mapConfigKey: props.mapConfigKey, newOrder: result }));
 	}
+	console.log(layerOrder)
 
 	return (
 		<div>
 			<ul>
-				{layerOrder.map((layer) => (
+				{layerOrder?.map?.((layer) => (
 					<LayerTreeListItem
 						key={layer.uuid}
 						visible={true}
 						configurable={true}
 						name={getLayerByUuid(mapState, layer.uuid)?.name || ''}
-						layerId={layer.uuid}
-						mapConfigId={props.mapConfigUuid}
+						layerOrderConfig={layer}
+						mapConfigKey={props.mapConfigKey}
 					></LayerTreeListItem>
 				))}
 			</ul>

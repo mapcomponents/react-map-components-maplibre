@@ -1,30 +1,30 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { LayerConfig, RootState } from '../../stores/map.store';
+import { LayerConfig, LayerOrderItem, RootState } from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from '@turf/turf';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 
 interface LayerOnMapProps {
-	mapConfigUuid: string;
-	mapId: string;
+	mapConfigKey: string;
+	mapId?: string;
 }
 
 function LayerOnMap(props: LayerOnMapProps) {
 	const layers = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigUuid].layers
+		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layers
 	);
 	const layerStoreOrder = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigUuid].layerOrder
+		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layerOrder
 	);
 
 	const mapHook = useMap({
-		mapId: props.mapId,
+		mapId: props?.mapId,
 	});
 
 	useEffect(() => {
-		if (!mapHook.map || layerStoreOrder.length < 0) {
+		if (!mapHook.map || !layerStoreOrder?.length) {
 			return;
 		}
 		const newOrder = [...layerStoreOrder];
@@ -36,37 +36,44 @@ function LayerOnMap(props: LayerOnMapProps) {
 		});
 	}, [layerStoreOrder, mapHook.map]);
 
-	function renderLayer(layer: LayerConfig): React.ReactNode {
-		switch (layer.type) {
+	function renderLayer(layer: LayerOrderItem): React.ReactNode {
+
+		const layerConfig = layers[layer.uuid];
+		
+		switch (layerConfig?.type) {
 			case 'geojson':
 				return (
 					<MlGeoJsonLayer
-						key={layer.uuid}
-						layerId={layer.uuid}
-						geojson={layer.config.geojson as Feature}
-						layout={layer.config.layout}
+						key={layerConfig.uuid}
+						layerId={layerConfig.uuid}
+						geojson={layerConfig.config.geojson as Feature}
+						layout={layerConfig.config.layout}
 					/>
 				);
 			case 'vt':
 				return (
 					<MlVectorTileLayer
-						key={layer.uuid}
-						layerId={layer.uuid}
-						url={layer.config.url}
-						layers={layer.config.layers}
+						key={layerConfig.uuid}
+						layerId={layerConfig.uuid}
+						url={layerConfig.config.url}
+						layers={layerConfig.config.layers}
 					/>
 				);
 			case 'wms':
 				//TODO: Handle WMS
 				return <></>;
 			case 'folder':
-				return layer.layers.map((subLayer: LayerConfig) => renderLayer(subLayer));
+				return layer?.layers ? (
+					layer.layers.map((subLayer: LayerOrderItem) => renderLayer(subLayer))
+				) : (
+					<></>
+				);
 			default:
 				return null;
 		}
 	}
 
-	return <>{Object.values(layers).map((layer) => renderLayer(layer))}</>;
+	return <>{layerStoreOrder?.map?.((layerOrderItem) => renderLayer(layerOrderItem))}</>;
 }
 
 export default LayerOnMap;

@@ -46,8 +46,8 @@ export type FolderLayerConfig = {
 	type: 'folder';
 	uuid: string;
 	name?: string;
+	visible?:boolean;
 	id?: string;
-	layers: LayerConfig[];
 	config: undefined;
 };
 
@@ -58,11 +58,10 @@ interface MapProps {
 	zoom: number;
 }
 
-interface LayerOrderItem {
+export interface LayerOrderItem {
 	uuid: string;
 	layers?: LayerOrderItem[];
 }
-
 interface MapConfig {
 	uuid: string;
 	name: string;
@@ -87,11 +86,12 @@ const mapConfigSlice = createSlice({
 	initialState,
 	reducers: {
 		// Add or update a MapConfig
-		setMapConfig: (state, action: PayloadAction<MapConfig>) => {
-			const mapConfig = action.payload;
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			state.mapConfigs[mapConfig.uuid] = mapConfig;
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		//@ts-ignore
+		setMapConfig: (state, action: PayloadAction<{ key: string; mapConfig: MapConfig }>) => {
+			const mapConfig = action.payload.mapConfig;
+			const key = action.payload.key;
+			state.mapConfigs[key] = mapConfig;
 		},
 		// Remove a MapConfig by its uuid
 		removeMapConfig: (state, action: PayloadAction<{ uuid: string }>) => {
@@ -101,12 +101,12 @@ const mapConfigSlice = createSlice({
 		setLayerInMapConfig: (
 			state,
 			action: PayloadAction<{
-				mapConfigUuid: string;
+				mapConfigKey: string;
 				layer: LayerConfig;
 			}>
 		) => {
-			const { mapConfigUuid, layer: updatedLayer } = action.payload;
-			const mapConfig = state.mapConfigs[mapConfigUuid];
+			const { mapConfigKey, layer: updatedLayer } = action.payload;
+			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig) {
 				const layerKeys = Object.keys(mapConfig.layers);
 				for (const key of layerKeys) {
@@ -122,22 +122,22 @@ const mapConfigSlice = createSlice({
 		removeLayerFromMapConfig: (
 			state,
 			action: PayloadAction<{
-				mapConfigUuid: string;
+				mapConfigKey: string;
 				layerUuid: string;
 			}>
 		) => {
-			const { mapConfigUuid, layerUuid } = action.payload;
-			const mapConfig = state.mapConfigs[mapConfigUuid];
+			const { mapConfigKey, layerUuid } = action.payload;
+			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig && mapConfig.layers[layerUuid]) {
 				delete mapConfig.layers[layerUuid];
 			}
 		},
 		updateLayerOrder: (
 			state,
-			action: PayloadAction<{ mapConfigUuid: string; newOrder: LayerOrderItem[] }>
+			action: PayloadAction<{ mapConfigKey: string; newOrder: LayerOrderItem[] }>
 		) => {
-			const { mapConfigUuid, newOrder } = action.payload;
-			const mapConfig = state.mapConfigs[mapConfigUuid];
+			const { mapConfigKey, newOrder } = action.payload;
+			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig) {
 				mapConfig.layerOrder = newOrder;
 			}
@@ -146,23 +146,10 @@ const mapConfigSlice = createSlice({
 });
 export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | null => {
 	const mapConfigs = state.mapConfigs;
-	const findLayer = (layers: LayerConfig | Record<string, LayerConfig>): LayerConfig | null => {
-		for (const layerKey in layers) {
-			const layer = layers[layerKey];
-			if (layer.uuid === uuid) {
-				return layer;
-			}
-			if (layer.type === 'folder') {
-				const found = findLayer(layer.layers);
-				if (found) return found;
-			}
-		}
-		return null;
-	};
 
 	for (const key in mapConfigs) {
 		const mapConfig = mapConfigs[key];
-		const foundLayer = findLayer(mapConfig.layers);
+		const foundLayer = mapConfig.layers[uuid];
 		if (foundLayer) return foundLayer;
 	}
 	return null;

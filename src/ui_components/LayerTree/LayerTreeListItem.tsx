@@ -1,5 +1,5 @@
-import React from 'react';
-import { ListItemText, SxProps, List } from '@mui/material';
+import React, { useState } from 'react';
+import { ListItemText, SxProps, List, styled, Box, IconButton } from '@mui/material';
 import {
 	CheckboxListItemIcon,
 	CheckboxStyled,
@@ -12,27 +12,41 @@ import {
 	setLayerInMapConfig,
 } from '../../stores/map.store';
 import { useDispatch, useSelector } from 'react-redux';
+import { LayerOrderItem } from '../../stores/map.store';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 interface LayerTreeListItemProps {
-	visible: boolean;
-	configurable: boolean;
+	visible?: boolean;
+	configurable?: boolean;
 	type?: 'background' | 'background-labels' | 'layer' | 'wms-layer' | 'vector-tile-layer';
-	name: string;
+	name?: string;
 	description?: string;
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
 	listItemSx?: SxProps;
 	buttons?: JSX.Element;
-	layerId: string;
 	sortable?: boolean;
-	mapConfigId: string;
+	mapConfigKey: string;
+	layerOrderConfig: LayerOrderItem;
 }
+
+const IconButtonStyled = styled(IconButton)({
+	marginRight: '0px',
+	padding: '0px',
+});
+const BoxStyled = styled(Box)<{ open: boolean }>(({ open }) => ({
+	display: open ? 'block' : 'none',
+}));
+const ListStyled = styled(List)({
+	marginLeft: '50px',
+});
 
 function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const layer = getLayerByUuid(
 		useSelector((state: RootState) => state.mapConfig),
-		props.layerId
+		props.layerOrderConfig.uuid
 	);
+	const [open, setOpen] = useState(false);
 
 	const dispatch = useDispatch();
 
@@ -46,10 +60,10 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	function toggleVisible(layer: LayerConfig, nextVisible: boolean): LayerConfig {
 		//TODO: update layout for all layer types
 		let updatedLayer = layer;
-		if (layer.type === 'folder') {
+		if (layer?.type === 'folder') {
 			updatedLayer = {
 				...layer,
-				layers: layer.layers.map((subLayer) => toggleVisible(subLayer, nextVisible)),
+				visible: !layer.visible
 			};
 		} else {
 			switch (layer?.type) {
@@ -87,7 +101,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		}
 		dispatch(
 			setLayerInMapConfig({
-				mapConfigUuid: props.mapConfigId,
+				mapConfigKey: props.mapConfigKey,
 				layer: updatedLayer,
 			})
 		);
@@ -107,17 +121,32 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		}
 		if (layer.type === 'folder') {
 			return (
-				<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx, pl: 4 }}>
-					<CheckboxListItemIcon>
-						<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
-					</CheckboxListItemIcon>
-					<ListItemText
-						primary={layer.name}
-						secondary={props.description}
-						primaryTypographyProps={{ overflow: 'hidden' }}
-					/>
-					<List>{layer.layers.map((subLayer) => renderLayerItem(subLayer))}</List>
-				</ListItemStyled>
+				<>
+					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx, pl: 4 }}>
+					<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
+						{open ? <ExpandMore /> : <ExpandLess />}
+					</IconButtonStyled>
+						<CheckboxListItemIcon>
+							<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
+						</CheckboxListItemIcon>
+						<ListItemText
+							primary={layer.name}
+							secondary={props.description}
+							primaryTypographyProps={{ overflow: 'hidden' }}
+						/>
+					</ListItemStyled>
+					<BoxStyled key={layer.uuid + '_list'} open={open}>
+						<ListStyled disablePadding>
+							{props?.layerOrderConfig?.layers?.map((subLayer) => (
+								<LayerTreeListItem
+									layerOrderConfig={subLayer}
+									key={subLayer.uuid}
+									mapConfigKey={props.mapConfigKey}
+								/>
+							))}
+						</ListStyled>
+					</BoxStyled>
+				</>
 			);
 		} else {
 			return (
