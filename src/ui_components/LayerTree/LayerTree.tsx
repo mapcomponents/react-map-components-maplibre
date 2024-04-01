@@ -16,14 +16,13 @@ function LayerTree(props: LayerTreeProps) {
 	const layerOrder = useSelector(
 		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layerOrder
 	);
-	const mapState = useSelector((state: RootState) => state.mapConfig);
 
 	return (
 		<ListStyled>
-			{layerOrder?.map?.((layer) => (
+			{layerOrder?.map?.((el) => (
 				<LayerTreeListItem
-					key={layer.uuid}
-					layerOrderConfig={layer}
+					key={el.uuid}
+					layerOrderConfig={el}
 					mapConfigKey={props.mapConfigKey}
 				></LayerTreeListItem>
 			))}

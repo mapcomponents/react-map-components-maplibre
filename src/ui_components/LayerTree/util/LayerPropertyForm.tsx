@@ -6,6 +6,8 @@ import {
 } from 'maplibre-gl';
 import { Box, ListItem, Paper, Slider, TextField, Typography, styled } from '@mui/material';
 import ColorPicker from './input/ColorPicker';
+import { getLayerByUuid } from '../../../stores/map.store';
+import { useSelector } from 'react-redux';
 
 const PaperStyled = styled(Paper)({
 	marginLeft: '-100px',
@@ -64,8 +66,18 @@ interface LayerPropertyFormProps {
 	layerUuid: string;
 }
 
-function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyFormProps) {
+function LayerPropertyForm(props: LayerPropertyFormProps) {
 	const key = useRef(Math.round(Math.random() * 10000000000));
+	const layer = getLayerByUuid(
+		useSelector((state: RootState) => state.mapConfig),
+		props.layerUuid
+	);
+
+	const paintProps = layer?.config?.options?.paint;
+
+	const setPaintProps = () => {
+
+	}
 
 	const getFormInputByType = useCallback(
 		(key: string) => {
@@ -138,12 +150,13 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 		[paintProps]
 	);
 
+	console.log(layer)
 	return (
 		<>
 			<PaperStyled>
-				<ListItem key={key + '_paintPropForm'}>
+				<ListItem key={key.current + '_paintPropForm'}>
 					<BoxStyled>
-						{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
+						{paintProps && Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
 					</BoxStyled>
 				</ListItem>
 			</PaperStyled>

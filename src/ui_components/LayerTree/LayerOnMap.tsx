@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { LayerConfig, LayerOrderItem, RootState } from '../../stores/map.store';
-import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from '@turf/turf';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
@@ -45,9 +45,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 				return (
 					<MlGeoJsonLayer
 						key={layerConfig.uuid}
-						layerId={layerConfig.uuid}
-						geojson={layerConfig.config.geojson as Feature}
-						layout={layerConfig.config.layout}
+						{...layerConfig.config}
 					/>
 				);
 			case 'vt':

@@ -41,7 +41,14 @@ const LayerOrder = () => {
 						name: 'Example Point Layer',
 						configurable: true,
 						config: {
+							type: 'circle',
 							geojson: sample_points_inside_polygon as FeatureCollection,
+							options: {
+								paint: {
+									'circle-color': 'blue',
+									'circle-radius': 5,
+								},
+							},
 						},
 					},
 					'0587c0ed-aaa0-4315-bb77-a40937a684d7': {
@@ -62,20 +69,19 @@ const LayerOrder = () => {
 						],
 					},
 				],
-
 			},
 		},
 	};
 	const dispatch = useDispatch();
-	dispatch(setMapConfig({key: 'mapConfig1', mapConfig: demoData.mapConfigs['mapConfig1']}));
+	dispatch(setMapConfig({ key: 'mapConfig1', mapConfig: demoData.mapConfigs['mapConfig1'] }));
 
-	console.log(Object.keys(demoData.mapConfigs)[0])
+	console.log(Object.keys(demoData.mapConfigs)[0]);
 	return (
 		<>
 			<Sidebar open={true}>
-				<Typography variant='h4'>Layertree 1</Typography>
+				<Typography variant="h4">Layertree 1</Typography>
 				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
-				<Typography variant='h4'>Layertree 2</Typography>
+				<Typography variant="h4">Layertree 2</Typography>
 				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
 			</Sidebar>
 			<LayerOnMap mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOnMap>
@@ -134,13 +140,13 @@ const LayerOrderFolder = () => {
 		},
 	};
 	const dispatch = useDispatch();
-	dispatch(setMapConfig({key: 'mapConfig1', mapConfig: demoData.mapConfigs['mapConfig1']}));
+	dispatch(setMapConfig({ key: 'mapConfig1', mapConfig: demoData.mapConfigs['mapConfig1'] }));
 
-	console.log(Object.keys(demoData.mapConfigs)[0])
+	console.log(Object.keys(demoData.mapConfigs)[0]);
 	return (
 		<>
 			<Sidebar open={true}>
-				<Typography variant='h2'>Layertree 1</Typography>
+				<Typography variant="h2">Layertree 1</Typography>
 				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
 			</Sidebar>
 			<LayerOnMap mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOnMap>
