@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { ListItemText, SxProps, List, styled, Box, IconButton, ListItem, ListItemIcon } from '@mui/material';
 import {
-	CheckboxListItemIcon,
-	CheckboxStyled,
-} from '../LayerList/util/LayerListItemVectorLayer';
+	ListItemText,
+	SxProps,
+	List,
+	styled,
+	Box,
+	IconButton,
+	ListItem,
+	ListItemIcon,
+} from '@mui/material';
+import { CheckboxListItemIcon, CheckboxStyled } from '../LayerList/util/LayerListItemVectorLayer';
 import {
 	getLayerByUuid,
 	LayerConfig,
@@ -12,11 +18,13 @@ import {
 } from '../../stores/map.store';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayerOrderItem } from '../../stores/map.store';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { KeyboardArrowRight as ExpandLess, ExpandMore } from '@mui/icons-material';
+import { Delete as DeleteIcon, Tune as TuneIcon } from '@mui/icons-material';
+import ConfirmDialog from '../ConfirmDialog';
+import LayerPropertyForm from './util/LayerPropertyForm';
 
 interface LayerTreeListItemProps {
 	visible?: boolean;
-	configurable?: boolean;
 	type?: 'background' | 'background-labels' | 'layer' | 'wms-layer' | 'vector-tile-layer';
 	name?: string;
 	description?: string;
@@ -29,6 +37,13 @@ interface LayerTreeListItemProps {
 	layerOrderConfig: LayerOrderItem;
 }
 
+const TuneIconButton = styled(IconButton)({
+	padding: '4px',
+	marginTop: '-3px',
+});
+const DeleteIconButton = styled(IconButton)({
+	marginLeft: '20px',
+});
 const ListItemStyled = styled(ListItem)({
 	paddingRight: 0,
 	paddingLeft: 0,
@@ -50,6 +65,8 @@ const ListStyled = styled(List)({
 });
 
 function LayerTreeListItem(props: LayerTreeListItemProps) {
+	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
+	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
 	const layer = getLayerByUuid(
 		useSelector((state: RootState) => state.mapConfig),
 		props.layerOrderConfig.uuid
@@ -120,6 +137,70 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		let visible = true;
 		if (layer?.type === 'geojson') {
 			visible = layer?.config?.layout?.visibility !== 'none';
+			return (
+				<>
+					<ListItemStyled
+						key={layer.uuid}
+						sx={{ ...props.listItemSx }}
+						secondaryAction={
+							layer.configurable ? (
+								<>
+									{props?.buttons}
+									<TuneIconButton
+										edge={'end'}
+										aria-label="settings"
+										onClick={() => {
+											setPaintPropsFormVisible((current) => {
+												return !current;
+											});
+										}}
+									>
+										<TuneIcon />
+									</TuneIconButton>
+								</>
+							) : undefined
+						}
+					>
+						<CheckboxListItemIcon>
+							<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
+						</CheckboxListItemIcon>
+						<ListItemText
+							variant="layerlist"
+							primary={layer.name || ''}
+							secondary={props.description}
+							primaryTypographyProps={{ overflow: 'hidden' }}
+						/>
+						{props.buttons}
+					</ListItemStyled>
+					{layer.configurable && paintPropsFormVisible && (
+						<>
+							{props.showDeleteButton && (
+								<>
+									<DeleteIconButton edge="end" aria-label="delete" onClick={() => {}}>
+										<DeleteIcon />
+									</DeleteIconButton>
+									{showDeletionConfirmationDialog && (
+										<ConfirmDialog
+											open={showDeletionConfirmationDialog}
+											onConfirm={() => {
+												setShowDeletionConfirmationDialog(false);
+											}}
+											onCancel={() => {
+												setShowDeletionConfirmationDialog(false);
+											}}
+											title="Delete layer"
+											text="Are you sure you want to delete this layer?"
+										/>
+									)}
+								</>
+							)}
+							<LayerPropertyForm
+								layerUuid={layer.uuid}
+							/>
+						</>
+					)}
+				</>
+			);
 		}
 		if (layer?.type === 'vt') {
 			visible = layer.config.layers.every((l) => l.layout?.visibility !== 'none');
@@ -136,7 +217,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 								{open ? <ExpandMore /> : <ExpandLess />}
 							</IconButtonStyled>
 							<CheckboxListItemIcon>
-								<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
+								<CheckboxStyled checked={layer?.visible} onClick={() => handleToggleVisibility(visible)} />
 							</CheckboxListItemIcon>
 						</ListItemIconStyled>
 						<ListItemText

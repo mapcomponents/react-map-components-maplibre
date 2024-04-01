@@ -32,12 +32,14 @@ const LayerOrder = () => {
 						type: 'folder',
 						uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
 						name: 'layers in a folder',
+						visible: true,
 						config: undefined,
 					},
 					'fec837fa-1d5d-432b-89c2-b416c9773523': {
 						type: 'geojson',
 						uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
 						name: 'Example Point Layer',
+						configurable: true,
 						config: {
 							geojson: sample_points_inside_polygon as FeatureCollection,
 						},
@@ -99,12 +101,13 @@ const LayerOrderFolder = () => {
 						type: 'folder',
 						uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
 						name: 'layers in a folder',
-						config: undefined,
+						visible: true,
 					},
 					'fec837fa-1d5d-432b-89c2-b416c9773523': {
 						type: 'geojson',
 						uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
 						name: 'Example Point Layer',
+						configurable: true,
 						config: {
 							geojson: sample_points_inside_polygon as FeatureCollection,
 						},

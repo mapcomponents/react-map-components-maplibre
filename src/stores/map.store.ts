@@ -24,6 +24,7 @@ export type WmsLayerConfig = {
 	name?: string;
 	id?: string;
 	config: wmsConfig;
+	masterVisible?: boolean;
 };
 
 export type GeojsonLayerConfig = {
@@ -32,6 +33,8 @@ export type GeojsonLayerConfig = {
 	name?: string;
 	id?: string;
 	config: MlGeoJsonLayerProps;
+	masterVisible?: boolean;
+	configurable?: boolean;
 };
 
 export type VtLayerConfig = {
@@ -40,15 +43,17 @@ export type VtLayerConfig = {
 	name?: string;
 	id?: string;
 	config: MlVectorTileLayerProps;
+	masterVisible?: boolean;
 };
 
 export type FolderLayerConfig = {
 	type: 'folder';
 	uuid: string;
 	name?: string;
-	visible?:boolean;
+	visible?: boolean;
+	masterVisible?: boolean;
 	id?: string;
-	config: undefined;
+	config?: undefined;
 };
 
 export type LayerConfig = WmsLayerConfig | GeojsonLayerConfig | VtLayerConfig | FolderLayerConfig;
@@ -78,6 +83,19 @@ export type RootState = {
 	mapConfig: MapState;
 };
 
+function processLayerOrderItems(
+	action: (item: LayerOrderItem, parent?: LayerOrderItem) => void,
+	items: LayerOrderItem[],
+	parent?: LayerOrderItem
+): void {
+	items.forEach((item) => {
+		action(item, parent);
+		if (item.layers && item.layers.length > 0) {
+			processLayerOrderItems(action, item.layers, item);
+		}
+	});
+}
+
 export const initialState: MapState = {
 	mapConfigs: {},
 };
@@ -94,8 +112,8 @@ const mapConfigSlice = createSlice({
 			state.mapConfigs[key] = mapConfig;
 		},
 		// Remove a MapConfig by its uuid
-		removeMapConfig: (state, action: PayloadAction<{ uuid: string }>) => {
-			delete state.mapConfigs[action.payload.uuid];
+		removeMapConfig: (state, action: PayloadAction<{ key: string }>) => {
+			delete state.mapConfigs[action.payload.key];
 		},
 		// Add or update a layer within a MapConfig
 		setLayerInMapConfig: (
@@ -130,6 +148,11 @@ const mapConfigSlice = createSlice({
 			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig && mapConfig.layers[layerUuid]) {
 				delete mapConfig.layers[layerUuid];
+				processLayerOrderItems(function (item: LayerOrderItem, parent?: LayerOrderItem): void {
+					if (parent && parent.layers) {
+						parent.layers = parent.layers.filter((child) => child.uuid !== layerUuid);
+					}
+				}, mapConfig.layerOrder);
 			}
 		},
 		updateLayerOrder: (

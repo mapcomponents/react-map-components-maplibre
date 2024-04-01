@@ -23,9 +23,6 @@ function LayerTree(props: LayerTreeProps) {
 			{layerOrder?.map?.((layer) => (
 				<LayerTreeListItem
 					key={layer.uuid}
-					visible={true}
-					configurable={true}
-					name={getLayerByUuid(mapState, layer.uuid)?.name || ''}
 					layerOrderConfig={layer}
 					mapConfigKey={props.mapConfigKey}
 				></LayerTreeListItem>
