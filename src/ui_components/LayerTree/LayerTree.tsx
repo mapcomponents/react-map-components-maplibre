@@ -1,6 +1,6 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, updateLayerOrder, getLayerByUuid } from '../../stores/map.store';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../stores/map.store';
 import LayerTreeListItem from './LayerTreeListItem';
 import { List, styled } from '@mui/material';
 

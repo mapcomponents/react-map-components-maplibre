@@ -67,6 +67,7 @@ export interface LayerOrderItem {
 	uuid: string;
 	layers?: LayerOrderItem[];
 }
+
 interface MapConfig {
 	uuid: string;
 	name: string;
@@ -104,11 +105,11 @@ const mapConfigSlice = createSlice({
 	initialState,
 	reducers: {
 		// Add or update a MapConfig
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		//@ts-ignore
 		setMapConfig: (state, action: PayloadAction<{ key: string; mapConfig: MapConfig }>) => {
 			const mapConfig = action.payload.mapConfig;
 			const key = action.payload.key;
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			//@ts-ignore
 			state.mapConfigs[key] = mapConfig;
 		},
 		// Remove a MapConfig by its uuid
@@ -148,7 +149,7 @@ const mapConfigSlice = createSlice({
 			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig && mapConfig.layers[layerUuid]) {
 				delete mapConfig.layers[layerUuid];
-				processLayerOrderItems(function (item: LayerOrderItem, parent?: LayerOrderItem): void {
+				processLayerOrderItems(function (_, parent?: LayerOrderItem): void {
 					if (parent && parent.layers) {
 						parent.layers = parent.layers.filter((child) => child.uuid !== layerUuid);
 					}

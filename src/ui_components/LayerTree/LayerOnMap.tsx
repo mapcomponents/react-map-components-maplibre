@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { LayerConfig, LayerOrderItem, RootState } from '../../stores/map.store';
-import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import { Feature } from '@turf/turf';
+import { LayerOrderItem, RootState } from '../../stores/map.store';
+import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 
@@ -37,9 +36,8 @@ function LayerOnMap(props: LayerOnMapProps) {
 	}, [layerStoreOrder, mapHook.map]);
 
 	function renderLayer(layer: LayerOrderItem): React.ReactNode {
-
 		const layerConfig = layers[layer.uuid];
-		
+
 		switch (layerConfig?.type) {
 			case 'geojson':
 				return (
