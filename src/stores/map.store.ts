@@ -166,6 +166,33 @@ const mapConfigSlice = createSlice({
 				mapConfig.layerOrder = newOrder;
 			}
 		},
+		setMasterVisible(
+			state,
+			action: PayloadAction<{ mapConfigKey: string; layerId: string; masterVisible: boolean }>
+		) {
+			const { mapConfigKey, layerId, masterVisible } = action.payload;
+
+			const mapConfig = state.mapConfigs[mapConfigKey];
+
+			if (mapConfig && mapConfig.layers[layerId]?.type === 'folder') {
+				const updatedLayers = { ...mapConfig.layers };
+				updatedLayers[layerId] = {
+					...updatedLayers[layerId],
+					masterVisible,
+				};
+				mapConfig.layerOrder.forEach((folder) => {
+					if (folder.uuid === layerId) {
+						folder.layers?.forEach((child) => {
+							updatedLayers[child.uuid] = {
+								...updatedLayers[child.uuid],
+								masterVisible,
+							};
+						});
+					}
+				});
+				state.mapConfigs[mapConfigKey].layers = updatedLayers;
+			}
+		},
 	},
 });
 export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | null => {
@@ -191,5 +218,6 @@ export const {
 	setLayerInMapConfig,
 	removeLayerFromMapConfig,
 	updateLayerOrder,
+	setMasterVisible,
 } = mapConfigSlice.actions;
 export default store;

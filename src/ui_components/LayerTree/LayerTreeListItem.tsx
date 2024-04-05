@@ -15,6 +15,7 @@ import {
 	LayerConfig,
 	RootState,
 	setLayerInMapConfig,
+	setMasterVisible,
 } from '../../stores/map.store';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayerOrderItem } from '../../stores/map.store';
@@ -76,9 +77,19 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const dispatch = useDispatch();
 
 	function handleToggleVisibility(visible: boolean) {
+		console.log('toggle visibility');
 		const nextVisible = !visible;
 		if (layer) {
 			toggleVisible(layer, nextVisible);
+			if (layer.type === 'folder') {
+				dispatch(
+					setMasterVisible({
+						mapConfigKey: props.mapConfigKey,
+						layerId: layer.uuid,
+						masterVisible: nextVisible,
+					})
+				);
+			}
 		}
 	}
 
@@ -162,7 +173,11 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						}
 					>
 						<CheckboxListItemIcon>
-							<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
+							<CheckboxStyled
+								checked={visible}
+								disabled={layer.masterVisible === false}
+								onClick={() => handleToggleVisibility(visible)}
+							/>
 						</CheckboxListItemIcon>
 						<ListItemText
 							variant="layerlist"
@@ -217,7 +232,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							<CheckboxListItemIcon>
 								<CheckboxStyled
 									checked={layer?.visible}
-									onClick={() => handleToggleVisibility(visible)}
+									onClick={() => handleToggleVisibility(layer.visible ? layer.visible : false)}
 								/>
 							</CheckboxListItemIcon>
 						</ListItemIconStyled>
