@@ -77,7 +77,6 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const dispatch = useDispatch();
 
 	function handleToggleVisibility(visible: boolean) {
-		console.log('toggle visibility');
 		const nextVisible = !visible;
 		if (layer) {
 			toggleVisible(layer, nextVisible);

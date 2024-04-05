@@ -45,6 +45,18 @@ function LayerOnMap(props: LayerOnMapProps) {
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
 						{...layerConfig.config}
+						options={{
+							...layerConfig.config.options,
+							layout: {
+								...layerConfig?.config?.layout,
+								visibility:
+									layerConfig.masterVisible === false
+										? 'none'
+										: layerConfig?.config?.layout?.visibility
+										? layerConfig?.config?.layout?.visibility
+										: 'visible',
+							},
+						}}
 					/>
 				);
 			case 'vt':
