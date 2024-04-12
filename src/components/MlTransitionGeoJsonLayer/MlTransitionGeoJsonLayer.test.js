@@ -10,11 +10,11 @@ layerRemovalTest(
 	"<MlTransitionGeoJsonLayer />",
 	testComponent,
 	new RegExp('^.*"MlGeoJsonLayer-' + uuid_regex + '".*$'),
-	"MlTransitionGeoJsonLayer-{uuid}"
+	"MlGeoJsonLayer-{uuid}"
 );
 sourceRemovalTest(
 	"<MlTransitionGeoJsonLayer />",
 	testComponent,
-	new RegExp('^.*"MlGeoJsonLayer-' + uuid_regex + '".*$'),
-	"MlTransitionGeoJsonLayer-{uuid}"
+	new RegExp('^.*"source-MlGeoJsonLayer-' + uuid_regex + '".*$'),
+	"source-MlGeoJsonLayer-{uuid}"
 );

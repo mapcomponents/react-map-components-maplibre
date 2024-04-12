@@ -114,7 +114,7 @@ const MlSpatialElevationProfile = (props: MlSpatialElevationProfileProps) => {
 		sourceId: sourceName.current,
 		source: {
 			type: 'geojson',
-			data: _geojson || featureCollection([]),
+			data: (_geojson || featureCollection([])) as (string | GeoJSON.GeoJSON),
 		},
 	});
 

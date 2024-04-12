@@ -136,12 +136,14 @@ function createJsPdf(options: createJsPdfOptions) {
 			...options,
 			pdf,
 			downloadPdf: (_options?: downloadPdfOptions) => downloadPdf({ ...params, ..._options }),
+			formData: new FormData(),
 		};
 
 		resolve(params);
 	});
 }
 interface createPdfResolverParams extends createJsPdfOptions {
+	formData: FormData;
 	pdf: jsPDF;
 	downloadPdf: (_options?: downloadPdfOptions) => Promise<downloadPdfOptions>;
 }

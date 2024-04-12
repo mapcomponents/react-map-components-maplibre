@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { MapContext } from '../index';
-import { JsxChildren } from 'typedoc/dist/lib/utils/jsx.elements';
 
 const LoadingOverlayContext = React.createContext({});
 const LoadingOverlayContextProvider = LoadingOverlayContext.Provider;
 
-const LoadingOverlayProvider = (children: JsxChildren) => {
+const LoadingOverlayProvider = (children: React.ReactNode) => {
 	const mapContext = useContext(MapContext);
 
 	const [controlled, setControlled] = useState(false);

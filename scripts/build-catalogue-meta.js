@@ -1,4 +1,4 @@
-const glob = require('glob');
+const { glob } = require('glob');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const Ajv = require('ajv');
 const ajv = new Ajv();
@@ -7,7 +7,7 @@ const fs = require('fs');
 let options = {};
 let mc_meta = {};
 
-glob('src/**/**/*.meta.json', options, function (er, files) {
+glob('src/**/**/*.meta.json', options).then(function (files) {
 	console.log(files);
 
 	for (var i = 0, len = files.length; i < len; i++) {

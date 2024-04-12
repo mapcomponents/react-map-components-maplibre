@@ -19,9 +19,10 @@ interface SidebarProps {
 	open?: boolean;
 	setOpen?: (val: boolean) => void;
 	name?: string;
+	drawerBleeding?: number;
 }
 
-const drawerBleeding = 56;
+const defaultDrawerBleeding = 56;
 
 const Puller = styled(Box)(({ theme }) => ({
 	width: 30,
@@ -42,6 +43,7 @@ export default function Sidebar({
 	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
 	const [drawerOpen, setDrawerOpen] = useState(false);
+	const drawerBleeding = props.drawerBleeding ? props.drawerBleeding : defaultDrawerBleeding;
 	return (
 		<>
 			{!mediaIsMobile ? (

@@ -1,0 +1,15 @@
+{
+	"name": "MlClientSearch",
+	"title": "Client-side search.",
+	"description": "Client-side search across cities in Germany with population {'>'} 500. Search Engine: http://elasticlunr.com/",
+	"i18n": {
+		"de": {
+			"title": "Client-side search",
+			"description": ""
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component",
+	"components": ["MlGeoJsonLayer"]
+}

@@ -1,18 +1,22 @@
-import React, { useContext, useState } from "react";
-import { mount, configure } from "enzyme";
-import MapContext, { MapComponentsProvider } from "../contexts/MapContext";
-import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
-import { waitFor } from "@testing-library/react";
-import { mockMapLibreMethods } from "../setupTests";
+import React, { useContext, useState } from 'react';
+import { mount, configure } from 'enzyme';
+import MapContext, { MapComponentsProvider } from '../contexts/MapContext';
+import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
+import { waitFor } from '@testing-library/react';
+import { mockMapLibreMethods } from '../setupTests';
 
-import useLayer from "./useLayer";
+import useLayer from './useLayer';
 
 const UseLayerTestComponent = (props) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	useLayer({
 		mapId: props.mapId,
-		layerId: props.layerId || "TestComponent",
-		geojson: props.geojson,
+		layerId: props.layerId || 'TestComponent',
+		geojson: {
+			type: 'FeatureCollection',
+			name: 'testcollection',
+			features: [],
+		},
 		options: {
 			paint: props.paint,
 			layout: props.layout || {},
@@ -56,7 +60,7 @@ const TestComponent = (props) => {
 	);
 };
 
-describe("useLayer hook", () => {
+describe('useLayer hook', () => {
 	it("should register 1 event listener 'hover' to the maplibre instance", async () => {
 		var testAttributes = {
 			onHover: () => {},
@@ -83,7 +87,7 @@ describe("useLayer hook", () => {
 			</MapComponentsProvider>
 		);
 
-		wrapper.find(".toggle_includeComponent").simulate("click");
+		wrapper.find('.toggle_includeComponent').simulate('click');
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
@@ -114,12 +118,11 @@ describe("useLayer hook", () => {
 			</MapComponentsProvider>
 		);
 
-		wrapper.find(".toggle_includeComponent").simulate("click");
+		wrapper.find('.toggle_includeComponent').simulate('click');
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
 	});
-
 
 	it("should register 1 event listener 'click' to the maplibre instance", async () => {
 		var testAttributes = {
@@ -147,7 +150,7 @@ describe("useLayer hook", () => {
 			</MapComponentsProvider>
 		);
 
-		wrapper.find(".toggle_includeComponent").simulate("click");
+		wrapper.find('.toggle_includeComponent').simulate('click');
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
@@ -165,7 +168,7 @@ describe("useLayer hook", () => {
 			</MapComponentsProvider>
 		);
 
-		wrapper.find(".change_testType").simulate("click");
+		wrapper.find('.change_testType').simulate('click');
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
@@ -181,7 +184,7 @@ describe("useLayer hook", () => {
 			</MapComponentsProvider>
 		);
 
-		wrapper.find(".change_testType").simulate("click");
+		wrapper.find('.change_testType').simulate('click');
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
@@ -197,7 +200,7 @@ describe("useLayer hook", () => {
 			</MapComponentsProvider>
 		);
 
-		wrapper.find(".change_testType").simulate("click");
+		wrapper.find('.change_testType').simulate('click');
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));

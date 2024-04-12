@@ -1,0 +1,115 @@
+/*!
+ * elasticlunr.Configuration
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.DocumentStore
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.EventEmitter
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.Index
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.InvertedIndex
+ * Copyright (C) 2016 Wei Song
+ * Includes code from - http://tartarus.org/~martin/PorterStemmer/js.txt
+ */
+
+/*!
+ * elasticlunr.Pipeline
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.js
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.stemmer
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ * Includes code from - http://tartarus.org/~martin/PorterStemmer/js.txt
+ */
+
+/*!
+ * elasticlunr.stopWordFilter
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.tokenizer
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.trimmer
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * elasticlunr.utils
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ */
+
+/*!
+ * lunr.SortedSet
+ * Copyright (C) 2016 Oliver Nightingale
+ */
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+
+/**
+ * elasticlunr - http://weixsong.github.io
+ * Lightweight full-text search engine in Javascript for browser search and offline search. - 0.9.5
+ *
+ * Copyright (C) 2016 Oliver Nightingale
+ * Copyright (C) 2016 Wei Song
+ * MIT Licensed
+ * @license
+ */

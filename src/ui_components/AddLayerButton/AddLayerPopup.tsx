@@ -19,8 +19,8 @@ export interface AddLayerPopupProps {
 
 type validTypes =
 	| LayerConfig['type']
-	| 'mbtiles'
 	| 'csv'
+	| 'mbtiles'
 	| 'topojson'
 	| 'osm'
 	| 'gpx'

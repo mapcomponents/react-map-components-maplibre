@@ -1,4 +1,4 @@
-import maplibregl, { Cancelable, RequestParameters, ResponseCallback } from 'maplibre-gl';
+import maplibregl, { AddProtocolAction } from 'maplibre-gl';
 import { useEffect } from 'react';
 
 export interface useAddProtocolProps {
@@ -11,7 +11,7 @@ export interface useAddProtocolProps {
 	 * Custom load tile function that will be called when using a source that starts with a custom url schema.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable;
+	handler: AddProtocolAction;
 }
 
 /**

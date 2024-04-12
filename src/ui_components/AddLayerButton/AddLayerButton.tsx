@@ -3,16 +3,15 @@ import React from 'react';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import AddLayerPopup from './AddLayerPopup';
 import { LayerConfig } from '../../contexts/LayerContext';
-import useAddProtocol, { useAddProtocolProps } from '../../hooks/useAddProtocol/useAddProtocol';
-import { mbTilesProtocolHandler } from '../../protocol_handlers/mbtiles';
+//import useAddProtocol, { useAddProtocolProps } from '../../hooks/useAddProtocol/useAddProtocol';
 
-function AddProtocol(props: useAddProtocolProps) {
-	useAddProtocol({
-		protocol: props.protocol,
-		handler: props.handler,
-	});
-	return <></>;
-}
+//function AddProtocol(props: useAddProtocolProps) {
+//	useAddProtocol({
+//		protocol: props.protocol,
+//		handler: props.handler,
+//	});
+//	return <></>;
+//}
 export interface AddLayerButtonProps {
 	sx?: SxProps;
 	/**
@@ -28,7 +27,7 @@ const AddLayerButton = (props: AddLayerButtonProps) => {
 	const layerTypes = props.layerTypes || [
 		'geojson',
 		'wms',
-		'mbtiles',
+		//'mbtiles',
 		'csv',
 		'topojson',
 		'osm',
@@ -39,14 +38,6 @@ const AddLayerButton = (props: AddLayerButtonProps) => {
 
 	return (
 		<>
-			{layerTypes.includes('mbtiles') && (
-				<AddProtocol
-					{...{
-						protocol: 'mbtiles',
-						handler: mbTilesProtocolHandler,
-					}}
-				/>
-			)}
 			<Button
 				variant="contained"
 				sx={{ marginTop: '10px', ...props.sx }}

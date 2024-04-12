@@ -28,7 +28,7 @@ const defaultProps = {
 	},
 };
 
-interface MlWmsLayerProps {
+export interface MlWmsLayerProps {
 	urlParameters?: { [key: string]: string };
 	url: string;
 	visible?: boolean;

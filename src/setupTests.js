@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import 'jest-enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import Adapter from '@cfaester/enzyme-adapter-react-18';
 
 import { configure } from 'enzyme';
 
@@ -96,7 +96,7 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 				setZoom: jest.fn(),
 				setPitch: jest.fn(),
 				setCenter: jest.fn(),
-				style: { ...styleFunctions },
+				style: { ...styleFunctions, '_layers': this.layers },
 				layers: this.layers,
 				sources: this.sources,
 				_update: jest.fn(),
