@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { LayerOrderItem, RootState } from '../../stores/map.store';
+import { extractUuidsFromLayerOrder, LayerOrderItem, RootState } from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
+import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
 
 interface LayerOnMapProps {
 	mapConfigKey: string;
@@ -21,6 +22,9 @@ function LayerOnMap(props: LayerOnMapProps) {
 	const mapHook = useMap({
 		mapId: props?.mapId,
 	});
+	const layerStoreOrderIds = useSelector((state: RootState) =>
+		extractUuidsFromLayerOrder(state, props.mapConfigKey)
+	);
 
 	useEffect(() => {
 		if (!mapHook.map || !layerStoreOrder?.length) {
@@ -35,6 +39,15 @@ function LayerOnMap(props: LayerOnMapProps) {
 		});
 	}, [layerStoreOrder, mapHook.map]);
 
+	const orderLayers = useMemo(() => {
+		const layerIds = [
+			'order-background',
+			...layerStoreOrderIds.map((el) => 'layer_id_' + el),
+			'order-labels',
+		];
+		return layerIds;
+	}, [layerStoreOrder]);
+
 	function renderLayer(layer: LayerOrderItem): React.ReactNode {
 		const layerConfig = layers[layer.uuid];
 
@@ -44,6 +57,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 					<MlGeoJsonLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
+						insertBeforeLayer={'layer_id_' + layerConfig.uuid}
 						{...layerConfig.config}
 						options={{
 							...layerConfig.config.options,
@@ -53,8 +67,8 @@ function LayerOnMap(props: LayerOnMapProps) {
 									layerConfig.masterVisible === false
 										? 'none'
 										: layerConfig?.config?.layout?.visibility
-										? layerConfig?.config?.layout?.visibility
-										: 'visible',
+											? layerConfig?.config?.layout?.visibility
+											: 'visible',
 							},
 						}}
 					/>
@@ -82,7 +96,12 @@ function LayerOnMap(props: LayerOnMapProps) {
 		}
 	}
 
-	return <>{layerStoreOrder?.map?.((layerOrderItem) => renderLayer(layerOrderItem))}</>;
+	return (
+		<>
+			<MlOrderLayers layerIds={orderLayers}></MlOrderLayers>
+			{layerStoreOrder?.map?.((layerOrderItem) => renderLayer(layerOrderItem))}
+		</>
+	);
 }
 
 export default LayerOnMap;

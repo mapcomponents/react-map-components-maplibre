@@ -105,11 +105,11 @@ const mapConfigSlice = createSlice({
 	initialState,
 	reducers: {
 		// Add or update a MapConfig
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		//@ts-ignore
 		setMapConfig: (state, action: PayloadAction<{ key: string; mapConfig: MapConfig }>) => {
 			const mapConfig = action.payload.mapConfig;
 			const key = action.payload.key;
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			//@ts-ignore
 			state.mapConfigs[key] = mapConfig;
 		},
 		// Remove a MapConfig by its uuid
@@ -204,6 +204,26 @@ export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | nul
 		if (foundLayer) return foundLayer;
 	}
 	return null;
+};
+
+export const extractUuidsFromLayerOrder = (state: RootState, mapConfigKey: string): string[] => {
+	const mapConfig = state.mapConfig.mapConfigs[mapConfigKey];
+	if (!mapConfig) {
+		return [];
+	}
+	const layerOrder = mapConfig.layerOrder;
+	const uuids: string[] = [];
+	function extractUuids(items: LayerOrderItem[]): void {
+		items.forEach((item) => {
+			uuids.push(item.uuid);
+			if (item.layers && item.layers.length > 0) {
+				extractUuids(item.layers);
+			}
+		});
+	}
+
+	extractUuids(layerOrder);
+	return uuids;
 };
 
 const store = configureStore({
