@@ -16,6 +16,7 @@ import {
 	RootState,
 	setLayerInMapConfig,
 	setMasterVisible,
+	updateLayerOrder,
 } from '../../stores/map.store';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayerOrderItem } from '../../stores/map.store';
@@ -23,6 +24,10 @@ import { KeyboardArrowRight as ExpandLess, ExpandMore } from '@mui/icons-materia
 import { Delete as DeleteIcon, Tune as TuneIcon } from '@mui/icons-material';
 import ConfirmDialog from '../ConfirmDialog';
 import LayerPropertyForm from './util/LayerPropertyForm';
+import {
+	ArrowCircleDown as ArrowCircleDownIcon,
+	ArrowCircleUp as ArrowCircleUpIcon,
+} from '@mui/icons-material';
 
 interface LayerTreeListItemProps {
 	visible?: boolean;
@@ -75,6 +80,43 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const [open, setOpen] = useState(false);
 
 	const dispatch = useDispatch();
+
+	const mapConfig = useSelector(
+		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigKey]
+	);
+	function moveLayer(uuid: string, getNewPos: (oldPos: number) => number) {
+		const newLayerOrder = JSON.parse(JSON.stringify(mapConfig.layerOrder));
+		const findAndMove = (layers: LayerOrderItem[]): boolean => {
+			let found = false;
+			layers.forEach((layer, index) => {
+				if (found) return;
+				if (layer.uuid === uuid) {
+					const newPos = getNewPos(index);
+					if (newPos < 0 || newPos >= layers.length) {
+						throw new Error('New position is out of bounds');
+					}
+					const [item] = layers.splice(index, 1);
+					layers.splice(newPos, 0, item);
+					found = true;
+				} else if (layer.layers) {
+					if (findAndMove(layer.layers)) {
+						found = true;
+					}
+				}
+			});
+			return found;
+		};
+		findAndMove(newLayerOrder);
+		dispatch(updateLayerOrder({ mapConfigKey: props.mapConfigKey, newOrder: newLayerOrder }));
+	}
+
+	const moveDown = (uuid: string) => {
+		moveLayer(uuid, (idx) => idx + 1);
+	};
+
+	const moveUp = (uuid: string) => {
+		moveLayer(uuid, (idx) => idx - 1);
+	};
 
 	function handleToggleVisibility(visible: boolean) {
 		const nextVisible = !visible;
@@ -156,6 +198,22 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							layer.configurable ? (
 								<>
 									{props?.buttons}
+									<IconButtonStyled
+										disabled={false}
+										onClick={() => {
+											moveDown(layer.uuid);
+										}}
+									>
+										<ArrowCircleDownIcon />
+									</IconButtonStyled>
+									<IconButtonStyled
+										disabled={false}
+										onClick={() => {
+											moveUp(layer.uuid);
+										}}
+									>
+										<ArrowCircleUpIcon />
+									</IconButtonStyled>
 									<TuneIconButton
 										edge={'end'}
 										aria-label="settings"
