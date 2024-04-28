@@ -5,6 +5,7 @@ import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
+import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
 
 interface LayerOnMapProps {
 	mapConfigKey: string;
@@ -27,16 +28,23 @@ function LayerOnMap(props: LayerOnMapProps) {
 	);
 
 	useEffect(() => {
-		if (!mapHook.map || !layerStoreOrder?.length) {
-			return;
-		}
-		const newOrder = [...layerStoreOrder];
-		newOrder.forEach((layerId, index) => {
-			const nextLayerId = index < newOrder.length - 1 ? newOrder[index + 1] : undefined;
-			if (mapHook.map?.getLayer(layerId.uuid) && nextLayerId?.uuid) {
-				mapHook.map.moveLayer(nextLayerId.uuid, layerId.uuid);
+		// recursively adjust the order of layers at each level of layers.
+		if (!mapHook.map || !layerStoreOrder) return;
+		const adjustLayerOrderAtLevel = (layers: LayerOrderItem[], map: MapLibreGlWrapper) => {
+			for (let i = layers.length - 1; i > 0; i--) {
+				const currentLayer = layers[i];
+				const previousLayer = layers[i - 1];
+				if (map.getLayer(currentLayer.uuid) && map.getLayer(previousLayer.uuid)) {
+					map.moveLayer(currentLayer.uuid, previousLayer.uuid);
+				}
 			}
-		});
+			layers.forEach((layer) => {
+				if (layer.layers && layer.layers.length > 0) {
+					adjustLayerOrderAtLevel(layer.layers, map);
+				}
+			});
+		};
+		adjustLayerOrderAtLevel(layerStoreOrder, mapHook.map);
 	}, [layerStoreOrder, mapHook.map]);
 
 	const orderLayers = useMemo(() => {
