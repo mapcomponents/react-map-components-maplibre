@@ -84,6 +84,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const mapConfig = useSelector(
 		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigKey]
 	);
+
 	function moveLayer(uuid: string, getNewPos: (oldPos: number) => number) {
 		const newLayerOrder = JSON.parse(JSON.stringify(mapConfig.layerOrder));
 		const findAndMove = (layers: LayerOrderItem[]): boolean => {
@@ -274,6 +275,26 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		}
 		if (layer?.type === 'vt') {
 			visible = layer.config.layers.every((l) => l.layout?.visibility !== 'none');
+			return (
+				<>
+					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }} secondaryAction={undefined}>
+						<CheckboxListItemIcon>
+							<CheckboxStyled
+								checked={visible}
+								disabled={layer.masterVisible === false}
+								onClick={() => handleToggleVisibility(visible)}
+							/>
+						</CheckboxListItemIcon>
+					</ListItemStyled>
+
+					<ListItemText
+						variant="layerlist"
+						primary={layer.name || ''}
+						secondary={props.description}
+						primaryTypographyProps={{ overflow: 'hidden' }}
+					/>
+				</>
+			);
 		}
 		if (layer?.type === 'wms') {
 			//TODO: handle wms
