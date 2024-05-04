@@ -278,21 +278,45 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 			return (
 				<>
 					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }} secondaryAction={undefined}>
-						<CheckboxListItemIcon>
-							<CheckboxStyled
-								checked={visible}
-								disabled={layer.masterVisible === false}
-								onClick={() => handleToggleVisibility(visible)}
-							/>
-						</CheckboxListItemIcon>
+						<ListItemIconStyled>
+							<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
+								{open ? <ExpandMore /> : <ExpandLess />}
+							</IconButtonStyled>
+							<CheckboxListItemIcon>
+								<CheckboxStyled
+									checked={layer?.visible}
+									onClick={() => handleToggleVisibility(layer.visible ? layer.visible : false)}
+								/>
+							</CheckboxListItemIcon>
+						</ListItemIconStyled>
+						<ListItemText
+							primary={layer.name}
+							secondary={props.description}
+							primaryTypographyProps={{ overflow: 'hidden' }}
+						/>
 					</ListItemStyled>
+					<BoxStyled key={layer.uuid + '_list'} open={open}>
+						<ListStyled disablePadding>
+							{layer.config?.layers?.map((subLayer) => (
+								<ListItemStyled key={subLayer.id} sx={{ ...props.listItemSx }} secondaryAction={undefined}> <ListItemIconStyled>
+										<CheckboxListItemIcon>
+											<CheckboxStyled
+												checked={subLayer?.layout?.visibility === 'visible'}
+												onClick={() => handleToggleVisibility(subLayer?.layout?.visibility === 'visible')}
+											/>
+										</CheckboxListItemIcon>
+									</ListItemIconStyled>
+								<ListItemText
+									key={subLayer.id}
+									variant="layerlist"
+									primary={subLayer['source-layer']}
+									primaryTypographyProps={{ overflow: 'hidden' }}
+								/>
+								</ListItemStyled>
+							))}
+						</ListStyled>
+					</BoxStyled>
 
-					<ListItemText
-						variant="layerlist"
-						primary={layer.name || ''}
-						secondary={props.description}
-						primaryTypographyProps={{ overflow: 'hidden' }}
-					/>
 				</>
 			);
 		}

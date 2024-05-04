@@ -48,6 +48,7 @@ const LayerTreeMultipleLayertypes = () => {
 						type: 'vt',
 						uuid: '346ced38-142c-4b57-8193-d689ffc7dfc2',
 						name: 'Vector Layer',
+						visible: true,
 						config: {
 							layers: [
 								{

@@ -86,6 +86,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 					<MlVectorTileLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
+						insertBeforeLayer={'layer_id_' + layerConfig.uuid}
 						url={layerConfig.config.url}
 						layers={layerConfig.config.layers}
 					/>

@@ -43,6 +43,7 @@ export type VtLayerConfig = {
 	name?: string;
 	id?: string;
 	config: MlVectorTileLayerProps;
+	visible?: boolean;
 	masterVisible?: boolean;
 };
 
