@@ -1,33 +1,35 @@
 import React, { useState } from 'react';
 import {
-	ListItemText,
-	SxProps,
-	List,
-	styled,
 	Box,
 	IconButton,
+	List,
 	ListItem,
 	ListItemIcon,
+	ListItemText,
+	styled,
+	SxProps,
 } from '@mui/material';
 import { CheckboxListItemIcon, CheckboxStyled } from '../LayerList/util/LayerListItemVectorLayer';
 import {
 	getLayerByUuid,
 	LayerConfig,
+	LayerOrderItem,
 	RootState,
 	setLayerInMapConfig,
 	setMasterVisible,
 	updateLayerOrder,
 } from '../../stores/map.store';
 import { useDispatch, useSelector } from 'react-redux';
-import { LayerOrderItem } from '../../stores/map.store';
-import { KeyboardArrowRight as ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Delete as DeleteIcon, Tune as TuneIcon } from '@mui/icons-material';
-import ConfirmDialog from '../ConfirmDialog';
-import LayerPropertyForm from './util/LayerPropertyForm';
 import {
 	ArrowCircleDown as ArrowCircleDownIcon,
 	ArrowCircleUp as ArrowCircleUpIcon,
+	Delete as DeleteIcon,
+	ExpandMore,
+	KeyboardArrowRight as ExpandLess,
+	Tune as TuneIcon,
 } from '@mui/icons-material';
+import ConfirmDialog from '../ConfirmDialog';
+import LayerPropertyForm from './util/LayerPropertyForm';
 
 interface LayerTreeListItemProps {
 	visible?: boolean;
@@ -119,10 +121,10 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		moveLayer(uuid, (idx) => idx - 1);
 	};
 
-	function handleToggleVisibility(visible: boolean) {
+	function handleToggleVisibility(visible: boolean, specificLayerId = '') {
 		const nextVisible = !visible;
 		if (layer) {
-			toggleVisible(layer, nextVisible);
+			toggleVisible(layer, nextVisible, specificLayerId);
 			if (layer.type === 'folder') {
 				dispatch(
 					setMasterVisible({
@@ -135,9 +137,13 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		}
 	}
 
-	function toggleVisible(layer: LayerConfig, nextVisible: boolean): LayerConfig {
+	function toggleVisible(
+		layer: LayerConfig,
+		nextVisible: boolean,
+		specificLayerId: string
+	): LayerConfig {
 		//TODO: update layout for all layer types
-		let updatedLayer = layer;
+		let updatedLayer: LayerConfig = { ...layer };
 		if (layer?.type === 'folder') {
 			updatedLayer = {
 				...layer,
@@ -159,18 +165,23 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					break;
 				}
 				case 'vt': {
-					const updatedLayers = layer.config.layers.map((layer) => ({
-						...layer,
-						layout: {
-							...layer.layout,
-							visibility: nextVisible ? 'visible' : 'none',
-						},
-					}));
+					const updatedSubLayers = layer.config.layers.map((layer) => {
+						if (layer.id === specificLayerId) {
+							return {
+								...layer,
+								layout: {
+									...layer.layout,
+									visibility: nextVisible ? 'visible' : 'none',
+								},
+							};
+						}
+						return layer;
+					});
 					updatedLayer = {
 						...layer,
 						config: {
 							...layer.config,
-							layers: updatedLayers,
+							layers: updatedSubLayers,
 						},
 					} as LayerConfig;
 					break;
@@ -274,7 +285,6 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 			);
 		}
 		if (layer?.type === 'vt') {
-			visible = layer.config.layers.every((l) => l.layout?.visibility !== 'none');
 			return (
 				<>
 					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }} secondaryAction={undefined}>
@@ -298,25 +308,35 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					<BoxStyled key={layer.uuid + '_list'} open={open}>
 						<ListStyled disablePadding>
 							{layer.config?.layers?.map((subLayer) => (
-								<ListItemStyled key={subLayer.id} sx={{ ...props.listItemSx }} secondaryAction={undefined}> <ListItemIconStyled>
+								<ListItemStyled
+									key={subLayer.id}
+									sx={{ ...props.listItemSx }}
+									secondaryAction={undefined}
+								>
+									{' '}
+									<ListItemIconStyled>
 										<CheckboxListItemIcon>
 											<CheckboxStyled
 												checked={subLayer?.layout?.visibility === 'visible'}
-												onClick={() => handleToggleVisibility(subLayer?.layout?.visibility === 'visible')}
+												onClick={() =>
+													handleToggleVisibility(
+														subLayer?.layout?.visibility === 'visible',
+														subLayer.id
+													)
+												}
 											/>
 										</CheckboxListItemIcon>
 									</ListItemIconStyled>
-								<ListItemText
-									key={subLayer.id}
-									variant="layerlist"
-									primary={subLayer['source-layer']}
-									primaryTypographyProps={{ overflow: 'hidden' }}
-								/>
+									<ListItemText
+										key={subLayer.id}
+										variant="layerlist"
+										primary={subLayer['source-layer']}
+										primaryTypographyProps={{ overflow: 'hidden' }}
+									/>
 								</ListItemStyled>
 							))}
 						</ListStyled>
 					</BoxStyled>
-
 				</>
 			);
 		}

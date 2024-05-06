@@ -98,7 +98,7 @@ const LayerTreeMultipleLayertypes = () => {
 	return (
 		<>
 			<Sidebar open={true}>
-				<Typography variant="h2">Layertree 1</Typography>
+				<Typography variant="h2">Example Layertree</Typography>
 				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
 			</Sidebar>
 			<LayerOnMap mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOnMap>
