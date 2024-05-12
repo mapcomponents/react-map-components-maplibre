@@ -67,7 +67,9 @@ const LayerTreeMultipleLayertypes = () => {
 									type: 'fill',
 									'source-layer': 'building',
 									source: 'openmaptiles',
-									layout: {},
+									layout: {
+										visibility: 'none'
+									},
 									paint: { 'fill-color': '#717875' },
 									maxzoom: 20,
 								},

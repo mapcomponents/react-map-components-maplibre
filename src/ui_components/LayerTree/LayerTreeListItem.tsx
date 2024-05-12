@@ -317,7 +317,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 									<ListItemIconStyled>
 										<CheckboxListItemIcon>
 											<CheckboxStyled
-												checked={subLayer?.layout?.visibility === 'visible'}
+												checked={(subLayer?.layout?.visibility ?? 'visible') === 'visible'}
 												onClick={() =>
 													handleToggleVisibility(
 														subLayer?.layout?.visibility === 'visible',

@@ -6,6 +6,7 @@ import useMap from '../../hooks/useMap';
 import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
+import { LayerSpecification } from 'maplibre-gl';
 
 interface LayerOnMapProps {
 	mapConfigKey: string;
@@ -81,16 +82,21 @@ function LayerOnMap(props: LayerOnMapProps) {
 						}}
 					/>
 				);
-			case 'vt':
+			case 'vt': {
+				const l = layerConfig.config.layers.map((layer: LayerSpecification) => {
+					layer.layout?.['visibility'] ?? 'visible';
+					return layer;
+				});
 				return (
 					<MlVectorTileLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
 						insertBeforeLayer={'layer_id_' + layerConfig.uuid}
 						url={layerConfig.config.url}
-						layers={layerConfig.config.layers}
+						layers={l}
 					/>
 				);
+			}
 			case 'wms':
 				//TODO: Handle WMS
 				return <></>;
