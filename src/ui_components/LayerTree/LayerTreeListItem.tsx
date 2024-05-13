@@ -77,14 +77,14 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
 	const layer = getLayerByUuid(
 		useSelector((state: RootState) => state.mapConfig),
-		props.layerOrderConfig.uuid
+		props.layerOrderConfig.uuid,
 	);
 	const [open, setOpen] = useState(false);
 
 	const dispatch = useDispatch();
 
 	const mapConfig = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigKey]
+		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigKey],
 	);
 
 	function moveLayer(uuid: string, getNewPos: (oldPos: number) => number) {
@@ -125,13 +125,13 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		const nextVisible = !visible;
 		if (layer) {
 			toggleVisible(layer, nextVisible, specificLayerId);
-			if (layer.type === 'folder') {
+			if (layer.type === 'folder' || (layer.type === 'vt') && specificLayerId === '') {
 				dispatch(
 					setMasterVisible({
 						mapConfigKey: props.mapConfigKey,
 						layerId: layer.uuid,
 						masterVisible: nextVisible,
-					})
+					}),
 				);
 			}
 		}
@@ -140,7 +140,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	function toggleVisible(
 		layer: LayerConfig,
 		nextVisible: boolean,
-		specificLayerId: string
+		specificLayerId: string,
 	): LayerConfig {
 		//TODO: update layout for all layer types
 		let updatedLayer: LayerConfig = { ...layer };
@@ -165,8 +165,10 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					break;
 				}
 				case 'vt': {
+					let updateSublayerOnly = false;
 					const updatedSubLayers = layer.config.layers.map((layer) => {
 						if (layer.id === specificLayerId) {
+							updateSublayerOnly = true
 							return {
 								...layer,
 								layout: {
@@ -177,13 +179,25 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						}
 						return layer;
 					});
-					updatedLayer = {
-						...layer,
-						config: {
-							...layer.config,
-							layers: updatedSubLayers,
-						},
-					} as LayerConfig;
+					if (updateSublayerOnly) {
+						updatedLayer = {
+							...layer,
+							config: {
+								...layer.config,
+								layers: updatedSubLayers,
+							},
+						} as LayerConfig;
+					}
+					else {
+						updatedLayer = {
+							...layer,
+							visible: nextVisible,
+							config: {
+								...layer.config,
+								layers: updatedSubLayers,
+							},
+						} as LayerConfig;
+					}
 					break;
 				}
 			}
@@ -192,7 +206,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 			setLayerInMapConfig({
 				mapConfigKey: props.mapConfigKey,
 				layer: updatedLayer,
-			})
+			}),
 		);
 		return updatedLayer;
 	}
@@ -260,7 +274,8 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						<>
 							{props.showDeleteButton && (
 								<>
-									<DeleteIconButton edge="end" aria-label="delete" onClick={() => {}}>
+									<DeleteIconButton edge="end" aria-label="delete" onClick={() => {
+									}}>
 										<DeleteIcon />
 									</DeleteIconButton>
 									{showDeletionConfirmationDialog && (
@@ -294,8 +309,9 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							</IconButtonStyled>
 							<CheckboxListItemIcon>
 								<CheckboxStyled
-									checked={layer?.visible}
-									onClick={() => handleToggleVisibility(layer.visible ? layer.visible : false)}
+									checked={layer.visible}
+									disabled={layer.masterVisible === false}
+									onClick={() => handleToggleVisibility(layer.visible ?? false)}
 								/>
 							</CheckboxListItemIcon>
 						</ListItemIconStyled>
@@ -318,10 +334,11 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 										<CheckboxListItemIcon>
 											<CheckboxStyled
 												checked={(subLayer?.layout?.visibility ?? 'visible') === 'visible'}
+												disabled={subLayer?.masterVisible === false}
 												onClick={() =>
 													handleToggleVisibility(
 														subLayer?.layout?.visibility === 'visible',
-														subLayer.id
+														subLayer.id,
 													)
 												}
 											/>
@@ -353,7 +370,8 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							</IconButtonStyled>
 							<CheckboxListItemIcon>
 								<CheckboxStyled
-									checked={layer?.visible}
+									checked={layer.visible}
+									disabled={layer.masterVisible}
 									onClick={() => handleToggleVisibility(layer.visible ? layer.visible : false)}
 								/>
 							</CheckboxListItemIcon>
