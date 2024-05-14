@@ -177,24 +177,27 @@ const mapConfigSlice = createSlice({
 				const layerConfig = mapConfig.layers[layerId];
 				if (layerConfig) {
 					const updatedLayers = { ...mapConfig.layers };
-					//updatedLayers[layerId] = {
-					//	...updatedLayers[layerId],
-					//	masterVisible,
-					//};
 					if (layerConfig.type === 'folder') {
 						mapConfig.layerOrder.forEach((folder) => {
 							if (folder.uuid === layerId) {
 								folder.layers?.forEach((child) => {
+									const childLayer = updatedLayers[child.uuid];
 									updatedLayers[child.uuid] = {
-										...updatedLayers[child.uuid],
+										...childLayer,
 										masterVisible,
 									};
+									if (childLayer?.type === 'vt' && childLayer?.config?.layers) {
+										childLayer.config.layers = childLayer.config.layers.map((layer) => ({
+											...layer,
+											masterVisible,
+										}));
+									}
 								});
 							}
 						});
 					}
-					if (layerConfig.type === 'vt'  && layerConfig?.config?.layers) {
-						layerConfig.config.layers = layerConfig.config.layers.map(layer => ({
+					if (layerConfig.type === 'vt' && layerConfig?.config?.layers) {
+						layerConfig.config.layers = layerConfig.config.layers.map((layer) => ({
 							...layer,
 							masterVisible,
 						}));
@@ -202,7 +205,7 @@ const mapConfigSlice = createSlice({
 					state.mapConfigs[mapConfigKey].layers = updatedLayers;
 				}
 			}
-		}
+		},
 	},
 });
 export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | null => {

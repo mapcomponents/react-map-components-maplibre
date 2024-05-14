@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 import { extractUuidsFromLayerOrder, LayerOrderItem, RootState } from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
-import MlVectorTileLayer from '../../components/MlVectorTileLayer/MlVectorTileLayer';
+import MlVectorTileLayer, {
+	ExtendedLayerSpecification,
+} from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
-import { LayerSpecification } from 'maplibre-gl';
 
 interface LayerOnMapProps {
 	mapConfigKey: string;
@@ -83,10 +84,20 @@ function LayerOnMap(props: LayerOnMapProps) {
 					/>
 				);
 			case 'vt': {
-				const l = layerConfig.config.layers.map((layer: LayerSpecification) => {
-					layer.layout?.['visibility'] ?? 'visible';
-					return layer;
+				const l = layerConfig.config.layers.map((layer: ExtendedLayerSpecification) => {
+					//layer.layout?.['visibility'] ?? 'visible';
+					const newLayer = { ...layer };
+
+					if (newLayer.layout) {
+						newLayer.layout = {
+							...newLayer.layout,
+							visibility:
+								newLayer.masterVisible === false ? 'none' : newLayer.layout.visibility ?? 'visible',
+						};
+					}
+					return newLayer;
 				});
+
 				return (
 					<MlVectorTileLayer
 						key={layerConfig.uuid}
