@@ -2,6 +2,7 @@ import { MlGeoJsonLayerProps } from 'src/components/MlGeoJsonLayer/MlGeoJsonLaye
 import { MlVectorTileLayerProps } from 'src/components/MlVectorTileLayer/MlVectorTileLayer';
 import { Layer } from 'wms-capabilities';
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { MlWmsLayerProps } from '../components/MlWmsLayer/MlWmsLayer';
 
 export interface wmsLoaderConfigProps {
 	getFeatureInfoUrl: string;
@@ -23,7 +24,7 @@ export type WmsLayerConfig = {
 	uuid: string;
 	name?: string;
 	id?: string;
-	config: wmsConfig;
+	config?: MlWmsLayerProps;
 	masterVisible?: boolean;
 };
 

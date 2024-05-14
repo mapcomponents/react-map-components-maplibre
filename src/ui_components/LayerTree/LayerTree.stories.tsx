@@ -68,7 +68,7 @@ const LayerTreeMultipleLayertypes = () => {
 									'source-layer': 'building',
 									source: 'openmaptiles',
 									layout: {
-										visibility: 'none'
+										visibility: 'none',
 									},
 									paint: { 'fill-color': '#717875' },
 									maxzoom: 20,
@@ -81,6 +81,17 @@ const LayerTreeMultipleLayertypes = () => {
 							},
 						},
 					},
+					'0e8cd91b-bd49-419d-a19a-5b15dec17542': {
+						type: 'wms',
+						uuid: '0e8cd91b-bd49-419d-a19a-5b15dec17542',
+						name: 'Example WMS Layer',
+						config: {
+							url: 'https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme',
+							urlParameters: {
+								layers: 'nw_uraufnahme_rw',
+							},
+						},
+					},
 				},
 				layerOrder: [
 					{
@@ -88,6 +99,7 @@ const LayerTreeMultipleLayertypes = () => {
 						layers: [
 							{ uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523' },
 							{ uuid: '346ced38-142c-4b57-8193-d689ffc7dfc2' },
+							{ uuid: '0e8cd91b-bd49-419d-a19a-5b15dec17542' },
 						],
 					},
 				],

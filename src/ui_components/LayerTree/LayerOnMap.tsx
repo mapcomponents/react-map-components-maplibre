@@ -8,6 +8,7 @@ import MlVectorTileLayer, {
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import MlOrderLayers from '../../components/MlOrderLayers/MlOrderLayers';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
+import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
 
 interface LayerOnMapProps {
 	mapConfigKey: string;
@@ -30,7 +31,6 @@ function LayerOnMap(props: LayerOnMapProps) {
 	);
 
 	useEffect(() => {
-		// recursively adjust the order of layers at each level of layers.
 		if (!mapHook.map || !layerStoreOrder) return;
 		const adjustLayerOrderAtLevel = (layers: LayerOrderItem[], map: MapLibreGlWrapper) => {
 			for (let i = layers.length - 1; i > 0; i--) {
@@ -108,9 +108,20 @@ function LayerOnMap(props: LayerOnMapProps) {
 					/>
 				);
 			}
-			case 'wms':
-				//TODO: Handle WMS
-				return <></>;
+			case 'wms': {
+				const visible = layerConfig.masterVisible === false ? false : layerConfig.config?.visible;
+				return (
+					<MlWmsLayer
+						key={layerConfig.uuid}
+						layerId={layerConfig.uuid}
+						insertBeforeLayer={'layer_id_' + layerConfig.uuid}
+						url={layerConfig.config?.url || ''}
+						urlParameters={layerConfig.config?.urlParameters}
+						visible={visible}
+					/>
+				);
+			}
+
 			case 'folder':
 				return layer?.layers ? (
 					layer.layers.map((subLayer: LayerOrderItem) => renderLayer(subLayer))

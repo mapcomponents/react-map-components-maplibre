@@ -18,6 +18,7 @@ import {
 	setLayerInMapConfig,
 	setMasterVisible,
 	updateLayerOrder,
+	WmsLayerConfig,
 } from '../../stores/map.store';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -202,6 +203,17 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					}
 					break;
 				}
+				case 'wms': {
+					updatedLayer = {
+						...layer,
+						visible: nextVisible,
+						config: {
+							...layer.config,
+							visible: nextVisible,
+						},
+					} as WmsLayerConfig;
+					break;
+				}
 			}
 		}
 		dispatch(
@@ -359,7 +371,25 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 			);
 		}
 		if (layer?.type === 'wms') {
-			//TODO: handle wms
+			const visible = layer.config?.visible ?? true;
+			return (
+				<>
+					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }} secondaryAction={undefined}>
+						<CheckboxListItemIcon>
+							<CheckboxStyled
+								checked={visible}
+								disabled={layer.masterVisible === false}
+								onClick={() => handleToggleVisibility(visible)}
+							/>
+						</CheckboxListItemIcon>
+						<ListItemText
+							primary={layer.name}
+							secondary={props.description}
+							primaryTypographyProps={{ overflow: 'hidden' }}
+						/>
+					</ListItemStyled>
+				</>
+			);
 		}
 		if (layer.type === 'folder') {
 			return (
@@ -397,20 +427,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 				</>
 			);
 		} else {
-			return (
-				<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }}>
-					<CheckboxListItemIcon>
-						<CheckboxStyled checked={visible} onClick={() => handleToggleVisibility(visible)} />
-					</CheckboxListItemIcon>
-					<ListItemText
-						variant="layerlist"
-						primary={layer.name || ''}
-						secondary={props.description}
-						primaryTypographyProps={{ overflow: 'hidden' }}
-					/>
-					{props.buttons}
-				</ListItemStyled>
-			);
+			return <></>;
 		}
 	}
 
