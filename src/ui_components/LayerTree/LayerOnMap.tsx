@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { extractUuidsFromLayerOrder, LayerOrderItem, RootState } from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
@@ -22,31 +22,39 @@ function LayerOnMap(props: LayerOnMapProps) {
 	const layerStoreOrder = useSelector(
 		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layerOrder
 	);
-
-	const mapHook = useMap({
-		mapId: props?.mapId,
-	});
+	const mapHook = useMap({ mapId: props?.mapId });
 	const layerStoreOrderIds = useSelector((state: RootState) =>
 		extractUuidsFromLayerOrder(state, props.mapConfigKey)
 	);
 
+	const previousLayerStoreOrderRef = useRef<LayerOrderItem[]>([]);
+
 	useEffect(() => {
 		if (!mapHook.map || !layerStoreOrder) return;
-		const adjustLayerOrderAtLevel = (layers: LayerOrderItem[], map: MapLibreGlWrapper) => {
-			for (let i = layers.length - 1; i > 0; i--) {
+
+		const adjustLayerOrderAtLevel = (
+			layers: LayerOrderItem[],
+			previousLayers: LayerOrderItem[],
+			map: MapLibreGlWrapper
+		) => {
+			for (let i = 0; i < layers.length; i++) {
 				const currentLayer = layers[i];
-				const previousLayer = layers[i - 1];
-				if (map.getLayer(currentLayer.uuid) && map.getLayer(previousLayer.uuid)) {
-					map.moveLayer(currentLayer.uuid, previousLayer.uuid);
+				const previousLayer = previousLayers ? previousLayers[i] : null;
+				if (currentLayer.uuid !== previousLayer?.uuid) {
+					if (map.getLayer(currentLayer.uuid)) {
+						const beforeLayer = i > 0 ? layers[i - 1].uuid : undefined;
+						map.moveLayer(currentLayer.uuid, beforeLayer);
+					}
+				}
+				if (currentLayer.layers && currentLayer.layers.length > 0) {
+					const previousSubLayers = previousLayer?.layers || [];
+					adjustLayerOrderAtLevel(currentLayer.layers, previousSubLayers, map);
 				}
 			}
-			layers.forEach((layer) => {
-				if (layer.layers && layer.layers.length > 0) {
-					adjustLayerOrderAtLevel(layer.layers, map);
-				}
-			});
 		};
-		adjustLayerOrderAtLevel(layerStoreOrder, mapHook.map);
+		const previousLayerStoreOrder = previousLayerStoreOrderRef.current;
+		adjustLayerOrderAtLevel(layerStoreOrder, previousLayerStoreOrder, mapHook.map);
+		previousLayerStoreOrderRef.current = layerStoreOrder;
 	}, [layerStoreOrder, mapHook.map]);
 
 	const orderLayers = useMemo(() => {
@@ -56,7 +64,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 			'order-labels',
 		];
 		return layerIds;
-	}, [layerStoreOrder]);
+	}, [layerStoreOrderIds]);
 
 	function renderLayer(layer: LayerOrderItem): React.ReactNode {
 		const layerConfig = layers[layer.uuid];
@@ -85,7 +93,6 @@ function LayerOnMap(props: LayerOnMapProps) {
 				);
 			case 'vt': {
 				const l = layerConfig.config.layers.map((layer: ExtendedLayerSpecification) => {
-					//layer.layout?.['visibility'] ?? 'visible';
 					const newLayer = { ...layer };
 
 					if (newLayer.layout) {
@@ -121,7 +128,6 @@ function LayerOnMap(props: LayerOnMapProps) {
 					/>
 				);
 			}
-
 			case 'folder':
 				return layer?.layers ? (
 					layer.layers.map((subLayer: LayerOrderItem) => renderLayer(subLayer))
