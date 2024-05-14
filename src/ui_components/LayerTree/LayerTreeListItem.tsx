@@ -77,14 +77,14 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
 	const layer = getLayerByUuid(
 		useSelector((state: RootState) => state.mapConfig),
-		props.layerOrderConfig.uuid,
+		props.layerOrderConfig.uuid
 	);
 	const [open, setOpen] = useState(false);
 
 	const dispatch = useDispatch();
 
 	const mapConfig = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigKey],
+		(state: RootState) => state.mapConfig.mapConfigs[props.mapConfigKey]
 	);
 
 	function moveLayer(uuid: string, getNewPos: (oldPos: number) => number) {
@@ -125,13 +125,13 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		const nextVisible = !visible;
 		if (layer) {
 			toggleVisible(layer, nextVisible, specificLayerId);
-			if (layer.type === 'folder' || (layer.type === 'vt') && specificLayerId === '') {
+			if (layer.type === 'folder' || (layer.type === 'vt' && specificLayerId === '')) {
 				dispatch(
 					setMasterVisible({
 						mapConfigKey: props.mapConfigKey,
 						layerId: layer.uuid,
 						masterVisible: nextVisible,
-					}),
+					})
 				);
 			}
 		}
@@ -140,7 +140,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	function toggleVisible(
 		layer: LayerConfig,
 		nextVisible: boolean,
-		specificLayerId: string,
+		specificLayerId: string
 	): LayerConfig {
 		//TODO: update layout for all layer types
 		let updatedLayer: LayerConfig = { ...layer };
@@ -155,10 +155,13 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					updatedLayer = {
 						...layer,
 						config: {
-							...layer?.config,
-							layout: {
-								...layer?.config?.layout,
-								visibility: nextVisible ? 'visible' : 'none',
+							...layer.config,
+							options: {
+								...layer?.config?.options,
+								layout: {
+									...layer?.config?.options?.layout,
+									visibility: nextVisible ? 'visible' : 'none',
+								},
 							},
 						},
 					} as LayerConfig;
@@ -168,7 +171,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					let updateSublayerOnly = false;
 					const updatedSubLayers = layer.config.layers.map((layer) => {
 						if (layer.id === specificLayerId) {
-							updateSublayerOnly = true
+							updateSublayerOnly = true;
 							return {
 								...layer,
 								layout: {
@@ -187,8 +190,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 								layers: updatedSubLayers,
 							},
 						} as LayerConfig;
-					}
-					else {
+					} else {
 						updatedLayer = {
 							...layer,
 							visible: nextVisible,
@@ -206,7 +208,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 			setLayerInMapConfig({
 				mapConfigKey: props.mapConfigKey,
 				layer: updatedLayer,
-			}),
+			})
 		);
 		return updatedLayer;
 	}
@@ -214,7 +216,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	function renderLayerItem(layer: LayerConfig): React.ReactNode {
 		let visible = true;
 		if (layer?.type === 'geojson') {
-			visible = layer?.config?.layout?.visibility !== 'none';
+			visible = layer?.config?.options?.layout?.visibility !== 'none';
 			return (
 				<>
 					<ListItemStyled
@@ -274,8 +276,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						<>
 							{props.showDeleteButton && (
 								<>
-									<DeleteIconButton edge="end" aria-label="delete" onClick={() => {
-									}}>
+									<DeleteIconButton edge="end" aria-label="delete" onClick={() => {}}>
 										<DeleteIcon />
 									</DeleteIconButton>
 									{showDeletionConfirmationDialog && (
@@ -338,7 +339,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 												onClick={() =>
 													handleToggleVisibility(
 														subLayer?.layout?.visibility === 'visible',
-														subLayer.id,
+														subLayer.id
 													)
 												}
 											/>

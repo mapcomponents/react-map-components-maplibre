@@ -72,12 +72,12 @@ function LayerOnMap(props: LayerOnMapProps) {
 						options={{
 							...layerConfig.config.options,
 							layout: {
-								...layerConfig?.config?.layout,
+								...layerConfig?.config?.options?.layout,
 								visibility:
 									layerConfig.masterVisible === false
 										? 'none'
-										: layerConfig?.config?.layout?.visibility
-											? layerConfig?.config?.layout?.visibility
+										: layerConfig?.config?.options?.layout?.visibility
+											? layerConfig?.config?.options?.layout?.visibility
 											: 'visible',
 							},
 						}}
