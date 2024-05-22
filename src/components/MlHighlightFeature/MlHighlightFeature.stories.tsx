@@ -36,7 +36,7 @@ const Template = () => {
 					}
 				}}
 			/>
-			<MlHighlightFeature features={selectedFeatures} />
+			<MlHighlightFeature features={selectedFeatures} offset={-5} paint={{"line-opacity": 0.5}} />
 		</>
 	);
 };
