@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 //import useMap from "../../hooks/useMap";
-import { featureCollection as createCollcetion, transformTranslate, Feature, FeatureCollection } from '@turf/turf';
+import { featureCollection as createCollection, transformTranslate, Feature, FeatureCollection } from '@turf/turf';
 import { LayerSpecification } from 'maplibre-gl';
-import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../MlGeoJsonLayer/MlGeoJsonLayer';
 
 export interface MlHighlightFeatureProps {
 	/**
@@ -35,9 +35,21 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 	// 	mapId: props.mapId,
 	// });
 	const [geojson, setGeojson] = useState<Feature | FeatureCollection>();
+	const [paint, setPaint] = useState<any>();
+	const [layerType, setLayerType] = useState<MlGeoJsonLayerProps['type']>("circle")
 
 	function getHighlightFeature(feature: Feature) {
-		const newFeature: Feature = transformTranslate(feature, 0.5, 0);
+		var newFeature: Feature = feature
+
+		switch (feature.geometry.type){
+			case "Polygon" :
+				console.log("hier!")
+				// newFeature = transformTranslate(feature, 0.5, 0) --->  Hier wird den Offset für die Linie definiert
+				setPaint({"line-color": "red"})
+				setLayerType("line")							
+			
+		}
+
 		return newFeature;
 	}
 
@@ -54,12 +66,12 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 			props.features.features.forEach((feature: Feature) =>
 				highlightedFeatures.push(getHighlightFeature(feature))
 			);
-			setGeojson(createCollcetion(highlightedFeatures))
+			setGeojson(createCollection(highlightedFeatures))
 		}
 	}, [props]);
 
 	return <>
- {geojson && <MlGeoJsonLayer mapId={props.mapId} geojson={geojson} options={{paint: {"fill-color": "red" }}} />}
+ {geojson && <MlGeoJsonLayer mapId={props.mapId} geojson={geojson} type={layerType} options={{paint: props.paint || paint}} />}
 	</>;
 };
 
