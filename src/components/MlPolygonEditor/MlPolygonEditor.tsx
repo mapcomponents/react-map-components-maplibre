@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import * as turf from '@turf/turf';
 import { Feature } from '@turf/turf';
+import PentagonIcon from '@mui/icons-material/Pentagon';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import ExpandOutlinedIcon from '@mui/icons-material/ExpandOutlined';
@@ -12,13 +13,15 @@ import { Box, Button, ButtonGroup, List, SxProps, Theme, Tooltip } from '@mui/ma
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import LayerListItem from '../../ui_components/LayerList/LayerListItem';
 import { LngLatLike } from 'maplibre-gl';
+import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 
 const EditorModes = [
-	{ name: 'Clone', mode: 'clone_polygon', icon: <ContentCopyOutlinedIcon /> },
-	{ name: 'Resize', mode: 'resize_polygon', icon: <ExpandOutlinedIcon /> },
-	{ name: 'Rotate', mode: 'rotate_polygon', icon: <RotateRightOutlinedIcon /> },
-	{ name: 'Split', mode: 'split_polygon', icon: <ContentCutOutlinedIcon /> },
-	{ name: 'Cut out', mode: 'cut_polygon', icon: <ContentCutOutlinedIcon /> },
+	{ name: 'Draw', mode: 'draw_polygon', icon: <PentagonIcon />, id: 0 },
+	{ name: 'Clone', mode: 'clone_polygon', icon: <ContentCopyOutlinedIcon />, id: 1 },
+	{ name: 'Resize', mode: 'resize_polygon', icon: <ExpandOutlinedIcon />, id: 2 },
+	{ name: 'Rotate', mode: 'rotate_polygon', icon: <RotateRightOutlinedIcon />, id: 3 },
+	{ name: 'Split', mode: 'split_polygon', icon: <ContentCutOutlinedIcon />, id: 4 },
+	{ name: 'Cut out', mode: 'cut_polygon', icon: <ContentCutOutlinedIcon />, id: 5 },
 ];
 
 export interface MlPolygonEditorProps {
@@ -49,6 +52,7 @@ type EditType = {
 	activeGeometryIndex?: number;
 	geometries: Feature[];
 	mode?: string;
+	//	drawMode?: MapboxDraw.DrawPolygon
 };
 
 /**
@@ -63,12 +67,18 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
 
+	const [selected, setSelected] = useState<number>(0);
+	const [editMode, setEditMode] = useState<string>(EditorModes[selected].mode);
+
 	const [editState, setEditState] = useState<EditType>({
 		activeGeometryIndex: undefined,
 		selectedGeoJson: undefined,
 		geometries: [],
-		mode: undefined,
 	});
+
+	useEffect(() => {
+		setEditMode(EditorModes[selected].mode);
+	}, [selected]);
 
 	const buttonStyle = {
 		...props.buttonStyleOverride,
@@ -94,7 +104,7 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 			<>
 				{EditorModes.map((el) => {
 					const stateColor = (theme: Theme) => {
-						if (EditorModes[0].mode === el.mode) {
+						if (editMode === el.mode) {
 							return theme.palette.primary.main;
 						} else {
 							return theme.palette.navigation.navColor;
@@ -102,7 +112,7 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 					};
 
 					const stateIconColor = (theme: Theme) => {
-						if (EditorModes[0].mode !== el.mode) {
+						if (editMode !== el.mode) {
 							return theme.palette.primary.main;
 						} else {
 							return theme.palette.navigation.navColor;
@@ -122,10 +132,14 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 										},
 										...buttonStyle,
 									}}
+									onClick={() => setSelected(el.id)}
 								>
 									{el.icon}
 								</Button>
 							</Tooltip>
+							{selected === 0 && (
+								<MlFeatureEditor mode={'draw_polygon'} geojson={editState.selectedGeoJson} />
+							)}
 						</>
 					);
 				})}
@@ -143,7 +157,6 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 					<EditButtons />
 				</ButtonGroup>
 			</Box>
-
 			<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
 				{editState.geometries.map((el) => (
 					<>
