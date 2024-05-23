@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import { Feature, FeatureCollection, Geometry, GeometryCollection } from '@turf/turf';
-import { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
+import { DataDrivenPropertyValueSpecification, LayerSpecification } from 'maplibre-gl';
 import { Typography, Button } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -322,7 +322,7 @@ const SymbolTemplate = (props: MlGeoJsonLayerProps) => {
 								[26, 0.2],
 							],
 						},
-					},
+					} as LayerSpecification['layout'],
 				}}
 			/>
 		</>

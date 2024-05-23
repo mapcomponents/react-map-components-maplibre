@@ -46,7 +46,7 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 	const [paint, setPaint] = useState<any>();
 	const [layerType, setLayerType] = useState<MlGeoJsonLayerProps['type']>('circle');
 
-	function getHighlightFeature(feature: Feature) {
+	function getHighlightedFeature(feature: Feature) {
 		var newFeature: Feature = feature;
 
 		switch (feature.geometry.type) {
@@ -63,14 +63,12 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 		if (!props.features) {
 			setGeojson(undefined);
 			return;
-		}
-		
+		}		
 			const highlightedFeatures: Feature[] = [];
 			props.features.forEach((feature: Feature) =>
-				highlightedFeatures.push(getHighlightFeature(feature))
+				highlightedFeatures.push(getHighlightedFeature(feature))
 			);
-			setGeojson(createCollection(highlightedFeatures));	
-	
+			setGeojson(createCollection(highlightedFeatures));		
 
 	}, [props]);
 
