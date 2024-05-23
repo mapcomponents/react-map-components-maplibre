@@ -44,15 +44,15 @@ export interface MlPolygonEditorProps {
 
 	inputPolygon?: Feature;
 
-	getResult?: () => void;
+	getResult?: (geometries: Feature[]) => void;
 }
 
 type EditType = {
+	drawMode: string;
 	selectedGeoJson?: Feature;
 	activeGeometryIndex?: number;
 	geometries: Feature[];
 	mode?: string;
-	//	drawMode?: MapboxDraw.DrawPolygon
 };
 
 /**
@@ -60,68 +60,74 @@ type EditType = {
  *
  */
 const MlPolygonEditor = (props: MlPolygonEditorProps) => {
-	const mapHook = useMap({
-		mapId: props.mapId,
-		waitForLayer: props.insertBeforeLayer,
-	});
-
-	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
-
-	const [selected, setSelected] = useState<number>(0);
-	const [editMode, setEditMode] = useState<string>(EditorModes[selected].mode);
-
-	const [editState, setEditState] = useState<EditType>({
-		activeGeometryIndex: undefined,
-		selectedGeoJson: undefined,
-		geometries: [],
-	});
-
-	useEffect(() => {
-		setEditMode(EditorModes[selected].mode);
-	}, [selected]);
-
-	const buttonStyle = {
-		...props.buttonStyleOverride,
-	};
-
-	const removeGeoJson = (geoJson: Feature): void => {
-		setEditState((editState) => {
-			const _geometries = [...editState.geometries];
-			_geometries.splice(_geometries.indexOf(geoJson), 1);
-
-			return {
-				...editState,
-				geometries: _geometries,
-				activeGeometryIndex: editState.activeGeometryIndex
-					? editState.activeGeometryIndex - 1
-					: undefined,
-			};
+    const mapHook = useMap({
+			mapId: props.mapId,
+			waitForLayer: props.insertBeforeLayer,
 		});
-	};
 
-	const EditButtons = () => {
-		return (
-			<>
-				{EditorModes.map((el) => {
-					const stateColor = (theme: Theme) => {
-						if (editMode === el.mode) {
-							return theme.palette.primary.main;
-						} else {
-							return theme.palette.navigation.navColor;
-						}
-					};
+    const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
 
-					const stateIconColor = (theme: Theme) => {
-						if (editMode !== el.mode) {
-							return theme.palette.primary.main;
-						} else {
-							return theme.palette.navigation.navColor;
-						}
-					};
+		const [selected, setSelected] = useState<number>(0);
+		const [editMode, setEditMode] = useState<string>(EditorModes[selected].mode);
 
-					return (
-						<>
-							<Tooltip title={el.name}>
+		const [editState, setEditState] = useState<EditType>({
+			activeGeometryIndex: undefined,
+			selectedGeoJson: undefined,
+			geometries: [],
+			drawMode: 'simple_select',
+		});
+
+		useEffect(() => {
+			setEditMode(EditorModes[selected].mode);
+		}, [selected]);
+
+		useEffect(() => {
+			if (props.getResult) {
+				props.getResult(editState.geometries);
+			}
+		}, [editState.geometries, props.getResult]);
+
+		const buttonStyle = {
+			...props.buttonStyleOverride,
+		};
+
+		const removeGeoJson = (geoJson: Feature): void => {
+			setEditState((editState) => {
+				const _geometries = [...editState.geometries];
+				_geometries.splice(_geometries.indexOf(geoJson), 1);
+
+				return {
+					...editState,
+					geometries: _geometries,
+					activeGeometryIndex: editState.activeGeometryIndex
+						? editState.activeGeometryIndex - 1
+						: undefined,
+				};
+			});
+		};
+
+		const EditButtons = () => {
+			return (
+				<>
+					{EditorModes.map((el) => {
+						const stateColor = (theme: Theme) => {
+							if (editMode === el.mode) {
+								return theme.palette.primary.main;
+							} else {
+								return theme.palette.navigation.navColor;
+							}
+						};
+
+						const stateIconColor = (theme: Theme) => {
+							if (editMode !== el.mode) {
+								return theme.palette.primary.main;
+							} else {
+								return theme.palette.navigation.navColor;
+							}
+						};
+
+						return (
+							<Tooltip title={el.name} key={el.id}>
 								<Button
 									sx={{
 										color: stateIconColor,
@@ -130,36 +136,65 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 										'&:hover': {
 											backgroundColor: stateColor,
 										},
-										...buttonStyle,
 									}}
 									onClick={() => setSelected(el.id)}
 								>
 									{el.icon}
 								</Button>
 							</Tooltip>
-							{selected === 0 && (
-								<MlFeatureEditor mode={'draw_polygon'} geojson={editState.selectedGeoJson} />
-							)}
-						</>
-					);
-				})}
-			</>
-		);
-	};
-	return (
-		<>
-			<Box
-				sx={{
-					zIndex: 104,
-				}}
-			>
-				<ButtonGroup>
-					<EditButtons />
-				</ButtonGroup>
-			</Box>
-			<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
-				{editState.geometries.map((el) => (
-					<>
+						);
+					})}
+				</>
+			);
+		};
+
+    return (
+			<>
+				<Box
+					sx={{
+						zIndex: 104,
+					}}
+				>
+					<ButtonGroup>
+						<EditButtons />
+					</ButtonGroup>
+				</Box>
+				{EditorModes[selected].mode === 'draw_polygon' && (
+					<MlFeatureEditor
+						mode={'draw_polygon'}
+						geojson={editState.selectedGeoJson}
+						onChange={(feature: object) => {
+							if (!feature?.[0]) return;
+
+							setEditState((_editState) => {
+								const _geometries = [..._editState.geometries];
+								if (typeof _editState.activeGeometryIndex === 'undefined') {
+									const tempFeature = feature[0];
+									tempFeature.properties.id = tempFeature.id;
+
+									_editState.activeGeometryIndex = _geometries.length;
+									_geometries.push(tempFeature);
+								} else {
+									_geometries[_editState.activeGeometryIndex] = feature[0];
+								}
+								return {
+									..._editState,
+									geometries: _geometries,
+								};
+							});
+						}}
+						onFinish={() => {
+							setEditState((_editState) => ({
+								..._editState,
+								drawMode: 'simple_select',
+								activeGeometryIndex: undefined,
+								selectedGeoJson: undefined,
+							}));
+						}}
+					/>
+				)}
+				<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
+					{editState.geometries.map((el) => (
 						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
 							<br />
 							<Box
@@ -177,8 +212,6 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 									setHoveredGeometry(undefined);
 								}}
 							>
-								{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-								{/* @ts-ignore-next-line */}
 								<LayerListItem
 									listItemSx={buttonStyle}
 									configurable={true}
@@ -219,34 +252,33 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 								</Box>
 							</Box>
 						</Box>
-					</>
-				))}
-				{hoveredGeometry && (
-					<MlGeoJsonLayer
-						mapId={props.mapId}
-						geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
-						layerId={'highlightBorder'}
-						defaultPaintOverrides={{
-							circle: {
-								'circle-color': '#dd9900',
-								'circle-opacity': 0.4,
-								'circle-radius': 10,
-							},
-							line: {
-								'line-color': '#dd9900',
-								'line-opacity': 0.4,
-								'line-width': 10,
-							},
-							fill: {
-								'fill-color': '#dd9900',
-								'fill-opacity': 0.4,
-							},
-						}}
-					/>
-				)}
-			</List>
-		</>
-	);
+					))}
+					{hoveredGeometry && (
+						<MlGeoJsonLayer
+							mapId={props.mapId}
+							geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
+							layerId={'highlightBorder'}
+							defaultPaintOverrides={{
+								circle: {
+									'circle-color': '#dd9900',
+									'circle-opacity': 0.4,
+									'circle-radius': 10,
+								},
+								line: {
+									'line-color': '#dd9900',
+									'line-opacity': 0.4,
+									'line-width': 10,
+								},
+								fill: {
+									'fill-color': '#dd9900',
+									'fill-opacity': 0.4,
+								},
+							}}
+						/>
+					)}
+				</List>
+			</>
+		);
 };
 
 MlPolygonEditor.defaultProps = {

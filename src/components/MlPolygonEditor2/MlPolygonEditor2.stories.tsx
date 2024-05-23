@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import MlPolygonEditor from './MlPolygonEditor';
+import MlPolygonEditor2 from './MlPolygonEditor2';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { Button } from '@mui/material';
@@ -8,8 +8,8 @@ import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 
 const storyoptions = {
-	title: 'MapComponents/MlPolygonEditor',
-	component: MlPolygonEditor,
+	title: 'MapComponents/MlPolygonEditor2',
+	component: MlPolygonEditor2,
 	argTypes: {},
 	decorators: mapContextDecorator,
 };
@@ -33,7 +33,7 @@ const Template = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Polygon Editor'}>
-				<MlPolygonEditor />
+				<MlPolygonEditor2 />
 			</Sidebar>
 		</>
 	);
