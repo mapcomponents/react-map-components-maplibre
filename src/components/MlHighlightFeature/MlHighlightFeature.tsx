@@ -16,7 +16,7 @@ export interface MlHighlightFeatureProps {
 	/**
 	 * The Featrue or FeatureCollecion to be highlighted by the component.
 	 */
-	features: Feature | FeatureCollection | undefined;
+	features: Feature[] | undefined;
 	/**
 	 * Distance between the original and the highlighted Features.
 	 * For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. 
@@ -37,14 +37,12 @@ export interface MlHighlightFeatureProps {
 }
 
 /**
- * It takes a single Feature or a FeatureCollection and generate a new Layer with a highlight of the given Features.
+ * It takes a Feature Array and generate a new layer with a highlight of the given Features.
  *
  */
 const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
-	// const mapHook = useMap({
-	// 	mapId: props.mapId,
-	// });
-	const [geojson, setGeojson] = useState<Feature | FeatureCollection>();
+
+	const [geojson, setGeojson] = useState<FeatureCollection>();
 	const [paint, setPaint] = useState<any>();
 	const [layerType, setLayerType] = useState<MlGeoJsonLayerProps['type']>('circle');
 
@@ -52,30 +50,28 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 		var newFeature: Feature = feature;
 
 		switch (feature.geometry.type) {
-			case 'Polygon':
-				// newFeature = transformTranslate(feature, 0.5, 0) --->  Hier wird den Offset für die Linie definiert
-				setPaint({ 'line-color': 'red', 'line-offset': props.offset || 0 , ...props.paint });
+			case 'Polygon':				
+				setPaint({ 'line-color': 'red', 'line-offset': props.offset, ...props.paint });
 				setLayerType('line');
 		}
 
 		return newFeature;
 	}
 
+
 	useEffect(() => {
 		if (!props.features) {
 			setGeojson(undefined);
 			return;
 		}
-
-		if (props.features?.type === 'Feature') {
-			setGeojson(getHighlightFeature(props.features));
-		} else if (props.features?.type === 'FeatureCollection') {
+		
 			const highlightedFeatures: Feature[] = [];
-			props.features.features.forEach((feature: Feature) =>
+			props.features.forEach((feature: Feature) =>
 				highlightedFeatures.push(getHighlightFeature(feature))
 			);
-			setGeojson(createCollection(highlightedFeatures));
-		}
+			setGeojson(createCollection(highlightedFeatures));	
+	
+
 	}, [props]);
 
 	return (
@@ -94,5 +90,6 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 
 MlHighlightFeature.defaultProps = {
 	mapId: undefined,
+	offset: 0
 };
 export default MlHighlightFeature;
