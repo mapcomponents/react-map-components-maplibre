@@ -16,7 +16,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
 import LayerListItem from '../../ui_components/LayerList/LayerListItem';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import { Feature } from '@turf/turf';
+import { Feature, transformScale, transformRotate } from '@turf/turf';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
 import { Button, Theme, Typography } from '@mui/material';
@@ -80,7 +80,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
-	const [selected, setSelected] = useState<number>(0);
+	const [reSize, SetReSize] = useState(false);
 	const [sketchState, setSketchState] = useState<SketchStateType>({
 		activeGeometryIndex: undefined,
 		selectedGeoJson: undefined,
@@ -92,11 +92,14 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		if (!(typeof props.onChange === 'function')) return;
 
 		props.onChange(sketchState);
+		console.log(sketchState);
 	}, [sketchState, props.onChange]);
 
 	const buttonStyle = {
 		...props.buttonStyleOverride,
 	};
+
+	useEffect(() => {});
 
 	const buttonClickHandler = (buttonDrawMode: keyof MapboxDraw.Modes) => {
 		setSketchState((_state) => ({
@@ -120,26 +123,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					: undefined,
 			};
 		});
-	};
-
-	const colorPicker = (x: number) => {
-		const stateColor = (theme: Theme) => {
-			if (x === selected) {
-				return theme.palette.primary.main;
-			} else {
-				return theme.palette.navigation.navColor;
-			}
-		};
-
-		const stateIconColor = (theme: Theme) => {
-			if (x === selected) {
-				return theme.palette.primary.main;
-			} else {
-				return theme.palette.navigation.navColor;
-			}
-		};
-
-		return [stateColor, stateIconColor];
 	};
 
 	const SketchToolButtons = () => {
@@ -260,7 +243,12 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									listItemSx={buttonStyle}
 									configurable={true}
 									layerComponent={
-										<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={String(el.id)} />
+										// Hier muss man Geojson auf "sketchState.selectedGeojson" updaten
+										<MlGeoJsonLayer
+											mapId={props.mapId}
+											geojson={reSize ? sketchState.selectedGeoJson : el}
+											layerId={String(el.id)}
+										/>
 									}
 									type={'layer'}
 									name={String(el.id)}
@@ -281,8 +269,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 											variant="outlined"
 											size="small"
 											onClick={() => {
-												setSelected(1);
-												colorPicker(1);
 												mapHook?.map?.map.setCenter(
 													el.geometry.type === 'Point'
 														? (el.geometry.coordinates as LngLatLike)
@@ -299,8 +285,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 											variant="outlined"
 											size="small"
 											onClick={() => {
-												setSelected(2);
-												colorPicker(2);
 												setSketchState((_sketchState) => ({
 													..._sketchState,
 													selectedGeoJson: el,
@@ -315,15 +299,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									{el.geometry.type === 'Polygon' && (
 										<>
 											<Tooltip title="Clone">
-												<Button
-													sx={buttonStyle}
-													size="small"
-													variant="outlined"
-													onClick={() => {
-														setSelected(3);
-														colorPicker(3);
-													}}
-												>
+												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
 													{' '}
 													<ContentCopyOutlinedIcon />
 												</Button>
@@ -334,8 +310,15 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 													size="small"
 													variant="outlined"
 													onClick={() => {
-														setSelected(4);
-														colorPicker(4);
+														console.log(el);
+														SetReSize(true);
+														const scaledEl = turf.transformScale(el, 2);
+														setSketchState((sketchState) => ({
+															...sketchState,
+															selectedGeoJson: scaledEl,
+															activeGeometryIndex: sketchState.geometries.indexOf(scaledEl),
+															drawMode: 'simple_select',
+														}));
 													}}
 												>
 													{' '}
@@ -343,46 +326,23 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 												</Button>
 											</Tooltip>
 											<Tooltip title="Rotate">
-												<Button
-													sx={buttonStyle}
-													size="small"
-													variant="outlined"
-													onClick={() => {
-														setSelected(5);
-														colorPicker(5);
-													}}
-												>
+												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
 													<RotateRightOutlinedIcon />
 												</Button>
 											</Tooltip>
 											<Tooltip title="Divide">
-												<Button
-													sx={buttonStyle}
-													size="small"
-													variant="outlined"
-													onClick={() => {
-														setSelected(6);
-														colorPicker(6);
-													}}
-												>
+												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
 													<ContentCutOutlinedIcon />
 												</Button>
 											</Tooltip>
 											<Tooltip title="Cut out Area">
-												<Button
-													sx={buttonStyle}
-													size="small"
-													variant="outlined"
-													onClick={() => {
-														setSelected(7);
-														colorPicker(7);
-													}}
-												>
+												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
 													<ContentCutOutlinedIcon />
 												</Button>
 											</Tooltip>
 										</>
 									)}
+									;
 									<Tooltip title="Delete">
 										<Button
 											sx={buttonStyle}
@@ -390,14 +350,13 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 											variant="outlined"
 											onClick={() => {
 												removeGeoJson(el);
-												setSelected(8);
-												colorPicker(8);
 												setHoveredGeometry(undefined);
 											}}
 										>
 											<DeleteIcon />
 										</Button>
 									</Tooltip>
+									;
 								</Box>
 							</Box>
 						</Box>
