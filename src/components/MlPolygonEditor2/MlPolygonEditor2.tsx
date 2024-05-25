@@ -80,7 +80,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
-	const [reSize, SetReSize] = useState(false);
 	const [sketchState, setSketchState] = useState<SketchStateType>({
 		activeGeometryIndex: undefined,
 		selectedGeoJson: undefined,
@@ -108,6 +107,22 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			activeGeometryIndex: undefined,
 			selectedGeoJson: undefined,
 		}));
+	};
+
+	const handleResize = (el: Feature) => {
+		const scaledEl = turf.transformScale(el, 2);
+		setSketchState((sketchState) => {
+			const newGeometries = sketchState.geometries.map((geometry) =>
+				geometry === el ? scaledEl : geometry
+			);
+			return {
+				...sketchState,
+				geometries: newGeometries,
+				selectedGeoJson: scaledEl,
+				activeGeometryIndex: newGeometries.indexOf(scaledEl),
+				drawMode: 'simple_select',
+			};
+		});
 	};
 
 	const removeGeoJson = (geoJson: Feature): void => {
@@ -244,11 +259,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									configurable={true}
 									layerComponent={
 										// Hier muss man Geojson auf "sketchState.selectedGeojson" updaten
-										<MlGeoJsonLayer
-											mapId={props.mapId}
-											geojson={reSize ? sketchState.selectedGeoJson : el}
-											layerId={String(el.id)}
-										/>
+										<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={String(el.id)} />
 									}
 									type={'layer'}
 									name={String(el.id)}
@@ -309,17 +320,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 													sx={buttonStyle}
 													size="small"
 													variant="outlined"
-													onClick={() => {
-														console.log(el);
-														SetReSize(true);
-														const scaledEl = turf.transformScale(el, 2);
-														setSketchState((sketchState) => ({
-															...sketchState,
-															selectedGeoJson: scaledEl,
-															activeGeometryIndex: sketchState.geometries.indexOf(scaledEl),
-															drawMode: 'simple_select',
-														}));
-													}}
+													onClick={() => handleResize(el)}
 												>
 													{' '}
 													<ExpandOutlinedIcon />
