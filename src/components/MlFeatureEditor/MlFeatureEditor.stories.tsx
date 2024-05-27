@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Theme, Typography, useMediaQuery } from '@mui/material';
 import MlFeatureEditor from './MlFeatureEditor';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -51,6 +51,8 @@ const Template = (args: useFeatureEditorProps) => {
 };
 
 const catalogueTemplate = () => {
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+
 	const [visible, setVisible] = useState(true);
 	const [selectedMode, setSelectedMode] = useState<string>('EditPolygon');
 
@@ -73,10 +75,32 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
+			<Box
+				sx={{
+					position: 'fixed',
+					width: { xs: '100%', xl: 'auto' },
+					top: { xs: '62px', sm: '64px', xl: '22px' },
+					right: { xs: '0px', xl: '385px' },
+					paddingRight: { xs: '20px', xl: '0px' },
+					color: '#009ee0',
+					backgroundColor: '#fff',
+					textAlign: 'right',
+					fontSize: '16px',
+					fontFamily: 'sans-serif',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '5px',
+					zIndex: 5000,
+				}}
+			>
+				{mediaIsMobile
+					? 'Zum Beenden erneut auf denselben Punkt klicken.'
+					: 'Beenden Sie die Zeichnung, indem Sie erneut auf den zuletzt gezeichneten Punkt klicken.'}
+			</Box>
 			<TopToolbar
 				unmovableButtons={
 					<>
-						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
+						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'} marginTop={'1px'}>
 							{configTitles[selectedMode]}
 						</Typography>
 						<Button
