@@ -65,7 +65,7 @@ const catalgoueTemplate = () => {
 			>
 				{mediaIsMobile
 					? 'Zum Beenden erneut auf denselben Punkt klicken.'
-					: 'Sie können die Zeichnung beenden, indem Sie erneut auf den zuletzt gezeichneten Punkt klicken.'}
+					: 'Die Zeichnung kann beendet werden, indem erneut auf den zuletzt gezeichneten Punkt geklickt wird.'}
 			</Box>
 			<TopToolbar
 				buttons={

@@ -193,7 +193,7 @@ const catalogueTemplate = () => {
 			>
 				{mediaIsMobile
 					? 'Zum Beenden erneut auf denselben Punkt klicken.'
-					: 'Beenden Sie die Zeichnung, indem Sie erneut auf den zuletzt gezeichneten Punkt klicken.'}
+					: 'Die Zeichnung kann beendet werden, indem erneut auf den zuletzt gezeichneten Punkt geklickt wird.'}
 			</Box>
 			<TopToolbar
 				unmovableButtons={

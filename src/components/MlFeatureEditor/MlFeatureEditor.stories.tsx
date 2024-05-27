@@ -80,7 +80,7 @@ const catalogueTemplate = () => {
 					position: 'fixed',
 					width: { xs: '100%', xl: 'auto' },
 					top: { xs: '62px', sm: '64px', xl: '22px' },
-					right: { xs: '0px', xl: '385px' },
+					right: { xs: '0px', xl: '415px' },
 					paddingRight: { xs: '20px', xl: '0px' },
 					color: '#009ee0',
 					backgroundColor: '#fff',
@@ -95,7 +95,7 @@ const catalogueTemplate = () => {
 			>
 				{mediaIsMobile
 					? 'Zum Beenden erneut auf denselben Punkt klicken.'
-					: 'Beenden Sie die Zeichnung, indem Sie erneut auf den zuletzt gezeichneten Punkt klicken.'}
+					: 'Die Zeichnung kann beendet werden, indem erneut auf den zuletzt gezeichneten Punkt geklickt wird.'}
 			</Box>
 			<TopToolbar
 				unmovableButtons={
