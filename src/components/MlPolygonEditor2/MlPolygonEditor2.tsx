@@ -19,7 +19,7 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature, transformScale, transformRotate } from '@turf/turf';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Button, Theme, Typography } from '@mui/material';
+import { Button, Input, Theme, Typography } from '@mui/material';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
@@ -80,6 +80,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
+	const [resizeWindow, showResizeWindow] = useState<boolean>();
 	const [sketchState, setSketchState] = useState<SketchStateType>({
 		activeGeometryIndex: undefined,
 		selectedGeoJson: undefined,
@@ -98,8 +99,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		...props.buttonStyleOverride,
 	};
 
-	useEffect(() => {});
-
 	const buttonClickHandler = (buttonDrawMode: keyof MapboxDraw.Modes) => {
 		setSketchState((_state) => ({
 			drawMode: _state.drawMode !== buttonDrawMode ? buttonDrawMode : undefined,
@@ -109,8 +108,8 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		}));
 	};
 
-	const handleResize = (el: Feature) => {
-		const scaledEl = turf.transformScale(el, 2);
+	const handleResize = (el: Feature, resizeFactor: number) => {
+		const scaledEl = turf.transformScale(el, resizeFactor);
 		setSketchState((sketchState) => {
 			const newGeometries = sketchState.geometries.map((geometry) =>
 				geometry === el ? scaledEl : geometry
@@ -320,12 +319,22 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 													sx={buttonStyle}
 													size="small"
 													variant="outlined"
-													onClick={() => handleResize(el)}
+													onClick={() => showResizeWindow(!resizeWindow)}
 												>
 													{' '}
 													<ExpandOutlinedIcon />
 												</Button>
 											</Tooltip>
+											{resizeWindow === true && (
+												<label>
+													Resize Factor:{' '}
+													<input
+														name="Resize Factor"
+														type="number"
+														onChange={(e) => handleResize(el, Number(e.target.value))}
+													/>
+												</label>
+											)}
 											<Tooltip title="Rotate">
 												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
 													<RotateRightOutlinedIcon />
