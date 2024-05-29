@@ -29,16 +29,6 @@ const sketchTools = [
 	{ name: 'Polygon', mode: 'draw_polygon', icon: <PentagonIcon /> },
 ];
 
-const EditorModes = [
-	{ name: 'Center', mode: 'center_object', id: 1 },
-	{ name: 'Edit', mode: 'edit_object', id: 2 },
-	{ name: 'Clone', mode: 'clone_polygon', id: 3 },
-	{ name: 'Resize', mode: 'resize_polygon', id: 4 },
-	{ name: 'Rotate', mode: 'rotate_polygon', id: 5 },
-	{ name: 'Split', mode: 'split_polygon', id: 6 },
-	{ name: 'Cut out', mode: 'cut_polygon', id: 7 },
-	{ name: 'Delete', mode: 'delete_object', id: 8 },
-];
 
 export interface MlSketchToolProps {
 	/**
@@ -81,12 +71,15 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	});
 	const [hoveredGeometry, setHoveredGeometry] = useState<Feature>();
 	const [resizeWindow, showResizeWindow] = useState<boolean>();
+	const [rotateWindow, showRotateWindow] = useState<boolean>();
 	const [sketchState, setSketchState] = useState<SketchStateType>({
 		activeGeometryIndex: undefined,
 		selectedGeoJson: undefined,
 		geometries: [],
 		drawMode: undefined,
 	});
+
+	console.log(sketchState);
 
 	useEffect(() => {
 		if (!(typeof props.onChange === 'function')) return;
@@ -124,6 +117,63 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		});
 	};
 
+	const handleRotate = (el: Feature, rotateFactor: number) => {
+		const rotateEl = turf.transformRotate(el, rotateFactor);
+		setSketchState((sketchState) => {
+			const newGeometries = sketchState.geometries.map((geometry) =>
+				geometry === el ? rotateEl : geometry
+			);
+			return {
+				...sketchState,
+				geometries: newGeometries,
+				selectedGeoJson: rotateEl,
+				activeGeometryIndex: newGeometries.indexOf(rotateEl),
+				drawMode: 'simple_select',
+			};
+		});
+	};
+
+	const clonePolygon = (el: Feature) => {
+		if (!el) return;
+
+		const newEl = turf.clone(el);
+		newEl.id = el?.id + Math.random().toString();
+		//`${el.id}-clone-${new Date().getTime()}`;
+		const offset = 0.01; // Adjust this value to your needs
+		const newCoordinates = el.geometry.coordinates[0].map((coord: [number, number]) => [
+			coord[0] + offset,
+			coord[1],
+		]);
+		newEl.geometry.coordinates = [newCoordinates];
+
+		setSketchState((sketchState) => {
+			const newGeometries = [...sketchState.geometries];
+			newGeometries.push(newEl);
+			return {
+				//			...sketchState,
+				geometries: newGeometries,
+				selectedGeoJson: newEl,
+				activeGeometryIndex: newGeometries.length - 1,
+				drawMode: undefined,
+			};
+		});
+	};
+	/*
+	const clonePolygon = (el: Feature) => {
+		const newEl = turf.clone(el);
+		const newGeometries = sketchState.geometries.map((geometry) =>
+			geometry === el ? newEl : geometry
+		);
+		return {
+			...sketchState,
+			geometries: newGeometries,
+			selectedGeoJson: newEl,
+			activeGeometryIndex: newGeometries.indexOf(newEl),
+			drawMode: 'simple_select',
+		};
+	};
+*/
+
 	const removeGeoJson = (geoJson: Feature): void => {
 		setSketchState((_sketchState) => {
 			const _geometries = [..._sketchState.geometries];
@@ -135,6 +185,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				activeGeometryIndex: _sketchState.activeGeometryIndex
 					? _sketchState.activeGeometryIndex - 1
 					: undefined,
+				drawMode: undefined,
 			};
 		});
 	};
@@ -232,146 +283,181 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			)}
 
 			<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
-				{sketchState.geometries.map((el) => (
-					<>
-						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
-							<br />
-							<Box
-								flexDirection={'row'}
-								sx={{
-									'&:hover': {
-										backgroundColor: 'rgb(177, 177, 177, 0.2)',
-									},
-									marginTop: '25px',
-								}}
-								onMouseOver={() => {
-									setHoveredGeometry(el);
-								}}
-								onMouseLeave={() => {
-									setHoveredGeometry(undefined);
-								}}
-							>
-								{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-								{/* @ts-ignore-next-line */}
-								<LayerListItem
-									listItemSx={buttonStyle}
-									configurable={true}
-									layerComponent={
-										// Hier muss man Geojson auf "sketchState.selectedGeojson" updaten
-										<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={String(el.id)} />
-									}
-									type={'layer'}
-									name={String(el.id)}
-									description={el.geometry.type}
-								></LayerListItem>
-								<Box
-									sx={{
-										padding: '3px 30px',
-										display: 'flex',
-										flexWrap: 'wrap',
-										marginRight: '4px',
-										marginBottom: '4px',
-										maxWidth: el.geometry.type === 'Polygon' ? '140px' : '240px',
-									}}
-								>
-									<Tooltip title="Center">
-										<Button
-											variant="outlined"
-											size="small"
-											onClick={() => {
-												mapHook?.map?.map.setCenter(
-													el.geometry.type === 'Point'
-														? (el.geometry.coordinates as LngLatLike)
-														: (turf.centerOfMass(el).geometry.coordinates as LngLatLike)
-												);
+				{sketchState.geometries.map(
+					(el) =>
+						el && (
+							<>
+								<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
+									<br />
+									<Box
+										flexDirection={'row'}
+										sx={{
+											'&:hover': {
+												backgroundColor: 'rgb(177, 177, 177, 0.2)',
+											},
+											marginTop: '25px',
+										}}
+										onMouseOver={() => {
+											setHoveredGeometry(el);
+										}}
+										onMouseLeave={() => {
+											setHoveredGeometry(undefined);
+										}}
+									>
+										{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+										{/* @ts-ignore-next-line */}
+										<LayerListItem
+											listItemSx={buttonStyle}
+											configurable={true}
+											layerComponent={
+												<MlGeoJsonLayer mapId={props.mapId} geojson={el} layerId={String(el.id)} />
+											}
+											type={'layer'}
+											name={String(el.id)}
+											description={el.geometry.type}
+										></LayerListItem>
+										<Box
+											sx={{
+												padding: '3px 30px',
+												display: 'flex',
+												flexWrap: 'wrap',
+												marginRight: '4px',
+												marginBottom: '4px',
+												maxWidth: el.geometry.type === 'Polygon' ? '140px' : '240px',
 											}}
 										>
-											<GpsFixedIcon />
-										</Button>
-									</Tooltip>
-									<Tooltip title="Edit">
-										<Button
-											sx={buttonStyle}
-											variant="outlined"
-											size="small"
-											onClick={() => {
-												setSketchState((_sketchState) => ({
-													..._sketchState,
-													selectedGeoJson: el,
-													activeGeometryIndex: _sketchState.geometries.indexOf(el),
-													drawMode: 'simple_select',
-												}));
-											}}
-										>
-											<EditIcon />
-										</Button>
-									</Tooltip>
-									{el.geometry.type === 'Polygon' && (
-										<>
-											<Tooltip title="Clone">
-												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
-													{' '}
-													<ContentCopyOutlinedIcon />
+											<Tooltip title="Center">
+												<Button
+													variant="outlined"
+													size="small"
+													onClick={() => {
+														mapHook?.map?.map.setCenter(
+															el.geometry.type === 'Point'
+																? (el.geometry.coordinates as LngLatLike)
+																: (turf.centerOfMass(el).geometry.coordinates as LngLatLike)
+														);
+													}}
+												>
+													<GpsFixedIcon />
 												</Button>
 											</Tooltip>
-											<Tooltip title="Resize">
+											<Tooltip title="Edit">
+												<Button
+													sx={buttonStyle}
+													variant="outlined"
+													size="small"
+													onClick={() => {
+														setSketchState((_sketchState) => ({
+															..._sketchState,
+															selectedGeoJson: el,
+															activeGeometryIndex: _sketchState.geometries.indexOf(el),
+															drawMode: 'simple_select',
+														}));
+													}}
+												>
+													<EditIcon />
+												</Button>
+											</Tooltip>
+											{el.geometry.type === 'Polygon' && (
+												<>
+													<Tooltip title="Clone">
+														<Button
+															sx={buttonStyle}
+															size="small"
+															variant="outlined"
+															onClick={() => {
+																clonePolygon(el);
+															}}
+														>
+															{' '}
+															<ContentCopyOutlinedIcon />
+														</Button>
+													</Tooltip>
+													<Tooltip title="Resize">
+														<Button
+															sx={buttonStyle}
+															size="small"
+															variant="outlined"
+															onClick={() => showResizeWindow(!resizeWindow)}
+														>
+															{' '}
+															<ExpandOutlinedIcon />
+														</Button>
+													</Tooltip>
+													{resizeWindow === true && (
+														<label>
+															Resize Factor:{' '}
+															<input
+																name="Resize Factor"
+																type="number"
+																onChange={(e) => handleResize(el, Number(e.target.value))}
+															/>
+														</label>
+													)}
+													<Tooltip title="Rotate">
+														<Button
+															sx={buttonStyle}
+															size="small"
+															variant="outlined"
+															onClick={() => showRotateWindow(!rotateWindow)}
+														>
+															<RotateRightOutlinedIcon />
+														</Button>
+													</Tooltip>
+													{rotateWindow === true && (
+														<label>
+															Rotate Polygon by °
+															<input
+																name="Rotate Factor"
+																type="number"
+																onChange={(e) => handleRotate(el, Number(e.target.value))}
+															/>
+														</label>
+													)}
+
+													<Tooltip title="Divide">
+														<Button
+															sx={buttonStyle}
+															size="small"
+															variant="outlined"
+															onClick={() => {}}
+														>
+															<ContentCutOutlinedIcon />
+														</Button>
+													</Tooltip>
+													<Tooltip title="Cut out Area">
+														<Button
+															sx={buttonStyle}
+															size="small"
+															variant="outlined"
+															onClick={() => {}}
+														>
+															<ContentCutOutlinedIcon />
+														</Button>
+													</Tooltip>
+												</>
+											)}
+											;
+											<Tooltip title="Delete">
 												<Button
 													sx={buttonStyle}
 													size="small"
 													variant="outlined"
-													onClick={() => showResizeWindow(!resizeWindow)}
+													onClick={() => {
+														removeGeoJson(el);
+														setHoveredGeometry(undefined);
+													}}
 												>
-													{' '}
-													<ExpandOutlinedIcon />
+													<DeleteIcon />
 												</Button>
 											</Tooltip>
-											{resizeWindow === true && (
-												<label>
-													Resize Factor:{' '}
-													<input
-														name="Resize Factor"
-														type="number"
-														onChange={(e) => handleResize(el, Number(e.target.value))}
-													/>
-												</label>
-											)}
-											<Tooltip title="Rotate">
-												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
-													<RotateRightOutlinedIcon />
-												</Button>
-											</Tooltip>
-											<Tooltip title="Divide">
-												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
-													<ContentCutOutlinedIcon />
-												</Button>
-											</Tooltip>
-											<Tooltip title="Cut out Area">
-												<Button sx={buttonStyle} size="small" variant="outlined" onClick={() => {}}>
-													<ContentCutOutlinedIcon />
-												</Button>
-											</Tooltip>
-										</>
-									)}
-									;
-									<Tooltip title="Delete">
-										<Button
-											sx={buttonStyle}
-											size="small"
-											variant="outlined"
-											onClick={() => {
-												removeGeoJson(el);
-												setHoveredGeometry(undefined);
-											}}
-										>
-											<DeleteIcon />
-										</Button>
-									</Tooltip>
-									;
+											;
+										</Box>
+									</Box>
 								</Box>
-							</Box>
-						</Box>
-					</>
-				))}
+							</>
+						)
+				)}
 				{hoveredGeometry && (
 					<MlGeoJsonLayer
 						mapId={props.mapId}
