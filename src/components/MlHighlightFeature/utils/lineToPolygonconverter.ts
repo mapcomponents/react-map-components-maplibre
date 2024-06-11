@@ -1,12 +1,14 @@
-function createPolygonAroundLine(line, offsetDistance) {
-  function offsetPoint(point, angle, distance) {
+import { Position } from "@turf/turf";
+
+function createPolygonAroundLine(line: Position[], offsetDistance: number) {
+  function offsetPoint(point: Position, angle: number, distance: number) {
     return [
       point[0] + Math.cos(angle) * distance,
       point[1] + Math.sin(angle) * distance
     ];
   }
 
-  function angleBetweenPoints(p1, p2) {
+  function angleBetweenPoints(p1: number[], p2: number[]) {
     return Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
   }
 

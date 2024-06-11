@@ -33,10 +33,12 @@ export interface MlHighlightFeatureProps {
 	 * For polygon and line inputs ---> Line Type
 	 * For circle inputs ----> circle Type
 	 * All available properties are documented in the MapLibreGl documentation
-	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#fill-extrusion
+	 * https://maplibre.org/maplibre-style-spec/layers/#paint
 	 */
 
 	paint?: LayerSpecification['paint'];
+
+	insertBeforeLayer?: string
 }
 
 /**
@@ -81,7 +83,6 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 
 				break;
 		}
-		console.log(newFeature);
 		return newFeature;
 	}
 
@@ -103,8 +104,10 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 				<MlGeoJsonLayer
 					mapId={props.mapId}
 					geojson={geojson}
+					layerId='MlHighlightFeature'
 					type={layerType}
 					options={{ paint: paint }}
+					insertBeforeLayer={props.insertBeforeLayer}
 				/>
 			)}
 		</>
