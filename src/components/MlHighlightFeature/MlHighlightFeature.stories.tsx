@@ -4,10 +4,13 @@ import MlHighlightFeature from './MlHighlightFeature';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
-import Sample1 from '../MlGeoJsonLayer/assets/sample_1.json';
+import examplePolygons from '../MlGeoJsonLayer/assets/sample_1.json';
+import exampleLines from './assets/sample_lines.json'; 
+import examplePoints from './assets/sample_points.json';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature, FeatureCollection } from '@turf/turf';
 import useMap from '../../hooks/useMap';
+
 
 const storyoptions = {
 	title: 'MapComponents/MlHighlightFeature',
@@ -17,7 +20,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = () => {
+const Template = (props: any) => {
 	const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>();
 	const selectedId = useRef<number[]>([]);	
 	const mapHook = useMap({
@@ -34,12 +37,12 @@ const Template = () => {
 
 	return (
 		<>	
-		<MlHighlightFeature features={selectedFeatures} offset={-5} paint={{ 'line-opacity': 0.5 }} />
+		<MlHighlightFeature features={selectedFeatures}  paint={props.type !== "circle"  ? { 'line-opacity': 0.5 }: {}} />
 
-			<MlGeoJsonLayer
-				geojson={Sample1 as FeatureCollection}
+			<MlGeoJsonLayer				
+				type={props.type}
+				geojson={props.sample as FeatureCollection}
 				onClick={(event: any) => {
-
 					if (selectedId.current?.includes(event.features[0].id)) {
 						setSelectedFeatures((current) => {
 							let newArray: Feature[] = [];
@@ -72,6 +75,14 @@ const Template = () => {
 	);
 };
 
-export const ExampleConfig = Template.bind({});
-ExampleConfig.parameters = {};
-ExampleConfig.args = {};
+export const Polygon = Template.bind({});
+Polygon.parameters = {};
+Polygon.args = { sample: examplePolygons, type: "fill"};
+
+export const Line = Template.bind({});
+Line.parameters = {};
+Line.args = {sample: exampleLines, type: "line"};
+
+export const Circle = Template.bind({});
+Circle.parameters = {};
+Circle.args = {sample: examplePoints, type: "circle"};
