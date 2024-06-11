@@ -64,7 +64,7 @@ type SketchStateType = {
  *
  */
 
-const MlSketchTool = (props: MlSketchToolProps) => {
+const MlPolygonEditor2 = (props: MlSketchToolProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
@@ -491,8 +491,8 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	);
 };
 
-MlSketchTool.defaultProps = {
+MlPolygonEditor2.defaultProps = {
 	mapId: undefined,
 	buttonStyleOverride: {},
 };
-export default MlSketchTool;
+export default MlPolygonEditor2;

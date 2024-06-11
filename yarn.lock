@@ -2075,6 +2075,40 @@
   resolved "https://registry.yarnpkg.com/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz#497c67a1cef50d1a2459ba60f315e448d2ad87fe"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
+"@mapcomponents/react-maplibre@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@mapcomponents/react-maplibre/-/react-maplibre-1.0.3.tgz#3355be1ec5dfb5c39dca9251f8a227254b19c455"
+  integrity sha512-qGaLQA30l3e0Yejg5cyFW5koaYvsDQe0zgq5PQIze5D4i6slVabyTxCPwmKYAq5r9wAYJtpuTyxD1i+sWCX0ZA==
+  dependencies:
+    "@dnd-kit/core" "^6.1.0"
+    "@dnd-kit/modifiers" "^7.0.0"
+    "@dnd-kit/sortable" "^8.0.0"
+    "@emotion/css" "^11.11.2"
+    "@emotion/react" "^11.11.3"
+    "@emotion/styled" "^11.11.0"
+    "@mapbox/mapbox-gl-draw" "^1.4.3"
+    "@mapbox/mapbox-gl-sync-move" "^0.3.1"
+    "@mui/icons-material" "^5.15.9"
+    "@mui/material" "^5.15.9"
+    "@tmcw/togeojson" "^5.8.1"
+    "@turf/turf" "^6.5.0"
+    "@types/d3" "^7.4.3"
+    "@types/react-color" "^3.0.11"
+    "@types/topojson-client" "^3.1.4"
+    "@xmldom/xmldom" "^0.8.10"
+    csv2geojson "^5.1.2"
+    d3 "^7.8.5"
+    jspdf "^2.5.1"
+    maplibre-gl "^4.0.0"
+    osm2geojson-lite "^0.9.4"
+    pako "^2.1.0"
+    react-color "^2.19.3"
+    react-moveable "^0.56.0"
+    three "^0.161.0"
+    topojson-client "^3.1.0"
+    uuid "^9.0.1"
+    wms-capabilities "^0.6.0"
+
 "@maplibre/maplibre-gl-style-spec@^20.1.1":
   version "20.1.1"
   resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-style-spec/-/maplibre-gl-style-spec-20.1.1.tgz#94b644493723776c34813bd62a223e748390099b"
