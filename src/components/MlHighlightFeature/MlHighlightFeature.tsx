@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-//import useMap from "../../hooks/useMap";
 import {
 	featureCollection as createCollection,
 	FeatureCollection,
 	Feature,
 	Geometry,
+	Position,
 } from '@turf/turf';
 import { LayerSpecification } from 'maplibre-gl';
 import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../MlGeoJsonLayer/MlGeoJsonLayer';
@@ -52,8 +52,6 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 	const [layerType, setLayerType] = useState<MlGeoJsonLayerProps['type']>('circle');
 
 	function getHighlightedFeature(feature: Feature) {
-		console.log(feature);
-
 		var newFeature: Feature = feature;
 		switch (feature.geometry.type) {
 			case 'Polygon':
@@ -66,9 +64,9 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 				setLayerType('line');
 
 				// transform newFeature into a polygon that surrounds the line
-				newFeature.geometry = createPolygonAroundLine(
-					(newFeature.geometry as Geometry).coordinates,
-					props.offset && props.offset * 1e-5
+				 newFeature.geometry = createPolygonAroundLine(
+					(newFeature.geometry as Geometry).coordinates as Position[],
+					props.offset ? props.offset * 1e-5 : 1 * 1e-5 
 				);
 				break;
 
