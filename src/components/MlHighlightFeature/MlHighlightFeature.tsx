@@ -56,7 +56,7 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 	const defaultColor = theme.palette.primary.main;
 
 	function getHighlightedFeature(feature: Feature) {
-		var newFeature: Feature = feature;
+		let newFeature: Feature = feature;
 		switch (feature.geometry.type) {
 			case 'Polygon':
 				setPaint({ 'line-color': defaultColor, 'line-offset': props.offset, ...props.paint });
