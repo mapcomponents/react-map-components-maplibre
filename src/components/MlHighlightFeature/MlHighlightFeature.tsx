@@ -9,6 +9,7 @@ import {
 import { LayerSpecification } from 'maplibre-gl';
 import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import createPolygonAroundLine from './utils/lineToPolygonconverter';
+import getTheme from '../../ui_components/MapcomponentsTheme';
 
 export interface MlHighlightFeatureProps {
 	/**
@@ -38,7 +39,7 @@ export interface MlHighlightFeatureProps {
 
 	paint?: LayerSpecification['paint'];
 
-	insertBeforeLayer?: string
+	insertBeforeLayer?: string;
 }
 
 /**
@@ -46,12 +47,13 @@ export interface MlHighlightFeatureProps {
  *
  */
 
-const defaultColor = 'red';
-
 const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 	const [geojson, setGeojson] = useState<FeatureCollection>();
 	const [paint, setPaint] = useState<any>();
 	const [layerType, setLayerType] = useState<MlGeoJsonLayerProps['type']>('circle');
+
+	const theme = getTheme("light");
+	const defaultColor = theme.palette.primary.main;
 
 	function getHighlightedFeature(feature: Feature) {
 		var newFeature: Feature = feature;
@@ -66,9 +68,9 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 				setLayerType('line');
 
 				// transform newFeature into a polygon that surrounds the line
-				 newFeature.geometry = createPolygonAroundLine(
+				newFeature.geometry = createPolygonAroundLine(
 					(newFeature.geometry as Geometry).coordinates as Position[],
-					props.offset ? props.offset * 1e-5 : 1 * 1e-5 
+					props.offset ? props.offset * 1e-5 : 1 * 1e-5
 				);
 				break;
 
@@ -104,7 +106,7 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 				<MlGeoJsonLayer
 					mapId={props.mapId}
 					geojson={geojson}
-					layerId='MlHighlightFeature'
+					layerId="MlHighlightFeature"
 					type={layerType}
 					options={{ paint: paint }}
 					insertBeforeLayer={props.insertBeforeLayer}

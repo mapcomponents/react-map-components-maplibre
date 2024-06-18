@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import MlHighlightFeature, { MlHighlightFeatureProps } from './MlHighlightFeature';
 
@@ -56,6 +56,28 @@ const Template = (props: TemplateProps) => {
 		mapHook.map.map.flyTo({ center: [7.105175528281227, 50.73348799274236], zoom: 15 });
 	}, [mapHook.map]);
 
+	const handleClick = useCallback((event: any) => {
+		const featureId = event.features[0].id;
+		const featureExists = selectedId.current.includes(featureId);
+
+		setSelectedFeatures((current) => {
+			if (featureExists) {
+				selectedId.current = selectedId.current.filter((id) => id !== featureId);
+				return current?.filter((feature) => feature.id !== featureId);
+			} else {
+				selectedId.current.push(featureId);
+				return [
+					...(current || []),
+					{
+						type: event.features[0].type,
+						geometry: event.features[0].geometry,
+						id: featureId,
+					} as Feature,
+				];
+			}
+		});
+	}, []);
+
 	return (
 		<>
 			<MlHighlightFeature
@@ -65,36 +87,7 @@ const Template = (props: TemplateProps) => {
 				insertBeforeLayer={props.insertBeforeLayer}
 			/>
 
-			<MlGeoJsonLayer
-				type={props.type}
-				geojson={props.sample as FeatureCollection}
-				onClick={(event: any) => {
-					if (selectedId.current?.includes(event.features[0].id)) {
-						setSelectedFeatures((current) => {
-							let newArray: Feature[] = [];
-							if (current) {
-								newArray = current.filter((feature) => feature.id !== event.features[0].id);
-							}
-							return newArray;
-						});
-
-						selectedId.current = selectedId.current.filter((idx) => idx !== event.features[0].id);
-					} else {
-						setSelectedFeatures((current) => {
-							const newArray: Feature[] = [];
-							current && newArray.push(...current);
-							newArray.push({
-								type: event.features[0].type,
-								geometry: event.features[0].geometry,
-								id: event.features[0].id,
-							} as Feature);
-							return newArray;
-						});
-
-						selectedId.current.push(event.features[0].id);
-					}
-				}}
-			/>
+			<MlGeoJsonLayer type={props.type} geojson={props.sample} onClick={handleClick} />
 		</>
 	);
 };
@@ -119,7 +112,6 @@ Circle.args = { sample: examplePoints, type: 'circle', offset: 5 };
 /// Catalogue Story
 
 const catalogueTemplate = () => {
-	const [openSidebar, setOpenSidebar] = useState(true);
 	const [selectedLayer, setSelectedLayer] = useState<string>('polygon');
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
