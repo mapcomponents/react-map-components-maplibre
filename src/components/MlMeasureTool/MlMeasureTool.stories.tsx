@@ -4,7 +4,15 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
 import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
 import Box from '@mui/material/Box';
-import { Button, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import {
+	Button,
+	MenuItem,
+	Select,
+	SelectChangeEvent,
+	Theme,
+	Typography,
+	useMediaQuery,
+} from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Menu from '@mui/material/Menu';
@@ -27,23 +35,23 @@ const Template = () => {
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-					<Select
-						name={'units'}
-						onChange={handleChange}
-						label={'Unit for measurement'}
-						defaultValue={'kilometers'}
-					>
-						<MenuItem value={'kilometers'}>Kilometers</MenuItem>
-						<MenuItem value={'miles'}>Miles</MenuItem>
-					</Select>
+				<Select
+					name={'units'}
+					onChange={handleChange}
+					label={'Unit for measurement'}
+					defaultValue={'kilometers'}
+				>
+					<MenuItem value={'kilometers'}>Kilometers</MenuItem>
+					<MenuItem value={'miles'}>Miles</MenuItem>
+				</Select>
 
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
-						<Typography variant="h5">Measure Polygon</Typography>
-					</Box>
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						Area: <MlMeasureTool measureType={'polygon'} unit={unit} />
-					</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+					<Typography variant="h5">Measure Polygon</Typography>
+				</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					Area: <MlMeasureTool measureType={'polygon'} unit={unit} />
+				</Box>
 			</Sidebar>
 		</>
 	);
@@ -59,23 +67,23 @@ const CTemplate = () => {
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-					<Select
-						name={'units'}
-						onChange={handleChange}
-						label={'Unit for measurement'}
-						defaultValue={'kilometers'}
-					>
-						<MenuItem value={'kilometers'}>Kilometers</MenuItem>
-						<MenuItem value={'miles'}>Miles</MenuItem>
-					</Select>
+				<Select
+					name={'units'}
+					onChange={handleChange}
+					label={'Unit for measurement'}
+					defaultValue={'kilometers'}
+				>
+					<MenuItem value={'kilometers'}>Kilometers</MenuItem>
+					<MenuItem value={'miles'}>Miles</MenuItem>
+				</Select>
 
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
-						<Typography variant="h5">Measure Polygon</Typography>
-					</Box>
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						Area: <MlMeasureTool measureType={'polygon'} unit={unit} />
-					</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					<SquareFootOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+					<Typography variant="h5">Measure Polygon</Typography>
+				</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					Area: <MlMeasureTool measureType={'polygon'} unit={unit} />
+				</Box>
 			</Sidebar>
 		</>
 	);
@@ -91,23 +99,23 @@ const LineTemplate = () => {
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-					<Select
-						name={'units'}
-						onChange={handleChange}
-						label={'Unit for measurement'}
-						defaultValue={'kilometers'}
-					>
-						<MenuItem value={'kilometers'}> Kilometers</MenuItem>
-						<MenuItem value={'miles'}> Miles</MenuItem>
-					</Select>
+				<Select
+					name={'units'}
+					onChange={handleChange}
+					label={'Unit for measurement'}
+					defaultValue={'kilometers'}
+				>
+					<MenuItem value={'kilometers'}> Kilometers</MenuItem>
+					<MenuItem value={'miles'}> Miles</MenuItem>
+				</Select>
 
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
-						<Typography variant="h5">Measure Line</Typography>
-					</Box>
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						Length: <MlMeasureTool measureType={'line'} unit={unit} />
-					</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+					<Typography variant="h5">Measure Line</Typography>
+				</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					Length: <MlMeasureTool measureType={'line'} unit={unit} />
+				</Box>
 			</Sidebar>
 		</>
 	);
@@ -123,29 +131,31 @@ const CLineTemplate = () => {
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
-					<Select
-						name={'units'}
-						onChange={handleChange}
-						label={'Unit for measurement'}
-						defaultValue={'kilometers'}
-					>
-						<MenuItem value={'kilometers'}> Kilometers</MenuItem>
-						<MenuItem value={'miles'}> Miles</MenuItem>
-					</Select>
+				<Select
+					name={'units'}
+					onChange={handleChange}
+					label={'Unit for measurement'}
+					defaultValue={'kilometers'}
+				>
+					<MenuItem value={'kilometers'}> Kilometers</MenuItem>
+					<MenuItem value={'miles'}> Miles</MenuItem>
+				</Select>
 
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
-						<Typography variant="h5">Measure Line</Typography>
-					</Box>
-					<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
-						Length: <MlMeasureTool measureType={'line'} unit={unit} />
-					</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					<StraightenOutlinedIcon sx={{ float: 'left', marginTop: '4px', marginRight: '5px' }} />
+					<Typography variant="h5">Measure Line</Typography>
+				</Box>
+				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
+					Length: <MlMeasureTool measureType={'line'} unit={unit} />
+				</Box>
 			</Sidebar>
 		</>
 	);
 };
 
 const catalogueTemplate = () => {
+	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+
 	const [selectedTool, setSelectedTool] = useState<string>('area_measure');
 
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -163,6 +173,28 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
+			<Box
+				sx={{
+					position: 'fixed',
+					width: { xs: '100%', sm: 'auto' },
+					top: { xs: '62px', sm: '22px' },
+					right: { xs: '0px', sm: '120px', md: '145px', lg: '155px', xl: '175px' },
+					paddingRight: { xs: '20px', sm: '0px' },
+					color: '#009ee0',
+					backgroundColor: '#fff',
+					textAlign: 'right',
+					fontSize: '16px',
+					fontFamily: 'sans-serif',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '5px',
+					zIndex: 5000,
+				}}
+			>
+				{mediaIsMobile
+					? 'Zum Beenden erneut auf denselben Punkt klicken.'
+					: 'Die Zeichnung kann beendet werden, indem erneut auf den zuletzt gezeichneten Punkt geklickt wird.'}
+			</Box>
 			<TopToolbar
 				unmovableButtons={
 					<>
