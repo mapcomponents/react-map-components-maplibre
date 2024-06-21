@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"main": "dist/index.cjs.js",
 	"license": "MIT",
 	"module": "dist/index.esm.js",
@@ -91,9 +91,9 @@
 		"babel-plugin-styled-components": "^2.1.4",
 		"babel-preset-react-app": "^10.0.1",
 		"cypress": "^13.6.4",
+		"elasticlunr": "^0.9.5",
 		"enzyme": "^3.11.0",
 		"eslint": "^8.56.0",
-		"elasticlunr": "^0.9.5",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-storybook": "^0.6.15",
