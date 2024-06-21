@@ -1,5 +1,13 @@
 # Change Log
 
+
+## [v1.0.5] - 2024-06-21
+
+### Changed
+- 78f7106: client search component MlClientSearch removed from release…
+### Fixed
+- 78f7106: MlGeojsonlayer options.source bug
+
 ## [v1.0.4] - 2024-06-21
 
 ### Added
