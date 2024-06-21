@@ -1,5 +1,24 @@
 # Change Log
 
+## [v1.0.4] - 2024-06-21
+
+### Added
+- cab1848: add hints to buttons in catalogue stories
+- c621883: Feature/add layer and source events (#167) …
+- fcb3c75: add feature for additional pdf form info to MlPdfForm (#162) …
+- 7994580: add client search component MlClientSearch (#166) …
+- b0d2c32: add makeMapContextDecorators function to enable changing MapLibreMap options inside the sb-story (#165) …
+
+### Changed
+- 20378bc: refactor geojson stories
+- af7e0c4, 6fa9a9b: update README.md
+- 8735ac8: redefiened MlLayer useLayerProps (#160) …
+
+### Fixed
+- a48a8fa: fix MlImageMarkerLayer story
+- 3afbe7b: remove useLayer hook initializedRef anti-pattern and fix reinitializa… (#169) …
+- 14ef756: Fix/usesource stylechange (#168) …
+
 
 ## [v1.0.3] - 2024-02-22
 
