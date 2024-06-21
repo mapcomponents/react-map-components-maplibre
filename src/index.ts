@@ -3,7 +3,7 @@ export { default as MapLibreMap } from './components/MapLibreMap/MapLibreMap';
 
 export { default as MlCenterPosition } from './components/MlCenterPosition/MlCenterPosition';
 
-export { default as MlClientSearch } from './components/MlClientSearch/MlClientSearch';
+//export { default as MlClientSearch } from './components/MlClientSearch/MlClientSearch';
 
 export { default as MlComponentTemplate } from './components/MlComponentTemplate/MlComponentTemplate';
 
