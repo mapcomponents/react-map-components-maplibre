@@ -144,9 +144,9 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 	useLayer({
 		mapId: props.mapId,
 		layerId: layerId.current,
-		options: {
-			...props.options,
+		options: {			
 			source: 'source-' + layerId.current,
+			...props.options,
 			paint: {
 				...(props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides)),
 				...props?.options?.paint,
