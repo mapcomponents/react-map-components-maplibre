@@ -108,6 +108,8 @@ function useLayer(props: useLayerProps): useLayerType {
 	const layerTypeRef = useRef<string>('');
 	const layerPaintConfRef = useRef<string>('');
 	const layerLayoutConfRef = useRef<string>('');
+	const layerOnClickRef = useRef<(ev: MapEventType & unknown) => Map | void>();
+
 
 	const [layer, setLayer] = useState<ReturnType<getLayerType>>();
 
@@ -199,6 +201,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		layerPaintConfRef.current = JSON.stringify(props.options?.paint);
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
+		layerOnClickRef.current = props.onClick 
 	}, [props, mapHook]);
 
 	useEffect(() => {
@@ -214,7 +217,6 @@ function useLayer(props: useLayerProps): useLayerType {
 		) {
 			return;
 		}
-
 		createLayer();
 	}, [mapHook.map, mapHook.mapIsReady, props, createLayer]);
 
@@ -293,6 +295,19 @@ function useLayer(props: useLayerProps): useLayerType {
 		};
 	}, []);
 
+	// Reload on-handlers when they change
+	useEffect(() => {
+		if (props.onClick !== layerOnClickRef.current) {	
+			if (layerOnClickRef.current) {
+				mapHook.map?.off('click', layerId.current, layerOnClickRef.current as any);
+			}
+			layerOnClickRef.current = props.onClick		
+			mapHook.map?.on('click', layerId.current, props.onClick, mapHook.componentId);
+		}		
+	}, [mapHook.map, props.onClick]);
+
+
+	
 	useEffect(() => {
 		if (typeof props?.options?.source !== 'string' || !mapHook.map) {
 			return;

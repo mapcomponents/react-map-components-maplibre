@@ -53,6 +53,9 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 
 	const initializedRef = useRef(false);
 
+	const [selected, setSelected] = useState();
+	console.log("selected: ", selected)
+
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
 		initializedRef.current = true;
@@ -76,6 +79,14 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 						} as DataDrivenPropertyValueSpecification<number>,
 						'circle-color': '#009EE0',
 					},
+				}}
+				onClick={(ev: any) => {
+					if(ev.features[0].properties.Standort === selected ){
+						setSelected(undefined)
+					}else {
+						setSelected(ev.features[0].properties.Standort);
+					}			
+					console.log("used for evaluation: ", selected);
 				}}
 				labelOptions={{
 					minzoom: 5,
@@ -101,11 +112,6 @@ const OsmProtocolSourceDemo = () => {
 		mapHook.map?.jumpTo({ center: [2.651811, 39.571309], zoom: 16.5 });
 	}, [mapHook.map]);
 
-	// useSource({sourceId: "test", source: {
-	// 	type: 'geojson',
-	// 	data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
-	// } })
-
 	return (
 		<>
 			<MlGeoJsonLayer
@@ -117,14 +123,13 @@ const OsmProtocolSourceDemo = () => {
 					},
 				}}
 				options={{
-					source: 
-					{
+					source: {
 						type: 'geojson',
 						data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
 					},
 				}}
 				labelProp="name"
-				labelOptions={{	
+				labelOptions={{
 					paint: {
 						'text-color': '#ff0000',
 					},
