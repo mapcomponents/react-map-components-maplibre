@@ -21,7 +21,6 @@ import useMap from '../../hooks/useMap';
 import useAddProtocol from '../../hooks/useAddProtocol/useAddProtocol';
 import geoJsonDecorator from '../../decorators/GeoJsonMapDecorator';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
-import useSource from '../../hooks/useSource';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
