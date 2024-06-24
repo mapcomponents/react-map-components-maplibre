@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, MutableRefObject } from 'react';
 
 import useMap, { useMapType } from './useMap';
 
@@ -11,6 +11,7 @@ import {
 	Map,
 	FilterSpecification,
 	MapGeoJSONFeature,
+	MapLayerEventType,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper, {
@@ -206,6 +207,18 @@ function useLayer(props: useLayerProps): useLayerType {
 		layerOnClickRef.current = props.onClick;
 	}, [props, mapHook]);
 
+	const updateMapEvent = (eventName: keyof MapLayerEventType, handlerRef: MutableRefObject<((ev: MapEventType & unknown) => Map | void) | undefined>, newHandler: string | ((ev: MapEventType) => void | Map) | undefined ) => {
+    if (newHandler !== handlerRef.current) {
+      if (handlerRef.current) {
+				mapHook.map?.off(eventName, layerId.current, handlerRef.current as unknown as (
+					ev: MapMouseEvent & { features?: MapGeoJSONFeature[] }
+				) => void)
+      }
+      handlerRef.current = newHandler as (ev: MapEventType & unknown) => Map | void;
+      mapHook.map?.on(eventName, layerId.current, newHandler, mapHook.componentId);
+    }
+  };
+
 	useEffect(() => {
 		if (!mapHook.map) return;
 		if (!props.geojson && !props.options.source && props?.options?.type !== 'background') return;
@@ -299,52 +312,16 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	// Reload on-handlers when they change
 	useEffect(() => {
-		if (props.onClick !== layerOnClickRef.current) {
-			if (layerOnClickRef.current) {
-				mapHook.map?.off(
-					'click',
-					layerId.current,
-					layerOnClickRef.current as unknown as (
-						ev: MapMouseEvent & { features?: MapGeoJSONFeature[] }
-					) => void
-				);
-			}
-			layerOnClickRef.current = props.onClick;
-			mapHook.map?.on('click', layerId.current, props.onClick, mapHook.componentId);
-		}
-	}, [mapHook.map, props.onClick]);
+    updateMapEvent('click', layerOnClickRef, props.onClick);
+  }, [mapHook, props.onClick]);
 
-	useEffect(() => {
-		if (props.onHover !== layerOnHoverRef.current) {
-			if (layerOnHoverRef.current) {
-				mapHook.map?.off(
-					'mousemove',
-					layerId.current,
-					layerOnHoverRef.current as unknown as (
-						ev: MapMouseEvent & { features?: MapGeoJSONFeature[] }
-					) => void
-				);
-			}
-			layerOnHoverRef.current = props.onHover;
-			mapHook.map?.on('mousemove', layerId.current, props.onHover, mapHook.componentId);
-		}
-	}, [mapHook.map, props.onHover]);
+  useEffect(() => {
+    updateMapEvent('mousemove', layerOnHoverRef, props.onHover);
+  }, [mapHook, props.onHover]);
 
-	useEffect(() => {
-		if (props.onLeave !== layerOnLeaveRef.current) {
-			if (layerOnLeaveRef.current) {
-				mapHook.map?.off(
-					'mouseleave',
-					layerId.current,
-					layerOnLeaveRef.current as unknown as (
-						ev: MapMouseEvent & { features?: MapGeoJSONFeature[] }
-					) => void
-				);
-			}
-			layerOnLeaveRef.current = props.onLeave;
-			mapHook.map?.on('mouseleave', layerId.current, props.onLeave, mapHook.componentId);
-		}
-	}, [mapHook.map, props.onLeave]);
+  useEffect(() => {
+    updateMapEvent('mouseleave', layerOnLeaveRef, props.onLeave);
+  }, [mapHook, props.onLeave]);
 
 	useEffect(() => {
 		if (typeof props?.options?.source !== 'string' || !mapHook.map) {
