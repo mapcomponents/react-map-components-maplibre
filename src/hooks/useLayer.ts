@@ -10,6 +10,7 @@ import {
 	MapEventType,
 	Map,
 	FilterSpecification,
+	MapGeoJSONFeature,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper, {
@@ -299,7 +300,7 @@ function useLayer(props: useLayerProps): useLayerType {
 	useEffect(() => {
 		if (props.onClick !== layerOnClickRef.current) {	
 			if (layerOnClickRef.current) {
-				mapHook.map?.off('click', layerId.current, layerOnClickRef.current as any);
+				mapHook.map?.off('click', layerId.current, layerOnClickRef.current  as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] } & Object) => void);
 			}
 			layerOnClickRef.current = props.onClick		
 			mapHook.map?.on('click', layerId.current, props.onClick, mapHook.componentId);
