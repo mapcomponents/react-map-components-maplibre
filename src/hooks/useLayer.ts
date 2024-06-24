@@ -219,6 +219,20 @@ function useLayer(props: useLayerProps): useLayerType {
     }
   };
 
+	// Reload on-handlers when they change
+	useEffect(() => {
+    updateMapEvent('click', layerOnClickRef, props.onClick);
+  }, [mapHook.map, props.onClick]);
+
+  useEffect(() => {
+    updateMapEvent('mousemove', layerOnHoverRef, props.onHover);
+  }, [mapHook.map, props.onHover]);
+
+  useEffect(() => {
+    updateMapEvent('mouseleave', layerOnLeaveRef, props.onLeave);
+  }, [mapHook.map, props.onLeave]);
+	
+
 	useEffect(() => {
 		if (!mapHook.map) return;
 		if (!props.geojson && !props.options.source && props?.options?.type !== 'background') return;
@@ -310,21 +324,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		};
 	}, []);
 
-	// Reload on-handlers when they change
-	useEffect(() => {
-    updateMapEvent('click', layerOnClickRef, props.onClick);
-  }, [mapHook.map, props.onClick]);
-
-  useEffect(() => {
-    updateMapEvent('mousemove', layerOnHoverRef, props.onHover);
-  }, [mapHook.map, props.onHover]);
-
-  useEffect(() => {
-    updateMapEvent('mouseleave', layerOnLeaveRef, props.onLeave);
-  }, [mapHook.map, props.onLeave]);
-
-
-
+	
 	useEffect(() => {
 		if (typeof props?.options?.source !== 'string' || !mapHook.map) {
 			return;
