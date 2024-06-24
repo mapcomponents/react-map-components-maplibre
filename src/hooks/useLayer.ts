@@ -313,15 +313,17 @@ function useLayer(props: useLayerProps): useLayerType {
 	// Reload on-handlers when they change
 	useEffect(() => {
     updateMapEvent('click', layerOnClickRef, props.onClick);
-  }, [mapHook, props.onClick]);
+  }, [mapHook.map, props.onClick]);
 
   useEffect(() => {
     updateMapEvent('mousemove', layerOnHoverRef, props.onHover);
-  }, [mapHook, props.onHover]);
+  }, [mapHook.map, props.onHover]);
 
   useEffect(() => {
     updateMapEvent('mouseleave', layerOnLeaveRef, props.onLeave);
-  }, [mapHook, props.onLeave]);
+  }, [mapHook.map, props.onLeave]);
+
+
 
 	useEffect(() => {
 		if (typeof props?.options?.source !== 'string' || !mapHook.map) {
