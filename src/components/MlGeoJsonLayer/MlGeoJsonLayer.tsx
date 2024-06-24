@@ -144,11 +144,11 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 	useLayer({
 		mapId: props.mapId,
 		layerId: layerId.current,
-		options: {			
+		options: {					
 			...(typeof props?.options?.source !== 'undefined' &&
-						typeof props?.options?.source !== 'string'
-							? {source: 'source-' + layerId.current,}
-							: {source: props.options?.source}),				
+						typeof props?.options?.source === 'string'
+							? {source: props.options.source}
+							: {source: 'source-' + layerId.current}),				
 			paint: {
 				...(props.paint || getDefaultPaintPropsByType(layerType, props.defaultPaintOverrides)),
 				...props?.options?.paint,
@@ -171,9 +171,9 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		mapId: props.mapId,
 		options: {
 			...(typeof props?.options?.source !== 'undefined' &&
-		typeof props?.options?.source !== 'string'
-			? {source: 'source-' + layerId.current,}
-			: {}),			
+						typeof props?.options?.source === 'string'
+							? {source: props.options.source}
+							: {source: 'source-' + layerId.current}),						
 			id: labelLayerId,
 			type: 'symbol',
 			maxzoom: 24,

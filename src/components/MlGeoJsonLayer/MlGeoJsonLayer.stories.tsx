@@ -21,6 +21,7 @@ import useMap from '../../hooks/useMap';
 import useAddProtocol from '../../hooks/useAddProtocol/useAddProtocol';
 import geoJsonDecorator from '../../decorators/GeoJsonMapDecorator';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
+import useSource from '../../hooks/useSource';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
@@ -101,6 +102,11 @@ const OsmProtocolSourceDemo = () => {
 		mapHook.map?.jumpTo({ center: [2.651811, 39.571309], zoom: 16.5 });
 	}, [mapHook.map]);
 
+	// useSource({sourceId: "test", source: {
+	// 	type: 'geojson',
+	// 	data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
+	// } })
+
 	return (
 		<>
 			<MlGeoJsonLayer
@@ -112,13 +118,14 @@ const OsmProtocolSourceDemo = () => {
 					},
 				}}
 				options={{
-					source: {
+					source: 
+					{
 						type: 'geojson',
 						data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
 					},
 				}}
 				labelProp="name"
-				labelOptions={{
+				labelOptions={{	
 					paint: {
 						'text-color': '#ff0000',
 					},
