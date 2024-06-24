@@ -54,7 +54,8 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 	const initializedRef = useRef(false);
 
 	const [selected, setSelected] = useState();
-	console.log("selected: ", selected)
+
+	console.log('selected: ', selected);
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
@@ -81,12 +82,12 @@ const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 					},
 				}}
 				onClick={(ev: any) => {
-					if(ev.features[0].properties.Standort === selected ){
-						setSelected(undefined)
-					}else {
+					console.log('used for evaluation: ', selected);
+					if (ev.features?.[0].properties.Standort === selected) {
+						setSelected(undefined);
+					} else {
 						setSelected(ev.features[0].properties.Standort);
-					}			
-					console.log("used for evaluation: ", selected);
+					}
 				}}
 				labelOptions={{
 					minzoom: 5,
