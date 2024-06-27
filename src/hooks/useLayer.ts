@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, MutableRefObject } from 'react';
 
 import useMap, { useMapType } from './useMap';
 
@@ -10,6 +10,8 @@ import {
 	MapEventType,
 	Map,
 	FilterSpecification,
+	MapGeoJSONFeature,
+	MapLayerEventType,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper, {
@@ -108,6 +110,9 @@ function useLayer(props: useLayerProps): useLayerType {
 	const layerTypeRef = useRef<string>('');
 	const layerPaintConfRef = useRef<string>('');
 	const layerLayoutConfRef = useRef<string>('');
+	const layerOnClickRef = useRef<(ev: MapEventType & unknown) => Map | void>();
+	const layerOnHoverRef = useRef<(ev: MapEventType & unknown) => Map | void>();
+	const layerOnLeaveRef = useRef<(ev: MapEventType & unknown) => Map | void>();
 
 	const [layer, setLayer] = useState<ReturnType<getLayerType>>();
 
@@ -199,7 +204,36 @@ function useLayer(props: useLayerProps): useLayerType {
 		layerPaintConfRef.current = JSON.stringify(props.options?.paint);
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
+		layerOnClickRef.current = props.onClick;
+		layerOnHoverRef.current = props.onHover;
+		layerOnLeaveRef.current = props.onLeave;
 	}, [props, mapHook]);
+
+	const updateMapEvent = (eventName: keyof MapLayerEventType, handlerRef: MutableRefObject<((ev: MapEventType & unknown) => Map | void) | undefined>, newHandler: string | ((ev: MapEventType) => void | Map) | undefined ) => {
+    if (newHandler !== handlerRef.current) {
+      if (handlerRef.current) {
+				mapHook.map?.off(eventName, layerId.current, handlerRef.current as unknown as (
+					ev: MapMouseEvent & { features?: MapGeoJSONFeature[] }
+				) => void)
+      }
+      handlerRef.current = newHandler as (ev: MapEventType & unknown) => Map | void;
+      mapHook.map?.on(eventName, layerId.current, newHandler, mapHook.componentId);
+    }
+  };
+
+	// Reload on-handlers when they change
+	useEffect(() => {
+    updateMapEvent('click', layerOnClickRef, props.onClick);
+  }, [mapHook.map, props.onClick]);
+
+  useEffect(() => {
+    updateMapEvent('mousemove', layerOnHoverRef, props.onHover);
+  }, [mapHook.map, props.onHover]);
+
+  useEffect(() => {
+    updateMapEvent('mouseleave', layerOnLeaveRef, props.onLeave);
+  }, [mapHook.map, props.onLeave]);
+	
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -214,7 +248,6 @@ function useLayer(props: useLayerProps): useLayerType {
 		) {
 			return;
 		}
-
 		createLayer();
 	}, [mapHook.map, mapHook.mapIsReady, props, createLayer]);
 
@@ -293,6 +326,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		};
 	}, []);
 
+	
 	useEffect(() => {
 		if (typeof props?.options?.source !== 'string' || !mapHook.map) {
 			return;
