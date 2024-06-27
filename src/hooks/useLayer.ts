@@ -205,6 +205,8 @@ function useLayer(props: useLayerProps): useLayerType {
 		layerLayoutConfRef.current = JSON.stringify(props.options?.layout);
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
 		layerOnClickRef.current = props.onClick;
+		layerOnHoverRef.current = props.onHover;
+		layerOnLeaveRef.current = props.onLeave;
 	}, [props, mapHook]);
 
 	const updateMapEvent = (eventName: keyof MapLayerEventType, handlerRef: MutableRefObject<((ev: MapEventType & unknown) => Map | void) | undefined>, newHandler: string | ((ev: MapEventType) => void | Map) | undefined ) => {
