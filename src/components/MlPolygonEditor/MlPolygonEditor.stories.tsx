@@ -37,17 +37,12 @@ const Template = () => {
 	useEffect(() => {
 		setGeoJson((current) => {
 			const modifiedGeoJson = { ...current };
-			// const newFeatures = [...current.features];
-			// newFeatures.push(newGeoJson as Feature);
 			modifiedGeoJson.features = [newGeoJson];
 			return modifiedGeoJson as any;
 		});
 		setSelectedFeature(newGeoJson as any);
 	}, [newGeoJson]);
 
-	console.log('selectedFeature:', selectedFeature);
-	//console.log('geojson: ', geoJson);
-	//console.log('newgeojson: ', newGeoJson);
 	return (
 		<>
 			<TopToolbar
@@ -70,15 +65,19 @@ const Template = () => {
 						setGeoJson((current) => {
 							const newGeojson = { ...current };
 							const newFeatures: Feature[] = [...current.features];
+							// newfeatures.id -> newId
 							newFeatures.push(result);
 							newGeojson.features = newFeatures as any;
 							setSelectedFeature(result);
 							return newGeojson;
 						});
 					}}
+					//newGeojson.features[] --> index des Features mit der gleichen Id wie "result" bzw "selectedFeature"
+
 					modifyResult={(result: Feature) => {
 						setGeoJson((current) => {
 							const newGeojson = { ...current };
+							console.log('result:', result);
 							newGeojson.features = [result];
 							return newGeojson;
 						});

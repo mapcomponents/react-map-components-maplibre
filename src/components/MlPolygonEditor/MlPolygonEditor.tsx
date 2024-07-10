@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as turf from '@turf/turf';
-import { Feature, GeoJSONObject } from '@turf/turf';
+import { Feature, FeatureCollection, GeoJSONObject } from '@turf/turf';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import ExpandOutlinedIcon from '@mui/icons-material/ExpandOutlined';
 import RotateRightOutlinedIcon from '@mui/icons-material/RotateRightOutlined';
 import ContentCutOutlinedIcon from '@mui/icons-material/ContentCutOutlined';
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import { Box, Button, ButtonGroup, SxProps, Theme, Tooltip } from '@mui/material';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
+import { FeatureState, typeOf } from 'maplibre-gl';
+
+//to-do
+
+// a) grab&move polygons
+// b) Display multiple polygons / layerList
+// c) make split working properly
 
 const EditorModes = [
-	{ name: 'Clone', mode: 'clone_polygon', icon: <ContentCopyOutlinedIcon />, id: 1 },
-	{ name: 'Resize', mode: 'resize_polygon', icon: <ExpandOutlinedIcon />, id: 2 },
-	{ name: 'Rotate', mode: 'rotate_polygon', icon: <RotateRightOutlinedIcon />, id: 3 },
-	{ name: 'Cut out', mode: 'cut_polygon', icon: <ContentCutOutlinedIcon />, id: 4 },
+	{ name: ' Edit', mode: 'edit_polygon', icon: <ModeEditOutlineIcon />, id: 1 },
+	{ name: 'Clone', mode: 'clone_polygon', icon: <ContentCopyOutlinedIcon />, id: 2 },
+	{ name: 'Resize', mode: 'resize_polygon', icon: <ExpandOutlinedIcon />, id: 3 },
+	{ name: 'Rotate', mode: 'rotate_polygon', icon: <RotateRightOutlinedIcon />, id: 4 },
 	{ name: 'Split', mode: 'split_polygon', icon: <ContentCutOutlinedIcon />, id: 5 },
 ];
 
@@ -30,13 +38,16 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 	const [resizeFactor, setResizeFactor] = useState<number>(1);
 	const [rotateFactor, setRotateFactor] = useState<number>(0);
 	const [offset, setOffset] = useState<number>(0.01);
-	const [cutArea, setCutArea] = useState<GeoJSONObject>();
 	const [line, setLine] = useState<Feature>();
+	const [poly, setPoly] = useState<Feature>();
+	const polyRef = useRef();
 	const [splitPolygon, setSplitPolygon] = useState<boolean>(false);
 	const [cutMode, setCutMode] = useState<boolean>(false);
 	const [resizeWindow, showResizeWindow] = useState<boolean>(false);
 	const [rotateWindow, showRotateWindow] = useState<boolean>(false);
 	const [offsetWindow, showOffsetWindow] = useState<boolean>(false);
+
+	console.log(poly);
 
 	// Type-checking functions
 
@@ -46,27 +57,14 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 		return feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon';
 	};
 
-	/* const isLineOrMultiLine = (
-		feature: Feature
-	): feature is Feature<turf.LineString | turf.MultiLineString> => {
-		return feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString';
-	};
-*/
-	const isFeature = (geoJson: GeoJSONObject): geoJson is Feature => {
-		return 'type' in geoJson && geoJson.type === 'Feature';
-	};
-
 	// Functions for polygon modification
 
-	const handleCut = (el: Feature, cutArea: GeoJSONObject) => {
-		if (!el || !cutArea) return;
-		if (isPolygonOrMultiPolygon(el) && isPolygonOrMultiPolygon(cutArea as Feature)) {
-			const newPolygon = turf.difference(el, cutArea as Feature<turf.Polygon | turf.MultiPolygon>);
-			if (newPolygon) {
-				props.modifyResult && props.modifyResult(newPolygon);
-			} else {
-				console.error('The polygons do not overlap or the difference operation failed.');
-			}
+	const handleEdit = (el: Feature) => {
+		console.log(poly);
+		if (poly) {
+			const thePolygon: Feature = { ...poly };
+			thePolygon.id = props.inputPolygon?.id;
+			props.modifyResult && thePolygon && props.modifyResult(thePolygon);
 		}
 	};
 
@@ -94,16 +92,67 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 		props.modifyResult && props.modifyResult(scaledEl);
 	};
 
+	function getSplittedPolygons(splitedLines: FeatureCollection) {
+		const geojson: FeatureCollection = { type: 'FeatureCollection', features: [] };
+		const features = splitedLines.features;
+		const newFeatures: Feature[] = [];
+
+		const firstFeature = features[0].geometry.coordinates;
+		const secondFeature = features[1].geometry.coordinates;
+		const thirdFeature = features[2].geometry.coordinates;
+
+		// firstPolygon
+		newFeatures.push({
+			type: 'Feature',
+
+			geometry: {
+				coordinates: [
+					[
+						firstFeature[0],
+						thirdFeature[1],
+						secondFeature[secondFeature.length - 1],
+						firstFeature[1],
+						firstFeature[0],
+					],
+				],
+				type: 'Polygon',
+			},
+		} as Feature);
+
+		// secondPolygon
+		newFeatures.push({
+			type: 'Feature',
+
+			geometry: {
+				coordinates: [
+					[
+						firstFeature[1],
+						...secondFeature
+							.filter((feature: any, idx: number) => idx !== 0 || idx !== secondFeature.length - 1)
+							.reverse(),
+						firstFeature[1],
+					],
+				],
+				type: 'Polygon',
+			},
+		} as Feature);
+		geojson.features = newFeatures;
+		return geojson;
+	}
+
 	const handleSplit = () => {
 		console.log(line);
 		if (!props.inputPolygon || !line) return;
 		if (isPolygonOrMultiPolygon(props.inputPolygon)) {
 			const polyAsLine = turf.polygonToLine(props.inputPolygon);
 			console.log(polyAsLine);
-			const splittetLines = turf.lineSplit(polyAsLine, line);
-			console.log(splittetLines);
+			const splittedLines = turf.lineSplit(polyAsLine as Feature, line);
+			console.log(splittedLines);
+			const newPolygons = getSplittedPolygons(splittedLines);
+			console.log(newPolygons);
 
-			props.modifyResult && props.modifyResult(turf.polygonize(splittetLines.features[0]));
+			props.modifyResult && props.modifyResult(newPolygons.features[0]);
+			props.getResult && props.getResult(newPolygons.features[1]);
 		}
 		setSplitPolygon(false);
 	};
@@ -111,12 +160,6 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 	useEffect(() => {
 		splitPolygon && handleSplit();
 	}, [splitPolygon]);
-
-	/*
-	if (polyAsLine.type === 'FeatureCollection') {
-				return }
-				else {
-					*/
 
 	// exec Functions specifying conditions
 
@@ -135,12 +178,6 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 	const rotatePolygon = () => {
 		if (props.inputPolygon && rotateFactor !== undefined) {
 			handleRotate(props.inputPolygon, rotateFactor);
-		}
-	};
-
-	const cutPolygon = () => {
-		if (props.inputPolygon && cutArea && isFeature(cutArea)) {
-			handleCut(props.inputPolygon, cutArea as Feature);
 		}
 	};
 
@@ -169,6 +206,14 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 			return;
 		}
 		switch (editMode) {
+			case 'edit_polygon':
+				props.inputPolygon;
+				showResizeWindow(false);
+				showRotateWindow(false);
+				showOffsetWindow(false);
+				setCutMode(false);
+				break;
+
 			case 'split_polygon':
 				props.inputPolygon;
 				showResizeWindow(false);
@@ -301,8 +346,7 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 					<>
 						<label>
 							<br></br>
-							Choose eastern Offset for new Polygon in Degrees
-							<br></br>
+							Choose eastern Offset for new Polygon in longitude °<br></br>
 							<input
 								name="offset"
 								type="number"
@@ -318,7 +362,6 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 					<MlFeatureEditor
 						mapId={props.mapId}
 						insertBeforeLayer={props.insertBeforeLayer}
-						//	geojson={props.inputPolygon}
 						mode="draw_line_string"
 						onChange={(state) => {
 							state && setLine(state[0] as Feature);
@@ -328,17 +371,20 @@ const MlPolygonEditor = (props: MlPolygonEditorProps) => {
 						}}
 					/>
 				)}
-				{editMode === 'cut_polygon' && (
+
+				{editMode === 'edit_polygon' && (
 					<MlFeatureEditor
 						mapId={props.mapId}
 						insertBeforeLayer={props.insertBeforeLayer}
-						//	geojson={props.inputPolygon}
-						mode="draw_polygon"
+						mode="simple_select"
+						geojson={props.inputPolygon}
 						onChange={(state) => {
-							state && setCutArea(state[0] as Feature);
+							state?.[0] && setPoly(state[0] as Feature);
 						}}
 						onFinish={() => {
-							cutPolygon();
+							if (props.inputPolygon) {
+								handleEdit(props.inputPolygon);
+							}
 						}}
 					/>
 				)}
@@ -351,3 +397,23 @@ MlPolygonEditor.defaultProps = {
 	mapId: undefined,
 };
 export default MlPolygonEditor;
+
+/*
+	const handleCut = (el: Feature, cutArea: GeoJSONObject) => {
+		if (!el || !cutArea) return;
+		if (isPolygonOrMultiPolygon(el) && isPolygonOrMultiPolygon(cutArea as Feature)) {
+			const newPolygon = turf.difference(el, cutArea as Feature<turf.Polygon | turf.MultiPolygon>);
+			if (newPolygon) {
+				props.modifyResult && props.modifyResult(newPolygon);
+			} else {
+				console.error('The polygons do not overlap or the difference operation failed.');
+			}
+		}
+	};
+
+	const cutPolygon = () => {
+		if (props.inputPolygon && cutArea && isFeature(cutArea)) {
+			handleCut(props.inputPolygon, cutArea as Feature);
+		}
+	};
+*/
