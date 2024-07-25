@@ -332,7 +332,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	// Reload onClick-handlers when they change
 	useEffect(() => {
-		if(!mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
+		if(!props.onClick || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
 		var onClickHandler = props.onClick;
 		mapHook.map?.on('click', layerId.current, onClickHandler, mapHook.componentId);
@@ -346,7 +346,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	// Reload onHover-handlers when they change
 	useEffect(() => {
-		if(!mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
+		if(!props.onHover || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
 		var onHoverHandler = props.onHover;
 		mapHook.map?.on('mousemove', layerId.current, onHoverHandler, mapHook.componentId);
@@ -360,7 +360,7 @@ function useLayer(props: useLayerProps): useLayerType {
 
 	// Reload onLeave-handlers when they change
 	useEffect(() => {
-		if(!mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
+		if(!props.onLeave || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
 		var onLeaveHandler = props.onLeave;
 		mapHook.map?.on('mouseleave', layerId.current, onLeaveHandler, mapHook.componentId);
