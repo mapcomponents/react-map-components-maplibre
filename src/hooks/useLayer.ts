@@ -329,7 +329,8 @@ function useLayer(props: useLayerProps): useLayerType {
 			}
 		};
 	}, [mapHook.map, props.options?.source]);
-	// Reload on-handlers when they change
+
+	// Reload onClick-handlers when they change
 	useEffect(() => {
 		if(!mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
@@ -343,6 +344,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		}
 	}, [mapHook.map, props.onClick]);
 
+	// Reload onHover-handlers when they change
 	useEffect(() => {
 		if(!mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
@@ -356,6 +358,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		}
 	}, [mapHook.map, props.onHover]);
 
+	// Reload onLeave-handlers when they change
 	useEffect(() => {
 		if(!mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
