@@ -334,12 +334,12 @@ function useLayer(props: useLayerProps): useLayerType {
 	useEffect(() => {
 		if(!props.onClick || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
-		var onClickHandler = props.onClick;
+		const onClickHandler = props.onClick;
 		mapHook.map?.on('click', layerId.current, onClickHandler);
 
 		return () => {
 			if (onClickHandler && mapHook?.map) {
-				mapHook.map?.off('click', layerId.current, onClickHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) => void)
+				mapHook.map?.off('click', layerId.current, onClickHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & any) => void)
 			}
 		}
 	}, [mapHook.map, props.onClick]);
@@ -348,12 +348,12 @@ function useLayer(props: useLayerProps): useLayerType {
 	useEffect(() => {
 		if(!props.onHover || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
-		var onHoverHandler = props.onHover;
+		const onHoverHandler = props.onHover;
 		mapHook.map?.on('mousemove', layerId.current, onHoverHandler);
 
 		return () => {
 			if (onHoverHandler && mapHook?.map) {
-				mapHook.map?.off('mousemove', layerId.current, onHoverHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) => void)
+				mapHook.map?.off('mousemove', layerId.current, onHoverHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & any) => void)
 			}
 		}
 	}, [mapHook.map, props.onHover]);
@@ -362,12 +362,12 @@ function useLayer(props: useLayerProps): useLayerType {
 	useEffect(() => {
 		if(!props.onLeave || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
 
-		var onLeaveHandler = props.onLeave;
+		const onLeaveHandler = props.onLeave;
 		mapHook.map?.on('mouseleave', layerId.current, onLeaveHandler);
 
 		return () => {
 			if (onLeaveHandler && mapHook?.map) {
-				mapHook.map?.off('mouseleave', layerId.current, onLeaveHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) => void)
+				mapHook.map?.off('mouseleave', layerId.current, onLeaveHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & any) => void)
 			}
 		}
 	}, [mapHook.map, props.onLeave]);

@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { mount, configure } from 'enzyme';
-import MapContext, { MapComponentsProvider } from '../contexts/MapContext';
+import React, { useState } from 'react';
+import { mount } from 'enzyme';
+import { MapComponentsProvider } from '../contexts/MapContext';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import { waitFor } from '@testing-library/react';
 import { mockMapLibreMethods } from '../setupTests';
@@ -66,7 +66,7 @@ describe('useLayer hook', () => {
 			onHover: () => {},
 		};
 
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -97,7 +97,7 @@ describe('useLayer hook', () => {
 			onLeave: () => {},
 		};
 
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -129,7 +129,7 @@ describe('useLayer hook', () => {
 			onClick: () => {},
 		};
 
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
