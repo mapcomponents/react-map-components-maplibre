@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "1.0.3",
+	"version": "1.0.5",
 	"main": "dist/index.cjs.js",
 	"license": "MIT",
 	"module": "dist/index.esm.js",
@@ -39,7 +39,6 @@
 		"@xmldom/xmldom": "^0.8.10",
 		"csv2geojson": "^5.1.2",
 		"d3": "^7.8.5",
-		"elasticlunr": "^0.9.5",
 		"jspdf": "^2.5.1",
 		"maplibre-gl": "^4.0.0",
 		"osm2geojson-lite": "^0.9.4",
@@ -96,6 +95,7 @@
 		"babel-plugin-styled-components": "^2.1.4",
 		"babel-preset-react-app": "^10.0.1",
 		"cypress": "^13.6.4",
+		"elasticlunr": "^0.9.5",
 		"enzyme": "^3.11.0",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",

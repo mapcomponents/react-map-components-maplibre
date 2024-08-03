@@ -1,32 +1,31 @@
 import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
-import MlGeoJsonLayer from './MlGeoJsonLayer';
-import TopToolbar from '../../ui_components/TopToolbar';
-import useMap from '../../hooks/useMap';
-import geoJsonDecorator from '../../decorators/GeoJsonMapDecorator';
-import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
-import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
-import HeatMapStyler from './story_utils/MlGeojsonLayerHeatMapStyler';
-import sample_geojson_1 from './assets/sample_1.json';
-import sample_geojson_2 from './assets/sample_2.json';
-import earthquakes from './assets/earthquake.json';
-import wgLocations from './assets/wg_locations.json';
 import { Feature, FeatureCollection, Geometry, GeometryCollection } from '@turf/turf';
-import { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
-import CircleMapStyler from './story_utils/MlGeojsonLayerCircleStyler';
+import { DataDrivenPropertyValueSpecification, SymbolLayerSpecification } from 'maplibre-gl';
 import { Typography, Button } from '@mui/material';
-import wgMarker from './assets/wgMarker.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
+
+import MlGeoJsonLayer, { MlGeoJsonLayerProps } from './MlGeoJsonLayer';
+
+import sample_geojson_1 from './assets/sample_1.json';
+import sample_geojson_2 from './assets/sample_2.json';
+import wgLocations from './assets/wg_locations.json';
+import earthquakes from './assets/earthquake.json';
+import wgMarker from './assets/wgMarker.png';
+
+import LineStyler from './story_utils/MlGeoJsonLayer.lineStyler';
+import PolygonStyler from './story_utils/MlGeoJsonLayer.polygonStyler';
+
+import TopToolbar from '../../ui_components/TopToolbar';
+import useMap from '../../hooks/useMap';
 import useAddProtocol from '../../hooks/useAddProtocol/useAddProtocol';
+import geoJsonDecorator from '../../decorators/GeoJsonMapDecorator';
 import { OSMProtocolHandler } from '../../protocol_handlers/osm';
 
 const storyoptions = {
 	title: 'MapComponents/MlGeoJsonLayer',
 	component: MlGeoJsonLayer,
-
 	argTypes: {},
-
 	decorators: geoJsonDecorator,
 };
 export default storyoptions;
@@ -47,7 +46,7 @@ const configTitles = {
 	polygon: 'Parks&Squares in Bonn',
 };
 
-const Template = (props: MlGeoJsonLayerProps) => {
+const CircleTemplate = (props: MlGeoJsonLayerProps) => {
 	const mapHook = useMap({
 		mapId: undefined,
 	});
@@ -56,14 +55,114 @@ const Template = (props: MlGeoJsonLayerProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
-
 		initializedRef.current = true;
-		mapHook.map.map.flyTo({ center: [7.105175528281227, 50.73348799274236], zoom: 15.5 });
+		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
 	}, [mapHook.map]);
 
 	return (
 		<>
-			<MlGeoJsonLayer {...props} />
+			<MlGeoJsonLayer
+				geojson={props.geojson}
+				layerId="Circle"
+				type="circle"
+				options={{
+					paint: {
+						'circle-radius': {
+							property: 'Mitarbeitende',
+							stops: [
+								[3, 6],
+								[26, 35],
+							],
+						} as DataDrivenPropertyValueSpecification<number>,
+						'circle-color': '#009EE0',
+					},
+				}}
+				labelOptions={{
+					minzoom: 5,
+					maxzoom: 18,
+				}}
+			/>
+		</>
+	);
+};
+
+const OsmProtocolSourceDemo = () => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	useAddProtocol({
+		protocol: 'osm',
+		handler: OSMProtocolHandler,
+	});
+
+	useEffect(() => {
+		if (!mapHook.map) return;
+		mapHook.map?.jumpTo({ center: [2.651811, 39.571309], zoom: 16.5 });
+	}, [mapHook.map]);
+
+	return (
+		<>
+			<MlGeoJsonLayer
+				type="line"
+				defaultPaintOverrides={{
+					line: {
+						'line-color': '#009EE0',
+						'line-width': 6,
+					},
+				}}
+				options={{
+					source: {
+						type: 'geojson',
+						data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
+					},
+				}}
+				labelProp="name"
+				labelOptions={{
+					paint: {
+						'text-color': '#ff0000',
+					},
+					minzoom: 5,
+					maxzoom: 18,
+				}}
+			/>
+		</>
+	);
+};
+
+const LabelSbDemo = () => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	useEffect(() => {
+		if (!mapHook.map) return;
+		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
+	}, [mapHook.map]);
+
+	return (
+		<>
+			<MlGeoJsonLayer
+				type="circle"
+				geojson={wgLocations as FeatureCollection}
+				options={{
+					paint: {
+						'circle-radius': {
+							property: 'Mitarbeitende',
+							stops: [
+								[3, 6],
+								[26, 35],
+							],
+						} as DataDrivenPropertyValueSpecification<number>,
+						'circle-color': '#009EE0',
+					},
+				}}
+				labelProp="Mitarbeitende"
+				labelOptions={{
+					minzoom: 5,
+					maxzoom: 18,
+				}}
+			/>
 		</>
 	);
 };
@@ -77,13 +176,24 @@ const LineTemplate = (props: TemplateProps) => {
 
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
-
 		initializedRef.current = true;
 		mapHook.map.map.flyTo({ center: [7.100175528281227, 50.73487992742369], zoom: 16 });
 	}, [mapHook.map]);
+
 	return (
 		<>
-			<LineStyler {...props} />
+			<MlGeoJsonLayer
+				geojson={props.geojson}
+				layerId="Linestring"
+				type="line"
+				defaultPaintOverrides={{
+					line: {
+						'line-color': '#2485C1',
+						'line-opacity': 0.8,
+						'line-width': 6,
+					},
+				}}
+			/>
 		</>
 	);
 };
@@ -101,40 +211,17 @@ const PolygonTemplate = (props: TemplateProps) => {
 		initializedRef.current = true;
 		mapHook.map.map.flyTo({ center: [7.105175528281227, 50.73348799274236], zoom: 15.5 });
 	}, [mapHook.map]);
-	return (
-		<>
-			<PolygonStyler {...props} />
-		</>
-	);
-};
-
-const CircleTemplate = (props: MlGeoJsonLayerProps) => {
-	const mapHook = useMap({
-		mapId: undefined,
-	});
-
-	const initializedRef = useRef(false);
-
-	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-
-		initializedRef.current = true;
-		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
-	}, [mapHook.map]);
-
-	if (props.type === 'symbol') {
-		mapHook.map?.loadImage(wgMarker).then(function (res) {
-			if (!res?.data){
-				console.log('image WG Marker could not be loaded');
-				return;
-			}
-			mapHook.map?.addImage('wgLogo', res.data);
-		});
-	}
 
 	return (
 		<>
-			<CircleMapStyler {...props} />
+			<MlGeoJsonLayer
+				geojson={props.geojson}
+				layerId="Polygon"
+				type="fill"
+				defaultPaintOverrides={{
+					fill: { 'fill-color': '#2485C1', 'fill-opacity': 0.8 },
+				}}
+			/>
 		</>
 	);
 };
@@ -155,11 +242,129 @@ const HeatmapTemplate = (props: MlGeoJsonLayerProps) => {
 
 	return (
 		<>
-			<HeatMapStyler {...props} />;
+			<MlGeoJsonLayer
+				geojson={props.geojson}
+				type="heatmap"
+				options={{
+					// paint examples copied from https://maplibre.org/maplibre-gl-js-docs/example/heatmap-layer/
+					paint: {
+						// Increase the heatmap weight based on frequency and property magnitude
+						'heatmap-weight': ['interpolate', ['linear'], ['get', 'mag'], 0, 0, 6, 1],
+						// Increase the heatmap color weight by zoom level
+						// heatmap-intensity is a multiplier on top of heatmap-weight
+						'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 9, 3],
+						// Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+						// Begin color ramp at 0-stop with a 0-transparancy color
+						// to create a blur-like effect.
+						'heatmap-color': [
+							'interpolate',
+							['linear'],
+							['heatmap-density'],
+							0,
+							'rgba(33,102,172,0)',
+							0.2,
+							'rgb(255,255,0)',
+							0.4,
+							'rgb(255,200,10)',
+							0.6,
+							'rgb(255,140,20)',
+							0.8,
+							'rgb(220,80,30)',
+							1,
+							'rgb(255,10,40)',
+						],
+						// Adjust the heatmap radius by zoom level
+						'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 20],
+						// Transition from heatmap to circle layer by zoom level
+						'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0],
+					},
+				}}
+			/>
 		</>
 	);
 };
 
+const SymbolTemplate = (props: MlGeoJsonLayerProps) => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
+	}, [mapHook.map]);
+
+	mapHook.map?.loadImage(wgMarker).then(function (res) {
+		if (!res?.data) {
+			console.log('image WG Marker could not be loaded');
+			return;
+		}
+		mapHook.map?.addImage('wgLogo', res.data);
+	});
+
+	return (
+		<>
+			<MlGeoJsonLayer
+				geojson={props.geojson}
+				layerId="Symbol"
+				type="symbol"
+				options={
+					{
+						layout: {
+							'icon-image': 'wgLogo',
+							'icon-size': {
+								property: 'Mitarbeitende',
+								stops: [
+									[3, 0.06],
+									[26, 0.2],
+								],
+							},
+						},
+					} as SymbolLayerSpecification
+				}
+			/>
+		</>
+	);
+};
+
+const Template = (props: MlGeoJsonLayerProps) => {
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [7.105175528281227, 50.73348799274236], zoom: 15.5 });
+	}, [mapHook.map]);
+
+	return (
+		<>
+			<MlGeoJsonLayer
+				geojson={props.geojson}
+				type={props.type}
+				defaultPaintOverrides={{
+					fill: {
+						'fill-color': 'blue',
+					},
+					circle: {
+						'circle-color': 'red',
+					},
+					line: {
+						'line-color': 'black',
+					},
+				}}
+			/>
+		</>
+	);
+};
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [selectedLayer, setSelectedLayer] = useState<string>('circle');
@@ -230,55 +435,24 @@ const catalogueTemplate = () => {
 				}
 			/>
 
-			{selectedLayer === 'circle' && (
-				<CircleTemplate
-					geojson={Circle.args.geojson}
-					paint={Circle.args.paint}
-					type={Circle.args.type}
-				/>
-			)}
+			{selectedLayer === 'circle' && <CircleTemplate geojson={Circle.args.geojson} />}
 			{selectedLayer === 'line' && (
-				<LineTemplate
+				<LineStyler
 					openSidebar={openSidebar}
 					setOpenSidebar={setOpenSidebar}
 					geojson={Linestring.args.geojson}
-					type={Linestring.args.type}
-					mapId={Linestring.args.mapId}
 				/>
 			)}
 			{selectedLayer === 'polygon' && (
-				<PolygonTemplate
+				<PolygonStyler
 					openSidebar={openSidebar}
 					setOpenSidebar={setOpenSidebar}
 					geojson={Polygon.args.geojson}
-					mapId={Polygon.args.mapId}
-					type={Polygon.args.type}
 				/>
 			)}
-			{selectedLayer === 'heatmap' && (
-				<HeatmapTemplate
-					geojson={HeatMap.args.geojson}
-					mapId={HeatMap.args.mapId}
-					type={HeatMap.args.type}
-					options={HeatMap.args.options}
-				/>
-			)}
-			{selectedLayer === 'symbol' && (
-				<CircleTemplate
-					geojson={Symbol.args.geojson}
-					mapId={Symbol.args.mapId}
-					type={Symbol.args.type}
-					options={Symbol.args.options}
-				/>
-			)}
-			{selectedLayer === 'default' && (
-				<Template
-					geojson={DefaultPaintOverrides.args.geojson}
-					mapId={DefaultPaintOverrides.args.mapId}
-					type={DefaultPaintOverrides.args.type}
-					options={DefaultPaintOverrides.args.options}
-				/>
-			)}
+			{selectedLayer === 'heatmap' && <HeatmapTemplate geojson={HeatMap.args.geojson} />}
+			{selectedLayer === 'symbol' && <SymbolTemplate geojson={Symbol.args.geojson} />}
+			{selectedLayer === 'default' && <Template geojson={DefaultPaintOverrides.args.geojson} />}
 		</>
 	);
 };
@@ -288,100 +462,11 @@ Circle.parameters = {};
 Circle.args = {
 	geojson: wgLocations,
 	title: 'WhereGroup locations by number of employees',
-	paint: {
-		'circle-radius': {
-			property: 'Mitarbeitende',
-			stops: [
-				[3, 6],
-				[26, 35],
-			],
-		},
-		'circle-color': '#009EE0',
-	},
-	type: 'circle',
-};
-
-const OsmProtocolSourceDemo = () => {
-	const mapHook = useMap({
-		mapId: undefined,
-	});
-	useAddProtocol({
-		protocol: 'osm',
-		handler: OSMProtocolHandler,
-	});
-	useEffect(() => {
-		if (!mapHook.map) return;
-
-		mapHook.map?.jumpTo({ center: [2.651811, 39.571309], zoom: 16.5 } as JumpToOptions);
-	}, [mapHook.map]);
-
-	return (
-		<>
-			<MlGeoJsonLayer
-				type="line"
-				options={{
-					source: {
-						type: 'geojson',
-						data: `osm://osm/palma.osm?completeFeature=true&allFeatures=false&renderTagged=false&excludeWay=false&suppressWay=false`,
-					},
-					paint: {
-						'line-color': '#009EE0',
-					},
-				}}
-				labelProp='name'
-				labelOptions={{
-					paint:{
-						"text-color":'#ff0000'
-					},
-					minzoom: 5,
-					maxzoom: 18,
-				}}
-			/>
-		</>
-	);
 };
 
 export const OsmProtocol = OsmProtocolSourceDemo.bind({});
 OsmProtocol.parameters = {};
 OsmProtocol.args = {};
-
-const LabelSbDemo = () => {
-	const mapHook = useMap({
-		mapId: undefined,
-	});
-
-	useEffect(() => {
-		if (!mapHook.map) return;
-
-		mapHook.map.map.flyTo({ center: [10.251805123900311, 51.11826171422632], zoom: 5 });
-	}, [mapHook.map]);
-
-	return (
-		<>
-			<MlGeoJsonLayer
-				type="circle"
-				geojson={wgLocations as FeatureCollection}
-				options={{
-					paint: {
-						'circle-radius': {
-							property: 'Mitarbeitende',
-							stops: [
-								[3, 6],
-								[26, 35],
-							],
-						} as DataDrivenPropertyValueSpecification<number>,
-						'circle-color': '#009EE0',
-					},
-				}}
-				labelProp="Mitarbeitende"
-				labelOptions={{
-					minzoom: 5,
-					maxzoom: 18,
-				}}
-			/>
-		</>
-	);
-};
 
 export const Label = LabelSbDemo.bind({});
 Label.parameters = {};
@@ -391,14 +476,13 @@ export const Linestring = LineTemplate.bind({});
 Linestring.parameters = {};
 Linestring.args = {
 	geojson: sample_geojson_2,
-	type: 'line',
 };
 
 export const Polygon = PolygonTemplate.bind({});
-
+Polygon.parameters = {};
 Polygon.args = {
 	geojson: sample_geojson_1,
-	type: 'polygon',
+	title: 'Parks & Squares in Bonn',
 };
 
 export const HeatMap = HeatmapTemplate.bind({});
@@ -406,80 +490,19 @@ HeatMap.parameters = {};
 HeatMap.args = {
 	geojson: earthquakes,
 	title: 'Earthquakes by magnitude in Alaska',
-	options: {
-		// paint examples copied from https://maplibre.org/maplibre-gl-js-docs/example/heatmap-layer/
-		paint: {
-			// Increase the heatmap weight based on frequency and property magnitude
-			'heatmap-weight': ['interpolate', ['linear'], ['get', 'mag'], 0, 0, 6, 1],
-			// Increase the heatmap color weight by zoom level
-			// heatmap-intensity is a multiplier on top of heatmap-weight
-			'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 9, 3],
-			// Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
-			// Begin color ramp at 0-stop with a 0-transparancy color
-			// to create a blur-like effect.
-			'heatmap-color': [
-				'interpolate',
-				['linear'],
-				['heatmap-density'],
-				0,
-				'rgba(33,102,172,0)',
-				0.2,
-				'rgb(255,255,0)',
-				0.4,
-				'rgb(255,200,10)',
-				0.6,
-				'rgb(255,140,20)',
-				0.8,
-				'rgb(220,80,30)',
-				1,
-				'rgb(255,10,40)',
-			],
-			// Adjust the heatmap radius by zoom level
-			'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 20],
-			// Transition from heatmap to circle layer by zoom level
-			'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0],
-		},
-	},
-	type: 'heatmap',
 };
 
-export const Symbol = CircleTemplate.bind({});
+export const Symbol = SymbolTemplate.bind({});
 Symbol.parameters = {};
 Symbol.args = {
 	geojson: wgLocations,
 	title: 'WhereGroup locations by number of employees',
-	options: {
-		layout: {
-			'icon-image': 'wgLogo',
-			'icon-size': {
-				property: 'Mitarbeitende',
-				stops: [
-					[3, 0.06],
-					[26, 0.2],
-				],
-			},
-		},
-	},
-	type: 'symbol',
 };
 
 export const DefaultPaintOverrides = Template.bind({});
 DefaultPaintOverrides.parameters = {};
-DefaultPaintOverrides.args = {
-	defaultPaintOverrides: {
-		fill: {
-			'fill-color': 'blue',
-		},
-		circle: {
-			'circle-color': 'red',
-		},
-		line: {
-			'line-color': 'black',
-		},
-	},
-	geojson: sample_geojson_1,
-	type: '',
-};
+DefaultPaintOverrides.args = { geojson: sample_geojson_1, type: 'fill' };
+
 export const CatalogueDemo = catalogueTemplate.bind({});
 CatalogueDemo.parameters = {};
 CatalogueDemo.args = {};
