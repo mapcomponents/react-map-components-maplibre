@@ -10,6 +10,7 @@ import {
 	MapEventType,
 	Map,
 	FilterSpecification,
+	MapGeoJSONFeature,
 } from 'maplibre-gl';
 
 import MapLibreGlWrapper, {
@@ -158,18 +159,6 @@ function useLayer(props: useLayerProps): useLayerType {
 		}
 		setLayer(() => mapHook.map?.map.getLayer(layerId.current));
 
-		if (typeof props.onHover !== 'undefined') {
-			mapHook.map.on('mousemove', layerId.current, props.onHover, mapHook.componentId);
-		}
-
-		if (typeof props.onClick !== 'undefined') {
-			mapHook.map.on('click', layerId.current, props.onClick, mapHook.componentId);
-		}
-
-		if (typeof props.onLeave !== 'undefined') {
-			mapHook.map.on('mouseleave', layerId.current, props.onLeave, mapHook.componentId);
-		}
-
 		// recreate layer if style has changed
 		const styledataEventHandler = () => {
 			if (!mapHook.map?.map.getLayer(layerId.current)) {
@@ -201,6 +190,9 @@ function useLayer(props: useLayerProps): useLayerType {
 		layerTypeRef.current = props.options.type as LayerSpecification['type'];
 	}, [props, mapHook]);
 
+
+
+
 	useEffect(() => {
 		if (!mapHook.map) return;
 		if (!props.geojson && !props.options.source && props?.options?.type !== 'background') return;
@@ -214,7 +206,6 @@ function useLayer(props: useLayerProps): useLayerType {
 		) {
 			return;
 		}
-
 		createLayer();
 	}, [mapHook.map, mapHook.mapIsReady, props, createLayer]);
 
@@ -293,6 +284,7 @@ function useLayer(props: useLayerProps): useLayerType {
 		};
 	}, []);
 
+
 	useEffect(() => {
 		if (typeof props?.options?.source !== 'string' || !mapHook.map) {
 			return;
@@ -337,6 +329,48 @@ function useLayer(props: useLayerProps): useLayerType {
 			}
 		};
 	}, [mapHook.map, props.options?.source]);
+
+	// Reload onClick-handlers when they change
+	useEffect(() => {
+		if(!props.onClick || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
+
+		const onClickHandler = props.onClick;
+		mapHook.map?.on('click', layerId.current, onClickHandler);
+
+		return () => {
+			if (onClickHandler && mapHook?.map) {
+				mapHook.map?.off('click', layerId.current, onClickHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & any) => void)
+			}
+		}
+	}, [mapHook.map, props.onClick]);
+
+	// Reload onHover-handlers when they change
+	useEffect(() => {
+		if(!props.onHover || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
+
+		const onHoverHandler = props.onHover;
+		mapHook.map?.on('mousemove', layerId.current, onHoverHandler);
+
+		return () => {
+			if (onHoverHandler && mapHook?.map) {
+				mapHook.map?.off('mousemove', layerId.current, onHoverHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & any) => void)
+			}
+		}
+	}, [mapHook.map, props.onHover]);
+
+	// Reload onLeave-handlers when they change
+	useEffect(() => {
+		if(!props.onLeave || !mapHook?.map || !mapHook?.map?.getLayer?.(layerId.current))return;
+
+		const onLeaveHandler = props.onLeave;
+		mapHook.map?.on('mouseleave', layerId.current, onLeaveHandler);
+
+		return () => {
+			if (onLeaveHandler && mapHook?.map) {
+				mapHook.map?.off('mouseleave', layerId.current, onLeaveHandler as unknown as (ev: MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & any) => void)
+			}
+		}
+	}, [mapHook.map, props.onLeave]);
 
 	return {
 		map: mapHook.map,

@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { mount, configure } from 'enzyme';
-import MapContext, { MapComponentsProvider } from '../contexts/MapContext';
+import React, { useState } from 'react';
+import { mount } from 'enzyme';
+import { MapComponentsProvider } from '../contexts/MapContext';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import { waitFor } from '@testing-library/react';
 import { mockMapLibreMethods } from '../setupTests';
@@ -66,7 +66,7 @@ describe('useLayer hook', () => {
 			onHover: () => {},
 		};
 
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -97,7 +97,7 @@ describe('useLayer hook', () => {
 			onLeave: () => {},
 		};
 
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -129,7 +129,7 @@ describe('useLayer hook', () => {
 			onClick: () => {},
 		};
 
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -170,12 +170,12 @@ describe('useLayer hook', () => {
 
 		wrapper.find('.change_testType').simulate('click');
 
-		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
-		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
+		// styledata event is not removed in this case as only the event handler is changed during runtime without removing the component
+		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1));
 	});
-	it("should deregister 1 event listener 'hover' to the maplibre instance if type is changed during component runtime", async () => {
+	it("should deregister 1 event listener 'leave' to the maplibre instance if type is changed during component runtime", async () => {
 		var testAttributes = {
-			onHover: () => {},
+			onLeave: () => {},
 		};
 
 		const wrapper = mount(
@@ -186,8 +186,8 @@ describe('useLayer hook', () => {
 
 		wrapper.find('.change_testType').simulate('click');
 
-		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
-		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
+		// styledata event is not removed in this case as only the event handler is changed during runtime without removing the component
+		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1));
 	});
 	it("should deregister 1 event listener 'click' to the maplibre instance if type is changed during component runtime", async () => {
 		var testAttributes = {
@@ -202,7 +202,7 @@ describe('useLayer hook', () => {
 
 		wrapper.find('.change_testType').simulate('click');
 
-		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
-		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
+		// styledata event is not removed in this case as only the event handler is changed during runtime without removing the component
+		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1));
 	});
 });
