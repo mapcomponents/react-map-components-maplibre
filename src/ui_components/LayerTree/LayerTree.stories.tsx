@@ -22,20 +22,19 @@ const LayerTreeMultipleLayertypes = () => {
 	const demoData: MapState = {
 		mapConfigs: {
 			mapConfig1: {
-				uuid: 'dc272150-8f04-44e2-97c5-d8f266a04cf8',
 				name: 'Demo Map',
 				mapProps: {
 					center: [7.0851268, 50.73884],
 					zoom: 12,
 				},
-				layers: {
-					'acd3d99f-2f82-40a5-a5c9-f303d54f5606': {
+				layers: [
+					{
 						type: 'folder',
 						uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
 						name: 'layers in a folder',
 						visible: true,
 					},
-					'fec837fa-1d5d-432b-89c2-b416c9773523': {
+					{
 						type: 'geojson',
 						uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
 						name: 'Example Point Layer',
@@ -44,7 +43,7 @@ const LayerTreeMultipleLayertypes = () => {
 							geojson: sample_points_inside_polygon as FeatureCollection,
 						},
 					},
-					'346ced38-142c-4b57-8193-d689ffc7dfc2': {
+					{
 						type: 'vt',
 						uuid: '346ced38-142c-4b57-8193-d689ffc7dfc2',
 						name: 'Vector Layer',
@@ -81,7 +80,7 @@ const LayerTreeMultipleLayertypes = () => {
 							},
 						},
 					},
-					'0e8cd91b-bd49-419d-a19a-5b15dec17542': {
+					{
 						type: 'wms',
 						uuid: '0e8cd91b-bd49-419d-a19a-5b15dec17542',
 						name: 'Example WMS Layer',
@@ -92,7 +91,7 @@ const LayerTreeMultipleLayertypes = () => {
 							},
 						},
 					},
-				},
+				],
 				layerOrder: [
 					{
 						uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
@@ -112,7 +111,7 @@ const LayerTreeMultipleLayertypes = () => {
 	return (
 		<>
 			<Sidebar open={true}>
-				<Typography variant="h2">Example Layertree</Typography>
+				<Typography variant="h5">Example Layertree</Typography>
 				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
 			</Sidebar>
 			<LayerOnMap mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOnMap>
@@ -128,21 +127,20 @@ const MultipleLayerTrees = () => {
 	const demoData: MapState = {
 		mapConfigs: {
 			mapConfig1: {
-				uuid: 'dc272150-8f04-44e2-97c5-d8f266a04cf8',
 				name: 'Demo Map',
 				mapProps: {
 					center: [7.0851268, 50.73884],
 					zoom: 12,
 				},
-				layers: {
-					'acd3d99f-2f82-40a5-a5c9-f303d54f5606': {
+				layers: [
+					{
 						type: 'folder',
 						uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
 						name: 'layers in a folder',
 						visible: true,
 						config: undefined,
 					},
-					'fec837fa-1d5d-432b-89c2-b416c9773523': {
+					{
 						type: 'geojson',
 						uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
 						name: 'Example Point Layer',
@@ -158,15 +156,21 @@ const MultipleLayerTrees = () => {
 							},
 						},
 					},
-					'0587c0ed-aaa0-4315-bb77-a40937a684d7': {
+					{
 						type: 'geojson',
 						uuid: '0587c0ed-aaa0-4315-bb77-a40937a684d7',
 						name: 'Example Polygon Layer',
+						configurable: true,
 						config: {
 							geojson: sample_polygon_1 as FeatureCollection,
+							options: {
+								paint: {
+									'fill-color': 'red',
+								},
+							},
 						},
 					},
-				},
+				],
 				layerOrder: [
 					{
 						uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
@@ -185,9 +189,9 @@ const MultipleLayerTrees = () => {
 	return (
 		<>
 			<Sidebar open={true}>
-				<Typography variant="h4">Layertree 1</Typography>
+				<Typography variant="h5">Layertree 1</Typography>
 				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
-				<Typography variant="h4">Layertree 2</Typography>
+				<Typography variant="h5">Layertree 2</Typography>
 				<LayerTree mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerTree>
 			</Sidebar>
 			<LayerOnMap mapConfigKey={Object.keys(demoData.mapConfigs)[0]}></LayerOnMap>

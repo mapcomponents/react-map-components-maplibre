@@ -235,38 +235,40 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						key={layer.uuid}
 						sx={{ ...props.listItemSx }}
 						secondaryAction={
-							layer.configurable ? (
-								<>
-									{props?.buttons}
-									<IconButtonStyled
-										disabled={false}
-										onClick={() => {
-											moveDown(layer.uuid);
-										}}
-									>
-										<ArrowCircleDownIcon />
-									</IconButtonStyled>
-									<IconButtonStyled
-										disabled={false}
-										onClick={() => {
-											moveUp(layer.uuid);
-										}}
-									>
-										<ArrowCircleUpIcon />
-									</IconButtonStyled>
-									<TuneIconButton
-										edge={'end'}
-										aria-label="settings"
-										onClick={() => {
-											setPaintPropsFormVisible((current) => {
-												return !current;
-											});
-										}}
-									>
-										<TuneIcon />
-									</TuneIconButton>
-								</>
-							) : undefined
+							<>
+								{props?.buttons}
+								<IconButtonStyled
+									disabled={false}
+									onClick={() => {
+										moveDown(layer.uuid);
+									}}
+								>
+									<ArrowCircleDownIcon />
+								</IconButtonStyled>
+								<IconButtonStyled
+									disabled={false}
+									onClick={() => {
+										moveUp(layer.uuid);
+									}}
+								>
+									<ArrowCircleUpIcon />
+								</IconButtonStyled>
+								{layer.configurable && (
+									<>
+										<TuneIconButton
+											edge={'end'}
+											aria-label="settings"
+											onClick={() => {
+												setPaintPropsFormVisible((current) => {
+													return !current;
+												});
+											}}
+										>
+											<TuneIcon />
+										</TuneIconButton>
+									</>
+								)}
+							</>
 						}
 					>
 						<CheckboxListItemIcon>

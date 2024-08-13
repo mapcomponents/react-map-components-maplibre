@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { extractUuidsFromLayerOrder, LayerOrderItem, RootState } from '../../stores/map.store';
+import {
+	extractUuidsFromLayerOrder,
+	LayerOrderItem,
+	RootState,
+	getLayerByUuid,
+} from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer, {
@@ -67,7 +72,8 @@ function LayerOnMap(props: LayerOnMapProps) {
 	}, [layerStoreOrderIds]);
 
 	function renderLayer(layer: LayerOrderItem): React.ReactNode {
-		const layerConfig = layers[layer.uuid];
+		const targetLayerIndex = layers.findIndex((el) => el.uuid === layer.uuid);
+		const layerConfig = layers[targetLayerIndex]
 
 		switch (layerConfig?.type) {
 			case 'geojson':

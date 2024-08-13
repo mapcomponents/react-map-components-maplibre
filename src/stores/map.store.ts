@@ -67,14 +67,14 @@ interface MapProps {
 
 export interface LayerOrderItem {
 	uuid: string;
-	layers?: LayerOrderItem[];
+	layers?:  LayerOrderItem[];
 }
 
 interface MapConfig {
-	uuid: string;
+	/*uuid: string;*/
 	name: string;
 	mapProps: MapProps;
-	layers: { [uuid: string]: LayerConfig };
+	layers: LayerConfig[];
 	layerOrder: LayerOrderItem[];
 }
 
@@ -107,20 +107,21 @@ const mapConfigSlice = createSlice({
 	initialState,
 	reducers: {
 		// Add or update a MapConfig
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		//@ts-ignore
-		setMapConfig: (state, action: PayloadAction<{ key: string; mapConfig: MapConfig }>) => {
+		setMapConfig: (
+			state,
+			action: PayloadAction<{ key: string; mapConfig: MapConfig }>
+		) => {
 			const mapConfig = action.payload.mapConfig;
 			const key = action.payload.key;
 			state.mapConfigs[key] = mapConfig;
 		},
 		// Remove a MapConfig by its uuid
-		removeMapConfig: (state, action: PayloadAction<{ key: string }>) => {
+		removeMapConfig: (state: MapState, action: PayloadAction<{ key: string }>) => {
 			delete state.mapConfigs[action.payload.key];
 		},
 		// Add or update a layer within a MapConfig
 		setLayerInMapConfig: (
-			state,
+			state: MapState,
 			action: PayloadAction<{
 				mapConfigKey: string;
 				layer: LayerConfig;
@@ -129,11 +130,9 @@ const mapConfigSlice = createSlice({
 			const { mapConfigKey, layer: updatedLayer } = action.payload;
 			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig) {
-				const layerKeys = Object.keys(mapConfig.layers);
-				for (const key of layerKeys) {
-					const layer = mapConfig.layers[key];
-					if (layer.uuid === updatedLayer.uuid) {
-						mapConfig.layers[key] = updatedLayer;
+				for (let i = 0;i < mapConfig.layers.length; i++) {
+					if (mapConfig.layers[i].uuid === updatedLayer.uuid) {
+						mapConfig.layers[i] = updatedLayer;
 						break;
 					}
 				}
@@ -141,7 +140,7 @@ const mapConfigSlice = createSlice({
 		},
 		// Remove a layer from a MapConfig
 		removeLayerFromMapConfig: (
-			state,
+			state: MapState,
 			action: PayloadAction<{
 				mapConfigKey: string;
 				layerUuid: string;
@@ -149,17 +148,21 @@ const mapConfigSlice = createSlice({
 		) => {
 			const { mapConfigKey, layerUuid } = action.payload;
 			const mapConfig = state.mapConfigs[mapConfigKey];
-			if (mapConfig && mapConfig.layers[layerUuid]) {
-				delete mapConfig.layers[layerUuid];
-				processLayerOrderItems(function (_, parent?: LayerOrderItem): void {
-					if (parent && parent.layers) {
-						parent.layers = parent.layers.filter((child) => child.uuid !== layerUuid);
-					}
-				}, mapConfig.layerOrder);
+
+			if (mapConfig) {
+				const targetLayerIndex = mapConfig.layers.findIndex((el) => el.uuid === layerUuid);
+				if (targetLayerIndex !== -1) {
+					delete mapConfig.layers[targetLayerIndex];
+					processLayerOrderItems(function (_, parent?: LayerOrderItem): void {
+						if (parent && parent.layers) {
+							parent.layers = parent.layers.filter((child) => child.uuid !== layerUuid);
+						}
+					}, mapConfig.layerOrder);
+				}
 			}
 		},
 		updateLayerOrder: (
-			state,
+			state: MapState,
 			action: PayloadAction<{ mapConfigKey: string; newOrder: LayerOrderItem[] }>
 		) => {
 			const { mapConfigKey, newOrder } = action.payload;
@@ -168,22 +171,30 @@ const mapConfigSlice = createSlice({
 				mapConfig.layerOrder = newOrder;
 			}
 		},
+		// masterVisible property will be applied to all children of a folder that is set to be not visible
+		// masterVisible will over rule the actual layer config if set to false
+		// if masterVisible is true the actual layerConfig visibility setting is respected
 		setMasterVisible(
-			state,
+			state: MapState,
 			action: PayloadAction<{ mapConfigKey: string; layerId: string; masterVisible: boolean }>
 		) {
 			const { mapConfigKey, layerId, masterVisible } = action.payload;
 			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig) {
-				const layerConfig = mapConfig.layers[layerId];
+				const targetLayerIndex = mapConfig.layers.findIndex((el) => el.uuid === layerId);
+				if (targetLayerIndex !== -1) {
+				const layerConfig = mapConfig.layers[targetLayerIndex];
 				if (layerConfig) {
 					const updatedLayers = { ...mapConfig.layers };
 					if (layerConfig.type === 'folder') {
 						mapConfig.layerOrder.forEach((folder) => {
 							if (folder.uuid === layerId) {
-								folder.layers?.forEach((child) => {
-									const childLayer = updatedLayers[child.uuid];
-									updatedLayers[child.uuid] = {
+								folder.layers?.forEach((childUuid) => {
+									const childLayerIndex = mapConfig.layers.findIndex((el) => el.uuid === childUuid.uuid);
+
+									const childLayer = updatedLayers[childLayerIndex];
+
+									updatedLayers[childLayerIndex] = {
 										...childLayer,
 										masterVisible,
 									};
@@ -206,6 +217,7 @@ const mapConfigSlice = createSlice({
 					state.mapConfigs[mapConfigKey].layers = updatedLayers;
 				}
 			}
+			}
 		},
 	},
 });
@@ -214,7 +226,8 @@ export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | nul
 
 	for (const key in mapConfigs) {
 		const mapConfig = mapConfigs[key];
-		const foundLayer = mapConfig.layers[uuid];
+		const targetLayerIndex = mapConfig.layers.findIndex((el) => el.uuid === uuid);
+		const foundLayer = mapConfig.layers[targetLayerIndex];
 		if (foundLayer) return foundLayer;
 	}
 	return null;
