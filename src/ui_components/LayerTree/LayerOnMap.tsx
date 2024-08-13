@@ -4,7 +4,6 @@ import {
 	extractUuidsFromLayerOrder,
 	LayerOrderItem,
 	RootState,
-	getLayerByUuid,
 } from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';

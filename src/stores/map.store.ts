@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { MlGeoJsonLayerProps } from 'src/components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { MlVectorTileLayerProps } from 'src/components/MlVectorTileLayer/MlVectorTileLayer';
 import { Layer } from 'wms-capabilities';
@@ -102,6 +103,7 @@ function processLayerOrderItems(
 export const initialState: MapState = {
 	mapConfigs: {},
 };
+//@ts-ignore
 const mapConfigSlice = createSlice({
 	name: 'mapConfig',
 	initialState,
