@@ -1,0 +1,14 @@
+{
+	"name": "MlGeoJsonLayer",
+	"title": "OGC API Features",
+	"description": "Presents OGC API features.",
+	"i18n": {
+		"de": {
+			"title": "OGC APi Darstellung",
+			"description": "Stellt OGC API Features dar"
+		}
+	},
+	"tags": ["Map layer"],
+	"category": "layer",
+	"type": "component"
+}
