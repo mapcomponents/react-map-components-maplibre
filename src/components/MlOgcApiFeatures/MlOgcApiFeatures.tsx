@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import useMapState from '../../hooks/useMapState';
+
 export type MlOgcApiFeaturesProps = {
 	/**
 	 * Id of the target MapLibre instance in mapContext
@@ -21,23 +21,51 @@ export type MlOgcApiFeaturesProps = {
 	/**
 	 * The url of OGC API
 	 */
-	ogcApiUrl: string;
+	ogcApiUrl: URL;
+	/**
+	 * The additional query parameters of OGC API
+	 */
+	ogcApiFeatureParams?: OgcApiFeaturesParamsTypes;
+};
+export type OgcApiFeaturesParamsTypes = {
+	bbox?: string;
+	bbox_crs?: string;
+	limit?: number;
+	offset?: number;
+	crs?: string;
+	datetime?: string;
+	properties?: string;
+	sortby?: string;
+	f?: string;
+	filter?: string;
+	lang?: string;
+	q?: string;
+	properties_crs?: string;
+	id?: string;
+	filter_lang?: string;
+	filter_crs?: string;
 };
 
 const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 	const [geojson, setGeojson] = useState();
 	const mapHook = useMap({ mapId: props.mapId });
-	const mapState = useMapState({
-		watch: { layers: false, sources: false, viewport: true },
-	});
+	const buildOgcApiUrl = () => {
+		const url = new URL(props.ogcApiUrl);
+		if (props.ogcApiFeatureParams) {
+			Object.entries(props.ogcApiFeatureParams).forEach(([key, value]) => {
+				if (value !== undefined && value !== null) {
+					url.searchParams.append(key, value.toString());
+				}
+			});
+		}
+		return url.toString();
+	};
 
 	useEffect(() => {
 		if (!mapHook.map) return;
+		const ogcApiUrl = buildOgcApiUrl();
 
-		const bounds = mapHook.map.getBounds();
-		const bbox =
-			bounds._sw.lng + ',' + bounds._sw.lat + ',' + bounds._ne.lng + ',' + bounds._ne.lat;
-		fetch(props.ogcApiUrl + '?limit=100&bbox=' + bbox)
+		fetch(ogcApiUrl) //  + '?limit=100&bbox=')
 			.then((res) => {
 				if (!res.ok) throw new Error('Error fetching OGC features');
 
@@ -50,7 +78,7 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 				console.log(error);
 				setGeojson(undefined);
 			});
-	}, [mapHook.map, mapState.viewport]);
+	}, [mapHook.map]);
 
 	return <>{geojson && <MlGeoJsonLayer geojson={geojson} />}</>;
 };
