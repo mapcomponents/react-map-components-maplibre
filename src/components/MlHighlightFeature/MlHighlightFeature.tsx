@@ -40,6 +40,8 @@ export interface MlHighlightFeatureProps {
 	paint?: LayerSpecification['paint'];
 
 	insertBeforeLayer?: string;
+
+	variant?: 'dark' | 'hell' | 'outline';
 }
 
 /**
@@ -48,40 +50,84 @@ export interface MlHighlightFeatureProps {
  */
 
 const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
+	const selectedVariant = props.variant || 'outlined';
 	const [geojson, setGeojson] = useState<FeatureCollection>();
 	const [paint, setPaint] = useState<any>();
 	const [layerType, setLayerType] = useState<MlGeoJsonLayerProps['type']>('circle');
 
-	const theme = getTheme("light");
+	const theme = getTheme('light');
 	const defaultColor = theme.palette.primary.main;
+
+	const variant = {
+		dark: { color: '#555555', opacity: 0.5 },
+		outline: { color: defaultColor, lineColor: '#777777', lineWidth: 3 },
+		hell: { color: '#FFFFFF', opacity: 0.5 },
+	};
 
 	function getHighlightedFeature(feature: Feature) {
 		const newFeature: Feature = feature;
+
 		switch (feature.geometry.type) {
 			case 'Polygon':
-				setPaint({ 'line-color': defaultColor, 'line-offset': props.offset, ...props.paint });
-				setLayerType('line');
+				if (props.variant == 'outline') {
+					setPaint({
+						'line-color': variant[selectedVariant].lineColor,
+						'line-width': variant[selectedVariant].lineWidth,
+						'line-offset': props.offset,
+						...props.paint,
+					});
+					setLayerType('line');
+				} else {
+					setPaint({
+						'fill-color': variant[selectedVariant].color,
+						'fill-opacity': variant[selectedVariant].opacity,
+						...props.paint,
+					});
+					setLayerType('fill');
+				}
 				break;
 
 			case 'LineString':
-				setPaint({ 'line-color': defaultColor, 'line-offset': props.offset, ...props.paint });
-				setLayerType('line');
-
-				// transform newFeature into a polygon that surrounds the line
-				newFeature.geometry = createPolygonAroundLine(
-					(newFeature.geometry as Geometry).coordinates as Position[],
-					props.offset ? props.offset * 1e-5 : 1 * 1e-5
-				);
-				break;
+				if (selectedVariant == 'outline') {
+					setPaint({ 'line-color': variant[selectedVariant].lineColor, 'line-offset': props.offset, ...props.paint });
+					setLayerType('line');
+						// transform newFeature into a polygon that surrounds the line
+						newFeature.geometry = createPolygonAroundLine(
+							(newFeature.geometry as Geometry).coordinates as Position[],
+							props.offset ? props.offset * 1e-5 : 1 * 1e-5
+						);
+				} else {
+					setPaint({
+						'line-color': variant[selectedVariant].color,
+						'line-opacity': variant[selectedVariant].opacity,
+						...props.paint,
+					});
+				
+					setLayerType('line');
+				}
+					break;
+										
 
 			case 'Point':
+				if (selectedVariant == 'outline') {
+
 				setLayerType('circle');
 				setPaint({
-					'circle-stroke-color': defaultColor,
+					'circle-stroke-color': variant[selectedVariant].lineColor,
 					'circle-opacity': 0,
+					'circle-stroke-width': 2,
 					'circle-radius': props.offset && Math.abs(props.offset),
 					...props.paint,
 				});
+			} else {
+				setPaint({
+					'circle-color': variant[selectedVariant].color,
+					'circle-opacity': variant[selectedVariant].opacity,
+					...props.paint,
+				});
+			
+				setLayerType('circle');
+			}
 
 				break;
 		}
@@ -118,6 +164,7 @@ const MlHighlightFeature = (props: MlHighlightFeatureProps) => {
 
 MlHighlightFeature.defaultProps = {
 	mapId: undefined,
-	offset: -5,
+	offset: 0,
+	variant: 'outlined',
 };
 export default MlHighlightFeature;

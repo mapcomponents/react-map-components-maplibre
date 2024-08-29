@@ -85,9 +85,10 @@ const Template = (props: TemplateProps) => {
 				offset={props.offset}
 				paint={props.paint}
 				insertBeforeLayer={props.insertBeforeLayer}
+				variant='outline'
 			/>
 
-			<MlGeoJsonLayer type={props.type} geojson={props.sample} onClick={handleClick} />
+			<MlGeoJsonLayer type={props.type} geojson={props.sample} onClick={handleClick}/>
 		</>
 	);
 };
@@ -98,16 +99,16 @@ Polygon.args = {
 	sample: examplePolygons,
 	type: 'fill',
 	offset: -5,
-	paint: { 'line-opacity': 0.5 },
+	//paint: { 'line-color': "#3598DB" },
 };
 
 export const Line = Template.bind({});
 Line.parameters = {};
-Line.args = { sample: exampleLines, type: 'line', offset: -5, paint: { 'line-opacity': 0.5 } };
+Line.args = { sample: exampleLines, type: 'line'};
 
 export const Circle = Template.bind({});
 Circle.parameters = {};
-Circle.args = { sample: examplePoints, type: 'circle', offset: 5 };
+Circle.args = { sample: examplePoints, type: 'circle', offset: 8 };
 
 /// Catalogue Story
 
