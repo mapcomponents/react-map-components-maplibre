@@ -1,5 +1,13 @@
 # Change Log
 
+## [v1.0.7] - 2024-07-30
+
+### Changed
+- a6bc647: Upgrade to maplibre-gl 4.5  (sky enabled) (#178)
+
+### Fixed
+- dde2ef4: fix: incorrect property access (#181) …
+
 ## [v1.0.6] - 2024-07-30
 
 ### Fixed
