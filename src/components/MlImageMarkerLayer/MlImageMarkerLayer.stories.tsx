@@ -32,7 +32,7 @@ const Template = () => (
 				'icon-offset': [0, -180],
 			},
 		}}
-		imgSrc={'/assets/marker.png'}
+		imgSrc={'assets/marker.png'}
 	/>
 );
 
