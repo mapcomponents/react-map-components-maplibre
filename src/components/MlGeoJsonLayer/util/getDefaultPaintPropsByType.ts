@@ -10,8 +10,8 @@ const getDefaultPaintPropsByType = (
 				return defaultPaintOverrides.fill;
 			}
 			return {
-				'fill-color': 'rgba(0, 158, 224,0.7)',
-				'fill-outline-color': 'rgba(20,230,256,0.8)',
+				'fill-color': 'rgba(0, 158, 224,0.6)',
+				'fill-outline-color': 'rgba(0, 158, 224,0.8)',
 			};
 		case 'line':
 			if (defaultPaintOverrides?.line) {

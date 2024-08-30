@@ -85,7 +85,7 @@ const Template = (props: TemplateProps) => {
 				offset={props.offset}
 				paint={props.paint}
 				insertBeforeLayer={props.insertBeforeLayer}
-				variant='outline'
+				variant='dark'
 			/>
 
 			<MlGeoJsonLayer type={props.type} geojson={props.sample} onClick={handleClick}/>
