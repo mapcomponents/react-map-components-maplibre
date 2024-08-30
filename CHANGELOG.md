@@ -1,10 +1,15 @@
 # Change Log
 
+## [v1.0.6] - 2024-07-30
+
+### Fixed
+- 209ec04: Fix/use layerhook update on functions
 
 ## [v1.0.5] - 2024-06-21
 
 ### Changed
 - 78f7106: client search component MlClientSearch removed from release…
+
 ### Fixed
 - 78f7106: MlGeojsonlayer options.source bug
 
