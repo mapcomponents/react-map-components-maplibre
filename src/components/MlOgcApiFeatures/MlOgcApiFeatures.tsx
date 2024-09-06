@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 
 export type MlOgcApiFeaturesProps = {
+	visible?: boolean;
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -49,6 +50,8 @@ export type OgcApiFeaturesParamsTypes = {
 const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 	const [geojson, setGeojson] = useState();
 	const mapHook = useMap({ mapId: props.mapId });
+	const layerId = useRef(props.layerId || 'MlOgcApiFeature-' + mapHook.componentId);
+
 	const buildOgcApiUrl = () => {
 		const url = new URL(props.ogcApiUrl);
 		if (props.ogcApiFeatureParams) {
@@ -80,6 +83,18 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 			});
 	}, [mapHook.map]);
 
-	return <>{geojson && <MlGeoJsonLayer geojson={geojson} />}</>;
+	useEffect(() => {
+		// if layer is not yet on map return
+		if (!mapHook.map || !mapHook.map.map.style.getLayer(layerId.current)) return;
+
+		// if layer is already on map: toggle layer visibility by changing the layout object's visibility property
+		if (props.visible) {
+			mapHook.map.map.setLayoutProperty(layerId.current, 'visibility', 'visible');
+		} else {
+			mapHook.map.map.setLayoutProperty(layerId.current, 'visibility', 'none');
+		}
+	}, [props.visible, mapHook.map]);
+
+	return <>{geojson && <MlGeoJsonLayer geojson={geojson} layerId={layerId.current} />}</>;
 };
 export default MlOgcApiFeatures;

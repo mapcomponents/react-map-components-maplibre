@@ -1,11 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 import MapContextDecorator from '../../decorators/MapContextDecorator';
 import MlOgcApiFeatures, {
 	MlOgcApiFeaturesProps,
 	OgcApiFeaturesParamsTypes,
 } from './MlOgcApiFeatures';
 import useMap from '../../hooks/useMap';
+import TopToolbar from '../../ui_components/TopToolbar';
+import Button from '@mui/material/Button';
 
 const storyoptions = {
 	title: 'MapComponents/MlOgcApiFeatures',
@@ -16,6 +17,7 @@ const storyoptions = {
 export default storyoptions;
 
 const PointTemplate = (props: MlOgcApiFeaturesProps) => {
+	const [showLayer, setShowLayer] = useState(true);
 	const mapHook = useMap({
 		mapId: props.mapId,
 	});
@@ -33,7 +35,19 @@ const PointTemplate = (props: MlOgcApiFeaturesProps) => {
 
 	return (
 		<>
+			<TopToolbar
+				unmovableButtons={
+					<Button
+						color="primary"
+						variant={showLayer ? 'contained' : 'outlined'}
+						onClick={() => setShowLayer(!showLayer)}
+					>
+						OGC API Feature Points
+					</Button>
+				}
+			/>
 			<MlOgcApiFeatures
+				visible={showLayer}
 				ogcApiUrl={props.ogcApiUrl}
 				mapId={props.mapId}
 				ogcApiFeatureParams={ogcApiFeatureParams}
