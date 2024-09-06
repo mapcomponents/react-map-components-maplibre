@@ -64,11 +64,12 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 		return url.toString();
 	};
 
+	const ogcApiUrl = buildOgcApiUrl();
+
 	useEffect(() => {
 		if (!mapHook.map) return;
-		const ogcApiUrl = buildOgcApiUrl();
 
-		fetch(ogcApiUrl) //  + '?limit=100&bbox=')
+		fetch(ogcApiUrl)
 			.then((res) => {
 				if (!res.ok) throw new Error('Error fetching OGC features');
 
@@ -81,7 +82,7 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 				console.log(error);
 				setGeojson(undefined);
 			});
-	}, [mapHook.map]);
+	}, [mapHook.map, ogcApiUrl, props.ogcApiFeatureParams]);
 
 	useEffect(() => {
 		// if layer is not yet on map return
