@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
+import {
+	CircleLayerSpecification,
+	FillLayerSpecification,
+	LayerSpecification,
+	LineLayerSpecification,
+	RasterLayerSpecification,
+} from 'maplibre-gl';
 
 export type MlOgcApiFeaturesProps = {
 	visible?: boolean;
@@ -27,6 +34,21 @@ export type MlOgcApiFeaturesProps = {
 	 * The additional query parameters of OGC API
 	 */
 	ogcApiFeatureParams?: OgcApiFeaturesParamsTypes;
+	/**
+	 * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
+	 * Can be used to style the returned geojson layer
+	 */
+	defaultPaintOverrides?: {
+		circle?: CircleLayerSpecification['paint'];
+		fill?: FillLayerSpecification['paint'];
+		line?: LineLayerSpecification['paint'];
+	};
+	/**
+	 * Type of the layer that will be added to the MapLibre instance.
+	 * All types from LayerSpecification union type are supported except the type from
+	 * RasterLayerSpecification
+	 */
+	type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
 };
 export type OgcApiFeaturesParamsTypes = {
 	bbox?: string;
@@ -64,7 +86,6 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 		return url.toString();
 	};
 
-
 	useEffect(() => {
 		if (!mapHook.map) return;
 
@@ -97,6 +118,17 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 		}
 	}, [props.visible, mapHook.map]);
 
-	return <>{geojson && <MlGeoJsonLayer geojson={geojson} layerId={layerId.current} />}</>;
+	return (
+		<>
+			{geojson && (
+				<MlGeoJsonLayer
+					geojson={geojson}
+					layerId={layerId.current}
+					defaultPaintOverrides={props.defaultPaintOverrides}
+					type={props.type}
+				/>
+			)}
+		</>
+	);
 };
 export default MlOgcApiFeatures;

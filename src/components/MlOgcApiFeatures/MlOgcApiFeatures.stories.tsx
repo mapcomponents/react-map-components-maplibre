@@ -8,7 +8,8 @@ import useMap from '../../hooks/useMap';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Button from '@mui/material/Button';
 import Sidebar from '../../ui_components/Sidebar';
-import { FormControl, TextField } from '@mui/material';
+import { FormControl, MenuItem, Select, Slider, TextField, Typography } from '@mui/material';
+import ColorPicker from '../../ui_components/ColorPicker/ColorPicker';
 
 const storyoptions = {
 	title: 'MapComponents/MlOgcApiFeatures',
@@ -64,9 +65,31 @@ Point.args = {
 };
 
 const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
+	interface Mark {
+		value: number;
+		label: string;
+	}
+
+	const marks: Mark[] = [
+		{ value: 0, label: '0%' },
+		{ value: 0.25, label: '25%' },
+		{ value: 0.5, label: '50%' },
+		{ value: 0.75, label: '75%' },
+		{ value: 1, label: '100%' },
+	];
+	const widthMarks: Mark[] = [
+		{ value: 0, label: '0' },
+		{ value: 5, label: '5' },
+		{ value: 10, label: '10' },
+	];
+
 	const [openSidebar, setOpenSidebar] = useState(true);
+	const [color, setColor] = useState<string>('#0E8A0E');
+	const [opacity, setOpacity] = useState<number>(0.8);
+	const [geomType, setGeomType] = useState<'fill' | 'circle' | 'line'>('fill');
+	const [lineWidth, setLineWidth] = useState<number>(6);
 	const [ogcApiUrl, setOgcApiUrl] = useState(
-		'https://geo.kreis-viersen.de/ows/osm-daten/wfs3/collections/hoflaeden_nrw/items.json?limit=100'
+		'https://demo.ldproxy.net/vineyards/collections/vineyards/items?f=json&limit=100'
 	);
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -76,8 +99,11 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
 		initializedRef.current = true;
-		mapHook.map.map.jumpTo({ center: [7.6616, 51.4332], zoom: 6 });
+		mapHook.map.map.jumpTo({ center: [8.202, 49.9117], zoom: 8 });
 	}, [mapHook.map]);
+	const handleColorChange = (value: string) => {
+		setColor(value);
+	};
 
 	return (
 		<>
@@ -102,6 +128,55 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 						sx={{ marginBottom: '10px' }}
 					/>
 				</FormControl>
+
+				<Typography variant={'h5'}>Style Feature</Typography>
+				<FormControl>
+					<Typography>Geometry type:</Typography>
+					<Select
+						value={geomType}
+						onChange={(e) => {
+							setGeomType(e.target.value as 'fill' | 'circle' | 'line');
+						}}
+					>
+						<MenuItem value={'fill'} key={1}>
+							fill
+						</MenuItem>
+						<MenuItem value={'circle'} key={2}>
+							circle
+						</MenuItem>
+						<MenuItem value={'line'} key={3}>
+							line
+						</MenuItem>
+					</Select>
+				</FormControl>
+				<Typography>Display color:</Typography>
+				<ColorPicker value={color} onChange={handleColorChange} />
+				<Typography>Opacity:</Typography>
+				<Slider
+					defaultValue={1}
+					aria-label="Default"
+					value={opacity}
+					max={1}
+					min={0}
+					step={0.01}
+					marks={marks}
+					onChange={(_, v) => {
+						setOpacity(v as number);
+					}}
+				/>
+				<Typography paddingTop={4}>Stroke:</Typography>
+				<Slider
+					value={lineWidth}
+					aria-label="Default"
+					max={10}
+					min={0}
+					step={1}
+					marks={widthMarks}
+					onChange={(_e, v) => {
+						setLineWidth(v as number);
+					}}
+					disabled={geomType !== 'line'}
+				/>
 			</Sidebar>
 			{
 				//only render if valid url
@@ -112,7 +187,16 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 						return false;
 					}
 				})() && (
-					<MlOgcApiFeatures ogcApiUrl={new URL(ogcApiUrl)} mapId={props.mapId}></MlOgcApiFeatures>
+					<MlOgcApiFeatures
+						ogcApiUrl={new URL(ogcApiUrl)}
+						mapId={props.mapId}
+						defaultPaintOverrides={{
+							fill: { 'fill-color': color, 'fill-opacity': opacity },
+							circle: { 'circle-color': color, 'circle-opacity': opacity },
+							line: { 'line-color': color, 'line-opacity': opacity, 'line-width': lineWidth },
+						}}
+						type={geomType}
+					></MlOgcApiFeatures>
 				)
 			}
 		</>
