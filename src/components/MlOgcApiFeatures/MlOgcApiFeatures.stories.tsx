@@ -89,7 +89,7 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 	const [geomType, setGeomType] = useState<'fill' | 'circle' | 'line'>('fill');
 	const [lineWidth, setLineWidth] = useState<number>(6);
 	const [ogcApiUrl, setOgcApiUrl] = useState(
-		'https://demo.ldproxy.net/vineyards/collections/vineyards/items?f=json&limit=100'
+		'https://demo.ldproxy.net/vineyards/collections/vineyards/items?f=json&limit=100&region=Rheinhessen'
 	);
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -99,7 +99,7 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
 		initializedRef.current = true;
-		mapHook.map.map.jumpTo({ center: [8.202, 49.9117], zoom: 8 });
+		mapHook.map.map.jumpTo({ center: [8.1186, 49.8487], zoom: 10 });
 	}, [mapHook.map]);
 	const handleColorChange = (value: string) => {
 		setColor(value);
