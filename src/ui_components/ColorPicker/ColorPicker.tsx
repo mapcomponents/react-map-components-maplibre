@@ -14,7 +14,6 @@ const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const value = props?.value || '';
 
-	console.log(value)
 	return (
 		<>
 			<Grid container sx={{ flexWrap: 'nowrap' }}>
