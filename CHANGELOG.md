@@ -1,5 +1,10 @@
 # Change Log
 
+## [v1.0.8] - 2024-09-16
+
+### Fixed
+- 2862ad4: fix layerComponent identification in LayerListItem component (#185) …
+
 ## [v1.0.7] - 2024-07-30
 
 ### Changed
