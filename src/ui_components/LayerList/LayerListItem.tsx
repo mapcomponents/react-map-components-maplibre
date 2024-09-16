@@ -109,7 +109,7 @@ function LayerListItem({
 
 	const _layerComponent = useMemo(() => {
 		if (layerComponent && type === 'layer') {
-			switch (layerComponent.type.name) {
+			switch (layerComponent.type.displayName) {
 				case 'MlWmsLayer':
 					return React.cloneElement(layerComponent, {
 						...layerComponent?.props,
