@@ -28,7 +28,7 @@ function useSource(props: useSourceProps): useSourceType {
 
 	const removeSource = useCallback(() => {
 		if (mapHook.map && mapHook.map?.style?._layers) {
-			for (const [layerId, layer] of Object.entries(mapHook.map.style._layers)) {
+			for (const [layerId, layer] of Object.entries(mapHook.map.map.style._layers)) {
 				if (layer.source === sourceId.current) {
 					mapHook.map.removeLayer(layerId);
 				}
