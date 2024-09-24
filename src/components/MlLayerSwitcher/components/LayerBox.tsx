@@ -1,8 +1,9 @@
 import React from 'react';
-import { css, CSSObject } from '@emotion/css';
+import { css } from '@emotion/css';
 import { Box } from '@mui/system';
 import ImageLoader from '../../../ui_components/ImageLoader';
 import useMapState from '../../../hooks/useMapState';
+import { SxProps } from '@mui/material';
 
 interface LayerBoxProps {
 	mapId?: string;
@@ -31,12 +32,16 @@ const LayerBox: React.FC<LayerBoxProps> = (props) => {
 		}
 	`;
 
-	const imageLoaderStyle: CSSObject = {
-		border: `2px solid ${layers?.[0]?.visible ? '#64c864' : '#fd720f'}`,
-		borderRadius: '8px',
-		height: '40px',
-		width: '40px',
+	// Using SxProps to generate something that is like a CSS-object
+	const imageLoaderStyle = {
+		imageLoader: (isVisible: boolean): SxProps => ({
+			border: `2px solid ${isVisible ? '#64c864' : '#fd720f'}`,
+			borderRadius: '8px',
+			height: '40px',
+			width: '40px',
+		}),
 	};
+	
 
 	return (
 		<>
@@ -58,10 +63,13 @@ const LayerBox: React.FC<LayerBoxProps> = (props) => {
 					props?.handleLayerBoxClick?.(props.layerId);
 				}}
 			>
-				{props?.thumbnail && <ImageLoader
-					sx={imageLoaderStyle}
-					src={props.thumbnail}
-				/>}
+				{props?.thumbnail && (
+					<ImageLoader
+						sx={imageLoaderStyle.imageLoader(!!layers?.[0]?.visible)}  //using presetted css object
+						src={props.thumbnail}
+					/>
+				)}
+
 
 				<div
 					className="mllayerswitcher-layer-text"
