@@ -1,8 +1,9 @@
 import React from 'react';
-import { css, CSSObject } from '@emotion/css';
+import { css } from '@emotion/css';
 import { Box } from '@mui/system';
 import ImageLoader from '../../../ui_components/ImageLoader';
 import useMapState from '../../../hooks/useMapState';
+import { SxProps } from '@mui/material';
 
 interface LayerBoxProps {
 	mapId?: string;
@@ -31,7 +32,7 @@ const LayerBox: React.FC<LayerBoxProps> = (props) => {
 		}
 	`;
 
-	const imageLoaderStyle: CSSObject = {
+	const imageLoaderStyle: SxProps = {
 		border: `2px solid ${layers?.[0]?.visible ? '#64c864' : '#fd720f'}`,
 		borderRadius: '8px',
 		height: '40px',
