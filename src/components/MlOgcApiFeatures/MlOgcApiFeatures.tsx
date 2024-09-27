@@ -35,6 +35,11 @@ export type MlOgcApiFeaturesProps = {
 	 */
 	ogcApiFeatureParams?: OgcApiFeaturesParamsTypes;
 	/**
+	 * Fetches the features everytime (based on the current bbox) when the map gets moved
+	 */
+	reloadFeaturesOnMapMove?: boolean;
+
+	/**
 	 * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
 	 * Can be used to style the returned geojson layer
 	 */
@@ -83,27 +88,36 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 				}
 			});
 		}
+		if (props.reloadFeaturesOnMapMove) {
+			const southWest = mapHook?.map?.getBounds().getSouthWest();
+			const northEast = mapHook?.map?.getBounds().getNorthEast();
+			const bbox = `${southWest?.lng},${southWest?.lat},${northEast?.lng},${northEast?.lat}`;
+			url.searchParams.append('bbox', bbox);
+		}
 		return url.toString();
 	};
 
 	useEffect(() => {
 		if (!mapHook.map) return;
-
-		const generatedOgcApiUrl = buildOgcApiUrl();
-
-		fetch(generatedOgcApiUrl)
-			.then((res) => {
-				if (!res.ok) throw new Error('Error fetching OGC features');
-
-				return res.json();
-			})
-			.then((data) => {
-				setGeojson(data);
-			})
-			.catch((error) => {
-				console.log(error);
-				setGeojson(undefined);
-			});
+		const getDataHandler = () => {
+			const generatedOgcApiUrl = buildOgcApiUrl();
+			fetch(generatedOgcApiUrl)
+				.then((res) => {
+					if (!res.ok) throw new Error('Error fetching OGC features');
+					return res.json();
+				})
+				.then((data) => {
+					setGeojson(data);
+				})
+				.catch((error) => {
+					console.log(error);
+					setGeojson(undefined);
+				});
+		};
+		getDataHandler();
+		if (props.reloadFeaturesOnMapMove) {
+			mapHook.map.on('moveend', getDataHandler);
+		}
 	}, [mapHook.map, props.ogcApiFeatureParams, props.ogcApiUrl]);
 
 	useEffect(() => {

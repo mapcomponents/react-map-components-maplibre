@@ -50,6 +50,7 @@ const PointTemplate = (props: MlOgcApiFeaturesProps) => {
 				ogcApiUrl={props.ogcApiUrl}
 				mapId={props.mapId}
 				ogcApiFeatureParams={props.ogcApiFeatureParams}
+				reloadFeaturesOnMapMove={true}
 			></MlOgcApiFeatures>
 		</>
 	);
@@ -60,7 +61,7 @@ Point.args = {
 	ogcApiUrl: 'https://geo.kreis-viersen.de/ows/osm-daten/wfs3/collections/hoflaeden_nrw/items.json',
 	mapId: 'map_1',
 	ogcApiFeatureParams: {
-		bbox: '6.154193673464448,49.97699076849764,8.024616036745385,51.523418007730754',
+		limit: 100,
 	} as OgcApiFeaturesParamsTypes,
 };
 
