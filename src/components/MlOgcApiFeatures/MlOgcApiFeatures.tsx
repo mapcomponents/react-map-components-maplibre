@@ -1,31 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useMap from '../../hooks/useMap';
-import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import {
-	CircleLayerSpecification,
-	FillLayerSpecification,
-	LayerSpecification,
-	LineLayerSpecification,
-	RasterLayerSpecification,
-} from 'maplibre-gl';
-
+import MlGeoJsonLayer, { MlGeoJsonLayerProps } from '../MlGeoJsonLayer/MlGeoJsonLayer';
 export type MlOgcApiFeaturesProps = {
 	visible?: boolean;
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
-	/**
-	 * Id of an existing layer in the mapLibre instance to help specify the layer order
-	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
-	 * This layer will not be added to the maplibre-gl instance until a layer with an
-	 * id that matches the value of insertBeforeLayer is created.
-	 */
-	insertBeforeLayer?: string;
-	/**
-	 * Id of the new layer and source that are added to the MapLibre instance
-	 */
-	layerId?: string;
 	/**
 	 * The url of OGC API
 	 */
@@ -38,22 +19,10 @@ export type MlOgcApiFeaturesProps = {
 	 * Fetches the features everytime (based on the current bbox) when the map gets moved
 	 */
 	reloadFeaturesOnMapMove?: boolean;
-
 	/**
-	 * Javascript object with optional properties "fill", "line", "circle" to override implicit layer type default paint properties.
-	 * Can be used to style the returned geojson layer
+	 * Geojson Layer props. But omit 'geojson' because it gets set from the OGC API Feature call
 	 */
-	defaultPaintOverrides?: {
-		circle?: CircleLayerSpecification['paint'];
-		fill?: FillLayerSpecification['paint'];
-		line?: LineLayerSpecification['paint'];
-	};
-	/**
-	 * Type of the layer that will be added to the MapLibre instance.
-	 * All types from LayerSpecification union type are supported except the type from
-	 * RasterLayerSpecification
-	 */
-	type?: Exclude<LayerSpecification['type'], RasterLayerSpecification['type']>;
+	mlGeoJsonLayerProps?: Omit<MlGeoJsonLayerProps, 'geojson'>;
 };
 export type OgcApiFeaturesParamsTypes = {
 	bbox?: string;
@@ -77,7 +46,9 @@ export type OgcApiFeaturesParamsTypes = {
 const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 	const [geojson, setGeojson] = useState();
 	const mapHook = useMap({ mapId: props.mapId });
-	const layerId = useRef(props.layerId || 'MlOgcApiFeature-' + mapHook.componentId);
+	const layerId = useRef(
+		props.mlGeoJsonLayerProps?.layerId || 'MlOgcApiFeature-' + mapHook.componentId
+	);
 
 	const buildOgcApiUrl = () => {
 		const url = new URL(props.ogcApiUrl);
@@ -138,8 +109,7 @@ const MlOgcApiFeatures = (props: MlOgcApiFeaturesProps) => {
 				<MlGeoJsonLayer
 					geojson={geojson}
 					layerId={layerId.current}
-					defaultPaintOverrides={props.defaultPaintOverrides}
-					type={props.type}
+					{...props.mlGeoJsonLayerProps}
 				/>
 			)}
 		</>

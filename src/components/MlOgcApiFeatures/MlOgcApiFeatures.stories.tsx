@@ -191,12 +191,14 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 					<MlOgcApiFeatures
 						ogcApiUrl={new URL(ogcApiUrl)}
 						mapId={props.mapId}
-						defaultPaintOverrides={{
-							fill: { 'fill-color': color, 'fill-opacity': opacity },
-							circle: { 'circle-color': color, 'circle-opacity': opacity },
-							line: { 'line-color': color, 'line-opacity': opacity, 'line-width': lineWidth },
+						mlGeoJsonLayerProps={{
+							defaultPaintOverrides: {
+								fill: { 'fill-color': color, 'fill-opacity': opacity },
+								circle: { 'circle-color': color, 'circle-opacity': opacity },
+								line: { 'line-color': color, 'line-opacity': opacity, 'line-width': lineWidth },
+							},
+							type: geomType,
 						}}
-						type={geomType}
 					></MlOgcApiFeatures>
 				)
 			}
