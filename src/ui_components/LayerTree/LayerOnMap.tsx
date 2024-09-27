@@ -72,8 +72,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 
 	function renderLayer(layer: LayerOrderItem): React.ReactNode {
 		const targetLayerIndex = layers.findIndex((el) => el.uuid === layer.uuid);
-		const layerConfig = layers[targetLayerIndex]
-
+		const layerConfig = layers[targetLayerIndex];
 		switch (layerConfig?.type) {
 			case 'geojson':
 				return (

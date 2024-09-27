@@ -68,7 +68,7 @@ interface MapProps {
 
 export interface LayerOrderItem {
 	uuid: string;
-	layers?:  LayerOrderItem[];
+	layers?: LayerOrderItem[];
 }
 
 interface MapConfig {
@@ -109,12 +109,10 @@ const mapConfigSlice = createSlice({
 	initialState,
 	reducers: {
 		// Add or update a MapConfig
-		setMapConfig: (
-			state,
-			action: PayloadAction<{ key: string; mapConfig: MapConfig }>
-		) => {
+		setMapConfig: (state, action: PayloadAction<{ key: string; mapConfig: MapConfig }>) => {
 			const mapConfig = action.payload.mapConfig;
 			const key = action.payload.key;
+			//@ts-ignore
 			state.mapConfigs[key] = mapConfig;
 		},
 		// Remove a MapConfig by its uuid
@@ -132,7 +130,7 @@ const mapConfigSlice = createSlice({
 			const { mapConfigKey, layer: updatedLayer } = action.payload;
 			const mapConfig = state.mapConfigs[mapConfigKey];
 			if (mapConfig) {
-				for (let i = 0;i < mapConfig.layers.length; i++) {
+				for (let i = 0; i < mapConfig.layers.length; i++) {
 					if (mapConfig.layers[i].uuid === updatedLayer.uuid) {
 						mapConfig.layers[i] = updatedLayer;
 						break;
@@ -185,40 +183,42 @@ const mapConfigSlice = createSlice({
 			if (mapConfig) {
 				const targetLayerIndex = mapConfig.layers.findIndex((el) => el.uuid === layerId);
 				if (targetLayerIndex !== -1) {
-				const layerConfig = mapConfig.layers[targetLayerIndex];
-				if (layerConfig) {
-					const updatedLayers = { ...mapConfig.layers };
-					if (layerConfig.type === 'folder') {
-						mapConfig.layerOrder.forEach((folder) => {
-							if (folder.uuid === layerId) {
-								folder.layers?.forEach((childUuid) => {
-									const childLayerIndex = mapConfig.layers.findIndex((el) => el.uuid === childUuid.uuid);
+					const layerConfig = mapConfig.layers[targetLayerIndex];
+					if (layerConfig) {
+						const updatedLayers = [...mapConfig.layers];
+						if (layerConfig.type === 'folder') {
+							mapConfig.layerOrder.forEach((folder) => {
+								if (folder.uuid === layerId) {
+									folder.layers?.forEach((childUuid) => {
+										const childLayerIndex = mapConfig.layers.findIndex(
+											(el) => el.uuid === childUuid.uuid
+										);
 
-									const childLayer = updatedLayers[childLayerIndex];
+										const childLayer = updatedLayers[childLayerIndex];
 
-									updatedLayers[childLayerIndex] = {
-										...childLayer,
-										masterVisible,
-									};
-									if (childLayer?.type === 'vt' && childLayer?.config?.layers) {
-										childLayer.config.layers = childLayer.config.layers.map((layer) => ({
-											...layer,
+										updatedLayers[childLayerIndex] = {
+											...childLayer,
 											masterVisible,
-										}));
-									}
-								});
-							}
-						});
+										};
+										if (childLayer?.type === 'vt' && childLayer?.config?.layers) {
+											childLayer.config.layers = childLayer.config.layers.map((layer) => ({
+												...layer,
+												masterVisible,
+											}));
+										}
+									});
+								}
+							});
+						}
+						if (layerConfig.type === 'vt' && layerConfig?.config?.layers) {
+							layerConfig.config.layers = layerConfig.config.layers.map((layer) => ({
+								...layer,
+								masterVisible,
+							}));
+						}
+						state.mapConfigs[mapConfigKey].layers = updatedLayers;
 					}
-					if (layerConfig.type === 'vt' && layerConfig?.config?.layers) {
-						layerConfig.config.layers = layerConfig.config.layers.map((layer) => ({
-							...layer,
-							masterVisible,
-						}));
-					}
-					state.mapConfigs[mapConfigKey].layers = updatedLayers;
 				}
-			}
 			}
 		},
 	},
