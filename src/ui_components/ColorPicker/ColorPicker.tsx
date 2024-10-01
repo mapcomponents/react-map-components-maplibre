@@ -7,14 +7,12 @@ import { converters } from './transformers';
 export interface ColorPickerProps {
 	onChange?: (value: string) => void;
 	convert: 'rgb' | 'rgba' | 'rgba_hex' | 'hex' | 'rgba_rgb';
-	internalValue?: string;
-	setValue?: (value: string) => void;
 	value?: string;
 }
 
 const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
 	const [showPicker, setShowPicker] = useState(false);
-	const [value, setValue] = useState(props?.value || '');
+	const value = props?.value || '';
 
 	return (
 		<>
@@ -58,7 +56,6 @@ const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
 							color={value}
 							onChange={(c) => {
 								const newValue = converters[convert](c);
-								setValue(newValue);
 								props?.onChange?.(newValue);
 							}}
 						/>

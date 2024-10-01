@@ -3,13 +3,17 @@ import useMap from '../../hooks/useMap';
 import { LayerSpecification } from 'maplibre-gl';
 import { VectorSourceSpecification } from 'maplibre-gl';
 
+export type ExtendedLayerSpecification = LayerSpecification & {
+	masterVisible?: boolean;
+};
+
 export type MlVectorTileLayerProps = {
 	mapId?: string;
 	insertBeforeLayer?: string;
 	layerId?: string;
 	sourceOptions?: VectorSourceSpecification;
 	url?: string;
-	layers: LayerSpecification[];
+	layers: ExtendedLayerSpecification[];
 };
 
 /**
