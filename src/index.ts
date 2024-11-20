@@ -109,9 +109,36 @@ export { default as SelectStylePopup } from './ui_components/SelectStyleButton/S
 export { default as ConfirmDialog } from './ui_components/ConfirmDialog';
 export { default as SpeedDial } from './ui_components/SpeedDial/SpeedDial';
 
+export { default as LayerTree } from './ui_components/LayerTree/LayerTree';
+export { default as LayerOnMap } from './ui_components/LayerTree/LayerOnMap';
+export { default as LayerTreeListItem } from './ui_components/LayerTree/LayerTreeListItem';
+
 // Styles
 export { default as GruvboxStyle } from './omt_styles/gruvbox';
 export { default as MedievalKingdomStyle } from './omt_styles/medieval_kingdom';
 export { default as MonokaiStyle } from './omt_styles/monokai';
 export { default as OceanicNextStyle } from './omt_styles/oceanic_next';
 export { default as SolarizedStyle } from './omt_styles/solarized';
+
+// Redux
+import {
+	default as MapStore_store,
+	setMapConfig,
+	removeMapConfig,
+	setLayerInMapConfig,
+	removeLayerFromMapConfig,
+	updateLayerOrder,
+	setMasterVisible,
+} from './stores/map.store';
+
+const MapStore = {
+	store: MapStore_store,
+	setMapConfig,
+	removeMapConfig,
+	setLayerInMapConfig,
+	removeLayerFromMapConfig,
+	updateLayerOrder,
+	setMasterVisible,
+};
+
+export { MapStore };
