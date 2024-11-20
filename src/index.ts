@@ -45,6 +45,7 @@ export { default as MlShareMapState } from './components/MlShareMapState/MlShare
 
 export { default as MlSpatialElevationProfile } from './components/MlSpatialElevationProfile/MlSpatialElevationProfile';
 export { default as MlVectorTileLayer } from './components/MlVectorTileLayer/MlVectorTileLayer';
+export { default as MlOgcApiFeatures } from './components/MlOgcApiFeatures/MlOgcApiFeatures';
 
 export { default as MlWmsFeatureInfoPopup } from './components/MlWmsFeatureInfoPopup/MlWmsFeatureInfoPopup';
 export { default as MlWmsLayer } from './components/MlWmsLayer/MlWmsLayer';
