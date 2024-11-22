@@ -1,5 +1,5 @@
 import { LngLatLike, RequestParameters } from 'maplibre-gl';
-import { Feature, FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
+import { Feature, FeatureCollection, Geometry, GeometryCollection, Properties } from 'geojson';
 import { feature as topojsonFeature } from 'topojson-client';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';

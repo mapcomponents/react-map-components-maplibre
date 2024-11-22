@@ -1,5 +1,5 @@
 import { RequestParameters } from 'maplibre-gl';
-import { FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
+import { FeatureCollection, Geometry, GeometryCollection, Properties } from 'geojson';
 import * as externParser from '@tmcw/togeojson';
 import toGeoJSON from '../hooks/useGpx/lib/gpxConverter';
 import protocolPathParser from './utils/protocolPathParser';
