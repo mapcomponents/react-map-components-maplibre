@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../stores/map.store';
+import { LayerOrderItem, RootState } from '../../stores/map.store';
 import LayerTreeListItem from './LayerTreeListItem';
 import { List, styled } from '@mui/material';
 
@@ -19,7 +19,7 @@ function LayerTree(props: LayerTreeProps) {
 
 	return (
 		<ListStyled>
-			{layerOrder?.map?.((el) => (
+			{layerOrder?.map?.((el: LayerOrderItem) => (
 				<LayerTreeListItem
 					key={el.uuid}
 					layerOrderConfig={el}
