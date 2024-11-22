@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GeoJsonContextProvider } from "./GeoJsonContext";
-import { FeatureCollection } from '@turf/turf';
+import { FeatureCollection } from 'geojson';
 
 const GeoJsonProvider = ({ children }:{children:JSX.Element}) => {
 	const [data, setData] = useState<FeatureCollection>({
