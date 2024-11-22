@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import * as turf from '@turf/turf';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import PentagonIcon from '@mui/icons-material/Pentagon';
-import { Feature, GeoJSONObject, Geometry, GeometryCollection, Properties } from '@turf/turf';
+import { Feature, GeoJSONObject, Geometry, GeometryCollection, Properties } from 'geojson';
 import MlMeasureTool from '../MlMeasureTool/MlMeasureTool';
 import LayerList from '../../ui_components/LayerList/LayerList';
 import LayerListItem from '../../ui_components/LayerList/LayerListItem';
