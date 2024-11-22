@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import useLayer from '../../hooks/useLayer';
 import useMap from '../../hooks/useMap';
 import { SymbolLayerSpecification } from 'maplibre-gl';
-import { Feature, FeatureCollection } from '@turf/turf';
+import { Feature, FeatureCollection } from 'geojson';
 
 export interface MlImageMarkerLayerProps {
 	/**
