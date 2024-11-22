@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import getDefaultPaintPropsByType from './util/getDefaultPaintPropsByType';
 import getDefaulLayerTypeByGeometry from './util/getDefaultLayerTypeByGeometry';
-import { Feature, FeatureCollection } from '@turf/turf';
+import { Feature, FeatureCollection,GeoJSON } from 'geojson';
 import { useLayerProps } from '../../hooks/useLayer';
 import useSource from '../../hooks/useSource';
 
@@ -37,7 +37,7 @@ export type MlGeoJsonLayerProps = {
 	/**
 	 * GeoJSON data that is supposed to be rendered by this component.
 	 */
-	geojson?: GeoJSON.Feature | GeoJSON.FeatureCollection | Feature | FeatureCollection | undefined;
+	geojson?:  Feature | FeatureCollection | undefined;
 	/**
 	 * Type of the layer that will be added to the MapLibre instance.
 	 * All types from LayerSpecification union type are supported except the type from
@@ -133,7 +133,7 @@ const MlGeoJsonLayer = (props: MlGeoJsonLayerProps) => {
 		sourceId: 'source-' + layerId.current,
 		source: {
 			type: 'geojson',
-			data: props.geojson as unknown as (string | GeoJSON.GeoJSON),
+			data: props.geojson as unknown as (string | GeoJSON),
 			...(typeof props?.options?.source !== 'undefined' &&
 			typeof props?.options?.source !== 'string'
 				? props.options.source
