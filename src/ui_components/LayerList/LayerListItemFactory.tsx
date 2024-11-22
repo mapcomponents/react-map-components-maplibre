@@ -29,8 +29,9 @@ import {
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import useMap from '../../hooks/useMap';
-import { FeatureCollection, bbox } from '@turf/turf';
+import { bbox } from '@turf/turf';
 import { LngLatBoundsLike, FitBoundsOptions } from 'maplibre-gl';
+import { FeatureCollection } from 'geojson';
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
