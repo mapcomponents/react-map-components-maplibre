@@ -3,14 +3,14 @@ import * as turf from '@turf/turf';
 import useMap from '../../hooks/useMap';
 import { _transitionToGeojson } from './util/transitionFunctions';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import { Feature, FeatureCollection } from '@turf/turf';
+import { Feature, FeatureCollection } from 'geojson';
 import { MlGeoJsonLayerProps } from '../MlGeoJsonLayer/MlGeoJsonLayer';
 
 const msPerStep = 50;
 
 export type MlTransitionGeoJsonLayerProps = MlGeoJsonLayerProps & {
 	transitionTime?: number;
-	geojson?: Feature | GeoJSON.Feature;
+	geojson?: Feature;
 };
 
 /**
@@ -28,7 +28,7 @@ const MlTransitionGeoJsonLayer = (props: MlTransitionGeoJsonLayerProps) => {
 	const initializedRef = useRef(false);
 
 	// transition effect variables
-	const oldGeojsonRef = useRef<GeoJSON.Feature | Feature | FeatureCollection>();
+	const oldGeojsonRef = useRef<Feature | FeatureCollection>();
 	const transitionInProgressRef = useRef(false);
 	const transitionTimeoutRef = useRef(undefined);
 	const currentTransitionStepRef = useRef(false);
