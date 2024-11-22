@@ -9,7 +9,7 @@ import { createExportOptions } from 'src/hooks/useExportMap/lib';
 
 export interface MlCreatePdfButtonProps {
 	/**
-	 * Id of the target MapLibre instance in mapContext
+	 * ID of the target MapLibre instance in mapContext
 	 */
 	mapId?: string;
 	/**
