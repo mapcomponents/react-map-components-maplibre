@@ -3,7 +3,6 @@ import { composeStories } from '@storybook/testing-react';
 import { mount } from '@cypress/react18';
 import * as stories from './MlCreatePdfForm.stories';
 
-// compile the "Primary" story with the library
 const { ExampleConfig }: any = composeStories(stories);
 
 describe('MlCreatePdfForm Tests', () => {
@@ -13,8 +12,6 @@ describe('MlCreatePdfForm Tests', () => {
 
 		cy.get('.pdfFormButton').click();
 
-		cy.wait(1000);
-		cy.get('.createPdfButton').click();
 		cy.wait(5000);
 		cy.readFile('./cypress/downloads/Map.pdf').should('contain', 'WhereGroup');
 	});
