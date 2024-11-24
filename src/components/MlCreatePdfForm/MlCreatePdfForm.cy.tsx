@@ -12,7 +12,7 @@ describe('MlCreatePdfForm Tests', () => {
 
 		cy.get('.pdfFormButton').click();
 
-		cy.wait(5000);
+		cy.wait(2000);
 		cy.readFile('./cypress/downloads/Map.pdf').should('contain', 'WhereGroup');
 	});
 });
