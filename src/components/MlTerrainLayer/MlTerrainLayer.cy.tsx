@@ -16,8 +16,10 @@ describe('MlTerrainLayer Tests', () => {
 			})
 			.then((win) => {
 				const { _map }: any = win;
-				expect(_map?.style?.sourceCaches?.terrain).to.not.be.undefined;
-				expect(_map?.style?._layers?.hills).to.not.be.undefined;
+				cy.wrap(_map).should((_map: any) => {
+					expect(_map?.style?.sourceCaches?.terrain).to.not.be.undefined;
+					expect(_map?.style?._layers?.hills).to.not.be.undefined;
+				});
 			});
 
 		// Trigger the click event to turn the terrain layer off
@@ -29,8 +31,8 @@ describe('MlTerrainLayer Tests', () => {
 				expect((win as any)._map).to.exist;
 			})
 			.then((win) => {
-				cy.wrap(win).should((win) => {
-					const { _map }: any = win;
+				const { _map }: any = win;
+				cy.wrap(_map).should((_map: any) => {
 					expect(_map?.style?.sourceCaches?.terrain).to.be.undefined;
 					expect(_map?.style?._layers?.hills).to.be.undefined;
 				});
