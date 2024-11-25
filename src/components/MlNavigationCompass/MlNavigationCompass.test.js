@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
-import { mount, configure } from "enzyme";
+import React, {  useState } from "react";
+import { mount } from "enzyme";
 import { waitFor } from "@testing-library/react";
-import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
+import { MapComponentsProvider } from "../../contexts/MapContext";
 import MlNavigationCompass from "./MlNavigationCompass";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
-import maplibregl from "maplibre-gl/dist/maplibre-gl";
 import { mockMapLibreMethods } from "../../setupTests";
 
 jest.mock("@mapbox/mapbox-gl-draw", () => {
@@ -14,7 +13,6 @@ jest.mock("@mapbox/mapbox-gl-draw", () => {
 		};
 	};
 });
-const mapLibreInstance = new maplibregl.Map();
 
 const MlNavigationCompassTestComponent = (props) => {
 	const [componentVisible, setComponentVisible] = useState(true);
@@ -41,11 +39,6 @@ let testAttributes = {};
 
 describe("<MlNavigationCompass>", () => {
 	it("should register 1 event listener to the maplibre instance", async () => {
-		const wrapper = mount(
-			<MapComponentsProvider>
-				<MlNavigationCompassTestComponent {...testAttributes} />
-			</MapComponentsProvider>
-		);
 
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5));

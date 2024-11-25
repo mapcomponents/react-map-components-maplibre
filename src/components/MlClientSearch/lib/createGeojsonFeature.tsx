@@ -1,11 +1,13 @@
+import {Point, MultiPoint, LineString, MultiLineString, Polygon, Feature} from 'geojson';
+
 type FeatureType = 'Point' | 'MultiPoint' | 'LineString' | 'MultiLineString' | 'Polygon';
 // Exclude 'GeometryCollection' from the GeoJSON geometry types
 type ExcludedGeometryCollection =
-	| GeoJSON.Point
-	| GeoJSON.MultiPoint
-	| GeoJSON.LineString
-	| GeoJSON.MultiLineString
-	| GeoJSON.Polygon;
+	| Point
+	| MultiPoint
+	| LineString
+	| MultiLineString
+	| Polygon;
 
 // Determine the GeoJSON-Feature-Type
 function determineFeatureType(coordinates: ExcludedGeometryCollection['coordinates']): FeatureType {
@@ -47,7 +49,7 @@ function determineFeatureType(coordinates: ExcludedGeometryCollection['coordinat
 // Create GeoJSON-Features
 export function createGeoJSONFeature(
 	coordinates: ExcludedGeometryCollection['coordinates']
-): GeoJSON.Feature<ExcludedGeometryCollection> {
+): Feature<ExcludedGeometryCollection> {
 	const featureType: FeatureType = determineFeatureType(coordinates);
 	return {
 		type: 'Feature',

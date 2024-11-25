@@ -5,6 +5,7 @@ import {
 	Popup,
 	MapEventType,
 } from 'maplibre-gl';
+import { Feature } from 'geojson';
 
 export interface LayerHoverPopupProps {
 	/**
@@ -15,7 +16,7 @@ export interface LayerHoverPopupProps {
 	 * Id of an existing layer in the mapLibre instance this event will be registered to
 	 */
 	layerId?: string;
-	getPopupContent: (feature: GeoJSON.Feature) => string;
+	getPopupContent: (feature: Feature) => string;
 }
 
 /**
@@ -52,7 +53,7 @@ const LayerHoverPopup = (props: LayerHoverPopupProps) => {
 				//const description = e.features[0].properties.desc;
 				let content = '';
 				if (e?.features?.[0] && typeof props.getPopupContent === 'function') {
-					content = props.getPopupContent(e.features[0] as unknown as GeoJSON.Feature);
+					content = props.getPopupContent(e.features[0] as unknown as Feature);
 				}
 
 				if (coordinates?.[0]) {

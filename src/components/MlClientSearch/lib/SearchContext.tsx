@@ -6,6 +6,7 @@ import useMap from '../../../hooks/useMap';
 import MlGeoJsonLayer from '../../MlGeoJsonLayer/MlGeoJsonLayer';
 import { createGeoJSONFeature } from './createGeojsonFeature';
 import { Coordinates, LngLatBoundsLike } from 'maplibre-gl';
+import {Feature} from 'geojson';
 
 interface SearchContextProviderProps {
 	children: React.ReactNode;
@@ -29,7 +30,7 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 	const [searchResults, setSearchResults] = useState<string[]>([]);
 	const [searchResultsArray, setSearchResultsArray] = useState<string[]>([]);
 	const [selectedResult, setSelectedResult] = useState<string | object | undefined>(undefined);
-	const [feature, setFeature] = useState<GeoJSON.Feature>();
+	const [feature, setFeature] = useState<Feature>();
 
 	const mapHook = useMap({
 		mapId: undefined,

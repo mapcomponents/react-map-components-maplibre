@@ -4,9 +4,9 @@ import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/m
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import useMap from '../../../hooks/useMap';
-
+import {FeatureCollection, Feature} from 'geojson';
 interface PolygonStylerProps {
-	geojson: GeoJSON.FeatureCollection;
+	geojson: FeatureCollection;
 	openSidebar: boolean;
 	setOpenSidebar: (open: boolean) => void;
 }
@@ -56,7 +56,7 @@ const PolygonStyler: React.FC<PolygonStylerProps> = ({ geojson, openSidebar, set
 		return {
 			type: 'FeatureCollection',
 			features: geojson.features.filter(
-				(item: GeoJSON.Feature) => item.properties?.name === featureToShow
+				(item: Feature) => item.properties?.name === featureToShow
 			),
 		};
 	}, [featureToShow, geojson]);
@@ -147,7 +147,7 @@ const PolygonStyler: React.FC<PolygonStylerProps> = ({ geojson, openSidebar, set
 			</Sidebar>
 
 			<MlGeoJsonLayer
-				geojson={storyGeoJson as GeoJSON.FeatureCollection}
+				geojson={storyGeoJson as FeatureCollection}
 				defaultPaintOverrides={{
 					fill: { 'fill-color': color, 'fill-opacity': opacity },
 					circle: { 'circle-color': color, 'circle-opacity': opacity },

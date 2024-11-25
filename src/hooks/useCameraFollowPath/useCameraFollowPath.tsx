@@ -49,7 +49,7 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	const timeoutId = useRef();
 
 	const kmPerStep = props.kmPerStep || 0.01;
-	const routeDistance = turf.lineDistance(props.route);
+	const routeDistance = turf.length(props.route);
 	const stepDuration = props.stepDuration || 70;
 
 	const mapHook = useMap({

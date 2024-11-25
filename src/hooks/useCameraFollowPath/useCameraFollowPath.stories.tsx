@@ -4,7 +4,7 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import { Button, MenuItem, Slider, Typography } from '@mui/material';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
-import { Feature } from '@turf/turf';
+import { Feature } from 'geojson';
 import Sidebar from '../../ui_components/Sidebar';
 
 const storyoptions = {

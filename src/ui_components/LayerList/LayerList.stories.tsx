@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LayerSpecification } from 'maplibre-gl';
-import { Feature, FeatureCollection } from '@turf/turf';
+import { Feature, FeatureCollection } from 'geojson';
 import { Button } from '@mui/material';
 import LayerList from './LayerList';
 import LayerListItem from './LayerListItem';
