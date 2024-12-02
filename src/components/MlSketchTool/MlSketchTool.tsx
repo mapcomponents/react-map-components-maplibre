@@ -282,18 +282,18 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						layerId={'highlightBorder'}
 						defaultPaintOverrides={{
 							circle:{
-							'circle-color': '#dd9900',
-							'circle-opacity': 0.4,
+							'circle-color': '#555555',
+							'circle-opacity': 0.5,
 							'circle-radius': 10,
 						},
 							line:{
-							'line-color': '#dd9900',
-							'line-opacity': 0.4,
+							'line-color': '#555555',
+							'line-opacity': 0.5,
 							'line-width': 10,
 						},
 							fill:{
-							'fill-color': '#dd9900',
-							'fill-opacity': 0.4
+							'fill-color': '#555555',
+							'fill-opacity': 0.5
 						},
 						}}
 					/>
