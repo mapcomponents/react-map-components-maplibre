@@ -39,6 +39,12 @@ let testAttributes = {};
 
 describe("<MlNavigationCompass>", () => {
 	it("should register 1 event listener to the maplibre instance", async () => {
+		const wrapper = mount(
+			<MapComponentsProvider>
+				<MlNavigationCompassTestComponent {...testAttributes} />
+			</MapComponentsProvider>
+		);
+
 
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5));
