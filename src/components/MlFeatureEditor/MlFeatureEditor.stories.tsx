@@ -28,7 +28,7 @@ const Template = (args: useFeatureEditorProps) => {
 	const [visible, setVisible] = useState(true);
 
 	useEffect(() => {
-		if (visible === false) {
+		if (!visible) {
 			setTimeout(() => {
 				setVisible(true);
 			}, 750);
@@ -66,7 +66,7 @@ const catalogueTemplate = () => {
 	};
 
 	useEffect(() => {
-		if (visible === false) {
+		if (!visible) {
 			setTimeout(() => {
 				setVisible(true);
 			}, 750);

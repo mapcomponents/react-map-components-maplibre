@@ -8,6 +8,7 @@ import sample_geojson_2 from './assets/sample_2.json';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { Button } from '@mui/material';
+import { Feature } from 'geojson';
 
 const storyoptions = {
 	title: 'MapComponents/MlLayerSwitcher',
@@ -58,13 +59,13 @@ const Template = (args:any) => {
 				<MlGeoJsonLayer
 					type="line"
 					options={{layout:{ visibility: args.geojsonLayerVisible ? 'visible' : 'none' }}}
-					geojson={sample_geojson_1 as GeoJSON.Feature}
+					geojson={sample_geojson_1 as Feature}
 					layerId="geojson1"
 				/>
 				<MlGeoJsonLayer
 					type="line"
 					options={{layout:{ visibility: args.geojson2LayerVisible ? 'visible' : 'none' }}}
-					geojson={sample_geojson_2 as GeoJSON.Feature}
+					geojson={sample_geojson_2 as Feature}
 					layerId="geojson2"
 				/>
 				<MlLayerSwitcher

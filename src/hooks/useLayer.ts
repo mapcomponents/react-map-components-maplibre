@@ -17,7 +17,7 @@ import MapLibreGlWrapper, {
 	MapLibreGlWrapperEventHandlerType,
 } from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 
-import { GeoJSONObject } from '@turf/turf';
+import { Feature, FeatureCollection, GeoJsonObject } from 'geojson';
 
 type getLayerType = Style['getLayer'];
 
@@ -31,7 +31,7 @@ type useLayerType = {
 
 export type MapEventHandler = (
 	ev: MapMouseEvent & {
-		features?: GeoJSON.Feature[] | undefined;
+		features?: Feature[] | undefined;
 	} & Record<string, unknown>
 ) => void;
 
@@ -41,7 +41,7 @@ export interface useLayerProps {
 	idPrefix?: string;
 	insertBeforeLayer?: string;
 	insertBeforeFirstSymbolLayer?: boolean;
-	geojson?: GeoJSONObject | GeoJSON.Feature | GeoJSON.FeatureCollection;
+	geojson?: GeoJsonObject | Feature | FeatureCollection;
 	options: Partial<
 		LayerSpecification & {
 			source?: GeoJSONSourceSpecification | string;

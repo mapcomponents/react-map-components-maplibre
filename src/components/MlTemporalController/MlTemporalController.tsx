@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import useMap from '../../hooks/useMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
-import { FeatureCollection, bbox } from '@turf/turf';
+import { bbox } from '@turf/turf';
+import { FeatureCollection } from 'geojson';
 import {
 	LineLayerSpecification,
 	CircleLayerSpecification,

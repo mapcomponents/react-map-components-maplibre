@@ -1,11 +1,11 @@
 import React from "react";
-import { FeatureCollection } from '@turf/turf';
+import { FeatureCollection } from "geojson";
 
-type ContextProps = { 
-		data: FeatureCollection,
-		setData: Function,
-		getEmptyFeatureCollection: Function
-	};
+type ContextProps = {
+	data: FeatureCollection;
+	setData: (data: FeatureCollection) => void;
+	getEmptyFeatureCollection: () => FeatureCollection;
+};
 
 const GeoJsonContext = React.createContext<Partial<ContextProps>>({});
 

@@ -5,7 +5,7 @@ import useLayerFilter from './useLayerFilter';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import sample from '../../components/MlGeoJsonLayer/assets/sample_2.json';
-import { FeatureCollection } from '@turf/turf';
+import { FeatureCollection } from 'geojson';
 
 const storyoptions = {
 	title: 'hooks/useLayerFilter',

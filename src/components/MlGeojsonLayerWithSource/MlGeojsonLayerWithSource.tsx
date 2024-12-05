@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import useMap from "../../hooks/useMap";
 import useLayer from "../../hooks/useLayer";
 import useSource from "../../hooks/useSource";
+import {Feature} from 'geojson';
 
 export interface MlGeojsonLayerWithSourceProps {
   /**
@@ -20,7 +21,7 @@ export interface MlGeojsonLayerWithSourceProps {
  *
  */
 const MlGeojsonLayerWithSource = (props: MlGeojsonLayerWithSourceProps) => {
-  const Spiekeroog:GeoJSON.Feature = {
+  const Spiekeroog:Feature = {
     type: "Feature",
 		properties:{},
     geometry: {

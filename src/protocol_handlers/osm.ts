@@ -1,5 +1,5 @@
 import { RequestParameters} from 'maplibre-gl';
-import { FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
+import { FeatureCollection, Geometry, GeometryCollection, Properties } from 'geojson';
 import osm2geojson from 'osm2geojson-lite';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
