@@ -16,6 +16,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           component: true
-          env: CI
+          env: '{"CI": true}'
         env:
           CI: true
