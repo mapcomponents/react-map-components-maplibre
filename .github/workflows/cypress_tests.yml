@@ -9,8 +9,6 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-22.04
-    env:
-      CI: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,3 +16,5 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           component: true
+          env:
+            CI: true
