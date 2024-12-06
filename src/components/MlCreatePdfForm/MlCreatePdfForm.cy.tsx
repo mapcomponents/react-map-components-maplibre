@@ -5,16 +5,17 @@ import * as stories from './MlCreatePdfForm.stories';
 
 const { ExampleConfig }: any = composeStories(stories);
 
-if (!Cypress.env('CI')) {
-	describe('MlCreatePdfForm Tests', () => {
-		it('Should generate and download a PDF export of the current map preview', () => {
-			mount(<ExampleConfig />);
-			cy.get('.pdfFormButton').click();
+describe('MlCreatePdfForm Tests', () => {
+	it('Should generate and download a PDF export of the current map preview', function () {
+		if (Cypress.env('CI')) {
+			cy.log('Skipping test in CI environment');
+			this.skip();
+		}
+		mount(<ExampleConfig />);
+		cy.get('.pdfFormButton').click();
 
-			cy.wait(2000);
-			cy.readFile('./cypress/downloads/Map.pdf').should('contain', 'WhereGroup');
-		});
+		cy.wait(2000);
+		cy.readFile('./cypress/downloads/Map.pdf').should('contain', 'WhereGroup');
 	});
-} else {
-	Cypress.log({ message: 'Skipping MlCreatePdfForm tests in CI environment' });
-}
+});
+

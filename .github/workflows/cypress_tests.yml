@@ -17,5 +17,3 @@ jobs:
         with:
           component: true
           env: '{"CI": true}'
-        env:
-          CI: true
