@@ -4,6 +4,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
 	component: {
+		defaultCommandTimeout: 10000,
 		viewportWidth: 800,
 		viewportHeight: 600,
 		//supportFile: './cypress/support/component.js',
