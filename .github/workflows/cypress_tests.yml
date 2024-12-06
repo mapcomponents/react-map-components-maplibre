@@ -1,4 +1,4 @@
-name: Component tests
+name: Cypress component tests
 on:
   push:
     branches:
