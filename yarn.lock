@@ -1230,10 +1230,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@cypress/react@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@cypress/react/-/react-8.0.0.tgz#9ed7a04284d149e65ad7ae9dc35aa2a20c2c4e57"
-  integrity sha512-3fnW1ow+GZVCdVHikSoYBWMZCKpaRIJe76vA7a1qS7MYXSeX/xs+VgIIrZmnM1fnc23w5nHtWh4bjGCyTfWyXA==
+"@cypress/react18@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@cypress/react18/-/react18-2.0.1.tgz#7bc6d9b557fd6a516a690996946092b12abbd3f9"
+  integrity sha512-T/bhFEvVDIu0lDOKXbEQqVEmmANKWc/pyFDyDoJw3OndRYv9QVEJSsE/VNXIaOQLDjWvQkKBOwd0lLe1hWF/Zg==
 
 "@cypress/request@^3.0.0":
   version "3.0.1"
