@@ -1,5 +1,5 @@
 import { RequestParameters } from 'maplibre-gl';
-import { FeatureCollection, Geometry, GeometryCollection, Properties } from 'geojson';
+import { FeatureCollection} from 'geojson';
 import * as externParser from '@tmcw/togeojson';
 import toGeoJSON from '../hooks/useGpx/lib/gpxConverter';
 import protocolPathParser from './utils/protocolPathParser';
@@ -17,13 +17,13 @@ async function convertXML(params: {
 				if (params.protocolId === 'tcx') {
 					return externParser[params.protocolId](
 						new DOMParser().parseFromString(rawData, 'text/xml')
-					) as FeatureCollection<Geometry | GeometryCollection, Properties>;
+					) as FeatureCollection;
 
 					// use the projects gpxConverter function for gpx and kml files
 				} else {
 					return toGeoJSON[params.protocolId](
 						new DOMParser().parseFromString(rawData, 'text/xml')
-					) as FeatureCollection<Geometry | GeometryCollection, Properties>;
+					) as FeatureCollection;
 				}
 			};
 

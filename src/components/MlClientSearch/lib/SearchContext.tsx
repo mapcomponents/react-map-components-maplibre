@@ -6,7 +6,7 @@ import useMap from '../../../hooks/useMap';
 import MlGeoJsonLayer from '../../MlGeoJsonLayer/MlGeoJsonLayer';
 import { createGeoJSONFeature } from './createGeojsonFeature';
 import { Coordinates, LngLatBoundsLike } from 'maplibre-gl';
-import {Feature} from 'geojson';
+import {Feature, BBox} from 'geojson';
 
 interface SearchContextProviderProps {
 	children: React.ReactNode;
@@ -40,7 +40,7 @@ const SearchContextProvider: React.FC<SearchContextProviderProps> = ({
 		setSearchIndexInstance(elasticlunr.Index.load(searchIndex));
 	}, [searchIndex]);
 
-	const getBoundingBox = (geometry: any): turf.BBox => {
+	const getBoundingBox = (geometry: any): BBox => {
 		if (geometry.geometry.coordinates?.length === 2) {
 			geometry = turf.buffer(geometry, 1, {
 				units: 'kilometers',
