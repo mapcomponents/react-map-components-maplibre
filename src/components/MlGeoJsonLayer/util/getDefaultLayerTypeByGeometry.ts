@@ -13,7 +13,7 @@ const mapGeometryTypesToLayerTypes: Record<string, LayerSpecification["type"]> =
 };
 
 const getDefaulLayerTypeByGeometry = (
-	geojson: Feature | FeatureCollection
+	geojson: Feature | FeatureCollection | undefined
 ): LayerSpecification['type'] => {
 	if (geojson?.type === "Feature") {
 		return mapGeometryTypesToLayerTypes?.[geojson?.geometry?.type]
