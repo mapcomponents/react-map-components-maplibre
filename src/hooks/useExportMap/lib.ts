@@ -2,7 +2,7 @@ import { Map } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
 
-import { BBox } from '@turf/turf';
+import { BBox } from 'geojson';
 
 interface createExportOptions {
 	map: MapLibreGlWrapper;
