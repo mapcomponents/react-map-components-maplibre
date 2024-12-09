@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
-import { Feature, GeoJSONObject } from '@turf/turf';
+import { Feature } from 'geojson';
 
 export interface MlMeasureToolProps {
 	/**
@@ -19,7 +19,7 @@ export interface MlMeasureToolProps {
 	onChange?: (options: {
 		value: number;
 		unit: string | undefined;
-		geojson: GeoJSONObject;
+		geojson: Feature;
 		geometries?: [];
 	}) => void;
 	/**
@@ -41,7 +41,7 @@ function getUnitLabel(measureType: string | undefined) {
 
 const MlMeasureTool = (props: MlMeasureToolProps) => {
 	const [displayValue, setDisplayValue] = useState({ value: 0, label: '' });
-	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
+	const [currentFeatures, setCurrentFeatures] = useState<Feature[]>([]);
 
 	useEffect(() => {
 		if (currentFeatures[0]) {

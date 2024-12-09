@@ -5,7 +5,7 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 
 import useMap from '../useMap';
-import { GeoJSONObject, Feature } from '@turf/turf';
+import { Feature } from 'geojson';
 import { MapEventType } from 'maplibre-gl';
 import featureEditorStyle from './utils/FeatureEditorStyle';
 import { MapLibreGlEventName } from 'src/components/MapLibreMap/lib/MapLibreGlWrapper';
@@ -28,7 +28,7 @@ export interface useFeatureEditorProps {
 	 * Callback function that is called each time the GeoJson data has changed within MlFeatureEditor.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onChange?: (para: GeoJSONObject[]) => void;
+	onChange?: (para: Feature[]) => void;
 	/**
 	 * Callback function that is called each time the GeoJson data within has been finished within MlFeatureEditor.
 	 * First parameter is the new GeoJson feature.
@@ -57,7 +57,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 
 	const drawToolsInitialized = useRef(false);
 	const [drawToolsReady, setDrawToolsReady] = useState(false);
-	const [feature, setFeature] = useState<GeoJSONObject[]>();
+	const [feature, setFeature] = useState<Feature[]>();
 	const style = featureEditorStyle();
 
 	const modeChangeHandler = useCallback(

@@ -222,14 +222,14 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			const unprojected = mapHook.map.unproject([ev.point.x, ev.point.y]);
 			const point = turf.point([unprojected.lng, unprojected.lat]);
 			const buffered = turf.buffer(point, 50, { units: 'meters' });
-			const _bbox = turf.bbox(buffered);
-			const _sw = lngLatToMeters({ lng: _bbox[0], lat: _bbox[1] } as LngLat);
-			const _ne = lngLatToMeters({ lng: _bbox[2], lat: _bbox[3] } as LngLat);
-			const bbox = [_sw[0], _sw[1], _ne[0], _ne[1]];
+			const _bbox = buffered && turf.bbox(buffered);
+			const _sw = _bbox && lngLatToMeters({ lng: _bbox[0], lat: _bbox[1] } as LngLat);
+			const _ne = _bbox && lngLatToMeters({ lng: _bbox[2], lat: _bbox[3] } as LngLat);
+			const bbox = _sw && _ne && [_sw[0], _sw[1], _ne[0], _ne[1]];
 			const _getFeatureInfoUrlParams = {
 				REQUEST: 'GetFeatureInfo',
 
-				BBOX: bbox.join(','),
+				BBOX: bbox?.join(','),
 				SERVICE: 'WMS',
 				INFO_FORMAT:
 					capabilities?.Capability?.Request?.GetFeatureInfo.Format.indexOf('text/html') !== -1

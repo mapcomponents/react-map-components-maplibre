@@ -1,8 +1,6 @@
 import React from 'react';
-
 import MlLayerMagnify from './MlLayerMagnify';
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
-
 import multiMapContextDecorator from '../../decorators/MultiMapContextDecorator';
 
 const storyoptions = {

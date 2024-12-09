@@ -10,6 +10,7 @@ import sample_geojson_1 from './assets/sample_1.json';
 import sample_geojson_2 from './assets/sample_2.json';
 
 import { Button } from '@mui/material';
+import { Feature } from 'geojson';
 
 const storyoptions = {
 	title: 'MapComponents/MlTransitionGeoJsonLayer',
@@ -24,7 +25,7 @@ export default storyoptions;
 
 const LinestringTransitionTemplate = (props:MlTransitionGeoJsonLayerProps) => {
 	const mapHook = useMap({ mapId: 'map_1' });
-	const [geojson, setGeojson] = useState<GeoJSON.Feature>(sample_geojson_1 as GeoJSON.Feature);
+	const [geojson, setGeojson] = useState<Feature>(sample_geojson_1 as Feature);
 	const initializedRef = useRef(false);
 	const [disabled, setDisabled] = useState(true);
 
@@ -46,9 +47,9 @@ const LinestringTransitionTemplate = (props:MlTransitionGeoJsonLayerProps) => {
 
 	function toogleSource() {
 		if (geojson?.properties?.name === 'sample1') {
-			setGeojson(sample_geojson_2 as GeoJSON.Feature);
+			setGeojson(sample_geojson_2 as Feature);
 		} else if (geojson?.properties?.name === 'sample2') {
-			setGeojson(sample_geojson_1 as GeoJSON.Feature);
+			setGeojson(sample_geojson_1 as Feature);
 		}
 	}
 

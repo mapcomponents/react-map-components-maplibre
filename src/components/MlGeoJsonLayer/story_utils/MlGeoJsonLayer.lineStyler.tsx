@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
-import { GeoJSON } from 'geojson';
+import {GeoJSON, FeatureCollection} from 'geojson';
 import useMap from '../../../hooks/useMap';
 
 interface LineStylerProps {
@@ -86,7 +86,7 @@ const LineStyler: React.FC<LineStylerProps> = ({ geojson, openSidebar, setOpenSi
 		}
 		return {
 			type: 'FeatureCollection',
-			features: (geojson as GeoJSON.FeatureCollection).features.filter((item) =>
+			features: (geojson as FeatureCollection).features.filter((item) =>
 				featuresToShow.includes(item?.properties?.name)
 			),
 		};

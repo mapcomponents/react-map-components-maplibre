@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEffect } from 'react';
 import useMapState from './useMapState';
 import useMap from './useMap';
