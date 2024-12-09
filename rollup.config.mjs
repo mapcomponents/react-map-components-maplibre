@@ -9,8 +9,9 @@ import externals from 'rollup-plugin-node-externals';
 import css from 'rollup-plugin-import-css';
 import del from 'rollup-plugin-delete';
 import svgr from '@svgr/rollup';
+import * as fs from 'node:fs';
 
-import pkg from './package.json' assert {type:"json"};
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
 const externalsConfig = {
 	deps: true,
