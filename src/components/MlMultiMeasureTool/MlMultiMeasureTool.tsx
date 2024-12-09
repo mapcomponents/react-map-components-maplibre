@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import * as turf from '@turf/turf';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import PentagonIcon from '@mui/icons-material/Pentagon';
-import { Feature, GeoJSONObject, Geometry, GeometryCollection, Properties } from 'geojson';
+import { Feature } from 'geojson';
 import MlMeasureTool from '../MlMeasureTool/MlMeasureTool';
 import LayerList from '../../ui_components/LayerList/LayerList';
 import LayerListItem from '../../ui_components/LayerList/LayerListItem';
@@ -49,8 +49,8 @@ export interface MlMultiMeasureToolProps {
 	 */
 	onChange?: (options: {
 		value: number;
-		unit: string | undefined;
-		geojson: GeoJSONObject;
+		unit?: string;
+		geojson: Feature;
 		geometries?: [];
 	}) => void;
 
@@ -61,12 +61,12 @@ export interface MlMultiMeasureToolProps {
 }
 
 type MeasureStateType = {
-	measure: number | undefined;
-	unit: string | undefined;
+	measure: number;
+	unit?: string ;
 	selectedGeoJson?: Feature;
 	activeGeometryIndex?: number;
 	geometries?: Feature[];
-	geojson: GeoJSONObject | undefined;
+	geojson?: Feature;
 	drawMode?: keyof MapboxDraw.Modes;
 };
 
@@ -84,7 +84,6 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	const [selectedUnit, setSelectedUnit] = useState<turf.Units>('kilometers');
 
 	const [measureList, setMeasureList] = useState<any>([]);
-	console.log(measureList);
 
 	const [reload, setReload] = useState(false);
 
@@ -108,8 +107,8 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 
 	const handleMeasureChange = (options: {
 		value: number;
-		unit: string | undefined;
-		geojson: GeoJSONObject | undefined;
+		unit?: string;
+		geojson?: Feature;
 	}) => {
 		setMeasureState({
 			measure: options.value,
@@ -252,9 +251,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 												layerComponent={
 													<MlGeoJsonLayer
 														mapId={props.mapId}
-														geojson={
-															measure.geojson as Feature<Geometry | GeometryCollection, Properties>
-														}
+														geojson={measure.geojson as Feature}
 													/>
 												}
 												visible={true}
