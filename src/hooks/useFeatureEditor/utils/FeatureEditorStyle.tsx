@@ -13,11 +13,12 @@ function featureEditorStyle() {
 				['!=', 'mode', 'static'],
 			],
 			paint: {
-				'fill-color': '#3bb2d0',
-				'fill-outline-color': '#3bb2d0',
-				'fill-opacity': 0.1,
+				'fill-color': '#009EE0',
+				'fill-outline-color': '#009EE0',	
+				'fill-opacity': 0.3,
 			},
 		},
+
 		{
 			id: 'gl-draw-polygon-fill-active',
 			type: 'fill',
@@ -25,7 +26,7 @@ function featureEditorStyle() {
 			paint: {
 				'fill-color': '#009EE0',
 				'fill-outline-color': '#009EE0',
-				'fill-opacity': 0.3,
+				'fill-opacity': 0.2,
 			},
 		},
 		
@@ -43,8 +44,8 @@ function featureEditorStyle() {
 				'line-join': 'round',
 			},
 			paint: {
-				'line-color': '#3bb2d0',
-				'line-width': 2,
+				'line-color': '#009EE0',
+				'line-width': 3,
 			},
 		},
 		{
@@ -76,8 +77,8 @@ function featureEditorStyle() {
 				'line-join': 'round',
 			},
 			paint: {
-				'line-color': '#3bb2d0',
-				'line-width': 2,
+				'line-color': '#009EE0',
+				'line-width': 3,
 			},
 		},
 		{
@@ -138,7 +139,7 @@ function featureEditorStyle() {
 			paint: {
 				'circle-radius': mediaIsMobile ? 10 : 9,
 				'circle-opacity': 1,
-				'circle-color': '#fff',
+				'circle-color': '#009EE0',
 			},
 		},
 		{
@@ -153,7 +154,7 @@ function featureEditorStyle() {
 			],
 			paint: {
 				'circle-radius': mediaIsMobile ? 7.5 : 6.5,
-				'circle-color': '#3bb2d0',
+				'circle-color': '#009EE0',		
 			},
 		},
 		{
