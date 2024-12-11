@@ -61,17 +61,7 @@ function featureEditorStyle() {
 				'line-width': 2,
 			},
 		},
-		{
-			id: 'gl-draw-polygon-midpoint',
-			type: 'circle',
-			filter: ['all', ['==', '$type', 'Point'], ['==', 'meta', 'midpoint']],
-			paint: {
-				'circle-radius': mediaIsMobile ? 7 : 5,
-				'circle-color': '#ffffff',
-				'circle-stroke-color': '#009EE0',	
-				'circle-stroke-width': 1
-			},
-		},
+		
 		{
 			id: 'gl-draw-line-inactive',
 			type: 'line',
@@ -99,9 +89,20 @@ function featureEditorStyle() {
 				'line-join': 'round',
 			},
 			paint: {
-				'line-color': '#fbb03b',
+				'line-color': "#009EE0",
 				'line-dasharray': [0.2, 2],
 				'line-width': 2,
+			},
+		},
+		{
+			id: 'gl-draw-polygon-midpoint',
+			type: 'circle',
+			filter: ['all', ['==', '$type', 'Point'], ['==', 'meta', 'midpoint']],
+			paint: {
+				'circle-radius': mediaIsMobile ? 5 : 4,
+				'circle-color': '#ffffff',
+				'circle-stroke-color': '#009EE0',	
+				'circle-stroke-width': 1
 			},
 		},
 		{
