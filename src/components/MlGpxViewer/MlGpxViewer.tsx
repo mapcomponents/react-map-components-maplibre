@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { bbox, featureCollection, FeatureCollection } from '@turf/turf';
+import { bbox, featureCollection } from '@turf/turf';
+import { FeatureCollection, GeoJSON } from 'geojson';
 import { LngLatBoundsLike } from 'maplibre-gl';
 import useMap from '../../hooks/useMap';
 import useGpx, { MetadataType } from '../../hooks/useGpx/useGpx';
@@ -49,7 +50,7 @@ const MlGpxViewer = (props: MlGpxViewerProps) => {
 		sourceId: sourceName.current,
 		source: {
 			type: 'geojson',
-			data: (parsedGpx.geojson || featureCollection([])) as (string | GeoJSON.GeoJSON),
+			data: (parsedGpx.geojson || featureCollection([])) as (string | GeoJSON),
 		},
 	});
 

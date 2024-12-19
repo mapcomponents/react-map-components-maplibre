@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface SearchContextInterface {
 	searchTerm: string | undefined;
 	setSearchTerm: (term: string | undefined) => void;

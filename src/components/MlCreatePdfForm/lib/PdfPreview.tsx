@@ -6,7 +6,8 @@ import useMapState from '../../../hooks/useMapState';
 import * as turf from '@turf/turf';
 import { PdfPreviewOptions } from './pdfContext';
 import {  LngLatLike, Map as MapType, PointLike } from 'maplibre-gl';
-import { Feature, Units } from '@turf/turf';
+import { Units } from '@turf/turf';
+import {Feature} from 'geojson';
 
 type Props = {
 	/**

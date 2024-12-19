@@ -18,7 +18,7 @@ import { Button, ToggleButton } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Feature } from '@turf/turf';
+import { Feature } from 'geojson';
 
 const storyoptions = {
 	title: 'MapComponents/MlShareMapState',

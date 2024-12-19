@@ -9,13 +9,11 @@ import {
 	point,
 	circle,
 	lineArc,
-	Feature,
-	Point,
 	bbox,
 	booleanContains,
 	bboxPolygon,
-	BBox,
 } from '@turf/turf';
+import {Feature, Point, BBox} from 'geojson';
 import { CircleLayerSpecification, FillLayerSpecification, LngLatBoundsLike } from 'maplibre-gl';
 
 export interface MlFollowGpsProps {
@@ -191,7 +189,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 				bboxPolygon(accurancyBounds as BBox)
 			);
 
-			if (contained === false) {
+			if (!contained) {
 				mapHook.map?.fitBounds(accurancyBounds, {
 					padding: { top: 25, bottom: 25 },
 				});

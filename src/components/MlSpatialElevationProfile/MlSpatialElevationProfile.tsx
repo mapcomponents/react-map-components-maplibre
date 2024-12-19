@@ -1,6 +1,6 @@
 import React, { useRef, useMemo } from 'react';
 import { featureCollection } from '@turf/helpers';
-import { Feature, FeatureCollection } from '@turf/turf';
+import { Feature, FeatureCollection, GeoJSON } from 'geojson';
 import { v4 as uuidv4 } from 'uuid';
 import useSource from '../../hooks/useSource';
 import useLayer from '../../hooks/useLayer';
@@ -114,7 +114,7 @@ const MlSpatialElevationProfile = (props: MlSpatialElevationProfileProps) => {
 		sourceId: sourceName.current,
 		source: {
 			type: 'geojson',
-			data: (_geojson || featureCollection([])) as (string | GeoJSON.GeoJSON),
+			data: (_geojson || featureCollection([])) as (string | GeoJSON),
 		},
 	});
 

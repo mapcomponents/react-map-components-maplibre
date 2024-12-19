@@ -29,8 +29,9 @@ import {
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import useMap from '../../hooks/useMap';
-import { FeatureCollection, bbox } from '@turf/turf';
+import { bbox } from '@turf/turf';
 import { LngLatBoundsLike, FitBoundsOptions } from 'maplibre-gl';
+import { Feature, FeatureCollection } from 'geojson';
 
 const IconButtonStyled = styled(IconButton)({
 	padding: '4px',
@@ -75,15 +76,15 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 					}
 					const _geojson = {
 						type: 'FeatureCollection',
-						features: mapHook.map?.querySourceFeatures(layerSource),
+						features: mapHook.map?.querySourceFeatures(layerSource) as Feature[],
 					};
 
 					if ((_geojson as FeatureCollection).features.length === 0) {
 						mapHook.map?.zoomTo(1);
-						_geojson.features = mapHook.map?.querySourceFeatures(layerSource);
+						_geojson.features = mapHook.map?.querySourceFeatures(layerSource) as Feature[];
 					}
 
-					_bbox = bbox(_geojson) as LngLatBoundsLike;
+					_bbox = bbox(_geojson as FeatureCollection) as LngLatBoundsLike;
 				}
 				break;
 			case 'vt':
