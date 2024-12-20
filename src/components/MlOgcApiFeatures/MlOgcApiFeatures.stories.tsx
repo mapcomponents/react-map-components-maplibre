@@ -8,7 +8,7 @@ import useMap from '../../hooks/useMap';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Button from '@mui/material/Button';
 import Sidebar from '../../ui_components/Sidebar';
-import { FormControl, MenuItem, Select, Slider, TextField, Typography } from '@mui/material';
+import { FormControl, Menu, MenuItem, Select, Slider, TextField, Typography } from '@mui/material';
 import ColorPicker from '../../ui_components/ColorPicker/ColorPicker';
 
 const storyoptions = {
@@ -19,7 +19,12 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const PointTemplate = (props: MlOgcApiFeaturesProps) => {
+type TemplateProps = MlOgcApiFeaturesProps & {
+	openSidebar: boolean;
+	setOpenSidebar: (open: boolean) => void;
+};
+
+const PointTemplate = (props: TemplateProps) => {
 	const [showLayer, setShowLayer] = useState(true);
 	const mapHook = useMap({
 		mapId: props.mapId,
@@ -34,17 +39,19 @@ const PointTemplate = (props: MlOgcApiFeaturesProps) => {
 
 	return (
 		<>
-			<TopToolbar
-				unmovableButtons={
-					<Button
-						color="primary"
-						variant={showLayer ? 'contained' : 'outlined'}
-						onClick={() => setShowLayer(!showLayer)}
-					>
-						OGC API Feature Points
-					</Button>
-				}
-			/>
+			<Sidebar
+				open={props.openSidebar}
+				setOpen={props.setOpenSidebar}
+				name={'OGC API Feature Points'}
+			>
+				<Button
+					color="primary"
+					variant={showLayer ? 'contained' : 'outlined'}
+					onClick={() => setShowLayer(!showLayer)}
+				>
+					OGC API Feature Points
+				</Button>
+			</Sidebar>
 			<MlOgcApiFeatures
 				visible={showLayer}
 				ogcApiUrl={props.ogcApiUrl}
@@ -63,9 +70,10 @@ Point.args = {
 	ogcApiFeatureParams: {
 		limit: 100,
 	} as OgcApiFeaturesParamsTypes,
+	openSidebar: true,
 };
 
-const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
+const OGCLoaderTemplate = (props: TemplateProps) => {
 	interface Mark {
 		value: number;
 		label: string;
@@ -84,7 +92,6 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 		{ value: 10, label: '10' },
 	];
 
-	const [openSidebar, setOpenSidebar] = useState(true);
 	const [color, setColor] = useState<string>('#0E8A0E');
 	const [opacity, setOpacity] = useState<number>(0.8);
 	const [geomType, setGeomType] = useState<'fill' | 'circle' | 'line'>('fill');
@@ -108,18 +115,11 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 
 	return (
 		<>
-			<TopToolbar
-				unmovableButtons={
-					<Button
-						color="primary"
-						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
-					>
-						OGC API Feature Loader
-					</Button>
-				}
-			/>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'OGC API Feature Loader'}>
+			<Sidebar
+				open={props.openSidebar}
+				setOpen={props.setOpenSidebar}
+				name={'OGC API Feature Loader'}
+			>
 				<FormControl fullWidth sx={{ marginTop: '10px' }}>
 					<TextField
 						label="OGC API Features URL"
@@ -208,5 +208,91 @@ const OGCLoaderTemplate = (props: MlOgcApiFeaturesProps) => {
 export const OgcApiLoader = OGCLoaderTemplate.bind({});
 OgcApiLoader.parameters = {};
 OgcApiLoader.args = {
+	mapId: 'map_1',
+	openSidebar: true,
+};
+
+const CatalogueTemplate = () => {
+	const configTitles = {
+		points: 'OGC API Feature Points',
+		featureLoader: 'OGC API Feature Loader',
+	};
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const [selectedStory, setSelectedStory] = useState<string>('points');
+
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleStorySelect = (story: string) => {
+		setSelectedStory(story);
+	};
+
+	return (
+		<>
+			<TopToolbar
+				unmovableButtons={
+					<>
+						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
+							{configTitles[selectedStory]}
+						</Typography>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							sx={{ marginRight: '10px' }}
+							onClick={() => setOpenSidebar(!openSidebar)}
+						>
+							Sidebar
+						</Button>
+						<Button
+							id="basic-button"
+							variant="contained"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={handleClick}
+						>
+							Examples
+						</Button>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							<MenuItem onClick={() => handleStorySelect('points')}>
+								OGC API Feature Points
+							</MenuItem>
+							<MenuItem onClick={() => handleStorySelect('featureLoader')}>
+								OGC API Feature Loader
+							</MenuItem>
+						</Menu>
+					</>
+				}
+			/>
+
+			{selectedStory === 'points' && (
+				<PointTemplate {...Point.args} openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+			)}
+			{selectedStory === 'featureLoader' && (
+				<OGCLoaderTemplate
+					{...OgcApiLoader.props}
+					openSidebar={openSidebar}
+					setOpenSidebar={setOpenSidebar}
+				/>
+			)}
+		</>
+	);
+};
+export const Catalogue = CatalogueTemplate.bind({});
+Catalogue.parameters = {};
+Catalogue.args = {
 	mapId: 'map_1',
 };
