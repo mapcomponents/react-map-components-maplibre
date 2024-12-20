@@ -291,8 +291,8 @@ const CatalogueTemplate = () => {
 		</>
 	);
 };
-export const Catalogue = CatalogueTemplate.bind({});
-Catalogue.parameters = {};
-Catalogue.args = {
+export const CatalogueDemo = CatalogueTemplate.bind({});
+CatalogueDemo.parameters = {};
+CatalogueDemo.args = {
 	mapId: 'map_1',
 };
