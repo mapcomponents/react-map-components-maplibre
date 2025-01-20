@@ -5,7 +5,7 @@ import {
 	SymbolLayerSpecification,
 	SymbolLayoutProps,
 } from 'maplibre-gl';
-import { FeatureCollection } from '@turf/turf';
+import { FeatureCollection } from 'geojson';
 import { useLayerProps } from '../../../hooks/useLayer';
 
 

@@ -61,7 +61,7 @@ export type FolderLayerConfig = {
 
 export type LayerConfig = WmsLayerConfig | GeojsonLayerConfig | VtLayerConfig | FolderLayerConfig;
 
-interface MapProps {
+export interface MapProps {
 	center: [number, number];
 	zoom: number;
 }
@@ -71,7 +71,7 @@ export interface LayerOrderItem {
 	layers?: LayerOrderItem[];
 }
 
-interface MapConfig {
+export interface MapConfig {
 	/*uuid: string;*/
 	name: string;
 	mapProps: MapProps;

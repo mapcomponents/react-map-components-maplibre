@@ -1,5 +1,16 @@
 # Change Log
 
+## [v1.0.9] - 2024-11-20
+
+### Added
+
+- 75649aa: add MlOgcApiFeatures Component
+- 90311cf: add new redux based layerconfig store
+
+### Changed
+
+- 0b448e1: Update @mui to ^6.1.1
+
 ## [v1.0.8] - 2024-09-16
 
 ### Fixed

@@ -1,9 +1,3 @@
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
-
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 

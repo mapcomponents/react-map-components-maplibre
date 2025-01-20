@@ -1,5 +1,5 @@
 import { LngLatLike, RequestParameters } from 'maplibre-gl';
-import { Feature, FeatureCollection, Geometry, GeometryCollection, Properties } from '@turf/turf';
+import { Feature, FeatureCollection } from 'geojson';
 import { feature as topojsonFeature } from 'topojson-client';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
@@ -23,12 +23,12 @@ function reduceFeatures(geojson: FeatureCollection) {
 				properties: e.properties,
 			});
 		} else {
-			e.features.forEach((el: Feature<Geometry | GeometryCollection, Properties>) => {
+			e.features.forEach((el: Feature) => {
 				newFeatures.push({ type: el.type, geometry: el.geometry, properties: el.properties });
 			});
 		}
 	});
-	return newFeatures as Feature<Geometry | GeometryCollection, Properties>[];
+	return newFeatures as Feature[];
 }
 
 async function convertTopojson(params: { filename: string }): Promise<FeatureCollection> {

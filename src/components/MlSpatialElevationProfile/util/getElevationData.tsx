@@ -1,5 +1,6 @@
 import { distance, lineOffset } from '@turf/turf';
 import { polygon, lineString, featureCollection} from '@turf/helpers';
+import {Feature} from 'geojson';
 
 interface geometry{
 coordinates: Array<number>
@@ -44,7 +45,7 @@ export default function getElevationData(_geojsonInfo: _geojsonInfo, elevationFa
         };
     
         const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
-		const points: GeoJSON.Feature[] = [];
+		const points: Feature[] = [];
 
 		_geojsonInfo.line.geometry.coordinates.forEach((coordinate: number, index: number) => {
 			//const point = createPoint(coordinate[0],coordinate[1],coordinate[2]-min);
@@ -89,7 +90,7 @@ export default function getElevationData(_geojsonInfo: _geojsonInfo, elevationFa
 					);
 
 					const point = createStep(x, y, z, x2, y2);
-					points.push(point as unknown as GeoJSON.Feature);
+					points.push(point as unknown as Feature);
 				}
 			}
 		});
