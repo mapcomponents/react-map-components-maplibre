@@ -72,7 +72,7 @@ interface CatalogueSidebarProps {
 const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpenSidebar }) => {
 	const theme = useTheme();
 
-	const [value, setValue] = useState('measure-distance');
+	const [measureType, setMeasureType] = useState('measure-distance');
 	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('meters');
 	const [resetKey, setResetKey] = useState(0);
 	const [showInstruction, setShowInstruction] = useState(true);
@@ -94,15 +94,11 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 		'hectares',
 	];
 
-	const handleUnitChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
-		setUnit(event.target.value as MlMeasureToolProps['unit']);
-	};
+	const handleMeasureTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newMeasureType = event.target.value;
+		setMeasureType(newMeasureType);
 
-	const handleButtonChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newValue = event.target.value;
-		setValue(newValue);
-
-		if (newValue === 'measure-distance' && (unit === 'acres' || unit === 'hectares')) {
+		if (newMeasureType === 'measure-distance' && (unit === 'acres' || unit === 'hectares')) {
 			setUnit('meters');
 		}
 
@@ -110,7 +106,11 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 		setIsFinished(false);
 	};
 
-	const handleResetButton = () => {
+	const handleUnitChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
+		setUnit(event.target.value as MlMeasureToolProps['unit']);
+	};
+
+	const handleRestartButton = () => {
 		setResetKey((prevKey) => prevKey + 1);
 		setIsMeasuring(false);
 		setIsFinished(false);
@@ -128,7 +128,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 			setIsFinished(false);
 		}
 
-		setValue(openSidebar ? 'measure-distance' : 'measure-distance');
+		setMeasureType(openSidebar ? 'measure-distance' : 'measure-distance');
 		setUnit(openSidebar ? 'meters' : 'meters');
 
 		if (openSidebar) {
@@ -142,7 +142,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 		setIsMeasuring(true);
 		if (
 			(state.geojson.geometry as LineString).coordinates[0].length == 2 &&
-			value == 'measure-area'
+			measureType == 'measure-area'
 		) {
 			setIsSecondAreaClick(true);
 		} else {
@@ -169,7 +169,11 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Measure Tool'}>
 				<Box style={{ fontFamily: 'sans-serif', marginTop: '20px' }}>
 					<FormControl>
-						<RadioGroup name="measure-tool-select" value={value} onChange={handleButtonChange}>
+						<RadioGroup
+							name="measure-type-select"
+							value={measureType}
+							onChange={handleMeasureTypeChange}
+						>
 							<FormControlLabel
 								value="measure-distance"
 								control={<Radio />}
@@ -205,7 +209,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 									key={unit}
 									value={unit}
 									disabled={
-										(unit === 'hectares' || unit === 'acres') && value === 'measure-distance'
+										(unit === 'hectares' || unit === 'acres') && measureType === 'measure-distance'
 									}
 								>
 									{unit}
@@ -224,12 +228,12 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 					}}
 				>
 					<Typography>
-						<b>{value === 'measure-distance' ? 'Distance' : 'Area'}</b>
+						<b>{measureType === 'measure-distance' ? 'Distance' : 'Area'}</b>
 					</Typography>
 					<Typography variant="h6">
 						<MlMeasureTool
-							key={`${value}-${resetKey}`}
-							measureType={value === 'measure-distance' ? 'line' : 'polygon'}
+							key={`${measureType}-${resetKey}`}
+							measureType={measureType === 'measure-distance' ? 'line' : 'polygon'}
 							unit={unit}
 							onFinish={handleMeasureFinish}
 							onChange={handleMeasureStart}
@@ -239,7 +243,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 
 				{isFinished && (
 					<Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-						<Button size="small" variant="contained" onClick={handleResetButton}>
+						<Button size="small" variant="contained" onClick={handleRestartButton}>
 							Restart
 						</Button>
 					</Box>
