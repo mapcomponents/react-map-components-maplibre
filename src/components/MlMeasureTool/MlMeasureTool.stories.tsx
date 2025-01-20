@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
+import { LineString } from 'geojson';
 
 const storyoptions = {
 	title: 'MapComponents/MlMeasureTool',
@@ -139,7 +140,10 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 
 	const handleMeasureStart = (state: MlMeasureToolOnChangeOptions) => {
 		setIsMeasuring(true);
-		if (state.geojson.geometry.coordinates[0].length == 2 && value == 'measure-area') {
+		if (
+			(state.geojson.geometry as LineString).coordinates[0].length == 2 &&
+			value == 'measure-area'
+		) {
 			setIsSecondAreaClick(true);
 		} else {
 			setIsSecondAreaClick(false);
@@ -155,7 +159,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 		if (isMeasuring) {
 			return isSecondAreaClick
 				? 'Click to add node.'
-				: 'Click to add node. Double click to complete drawing.';
+				: 'Click to add node. </br> Double click to complete drawing.';
 		}
 		return 'Click on map to start.';
 	};
