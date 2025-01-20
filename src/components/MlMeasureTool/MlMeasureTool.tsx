@@ -95,9 +95,9 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				result = turf.area(currentFeatures[0] as Feature);
 
 				// Convert area depending on the unit (square meters -> selected area unit)
-				if (props.unit === 'acres') {
+				if (props.unit && props.unit === 'acres') {
 					result = result / 4046.8564224;
-				} else if (props.unit === 'hectares') {
+				} else if (props.unit && props.unit === 'hectares') {
 					result = result / 10000;
 				} else {
 					result = result * unitMultiplier(props.unit) ** 2;
