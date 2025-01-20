@@ -28,50 +28,89 @@ export interface MlMeasureToolProps {
 	onFinish?: () => void;
 }
 
-//const unitSquareConvert = {
-//	kilometers: 1,
-//	miles: 1 / 2.58998811,
-//};
-function getUnitSquareMultiplier(measureType: string | undefined) {
-	return measureType === 'miles' ? 1 / 2.58998811 : 1;
+function unitMultiplier(unit: string | undefined) {
+	switch (unit) {
+		case 'meters':
+			return 1;
+		case 'millimeters':
+			return 1000;
+		case 'centimeters':
+			return 100;
+		case 'kilometers':
+			return 0.001;
+		case 'miles':
+			return 1 / 1609.344; // Meters in Miles
+		case 'nauticalmiles':
+			return 1 / 1852; // Meters in Nautical Miles
+		case 'inches':
+			return 39.3701; // Meters in Inches
+		case 'yards':
+			return 1.09361; // Meters in Yards
+		case 'feet':
+			return 3.28084; // Meters in Feet
+		default:
+			return 1;
+	}
 }
-function getUnitLabel(measureType: string | undefined) {
-	return measureType === 'miles' ? 'mi' : 'km';
+
+function unitLabel(unit: string | undefined) {
+	switch (unit) {
+		case 'miles':
+			return 'mi';
+		case 'acres':
+			return 'ac';
+		case 'kilometers':
+			return 'km';
+		case 'meters':
+			return 'm';
+		case 'millimeters':
+			return 'mm';
+		case 'centimeters':
+			return 'cm';
+		case 'nauticalmiles':
+			return 'nm';
+		case 'inches':
+			return 'in';
+		case 'yards':
+			return 'yd';
+		case 'feet':
+			return 'ft';
+		case 'hectares':
+			return 'ha';
+		default:
+			return 'm';
+	}
 }
 
 const MlMeasureTool = (props: MlMeasureToolProps) => {
-	const [displayValue, setDisplayValue] = useState({ value: 0, label: '' });
+	const [displayValue, setDisplayValue] = useState({ value: 0, label: unitLabel(props.unit) });
 	const [currentFeatures, setCurrentFeatures] = useState<GeoJSONObject[]>([]);
 
 	useEffect(() => {
 		if (currentFeatures[0]) {
-			const result =
-				props.measureType === 'polygon'
-					? // for "polyong" mode calculate km²
-						(turf.area(currentFeatures[0] as Feature) / 1000000) *
-						getUnitSquareMultiplier(props.unit)
-					: turf.length(currentFeatures[0] as Feature, { units: props.unit });
+			let result: number = 0;
+			if (props.measureType === 'polygon') {
+				// Calculate area in square meters
+				result = turf.area(currentFeatures[0] as Feature);
+
+				// Convert area depending on the unit (square meters -> selected area unit)
+				if (props.unit === 'acres') {
+					result = result / 4046.8564224;
+				} else if (props.unit === 'hectares') {
+					result = result / 10000;
+				} else {
+					result = result * unitMultiplier(props.unit) ** 2;
+				}
+			} else {
+				result = turf.length(currentFeatures[0] as Feature, { units: props.unit });
+			}
 
 			if (typeof props.onChange === 'function') {
 				props.onChange({ value: result, unit: props.unit, geojson: currentFeatures[0] });
 			}
 
 			if (result >= 0.1) {
-				setDisplayValue({ value: result, label: getUnitLabel(props.unit) });
-			} else {
-				let label = 'm';
-				let value = result * 1000;
-				if (props.measureType === 'polygon') {
-					value = result * 1000000;
-				}
-				if (getUnitLabel(props.unit) === 'mi') {
-					label = 'Yard';
-					value = result * 1760;
-					if (props.measureType === 'polygon') {
-						value = result * 3097600;
-					}
-				}
-				setDisplayValue({ value: value, label: label });
+				setDisplayValue({ value: result, label: unitLabel(props.unit) });
 			}
 		}
 	}, [props.unit, currentFeatures]);
@@ -85,9 +124,16 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				mode={props.measureType === 'polygon' ? 'draw_polygon' : 'draw_line_string'}
 				onFinish={props.onFinish}
 			/>
-			{displayValue.value.toFixed(2)} {''}
-			{displayValue.label}
-			{displayValue.label && props.measureType === 'polygon' ? ' ²' : ''}
+			{displayValue.value.toLocaleString('de-DE', {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			})}{' '}
+			{unitLabel(props.unit)}
+			{displayValue.label &&
+			props.measureType === 'polygon' &&
+			!['hectares', 'acres'].includes(props.unit || '')
+				? ' ²'
+				: ''}
 		</>
 	);
 };
@@ -95,6 +141,6 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 MlMeasureTool.defaultProps = {
 	mapId: undefined,
 	measureType: 'line',
-	unit: 'kilometers',
+	unit: 'meters',
 };
 export default MlMeasureTool;
