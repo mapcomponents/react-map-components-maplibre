@@ -49,10 +49,6 @@ function unitMultiplier(unit: string | undefined) {
 			return 1.09361; // Meters in Yards
 		case 'feet':
 			return 3.28084; // Meters in Feet
-		case 'acres':
-			return 1;
-		case 'hectares':
-			return 1;
 		default:
 			return 1;
 	}
