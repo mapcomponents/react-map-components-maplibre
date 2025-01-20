@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MlMeasureTool, { MlMeasureToolProps } from './MlMeasureTool';
+import MlMeasureTool, { MlMeasureToolOnChangeOptions, MlMeasureToolProps } from './MlMeasureTool';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
 import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
@@ -77,6 +77,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 	const [showInstruction, setShowInstruction] = useState(true);
 	const [isMeasuring, setIsMeasuring] = useState(false);
 	const [isFinished, setIsFinished] = useState(false);
+	const [isSecondAreaClick, setIsSecondAreaClick] = useState(false);
 
 	const units = [
 		'meters',
@@ -136,8 +137,13 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 		}
 	}, [openSidebar]);
 
-	const handleMeasureStart = () => {
+	const handleMeasureStart = (state: MlMeasureToolOnChangeOptions) => {
 		setIsMeasuring(true);
+		if (state.geojson.geometry.coordinates[0].length == 2 && value == 'measure-area') {
+			setIsSecondAreaClick(true);
+		} else {
+			setIsSecondAreaClick(false);
+		}
 	};
 
 	const handleMeasureFinish = () => {
@@ -146,11 +152,10 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 	};
 
 	const getInstructionText = () => {
-		if (isFinished) {
-			return 'Click reset button to start new drawing';
-		}
 		if (isMeasuring) {
-			return 'Double click to complete drawing.';
+			return isSecondAreaClick
+				? 'Click to add node.'
+				: 'Click to add node. Double click to complete drawing.';
 		}
 		return 'Click on map to start.';
 	};
@@ -170,7 +175,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 						</RadioGroup>
 						<FormControlLabel
 							control={<Checkbox checked={showInstruction} onChange={handleCheckboxChange} />}
-							label="Don't show instruction"
+							label="Show instructions"
 						/>
 					</FormControl>
 				</Box>
@@ -228,14 +233,16 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 					</Typography>
 				</Box>
 
-				<Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
-					<Button size="small" variant="contained" onClick={handleResetButton}>
-						Reset
-					</Button>
-				</Box>
+				{isFinished && (
+					<Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+						<Button size="small" variant="contained" onClick={handleResetButton}>
+							Restart
+						</Button>
+					</Box>
+				)}
 			</Sidebar>
 
-			{openSidebar && showInstruction && (
+			{openSidebar && showInstruction && !isFinished && (
 				<Paper
 					sx={{
 						position: 'fixed',
