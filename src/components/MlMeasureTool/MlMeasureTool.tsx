@@ -3,6 +3,12 @@ import MlFeatureEditor from '../MlFeatureEditor/MlFeatureEditor';
 import * as turf from '@turf/turf';
 import { Feature, GeoJSONObject } from '@turf/turf';
 
+export interface MlMeasureToolOnChangeOptions {
+	value: number;
+	unit: string | undefined;
+	geojson: GeoJSONObject;
+	geometries?: [];
+}
 export interface MlMeasureToolProps {
 	/**
 	 * String that specify if the Tool measures an area ("polygon") or length ("line")
@@ -16,12 +22,7 @@ export interface MlMeasureToolProps {
 	 * Callback function that is called each time measurment geometry within has changed within MlMeasureTool.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onChange?: (options: {
-		value: number;
-		unit: string | undefined;
-		geojson: GeoJSONObject;
-		geometries?: [];
-	}) => void;
+	onChange?: (options: MlMeasureToolOnChangeOptions) => void;
 	/**
 	 * Callback function that is called by the end of drawing geometries.
 	 */
