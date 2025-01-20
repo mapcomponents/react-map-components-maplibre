@@ -49,6 +49,10 @@ function unitMultiplier(unit: string | undefined) {
 			return 1.09361; // Meters in Yards
 		case 'feet':
 			return 3.28084; // Meters in Feet
+		case 'acres':
+			return 1;
+		case 'hectares':
+			return 1;
 		default:
 			return 1;
 	}
@@ -95,9 +99,9 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 				result = turf.area(currentFeatures[0] as Feature);
 
 				// Convert area depending on the unit (square meters -> selected area unit)
-				if (props.unit && props.unit === 'acres') {
+				if (props.unit === 'acres') {
 					result = result / 4046.8564224;
-				} else if (props.unit && props.unit === 'hectares') {
+				} else if (props.unit === 'hectares') {
 					result = result / 10000;
 				} else {
 					result = result * unitMultiplier(props.unit) ** 2;
