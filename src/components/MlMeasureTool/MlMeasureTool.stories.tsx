@@ -159,7 +159,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 		if (isMeasuring) {
 			return isSecondAreaClick
 				? 'Click to add node.'
-				: 'Click to add node. </br> Double click to complete drawing.';
+				: 'Click to add node. Double click to complete drawing.';
 		}
 		return 'Click on map to start.';
 	};
