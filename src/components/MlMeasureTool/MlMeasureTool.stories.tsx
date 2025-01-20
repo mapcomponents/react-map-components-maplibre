@@ -33,7 +33,7 @@ export default storyoptions;
 
 const Template = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('kilometers');
+	const [unit, setUnit] = useState<MlMeasureToolProps['unit']>('meters');
 	const handleChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
 		setUnit(event.target.value as MlMeasureToolProps['unit']);
 	};
