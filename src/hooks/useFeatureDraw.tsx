@@ -42,17 +42,15 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 	}, [mapHook.map, props.mode]);
 
 	const setMode = (mode: string): void => {
-		if (draw.current) {
-			draw.current?.setMode(mode);
-			setIsDrawing(true);
-		}
+		draw.current?.setMode(mode);
+		setIsDrawing(mode !== 'select');
 	};
 
 	const startDrawing = (mode: string): void => {
 		if (!draw.current) {
 			initializeDraw();
 		}
-		if (draw.current) {
+		if (draw.current && !isDrawing) {
 			draw.current.start();
 			setMode(mode);
 		}
@@ -60,12 +58,16 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 
 	const stopDrawing = (): void => {
 		if (draw.current) {
-			draw.current.stop();
-			draw.current = null;
-			setIsDrawing(false);
+			setMode('select');
 		}
 	};
 
-	return { startDrawing, stopDrawing, isDrawing };
+	const clearDrawing = (): void => {
+		if (draw.current) {
+			draw.current.clear();
+		}
+	};
+
+	return { startDrawing, stopDrawing, clearDrawing, isDrawing };
 };
 export default useFeatureDraw;

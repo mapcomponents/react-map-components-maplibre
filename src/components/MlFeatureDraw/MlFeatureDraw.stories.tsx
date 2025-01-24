@@ -3,7 +3,8 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlFeatureDraw from './MlFeatureDraw';
 import Sidebar from '../../ui_components/Sidebar';
 import useFeatureDraw from '../../hooks/useFeatureDraw';
-import { TerraDrawPolygonMode } from 'terra-draw';
+import { TerraDrawPolygonMode, TerraDrawSelectMode } from 'terra-draw';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const storyoptions = {
 	title: 'MapComponents/MlFeatureDraw',
@@ -14,18 +15,39 @@ const storyoptions = {
 
 export default storyoptions;
 const Template = () => {
-	const { startDrawing, stopDrawing, isDrawing } = useFeatureDraw({
+	const { startDrawing, stopDrawing, clearDrawing, isDrawing } = useFeatureDraw({
 		mapId: 'map_1',
-		mode: [new TerraDrawPolygonMode()],
+		mode: [
+			new TerraDrawPolygonMode(),
+			new TerraDrawSelectMode({
+				flags: {
+					polygon: {
+						feature: {
+							draggable: true,
+							rotateable: true,
+							scaleable: true,
+							coordinates: {
+								midpoints: true,
+								draggable: true,
+								deletable: true,
+							},
+						},
+					},
+				},
+			}),
+		],
 	});
 	return (
 		<>
 			<Sidebar open={true}>
-				<button onClick={() => startDrawing('polygon')}>
-					{isDrawing ? 'Drawing...' : 'Start Drawing Polygon'}
+				<button disabled={isDrawing} onClick={() => startDrawing('polygon')}>
+					{isDrawing ? 'Drawing...' : 'New Polygon'}
 				</button>
 				<button onClick={stopDrawing} disabled={!isDrawing}>
-					Stop Drawing
+					{isDrawing ? 'Edit Feature' : 'Editing...'}
+				</button>
+				<button onClick={clearDrawing}>
+					<DeleteIcon fontSize="small"></DeleteIcon>
 				</button>
 			</Sidebar>
 		</>
