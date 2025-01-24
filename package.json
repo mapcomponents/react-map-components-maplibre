@@ -50,6 +50,8 @@
 		"react-redux": "^9.1.2",
 		"redux": "^5.0.1",
 		"redux-thunk": "^3.1.0",
+		"terra-draw": "^1.0.0",
+		"terra-draw-maplibre-gl-adapter": "^1.0.1",
 		"three": "^0.161.0",
 		"topojson-client": "^3.1.0",
 		"uuid": "^9.0.1",
