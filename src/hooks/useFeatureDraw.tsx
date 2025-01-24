@@ -28,31 +28,56 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const initializeDraw = () => {
-		if (mapHook.map && !draw.current) {
-			draw.current = new TerraDraw({
-				adapter: new TerraDrawMapLibreGLAdapter(mapHook.map),
-				modes: props.mode,
-			});
+	const cleanup = () => {
+		if (draw.current) {
+			// Proper cleanup sequence
+			draw.current.stop();
+			draw.current.clear();
+			draw.current = null;
 		}
+		setIsDrawing(false);
+	};
+
+	const initializeDraw = () => {
+		if (!mapHook.map) return;
+		// Clean up any existing instance first
+		cleanup();
+		draw.current = new TerraDraw({
+			adapter: new TerraDrawMapLibreGLAdapter(mapHook.map),
+			modes: props.mode,
+		});
 	};
 
 	useEffect(() => {
 		initializeDraw();
+		return () => cleanup();
 	}, [mapHook.map, props.mode]);
 
 	const setMode = (mode: string): void => {
-		draw.current?.setMode(mode);
-		setIsDrawing(mode !== 'select');
+		if (!draw.current) return;
+
+		try {
+			draw.current.setMode(mode);
+			setIsDrawing(mode !== 'select');
+		} catch (error) {
+			console.error('Error setting mode:', error);
+			setIsDrawing(false);
+		}
 	};
 
-	const startDrawing = (mode: string): void => {
-		if (!draw.current) {
-			initializeDraw();
-		}
-		if (draw.current && !isDrawing) {
-			draw.current.start();
+	const startDrawing = (mode: string) => {
+		if (!draw.current) initializeDraw();
+		if (!draw.current) return;
+
+		try {
+			// Start TerraDraw if not already started
+			if (!isDrawing) {
+				draw.current.start();
+			}
 			setMode(mode);
+		} catch (error) {
+			console.error('Error starting drawing:', error);
+			cleanup();
 		}
 	};
 
@@ -65,6 +90,7 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 	const clearDrawing = (): void => {
 		if (draw.current) {
 			draw.current.clear();
+			initializeDraw();
 		}
 	};
 
