@@ -30,7 +30,6 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 
 	const cleanup = () => {
 		if (draw.current) {
-			// Proper cleanup sequence
 			draw.current.stop();
 			draw.current.clear();
 			draw.current = null;
@@ -70,7 +69,6 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 		if (!draw.current) return;
 
 		try {
-			// Start TerraDraw if not already started
 			if (!isDrawing) {
 				draw.current.start();
 			}
