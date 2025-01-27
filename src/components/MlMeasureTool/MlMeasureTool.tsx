@@ -49,6 +49,10 @@ function unitMultiplier(unit: string | undefined) {
 			return 1.09361; // Meters in Yards
 		case 'feet':
 			return 3.28084; // Meters in Feet
+		case 'acres':
+			return 1 / 4046.8564224; // Square meters in an acre
+		case 'hectares':
+			return 1 / 10000; // Square meters in a hectare
 		default:
 			return 1;
 	}
