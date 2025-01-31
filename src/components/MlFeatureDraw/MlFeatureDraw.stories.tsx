@@ -91,7 +91,6 @@ const Template = (args: { modeType: string }) => {
 				selectConfig = {
 					flags: {
 						polygon: {
-							// Rectangles are typically stored as polygons
 							feature: {
 								draggable: true,
 								rotateable: true,
@@ -112,7 +111,6 @@ const Template = (args: { modeType: string }) => {
 				selectConfig = {
 					flags: {
 						polygon: {
-							// Freehand creates polygon-like features
 							feature: {
 								draggable: true,
 								coordinates: {
@@ -131,7 +129,6 @@ const Template = (args: { modeType: string }) => {
 				selectConfig = {
 					flags: {
 						polygon: {
-							// Circles are often represented as polygons
 							feature: {
 								draggable: true,
 								rotateable: true,
