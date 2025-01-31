@@ -48,8 +48,12 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 	};
 
 	useEffect(() => {
+		console.log('Initializing TerraDraw');
 		initializeDraw();
-		return () => cleanup();
+		return () => {
+			console.log('Cleanup TerraDraw');
+			cleanup();
+		};
 	}, [mapHook.map, props.mode]);
 
 	const setMode = (mode: string): void => {
@@ -69,7 +73,7 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 		if (!draw.current) return;
 
 		try {
-			if (!isDrawing) {
+			if (!draw.current.enabled) {
 				draw.current.start();
 			}
 			setMode(mode);
