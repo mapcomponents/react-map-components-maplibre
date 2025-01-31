@@ -31,7 +31,6 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 	const cleanup = () => {
 		if (draw.current) {
 			draw.current.stop();
-			draw.current.clear();
 			draw.current = null;
 		}
 		setIsDrawing(false);
@@ -39,7 +38,6 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 
 	const initializeDraw = () => {
 		if (!mapHook.map) return;
-		// Clean up any existing instance first
 		cleanup();
 		draw.current = new TerraDraw({
 			adapter: new TerraDrawMapLibreGLAdapter(mapHook.map),
@@ -92,7 +90,6 @@ const useFeatureDraw = (props: useFeatureDrawProps) => {
 	const clearDrawing = (): void => {
 		if (draw.current) {
 			draw.current.clear();
-			initializeDraw();
 		}
 	};
 
