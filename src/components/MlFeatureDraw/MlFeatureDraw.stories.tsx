@@ -13,6 +13,10 @@ import {
 	TerraDrawSelectMode,
 } from 'terra-draw';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import EditIcon from '@mui/icons-material/Edit';
+import { Button, Tooltip } from '@mui/material';
+import DrawIcon from '@mui/icons-material/Draw';
 
 const storyoptions = {
 	title: 'MapComponents/MlFeatureDraw',
@@ -153,15 +157,23 @@ const Template = (args: { modeType: string }) => {
 	return (
 		<>
 			<Sidebar open={true}>
-				<button disabled={isDrawing} onClick={() => startDrawing(args.modeType)}>
-					{isDrawing ? 'Drawing...' : `Draw ${args.modeType}`}
-				</button>
-				<button onClick={stopDrawing} disabled={!isDrawing}>
-					{isDrawing ? 'Edit Feature' : 'Editing...'}
-				</button>
-				<button onClick={clearDrawing}>
-					<DeleteIcon fontSize="small" />
-				</button>
+				<ButtonGroup size="small">
+					<Tooltip title="Draw">
+						<Button
+							variant={isDrawing ? 'contained' : 'outlined'}
+							onClick={() => startDrawing(args.modeType)}
+						>
+							<DrawIcon />
+							{`Draw ${args.modeType}`}
+						</Button>
+					</Tooltip>
+					<Button variant={!isDrawing ? 'contained' : 'outlined'} onClick={stopDrawing}>
+						<EditIcon />
+					</Button>
+					<Button onClick={clearDrawing}>
+						<DeleteIcon />
+					</Button>
+				</ButtonGroup>
 			</Sidebar>
 		</>
 	);
