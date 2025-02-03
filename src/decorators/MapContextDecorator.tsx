@@ -6,7 +6,9 @@ import './style.css';
 import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
+import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
 import { Decorator } from '@storybook/react';
+import { Paper } from '@mui/material';
 
 interface StoryContext {
 	globals: {
@@ -23,6 +25,16 @@ const makeMapContextDecorators = (options: MapLibreMapProps['options']): Decorat
 				<div className="fullscreen_map">
 					<MapComponentsProvider>
 						<MUIThemeProvider theme={theme}>
+							<Paper
+								sx={{
+									position: 'fixed',
+									top: '75px',
+									right: '20px',
+									zIndex: 1300,
+								}}
+							>
+								<MlScaleReference />
+							</Paper>
 							<Story />
 							<MapLibreMap
 								options={{
