@@ -112,7 +112,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				display: 'flex',
 				flexDirection: 'column',
 				right: mediaIsMobile ? '15px' : '25px',
-				bottom: mediaIsMobile ? '20px' : '30px',
+				bottom: mediaIsMobile ? '20px' : '40px',
 				...(mediaIsMobile ? { margin: '80px 10px 50px 10px' } : { marginTop: '50px' }),
 				...props.sx,
 			}}
