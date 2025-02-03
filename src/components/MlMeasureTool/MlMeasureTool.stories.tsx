@@ -161,7 +161,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 				? 'Click to add node.'
 				: 'Click to add node. Double click to complete drawing.';
 		}
-		return 'Click on map to start.';
+		return 'Click on the map to start.';
 	};
 
 	return (
@@ -254,10 +254,10 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 				<Paper
 					sx={{
 						position: 'fixed',
-						top: '90px',
-						right: '25px',
+						top: '110px',
+						right: '20px',
 						backgroundColor: '#f6f6f6',
-						border: '2px solid #009ee0',
+						border: '2px solid #000000',
 						padding: '10px',
 						zIndex: 101,
 						elevation: 3,
@@ -309,7 +309,7 @@ const catalogueTemplate = () => {
 
 	return (
 		<>
-			<Box
+			{/* <Box
 				sx={{
 					mousePosition: 'fixed',
 					width: { xs: '100%', sm: 'auto' },
@@ -326,7 +326,7 @@ const catalogueTemplate = () => {
 					gap: '5px',
 					zIndex: 5000,
 				}}
-			></Box>
+			></Box> */}
 			<TopToolbar
 				unmovableButtons={
 					<>
