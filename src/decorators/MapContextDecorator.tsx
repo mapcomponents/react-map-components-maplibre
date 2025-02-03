@@ -14,27 +14,30 @@ interface StoryContext {
 	globals: {
 		theme?: 'dark' | 'light';
 	};
+	name: string;
 }
 
 const makeMapContextDecorators = (options: MapLibreMapProps['options']): Decorator[] => {
 	return [
 		(Story: FC, context?: StoryContext): ReactElement => {
 			const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
-
+			console.log(context?.name);
 			return (
 				<div className="fullscreen_map">
 					<MapComponentsProvider>
 						<MUIThemeProvider theme={theme}>
-							<Paper
-								sx={{
-									position: 'fixed',
-									top: '75px',
-									right: '20px',
-									zIndex: 1300,
-								}}
-							>
-								<MlScaleReference />
-							</Paper>
+							{(context?.name === 'Example Config' || context?.name === 'Catalogue Demo') && (
+								<Paper
+									sx={{
+										position: 'fixed',
+										top: '70px',
+										right: '20px',
+										zIndex: 1300,
+									}}
+								>
+									<MlScaleReference />
+								</Paper>
+							)}
 							<Story />
 							<MapLibreMap
 								options={{
