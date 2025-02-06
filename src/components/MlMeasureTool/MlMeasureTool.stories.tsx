@@ -254,16 +254,20 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 				<Paper
 					sx={{
 						position: 'fixed',
-						top: '110px',
+						top: '105px',
 						right: '20px',
-						backgroundColor: '#f6f6f6',
-						border: '2px solid #000000',
+						bgcolor: theme.palette.mode === 'dark' ? '#313131' : '#f6f6f6',
+						border: theme.palette.mode === 'dark' ? '2px solid #313131' : '2px solid #000000',
 						padding: '10px',
 						zIndex: 101,
 						elevation: 3,
 					}}
 				>
-					<Typography variant="body1" align="center">
+					<Typography
+						variant="body1"
+						align="center"
+						sx={{ color: theme.palette.mode === 'dark' ? '#ffffff' : '#000000' }}
+					>
 						{getInstructionText()}
 					</Typography>
 				</Paper>
