@@ -94,7 +94,7 @@ const Template = (args: { modeType: string }) => {
 				baseMode = new TerraDrawRectangleMode();
 				selectConfig = {
 					flags: {
-						polygon: {
+						rectangle: {
 							feature: {
 								draggable: true,
 								rotateable: true,
@@ -114,7 +114,7 @@ const Template = (args: { modeType: string }) => {
 				baseMode = new TerraDrawFreehandMode();
 				selectConfig = {
 					flags: {
-						polygon: {
+						freehand: {
 							feature: {
 								draggable: true,
 								coordinates: {
@@ -132,11 +132,9 @@ const Template = (args: { modeType: string }) => {
 				baseMode = new TerraDrawCircleMode();
 				selectConfig = {
 					flags: {
-						polygon: {
+						circle: {
 							feature: {
 								draggable: true,
-								rotateable: true,
-								scaleable: true,
 							},
 						},
 					},
