@@ -45,7 +45,7 @@ const config = defineConfig([
 			}),
 			externals(externalsConfig),
 			commonjs(),
-			typescript({ declarationDir: 'dist/types', sourceMap: true
+			typescript({ declarationDir: 'dist', sourceMap: true
 			,exclude: ["**/*.cy.tsx", "**/*.stories.tsx", "**/*.test.tsx"] }),
 			css(),
 			del({ targets: ['dist/*'] }),
