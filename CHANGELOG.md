@@ -1,5 +1,17 @@
 # Change Log
 
+## [v1.0.10] - 2025-02-13
+
+### Added
+
+- 3a5b6ca: add cypress test-setup
+- 4e346a2: add MlOgcApiFeatures components
+
+### Changed
+
+- a6ab82d: use @types/geojson throughout the whole project, replace turf geojson types
+- 3c16c31: improve MlFeatureEditor demo UX
+
 ## [v1.0.9] - 2024-11-20
 
 ### Added
