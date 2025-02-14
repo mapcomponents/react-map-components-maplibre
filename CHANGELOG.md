@@ -1,5 +1,11 @@
 # Change Log
 
+## [v1.0.11] - 2025-02-14
+
+### Fixed
+
+- fix package.json `types` property value in release
+
 ## [v1.0.10] - 2025-02-13
 
 ### Added
