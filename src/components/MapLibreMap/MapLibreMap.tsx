@@ -81,6 +81,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 				mapRef.current.cancelled = true;
 				mapRef.current = undefined;
 			}
+			window['_map'] = undefined;
 		};
 	}, []);
 

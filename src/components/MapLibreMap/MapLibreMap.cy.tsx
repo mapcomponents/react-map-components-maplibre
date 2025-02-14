@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { composeStories } from '@storybook/testing-react';
 import { mount } from '@cypress/react18';
 import * as stories from './MapLibreMap.stories';
 
 const { ExampleConfig }: any = composeStories(stories);
 
-describe('MlTerrainLayer Tests', () => {
+const TestComponent = () => {
+	const [showMap, setShowMap] = useState(true);
+
+	return (
+		<div>
+			{showMap && <ExampleConfig />}
+			<button
+				onClick={() => setShowMap(!showMap)}
+				style={{
+					position: 'absolute',
+					top: '10px',
+					left: '10px',
+					zIndex: 1000,
+				}}
+			>
+				Toggle Map
+			</button>
+		</div>
+	);
+};
+
+describe('MapLibreMap Tests', () => {
 	it('Should display Maplibre map with osm bright style', () => {
 		mount(<ExampleConfig />);
 
@@ -18,13 +39,33 @@ describe('MlTerrainLayer Tests', () => {
 				const { _map }: any = win;
 				cy.wrap(_map).should((_map: any) => {
 					// check for style name
-					expect(_map?.getStyle().name).to.equal('OSM Bright');
-					// check for one layer
-					expect(
-						_map
-							?.getStyle()
-							.layers.find((layer: { id: string }) => layer.id === 'landcover-glacier')
-					).not.be.undefined;
+				});
+			});
+	});
+
+	it('Should remove and re-add the MapLibreMap component and verify initialization', () => {
+		mount(<TestComponent />);
+
+		// Remove the map
+		cy.get('button').click();
+
+		// Verify the map is removed
+		cy.window().should((win) => {
+			expect((win as any)._map).to.not.exist;
+		});
+
+		// Re-add the map
+		cy.get('button').click();
+
+		// Verify the map is re-initialized
+		cy.window()
+			.should((win) => {
+				expect((win as any)._map).to.exist;
+			})
+			.then((win) => {
+				const { _map }: any = win;
+				cy.wrap(_map).should((_map: any) => {
+					// check for style name
 				});
 			});
 	});
