@@ -1,4 +1,4 @@
-import { layerRemovalTest, sourceRemovalTest } from "../../util";
+import { layerRemovalTest } from "../../util";
 
 import MlThreeJsLayer from "./MlThreeJsLayer";
 
