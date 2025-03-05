@@ -5678,12 +5678,11 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.7.tgz"
   integrity sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==
 
-"@types/react-color@^3.0.11":
-  version "3.0.11"
-  resolved "https://registry.npmjs.org/@types/react-color/-/react-color-3.0.11.tgz"
-  integrity sha512-20m5GpzmdqwmSdnPeMs4UPPUuvkS4ESwakL6u2YN1hbo+ajWiiTwGYIMGhdcJFGeoLyAsr7TVonbZrMhU3+pdw==
+"@types/react-color@^3.0.13":
+  version "3.0.13"
+  resolved "https://registry.yarnpkg.com/@types/react-color/-/react-color-3.0.13.tgz#0f86a14ac948428bd811689706c328817661dc13"
+  integrity sha512-2c/9FZ4ixC5T3JzN0LP5Cke2Mf0MKOP2Eh0NPDPWmuVH3NjPyhEjqNMQpN1Phr5m74egAy+p2lYNAFrX1z9Yrg==
   dependencies:
-    "@types/react" "*"
     "@types/reactcss" "*"
 
 "@types/react-dom@^18.0.0", "@types/react-dom@^18.2.19":
