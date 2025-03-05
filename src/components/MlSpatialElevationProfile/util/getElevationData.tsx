@@ -1,6 +1,6 @@
 import { distance, lineOffset } from '@turf/turf';
 import { polygon, lineString, featureCollection} from '@turf/helpers';
-import {Feature} from 'geojson';
+import {Feature, FeatureCollection} from 'geojson';
 
 interface geometry{
 coordinates: Array<number>
@@ -15,7 +15,7 @@ min: number
 
 
 
-export default function getElevationData(_geojsonInfo: _geojsonInfo, elevationFactor: number) {
+export default function getElevationData(_geojsonInfo: _geojsonInfo, elevationFactor: number):FeatureCollection {
 
     const createStep =  (x: number, y: number, z: number, x2: number, y2: number) => {
             //const summand = 0.0002;
