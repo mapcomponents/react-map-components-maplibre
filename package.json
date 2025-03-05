@@ -37,7 +37,7 @@
 		"@types/d3": "^7.4.3",
 		"@types/geojson": "^7946.0.16",
 		"@types/react-color": "^3.0.13",
-		"@types/topojson-client": "^3.1.4",
+		"@types/topojson-client": "^3.1.5",
 		"@xmldom/xmldom": "^0.8.10",
 		"csv2geojson": "^5.1.2",
 		"d3": "^7.8.5",
