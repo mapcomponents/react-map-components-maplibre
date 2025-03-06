@@ -1,5 +1,5 @@
 import { layerRemovalTest } from "../../util";
-
+import React from 'react';
 import MlThreeJsLayer from "./MlThreeJsLayer";
 
 const testComponent = <MlThreeJsLayer
@@ -28,6 +28,6 @@ const testComponent = <MlThreeJsLayer
 layerRemovalTest(
 	"<MlThreeJsLayer />",
 	testComponent,
-	/^.*\"3d\-model*\".*$/,
+	/^.*\"3d\-model*\".*$/, // eslint-disable-line
 	"3d-model"
 );
