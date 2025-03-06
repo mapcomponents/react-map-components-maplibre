@@ -6,7 +6,7 @@ import MlLayer from "./MlLayer";
 
 import { uuid_regex } from "../../setupTests";
 
-const MlLayerTestComponent = (props) => {
+const MlLayerTestComponent = () => {
 	const [layerVisible, setLayerVisible] = useState(true);
 	const [refreshTrigger, setRefreshTrigger] = useState(0);
 	const mapContext = useContext(MapContext);
