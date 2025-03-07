@@ -100,7 +100,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 					map.once('load', () => {
 						if (!wrapper?.cancelled) {
 							// add maplibre instance to window for debugging purposes
-							window['_map'] = map;
+							(window as {[key:string]: any})['_map'] = map;
 							if (props.mapId) {
 								mapContext.registerMap(props.mapId, wrapper);
 							} else {

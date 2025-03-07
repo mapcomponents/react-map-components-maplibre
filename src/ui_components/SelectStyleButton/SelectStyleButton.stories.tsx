@@ -45,7 +45,7 @@ const SelectStyleTemplate = () => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<SelectStyleButton />
 				<LayerList>
-					<LayerListItemFactory />
+					<LayerListItemFactory layers={[]} />
 				</LayerList>
 			</Sidebar>
 		</>

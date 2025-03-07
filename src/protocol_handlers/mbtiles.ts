@@ -2,7 +2,9 @@ import initSqlJs from 'sql.js';
 import * as pako from 'pako';
 import { RequestParameters} from 'maplibre-gl';
 
-const loadedMbtiles = {};
+type keyIsStringObject = {[key: string]: any};
+
+const loadedMbtiles: keyIsStringObject = {};
 
 const parseTileParams = (url: string) => {
 	const urlParts = url.split('://');

@@ -32,7 +32,7 @@ function CSVOptionsFormular(props: CSVOptionsFormulaProps) {
 										size="small"
 										onChange={(ev) => {
 											const newObject = {};
-											newObject[el] = ev.target.value;
+											(newObject as {[key:string]:any})[el] = ev.target.value;
 											props.setter(newObject);
 										}}
 									/>

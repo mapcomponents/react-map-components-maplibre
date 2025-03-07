@@ -55,19 +55,20 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 			};
 
 			if (topoJsonData.type === 'Topology' && topoJsonData.objects !== undefined) {
+				const topoJsonDataObjects: {[key:string]:any} = topoJsonData.objects;
 				// add the "fromObject" property in each topojson feature
 				Object.keys(topoJsonData.objects).map((key) => {
-					if (topoJsonData.objects?.[key].type === 'GeometryCollection') {
-						topoJsonData.objects?.[key].geometries?.forEach(
+					if (topoJsonDataObjects?.[key].type === 'GeometryCollection') {
+						topoJsonDataObjects?.[key].geometries?.forEach(
 							(e: Feature) => (e.properties = { fromObject: key, ...e.properties })
 						);
 					} else if (
-						topoJsonData?.objects?.[key] &&
-						topoJsonData?.objects?.[key]?.type !== 'GeometryCollection'
+						topoJsonDataObjects?.[key] &&
+						topoJsonDataObjects?.[key]?.type !== 'GeometryCollection'
 					) {
-						topoJsonData.objects[key].properties = {
+						topoJsonDataObjects[key].properties = {
 							fromObject: key,
-							...topoJsonData.objects?.[key].properties,
+							...topoJsonDataObjects?.[key].properties,
 						};
 					}
 				});

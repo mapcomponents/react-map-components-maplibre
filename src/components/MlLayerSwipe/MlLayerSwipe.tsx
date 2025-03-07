@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useRef, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import syncMove from '@mapbox/mapbox-gl-sync-move';
@@ -27,12 +27,14 @@ export interface MlLayerSwipeProps {
 
 const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	const mapContext: MapContextType = useContext(MapContext);
+	const mapContextMap: { [key: string]: any } | undefined = mapContext.map;
 	const initializedRef = useRef(false);
 
 	const [swipeX, setSwipeX] = useState(50);
 	const swipeXRef = useRef(0);
 
-	const syncCleanupFunctionRef = useRef(() => {});
+	const syncCleanupFunctionRef = useRef(() => {
+	});
 
 	const mapExists = useCallback(() => {
 		if (!props.map1Id || !props.map2Id) {
@@ -53,7 +55,7 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 		(e: TouchEvent & MouseEvent) => {
 			if (!mapExists()) return;
 
-			const bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
+			const bounds = mapContextMap && mapContextMap[props.map1Id].getCanvas().getBoundingClientRect();
 			let clientX =
 				e.clientX ||
 				(typeof e.touches !== 'undefined' && typeof e.touches[0] !== 'undefined'
@@ -69,10 +71,20 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 
 				const clipA = 'rect(0, ' + (swipeXRef.current * bounds.width) / 100 + 'px, 999em, 0)';
 
-				mapContext.maps[props.map2Id].getContainer().style.clip = clipA;
+				if (mapContextMap && mapContextMap[props.map2Id]) {
+					const mapContainer = mapContextMap[props.map2Id].getContainer();
+					if (mapContainer) {
+						mapContainer.style.clip = clipA;
+					} else {
+						console.error("Map container not found!");
+					}
+				} else {
+					console.error("Map with id " + props.map2Id + " not found.");
+				}
+
 			}
 		},
-		[mapContext, mapExists, props.map1Id, props.map2Id]
+		[mapContext, mapExists, props.map1Id, props.map2Id],
 	);
 
 	useEffect(() => {
@@ -85,10 +97,10 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 		initializedRef.current = true;
 		syncCleanupFunctionRef.current = syncMove(
 			mapContext.getMap(props.map1Id).map,
-			mapContext.getMap(props.map2Id).map
+			mapContext.getMap(props.map2Id).map,
 		);
 		onMove({
-			clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
+			clientX: mapContextMap && mapContextMap[props.map1Id].getCanvas().clientWidth / 2,
 		} as TouchEvent & MouseEvent);
 	}, [mapContext.mapIds, mapContext, props, onMove, mapExists]);
 
@@ -113,19 +125,21 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	};
 
 	function adjustWindowSize() {
-		const clipWidth = mapContext.maps[props.map2Id]
-			.getContainer()
-			.style.clip.split(',')[1]
-			.replace('px', '');
-		const canvasWidth = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect().width;
+		if (mapContextMap) {
+			const clipWidth = mapContextMap[props.map2Id]
+				.getContainer()
+				.style.clip.split(',')[1]
+				.replace('px', '');
+			const canvasWidth = mapContextMap[props.map1Id].getCanvas().getBoundingClientRect().width;
 
-		if (parseFloat(clipWidth) < canvasWidth) {
-			const newPosition = parseFloat(((clipWidth / canvasWidth) * 100).toFixed(2));
-			setSwipeX(newPosition);
-		} else {
-			const newClip = 'rect(0, ' + canvasWidth / 2 + 'px, 999em, 0)';
-			mapContext.maps[props.map2Id].getContainer().style.clip = newClip;
-			setSwipeX(50);
+			if (parseFloat(clipWidth) < canvasWidth) {
+				const newPosition = parseFloat(((clipWidth / canvasWidth) * 100).toFixed(2));
+				setSwipeX(newPosition);
+			} else {
+				const newClip = 'rect(0, ' + canvasWidth / 2 + 'px, 999em, 0)';
+				mapContextMap[props.map2Id].getContainer().style.clip = newClip;
+				setSwipeX(50);
+			}
 		}
 	}
 

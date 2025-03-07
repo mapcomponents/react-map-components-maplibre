@@ -24,6 +24,8 @@ export interface MlLayerMagnifyProps {
 	magnifierStyle: React.CSSProperties | undefined;
 }
 
+type keyIsStingObject = {[key: string]: any};
+
 /**
  *
  * Hides the MapLibreMap referenced by props.map2Id except for the "magnifier"-circle that reveals
@@ -77,7 +79,7 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 		(e:(TouchEvent & MouseEvent)) => {
 			if (!mapExists()) return;
 
-			const bounds = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect();
+			const bounds = (mapContext.maps as keyIsStingObject)[props.map1Id].getCanvas().getBoundingClientRect();
 			let clientX =
 				e?.clientX ||
 				(typeof e?.touches !== 'undefined' && typeof e?.touches[0] !== 'undefined'
@@ -100,7 +102,7 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 				setSwipeY(swipeY_tmp);
 				swipeYRef.current = swipeY_tmp;
 
-				mapContext.maps[props.map2Id].getContainer().style.clipPath =
+				(mapContext.maps as keyIsStingObject)[props.map2Id].getContainer().style.clipPath =
 					`circle(${magnifierRadius}px at ` +
 					(swipeXRef.current * bounds.width) / 100 +
 					'px ' +
@@ -152,8 +154,8 @@ const MlLayerMagnify = (props: MlLayerMagnifyProps) => {
 		*/
 
 		onMove({
-			clientX: mapContext.maps[props.map1Id].getCanvas().clientWidth / 2,
-			clientY: mapContext.maps[props.map1Id].getCanvas().clientHeight / 2,
+			clientX: (mapContext.maps as keyIsStingObject)[props.map1Id].getCanvas().clientWidth / 2,
+			clientY: (mapContext.maps as keyIsStingObject)[props.map1Id].getCanvas().clientHeight / 2,
 		} as (TouchEvent & MouseEvent));
 	}, [mapContext.mapIds, mapContext, mapExists, props, onMove]);
 

@@ -68,6 +68,8 @@ interface LayerPropertyFormProps {
 	layerType: string;
 }
 
+type keyIsStringObject = {[key: string]: any};
+
 function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyFormProps) {
 	const key = useRef(Math.round(Math.random() * 10000000000));
 
@@ -75,22 +77,22 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 		(key: string) => {
 			if (
 				mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1 &&
-				(typeof paintProps[key] === 'number' || typeof paintProps[key] === 'string')
+				(typeof (paintProps as keyIsStringObject)[key] === 'number' || typeof (paintProps as keyIsStringObject)[key] === 'string')
 			) {
 				const label = (
 					<Typography id={key + '_label'} gutterBottom>
 						{key}
 					</Typography>
 				);
-				switch (mapPropKeyToFormInputType[key]) {
+				switch ((mapPropKeyToFormInputType as keyIsStringObject)[key]) {
 					case 'slider':
 						return (
 							<React.Fragment key={key}>
 								{label}
 								<Slider
-									{...inputPropsByPropKey[key]}
+									{...(inputPropsByPropKey as keyIsStringObject)[key]}
 									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-									value={paintProps[key]}
+									value={(paintProps as keyIsStringObject)[key]}
 									valueLabelDisplay="auto"
 									onChange={(_ev: Event, value: number) => {
 										if (value) {
@@ -107,7 +109,7 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								{label}
 								<TextField
 									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-									value={paintProps[key]}
+									value={(paintProps as keyIsStringObject)[key]}
 									onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
 										if (ev?.target?.value) {
 											setPaintProps((current) => ({
@@ -127,7 +129,7 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								<Box sx={{ '& > div': { width: 'initial !important' } }}>
 									<ColorPicker
 										key={key}
-										value={paintProps[key]}
+										value={(paintProps as keyIsStringObject)[key]}
 										propKey={key}
 										setPaintProps={setPaintProps}
 									/>

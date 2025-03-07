@@ -16,6 +16,8 @@ export type MlVectorTileLayerProps = {
 	layers: ExtendedLayerSpecification[];
 };
 
+type keyIsStringObject = {[key: string]: any };
+
 /**
  * Adds a vector-tile source and 0...n vector-tile-layers to the MapLibre instance referenced by
  * props.mapId
@@ -32,6 +34,9 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	const layerPaintConfsRef = useRef({});
 	const layerLayoutConfsRef = useRef({});
 	const initializedRef = useRef(false);
+
+	const layerPaintConfsRefCurrent: keyIsStringObject = layerPaintConfsRef.current;
+	const layerLayoutConsRefCurrent: keyIsStringObject = layerLayoutConfsRef.current;
 
 	const createLayers = useCallback(() => {
 		if (!mapHook.map) return;
@@ -59,6 +64,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 		}
 
 		props.layers.forEach((layer) => {
+			console.log(layer);
 			if (!mapHook.map) return;
 			mapHook.map.addLayer(
 				{
@@ -78,8 +84,8 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 				props.insertBeforeLayer,
 				mapHook.componentId
 			);
-			layerPaintConfsRef.current[layer.id] = JSON.stringify(layer.paint);
-			layerLayoutConfsRef.current[layer.id] = JSON.stringify(layer.layout);
+			layerPaintConfsRefCurrent[layer.id] = JSON.stringify(layer.paint);
+			layerPaintConfsRefCurrent[layer.id] = JSON.stringify(layer.layout);
 
 			// recreate layer if style has changed
 			mapHook.map.on(
@@ -104,22 +110,22 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 				// update changed paint property
 				const layerPaintConfString = JSON.stringify(layer.paint);
 
-				if (layerPaintConfString !== layerPaintConfsRef.current[layer.id]) {
+				if (layerPaintConfString !== layerPaintConfsRefCurrent[layer.id]) {
 					for (const paintKey in layer.paint) {
-						mapHook.map.map.setPaintProperty(layer.id, paintKey, layer.paint[paintKey]);
+						mapHook.map.map.setPaintProperty(layer.id, paintKey, (layer.paint as keyIsStringObject)[paintKey]);
 					}
 				}
-				layerPaintConfsRef.current[layer.id] = layerPaintConfString;
+				layerPaintConfsRefCurrent[layer.id] = layerPaintConfString;
 
 				// update changed layout property
 				const layerLayoutConfString = JSON.stringify(layer.layout);
 
-				if (layerLayoutConfString !== layerLayoutConfsRef.current[layer.id]) {
+				if (layerLayoutConfString !== layerLayoutConsRefCurrent[layer.id]) {
 					for (const layoutKey in layer.layout) {
-						mapHook.map.map.setLayoutProperty(layer.id, layoutKey, layer.layout[layoutKey]);
+						mapHook.map.map.setLayoutProperty(layer.id, layoutKey, (layer.layout as keyIsStringObject)[layoutKey]);
 					}
 				}
-				layerLayoutConfsRef.current[layer.id] = layerLayoutConfString;
+				layerLayoutConsRefCurrent[layer.id] = layerLayoutConfString;
 			}
 		});
 	}, [mapHook.map, props.layers]);
