@@ -362,7 +362,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 									<ListItemText
 										key={subLayer.id}
 										variant="layerlist"
-										primary={subLayer['source-layer']}
+										primary={(subLayer as {[key:string]:any})['source-layer']}
 										primaryTypographyProps={{ overflow: 'hidden' }}
 									/>
 								</ListItemStyled>

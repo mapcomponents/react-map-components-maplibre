@@ -215,7 +215,7 @@ const additionalInfoTemplate = () => {
 					const title = options.formData.get('title') as string;
 					const text = options.formData.get('description') as string;
 					const centerY = pageWidth / 2;
-					const fontSizes = {
+					const fontSizes: {[key:string]:any} = {
 						a4: {
 							width: 210,
 							textSize: 10,

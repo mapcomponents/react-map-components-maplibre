@@ -18,19 +18,26 @@ interface TemplateProps {
 
 const Template = (args: TemplateProps) => (
 	<>
+		{/* WMS Layer with the provided URL and options */}
 		<MlWmsLayer
 			url="https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme"
 			urlParameters={{
 				layers: 'nw_uraufnahme_rw',
 			}}
 			sourceOptions={{
+				type: 'raster',
 				minzoom: 13,
 				maxzoom: 20,
 			}}
-			mapId={args.wmsLayerMapId}
-			
+			mapId={args.wmsLayerMapId} // Passing dynamic mapId
 		/>
-		<MlLayerMagnify map1Id="map_1" map2Id="map_2" magnifierStyle={{border:'2px solid grey'}} magnifierRadius={args.magnifierRadius} />
+		{/* Magnification layer with style and radius */}
+		<MlLayerMagnify
+			map1Id="map_1"
+			map2Id="map_2"
+			magnifierStyle={{ border: '2px solid grey' }}
+			magnifierRadius={args.magnifierRadius}
+		/>
 	</>
 );
 

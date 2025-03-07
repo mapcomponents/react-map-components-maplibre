@@ -50,7 +50,7 @@ export default function SearchForm() {
 	function processObject(obj: object): string {
 		const keys = searchContext.searchIndex.fields;
 		const filteredKeys = Object.keys(obj).filter((key) => keys.includes(key));
-		return filteredKeys.map((key) => obj[key]).join(', ');
+		return filteredKeys.map((key) => (obj as {[key:string]:any})[key]).join(', ');
 	}
 	const debouncedHandleInput = useCallback(
 		debounce((e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
-import { Feature, FeatureCollection, Geometry, GeometryCollection } from '@turf/turf';
+import { Feature, FeatureCollection, Geometry, GeometryCollection } from 'geojson';
 import { DataDrivenPropertyValueSpecification, SymbolLayerSpecification } from 'maplibre-gl';
 import { Typography, Button } from '@mui/material';
 import Menu from '@mui/material/Menu';
@@ -397,7 +397,7 @@ const catalogueTemplate = () => {
 				unmovableButtons={
 					<>
 						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
-							{configTitles[selectedLayer]}
+							{(configTitles as {[key:string]:any})[selectedLayer]}
 						</Typography>
 						{(selectedLayer === 'polygon' || selectedLayer === 'line') && (
 							<Button

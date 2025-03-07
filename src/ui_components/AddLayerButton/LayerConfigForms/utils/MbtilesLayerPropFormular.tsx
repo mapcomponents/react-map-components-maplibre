@@ -17,9 +17,10 @@ const LayerSpecificationKeys = [
 	'options',
 ];
 
+
 export default function MbtilesLayerPropFormular(props: MbtilesLayerPropFormularProps) {
 	const [layers, setLayers] = useState<LayerSpecification[]>([]);
-	const newLayer = {
+	const newLayer: {[key:string]: any} = {
 	};
 	const toJSON = ['paint', 'layout', 'options', 'metadata'];
 
@@ -32,7 +33,7 @@ export default function MbtilesLayerPropFormular(props: MbtilesLayerPropFormular
 		
 		return (
 			<>
-				{LayerSpecificationKeys.map((key) => {
+				{LayerSpecificationKeys.map((key: string) => {
 					return (
 						<React.Fragment key={key + '_fragment'}>
 							<TextField

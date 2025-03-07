@@ -1,13 +1,12 @@
 import React, { useContext, useState } from "react";
-import { mount, configure } from "enzyme";
-import { waitFor } from "@testing-library/react";
+import { mount } from "enzyme";
 import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 import MlLayer from "./MlLayer";
 
 import { uuid_regex } from "../../setupTests";
 
-const MlLayerTestComponent = (props) => {
+const MlLayerTestComponent = () => {
 	const [layerVisible, setLayerVisible] = useState(true);
 	const [refreshTrigger, setRefreshTrigger] = useState(0);
 	const mapContext = useContext(MapContext);

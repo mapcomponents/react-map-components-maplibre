@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { mount, configure } from "enzyme";
+import { mount } from "enzyme";
 import { waitFor } from "@testing-library/react";
 import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
 import MlFeatureEditor from "./MlFeatureEditor";
@@ -15,6 +15,7 @@ jest.mock("@mapbox/mapbox-gl-draw", () => {
 	};
 });
 const mapLibreInstance = new maplibregl.Map();
+console.log(mapLibreInstance);
 
 const MlFeatureEditorTestComponent = (props) => {
 	const [layerVisible, setLayerVisible] = useState(true);
@@ -81,6 +82,8 @@ describe("<MlFeatureEditor>", () => {
 			</MapComponentsProvider>
 		);
 
+		console.log(wrapper);
+
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(7));
 	});
@@ -106,7 +109,7 @@ describe("<MlFeatureEditor>", () => {
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
-
+		console.log(wrapper);
 		expect(mockMapLibreMethods.addControl).toHaveBeenCalledTimes(1);
 	});
 

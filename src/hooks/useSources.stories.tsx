@@ -71,7 +71,6 @@ const VectorExample = (args: any) => {
 				},
 				paint: { 'line-width': 2, 'line-color': '#ff0000' },
 			},
-			false,
 			mapHook.componentId
 		);
 		mapHook.map.addLayer(
@@ -87,7 +86,6 @@ const VectorExample = (args: any) => {
 					'fill-opacity': 0.4,
 				},
 			},
-			false,
 			mapHook.componentId
 		);
 	}, [mapHook.map]);
@@ -109,7 +107,6 @@ const RasterExample = (args: any) => {
 				minzoom: 0,
 				maxzoom: 22,
 			},
-			false,
 			mapHook.componentId
 		);
 	}, [mapHook.map]);

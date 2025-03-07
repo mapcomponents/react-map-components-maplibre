@@ -95,16 +95,21 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 	];
 
 	const handleMeasureTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newMeasureType = event.target.value;
+		const newMeasureType = event.target.value as string;
 		setMeasureType(newMeasureType);
 
+
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		if (newMeasureType === 'measure-distance' && (unit === 'acres' || unit === 'hectares')) {
 			setUnit('meters');
 		}
 
+		// Reset measurement-related flags
 		setIsMeasuring(false);
 		setIsFinished(false);
 	};
+
 
 	const handleUnitChange = (event: SelectChangeEvent<MlMeasureToolProps['unit']>) => {
 		setUnit(event.target.value as MlMeasureToolProps['unit']);
