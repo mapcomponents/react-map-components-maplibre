@@ -112,7 +112,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 
 				if (layerPaintConfString !== layerPaintConfsRefCurrent[layer.id]) {
 					for (const paintKey in layer.paint) {
-						mapHook.map.map.setPaintProperty(layer.id, paintKey, (layer.paint as keyIsStringObject)[paintKey]);
+						mapHook.map.setPaintProperty(layer.id, paintKey, (layer.paint as keyIsStringObject)[paintKey]);
 					}
 				}
 				layerPaintConfsRefCurrent[layer.id] = layerPaintConfString;
@@ -122,7 +122,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 
 				if (layerLayoutConfString !== layerLayoutConsRefCurrent[layer.id]) {
 					for (const layoutKey in layer.layout) {
-						mapHook.map.map.setLayoutProperty(layer.id, layoutKey, (layer.layout as keyIsStringObject)[layoutKey]);
+						mapHook.map.setLayoutProperty(layer.id, layoutKey, (layer.layout as keyIsStringObject)[layoutKey]);
 					}
 				}
 				layerLayoutConsRefCurrent[layer.id] = layerLayoutConfString;
