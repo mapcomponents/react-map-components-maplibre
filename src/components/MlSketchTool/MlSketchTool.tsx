@@ -130,6 +130,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						<>
 							<Tooltip title={el.name}>
 								<Button
+									key={el.name}
 									sx={{
 										color: stateIconColor,
 										backgroundColor: stateColor,
