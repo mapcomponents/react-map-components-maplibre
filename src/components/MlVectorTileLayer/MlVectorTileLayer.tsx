@@ -64,7 +64,6 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 		}
 
 		props.layers.forEach((layer) => {
-			console.log(layer);
 			if (!mapHook.map) return;
 			mapHook.map.addLayer(
 				{

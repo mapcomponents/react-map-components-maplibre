@@ -7,7 +7,7 @@ const storyoptions = {
 	title: 'MapComponents/MlLayerMagnify',
 	component: MlLayerMagnify,
 	argTypes: {},
-	decorators: [multiMapContextDecorator],
+	decorators: multiMapContextDecorator,
 };
 export default storyoptions;
 
