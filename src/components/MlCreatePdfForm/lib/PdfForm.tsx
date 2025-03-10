@@ -138,7 +138,6 @@ export default function PdfForm(props: PdfFormProps) {
 						res.formData = new FormData(
 							document.getElementById('createPdfFormID') as HTMLFormElement
 						);
-						console.log('testlog');
 						props.onCreatePdf(res);
 					}
 					setLoading(false);

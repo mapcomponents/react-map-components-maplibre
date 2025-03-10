@@ -73,10 +73,10 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	});
 
 	useEffect(() => {
-		if(!(typeof props.onChange === 'function'))return;
+		if (!(typeof props.onChange === 'function')) return;
 
-		props.onChange(sketchState)
-	}, [sketchState, props.onChange])
+		props.onChange(sketchState);
+	}, [sketchState, props.onChange]);
 
 	const buttonStyle = {
 		...props.buttonStyleOverride,
@@ -130,6 +130,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						<>
 							<Tooltip title={el.name}>
 								<Button
+									key={el.name}
 									sx={{
 										color: stateIconColor,
 										backgroundColor: stateColor,
@@ -167,14 +168,18 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				<MlFeatureEditor
 					mode={sketchState.drawMode}
 					geojson={sketchState.selectedGeoJson}
-					onChange={(feature: object) => {
+					onChange={(feature: Feature[]) => {
 						if (!feature?.[0]) return;
 
 						setSketchState((_sketchState) => {
 							const _geometries = [...sketchState.geometries];
 							if (typeof _sketchState.activeGeometryIndex === 'undefined') {
 								const tempFeature = feature[0];
-								tempFeature.properties.id = tempFeature.id;
+								if (tempFeature && tempFeature.properties) {
+									tempFeature.properties.id = tempFeature.id;
+								} else {
+									console.error('tempFeature or tempFeature.properties is null or undefined');
+								}
 
 								_sketchState.activeGeometryIndex = _geometries.length;
 								_geometries.push(tempFeature);
@@ -281,20 +286,20 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 						geojson={{ type: 'FeatureCollection', features: [hoveredGeometry] }}
 						layerId={'highlightBorder'}
 						defaultPaintOverrides={{
-							circle:{
-							'circle-color': '#dd9900',
-							'circle-opacity': 0.4,
-							'circle-radius': 10,
-						},
-							line:{
-							'line-color': '#dd9900',
-							'line-opacity': 0.4,
-							'line-width': 10,
-						},
-							fill:{
-							'fill-color': '#dd9900',
-							'fill-opacity': 0.4
-						},
+							circle: {
+								'circle-color': '#dd9900',
+								'circle-opacity': 0.4,
+								'circle-radius': 10,
+							},
+							line: {
+								'line-color': '#dd9900',
+								'line-opacity': 0.4,
+								'line-width': 10,
+							},
+							fill: {
+								'fill-color': '#dd9900',
+								'fill-opacity': 0.4,
+							},
 						}}
 					/>
 				)}

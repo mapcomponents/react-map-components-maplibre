@@ -16,6 +16,8 @@ interface createExportOptions {
 }
 export type { createExportOptions };
 
+type keyIsStringObject = {[key: string]: any};
+
 const createExport = (options: createExportOptions) => {
 	const width = options.width;
 	const height = options.height;
@@ -38,11 +40,11 @@ const createExport = (options: createExportOptions) => {
 	for (const name in style.sources) {
 		const src = style.sources[name];
 
-		Object.keys(src).forEach((key) => {
+		Object.keys(src).forEach((key: string) => {
 			// delete property if value is undefined.
 			// for instance, raster-dem might have undefined value in "url" and "bounds"
-			if (!src[key]) {
-				delete src[key];
+			if (!(src as keyIsStringObject)[key]) {
+				delete (src as keyIsStringObject)[key];
 			}
 		});
 	}

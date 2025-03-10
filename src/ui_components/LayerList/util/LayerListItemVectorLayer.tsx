@@ -29,6 +29,8 @@ interface LayerListItemVectorLayerProps {
 	visibleMaster?: boolean;
 }
 
+type idIsStringObject = {[key:string]:any}
+
 function LayerListItemVectorLayer({
 	configurable,
 	vtProps,
@@ -38,22 +40,22 @@ function LayerListItemVectorLayer({
 }: LayerListItemVectorLayerProps) {
 	const [paintPropsFormVisible, setPaintPropsFormVisible] = useState(false);
 	const [visible, setVisible] = useState(true);
-	const [paintProps, setPaintProps] = useState(vtProps.layers[id].paint);
+	const [paintProps, setPaintProps] = useState((vtProps.layers as idIsStringObject)[id].paint);
 
 	useEffect(() => {
 		if (
 			!setVtProps ||
-			(typeof vtProps.layers[id]?.layout?.visibility === 'undefined' && visible) ||
-			(!visible && vtProps.layers[id]?.layout?.visibility === 'none') ||
-			(visible && vtProps.layers[id]?.layout?.visibility === 'visible')
+			(typeof (vtProps.layers as idIsStringObject)[id]?.layout?.visibility === 'undefined' && visible) ||
+			(!visible && (vtProps.layers as idIsStringObject)[id]?.layout?.visibility === 'none') ||
+			(visible && (vtProps.layers as idIsStringObject)[id]?.layout?.visibility === 'visible')
 		)
 			return;
 
 		const _layers = [...vtProps.layers];
-		if (!_layers[id].layout) {
-			_layers[id].layout = { visibility: visible ? 'visible' : 'none' };
+		if (!(_layers as idIsStringObject)[id].layout) {
+			(_layers as idIsStringObject)[id].layout = { visibility: visible ? 'visible' : 'none' };
 		} else {
-			_layers[id].layout.visibility = visible ? 'visible' : 'none';
+			(_layers as idIsStringObject)[id].layout.visibility = visible ? 'visible' : 'none';
 		}
 
 		setVtProps({ ...vtProps, layers: _layers });
@@ -66,10 +68,10 @@ function LayerListItemVectorLayer({
 	useEffect(() => {
 		if (!setVtProps) return;
 
-		if (JSON.stringify(paintProps) !== JSON.stringify(vtProps.layers[id].paint)) {
+		if (JSON.stringify(paintProps) !== JSON.stringify((vtProps.layers as idIsStringObject)[id].paint)) {
 			const _paintProps = { ...paintProps };
 			const _layers = [...vtProps.layers];
-			_layers[id].paint = _paintProps;
+			(_layers as idIsStringObject)[id].paint = _paintProps;
 			setVtProps({ ...vtProps, layers: _layers });
 		}
 	}, [paintProps, id, setVtProps, vtProps]);
@@ -102,13 +104,13 @@ function LayerListItemVectorLayer({
 						}}
 					/>
 				</CheckboxListItemIcon>
-				<ListItemText primary={vtProps.layers[id].id} variant="layerlist" />
+				<ListItemText primary={(vtProps.layers as idIsStringObject)[id].id} variant="layerlist" />
 			</ListItemStyled>
 			{configurable && paintPropsFormVisible && (
 				<LayerPropertyForm
 					paintProps={paintProps}
 					setPaintProps={setPaintProps}
-					layerType={vtProps.layers[id].type}
+					layerType={(vtProps.layers as idIsStringObject)[id].type}
 				/>
 			)}
 		</>

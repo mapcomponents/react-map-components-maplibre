@@ -5,6 +5,8 @@ import { MapContext } from '../index';
 const LoadingOverlayContext = React.createContext({});
 const LoadingOverlayContextProvider = LoadingOverlayContext.Provider;
 
+type keyIsStringObject = {[key: string]: any};
+
 const LoadingOverlayProvider = (children: React.ReactNode) => {
 	const mapContext = useContext(MapContext);
 
@@ -16,7 +18,7 @@ const LoadingOverlayProvider = (children: React.ReactNode) => {
 	const [checkIdleTrigger, setCheckIdleTrigger] = useState(0);
 
 	const createOnMapIdleFunction = (mapId: string) => () => {
-		mapJobsRef.current[mapId] = true;
+		(mapJobsRef.current as keyIsStringObject)[mapId] = true;
 		setCheckIdleTrigger(Math.random());
 	};
 
@@ -34,7 +36,7 @@ const LoadingOverlayProvider = (children: React.ReactNode) => {
 		if (!mapContext.map || controlled) return;
 
 		for (const key in mapJobsRef.current) {
-			if (!mapJobsRef.current[key]) return;
+			if (!(mapJobsRef.current as keyIsStringObject)[key]) return;
 		}
 
 		fadeOut();
@@ -46,7 +48,7 @@ const LoadingOverlayProvider = (children: React.ReactNode) => {
 				const mapId = mapContext.mapIds[i] + '';
 
 				if (mapContext.getMap(mapId)) {
-					mapJobsRef.current[mapId] = false;
+					(mapJobsRef.current as keyIsStringObject)[mapId] = false;
 
 					mapContext.getMap(mapId).on('idle', createOnMapIdleFunction(mapId));
 				}
