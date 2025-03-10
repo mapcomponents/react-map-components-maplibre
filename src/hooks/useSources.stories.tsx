@@ -57,6 +57,7 @@ const VectorExample = (args: any) => {
 	});
 	useEffect(() => {
 		if (!mapHook.map) return;
+		else if (mapHook.map?.getLayer(mapHook.componentId)) return;
 		mapHook.map.addLayer(
 			{
 				id: 'vector-lineLayer',
@@ -71,7 +72,6 @@ const VectorExample = (args: any) => {
 				},
 				paint: { 'line-width': 2, 'line-color': '#ff0000' },
 			},
-			mapHook.componentId
 		);
 		mapHook.map.addLayer(
 			{
@@ -86,7 +86,6 @@ const VectorExample = (args: any) => {
 					'fill-opacity': 0.4,
 				},
 			},
-			mapHook.componentId
 		);
 	}, [mapHook.map]);
 	return <></>;
