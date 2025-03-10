@@ -83,16 +83,16 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	const zoomIn = useCallback(() => {
 		if (!mapHook.map) return;
 
-		if (mapHook.map.transform._zoom + 0.5 <= mapHook.map.transform._maxZoom) {
-			mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom + 0.5 });
+		if (mapHook.map.transform.zoom + 0.5 <= mapHook.map.transform.maxZoom) {
+			mapHook.map.easeTo({ zoom: mapHook.map.transform.zoom + 0.5 });
 		}
 	}, [mapHook.map]);
 
 	const zoomOut = useCallback(() => {
 		if (!mapHook.map) return;
 
-		if (mapHook.map.transform._zoom - 0.5 >= mapHook.map.transform._minZoom) {
-			mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom - 0.5 });
+		if (mapHook.map.transform.zoom - 0.5 >= mapHook.map.transform.minZoom) {
+			mapHook.map.easeTo({ zoom: mapHook.map.transform.zoom - 0.5 });
 		}
 	}, [mapHook.map]);
 
