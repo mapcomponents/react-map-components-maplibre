@@ -40,7 +40,7 @@
 		"@types/topojson-client": "^3.1.5",
 		"@xmldom/xmldom": "^0.8.10",
 		"csv2geojson": "^5.1.2",
-		"d3": "^7.8.5",
+		"d3": "^7.9.0",
 		"jspdf": "^2.5.1",
 		"maplibre-gl": "^4.5.2",
 		"osm2geojson-lite": "^0.9.4",
