@@ -42,7 +42,6 @@ function LayerListItemVectorLayer({
 	const [visible, setVisible] = useState(true);
 	const [paintProps, setPaintProps] = useState((vtProps.layers as idIsStringObject)[id].paint);
 
-	console.log(typeof id);
 	useEffect(() => {
 		if (
 			!setVtProps ||

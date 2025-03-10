@@ -142,8 +142,7 @@ const Template = () => {
 					</Typography>
 					<Slider
 						value={state.zoom}
-						onChange={(ev, value) => {
-							console.log(ev);
+						onChange={(_ev, value) => {
 							setState((current) => {
 								return { ...current, zoom: Number(value) };
 							});
