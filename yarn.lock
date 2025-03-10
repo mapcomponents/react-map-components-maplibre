@@ -15239,6 +15239,16 @@ tempy@^1.0.1:
     type-fest "^0.16.0"
     unique-string "^2.0.0"
 
+terra-draw-maplibre-gl-adapter@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/terra-draw-maplibre-gl-adapter/-/terra-draw-maplibre-gl-adapter-1.0.1.tgz#1b85fbe3c50836e8e8b0bae796cc1ce018ebcca4"
+  integrity sha512-B5zM6OhOEwcYegNLP2HybOc+V0ZaQNYuSkOiAcGABV6ZVd5zZCX51GIXcAgOL07okcs1D+7a+4zCgqtD/fLgTg==
+
+terra-draw@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/terra-draw/-/terra-draw-1.0.0.tgz#ffd6339a8644ed66e589457bc22a670381ea95cd"
+  integrity sha512-LMD5wLHHSfkXOX0eGjhUV/Pnxedn5MvsKBvGOP6txCY1D1LAIVnIx1g+trTXfBHUjogDJj/vmswsGMD/5LtNKQ==
+
 terser-webpack-plugin@^5.3.1, terser-webpack-plugin@^5.3.10:
   version "5.3.10"
   resolved "https://registry.npmjs.org/terser-webpack-plugin/-/terser-webpack-plugin-5.3.10.tgz"
