@@ -57,7 +57,6 @@ const VectorExample = (args: any) => {
 	});
 	useEffect(() => {
 		if (!mapHook.map) return;
-		else if (mapHook.map?.getLayer(mapHook.componentId)) return;
 		mapHook.map.addLayer(
 			{
 				id: 'vector-lineLayer',
@@ -105,8 +104,7 @@ const RasterExample = (args: any) => {
 				source: args.sourceId,
 				minzoom: 0,
 				maxzoom: 22,
-			},
-			mapHook.componentId
+			}
 		);
 	}, [mapHook.map]);
 	return <></>;
