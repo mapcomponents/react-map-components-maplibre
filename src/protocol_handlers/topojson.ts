@@ -14,7 +14,6 @@ type TopoJson = {
 
 function reduceFeatures(geojson: FeatureCollection) {
 	const newFeatures: Feature[] = [];
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	geojson.features.forEach((e: any) => {
 		if (!e.features) {
 			newFeatures.push({

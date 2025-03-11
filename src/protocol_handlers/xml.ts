@@ -38,7 +38,6 @@ async function convertXML(params: {
 	return geojson;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const XMLProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 

@@ -10,7 +10,6 @@ export interface useAddProtocolProps {
 	/**
 	 * Custom load tile function that will be called when using a source that starts with a custom url schema.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	handler: AddProtocolAction;
 }
 

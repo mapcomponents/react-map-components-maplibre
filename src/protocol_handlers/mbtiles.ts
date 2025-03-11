@@ -93,7 +93,6 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
  *
  * 'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}'
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mbTilesProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = parseTileParams(params.url);
 	const data = await getBufferFromMbtiles(parsedParams);

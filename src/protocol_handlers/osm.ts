@@ -31,7 +31,6 @@ async function convertOSM(params: {
 	return geojson;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const OSMProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 

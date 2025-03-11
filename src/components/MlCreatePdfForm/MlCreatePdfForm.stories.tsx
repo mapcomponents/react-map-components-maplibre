@@ -317,7 +317,6 @@ const additionalInfoTemplate = () => {
 					pdf.setFontSize(fontSizes[options.format].titleSize);
 					const titleWidth =
 						(pdf.getStringUnitWidth(title) * pdf.getFontSize()) / pdf.internal.scaleFactor;
-					pdf.internal.scaleFactor;
 					const titleX = isLandscape ? centerY - titleWidth / 2 : (pageWidth - titleWidth) / 2;
 					pdf.text(title, titleX, fontSizes[options.format].titleOffset);
 
