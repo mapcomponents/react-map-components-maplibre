@@ -1,7 +1,7 @@
 module.exports = {
-    stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+	stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
 
-    addons: [
+	addons: [
 		'storybook-source-link',
 		//'@storybook/addon-storysource',
 		'@storybook/addon-links',
@@ -14,27 +14,28 @@ module.exports = {
 		},
 	],
 
-    framework: {
-        name: "@storybook/react-webpack5",
-        options: {}
-    },
+	framework: {
+		name: '@storybook/react-webpack5',
+		options: {},
+	},
 
-    webpackFinal: async (config, { configType }) => {
-		// split into more chunks
-		config.optimization = {
-			splitChunks: {
-				chunks: 'all',
-				minSize: 30 * 1024, // 30KB
-				maxSize: 1024 * 1024, // 1MB
-			},
-		};
-
-		config.externals = { fs: 'fs' };
-
+	webpackFinal: async (config) => {
+		config.module.rules.push({
+			test: /\.(ts|tsx)$/,
+			use: [
+				{
+					loader: require.resolve('babel-loader'),
+					options: {
+						presets: [require.resolve('@babel/preset-typescript')],
+					},
+				},
+			],
+		});
+		config.resolve.extensions.push('.ts', '.tsx');
 		return config;
 	},
 
-    typescript: {
+	typescript: {
 		check: false,
 		checkOptions: {},
 		reactDocgen: 'react-docgen-typescript',
@@ -44,13 +45,13 @@ module.exports = {
 		},
 	},
 
-    docs: {
-        autodocs: true
-    },
+	docs: {
+		autodocs: true,
+	},
 	staticDirs: [
 		'../public',
 	],
 	features: {
-    buildStoriesJson: true,
-  }
+		buildStoriesJson: true,
+	},
 };
