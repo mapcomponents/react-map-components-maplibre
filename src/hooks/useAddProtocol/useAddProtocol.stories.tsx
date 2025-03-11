@@ -45,7 +45,6 @@ export default storyoptions;
 
 interface TemplateProps {
 	protocol: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	handler: (requestParameters: RequestParameters, callback: any) => any;
 	sourceId: string;
 	filePath: string;

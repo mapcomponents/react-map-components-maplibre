@@ -3,7 +3,7 @@ import { Feature, FeatureCollection } from 'geojson';
 import { feature as topojsonFeature } from 'topojson-client';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
-import { Topology } from '../../node_modules/@types/topojson-specification';
+import { Topology } from 'topojson-specification';
 
 type TopoJson = {
 	type?: 'Topology';
@@ -45,6 +45,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 			try {
 				topoJsonData = JSON.parse(rawData);
 			} catch (e) {
+				console.error('Error converting topojson', e);
 				throw 'Invalid TopoJson';
 			}
 			// Convert the data
