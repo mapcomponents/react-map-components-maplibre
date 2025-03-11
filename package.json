@@ -32,6 +32,7 @@
 		"@mui/material": "^6.4.7",
 		"@reduxjs/toolkit": "^2.6.1",
 		"@rollup/plugin-json": "^6.1.0",
+		"@testing-library/dom": "^10.4.0",
 		"@tmcw/togeojson": "^7.0.0",
 		"@turf/turf": "^7.2.0",
 		"@types/d3": "^7.4.3",
