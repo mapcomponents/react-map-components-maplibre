@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { FC, useRef } from 'react';
 import PropTypes from "prop-types";
 
 import useMapState from "../../hooks/useMapState";
@@ -9,6 +9,9 @@ export interface MlUseMapDebuggerProps {
 	filter?: {[key: string]: any};
 }
 
+//Add default props to MlUseMapDebugger
+type MlUseMapDebuggerComponent = FC<MlUseMapDebuggerProps> & {defaultProps: MlUseMapDebuggerProps};
+
 /**
  * Renders a collapsible top-drawer containing live map debug information
  *
@@ -17,7 +20,7 @@ export interface MlUseMapDebuggerProps {
  *
  * @component
  */
-const MlUseMapDebugger: React.FC<MlUseMapDebuggerProps> = (props) => {
+const MlUseMapDebugger: MlUseMapDebuggerComponent = (props) => {
 	const map = useMapState({
 		mapId: props.mapId,
 		watch: {

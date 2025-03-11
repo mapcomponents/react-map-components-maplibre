@@ -33,13 +33,13 @@ function useMapState(props: {
 	const mapContext = useContext<MapContextType>(MapContext);
 
 	const initializedRef = useRef(false);
-	const mapRef = useRef<MapLibreGlWrapper>();
+	const mapRef = useRef<MapLibreGlWrapper | null>(null);
 
 	const [viewport, setViewport] = useState<ViewportState | undefined>();
 	const viewportRef = useRef(undefined);
 
 	const [layers, setLayers] = useState<(LayerState | undefined)[]>([]);
-	const layersRef = useRef<string>();
+	const layersRef = useRef<string>("");
 	//const mapRef = useRef(props.map);
 	const componentId = useRef(uuidv4());
 
@@ -86,7 +86,7 @@ function useMapState(props: {
 			// cleanup all event listeners
 			if (mapRef.current) {
 				mapRef.current.cleanup(_componentId);
-				mapRef.current = undefined;
+				mapRef.current = null;
 			}
 			initializedRef.current = false;
 		};

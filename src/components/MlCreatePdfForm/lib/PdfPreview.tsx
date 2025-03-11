@@ -81,7 +81,7 @@ function getMapZoomScaleModifier(point: [number, number], _map: MapType) {
 export default function PdfPreview(props: Props) {
 	const mapState = useMapState({ mapId: props.mapId, watch: { layers: false, viewport: true } });
 	const targetRef = useRef<HTMLDivElement>(null);
-	const fixedScaleRef = useRef<number | undefined>();
+	const fixedScaleRef = useRef<number | null>(null);
 	const moveableRef = useRef<Moveable>(null);
 	const mapContainerRef = useRef<HTMLDivElement>(document.querySelector('.mapContainer'));
 	//const [transform, setTransform] = useState('translate(452.111px, 15.6148px)');

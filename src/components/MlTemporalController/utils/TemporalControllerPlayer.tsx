@@ -46,7 +46,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 	const [currentVal, setCurrentVal] = useState(props.currentVal);
 	const [isPlaying, setIsPlaying] = useState(props.isPlaying);
 	const range = props.maxVal - props.minVal;
-	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>();
+	const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
 	useEffect(() => {
@@ -70,7 +70,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 		intervalRef.current = setInterval(function () {
 			if (counter >= range) {
-				clearInterval(intervalRef.current);
+				if (intervalRef.current) clearInterval(intervalRef.current);
 				setIsPlaying(false);
 			} else {
 				setCurrentVal((val) => val + props.step);
@@ -88,20 +88,20 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 		} else {
 			setIsPlaying(false);
 			if (isPlaying) {
-				clearInterval(intervalRef.current);
+				if (intervalRef.current) clearInterval(intervalRef.current);
 			}
 		}
 	};
 
 	const handleStop = () => {
-		clearInterval(intervalRef.current);
+		if (intervalRef.current) clearInterval(intervalRef.current);
 		setCurrentVal(props.minVal);
 		setIsPlaying(false);
 	};
 
 	const handleFastRewind = () => {
 		if (isPlaying) {
-			clearInterval(intervalRef.current);
+			if (intervalRef.current) clearInterval(intervalRef.current);
 			setCurrentVal(currentVal - range / 10);
 			play();
 		} else {
@@ -110,7 +110,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 	};
 	const handleFastForward = () => {
 		if (isPlaying) {
-			clearInterval(intervalRef.current);
+			if (intervalRef.current) clearInterval(intervalRef.current);
 			setCurrentVal(currentVal + range / 10);
 			play();
 		} else {
@@ -125,7 +125,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 			setCurrentVal(newValue as number);
 		} else {
 			if (e) {
-				clearInterval(intervalRef.current);
+				if (intervalRef.current) clearInterval(intervalRef.current);
 				setCurrentVal(newValue as number);
 				play();
 			}

@@ -46,7 +46,7 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	const pitch = useRef<number | undefined>(props.pitch);
 	const step = useRef(1);
 	const speed = useRef<number | undefined>(props.speed);
-	const timeoutId = useRef();
+	const timeoutId = useRef<any | null>(null);
 
 	const kmPerStep = props.kmPerStep || 0.01;
 	const routeDistance = turf.length(props.route);
