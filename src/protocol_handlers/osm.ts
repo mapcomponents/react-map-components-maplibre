@@ -1,5 +1,7 @@
 import { RequestParameters} from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import osm2geojson from 'osm2geojson-lite';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
