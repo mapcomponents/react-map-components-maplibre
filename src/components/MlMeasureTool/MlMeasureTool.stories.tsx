@@ -254,7 +254,7 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 				<Paper
 					sx={{
 						position: 'fixed',
-						bottom: '8%',
+						bottom: '20px',
 						left: '50%',
 						borderColor: theme.palette.mode === 'dark' ? '#313131' : '#f6f6f6',
 						padding: '10px',
