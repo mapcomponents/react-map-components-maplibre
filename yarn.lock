@@ -2210,7 +2210,7 @@
     get-stream "^6.0.1"
     minimist "^1.2.6"
 
-"@mapbox/jsonlint-lines-primitives@^2.0.2":
+"@mapbox/jsonlint-lines-primitives@^2.0.2", "@mapbox/jsonlint-lines-primitives@~2.0.2":
   version "2.0.2"
   resolved "https://registry.npmjs.org/@mapbox/jsonlint-lines-primitives/-/jsonlint-lines-primitives-2.0.2.tgz"
   integrity sha512-rY0o9A5ECsTQRVhv7tL/OyDpGAoUB4tTvLiW1DSzQGq4bvTPhNw1VpSNjDJc5GFZ2XuyOtSWSVN05qOtcD71qQ==
@@ -2227,11 +2227,6 @@
     hat "0.0.3"
     lodash.isequal "^4.5.0"
     xtend "^4.0.2"
-
-"@mapbox/mapbox-gl-supported@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@mapbox/mapbox-gl-supported/-/mapbox-gl-supported-2.0.1.tgz#c15367178d8bfe4765e6b47b542fe821ce259c7b"
-  integrity sha512-HP6XvfNIzfoMVfyGjBckjiAOQK9WfX0ywdLubuPMPv+Vqf5fj0uCbgBQYpiqcWZT6cbyyRnTSXDheT1ugvF6UQ==
 
 "@mapbox/mapbox-gl-supported@^3.0.0":
   version "3.0.0"
@@ -2253,7 +2248,7 @@
   resolved "https://registry.npmjs.org/@mapbox/sexagesimal/-/sexagesimal-1.2.0.tgz"
   integrity sha512-+C3+Azc4ObH2qmDYvg9MC+vvlGVfwB1BZNX8jt4XehJjfDGXwlElqJ6PS9BtgLHSjdinEoZTNanTG/WTc+dpRA==
 
-"@mapbox/tiny-sdf@^2.0.5", "@mapbox/tiny-sdf@^2.0.6":
+"@mapbox/tiny-sdf@^2.0.6":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@mapbox/tiny-sdf/-/tiny-sdf-2.0.6.tgz#9a1d33e5018093e88f6a4df2343e886056287282"
   integrity sha512-qMqa27TLw+ZQz5Jk+RcwZGH7BQf5G/TrutJhspsca/3SHwmgKQ1iq+d3Jxz5oysPVYTGP6aXxCo5Lk9Er6YBAA==
@@ -2274,6 +2269,19 @@
   version "3.1.0"
   resolved "https://registry.npmjs.org/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
+
+"@maplibre/maplibre-gl-style-spec@^20.1.0":
+  version "20.4.0"
+  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-style-spec/-/maplibre-gl-style-spec-20.4.0.tgz#408339e051fb51e022b40af2235e0beb037937ea"
+  integrity sha512-AzBy3095fTFPjDjmWpR2w6HVRAZJ6hQZUCwk5Plz6EyfnfuQW1odeW5i2Ai47Y6TBA2hQnC+azscjBSALpaWgw==
+  dependencies:
+    "@mapbox/jsonlint-lines-primitives" "~2.0.2"
+    "@mapbox/unitbezier" "^0.0.1"
+    json-stringify-pretty-compact "^4.0.0"
+    minimist "^1.2.8"
+    quickselect "^2.0.0"
+    rw "^1.3.3"
+    tinyqueue "^3.0.0"
 
 "@mdx-js/react@^2.1.5":
   version "2.3.0"
@@ -5764,9 +5772,9 @@
   resolved "https://registry.npmjs.org/@types/find-cache-dir/-/find-cache-dir-3.2.1.tgz"
   integrity sha512-frsJrz2t/CeGifcu/6uRo4b+SzAwT4NYCVPu1GN8IB9XTzrpPkGuV0tmh9mN+/L0PklAlsC3u5Fxt0ju00LXIw==
 
-"@types/geojson-vt@^3.2.5":
+"@types/geojson-vt@3.2.5", "@types/geojson-vt@^3.2.5":
   version "3.2.5"
-  resolved "https://registry.npmjs.org/@types/geojson-vt/-/geojson-vt-3.2.5.tgz"
+  resolved "https://registry.yarnpkg.com/@types/geojson-vt/-/geojson-vt-3.2.5.tgz#b6c356874991d9ab4207533476dfbcdb21e38408"
   integrity sha512-qDO7wqtprzlpe8FfQ//ClPV9xiuoh2nkIgiouIptON9w5jvD/fA4szvP9GBlDVdJ5dldAl0kX/sy3URbWwLx0g==
   dependencies:
     "@types/geojson" "*"
@@ -5776,7 +5784,7 @@
   resolved "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.14.tgz"
   integrity sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==
 
-"@types/geojson@^7946.0.16":
+"@types/geojson@^7946.0.13", "@types/geojson@^7946.0.16":
   version "7946.0.16"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.16.tgz#8ebe53d69efada7044454e3305c19017d97ced2a"
   integrity sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==
@@ -5868,12 +5876,12 @@
     "@types/geojson" "*"
     mapbox-gl "*"
 
-"@types/mapbox__point-geometry@*", "@types/mapbox__point-geometry@^0.1.2", "@types/mapbox__point-geometry@^0.1.4":
+"@types/mapbox__point-geometry@*", "@types/mapbox__point-geometry@^0.1.4":
   version "0.1.4"
   resolved "https://registry.npmjs.org/@types/mapbox__point-geometry/-/mapbox__point-geometry-0.1.4.tgz"
   integrity sha512-mUWlSxAmYLfwnRBmgYV86tgYmMIICX4kza8YnE/eIlywGe2XoOxlpVnXWwir92xRLjwyarqwpu2EJKD2pk0IUA==
 
-"@types/mapbox__vector-tile@^1.3.0", "@types/mapbox__vector-tile@^1.3.4":
+"@types/mapbox__vector-tile@^1.3.4":
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@types/mapbox__vector-tile/-/mapbox__vector-tile-1.3.4.tgz#ad757441ef1d34628d9e098afd9c91423c1f8734"
   integrity sha512-bpd8dRn9pr6xKvuEBQup8pwQfD4VUyqO/2deGjfpe6AwC8YRlyEipvefyRJUSiCJTZuCb8Pl1ciVV5ekqJ96Bg==
@@ -5949,9 +5957,9 @@
   resolved "https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.2.tgz"
   integrity sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==
 
-"@types/pbf@*", "@types/pbf@^3.0.2", "@types/pbf@^3.0.5":
+"@types/pbf@*", "@types/pbf@^3.0.5":
   version "3.0.5"
-  resolved "https://registry.npmjs.org/@types/pbf/-/pbf-3.0.5.tgz"
+  resolved "https://registry.yarnpkg.com/@types/pbf/-/pbf-3.0.5.tgz#a9495a58d8c75be4ffe9a0bd749a307715c07404"
   integrity sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==
 
 "@types/pretty-hrtime@^1.0.0":
@@ -12416,6 +12424,11 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.npmjs.org/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
+json-stringify-pretty-compact@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/json-stringify-pretty-compact/-/json-stringify-pretty-compact-4.0.0.tgz#cf4844770bddee3cb89a6170fe4b00eee5dbf1d4"
+  integrity sha512-3CNZ2DnrpByG9Nqj6Xo8vqbjT4F6N+tb4Gb28ESAZjYZ5yqvmc56J+/kuIwkaAMOyblTQhUW7PxMkUb8Q36N3Q==
+
 json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
@@ -12484,11 +12497,6 @@ jsts@2.7.1:
     array.prototype.flat "^1.3.1"
     object.assign "^4.1.4"
     object.values "^1.1.6"
-
-kdbush@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/kdbush/-/kdbush-3.0.0.tgz#f8484794d47004cc2d85ed3a79353dbe0abc2bf0"
-  integrity sha512-hRkd6/XW4HTsA9vjVpY9tuXJYLSlelnkTmVFu4M9/7MIYQtFcHpbugAU7UbOfjOiVSVYl2fqgBuJ32JUmRo5Ew==
 
 kdbush@^4.0.2:
   version "4.0.2"
@@ -12922,33 +12930,35 @@ mapbox-gl@*:
     tinyqueue "^3.0.0"
     vt-pbf "^3.1.3"
 
-maplibre-gl@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/maplibre-gl/-/maplibre-gl-2.4.0.tgz#2b53dbf526626bf4ee92ad4f33f13ef09e5af182"
-  integrity sha512-csNFylzntPmHWidczfgCZpvbTSmhaWvLRj9e1ezUDBEPizGgshgm3ea1T5TCNEEBq0roauu7BPuRZjA3wO4KqA==
+maplibre-gl@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/maplibre-gl/-/maplibre-gl-4.0.0.tgz#bcb01eee68378402e9f7d499389664d3ca7211bf"
+  integrity sha512-bzVQ2pdOWITwbE+JHKSiAB/viVBBx4Aa1puydc1xizOWGbvRHD9pXpy3dsaW2ZlbmZKbv9r9sHpcvM9fTLGsKA==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.2"
     "@mapbox/jsonlint-lines-primitives" "^2.0.2"
-    "@mapbox/mapbox-gl-supported" "^2.0.1"
     "@mapbox/point-geometry" "^0.1.0"
-    "@mapbox/tiny-sdf" "^2.0.5"
+    "@mapbox/tiny-sdf" "^2.0.6"
     "@mapbox/unitbezier" "^0.0.1"
     "@mapbox/vector-tile" "^1.3.1"
     "@mapbox/whoots-js" "^3.1.0"
-    "@types/geojson" "^7946.0.10"
-    "@types/mapbox__point-geometry" "^0.1.2"
-    "@types/mapbox__vector-tile" "^1.3.0"
-    "@types/pbf" "^3.0.2"
-    csscolorparser "~1.0.3"
+    "@maplibre/maplibre-gl-style-spec" "^20.1.0"
+    "@types/geojson" "^7946.0.13"
+    "@types/geojson-vt" "3.2.5"
+    "@types/mapbox__point-geometry" "^0.1.4"
+    "@types/mapbox__vector-tile" "^1.3.4"
+    "@types/pbf" "^3.0.5"
+    "@types/supercluster" "^7.1.3"
     earcut "^2.2.4"
     geojson-vt "^3.2.1"
     gl-matrix "^3.4.3"
     global-prefix "^3.0.0"
+    kdbush "^4.0.2"
     murmurhash-js "^1.0.0"
     pbf "^3.2.1"
-    potpack "^1.0.2"
+    potpack "^2.0.0"
     quickselect "^2.0.0"
-    supercluster "^7.1.5"
+    supercluster "^8.0.1"
     tinyqueue "^2.0.3"
     vt-pbf "^3.1.3"
 
@@ -14118,11 +14128,6 @@ postcss@^8.5.3:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
-potpack@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/potpack/-/potpack-1.0.2.tgz#23b99e64eb74f5741ffe7656b5b5c4ddce8dfc14"
-  integrity sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==
-
 potpack@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/potpack/-/potpack-2.0.0.tgz"
@@ -15227,7 +15232,7 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
-rw@1:
+rw@1, rw@^1.3.3:
   version "1.3.3"
   resolved "https://registry.npmjs.org/rw/-/rw-1.3.3.tgz"
   integrity sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==
@@ -16132,13 +16137,6 @@ stylis@4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/stylis/-/stylis-4.2.0.tgz"
   integrity sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==
-
-supercluster@^7.1.5:
-  version "7.1.5"
-  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-7.1.5.tgz#65a6ce4a037a972767740614c19051b64b8be5a3"
-  integrity sha512-EulshI3pGUM66o6ZdH3ReiFcvHpM3vAigyK+vcxdjpJyEbIIrtbmBdY23mGgnI24uXiGFvrGq9Gkum/8U7vJWg==
-  dependencies:
-    kdbush "^3.0.0"
 
 supercluster@^8.0.1:
   version "8.0.1"
