@@ -103,7 +103,7 @@
 		"babel-plugin-inline-react-svg": "^2.0.2",
 		"babel-plugin-styled-components": "^2.1.4",
 		"babel-preset-react-app": "^10.1.0",
-		"cypress": "^14.1.0",
+		"cypress": "^14.2.0",
 		"elasticlunr": "^0.9.5",
 		"enzyme": "^3.11.0",
 		"eslint": "^9.22.0",
