@@ -52,7 +52,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	const mapContext = useContext(MapContext);
 	const initializedRef = useRef(false);
-	const mapRef = useRef<MapLibreGlWrapper | undefined>();
+	const mapRef = useRef<MapLibreGlWrapper | null>(null);
 	const [map, setMap] = useState<MapLibreGlWrapper | undefined>(undefined);
 	const layersFromUrlParamsRef = useRef({});
 	const componentId = useRef((props.idPrefix ? props.idPrefix : 'MlShareMapState-') + uuidv4());
@@ -68,7 +68,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 	});
 
 	const allStatesRestoredRef = useRef(false);
-	const layerStatesRestored = useRef<LayerStatesInterface>();
+	const layerStatesRestored = useRef<LayerStatesInterface | null>(null);
 	const restoredStatesRef = useRef({
 		viewport: {
 			center: false,
@@ -103,7 +103,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		});
 		JSON.parse(Object.fromEntries(urlParams).layers).forEach((el: { id: number }) => {
 			// is iD a number?
-			layersFromUrlParamsRef.current[el.id] = false;
+			(layersFromUrlParamsRef.current as {[key:string]:any})[el.id] = false;
 		});
 
 		const currentParams = new URLSearchParams(window.location.search);
@@ -130,7 +130,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 
 			if (mapRef.current) {
 				mapRef.current.cleanup(_componentId);
-				mapRef.current = undefined;
+				mapRef.current = null;
 			}
 			initializedRef.current = false;
 		};
@@ -170,7 +170,7 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 		if (!mapState?.layers?.length) return;
 
 		if (typeof layerStatesRestored.current === 'undefined') {
-			layerStatesRestored.current = undefined;
+			layerStatesRestored.current = null;
 			initialUrlParams?.layers?.forEach((layer: { id: string }) => {
 				if (layerStatesRestored.current?.[layer.id]) {
 					layerStatesRestored.current[layer.id] = false;

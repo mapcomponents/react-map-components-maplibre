@@ -29,8 +29,8 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	});
 
 	const layerId = useRef(props.layerId || 'MlVectorTileLayer-' + mapHook.componentId);
-	const layerPaintConfsRef = useRef({});
-	const layerLayoutConfsRef = useRef({});
+	const layerPaintConfsRef = useRef<{[key: string]: string }>({});
+	const layerLayoutConfsRef = useRef<{[key: string]: string }>({});
 	const initializedRef = useRef(false);
 
 	const createLayers = useCallback(() => {
@@ -106,7 +106,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 
 				if (layerPaintConfString !== layerPaintConfsRef.current[layer.id]) {
 					for (const paintKey in layer.paint) {
-						mapHook.map.map.setPaintProperty(layer.id, paintKey, layer.paint[paintKey]);
+						mapHook.map.setPaintProperty(layer.id, paintKey, layer.paint[paintKey as keyof typeof layer.paint]);
 					}
 				}
 				layerPaintConfsRef.current[layer.id] = layerPaintConfString;
@@ -116,7 +116,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 
 				if (layerLayoutConfString !== layerLayoutConfsRef.current[layer.id]) {
 					for (const layoutKey in layer.layout) {
-						mapHook.map.map.setLayoutProperty(layer.id, layoutKey, layer.layout[layoutKey]);
+						mapHook.map.setLayoutProperty(layer.id, layoutKey, layer.layout[layoutKey as keyof typeof layer.layout]);
 					}
 				}
 				layerLayoutConfsRef.current[layer.id] = layerLayoutConfString;

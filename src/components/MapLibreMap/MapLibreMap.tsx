@@ -21,6 +21,8 @@ export type MapLibreMapProps = {
 	 * css style definition passed to the map container DOM element
 	 */
 	style?: object;
+
+
 };
 
 const defaultProps: MapLibreMapProps = {
@@ -50,6 +52,8 @@ const defaultProps: MapLibreMapProps = {
 	},
 };
 
+type MapLibreMapComponent = FC<MapLibreMapProps> & { defaultProps: MapLibreMapProps };
+
 /**
  * Creates a MapLibreGlWrapper instance and registers it in MapContext
  * after the MapLibre-gl load event has fired.
@@ -60,9 +64,9 @@ const defaultProps: MapLibreMapProps = {
  *
  * @category Map components
  */
-const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
-	const mapRef = useRef<MapLibreGlWrapper>();
-	const mapContainer = useRef<HTMLDivElement>();
+const MapLibreMap: MapLibreMapComponent = (props: MapLibreMapProps) => {
+	const mapRef = useRef<MapLibreGlWrapper | null>(null);
+	const mapContainer = useRef<HTMLDivElement | null>(null);
 
 	const mapContext = useContext<MapContextType>(MapContext);
 
@@ -79,7 +83,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 			if (mapRef.current) {
 				mapRef.current.map?.remove?.();
 				mapRef.current.cancelled = true;
-				mapRef.current = undefined;
+				mapRef.current = null;
 			}
 		};
 	}, []);
@@ -100,7 +104,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 					map.once('load', () => {
 						if (!wrapper?.cancelled) {
 							// add maplibre instance to window for debugging purposes
-							window['_map'] = map;
+							(window as {[key:string]: any})['_map'] = map;
 							if (props.mapId) {
 								mapContext.registerMap(props.mapId, wrapper);
 							} else {

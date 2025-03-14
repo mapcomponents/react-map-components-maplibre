@@ -3,7 +3,7 @@ import { Feature, FeatureCollection } from 'geojson';
 import { feature as topojsonFeature } from 'topojson-client';
 import protocolPathParser from './utils/protocolPathParser';
 import getProtocolData from './utils/getProtocolData';
-import { Topology } from '../../node_modules/@types/topojson-specification';
+import { Topology } from 'topojson-specification';
 
 type TopoJson = {
 	type?: 'Topology';
@@ -14,7 +14,6 @@ type TopoJson = {
 
 function reduceFeatures(geojson: FeatureCollection) {
 	const newFeatures: Feature[] = [];
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	geojson.features.forEach((e: any) => {
 		if (!e.features) {
 			newFeatures.push({
@@ -46,6 +45,7 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 			try {
 				topoJsonData = JSON.parse(rawData);
 			} catch (e) {
+				console.error('Error converting topojson', e);
 				throw 'Invalid TopoJson';
 			}
 			// Convert the data
@@ -55,19 +55,20 @@ async function convertTopojson(params: { filename: string }): Promise<FeatureCol
 			};
 
 			if (topoJsonData.type === 'Topology' && topoJsonData.objects !== undefined) {
+				const topoJsonDataObjects: {[key:string]:any} = topoJsonData.objects;
 				// add the "fromObject" property in each topojson feature
 				Object.keys(topoJsonData.objects).map((key) => {
-					if (topoJsonData.objects?.[key].type === 'GeometryCollection') {
-						topoJsonData.objects?.[key].geometries?.forEach(
+					if (topoJsonDataObjects?.[key].type === 'GeometryCollection') {
+						topoJsonDataObjects?.[key].geometries?.forEach(
 							(e: Feature) => (e.properties = { fromObject: key, ...e.properties })
 						);
 					} else if (
-						topoJsonData?.objects?.[key] &&
-						topoJsonData?.objects?.[key]?.type !== 'GeometryCollection'
+						topoJsonDataObjects?.[key] &&
+						topoJsonDataObjects?.[key]?.type !== 'GeometryCollection'
 					) {
-						topoJsonData.objects[key].properties = {
+						topoJsonDataObjects[key].properties = {
 							fromObject: key,
-							...topoJsonData.objects?.[key].properties,
+							...topoJsonDataObjects?.[key].properties,
 						};
 					}
 				});

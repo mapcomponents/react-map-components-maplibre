@@ -90,11 +90,7 @@ const Template = () => {
 					</Button>
 				}
 			/>
-			<Sidebar
-				open={openSidebar}
-				setOpen={setOpenSidebar}
-				name={'Camera Settings'}
-			>
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Camera Settings'}>
 				<MenuItem onClick={() => setShowRoute(!showRoute)}>
 					<Typography>{showRoute ? 'Hide route' : 'Show route'}</Typography>
 				</MenuItem>
@@ -146,7 +142,7 @@ const Template = () => {
 					</Typography>
 					<Slider
 						value={state.zoom}
-						onChange={(ev, value) => {
+						onChange={(_ev, value) => {
 							setState((current) => {
 								return { ...current, zoom: Number(value) };
 							});
@@ -173,7 +169,7 @@ const Template = () => {
 					</Typography>
 					<Slider
 						value={state.speed}
-						onChange={(ev, value) => {
+						onChange={(_ev, value) => {
 							setState((current) => {
 								return { ...current, speed: Number(value) };
 							});

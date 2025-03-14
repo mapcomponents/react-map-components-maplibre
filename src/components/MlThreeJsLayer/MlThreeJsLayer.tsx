@@ -23,7 +23,7 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 
 	const layerName = '3d-model';
 	const initializedRef = useRef(false);
-	const mapRef = useRef<MapLibreGlWrapper>();
+	const mapRef = useRef<MapLibreGlWrapper | null>(null);
 	const initFuncRef = useRef(props.init);
 
 	const cleanup = () => {
@@ -31,7 +31,7 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 			if (mapRef.current.getLayer(layerName)) {
 				mapRef.current.removeLayer(layerName);
 			}
-			mapRef.current = undefined;
+			mapRef.current = null;
 		}
 	};
 
@@ -146,7 +146,7 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 					modelTransform.rotateZ
 				);
 
-				const m = new THREE.Matrix4().fromArray(matrix);
+				const m = new THREE.Matrix4().fromArray(Object.values(matrix.defaultProjectionData.mainMatrix));
 				const l = new THREE.Matrix4()
 					.makeTranslation(
 						modelTransform.translateX,

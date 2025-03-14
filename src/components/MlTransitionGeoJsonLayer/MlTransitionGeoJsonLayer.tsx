@@ -10,7 +10,7 @@ const msPerStep = 50;
 
 export type MlTransitionGeoJsonLayerProps = MlGeoJsonLayerProps & {
 	transitionTime?: number;
-	geojson?: Feature;
+	geojson?: Feature | FeatureCollection | null;
 };
 
 /**
@@ -28,7 +28,7 @@ const MlTransitionGeoJsonLayer = (props: MlTransitionGeoJsonLayerProps) => {
 	const initializedRef = useRef(false);
 
 	// transition effect variables
-	const oldGeojsonRef = useRef<Feature | FeatureCollection>();
+	const oldGeojsonRef = useRef<Feature | FeatureCollection | null>(null);
 	const transitionInProgressRef = useRef(false);
 	const transitionTimeoutRef = useRef(undefined);
 	const currentTransitionStepRef = useRef(false);
@@ -74,7 +74,9 @@ const MlTransitionGeoJsonLayer = (props: MlTransitionGeoJsonLayerProps) => {
 			transitionGeojsonCommonDataRef.current = [];
 			transitionToGeojson();
 		}
-		oldGeojsonRef.current = props.geojson;
+		if (props.geojson) {
+			oldGeojsonRef.current = props.geojson;
+		}
 	}, [mapHook.map, transitionToGeojson, props]);
 
 	const startTransition = useCallback(() => {

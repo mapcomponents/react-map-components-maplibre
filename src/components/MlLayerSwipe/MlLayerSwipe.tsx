@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useRef, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import syncMove from '@mapbox/mapbox-gl-sync-move';
@@ -113,13 +113,13 @@ const MlLayerSwipe = (props: MlLayerSwipeProps) => {
 	};
 
 	function adjustWindowSize() {
-		const clipWidth = mapContext.maps[props.map2Id]
+		const clipWidth = parseFloat(mapContext.maps[props.map2Id]
 			.getContainer()
 			.style.clip.split(',')[1]
-			.replace('px', '');
+			.replace('px', ''));
 		const canvasWidth = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect().width;
 
-		if (parseFloat(clipWidth) < canvasWidth) {
+		if (clipWidth < canvasWidth) {
 			const newPosition = parseFloat(((clipWidth / canvasWidth) * 100).toFixed(2));
 			setSwipeX(newPosition);
 		} else {

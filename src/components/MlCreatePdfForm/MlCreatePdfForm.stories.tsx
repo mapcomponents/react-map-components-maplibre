@@ -215,7 +215,7 @@ const additionalInfoTemplate = () => {
 					const title = options.formData.get('title') as string;
 					const text = options.formData.get('description') as string;
 					const centerY = pageWidth / 2;
-					const fontSizes = {
+					const fontSizes: {[key:string]:any} = {
 						a4: {
 							width: 210,
 							textSize: 10,
@@ -317,7 +317,6 @@ const additionalInfoTemplate = () => {
 					pdf.setFontSize(fontSizes[options.format].titleSize);
 					const titleWidth =
 						(pdf.getStringUnitWidth(title) * pdf.getFontSize()) / pdf.internal.scaleFactor;
-					pdf.internal.scaleFactor;
 					const titleX = isLandscape ? centerY - titleWidth / 2 : (pageWidth - titleWidth) / 2;
 					pdf.text(title, titleX, fontSizes[options.format].titleOffset);
 

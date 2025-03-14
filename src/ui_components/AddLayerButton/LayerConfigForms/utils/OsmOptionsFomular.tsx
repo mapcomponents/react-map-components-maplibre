@@ -34,7 +34,7 @@ function OsmOptionsFomular(props: OsmOptionsFomularProps) {
 									<Checkbox										
 										onChange={(ev) => {
 											const newObject = {};
-											newObject[el] = ev.target.value === 'on' ? true : false;
+											(newObject as {[key:string]:any})[el] = ev.target.value === 'on' ? true : false;
 											props.setter(newObject);
 										}}
 									/>

@@ -29,12 +29,12 @@ function determineFeatureType(coordinates: ExcludedGeometryCollection['coordinat
 				)
 			) {
 				return 'LineString';
-			} else if (coordinates.every((coord) => Array.isArray(coord) && Array.isArray(coord[0]))) {
+			} else if (coordinates.every((coord)=> Array.isArray(coord) && Array.isArray(coord[0]))) {
 				// an array of arrays can be a multi-linestring or polygon,
 				// if the first and last coordinate is the same, it is a polygon
 				if (
-					coordinates[0][0][0] === coordinates[0][coordinates[0].length - 1][0] &&
-					coordinates[0][0][1] === coordinates[0][coordinates[0].length - 1][1]
+					(coordinates as {[key:string]:any})[0][0][0] === (coordinates as {[key:string]:any})[0][(coordinates as {[key:string]:any})[0].length - 1][0] &&
+					(coordinates as {[key:string]:any})[0][0][1] === (coordinates as {[key:string]:any})[0][(coordinates as {[key:string]:any})[0].length - 1][1]
 				) {
 					return 'Polygon';
 				} else {

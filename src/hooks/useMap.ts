@@ -28,7 +28,7 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 		},
 	});
 
-	const mapRef = useRef<MapLibreGlWrapper>();
+	const mapRef = useRef<MapLibreGlWrapper | null>(null);
 
 	const componentId = useRef(uuidv4());
 
@@ -42,13 +42,13 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 	useEffect(() => {
 		return () => {
 			cleanup();
-			mapRef.current = undefined;
+			mapRef.current = null;
 		};
 	}, []);
 
 	useEffect(() => {
 		if(mapRef.current && mapRef.current.cancelled === true){
-			mapRef.current = undefined
+			mapRef.current = null
 			setState({map:undefined, ready: false})
 		}
 		if (mapRef.current || !mapContext.mapExists(props?.mapId)) return;

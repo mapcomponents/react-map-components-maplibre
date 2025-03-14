@@ -49,7 +49,7 @@ export interface useFeatureEditorProps {
  * GeoJson Feature editor that allows to create or manipulate GeoJson data
  */
 const useFeatureEditor = (props: useFeatureEditorProps) => {
-	const draw = useRef<MapboxDraw>();
+	const draw = useRef<MapboxDraw | null>(null);
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,

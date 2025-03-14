@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-	Cancelable,
 	FlyToOptions,
 	JumpToOptions,
 	LayerSpecification,
 	RequestParameters,
-	ResponseCallback,
 	StyleSpecification,
 	VectorSourceSpecification,
 } from 'maplibre-gl';
@@ -47,8 +45,7 @@ export default storyoptions;
 
 interface TemplateProps {
 	protocol: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	handler: (requestParameters: RequestParameters, callback: ResponseCallback<any>) => Cancelable;
+	handler: (requestParameters: RequestParameters, callback: any) => any;
 	sourceId: string;
 	filePath: string;
 	type?: 'circle' | 'line' | 'fill';
@@ -62,7 +59,7 @@ interface TemplateProps {
 const BackgroundLayers = () => {
 	const layerContext = useContext(LayerContext);
 	useEffect(() => {
-		layerContext.updateStyle(bright as StyleSpecification);
+		layerContext.updateStyle(bright as unknown as StyleSpecification);
 	}, []);
 
 	return (
@@ -617,7 +614,7 @@ const CatalogueTemplate = () => {
 	const [currentDemo, setCurrentDemo] = useState<string>('csv');
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	const props: TemplateProps = currentProps[currentDemo];
+	const props: TemplateProps = (currentProps as {[key:string]:any})[currentDemo];
 
 	const optionsURL = '?' + new URLSearchParams(props.options as string).toString();
 
@@ -627,7 +624,7 @@ const CatalogueTemplate = () => {
 	});
 
 	useEffect(() => {
-		layerContext.updateStyle(bright as StyleSpecification);
+		layerContext.updateStyle(bright as unknown as StyleSpecification);
 
 		layerContext.setLayers([
 			props.protocol === 'mbtiles'

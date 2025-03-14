@@ -32,7 +32,7 @@ const mapPropKeyToFormInputType = {
 };
 const mapPropKeyToFormInputTypeKeys = Object.keys(mapPropKeyToFormInputType);
 
-const inputPropsByPropKey = {
+const inputPropsByPropKey:{[key:string]:{ [K in "step" | "min" | "max"]: number }} = {
 	'circle-stroke-width': {
 		step: 1,
 		min: 1,
@@ -68,11 +68,12 @@ interface LayerPropertyFormProps {
 	layerType: string;
 }
 
+
 function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyFormProps) {
 	const key = useRef(Math.round(Math.random() * 10000000000));
 
 	const getFormInputByType = useCallback(
-		(key: string) => {
+		(key: keyof paintPropsType) => {
 			if (
 				mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1 &&
 				(typeof paintProps[key] === 'number' || typeof paintProps[key] === 'string')
@@ -89,7 +90,6 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								{label}
 								<Slider
 									{...inputPropsByPropKey[key]}
-									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
 									value={paintProps[key]}
 									valueLabelDisplay="auto"
 									onChange={(_ev: Event, value: number) => {
@@ -147,7 +147,7 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 			<PaperStyled>
 				<ListItem key={key + '_paintPropForm'}>
 					<BoxStyled>
-						{Object.keys(paintProps).map((el: string) => getFormInputByType(el))}
+						{Object.keys(paintProps).map((el) => getFormInputByType(el as keyof paintPropsType))}
 					</BoxStyled>
 				</ListItem>
 			</PaperStyled>

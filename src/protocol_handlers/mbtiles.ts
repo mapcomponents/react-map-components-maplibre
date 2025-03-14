@@ -1,8 +1,12 @@
-import initSqlJs from 'sql.js';
+import initSqlJs, { Database } from 'sql.js';
 import * as pako from 'pako';
-import { RequestParameters} from 'maplibre-gl';
+import { RequestParameters } from 'maplibre-gl';
 
-const loadedMbtiles = {};
+interface MbTilesDbHandlerMap {
+	[filename: string]: Database;
+}
+
+const loadedMbtiles: MbTilesDbHandlerMap = {};
 
 const parseTileParams = (url: string) => {
 	const urlParts = url.split('://');
@@ -14,12 +18,7 @@ const parseTileParams = (url: string) => {
 	const z = mbtilesParts.splice(mbtilesPartsLength - 3, 1)[0];
 	const filename = mbtilesParts.join('/');
 
-	return {
-		filename,
-		z,
-		x,
-		y,
-	};
+	return { filename, z, x, y };
 };
 
 // mbtiles files are sqlite databases. This function loads the database and returns a handler
@@ -91,7 +90,6 @@ async function getBufferFromMbtiles(params: { filename: string; z: string; x: st
  *
  * 'mbtiles://mbtiles/countries.mbtiles/{z}/{x}/{y}'
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mbTilesProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = parseTileParams(params.url);
 	const data = await getBufferFromMbtiles(parsedParams);

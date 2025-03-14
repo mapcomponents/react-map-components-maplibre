@@ -19,7 +19,7 @@ const PdfContextProvider = ({ children }: { children: React.ReactNode }) => {
 		fixedScale: 0,
 	});
 
-	const geojsonRef = useRef();
+	const geojsonRef = useRef<any | null>(null);
 
 	const template = useMemo(() => {
 		if (typeof templates[format][quality] !== 'undefined') {

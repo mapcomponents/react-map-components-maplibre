@@ -1,4 +1,4 @@
-import { Map } from 'maplibre-gl';
+import { Map, SourceSpecification } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
 
@@ -14,6 +14,7 @@ interface createExportOptions {
 	format: string;
 	orientation: string;
 }
+
 export type { createExportOptions };
 
 const createExport = (options: createExportOptions) => {
@@ -38,11 +39,11 @@ const createExport = (options: createExportOptions) => {
 	for (const name in style.sources) {
 		const src = style.sources[name];
 
-		Object.keys(src).forEach((key) => {
+		Object.keys(src).forEach((key: keyof SourceSpecification) => {
 			// delete property if value is undefined.
 			// for instance, raster-dem might have undefined value in "url" and "bounds"
 			if (!src[key]) {
-				delete src[key];
+				delete (src as Record<string, unknown>)[key];
 			}
 		});
 	}
@@ -55,6 +56,8 @@ const createExport = (options: createExportOptions) => {
 		bearing: 0,
 		pitch: 0,
 		interactive: false,
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		preserveDrawingBuffer: true,
 		fadeDuration: 0,
 		attributionControl: false,
@@ -93,6 +96,7 @@ interface createExportResolverParams extends createExportOptions {
 	renderMap: Map;
 	hiddenContainer: HTMLDivElement;
 }
+
 export type { createExportResolverParams };
 
 interface createJsPdfOptions extends createExportOptions {
@@ -142,6 +146,7 @@ function createJsPdf(options: createJsPdfOptions) {
 		resolve(params);
 	});
 }
+
 interface createPdfResolverParams extends createJsPdfOptions {
 	formData: FormData;
 	pdf: jsPDF;

@@ -33,6 +33,7 @@ type ViewportState = {
 	pitch: number;
 };
 
+
 /**
  * Creates a MapLibre-gl-js instance and offers all of the native MapLibre functions and properties as well as additional functionality such as element registration & cleanup and more events.
  *
@@ -41,7 +42,7 @@ type ViewportState = {
  * @class
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+// @ts-ignore
 interface MapLibreGlWrapper extends MapType {
 	addImage: (
 		id: string,
@@ -104,7 +105,7 @@ export type MapLibreGlEventName = keyof MapLayerEventType | keyof MapEventType |
 
 export type MapLibreGlWrapperEventName = keyof MapLibreGlWrapperEventHandlers;
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+
 class MapLibreGlWrapper {
 	[key: string]: any;
 	registeredElements: {
@@ -501,7 +502,7 @@ class MapLibreGlWrapper {
 				self.registeredElements[componentId].events.push(_arguments);
 			}
 
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			 
 			// @ts-ignore
 			self.map.on(..._arguments);
 			return this;
@@ -554,7 +555,7 @@ class MapLibreGlWrapper {
 
 				// cleanup events
 				self.registeredElements[componentId].events.forEach((item: EventArgArray) => {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					 
 					// @ts-ignore
 					self.map.off(...item);
 				});

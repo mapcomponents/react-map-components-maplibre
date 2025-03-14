@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { mount } from 'enzyme';
 import { MapComponentsProvider } from '../contexts/MapContext';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
-import { waitFor } from '@testing-library/react';
+import { waitFor } from "@testing-library/react";
 
 import useMap from './useMap';
 import useSource from './useSource';

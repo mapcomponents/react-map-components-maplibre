@@ -21,7 +21,7 @@ async function convertXML(params: {
 
 					// use the projects gpxConverter function for gpx and kml files
 				} else {
-					return toGeoJSON[params.protocolId](
+					return (toGeoJSON as {[key:string]:any})[params.protocolId](
 						new DOMParser().parseFromString(rawData, 'text/xml')
 					) as FeatureCollection;
 				}
@@ -38,7 +38,6 @@ async function convertXML(params: {
 	return geojson;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const XMLProtocolHandler = async (params: RequestParameters) => {
 	const parsedParams = protocolPathParser(params.url);
 

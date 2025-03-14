@@ -9,6 +9,7 @@ import jakobsweg from './assets/jackobsweg.json';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import useMap from '../../hooks/useMap';
+import { fn } from '@storybook/test';
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',
@@ -17,6 +18,9 @@ const storyoptions = {
 	decorators: temporalControllerDecorator,
 	parameters: {
 		sourceLink: 'components/MlTemporalController/MlTemporalController.tsx',
+	},
+	args: {
+		onStateChange: fn(),
 	},
 };
 export default storyoptions;

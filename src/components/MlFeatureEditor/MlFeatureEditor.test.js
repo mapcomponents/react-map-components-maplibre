@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
-import { mount, configure } from "enzyme";
+import { mount } from "enzyme";
 import { waitFor } from "@testing-library/react";
 import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
 import MlFeatureEditor from "./MlFeatureEditor";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
-import maplibregl from "maplibre-gl/dist/maplibre-gl";
 import { mockMapLibreMethods } from "../../setupTests";
 
 jest.mock("@mapbox/mapbox-gl-draw", () => {
@@ -14,7 +13,6 @@ jest.mock("@mapbox/mapbox-gl-draw", () => {
 		};
 	};
 });
-const mapLibreInstance = new maplibregl.Map();
 
 const MlFeatureEditorTestComponent = (props) => {
 	const [layerVisible, setLayerVisible] = useState(true);
@@ -75,7 +73,7 @@ let testAttributes = {
 
 describe("<MlFeatureEditor>", () => {
 	it("should register 2 event listeners to the maplibre instance", async () => {
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -101,12 +99,11 @@ describe("<MlFeatureEditor>", () => {
 	});
 
 	it("should add MapBox-Gl-draw instance using map.addControl to the maplibre instance", async () => {
-		const wrapper = mount(
+		mount(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
-
 		expect(mockMapLibreMethods.addControl).toHaveBeenCalledTimes(1);
 	});
 
