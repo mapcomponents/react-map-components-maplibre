@@ -1,10 +1,12 @@
-import initSqlJs from 'sql.js';
+import initSqlJs, {SqlJsStatic, Database} from 'sql.js';
 import * as pako from 'pako';
 import { RequestParameters} from 'maplibre-gl';
 
-type keyIsStringObject = {[key: string]: any};
+interface MbTilesDbHandlerMap {
+	[filename: string]: Database;
+}
 
-const loadedMbtiles: keyIsStringObject = {};
+const loadedMbtiles: MbTilesDbHandlerMap = {};
 
 const parseTileParams = (url: string) => {
 	const urlParts = url.split('://');
