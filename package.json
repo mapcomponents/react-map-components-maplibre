@@ -28,7 +28,7 @@
 		"@emotion/styled": "^11.14.0",
 		"@eslint/eslintrc": "^3.3.0",
 		"@eslint/js": "^9.22.0",
-		"@mapbox/mapbox-gl-draw": "^1.4.3",
+		"@mapbox/mapbox-gl-draw": "1.4.3",
 		"@mapbox/mapbox-gl-sync-move": "^0.3.1",
 		"@mui/icons-material": "^6.4.7",
 		"@mui/material": "^6.4.7",
