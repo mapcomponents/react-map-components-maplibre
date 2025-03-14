@@ -502,7 +502,7 @@ class MapLibreGlWrapper {
 				self.registeredElements[componentId].events.push(_arguments);
 			}
 
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			 
 			// @ts-ignore
 			self.map.on(..._arguments);
 			return this;
@@ -555,7 +555,7 @@ class MapLibreGlWrapper {
 
 				// cleanup events
 				self.registeredElements[componentId].events.forEach((item: EventArgArray) => {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					 
 					// @ts-ignore
 					self.map.off(...item);
 				});

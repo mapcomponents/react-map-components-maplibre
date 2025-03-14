@@ -1,6 +1,6 @@
-import initSqlJs, {SqlJsStatic, Database} from 'sql.js';
+import initSqlJs, { Database } from 'sql.js';
 import * as pako from 'pako';
-import { RequestParameters} from 'maplibre-gl';
+import { RequestParameters } from 'maplibre-gl';
 
 interface MbTilesDbHandlerMap {
 	[filename: string]: Database;
@@ -18,12 +18,7 @@ const parseTileParams = (url: string) => {
 	const z = mbtilesParts.splice(mbtilesPartsLength - 3, 1)[0];
 	const filename = mbtilesParts.join('/');
 
-	return {
-		filename,
-		z,
-		x,
-		y,
-	};
+	return { filename, z, x, y };
 };
 
 // mbtiles files are sqlite databases. This function loads the database and returns a handler
