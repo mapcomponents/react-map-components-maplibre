@@ -5,8 +5,6 @@ import { MapContext } from '../index';
 const LoadingOverlayContext = React.createContext({});
 const LoadingOverlayContextProvider = LoadingOverlayContext.Provider;
 
-type keyIsStringObject = {[key: string]: any};
-
 const LoadingOverlayProvider = (children: React.ReactNode) => {
 	const mapContext = useContext(MapContext);
 
@@ -14,11 +12,11 @@ const LoadingOverlayProvider = (children: React.ReactNode) => {
 	const [loadingDone, setLoadingDone] = useState(false);
 	const [visible, setVisible] = useState(true);
 	const [fadeoutAnimation, setFadeoutAnimation] = useState(false);
-	const mapJobsRef = useRef({});
+	const mapJobsRef = useRef<{[key: string]: any}>({});
 	const [checkIdleTrigger, setCheckIdleTrigger] = useState(0);
 
 	const createOnMapIdleFunction = (mapId: string) => () => {
-		(mapJobsRef.current as keyIsStringObject)[mapId] = true;
+		mapJobsRef.current[mapId] = true;
 		setCheckIdleTrigger(Math.random());
 	};
 
@@ -36,7 +34,7 @@ const LoadingOverlayProvider = (children: React.ReactNode) => {
 		if (!mapContext.map || controlled) return;
 
 		for (const key in mapJobsRef.current) {
-			if (!(mapJobsRef.current as keyIsStringObject)[key]) return;
+			if (!mapJobsRef.current[key]) return;
 		}
 
 		fadeOut();
@@ -48,7 +46,7 @@ const LoadingOverlayProvider = (children: React.ReactNode) => {
 				const mapId = mapContext.mapIds[i] + '';
 
 				if (mapContext.getMap(mapId)) {
-					(mapJobsRef.current as keyIsStringObject)[mapId] = false;
+					mapJobsRef.current[mapId] = false;
 
 					mapContext.getMap(mapId).on('idle', createOnMapIdleFunction(mapId));
 				}

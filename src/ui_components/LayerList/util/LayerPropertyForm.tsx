@@ -32,7 +32,7 @@ const mapPropKeyToFormInputType = {
 };
 const mapPropKeyToFormInputTypeKeys = Object.keys(mapPropKeyToFormInputType);
 
-const inputPropsByPropKey = {
+const inputPropsByPropKey:{[key:string]:{ [K in "step" | "min" | "max"]: number }} = {
 	'circle-stroke-width': {
 		step: 1,
 		min: 1,
@@ -68,31 +68,29 @@ interface LayerPropertyFormProps {
 	layerType: string;
 }
 
-type keyIsStringObject = {[key: string]: any};
 
 function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyFormProps) {
 	const key = useRef(Math.round(Math.random() * 10000000000));
 
 	const getFormInputByType = useCallback(
-		(key: string) => {
+		(key: keyof paintPropsType) => {
 			if (
 				mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1 &&
-				(typeof (paintProps as keyIsStringObject)[key] === 'number' || typeof (paintProps as keyIsStringObject)[key] === 'string')
+				(typeof paintProps[key] === 'number' || typeof paintProps[key] === 'string')
 			) {
 				const label = (
 					<Typography id={key + '_label'} gutterBottom>
 						{key}
 					</Typography>
 				);
-				switch ((mapPropKeyToFormInputType as keyIsStringObject)[key]) {
+				switch (mapPropKeyToFormInputType[key]) {
 					case 'slider':
 						return (
 							<React.Fragment key={key}>
 								{label}
 								<Slider
-									{...(inputPropsByPropKey as keyIsStringObject)[key]}
-									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-									value={(paintProps as keyIsStringObject)[key]}
+									{...inputPropsByPropKey[key]}
+									value={paintProps[key]}
 									valueLabelDisplay="auto"
 									onChange={(_ev: Event, value: number) => {
 										if (value) {
@@ -109,7 +107,7 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								{label}
 								<TextField
 									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-									value={(paintProps as keyIsStringObject)[key]}
+									value={paintProps[key]}
 									onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
 										if (ev?.target?.value) {
 											setPaintProps((current) => ({
@@ -129,7 +127,7 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								<Box sx={{ '& > div': { width: 'initial !important' } }}>
 									<ColorPicker
 										key={key}
-										value={(paintProps as keyIsStringObject)[key]}
+										value={paintProps[key]}
 										propKey={key}
 										setPaintProps={setPaintProps}
 									/>
