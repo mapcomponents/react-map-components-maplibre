@@ -1,4 +1,4 @@
-import { Map } from 'maplibre-gl';
+import { Map, SourceSpecification } from 'maplibre-gl';
 import jsPDF from 'jspdf';
 import MapLibreGlWrapper from '../../components/MapLibreMap/lib/MapLibreGlWrapper';
 
@@ -16,8 +16,6 @@ interface createExportOptions {
 }
 
 export type { createExportOptions };
-
-type keyIsStringObject = { [key: string]: any };
 
 const createExport = (options: createExportOptions) => {
 	const width = options.width;
@@ -41,11 +39,11 @@ const createExport = (options: createExportOptions) => {
 	for (const name in style.sources) {
 		const src = style.sources[name];
 
-		Object.keys(src).forEach((key: string) => {
+		Object.keys(src).forEach((key: keyof SourceSpecification) => {
 			// delete property if value is undefined.
 			// for instance, raster-dem might have undefined value in "url" and "bounds"
-			if (!(src as keyIsStringObject)[key]) {
-				delete (src as keyIsStringObject)[key];
+			if (!src[key]) {
+				delete (src as Record<string, unknown>)[key];
 			}
 		});
 	}
