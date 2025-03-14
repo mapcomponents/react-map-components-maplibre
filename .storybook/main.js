@@ -19,6 +19,10 @@ module.exports = {
 		options: {},
 	},
 
+	core: {
+		disableTelemetry: true,
+	},
+
 	webpackFinal: async (config) => {
 		config.module.rules.push({
 			test: /\.(ts|tsx)$/,
