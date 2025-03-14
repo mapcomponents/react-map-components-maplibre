@@ -15,7 +15,6 @@ jest.mock("@mapbox/mapbox-gl-draw", () => {
 	};
 });
 const mapLibreInstance = new maplibregl.Map();
-console.log(mapLibreInstance);
 
 const MlFeatureEditorTestComponent = (props) => {
 	const [layerVisible, setLayerVisible] = useState(true);
@@ -82,8 +81,6 @@ describe("<MlFeatureEditor>", () => {
 			</MapComponentsProvider>
 		);
 
-		console.log(wrapper);
-
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(7));
 	});
@@ -109,7 +106,6 @@ describe("<MlFeatureEditor>", () => {
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
-		console.log(wrapper);
 		expect(mockMapLibreMethods.addControl).toHaveBeenCalledTimes(1);
 	});
 
