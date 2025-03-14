@@ -8,7 +8,7 @@ import { LayerContextProvider } from './LayerContext';
 export interface MapContextType {
 	mapIds: string[];
 	mapExists: (map_id: string | undefined) => boolean;
-	maps: MapLibreGlWrapper[];
+	maps: { [key: string]: MapLibreGlWrapper };
 	map: MapLibreGlWrapper | undefined;
 	getMap: (map_id: string | undefined) => MapLibreGlWrapper;
 	setMap: (map: MapLibreGlWrapper) => void;
