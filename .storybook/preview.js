@@ -4,8 +4,6 @@ import { themes } from "@storybook/theming";
 
 import "./style.css";
 
-console.log('ReactDOM.render warning is from storybook still using react 17 to render the UI; The components shown are using 18 thoug. See https://github.com/storybookjs/storybook/issues/17831 for more info. The issue will eventually be resolved by upgrading storybook, once it fully supports React 18');
-
 export const parameters = {
   docs: {
     inlineStories: false,
