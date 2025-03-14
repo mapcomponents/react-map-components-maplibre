@@ -46,7 +46,7 @@
 		"d3": "^7.9.0",
 		"globals": "^16.0.0",
 		"jspdf": "^3.0.0",
-		"maplibre-gl": "4.2.0",
+		"maplibre-gl": "5.2.0",
 		"osm2geojson-lite": "^1.0.2",
 		"pako": "^2.1.0",
 		"react-color": "^2.19.3",
