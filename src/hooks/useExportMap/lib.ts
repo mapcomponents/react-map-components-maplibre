@@ -14,9 +14,10 @@ interface createExportOptions {
 	format: string;
 	orientation: string;
 }
+
 export type { createExportOptions };
 
-type keyIsStringObject = {[key: string]: any};
+type keyIsStringObject = { [key: string]: any };
 
 const createExport = (options: createExportOptions) => {
 	const width = options.width;
@@ -57,6 +58,8 @@ const createExport = (options: createExportOptions) => {
 		bearing: 0,
 		pitch: 0,
 		interactive: false,
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		preserveDrawingBuffer: true,
 		fadeDuration: 0,
 		attributionControl: false,
@@ -95,6 +98,7 @@ interface createExportResolverParams extends createExportOptions {
 	renderMap: Map;
 	hiddenContainer: HTMLDivElement;
 }
+
 export type { createExportResolverParams };
 
 interface createJsPdfOptions extends createExportOptions {
@@ -144,6 +148,7 @@ function createJsPdf(options: createJsPdfOptions) {
 		resolve(params);
 	});
 }
+
 interface createPdfResolverParams extends createJsPdfOptions {
 	formData: FormData;
 	pdf: jsPDF;
