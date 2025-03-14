@@ -4,7 +4,6 @@ import React, { useContext, useCallback, useRef, useEffect, useState, useMemo } 
 import syncMove from '@mapbox/mapbox-gl-sync-move';
 import './style.css';
 import MapContext, { MapContextType } from '../../contexts/MapContext';
-import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 
 export interface MlLayerMagnifyProps {
 	/**
