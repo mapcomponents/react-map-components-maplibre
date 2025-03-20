@@ -58,6 +58,7 @@ const PointTemplate = (props: TemplateProps) => {
 				mapId={props.mapId}
 				ogcApiFeatureParams={props.ogcApiFeatureParams}
 				reloadFeaturesOnMapMove={true}
+				mlGeoJsonLayerProps={{ defaultPaintOverrides: { circle: { 'circle-color': '#CF003D' } } }}
 			></MlOgcApiFeatures>
 		</>
 	);
