@@ -84,7 +84,11 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		if (!mapHook.map) return;
 
 		if (mapHook.map.transform.zoom + 0.5 <= mapHook.map.transform.maxZoom) {
-			mapHook.map.easeTo({ zoom: mapHook.map.transform.zoom + 0.5 });
+			const currentZoom: number = mapHook.map.getZoom();
+			console.log("currentZoom", currentZoom);
+			const newZoom: number = currentZoom + 0.5;
+			console.log("newZoom", newZoom);
+			mapHook.map.easeTo({ zoom: newZoom });
 		}
 	}, [mapHook.map]);
 
@@ -92,7 +96,11 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		if (!mapHook.map) return;
 
 		if (mapHook.map.transform.zoom - 0.5 >= mapHook.map.transform.minZoom) {
-			mapHook.map.easeTo({ zoom: mapHook.map.transform.zoom - 0.5 });
+			const currentZoom: number = mapHook.map.getZoom();
+			console.log("currentZoom", currentZoom);
+			const newZoom: number = currentZoom - 0.5;
+			console.log("newZoom", newZoom);
+			mapHook.map.easeTo({ zoom: newZoom });
 		}
 	}, [mapHook.map]);
 
