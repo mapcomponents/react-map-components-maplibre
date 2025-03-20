@@ -85,9 +85,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 
 		if (mapHook.map.transform.zoom + 0.5 <= mapHook.map.transform.maxZoom) {
 			const currentZoom: number = mapHook.map.getZoom();
-			console.log("currentZoom", currentZoom);
 			const newZoom: number = currentZoom + 0.5;
-			console.log("newZoom", newZoom);
 			mapHook.map.easeTo({ zoom: newZoom });
 		}
 	}, [mapHook.map]);
@@ -97,9 +95,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 
 		if (mapHook.map.transform.zoom - 0.5 >= mapHook.map.transform.minZoom) {
 			const currentZoom: number = mapHook.map.getZoom();
-			console.log("currentZoom", currentZoom);
 			const newZoom: number = currentZoom - 0.5;
-			console.log("newZoom", newZoom);
 			mapHook.map.easeTo({ zoom: newZoom });
 		}
 	}, [mapHook.map]);
