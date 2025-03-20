@@ -83,21 +83,13 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 	const zoomIn = useCallback(() => {
 		if (!mapHook.map) return;
 
-		if (mapHook.map.transform.zoom + 0.5 <= mapHook.map.transform.maxZoom) {
-			const currentZoom: number = mapHook.map.getZoom();
-			const newZoom: number = currentZoom + 0.5;
-			mapHook.map.easeTo({ zoom: newZoom });
-		}
+		mapHook.map.easeTo({ zoom: mapHook.map.getZoom() + 0.5 });
 	}, [mapHook.map]);
 
 	const zoomOut = useCallback(() => {
 		if (!mapHook.map) return;
 
-		if (mapHook.map.transform.zoom - 0.5 >= mapHook.map.transform.minZoom) {
-			const currentZoom: number = mapHook.map.getZoom();
-			const newZoom: number = currentZoom - 0.5;
-			mapHook.map.easeTo({ zoom: newZoom });
-		}
+		mapHook.map.easeTo({ zoom: mapHook.map.getZoom() - 0.5 });
 	}, [mapHook.map]);
 
 	const adjustPitch = useCallback(() => {
