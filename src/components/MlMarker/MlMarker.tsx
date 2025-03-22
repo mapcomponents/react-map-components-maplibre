@@ -1,140 +1,114 @@
-import React, { useRef, useState, useEffect } from "react";
-import MlGeoJsonLayer from "../MlGeoJsonLayer/MlGeoJsonLayer";
-import Paper from "@mui/material/Paper";
-import useMapState from "../../hooks/useMapState";
-import useMap from "../../hooks/useMap";
-
-import Point from "@mapbox/point-geometry";
+import React, { useRef, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import Paper from '@mui/material/Paper';
+import useMap from '../../hooks/useMap';
+import maplibregl from 'maplibre-gl';
 
 export interface MlMarkerProps {
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
 	mapId?: string;
-	/**
-	 * The layerId of an existing layer this layer should be rendered visually beneath
-	 * https://maplibre.org/maplibre-gl-js-docs/api/map/#map#addlayer - see "beforeId" property
-	 */
 	insertBeforeLayer?: string;
-	/**
-	 * Longitude of the marker position
-	 */
 	lng: number;
-	/**
-	 * Latitude of the marker position
-	 */
 	lat: number;
-	/**
-	 * Content of the description popup
-	 */
 	content?: string;
+	markerStyle?: React.CSSProperties;
+	containerStyle?: React.CSSProperties;
+	iframeStyle?: React.CSSProperties;
+	anchor?:
+		| 'center'
+		| 'top'
+		| 'bottom'
+		| 'left'
+		| 'right'
+		| 'top-left'
+		| 'top-right'
+		| 'bottom-left'
+		| 'bottom-right';
 }
 
-/**
- * Adds a marker to the map and displays the contents of the "content" property in an iframe next to it
- */
 const MlMarker = (props: MlMarkerProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const mapState = useMapState({
-		mapId: props.mapId,
-		watch: { viewport: true },
-	});
-
-	const iframe = useRef<HTMLIFrameElement>(null);
-
-	const [iframeDimensions, setIframeDimensions] = useState({
-		width: "400px",
-		height: "500px",
-	});
-
-	const [markerPixelPos, setMarkerPixelPos] = useState<Point>();
+	const [marker, setMarker] = useState<maplibregl.Marker | null>(null);
+	const [container] = useState(() => document.createElement('div'));
 
 	useEffect(() => {
-		if (!mapHook.map?.map?.project) return;
+		if (!mapHook.map) return;
 
-		const _pixelPos = mapHook.map.map.project([props.lng, props.lat]);
+		const markerStyle = {
+			width: '14px',
+			height: '14px',
+			borderRadius: '50%',
+			backgroundColor: 'rgba(40,200,20,0.5)',
+			...props.markerStyle,
+		};
 
-		setMarkerPixelPos(_pixelPos);
-	}, [mapHook.map, props.lng, props.lat, mapState.viewport]);
+		const maplibreMarker = new maplibregl.Marker({
+			element: container,
+			anchor: props.anchor || 'center',
+		})
+			.setLngLat([props.lng, props.lat])
+			.addTo(mapHook.map.map);
+
+		setMarker(maplibreMarker);
+
+		const markerDot = document.createElement('div');
+
+		if (markerStyle) {
+			Object.entries(markerStyle).forEach(([key, value]) => {
+				// @ts-ignore
+				markerDot.style[key] = value;
+			});
+		}
+
+		container.appendChild(markerDot);
+
+		return () => {
+			markerDot.remove();
+			maplibreMarker.remove();
+			container.remove();
+		};
+	}, [mapHook.map, props.lng, props.lat, props.markerStyle, props.anchor]);
 
 	useEffect(() => {
-		if (
-			!mapHook.map ||
-			!iframe.current?.contentWindow?.document?.body?.scrollHeight
-		)
-			return;
+		if (marker) {
+			marker.setLngLat([props.lng, props.lat]);
+		}
+	}, [marker, props.lng, props.lat]);
 
-		const mapHeight = mapHook.map.map._container.clientHeight;
+	const iframeRef = useRef<HTMLIFrameElement>(null);
 
-		const _pixelPos = mapHook.map.map.project([props.lng, props.lat]);
-		const pixelToBottom = mapHeight - _pixelPos.y;
-		const iframeHeight =
-			iframe.current?.contentWindow?.document?.body?.scrollHeight;
-		const iframeWidth =
-			iframe.current?.contentWindow?.document?.body?.scrollWidth;
-
-		setIframeDimensions({
-			width: iframeWidth + "px",
-			height:
-				(pixelToBottom < iframeHeight ? pixelToBottom : iframeHeight) + "px",
-		});
-	}, [props.lng, props.lat, props.content]);
-
-	return (
-		<>
-			<MlGeoJsonLayer
-				geojson={{
-					type: "Feature",
-					geometry: {
-						type: "Point",
-						coordinates: [props.lng, props.lat],
-					},
-					properties: {},
+	return createPortal(
+		<Paper
+			sx={{
+				opacity: 0.7,
+				position: 'absolute',
+				display: 'flex',
+				width: '300px',
+				height: '300px',
+				'&:hover': {
+					opacity: 1,
+				},
+				zIndex: -1,
+				transform: 'translate(14px, -100%)',
+				...(props.containerStyle || {}),
+			}}
+		>
+			<iframe
+				style={{
+					width: '100%',
+					...(props.iframeStyle || {}),
 				}}
-				paint={{
-					"circle-radius": 14,
-					"circle-color": "rgba(40,200,20,0.5)",
-				}}
-				type="circle"
-				mapId={props.mapId}
-			></MlGeoJsonLayer>
-			{markerPixelPos && (
-				<Paper
-					sx={{
-						opacity: 0.7,
-						position: "fixed",
-						display: "flex",
-						/** TODO: fix positioning delay when moving the map */
-						left: markerPixelPos.x,
-						top: markerPixelPos.y,
-						width: iframeDimensions.width,
-						height: iframeDimensions.height,
-						"&:hover": {
-							opacity: 1,
-						},
-						zIndex: -1,
-					}}
-				>
-					<iframe
-						style={{ width: "100%" }}
-						srcDoc={props.content}
-						ref={iframe}
-						sandbox="allow-same-origin allow-popups-to-escape-sandbox"
-						frameBorder="0"
-						title={mapHook.componentId}
-					></iframe>
-				</Paper>
-			)}
-		</>
+				srcDoc={props.content}
+				ref={iframeRef}
+				sandbox="allow-same-origin allow-popups-to-escape-sandbox"
+				title={mapHook.componentId}
+			/>
+		</Paper>,
+		container
 	);
-};
-
-MlMarker.defaultProps = {
-	mapId: undefined,
 };
 
 export default MlMarker;
