@@ -5,7 +5,7 @@ import MlSketchTool from './MlSketchTool';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Box, Button, Theme, useMediaQuery } from '@mui/material';
+import { Button, Paper, Typography } from '@mui/material';
 
 const storyoptions = {
 	title: 'MapComponents/MlSketchTool',
@@ -40,12 +40,27 @@ const Template = () => {
 };
 
 const catalgoueTemplate = () => {
-	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+	// const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
 	const [openSidebar, setOpenSidebar] = useState(true);
+	const [instructionText, setInstructionText] = useState('Select a sketch tool.');
+
+	const getInstructionText = (drawMode?: keyof MapboxDraw.Modes) => {
+		switch (drawMode) {
+			case 'draw_point':
+				return 'Click to draw point.';
+			case 'draw_line_string':
+				return 'Click to add node. Double click to complete drawing.';
+			case 'draw_polygon':
+				return 'Click to add node. Double click to complete drawing.';
+			default:
+				return 'Select a sketch tool.';
+		}
+	};
+
 	return (
 		<>
-			<Box
+			{/* <Box
 				sx={{
 					position: 'fixed',
 					width: { xs: '100%', sm: 'auto' },
@@ -66,7 +81,7 @@ const catalgoueTemplate = () => {
 				{mediaIsMobile
 					? 'Zum Beenden erneut auf denselben Punkt klicken.'
 					: 'Die Zeichnung kann beendet werden, indem erneut auf den zuletzt gezeichneten Punkt geklickt wird.'}
-			</Box>
+			</Box> */}
 			<TopToolbar
 				buttons={
 					<>
@@ -81,8 +96,32 @@ const catalgoueTemplate = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Sketch Tool'}>
-				<MlSketchTool onChange={(state) => console.log(state)} />
+				{/* <MlSketchTool onChange={(state) => console.log(state)} /> */}
+				<MlSketchTool
+					onChange={(state) => {
+						const { drawMode } = state;
+						setInstructionText(getInstructionText(drawMode));
+					}}
+				/>
 			</Sidebar>
+
+			<Paper
+				sx={{
+					position: 'fixed',
+					bottom: '25px',
+					left: '50%',
+					// borderColor: theme.palette.mode === 'dark' ? '#313131' : '#f6f6f6',
+					padding: '10px',
+					zIndex: 101,
+				}}
+			>
+				<Typography>
+					{/* {mediaIsMobile
+						? 'Zum Beenden erneut auf denselben Punkt klicken.'
+						: 'Die Zeichnung kann beendet werden, indem erneut auf den zuletzt gezeichneten Punkt geklickt wird.'} */}
+					{instructionText}
+				</Typography>
+			</Paper>
 		</>
 	);
 };
