@@ -241,39 +241,47 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									}}
 								>
 									<ButtonGroup size="small">
-										<Button
-											onClick={() => {
-												mapHook?.map?.map.setCenter(
-													el.geometry.type === 'Point'
-														? (el.geometry.coordinates as LngLatLike)
-														: (turf.centerOfMass(el).geometry.coordinates as LngLatLike)
-												);
-											}}
-										>
-											<GpsFixedIcon />
-										</Button>
-										<Button
-											sx={buttonStyle}
-											onClick={() => {
-												setSketchState((_sketchState) => ({
-													..._sketchState,
-													selectedGeoJson: el,
-													activeGeometryIndex: _sketchState.geometries.indexOf(el),
-													drawMode: 'simple_select',
-												}));
-											}}
-										>
-											<EditIcon />
-										</Button>
-										<Button
-											sx={buttonStyle}
-											onClick={() => {
-												removeGeoJson(el);
-												setHoveredGeometry(undefined);
-											}}
-										>
-											<DeleteIcon />
-										</Button>
+										<Tooltip title="Center map">
+											<Button
+												onClick={() => {
+													mapHook?.map?.map.setCenter(
+														el.geometry.type === 'Point'
+															? (el.geometry.coordinates as LngLatLike)
+															: (turf.centerOfMass(el).geometry.coordinates as LngLatLike)
+													);
+												}}
+											>
+												<GpsFixedIcon />
+											</Button>
+										</Tooltip>
+
+										<Tooltip title="Edit">
+											<Button
+												sx={buttonStyle}
+												onClick={() => {
+													setSketchState((_sketchState) => ({
+														..._sketchState,
+														selectedGeoJson: el,
+														activeGeometryIndex: _sketchState.geometries.indexOf(el),
+														drawMode: 'simple_select',
+													}));
+												}}
+											>
+												<EditIcon />
+											</Button>
+										</Tooltip>
+
+										<Tooltip title="Delete">
+											<Button
+												sx={buttonStyle}
+												onClick={() => {
+													removeGeoJson(el);
+													setHoveredGeometry(undefined);
+												}}
+											>
+												<DeleteIcon />
+											</Button>
+										</Tooltip>
 									</ButtonGroup>
 								</Box>
 							</Box>
