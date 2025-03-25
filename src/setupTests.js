@@ -1,8 +1,4 @@
-/* eslint-disable no-undef */
-import 'jest-enzyme';
-import Adapter from '@cfaester/enzyme-adapter-react-18';
-
-import { configure } from 'enzyme';
+import '@testing-library/jest-dom';
 
 var uuid_regex = '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
 export { uuid_regex };
@@ -106,8 +102,6 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 		NavigationControl: jest.fn(),
 	};
 });
-
-configure({ adapter: new Adapter() });
 
 window.URL.createObjectURL = function () {};
 window.HTMLCanvasElement.prototype.getContext = () => {};
