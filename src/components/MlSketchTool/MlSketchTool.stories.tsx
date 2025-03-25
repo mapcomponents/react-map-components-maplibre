@@ -50,9 +50,9 @@ const catalgoueTemplate = () => {
 			case 'draw_point':
 				return 'Click to draw point.';
 			case 'draw_line_string':
-				return 'Click to add node. Double click to complete drawing.';
+				return 'Click to add nodes. Double click to complete drawing.';
 			case 'draw_polygon':
-				return 'Click to add node. Double click to complete drawing.';
+				return 'Click to add nodes. Double click to complete drawing.';
 			default:
 				return 'Select a sketch tool.';
 		}
@@ -110,7 +110,6 @@ const catalgoueTemplate = () => {
 					position: 'fixed',
 					bottom: '25px',
 					left: '50%',
-					// borderColor: theme.palette.mode === 'dark' ? '#313131' : '#f6f6f6',
 					padding: '10px',
 					zIndex: 101,
 				}}
