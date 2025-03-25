@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import MlSketchTool from './MlSketchTool';
+import { Feature } from 'geojson';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
@@ -45,7 +46,12 @@ const catalgoueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [instructionText, setInstructionText] = useState('Select a sketch tool.');
 
-	const getInstructionText = (drawMode?: keyof MapboxDraw.Modes) => {
+	const getInstructionText = (drawMode?: keyof MapboxDraw.Modes, selectedGeoJson?: Feature) => {
+		if (drawMode === 'simple_select' && selectedGeoJson) {
+			const geoType = selectedGeoJson.geometry.type;
+			return `Edit ${geoType}`;
+		}
+
 		switch (drawMode) {
 			case 'draw_point':
 				return 'Click to draw point.';
@@ -77,8 +83,8 @@ const catalgoueTemplate = () => {
 				{/* <MlSketchTool onChange={(state) => console.log(state)} /> */}
 				<MlSketchTool
 					onChange={(state) => {
-						const { drawMode } = state;
-						setInstructionText(getInstructionText(drawMode));
+						const { drawMode, selectedGeoJson } = state;
+						setInstructionText(getInstructionText(drawMode, selectedGeoJson));
 					}}
 				/>
 			</Sidebar>
