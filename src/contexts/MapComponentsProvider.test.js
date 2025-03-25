@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import MapContext from "./MapContext";
 import { MapComponentsProvider } from "./MapContext";
-import { mount } from "enzyme";
+import {render, screen} from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 
 const MapObjectTestBlock = ({ mapId }) => {
 	const mapContext = useContext(MapContext);
@@ -67,194 +68,202 @@ const MapContextTestComponent = () => {
 };
 
 describe("MapComponentsProvider.setMap", () => {
-	it("should add an anonymous map object to mapContext", () => {
-		const wrapper = mount(
+	it("should add an anonymous map object to mapContext", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".typeof_map").text()).toEqual("undefined");
-		expect(wrapper.find(".map_count").text()).toEqual("0");
+		expect(screen.getByText('undefined')).toHaveClass('typeof_map');
+		expect(screen.getByText('0')).toHaveClass("map_count");
 
-		wrapper.find(".set_anonymous_map").simulate("click");
+		await userEvent.click(screen.getAllByRole("button", { name: /set anonymous map/i }).find(element => element.classList.contains("set_anonymous_map")));
 
-		expect(wrapper.find(".typeof_map").text()).toEqual("object");
-		expect(wrapper.find(".map_count").text()).toEqual("1");
+		expect(screen.getByText('object')).toHaveClass("typeof_map");
+		expect(screen.getByText('1')).toHaveClass("map_count");
 	});
 });
 
 describe("MapComponentsProvider.getMap", () => {
-	it("should return the map object referenced by mapContext.map if no parameters are passed", () => {
-		const wrapper = mount(
+	it("should return the map object referenced by mapContext.map if no parameters are passed", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".get_anonymous_map").text()).toEqual("false");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('get_anonymous_map')));
 
-		wrapper.find(".set_anonymous_map").simulate("click");
+		await userEvent.click(screen.getByRole("button", { name: /set anonymous map/i }));
 
-		expect(wrapper.find(".get_anonymous_map").text()).toEqual("true");
+		expect(screen.getAllByText('true').find(element => element.classList.contains('get_anonymous_map')));
 	});
 });
 
 describe("MapComponentsProvider.mapExists", () => {
-	it("should return true if an anonymous map object has been set using setMap", () => {
-		const wrapper = mount(
+	it("should return true if an anonymous map object has been set using setMap", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".typeof_map").text()).toEqual("undefined");
-		expect(wrapper.find(".map_count").text()).toEqual("0");
-		expect(wrapper.find(".anonymous_map_found").text()).toEqual("false");
+		expect(screen.getByText('undefined')).toHaveClass('typeof_map');
+		expect(screen.getByText('0')).toHaveClass("map_count");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('get_anonymous_map')));
 
-		wrapper.find(".set_anonymous_map").simulate("click");
+		await userEvent.click(screen.getByRole("button", { name: /set anonymous map/i }));
 
-		expect(wrapper.find(".typeof_map").text()).toEqual("object");
-		expect(wrapper.find(".map_count").text()).toEqual("1");
-		expect(wrapper.find(".anonymous_map_found").text()).toEqual("true");
+		expect(screen.getByText('object')).toHaveClass("typeof_map");
+		expect(screen.getByText('1')).toHaveClass("map_count");
+		expect(screen.getAllByText('true').find(element => element.classList.contains('get_anonymous_map')));
 	});
 
-	it("should return true if a map object has been registered using registerMap", () => {
-		const wrapper = mount(
+	it("should return true if a map object has been registered using registerMap", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("false");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).toEqual("-1");
-		expect(wrapper.find(".anonymous_map_found").text()).toEqual("false");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.anonymous_map_found')));
 
-		wrapper.find(".register_map_1").simulate("click");
+		await userEvent.click(screen.getAllByText('set map_1').find(button => button.classList.contains('register_map_1')));
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("true");
-		expect(wrapper.find(".map_1_id").text()).toEqual("map_1");
-		expect(wrapper.find(".anonymous_map_found").text()).toEqual("true");
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('map_1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.anonymous_map_found')));
 	});
 });
 
 describe("MapComponentsProvider.registerMap", () => {
-	it("should register a map object with the id map_1 to mapContext", () => {
-		const wrapper = mount(
+	it("should register a map object with the id map_1 to mapContext", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("false");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).toEqual("-1");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
 
-		wrapper.find(".register_map_1").simulate("click");
+		await userEvent.click(screen.getAllByText('set map_1').find(button => button.classList.contains('register_map_1')));
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("true");
-		expect(wrapper.find(".map_1_id").text()).toEqual("map_1");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).not.toEqual("-1");
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('map_1').find(element => element.classList.contains('.map_1_id')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
 	});
 
-	it("should register a map object with the id map_1 and another on with the id map_2 to mapContext", () => {
-		const wrapper = mount(
+	it("should register a map object with the id map_1 and another on with the id map_2 to mapContext", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("false");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).toEqual("-1");
-		expect(wrapper.find(".map_2_found").text()).toEqual("false");
-		expect(wrapper.find(".map_2_id_position_in_map_ids").text()).toEqual("-1");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_2_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_2_id_position_in_map_ids')));
 
-		wrapper.find(".register_map_1").simulate("click");
-		wrapper.find(".register_map_2").simulate("click");
+		await userEvent.click(screen.getAllByText('set map_1').find(button => button.classList.contains('register_map_1')));
+		await userEvent.click(screen.getAllByText('set map_2').find(button => button.classList.contains('register_map_2')));
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("true");
-		expect(wrapper.find(".map_1_id").text()).toEqual("map_1");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).not.toEqual("-1");
-		expect(wrapper.find(".map_2_found").text()).toEqual("true");
-		expect(wrapper.find(".map_2_id").text()).toEqual("map_2");
-		expect(wrapper.find(".map_2_id_position_in_map_ids").text()).not.toEqual("-1");
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('map_1').find(element => element.classList.contains('.map_1_id')));
+		expect(screen.getAllByText('0').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.map_2_found')));
+		expect(screen.getAllByText('map_2').find(element => element.classList.contains('.map_2_id')));
+		expect(screen.getAllByText('0').find(element => element.classList.contains('.map_2_id_position_in_map_ids')));
 	});
 });
 
 describe("MapComponentsProvider.removeMap", () => {
-	it("should remove an anonymous map object from mapContext", () => {
-		const wrapper = mount(
+	it("should remove an anonymous map object from mapContext", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".typeof_map").text()).toEqual("undefined");
-		expect(wrapper.find(".map_count").text()).toEqual("0");
+		expect(screen.getByText("undefined")).toHaveClass("typeof_map");
+		expect(screen.getByText("0")).toHaveClass("map_count");
 
-		wrapper.find(".set_anonymous_map").simulate("click");
+		await userEvent.click(screen.getAllByRole("button", { name: /set anonymous map/i }).find(element => element.classList.contains("set_anonymous_map")));
 
-		expect(wrapper.find(".typeof_map").text()).toEqual("object");
-		expect(wrapper.find(".map_count").text()).toEqual("1");
+		expect(screen.getByText("object")).toHaveClass("typeof_map");
+		expect(screen.getByText("1")).toHaveClass("map_count");
 
-		wrapper.find(".remove_anonymous_map").simulate("click");
+		await userEvent.click(screen.getAllByRole("button", { name: /set anonymous map/i }).find(element => element.classList.contains("remove_anonymous_map")));
 
-		expect(wrapper.find(".typeof_map").text()).toEqual("undefined");
-		expect(wrapper.find(".map_count").text()).toEqual("0");
+		expect(screen.getByText("undefined")).toHaveClass("typeof_map");
+		expect(screen.getByText("0")).toHaveClass("map_count");
 	});
 
-	it("should remove a map object with the id map_1 from mapContext", () => {
-		const wrapper = mount(
+	it("should remove a map object with the id map_1 from mapContext", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("false");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).toEqual("-1");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
 
-		wrapper.find(".register_map_1").simulate("click");
+		await userEvent.click(screen.getAllByText('set map_1').find(button => button.classList.contains('register_map_1')));
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("true");
-		expect(wrapper.find(".map_1_id").text()).toEqual("map_1");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).not.toEqual("-1");
 
-		wrapper.find(".remove_map_1").simulate("click");
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('map_1').find(element => element.classList.contains('.map_1_id')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("false");
-		expect(wrapper.find(".map_1_id").text()).toEqual("");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).toEqual("-1");
+		await userEvent.click(screen.getAllByText('set map_1').find(button => button.classList.contains('remove_map_1')));
+
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('').find(element => element.classList.contains('.map_1_id')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
 	});
 
-	it("should remove a map object with the id map_1 and another on with the id map_2 from mapContext", () => {
-		const wrapper = mount(
+	it("should remove a map object with the id map_1 and another on with the id map_2 from mapContext", async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const wrapper = render(
 			<MapComponentsProvider>
 				<MapContextTestComponent />
 			</MapComponentsProvider>
 		);
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("false");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).toEqual("-1");
-		expect(wrapper.find(".map_2_found").text()).toEqual("false");
-		expect(wrapper.find(".map_2_id_position_in_map_ids").text()).toEqual("-1");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_2_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_2_id_position_in_map_ids')));
 
-		wrapper.find(".register_map_1").simulate("click");
-		wrapper.find(".register_map_2").simulate("click");
+		await userEvent.click(screen.getAllByText('set map_1').find(button => button.classList.contains('register_map_1')));
+		await userEvent.click(screen.getAllByText('set map_2').find(button => button.classList.contains('register_map_2')));
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("true");
-		expect(wrapper.find(".map_1_id").text()).toEqual("map_1");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).not.toEqual("-1");
-		expect(wrapper.find(".map_2_found").text()).toEqual("true");
-		expect(wrapper.find(".map_2_id").text()).toEqual("map_2");
-		expect(wrapper.find(".map_2_id_position_in_map_ids").text()).not.toEqual("-1");
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('map_1').find(element => element.classList.contains('.map_1_id')));
+		expect(screen.getAllByText('0').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
+		expect(screen.getAllByText('true').find(element => element.classList.contains('.map_2_found')));
+		expect(screen.getAllByText('map_2').find(element => element.classList.contains('.map_2_id')));
+		expect(screen.getAllByText('0').find(element => element.classList.contains('.map_2_id_position_in_map_ids')));
 
-		wrapper.find(".remove_map_1").simulate("click");
-		wrapper.find(".remove_map_2").simulate("click");
+		await userEvent.click(screen.getAllByText('set map_1').find(button => button.classList.contains('remove_map_1')));
+		await userEvent.click(screen.getAllByText('set map_2').find(button => button.classList.contains('remove_map_2')));
 
-		expect(wrapper.find(".map_1_found").text()).toEqual("false");
-		expect(wrapper.find(".map_1_id").text()).toEqual("");
-		expect(wrapper.find(".map_1_id_position_in_map_ids").text()).toEqual("-1");
-		expect(wrapper.find(".map_2_found").text()).toEqual("false");
-		expect(wrapper.find(".map_2_id").text()).toEqual("");
-		expect(wrapper.find(".map_2_id_position_in_map_ids").text()).toEqual("-1");
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_1_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_1_id_position_in_map_ids')));
+		expect(screen.getAllByText('false').find(element => element.classList.contains('.map_2_found')));
+		expect(screen.getAllByText('-1').find(element => element.classList.contains('.map_2_id_position_in_map_ids')));
 	});
 });
