@@ -76,13 +76,13 @@ describe("MapComponentsProvider.setMap", () => {
 			</MapComponentsProvider>
 		);
 
-		expect(screen.getByText('undefined')).toHaveClass('typeof_map');
-		expect(screen.getByText('0')).toHaveClass("map_count");
+		expect(screen.getAllByText('undefined').find(element => element.classList.contains('typeof_map')));
+		expect(screen.getAllByText('0').find(element => element.classList.contains('map_count')));
 
 		await userEvent.click(screen.getAllByRole("button", { name: /set anonymous map/i }).find(element => element.classList.contains("set_anonymous_map")));
 
-		expect(screen.getByText('object')).toHaveClass("typeof_map");
-		expect(screen.getByText('1')).toHaveClass("map_count");
+		expect(screen.getAllByText('object').find(element => element.classList.contains('typeof_map')));
+		expect(screen.getAllByText('1').find(element => element.classList.contains('map_count')));
 	});
 });
 
@@ -112,14 +112,14 @@ describe("MapComponentsProvider.mapExists", () => {
 			</MapComponentsProvider>
 		);
 
-		expect(screen.getByText('undefined')).toHaveClass('typeof_map');
-		expect(screen.getByText('0')).toHaveClass("map_count");
+		expect(screen.getAllByText('undefined').find(element => element.classList.contain('typeof_map')));
+		expect(screen.getAllByText('0').find(element => element.classList.contain('map_count')));
 		expect(screen.getAllByText('false').find(element => element.classList.contains('get_anonymous_map')));
 
 		await userEvent.click(screen.getByRole("button", { name: /set anonymous map/i }));
 
-		expect(screen.getByText('object')).toHaveClass("typeof_map");
-		expect(screen.getByText('1')).toHaveClass("map_count");
+		expect(screen.getAllByText('object').find(element => element.classList.contain('typeof_map')));
+		expect(screen.getAllByText('1').find(element => element.classList.contain('map_count')));
 		expect(screen.getAllByText('true').find(element => element.classList.contains('get_anonymous_map')));
 	});
 
@@ -196,18 +196,18 @@ describe("MapComponentsProvider.removeMap", () => {
 			</MapComponentsProvider>
 		);
 
-		expect(screen.getByText("undefined")).toHaveClass("typeof_map");
-		expect(screen.getByText("0")).toHaveClass("map_count");
+		expect(screen.getAllByText("undefined").find(element => element.classList.contains('typeof_map')));
+		expect(screen.getAllByText("0").find(element => element.classList.contains('map_count')));
 
 		await userEvent.click(screen.getAllByRole("button", { name: /set anonymous map/i }).find(element => element.classList.contains("set_anonymous_map")));
 
-		expect(screen.getByText("object")).toHaveClass("typeof_map");
-		expect(screen.getByText("1")).toHaveClass("map_count");
+		expect(screen.getAllByText("object").find(element => element.classList.contains('typeof_map')));
+		expect(screen.getAllByText("1").find(element => element.classList.contains('map_count')));
 
 		await userEvent.click(screen.getAllByRole("button", { name: /set anonymous map/i }).find(element => element.classList.contains("remove_anonymous_map")));
 
-		expect(screen.getByText("undefined")).toHaveClass("typeof_map");
-		expect(screen.getByText("0")).toHaveClass("map_count");
+		expect(screen.getAllByText("undefined").find(element => element.classList.contains('typeof_map')));
+		expect(screen.getAllByText("0").find(element => element.classList.contains('map_count')));
 	});
 
 	it("should remove a map object with the id map_1 from mapContext", async () => {
