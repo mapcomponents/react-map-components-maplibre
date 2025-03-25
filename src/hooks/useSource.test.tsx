@@ -1,22 +1,20 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useState, useEffect } from 'react';
-import { mount } from 'enzyme';
-import { MapComponentsProvider } from '../contexts/MapContext';
-import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
-import { waitFor } from "@testing-library/react";
+import React, { useState, useEffect } from "react";
+import { MapComponentsProvider } from "../contexts/MapContext";
+import MapLibreMap from "../components/MapLibreMap/MapLibreMap";
+import { waitFor, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-import useMap from './useMap';
-import useSource from './useSource';
-import useLayer, { useLayerProps } from './useLayer'
+import useMap from "./useMap";
+import useSource from "./useSource";
+import useLayer, { useLayerProps } from "./useLayer";
 
 const UseSourceTestComponent = () => {
-	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
 	useSource({
-		sourceId: 'geojson-source',
+		sourceId: "geojson-source",
 		source: {
-			type: 'geojson',
+			type: "geojson",
 			data: {
-				type: 'FeatureCollection',
+				type: "FeatureCollection",
 				features: [],
 			},
 		},
@@ -25,13 +23,12 @@ const UseSourceTestComponent = () => {
 	return <></>;
 };
 
-const UseLayerTestComponent = (props:Partial<useLayerProps>) => {
-	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
+const UseLayerTestComponent = (props: Partial<useLayerProps>) => {
 	useLayer({
-		layerId: props.layerId || 'TestComponent',
+		layerId: props.layerId || "TestComponent",
 		options: {
-			source: 'geojson-source',
-			type: 'fill',
+			source: "geojson-source",
+			type: "fill",
 			...props.options,
 		} as useLayerProps["options"],
 		insertBeforeLayer: props.insertBeforeLayer,
@@ -48,23 +45,20 @@ const layerAddEventHandler = jest.fn();
 
 const TestComponent = () => {
 	const mapHook = useMap();
-
 	const [includeComponent, setIncludeComponent] = useState(false);
 
 	useEffect(() => {
-		if(!mapHook.map) return;
+		if (!mapHook.map) return;
 
-		mapHook.map.wrapper.on('addsource', sourceAddEventHandler)
-		mapHook.map.wrapper.on('addlayer', layerAddEventHandler)
-	}, [mapHook.map])
+		mapHook.map.wrapper.on("addsource", sourceAddEventHandler);
+		mapHook.map.wrapper.on("addlayer", layerAddEventHandler);
+	}, [mapHook.map]);
 
 	return (
 		<>
 			<button
 				className="toggle_includeComponent"
-				onClick={() => {
-					setIncludeComponent(!includeComponent);
-				}}
+				onClick={() => setIncludeComponent(!includeComponent)}
 			>
 				toggle
 			</button>
@@ -74,35 +68,40 @@ const TestComponent = () => {
 	);
 };
 
-describe('useSource hook', () => {
-	it("should fire a 'addsource' event in MapLibreGlWrapper", async () => {
-
-		const wrapper = mount(
+describe("useSource hook", () => {
+	it("should fire an 'addsource' event in MapLibreGlWrapper", async () => {
+		render(
 			<MapComponentsProvider>
 				<TestComponent />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.toggle_includeComponent').simulate('click');
-		//@ts-ignore
-		await waitFor(() => expect(sourceAddEventHandler).toHaveBeenCalledTimes(1));
-		wrapper.find('.toggle_includeComponent').simulate('click');
-		wrapper.find('.toggle_includeComponent').simulate('click');
-		//@ts-ignore
-		await waitFor(() => expect(sourceAddEventHandler).toHaveBeenCalledTimes(2));
+		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
+
+		await waitFor(() =>
+			expect(sourceAddEventHandler).toHaveBeenCalledTimes(1)
+		);
+
+		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
+		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
+
+		await waitFor(() =>
+			expect(sourceAddEventHandler).toHaveBeenCalledTimes(2)
+		);
 	});
 
-	it("should fire a 'addlayer' event in MapLibreGlWrapper", async () => {
-
-		const wrapper = mount(
+	it("should fire an 'addlayer' event in MapLibreGlWrapper", async () => {
+		render(
 			<MapComponentsProvider>
 				<TestComponent />
 				<UseLayerTestComponent />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.toggle_includeComponent').simulate('click');
-		//@ts-ignore
-		await waitFor(() => expect(layerAddEventHandler).toHaveBeenCalledTimes(1));
+		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
+
+		await waitFor(() =>
+			expect(layerAddEventHandler).toHaveBeenCalledTimes(1)
+		);
 	});
 });
