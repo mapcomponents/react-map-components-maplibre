@@ -105,7 +105,6 @@
 		"babel-preset-react-app": "^10.1.0",
 		"cypress": "^14.2.0",
 		"elasticlunr": "^0.9.5",
-		"enzyme": "^3.11.0",
 		"eslint": "^9.23.0",
 		"eslint-config-prettier": "^10.1.1",
 		"eslint-plugin-react": "^7.37.4",
