@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
-import { mount, configure } from "enzyme";
-import { MapContext, MapComponentsProvider } from "../index";
-import MapLibreMap from "./../components/MapLibreMap/MapLibreMap";
+import React, { useContext, useState } from 'react';
+import { MapComponentsProvider, MapContext } from '../index';
+import MapLibreMap from './../components/MapLibreMap/MapLibreMap';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 const sourceRemovalTest = (
 	ComponentName,
@@ -11,7 +12,7 @@ const sourceRemovalTest = (
 	beforeWrapperInit,
 	afterWrapperInit
 ) => {
-	const TestComponent = (props) => {
+	const TestComponent = () => {
 		const [layerVisible, setLayerVisible] = useState(true);
 		const [refreshTrigger, setRefreshTrigger] = useState(0);
 		const mapContext = useContext(MapContext);
@@ -24,6 +25,7 @@ const sourceRemovalTest = (
 
 				<button
 					className="toggle_layer_visible"
+					data-testid="toggle_layer_visible"
 					onClick={() => {
 						setLayerVisible(!layerVisible);
 					}}
@@ -32,23 +34,22 @@ const sourceRemovalTest = (
 				</button>
 				<button
 					className="trigger_refresh"
+					data-testid="trigger_refresh"
 					onClick={() => {
 						setRefreshTrigger(refreshTrigger + 1);
 					}}
 				>
 					refresh
 				</button>
-				<div className="sources_json">
-					{mapContext.map &&
-						refreshTrigger &&
-						JSON.stringify(mapContext.map.map.sources)}
+				<div className="sources_json" data-testid="sources_json">
+					{mapContext.map && refreshTrigger && JSON.stringify(mapContext.map.map.sources)}
 				</div>
 			</>
 		);
 	};
 
 	const createWrapper = () =>
-		mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent />
 			</MapComponentsProvider>
@@ -56,25 +57,22 @@ const sourceRemovalTest = (
 
 	describe(ComponentName, () => {
 		it(
-			"should add a Source with the id '" +
-				humanReadableLayerName +
-				"' to the MapLibre instance",
+			"should add a Source with the id '" + humanReadableLayerName + "' to the MapLibre instance",
 			async () => {
-				if (typeof beforeWrapperInit === "function") {
+				if (typeof beforeWrapperInit === 'function') {
 					await beforeWrapperInit();
 				}
 
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const wrapper = createWrapper();
 
-				if (typeof afterWrapperInit === "function") {
+				if (typeof afterWrapperInit === 'function') {
 					await afterWrapperInit();
 				}
 
-				wrapper.find(".trigger_refresh").simulate("click");
+				await userEvent.click(screen.getByTestId('trigger_refresh'));
 
-				expect(
-					regexLayerNameTest.test(wrapper.find(".sources_json").text())
-				).toEqual(true);
+				expect(regexLayerNameTest.test(screen.getByTestId('sources_json').innerHTML)).toEqual(true);
 			}
 		);
 
@@ -83,28 +81,24 @@ const sourceRemovalTest = (
 				humanReadableLayerName +
 				"' from the MapLibre instance",
 			async () => {
-				if (typeof beforeWrapperInit === "function") {
+				if (typeof beforeWrapperInit === 'function') {
 					await beforeWrapperInit();
 				}
 
 				const wrapper = createWrapper();
 
-				if (typeof afterWrapperInit === "function") {
+				if (typeof afterWrapperInit === 'function') {
 					await afterWrapperInit();
 				}
 
-				wrapper.find(".trigger_refresh").simulate("click");
+				await userEvent.click(screen.getByTestId('trigger_refresh'));
 
-				expect(
-					regexLayerNameTest.test(wrapper.find(".sources_json").text())
-				).toEqual(true);
+				expect(regexLayerNameTest.test(screen.getByTestId('sources_json').innerHTML)).toEqual(true);
 
-				wrapper.find(".toggle_layer_visible").simulate("click");
-				wrapper.find(".trigger_refresh").simulate("click");
+				await userEvent.click(screen.getByTestId('toggle_layer_visible'));
+				await userEvent.click(screen.getByTestId('trigger_refresh'));
 
-				expect(
-					regexLayerNameTest.test(wrapper.find(".sources_json").text())
-				).toEqual(false);
+				expect(regexLayerNameTest.test(screen.getByTestId('sources_json').innerHTML)).toEqual(false);
 			}
 		);
 	});

@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
-import { mount } from "enzyme";
-import { MapContext, MapComponentsProvider } from "../index";
-import MapLibreMap from "./../components/MapLibreMap/MapLibreMap";
+import React, { useContext, useState } from 'react';
+import { MapComponentsProvider, MapContext } from '../index';
+import MapLibreMap from './../components/MapLibreMap/MapLibreMap';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 const layerRemovalTest = (
 	ComponentName,
@@ -25,6 +26,7 @@ const layerRemovalTest = (
 
 				<button
 					className="toggle_layer_visible"
+					data-testid="toggle_layer_visible"
 					onClick={() => {
 						setLayerVisible(!layerVisible);
 					}}
@@ -33,25 +35,24 @@ const layerRemovalTest = (
 				</button>
 				<button
 					className="trigger_refresh"
+					data-testid="trigger_refresh"
 					onClick={() => {
 						setRefreshTrigger(refreshTrigger + 1);
 					}}
 				>
 					refresh
 				</button>
-				<div className="layers_json">
-					{mapContext.map &&
-						refreshTrigger &&
-						JSON.stringify(mapContext.map.map.layers)}
+				<div className="layers_json" data-testid="layers_json">
+					{mapContext.map && refreshTrigger && JSON.stringify(mapContext.map.map.layers)}
 				</div>
 			</>
 		);
 	};
 
 	const createWrapper =
-		(typeof createWrapperFunction === "function" && createWrapperFunction) ||
+		(typeof createWrapperFunction === 'function' && createWrapperFunction) ||
 		(() =>
-			mount(
+			render(
 				<MapComponentsProvider>
 					<TestComponent />
 				</MapComponentsProvider>
@@ -59,30 +60,27 @@ const layerRemovalTest = (
 
 	describe(ComponentName, () => {
 		it(
-			"should add a Layer with the id '" +
-				humanReadableLayerName +
-				"' to the MapLibre instance",
+			"should add a Layer with the id '" + humanReadableLayerName + "' to the MapLibre instance",
 			async () => {
-				if (typeof beforeWrapperInit === "function") {
+				if (typeof beforeWrapperInit === 'function') {
 					await beforeWrapperInit();
 				}
 
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const wrapper = createWrapper(TestComponent);
 
-				if (typeof afterWrapperInit === "function") {
+				if (typeof afterWrapperInit === 'function') {
 					await afterWrapperInit();
 				}
 
-				wrapper.find(".trigger_refresh").simulate("click");
+				await userEvent.click(screen.getByTestId("trigger_refresh"));
 
 				// debug helper
 				//console.log('layer removal test')
 				//console.log(wrapper.find(".layers_json").text());
 				//console.log(regexLayerNameTest.toString());
 				//console.log(regexLayerNameTest.test(wrapper.find(".layers_json").text()));
-				expect(regexLayerNameTest.test(wrapper.find(".layers_json").text())).toEqual(
-					true
-				);
+				expect(regexLayerNameTest.test(screen.getByTestId("layers_json").innerHTML)).toEqual(true);
 			}
 		);
 
@@ -91,28 +89,25 @@ const layerRemovalTest = (
 				humanReadableLayerName +
 				"' from the MapLibre instance",
 			async () => {
-				if (typeof beforeWrapperInit === "function") {
+				if (typeof beforeWrapperInit === 'function') {
 					await beforeWrapperInit();
 				}
 
 				const wrapper = createWrapper(TestComponent);
 
-				if (typeof afterWrapperInit === "function") {
+				if (typeof afterWrapperInit === 'function') {
 					await afterWrapperInit();
 				}
 
-				wrapper.find(".trigger_refresh").simulate("click");
+				await userEvent.click(screen.getByTestId("trigger_refresh"));
 
-				expect(regexLayerNameTest.test(wrapper.find(".layers_json").text())).toEqual(
-					true
-				);
+				expect(regexLayerNameTest.test(screen.getByTestId("layers_json").innerHTML)).toEqual(true);
 
-				wrapper.find(".toggle_layer_visible").simulate("click");
-				wrapper.find(".trigger_refresh").simulate("click");
+				await userEvent.click(screen.getByTestId("toggle_layer_visible"));
 
-				expect(regexLayerNameTest.test(wrapper.find(".layers_json").text())).toEqual(
-					false
-				);
+				await userEvent.click(screen.getByTestId("trigger_refresh"));
+
+				expect(regexLayerNameTest.test(screen.getByTestId("layers_json").innerHTML)).toEqual(false);
 			}
 		);
 	});
