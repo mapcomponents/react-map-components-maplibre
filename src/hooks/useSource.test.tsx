@@ -58,6 +58,7 @@ const TestComponent = () => {
 		<>
 			<button
 				className="toggle_includeComponent"
+				data-testid="toggle_includeComponent"
 				onClick={() => setIncludeComponent(!includeComponent)}
 			>
 				toggle
@@ -76,14 +77,14 @@ describe("useSource hook", () => {
 			</MapComponentsProvider>
 		);
 
-		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
+		await userEvent.click(screen.getByTestId("toggle_includeComponent"));
 
 		await waitFor(() =>
 			expect(sourceAddEventHandler).toHaveBeenCalledTimes(1)
 		);
 
-		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
-		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
+		await userEvent.click(screen.getByTestId("toggle_includeComponent"));
+		await userEvent.click(screen.getByTestId("toggle_includeComponent"));
 
 		await waitFor(() =>
 			expect(sourceAddEventHandler).toHaveBeenCalledTimes(2)
@@ -98,7 +99,7 @@ describe("useSource hook", () => {
 			</MapComponentsProvider>
 		);
 
-		await userEvent.click(screen.getByRole("button", { name: /toggle/i }));
+		await userEvent.click(screen.getByTestId("toggle_includeComponent"));
 
 		await waitFor(() =>
 			expect(layerAddEventHandler).toHaveBeenCalledTimes(1)
