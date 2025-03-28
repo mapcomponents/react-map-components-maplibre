@@ -9,6 +9,8 @@ describe('MlCreatePdfForm Tests', () => {
 	it('Should generate and download a PDF export of the current map preview', function () {
 		if (Cypress.env('CI')) {
 			cy.log('Skipping test in CI environment');
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
 			this.skip();
 		}
 		mount(<ExampleConfig />);

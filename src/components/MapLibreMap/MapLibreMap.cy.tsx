@@ -12,15 +12,14 @@ describe('MlTerrainLayer Tests', () => {
 
 		// Wait for the map to be initialized and verify, that the terrain layer is added to the map
 		cy.window()
-			.should((win) => {
-				expect((win as any)._map).to.exist;
-			})
+			.should((win) => expect((win as any)._map).to.exist)
 			.then((win) => {
 				const { _map }: any = win;
 				cy.wrap(_map).should((_map: any) => {
 					// check for style name
 					expect(_map?.getStyle().name).to.equal('OSM Bright');
 					// check for one layer
+					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 					expect(
 						_map
 							?.getStyle()
