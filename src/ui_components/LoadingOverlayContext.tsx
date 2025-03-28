@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { MapContext } from '../index';
 
 const LoadingOverlayContext = React.createContext({});
@@ -69,10 +68,6 @@ const LoadingOverlayProvider = (children: React.ReactNode) => {
 	};
 
 	return <LoadingOverlayContextProvider value={value}>{children}</LoadingOverlayContextProvider>;
-};
-
-LoadingOverlayProvider.propTypes = {
-	children: PropTypes.node.isRequired,
 };
 
 export { LoadingOverlayContext, LoadingOverlayProvider };

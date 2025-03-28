@@ -47,12 +47,7 @@ export interface MlMultiMeasureToolProps {
 	 * Callback function that is called each time measurment geometry within has changed within MlMeasureTool.
 	 * First parameter is the new GeoJson feature.
 	 */
-	onChange?: (options: {
-		value: number;
-		unit?: string;
-		geojson: Feature;
-		geometries?: [];
-	}) => void;
+	onChange?: (options: { value: number; unit?: string; geojson: Feature; geometries?: [] }) => void;
 
 	/**
 	 * Callback function that is called by the end of drawing geometries.
@@ -62,7 +57,7 @@ export interface MlMultiMeasureToolProps {
 
 type MeasureStateType = {
 	measure: number;
-	unit?: string ;
+	unit?: string;
 	selectedGeoJson?: Feature;
 	activeGeometryIndex?: number;
 	geometries?: Feature[];
@@ -105,11 +100,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 		});
 	};
 
-	const handleMeasureChange = (options: {
-		value: number;
-		unit?: string;
-		geojson?: Feature;
-	}) => {
+	const handleMeasureChange = (options: { value: number; unit?: string; geojson?: Feature }) => {
 		setMeasureState({
 			measure: options.value,
 			unit: options.unit,
@@ -118,14 +109,16 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 	};
 
 	useEffect(() => {
-		reload && setReload(false);
-		reload &&
+		if (reload) {
+			setReload(false);
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			measureState &&
-			setMeasureList((current: any) => {
-				const newList = [...current];
-				newList.push(measureState);
-				return newList;
-			});
+				setMeasureList((current: any) => {
+					const newList = [...current];
+					newList.push(measureState);
+					return newList;
+				});
+		}
 	}, [reload]);
 
 	useEffect(() => {
@@ -138,7 +131,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 				<Box sx={{ flexGrow: 1 }}>
 					<br />
 					<Grid container spacing={4} justifyContent="flex-start">
-						<Grid item xs={3}>
+						<Grid size={3}>
 							<Tooltip title="Measure Area">
 								<Button
 									variant="outlined"
@@ -162,7 +155,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 								</Button>
 							</Tooltip>
 						</Grid>
-						<Grid item xs={3}>
+						<Grid size={3}>
 							<Tooltip title="Measure Distance">
 								<Button
 									variant="outlined"
@@ -191,7 +184,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 
 				<br />
 
-				<Grid item xs={4}>
+				<Grid size={4}>
 					<FormControl>
 						<InputLabel id="unit-select-label">Unit</InputLabel>
 						<Select

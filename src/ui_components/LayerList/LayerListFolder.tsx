@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { Box, styled } from '@mui/system';
-import { ListItemIcon, ListItemText, List, Checkbox, ListItem, IconButton } from '@mui/material';
-import { KeyboardArrowRight as ExpandLess, ExpandMore } from '@mui/icons-material';
+import { Checkbox, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const ListItemStyled = styled(ListItem)({
 	paddingRight: 0,
@@ -65,7 +66,7 @@ function LayerListFolder({ visible = true, name, children, setVisible }: LayerLi
 			<ListItemStyled>
 				<ListItemIconStyled>
 					<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
-						{open ? <ExpandMore /> : <ExpandLess />}
+						{open ? <ExpandMoreIcon /> : <ExpandLessIcon />}
 					</IconButtonStyled>
 					<CheckboxStyled
 						disabled={setVisible ? false : !visible}
@@ -87,4 +88,5 @@ function LayerListFolder({ visible = true, name, children, setVisible }: LayerLi
 		</>
 	);
 }
+
 export default LayerListFolder;

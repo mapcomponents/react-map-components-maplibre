@@ -1,10 +1,10 @@
 import React, {  useState } from "react";
-import { mount } from "enzyme";
-import { waitFor } from "@testing-library/react";
+import { waitFor, render, screen } from "@testing-library/react";
 import { MapComponentsProvider } from "../../contexts/MapContext";
 import MlNavigationCompass from "./MlNavigationCompass";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 import { mockMapLibreMethods } from "../../setupTests";
+import userEvent from '@testing-library/user-event';
 
 jest.mock("@mapbox/mapbox-gl-draw", () => {
 	return function () {
@@ -25,6 +25,7 @@ const MlNavigationCompassTestComponent = (props) => {
 
 			<button
 				className="toggle_layer_visible"
+				data-testid="toggle_layer_visible"
 				onClick={() => {
 					setComponentVisible(!componentVisible);
 				}}
@@ -39,7 +40,7 @@ let testAttributes = {};
 
 describe("<MlNavigationCompass>", () => {
 	it("should register 1 event listener to the maplibre instance", async () => {
-		mount(
+		render(
 			<MapComponentsProvider>
 				<MlNavigationCompassTestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -51,7 +52,7 @@ describe("<MlNavigationCompass>", () => {
 	});
 
 	it("should deregister 1 event listener to the maplibre instance", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MlNavigationCompassTestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -60,7 +61,7 @@ describe("<MlNavigationCompass>", () => {
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5);
 
-		wrapper.find(".toggle_layer_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_layer_visible'))
 
 		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2);
 	});

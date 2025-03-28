@@ -3,7 +3,6 @@ import MapContext from '../../contexts/MapContext';
 import maplibregl, { CustomLayerInterface, LngLatLike, Map } from 'maplibre-gl';
 import * as THREE from 'three';
 import GLTFLoader from './lib/GLTFLoader';
-import PropTypes from 'prop-types';
 import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 
 /**
@@ -177,21 +176,6 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 	}, [mapContext.mapIds, mapContext, props]);
 
 	return <></>;
-};
-
-MlThreeJsLayer.propTypes = {
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
-	mapId: PropTypes.string,
-	/**
-	 * function that gets called when initialized
-	 */
-	init: PropTypes.func,
-	/**
-	 * function that gets called when models are loaded
-	 */
-	onDone: PropTypes.func,
 };
 
 export default MlThreeJsLayer;

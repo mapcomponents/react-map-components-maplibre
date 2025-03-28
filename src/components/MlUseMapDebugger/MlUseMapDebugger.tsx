@@ -1,5 +1,4 @@
 import React, { FC, useRef } from 'react';
-import PropTypes from "prop-types";
 
 import useMapState from "../../hooks/useMapState";
 
@@ -73,13 +72,6 @@ const MlUseMapDebugger: MlUseMapDebuggerComponent = (props) => {
 
 MlUseMapDebugger.defaultProps = {
 	mapId: undefined,
-};
-
-MlUseMapDebugger.propTypes = {
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
-	mapId: PropTypes.string,
 };
 
 export default MlUseMapDebugger;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { SimpleDataContextProvider } from "./SimpleDataContext";
 import * as d3 from "d3";
 
@@ -69,10 +68,6 @@ const SimpleDataProvider = (props:SimpleDataProviderProps) => {
 			{props.children}
 		</SimpleDataContextProvider>
 	);
-};
-
-SimpleDataProvider.propTypes = {
-	children: PropTypes.node.isRequired,
 };
 
 export default SimpleDataProvider;

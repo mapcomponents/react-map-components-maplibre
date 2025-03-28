@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
 	Box,
-	Typography,
 	Button,
 	Divider,
-	TextField,
-	Grid,
 	Fade,
+	Grid,
 	Paper,
+	TextField,
 	Theme,
+	Typography,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
@@ -83,7 +83,7 @@ export default function WMSLinks(props: wmsLinksProps) {
 				{mediaIsMobile ? (
 					<div style={{ width: '105%', height: '70%' }}>
 						{wmsServices.map((el) => (
-							<Grid item xs={12} sx={{ marginTop: 5 }} key={el.id}>
+							<Grid sx={{ marginTop: 5 }} key={el.id} size={12}>
 								<Accordion>
 									<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 										<Typography marginRight={1.5} variant="h6">
@@ -114,7 +114,7 @@ export default function WMSLinks(props: wmsLinksProps) {
 				) : (
 					<>
 						{wmsServices.map((el) => (
-							<Grid item xs={12} sx={{ marginTop: 5 }} key={el.id}>
+							<Grid sx={{ marginTop: 5 }} key={el.id} size={12}>
 								<Typography variant="h6">{el.title}</Typography>
 								<Typography variant="body2">{el.description}</Typography>
 								<TextField value={el.link} size="small"></TextField>
@@ -150,12 +150,12 @@ export default function WMSLinks(props: wmsLinksProps) {
 					<Box sx={mediaIsMobile ? mobileStyle : modalStyle}>
 						<Paper sx={{ padding: '10px' }}>
 							<Grid container>
-								<Grid item xs={10}>
+								<Grid size={10}>
 									<Typography id="modal-modal-title" variant="h6">
 										WMS Links
 									</Typography>
 								</Grid>
-								<Grid item xs={2}>
+								<Grid size={2}>
 									<Button onClick={props.close}>
 										<CloseIcon sx={{ color: 'text.primary' }} />
 									</Button>

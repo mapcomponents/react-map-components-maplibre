@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { mount } from 'enzyme';
 import { MapComponentsProvider } from '../contexts/MapContext';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
-import { waitFor } from '@testing-library/react';
+import { waitFor, render, screen } from '@testing-library/react';
 import { mockMapLibreMethods } from '../setupTests';
 
 import useLayer from './useLayer';
+import userEvent from '@testing-library/user-event';
 
 const UseLayerTestComponent = (props) => {
 	// Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -40,6 +40,7 @@ const TestComponent = (props) => {
 		<>
 			<button
 				className="change_testType"
+				data-testid="change_testType"
 				onClick={() => {
 					setTestType('circle');
 				}}
@@ -48,6 +49,7 @@ const TestComponent = (props) => {
 			</button>
 			<button
 				className="toggle_includeComponent"
+				data-testid="toggle_includeComponent"
 				onClick={() => {
 					setIncludeComponent(!includeComponent);
 				}}
@@ -66,7 +68,7 @@ describe('useLayer hook', () => {
 			onHover: () => {},
 		};
 
-		mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -81,13 +83,13 @@ describe('useLayer hook', () => {
 			onHover: () => {},
 		};
 
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.toggle_includeComponent').simulate('click');
+		await userEvent.click(screen.getByTestId('toggle_includeComponent'))
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
@@ -97,7 +99,7 @@ describe('useLayer hook', () => {
 			onLeave: () => {},
 		};
 
-		mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -112,13 +114,13 @@ describe('useLayer hook', () => {
 			onLeave: () => {},
 		};
 
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.toggle_includeComponent').simulate('click');
+		await userEvent.click(screen.getByTestId('toggle_includeComponent'))
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
@@ -129,7 +131,7 @@ describe('useLayer hook', () => {
 			onClick: () => {},
 		};
 
-		mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -144,13 +146,13 @@ describe('useLayer hook', () => {
 			onClick: () => {},
 		};
 
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.toggle_includeComponent').simulate('click');
+		await userEvent.click(screen.getByTestId('toggle_includeComponent'))
 
 		// useLayer always subscribes to 'styledata' to watch whether its representation within the maplibre instance has been removed
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(2));
@@ -162,13 +164,13 @@ describe('useLayer hook', () => {
 			onHover: () => {},
 		};
 
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.change_testType').simulate('click');
+		await userEvent.click(screen.getByTestId('change_testType'));
 
 		// styledata event is not removed in this case as only the event handler is changed during runtime without removing the component
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1));
@@ -178,13 +180,13 @@ describe('useLayer hook', () => {
 			onLeave: () => {},
 		};
 
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.change_testType').simulate('click');
+		await userEvent.click(screen.getByTestId('change_testType'));
 
 		// styledata event is not removed in this case as only the event handler is changed during runtime without removing the component
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1));
@@ -194,13 +196,13 @@ describe('useLayer hook', () => {
 			onClick: () => {},
 		};
 
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<TestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find('.change_testType').simulate('click');
+		await userEvent.click(screen.getByTestId('change_testType'));
 
 		// styledata event is not removed in this case as only the event handler is changed during runtime without removing the component
 		await waitFor(() => expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1));

@@ -14,7 +14,8 @@ import { Layer2, Layer3 } from 'wms-capabilities';
 import { useWmsReturnType } from '../../hooks/useWms';
 import useMap from '../../hooks/useMap';
 import { Box, Checkbox, ListItemIcon, Snackbar } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
@@ -416,7 +417,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						aria-label="open"
 						onClick={() => setOpen((current) => !current)}
 					>
-						{open ? <ExpandLess /> : <ExpandMore />}
+						{open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
 					</IconButton>
 					{props.showDeleteButton && (
 						<>

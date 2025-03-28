@@ -1,7 +1,8 @@
 import React from 'react';
 import { composeStories } from '@storybook/testing-react';
-import { mount } from '@cypress/react18';
+import { mount } from '@cypress/react';
 import * as stories from './MlTerrainLayer.stories';
+import {expect} from 'chai';
 
 const { ExampleConfig }: any = composeStories(stories);
 
@@ -11,13 +12,13 @@ describe('MlTerrainLayer Tests', () => {
 
 		// Wait for the map to be initialized and verify, that the terrain layer is added to the map
 		cy.window()
-			.should((win) => {
-				expect((win as any)._map).to.exist;
-			})
+			.should((win) => expect((win as any)._map).to.exist)
 			.then((win) => {
 				const { _map }: any = win;
 				cy.wrap(_map).should((_map: any) => {
+					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 					expect(_map?.style?.sourceCaches?.terrain).to.not.be.undefined;
+					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 					expect(_map?.style?._layers?.hills).to.not.be.undefined;
 				});
 			});
@@ -27,13 +28,13 @@ describe('MlTerrainLayer Tests', () => {
 
 		// Dynamically wait for the map to update and verify terrain removal
 		cy.window()
-			.should((win) => {
-				expect((win as any)._map).to.exist;
-			})
+			.should((win) => expect((win as any)._map).to.exist)
 			.then((win) => {
 				const { _map }: any = win;
 				cy.wrap(_map).should((_map: any) => {
+					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 					expect(_map?.style?.sourceCaches?.terrain).to.be.undefined;
+					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 					expect(_map?.style?._layers?.hills).to.be.undefined;
 				});
 			});

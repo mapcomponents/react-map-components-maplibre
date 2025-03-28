@@ -1,7 +1,7 @@
-import React, {  useState } from 'react';
-import { mount } from 'enzyme';
-import  { MapComponentsProvider } from '../contexts/MapContext';
+import React, { useState } from 'react';
+import { MapComponentsProvider } from '../contexts/MapContext';
 import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
+import { render, screen } from '@testing-library/react';
 
 import useMap from './useMap';
 
@@ -18,13 +18,14 @@ const TestComponent = () => {
 		<>
 			<button
 				className="toggle_includeComponent"
+				data-testid="toggle_includeComponent"
 				onClick={() => {
 					setIncludeComponent(!includeComponent);
 				}}
 			>
 				toggle
 			</button>
-			<div className="useMapContainer">
+			<div className="useMapContainer" data-testid="useMapContainer">
 				{includeComponent && <UseMapTestComponent />}
 			</div>
 			<MapLibreMap />
@@ -33,16 +34,13 @@ const TestComponent = () => {
 };
 
 describe('useMap hook', () => {
-	it("should retrieve a MapLibre instance even if no attributes are passed", async () => {
-		const wrapper = mount(
+	it('should retrieve a MapLibre instance even if no attributes are passed', async () => {
+		render(
 			<MapComponentsProvider>
 				<TestComponent />
 			</MapComponentsProvider>
 		);
 
-		
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		expect(wrapper.find('.useMapContainer').text()).toEqual("Map is ready");
+		expect(screen.getByTestId('useMapContainer').innerHTML).toEqual('Map is ready');
 	});
 });

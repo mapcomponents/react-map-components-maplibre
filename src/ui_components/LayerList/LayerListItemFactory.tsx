@@ -1,10 +1,8 @@
 import React, { useMemo } from 'react';
 import { IconButton, styled } from '@mui/material';
-import {
-	ArrowCircleDown as ArrowCircleDownIcon,
-	ArrowCircleUp as ArrowCircleUpIcon,
-	CenterFocusWeak as CenterLayerIcon,
-} from '@mui/icons-material';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import CenterFocusWeakIcon from '@mui/icons-material/CenterFocusWeak';
 import LayerListItem from './LayerListItem';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import MlWmsLoader from '../../components/MlWmsLoader/MlWmsLoader';
@@ -213,7 +211,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 													<ArrowCircleUpIcon />
 												</IconButtonStyled>
 												<IconButtonStyled onClick={() => fitLayer(layer)}>
-													<CenterLayerIcon />
+													<CenterFocusWeakIcon />
 												</IconButtonStyled>
 											</>
 										}
@@ -288,7 +286,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 														<ArrowCircleUpIcon />
 													</IconButtonStyled>
 													<IconButtonStyled onClick={() => fitLayer(layer)}>
-														<CenterLayerIcon />
+														<CenterFocusWeakIcon />
 													</IconButtonStyled>
 												</>
 											}
@@ -332,7 +330,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 														<ArrowCircleUpIcon />
 													</IconButtonStyled>
 													<IconButtonStyled onClick={() => fitLayer(layer)}>
-														<CenterLayerIcon />
+														<CenterFocusWeakIcon />
 													</IconButtonStyled>
 												</>
 											}

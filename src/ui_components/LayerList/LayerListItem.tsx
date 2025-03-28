@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { LayerSpecification } from 'maplibre-gl';
-import { IconButton, ListItemText, SxProps, styled } from '@mui/material';
-import { Delete as DeleteIcon, Tune as TuneIcon } from '@mui/icons-material';
+import { IconButton, ListItemText, styled, SxProps } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import TuneIcon from '@mui/icons-material/Tune';
 import LayerListFolder from './LayerListFolder';
 import LayerPropertyForm from './util/LayerPropertyForm';
 import LayerListItemVectorLayer, {
-	ListItemStyled,
 	CheckboxListItemIcon,
 	CheckboxStyled,
+	ListItemStyled,
 } from './util/LayerListItemVectorLayer';
 import ConfirmDialog from '../ConfirmDialog';
 import getDefaultLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
@@ -55,7 +56,8 @@ function LayerListItem({
 
 	// this state variable is used for layer components that provide a paint attribute
 	const [paintProps, setPaintProps] = useState(
-		layerComponent?.props?.paint || layerComponent?.props?.options?.paint ||
+		layerComponent?.props?.paint ||
+			layerComponent?.props?.options?.paint ||
 			getDefaultPaintPropsByType(
 				layerComponent?.props?.type || getDefaultLayerTypeByGeometry(layerComponent.props.geojson)
 			)
@@ -127,11 +129,10 @@ function LayerListItem({
 						layout: {
 							visibility: _visible ? 'visible' : 'none',
 						},
-						options:{
+						options: {
 							...layerComponent?.props?.options,
 							...(setLayerState ? {} : { paint: paintProps }),
-						}
-						
+						},
 					});
 					break;
 			}
@@ -195,7 +196,7 @@ function LayerListItem({
 			{props.sortable && props.layerId && !layerComponent?.props?.layers && (
 				<SortableContainer layerId={props.layerId}>{listContent}</SortableContainer>
 			)}
-			{!props.sortable && !layerComponent?.props?.layers && (listContent)}
+			{!props.sortable && !layerComponent?.props?.layers && listContent}
 			{_layerComponent}
 			{!layerComponent?.props?.layers &&
 				Object.keys(paintProps).length > 0 &&

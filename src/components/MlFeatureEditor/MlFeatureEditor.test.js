@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import { mount } from "enzyme";
-import { waitFor } from "@testing-library/react";
+import { waitFor, render, screen } from "@testing-library/react";
 import MapContext, { MapComponentsProvider } from "../../contexts/MapContext";
 import MlFeatureEditor from "./MlFeatureEditor";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
 import { mockMapLibreMethods } from "../../setupTests";
+import userEvent from '@testing-library/user-event';
 
 jest.mock("@mapbox/mapbox-gl-draw", () => {
 	return function () {
@@ -27,6 +27,7 @@ const MlFeatureEditorTestComponent = (props) => {
 
 			<button
 				className="toggle_layer_visible"
+				data-testid="toggle_layer_visible"
 				onClick={() => {
 					setLayerVisible(!layerVisible);
 				}}
@@ -35,16 +36,19 @@ const MlFeatureEditorTestComponent = (props) => {
 			</button>
 			<button
 				className="trigger_refresh"
+				data-testid="trigger_refresh"
 				onClick={() => {
 					setRefreshTrigger(refreshTrigger + 1);
 				}}
 			>
 				refresh
 			</button>
-			<div className="layers_json">
+			<div className="layers_json"
+			data-testid="layers_json">
 				{mapContext.map && refreshTrigger && JSON.stringify(mapContext.map.layers)}
 			</div>
-			<div className="sources_json">
+			<div className="sources_json"
+			data-testid="sources_json">
 				{mapContext.map && refreshTrigger && JSON.stringify(mapContext.map.sources)}
 			</div>
 		</>
@@ -73,7 +77,7 @@ let testAttributes = {
 
 describe("<MlFeatureEditor>", () => {
 	it("should register 2 event listeners to the maplibre instance", async () => {
-		mount(
+		render(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -84,7 +88,7 @@ describe("<MlFeatureEditor>", () => {
 	});
 
 	it("should deregister 2 event listeners to the maplibre instance", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -93,13 +97,13 @@ describe("<MlFeatureEditor>", () => {
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(7);
 
-		wrapper.find(".toggle_layer_visible").simulate("click");
+		await userEvent.click(screen.getByTestId("toggle_layer_visible"));
 
 		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(3);
 	});
 
 	it("should add MapBox-Gl-draw instance using map.addControl to the maplibre instance", async () => {
-		mount(
+		render(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -108,7 +112,7 @@ describe("<MlFeatureEditor>", () => {
 	});
 
 	it("should remove MapBox-Gl-draw instance using map.addControl to the maplibre instance", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
 			</MapComponentsProvider>
@@ -116,7 +120,7 @@ describe("<MlFeatureEditor>", () => {
 
 		expect(mockMapLibreMethods.addControl).toHaveBeenCalledTimes(1);
 
-		wrapper.find(".toggle_layer_visible").simulate("click");
+		await userEvent.click(screen.getByTestId("toggle_layer_visible"));
 
 		expect(mockMapLibreMethods.removeControl).toHaveBeenCalledTimes(1);
 	});

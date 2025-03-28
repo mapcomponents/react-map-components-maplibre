@@ -1,8 +1,8 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
 import { Box, styled } from '@mui/material';
-import { ReactComponent as CompassNeedle } from './assets/CompassNeedle.svg';
-import { ReactComponent as CompassBackground } from './assets/CompassBackground.svg';
 import useMap from '../../hooks/useMap';
+import CompassBackground from './assets/CompassBackground';
+import CompassNeedle from './assets/CompassNeedle';
 
 const BoxStyled = styled(Box)(({ theme }) => ({
 	zIndex: 1000,
