@@ -2,7 +2,6 @@ import MlLayerSwipe from './MlLayerSwipe';
 import React, { useContext, useState } from 'react';
 import MapContext, { MapComponentsProvider } from '../../contexts/MapContext';
 import MapLibreMap from './../MapLibreMap/MapLibreMap';
-import syncMove from '@mapbox/mapbox-gl-sync-move';
 import userEvent from '@testing-library/user-event';
 import {render, screen} from '@testing-library/react';
 
@@ -19,10 +18,6 @@ jest.mock('@mapbox/mapbox-gl-sync-move', () => {
 		default: () => mockSyncMoveMethods.cleanup,
 	};
 });
-
-const syncMoveObj = {
-	syncMove: syncMove,
-};
 
 const TestComponent = () => {
 	const [layerVisible, setLayerVisible] = useState(true);

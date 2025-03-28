@@ -63,8 +63,7 @@ const sourceRemovalTest = (
 					await beforeWrapperInit();
 				}
 
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				const wrapper = createWrapper();
+				createWrapper();
 
 				if (typeof afterWrapperInit === 'function') {
 					await afterWrapperInit();
@@ -85,7 +84,7 @@ const sourceRemovalTest = (
 					await beforeWrapperInit();
 				}
 
-				const wrapper = createWrapper();
+				createWrapper();
 
 				if (typeof afterWrapperInit === 'function') {
 					await afterWrapperInit();
