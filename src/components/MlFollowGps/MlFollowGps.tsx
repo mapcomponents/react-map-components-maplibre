@@ -243,6 +243,7 @@ const MlFollowGps = (props: MlFollowGpsProps) => {
 
 			<Button
 				variant="navtools"
+				data-testid="mlFollowGpsBtn"
 				sx={{
 					zIndex: 1002,
 					color: isFollowed

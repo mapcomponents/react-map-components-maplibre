@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { mount } from "enzyme";
-import { waitFor } from "@testing-library/react";
+import { waitFor, screen, render } from "@testing-library/react";
 import { MapComponentsProvider } from "../../contexts/MapContext";
 import MlFollowGps from "./MlFollowGps";
 import MapLibreMap from "./../MapLibreMap/MapLibreMap";
+import userEvent from '@testing-library/user-event';
 
 const mockGeolocation = {
 	watchPosition: jest.fn(() => 1),
@@ -23,6 +23,7 @@ const MlFollowGPSTestComponent = (props) => {
 
 			<button
 				className="toggle_layer_visible"
+				data-testid="toggle_layer_visible"
 				onClick={() => {
 					setComponentVisible(!componentVisible);
 				}}
@@ -37,25 +38,25 @@ let testAttributes = {};
 
 describe("<MlFollowGps>", () => {
 	it("should call navigator.geolocation.watchPosition once", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MlFollowGPSTestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find("MlFollowGps button").simulate("click");
+		await userEvent.click(screen.getByTestId("mlFollowGpsBtn"));
 		await waitFor(() => expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1));
 	});
 
 	it("should call navigator.geolocation.clearWatch once, after MlFollowGPSButton has been pressed twice", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MlFollowGPSTestComponent {...testAttributes} />
 			</MapComponentsProvider>
 		);
 
-		wrapper.find("MlFollowGps button").simulate("click");
-		wrapper.find("MlFollowGps button").simulate("click");
+		await userEvent.click(screen.getByTestId('mlFollowGpsBtn'))
+		await userEvent.click(screen.getByTestId('mlFollowGpsBtn'))
 		//wrapper.find(".toggle_layer_visible").simulate("click");
 
 		await waitFor(() => expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(1));
