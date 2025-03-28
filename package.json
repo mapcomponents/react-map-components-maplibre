@@ -50,6 +50,7 @@
 		"osm2geojson-lite": "^1.0.3",
 		"pako": "^2.1.0",
 		"react-color": "^2.19.3",
+		"react-moveable": "^0.56.0",
 		"react-redux": "^9.2.0",
 		"redux": "^5.0.1",
 		"redux-thunk": "^3.1.0",
