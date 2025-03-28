@@ -20,6 +20,7 @@
 		"create-component": "./scripts/create-map-component.sh"
 	},
 	"dependencies": {
+		"@cypress/react": "^9.0.1",
 		"@dnd-kit/core": "^6.3.1",
 		"@dnd-kit/modifiers": "^9.0.0",
 		"@dnd-kit/sortable": "^10.0.0",
@@ -62,10 +63,8 @@
 	"devDependencies": {
 		"@babel/plugin-proposal-private-property-in-object": "^7.21.11",
 		"@babel/preset-react": "^7.26.3",
-		"@babel/preset-typescript": "^7.27.0",
 		"@bahmutov/cy-rollup": "^2.0.0",
 		"@cfaester/enzyme-adapter-react-18": "^0.8.0",
-		"@cypress/react18": "^2.0.1",
 		"@rollup/plugin-babel": "^6.0.4",
 		"@rollup/plugin-commonjs": "^28.0.3",
 		"@rollup/plugin-url": "^8.0.2",
@@ -79,7 +78,6 @@
 		"@storybook/react-webpack5": "^8.6.11",
 		"@storybook/test": "^8.6.11",
 		"@storybook/testing-react": "^2.0.1",
-		"@storybook/theming": "^8.6.11",
 		"@svgr/rollup": "^8.1.0",
 		"@testing-library/react": "^16.2.0",
 		"@types/elasticlunr": "^0.9.5",
