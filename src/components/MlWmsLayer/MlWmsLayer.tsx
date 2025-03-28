@@ -1,7 +1,5 @@
 import React, { useMemo, useRef, useEffect, useCallback } from 'react';
 import useMap from '../../hooks/useMap';
-
-import PropTypes from 'prop-types';
 import { RasterLayerSpecification, RasterSourceSpecification } from 'maplibre-gl';
 
 const defaultProps = {
@@ -170,49 +168,4 @@ MlWmsLayer.defaultProps = {
 	...defaultProps,
 };
 
-MlWmsLayer.propTypes = {
-	/**
-	 * WMS URL
-	 */
-	url: PropTypes.string.isRequired,
-	/**
-	 * URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object.
-	 */
-	urlParameters: PropTypes.shape({
-		layers: PropTypes.string.isRequired,
-		bbox: PropTypes.string,
-		format: PropTypes.string,
-		service: PropTypes.string,
-		version: PropTypes.string,
-		request: PropTypes.string,
-		srs: PropTypes.string,
-		width: PropTypes.number,
-		height: PropTypes.number,
-	}),
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
-	mapId: PropTypes.string,
-	/**
-	 * MapLibre attribution shown in the bottom right of the map, if this layer is visible
-	 */
-	attribution: PropTypes.string,
-	/**
-	 * Object that is passed to the MapLibre.addLayer call as config option parameter
-	 */
-	layerOptions: PropTypes.object,
-	/**
-	 * Object that is passed to the MapLibre.addSource call as config option parameter
-	 */
-	sourceOptions: PropTypes.object,
-	/**
-	 * Id of an existing layer in the mapLibre instance to help specify the layer order
-	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
-	 */
-	insertBeforeLayer: PropTypes.string,
-	/**
-	 * Sets layer "visibility" property to "visible" if true or "none" if false
-	 */
-	visible: PropTypes.bool,
-};
 export default MlWmsLayer;

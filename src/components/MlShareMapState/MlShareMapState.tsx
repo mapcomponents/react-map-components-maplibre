@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useContext, useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import MapContext from '../../contexts/MapContext';
 import { v4 as uuidv4 } from 'uuid';
@@ -254,16 +253,9 @@ const MlShareMapState = (props: MlShareMapStateProps) => {
 	};
 
 	return <></>;
-};;
+};
 
 MlShareMapState.defaultProps = {
 	mapId: undefined,
-};
-
-MlShareMapState.propTypes = {
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
-	mapId: PropTypes.string,
 };
 export default MlShareMapState;

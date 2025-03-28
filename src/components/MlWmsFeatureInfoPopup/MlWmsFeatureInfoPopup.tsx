@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
 
 import MapContext from "../../contexts/MapContext";
 import { v4 as uuidv4 } from "uuid";
@@ -60,12 +59,5 @@ const MlWmsFeatureInfoPopup = (props:MlWmsFeatureInfoPopupProps) => {
 
 MlWmsFeatureInfoPopup.defaultProps = {
 	mapId: undefined,
-};
-
-MlWmsFeatureInfoPopup.propTypes = {
-	/**
-	 * Id of the target MapLibre instance in mapContext
-	 */
-	mapId: PropTypes.string,
 };
 export default MlWmsFeatureInfoPopup;
