@@ -1,6 +1,6 @@
 import React from 'react';
 import { composeStories } from '@storybook/testing-react';
-import { mount } from '@cypress/react18';
+import { mount } from '@cypress/react';
 import * as stories from './MlCreatePdfForm.stories';
 
 const { ExampleConfig }: any = composeStories(stories);
