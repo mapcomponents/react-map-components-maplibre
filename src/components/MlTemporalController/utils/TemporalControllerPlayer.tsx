@@ -68,7 +68,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 			clearInterval(intervalRef.current);
 		}
 
-		intervalRef.current = setInterval(function () {
+		intervalRef.current = setInterval(function() {
 			if (counter >= range) {
 				if (intervalRef.current) clearInterval(intervalRef.current);
 				setIsPlaying(false);
@@ -134,62 +134,66 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 	return (
 		<>
-			<Drawer
-				anchor="bottom"
-				open={props.open || true}
-				variant="persistent"
-				sx={{
-					flexShrink: 0,
-					'& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
-				}}
-			>
-				<Grid container>
-					{mediaIsMobile ? <></> : <Grid size={3} />}
-					<Grid textAlign="center" size={mediaIsMobile ? 12 : 6}>
-						<Button onClick={handleFastRewind}>
-							<FastRewindIcon />
-						</Button>
-						<Button onClick={handleStop}>
-							<StopIcon />
-						</Button>
-						<Button onClick={handlePlayPause}>
-							{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-						</Button>
-						<Button onClick={handleFastForward}>
-							<FastForwardIcon />
-						</Button>
-					</Grid>
-
-					{props.display && !mediaIsMobile && (
-						<Grid size={3}>
-							<Typography variant={'h5'} textAlign={'right'} sx={{ paddingRight: '25px' }}>
-								{Math.floor(currentVal)}
-							</Typography>
-						</Grid>
-					)}
+		<Drawer
+			anchor="bottom"
+			open={props.open || true}
+			variant="persistent"
+			sx={{
+				flexShrink: 0,
+				'& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
+			}}
+		>
+			<Grid container alignItems="center" justifyContent="space-between">
+				{/* Buttons - Centered */}
+				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+				{/*@ts-expect-error*/}
+				<Grid item xs={12} sm={10} textAlign="center">
+					<Button onClick={handleFastRewind}>
+						<FastRewindIcon />
+					</Button>
+					<Button onClick={handleStop}>
+						<StopIcon />
+					</Button>
+					<Button onClick={handlePlayPause}>
+						{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+					</Button>
+					<Button onClick={handleFastForward}>
+						<FastForwardIcon />
+					</Button>
 				</Grid>
+				{props.display && !mediaIsMobile && (
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					<Grid item xs={12} sm={5} textAlign="right">
+				<Typography variant={'h5'} sx={{ paddingRight: '25px' }}>
+					{Math.floor(currentVal)}
+				</Typography>
+			</Grid>
+			)}
+		</Grid>
 
-				<Slider
-					sx={{
-						position: 'flex',
-						width: '95%',
-						paddingTop: '10px',
-						alignSelf: 'center',
-					}}
-					aria-label="Custom marks"
-					defaultValue={props.minVal}
-					value={currentVal}
-					step={props.step}
-					onChange={handleChange}
-					min={props.minVal}
-					max={props.maxVal}
-				/>
-				{mediaIsMobile && props.display && (
-					<Typography variant={'body1'} textAlign={'right'}>
-						{Math.floor(currentVal)}
-					</Typography>
-				)}
-			</Drawer>
-		</>
-	);
+		<Slider
+			sx={{
+				position: 'flex',
+				width: '95%',
+				paddingTop: '10px',
+				alignSelf: 'center',
+			}}
+			aria-label="Custom marks"
+			defaultValue={props.minVal}
+			value={currentVal}
+			step={props.step}
+			onChange={handleChange}
+			min={props.minVal}
+			max={props.maxVal}
+		/>
+		{mediaIsMobile && props.display && (
+			<Typography variant={'body1'} textAlign={'right'}>
+				{Math.floor(currentVal)}
+			</Typography>
+		)}
+		</Drawer>
+</>
+)
+	;
 }
