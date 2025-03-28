@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import StopIcon from '@mui/icons-material/Stop';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import { Slider, Drawer, Button, Grid, Typography, useMediaQuery, Theme } from '@mui/material';
+import { Button, Drawer, Grid, Slider, Theme, Typography, useMediaQuery } from '@mui/material';
 
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -144,8 +144,8 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 				}}
 			>
 				<Grid container>
-					{mediaIsMobile ? <></> : <Grid item xs={3} />}
-					<Grid item xs={mediaIsMobile ? 12 : 6} textAlign="center">
+					{mediaIsMobile ? <></> : <Grid size={3} />}
+					<Grid textAlign="center" size={mediaIsMobile ? 12 : 6}>
 						<Button onClick={handleFastRewind}>
 							<FastRewindIcon />
 						</Button>
@@ -161,7 +161,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 					</Grid>
 
 					{props.display && !mediaIsMobile && (
-						<Grid item xs={3}>
+						<Grid size={3}>
 							<Typography variant={'h5'} textAlign={'right'} sx={{ paddingRight: '25px' }}>
 								{Math.floor(currentVal)}
 							</Typography>

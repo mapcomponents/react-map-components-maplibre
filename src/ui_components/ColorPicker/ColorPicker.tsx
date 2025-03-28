@@ -17,7 +17,7 @@ const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
 	return (
 		<>
 			<Grid container sx={{ flexWrap: 'nowrap' }}>
-				<Grid xs={12} item>
+				<Grid size={12}>
 					<Button
 						variant="outlined"
 						onClick={() => setShowPicker(true)}

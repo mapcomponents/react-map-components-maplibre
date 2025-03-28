@@ -92,12 +92,12 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 					<Box sx={mediaIsMobile ? mobileStyle : modalStyle}>
 						<Paper sx={{ padding: '20px' }}>
 							<Grid container>
-								<Grid item xs={10}>
+								<Grid size={10}>
 									<Typography id="modal-modal-title" variant="h6">
 										GPX demo files
 									</Typography>
 								</Grid>
-								<Grid item xs={2}>
+								<Grid size={2}>
 									<Button onClick={props.close}>
 										<CloseIcon sx={{ color: 'text.primary' }} />
 									</Button>

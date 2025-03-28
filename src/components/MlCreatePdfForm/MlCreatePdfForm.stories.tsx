@@ -12,14 +12,14 @@ import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Draggable from 'react-draggable';
 
 const PaperComponent = (props: object) => {
-
 	const nodeRef = React.useRef<HTMLDivElement>(null);
 
 	return (
 		<Draggable
 			nodeRef={nodeRef as React.RefObject<HTMLDivElement>}
 			handle="#draggable-dialog-title"
-			cancel={'[class*="MuiDialogContent-root"]'}>
+			cancel={'[class*="MuiDialogContent-root"]'}
+		>
 			<Paper {...props} ref={nodeRef} />
 		</Draggable>
 	);
