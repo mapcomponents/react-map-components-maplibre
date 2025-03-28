@@ -1,8 +1,7 @@
 import React, {useContext} from 'react';
 import SimpleDataContext from './SimpleDataContext';
 import SimpleDataProvider from './SimpleDataProvider';
-import {	waitFor } from '@testing-library/react';
-import {mount} from 'enzyme';
+import {	waitFor, render, screen } from '@testing-library/react';
 import * as d3 from "d3";
 
 
@@ -14,7 +13,9 @@ const SimpleDataContextTestComponent = () => {
 	const simpleDataContext = useContext(SimpleDataContext);
 
 	return <>
-		<div className="data">{JSON.stringify(simpleDataContext.data)}</div>
+		<div className="data"
+		data-testid="data"
+		>{JSON.stringify(simpleDataContext.data)}</div>
 	</>;
 }
 
@@ -27,41 +28,41 @@ describe('SimpleDataProvider',() => {
 	it('should retrieve data and provide it through simpleDataContext.data (format: "csv")', async () => {
 		d3.csv.mockResolvedValue(mockData);
 
-		const wrapper = mount(<SimpleDataProvider format="csv" url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
+		render(<SimpleDataProvider format="csv" url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
 
 		await waitFor(() => expect(d3.csv).toHaveBeenCalledTimes(1))
 
-		expect(wrapper.find('.data').text()).toEqual(JSON.stringify(mockData));
+		await waitFor(() => expect(screen.getByTestId('data').textContent).toEqual(JSON.stringify(mockData)));
 	});
 
 	it('should retrieve data and provide it through simpleDataContext.data (format: "xml")', async () => {
 		d3.xml.mockResolvedValue(xmlMockData);
 
-		const wrapper = mount(<SimpleDataProvider format="xml" nodeType="record" formatData={(record) => { return {id:record.querySelector('id').innerHTML,title:record.querySelector('title').innerHTML}}} url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
+		render(<SimpleDataProvider format="xml" nodeType="record" formatData={(record) => { return {id:record.querySelector('id').innerHTML,title:record.querySelector('title').innerHTML}}} url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
 
 		await waitFor(() => expect(d3.xml).toHaveBeenCalledTimes(1))
 
-		expect(wrapper.find('.data').text()).toEqual('[{"id":"1","title":"Macey, Josephine, Robert, Clark"},{"id":"2","title":"Summer, Channing, Colette, Josephine"}]');
+		await waitFor(() => expect(screen.getByTestId('data').textContent).toEqual('[{"id":"1","title":"Macey, Josephine, Robert, Clark"},{"id":"2","title":"Summer, Channing, Colette, Josephine"}]'))
 	});
 
 	it('should retrieve data and provide it through simpleDataContext.data (format: "json")', async () => {
 		d3.json.mockResolvedValue(mockData);
 
-		const wrapper = mount(<SimpleDataProvider format="json" url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
+		render(<SimpleDataProvider format="json" url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
 
 		await waitFor(() => expect(d3.json).toHaveBeenCalledTimes(1))
 
-		expect(wrapper.find('.data').text()).toEqual(JSON.stringify(mockData));
+		await waitFor(() => expect(screen.getByTestId('data').textContent).toEqual(JSON.stringify(mockData)));
 	});
 
 	it('should retrieve data and provide the content of the key props.dataProperty on the retrieved data through simpleDataContext.data (format: "json")', async () => {
 		d3.json.mockResolvedValue(nestedMockData);
 
-		const wrapper = mount(<SimpleDataProvider format="json" data_property="data" url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
+		render(<SimpleDataProvider format="json" data_property="data" url="test"><SimpleDataContextTestComponent /></SimpleDataProvider>);
 
 		await waitFor(() => expect(d3.json).toHaveBeenCalledTimes(1))
 
-		expect(wrapper.find('.data').text()).toEqual(JSON.stringify(mockData));
+		await waitFor(() => expect(screen.getByTestId('data').textContent).toEqual(JSON.stringify(mockData)));
 	});
 
 
