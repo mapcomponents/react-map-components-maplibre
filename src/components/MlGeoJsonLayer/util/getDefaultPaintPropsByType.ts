@@ -10,15 +10,21 @@ const getDefaultPaintPropsByType = (
 				return defaultPaintOverrides.fill;
 			}
 			return {
-				'fill-color': 'rgba(10,240,256,0.6)',
-				'fill-outline-color': 'rgba(20,230,256,0.8)',
+				// 'fill-color': 'rgba(10,240,256,0.6)',
+				// 'fill-outline-color': 'rgba(20,230,256,0.8)',
+				'fill-color': '#009EE0',
+				'fill-outline-color': '#009EE0',
 			};
 		case 'line':
 			if (defaultPaintOverrides?.line) {
+				console.log(defaultPaintOverrides.line);
 				return defaultPaintOverrides.line;
 			}
 			return {
-				'line-color': 'rgb(203,211,2)',
+				// // 'line-color': 'rgb(203,211,2)',
+				// 'line-width': 5,
+				// 'line-blur': 0,
+				'line-color': '#009EE0',
 				'line-width': 5,
 				'line-blur': 0,
 			};
@@ -27,10 +33,14 @@ const getDefaultPaintPropsByType = (
 				return defaultPaintOverrides.circle;
 			}
 			return {
-				'circle-color': 'rgba(10,240,256,0.8)',
+				// 'circle-color': 'rgba(10,240,256,0.8)',
+				// 'circle-stroke-color': '#fff',
+				// 'circle-stroke-width': 2,
+				// 'circle-radius': 4,
+				'circle-color': '#009EE0',
 				'circle-stroke-color': '#fff',
 				'circle-stroke-width': 2,
-				'circle-radius': 4,
+				'circle-radius': 5,
 			};
 		default:
 			return {};
