@@ -1,5 +1,11 @@
 # Change Log
 
+## [v1.2.0]
+
+## Changed
+- update React v18 -> v19
+- replace enzyme in jest tests with @testing-library/react
+
 ## [v1.1.0] - 2025-03-21
 
 ### Added
