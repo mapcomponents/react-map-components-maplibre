@@ -82,7 +82,7 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 	};
 
 	useEffect(() => {
-		loadSample('assets/sample2.gpx');
+		loadSample('assets/sample1.gpx');
 	}, []);
 
 	return (
@@ -104,7 +104,7 @@ const MlGpxDemoLoader = (props: MlGpxDemoLoaderProps) => {
 								</Grid>
 							</Grid>
 							<Divider />
-							<Grid container>
+							<Grid container key={"demo-container"}>
 								<List>
 									{samples.map((el, idx) => (
 										<>
