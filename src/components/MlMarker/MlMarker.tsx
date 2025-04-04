@@ -34,6 +34,7 @@ const MlMarker = (props: MlMarkerProps) => {
 
 	const [marker, setMarker] = useState<maplibregl.Marker | null>(null);
 	const container = useRef<HTMLDivElement | undefined>(undefined);
+	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -80,7 +81,13 @@ const MlMarker = (props: MlMarkerProps) => {
 		}
 	}, [marker, props.lng, props.lat]);
 
-	const iframeRef = useRef<HTMLIFrameElement>(null);
+	function handleIframeLoad() {
+		const iframeDoc = iframeRef.current?.contentWindow?.document;
+		if (iframeDoc && iframeRef.current?.parentElement) {
+			const scrollHeight = iframeDoc.documentElement.scrollHeight;
+			iframeRef.current.parentElement.style.height = `${scrollHeight}px`;
+		}
+	}
 
 	return container.current && createPortal(
 		<Box
@@ -89,7 +96,7 @@ const MlMarker = (props: MlMarkerProps) => {
 				position: 'absolute',
 				display: 'flex',
 				width: '300px',
-				height: '300px',
+				maxHeight: '500px',
 				'&:hover': {
 					opacity: 1,
 				},
@@ -99,24 +106,23 @@ const MlMarker = (props: MlMarkerProps) => {
 			}}
 		>
 			<iframe
+				ref={iframeRef}
+				onLoad={handleIframeLoad}
 				style={{
 					width: '100%',
 					borderStyle: 'none',
 					...(props.iframeStyle || {}),
 				}}
-				srcDoc={`
-			<div>
-	  <style>
+				srcDoc={`<div>
+	<style>
 		body {
 		${Object.entries(props.iframeBodyStyle || {})
 						.map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`)
 						.join(' ')}
 		}
-	  </style>
-	  ${props.content || ''}
-			</div>
-  `}
-				ref={iframeRef}
+	</style>
+	${props.content || ''}
+</div>`}
 				sandbox="allow-same-origin allow-popups-to-escape-sandbox allow-scripts"
 				title={mapHook.componentId}
 			/>
