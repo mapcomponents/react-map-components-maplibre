@@ -14,6 +14,7 @@ export interface MlMarkerProps {
 	containerStyle?: React.CSSProperties;
 	iframeStyle?: React.CSSProperties;
 	iframeBodyStyle?: React.CSSProperties;
+	contentOffset?: number;
 	anchor?:
 	| 'top'
 	| 'bottom'
@@ -47,19 +48,20 @@ const getBoxTransform = (anchor: MlMarkerProps['anchor'] = 'top') => {
 	}
 };
 
-function getBoxMargins(anchor: MlMarkerProps['anchor'], style?: React.CSSProperties) {
+function getBoxMargins(anchor: MlMarkerProps['anchor'], style?: React.CSSProperties, contentOffset?: number) {
 	const w = parseInt(String(style?.width || 14), 10);
 	const h = parseInt(String(style?.height || 14), 10);
+	const offset = contentOffset || 7;
 	const m: Record<string, string> = {};
 	switch (anchor) {
-		case 'bottom': m.marginTop = `-${h}px`; break;
-		case 'left': m.marginLeft = `-${w}px`; break;
-		case 'right': m.marginRight = `-${w}px`; break;
-		case 'top-left': m.marginTop = `-${h}px`; m.marginLeft = `-${w}px`; break;
-		case 'top-right': m.marginTop = `-${h}px`; m.marginRight = `-${w}px`; break;
-		case 'bottom-left': m.marginBottom = `-${h}px`; m.marginLeft = `-${w}px`; break;
-		case 'bottom-right': m.marginBottom = `-${h}px`; m.marginRight = `-${w}px`; break;
-		case 'top': default: m.marginTop = `-${h}px`; break;
+		case 'bottom': m.marginTop = `-${h + offset}px`; break;
+		case 'left': m.marginLeft = `-${w + offset}px`; break;
+		case 'right': m.marginRight = `-${w + offset}px`; break;
+		case 'top-left': m.marginTop = `-${h + offset}px`; m.marginLeft = `-${w + offset}px`; break;
+		case 'top-right': m.marginTop = `-${h + offset}px`; m.marginRight = `-${w + offset}px`; break;
+		case 'bottom-left': m.marginBottom = `-${h + offset}px`; m.marginLeft = `-${w + offset}px`; break;
+		case 'bottom-right': m.marginBottom = `-${h + offset}px`; m.marginRight = `-${w + offset}px`; break;
+		case 'top': default: m.marginTop = `-${h + offset}px`; break;
 	}
 	return m;
 }
@@ -79,13 +81,16 @@ const MlMarker = (props: MlMarkerProps) => {
 
 		container.current = document.createElement('div');
 
-		const markerStyle = {
-			width: '14px',
-			height: '14px',
-			borderRadius: '50%',
+		const defaultMarkerStyle = {
+			width: '16px',
+			height: '16px',
 			background: 'linear-gradient(135deg, rgb(186, 208, 218) 0%, rgb(96, 209, 253) 100%)',
 			border: '1px solid rgba(255, 255, 255, 0.7)',
-			boxShadow: '0 6px 12px rgba(90, 0, 0, 0.2), 0 0 0 4px rgba(240, 147, 251, 0.2)',
+			boxShadow: '0 2px 6px rgba(90, 0, 0, 0.2), 0 0 0 2px rgba(240, 147, 251, 0.2)',
+			borderRadius: '50%',
+		};
+		const markerStyle = {
+			...defaultMarkerStyle,
 			...props.markerStyle,
 		};
 
@@ -100,7 +105,10 @@ const MlMarker = (props: MlMarkerProps) => {
 
 		const markerDot = document.createElement('div');
 		Object.entries(markerStyle).forEach(([key, value]) => {
-			markerDot.style.setProperty(key, String(value));
+			markerDot.style.setProperty(
+				key.replace(/([A-Z])/g, '-$1').toLowerCase(),
+				String(value)
+			);
 		});
 		container.current.appendChild(markerDot);
 
@@ -137,7 +145,7 @@ const MlMarker = (props: MlMarkerProps) => {
 					opacity: 0.7,
 					zIndex: -1,
 					transform: getBoxTransform(props.anchor),
-					...getBoxMargins(props.anchor, props.markerStyle),
+					...getBoxMargins(props.anchor, props.markerStyle, props.contentOffset),
 					'&:hover': {
 						opacity: 1,
 					},
