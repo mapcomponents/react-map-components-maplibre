@@ -45,6 +45,7 @@ CustomStyledMarker.args = {
   lng: 7.0851268,
   lat: 50.73884,
   anchor: "top-right",
+  passEventsThrough: false,
   markerStyle: {
     width: "15px",
     height: "15px",

@@ -15,6 +15,7 @@ export interface MlMarkerProps {
 	iframeStyle?: React.CSSProperties;
 	iframeBodyStyle?: React.CSSProperties;
 	contentOffset?: number;
+	passEventsThrough?: boolean;
 	anchor?:
 	| 'top'
 	| 'bottom'
@@ -66,7 +67,7 @@ function getBoxMargins(anchor: MlMarkerProps['anchor'], style?: React.CSSPropert
 	return m;
 }
 
-const MlMarker = (props: MlMarkerProps) => {
+const MlMarker = ({ passEventsThrough = true, ...props }: MlMarkerProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
@@ -142,10 +143,11 @@ const MlMarker = (props: MlMarkerProps) => {
 					display: 'flex',
 					width: '300px',
 					maxHeight: '500px',
-					opacity: 0.7,
+					opacity: passEventsThrough ? 1 : 0.7,
 					zIndex: -1,
 					transform: getBoxTransform(props.anchor),
 					...getBoxMargins(props.anchor, props.markerStyle, props.contentOffset),
+					pointerEvents: passEventsThrough ? 'none' : 'auto',
 					'&:hover': {
 						opacity: 1,
 					},
