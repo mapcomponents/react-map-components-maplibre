@@ -15,10 +15,29 @@ const Template = (args: MlMarkerProps) => <MlMarker {...args} />;
 
 export const ExampleConfig = Template.bind({});
 ExampleConfig.args = {
-  content: '<b>WhereGroup</b>',
   lng: 7.0851268,
   lat: 50.73884,
   mapId: 'map_1',
+  content: `
+    <div style="padding: 12px; font-family: Arial, sans-serif; max-width: 220px;">
+      <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px; color: #3b82f6;">WhereGroup</div>
+      <div style="display: flex; align-items: center; margin-bottom: 10px;">
+        <span style="color: #6b7280; font-size: 14px;">Bonn, Germany</span>
+      </div>
+      <p>
+        Geospatial technologies and open-source GIS solutions.
+      </p>
+      <div style="font-size: 13px; color: #6b7280;">
+        <div>📍 50.73884, 7.0851268</div>
+      </div>
+    </div>
+  `,
+  containerStyle: {
+    borderRadius: "8px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    overflow: "hidden",
+    backgroundColor: "white"
+  }
 };
 
 export const CustomStyledMarker = Template.bind({});
