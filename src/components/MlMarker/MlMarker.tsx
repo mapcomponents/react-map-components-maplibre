@@ -32,10 +32,12 @@ const MlMarker = (props: MlMarkerProps) => {
 	});
 
 	const [marker, setMarker] = useState<maplibregl.Marker | null>(null);
-	const [container] = useState(() => document.createElement('div'));
+	const container = useRef<HTMLDivElement | undefined>(undefined);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
+
+		container.current = document.createElement('div')
 
 		const markerStyle = {
 			width: '14px',
@@ -46,7 +48,7 @@ const MlMarker = (props: MlMarkerProps) => {
 		};
 
 		const maplibreMarker = new maplibregl.Marker({
-			element: container,
+			element: container.current,
 			anchor: props.anchor || 'center',
 		})
 			.setLngLat([props.lng, props.lat])
@@ -58,17 +60,18 @@ const MlMarker = (props: MlMarkerProps) => {
 
 		if (markerStyle) {
 			Object.entries(markerStyle).forEach(([key, value]) => {
-				// @ts-ignore
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
 				markerDot.style[key] = value;
 			});
 		}
 
-		container.appendChild(markerDot);
+		container.current.appendChild(markerDot);
 
 		return () => {
 			markerDot.remove();
 			maplibreMarker.remove();
-			container.remove();
+			container.current?.remove();
 		};
 	}, [mapHook.map, props.lng, props.lat, props.markerStyle, props.anchor]);
 
@@ -80,7 +83,7 @@ const MlMarker = (props: MlMarkerProps) => {
 
 	const iframeRef = useRef<HTMLIFrameElement>(null);
 
-	return createPortal(
+	return container.current && createPortal(
 		<Paper
 			sx={{
 				opacity: 0.7,
@@ -103,11 +106,11 @@ const MlMarker = (props: MlMarkerProps) => {
 				}}
 				srcDoc={props.content}
 				ref={iframeRef}
-				sandbox="allow-same-origin allow-popups-to-escape-sandbox"
+				sandbox="allow-same-origin allow-popups-to-escape-sandbox allow-scripts"
 				title={mapHook.componentId}
 			/>
 		</Paper>,
-		container
+		container.current
 	);
 };
 
