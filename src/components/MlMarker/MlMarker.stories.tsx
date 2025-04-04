@@ -1,14 +1,46 @@
 import React from "react";
-
 import MlMarker, { MlMarkerProps } from "./MlMarker";
-
 import mapContextDecorator from "../../decorators/MapContextDecorator";
 
 const storyoptions = {
   title: "MapComponents/MlMarker",
   component: MlMarker,
   decorators: mapContextDecorator,
+  parameters: {
+    docs: {
+      description: {
+        component: 'A customizable marker component for MapLibre maps that supports rich HTML content.'
+      },
+    },
+  },
+  argTypes: {
+    lng: {
+      control: { type: 'number', step: 0.0001 }
+    },
+    lat: {
+      control: { type: 'number', step: 0.0001 }
+    },
+    contentOffset: {
+      control: { type: 'range', min: 0, max: 20, step: 1 }
+    },
+    markerStyle: {
+      control: { type: 'object' }
+    },
+    containerStyle: {
+      control: { type: 'object' }
+    },
+    iframeStyle: {
+      control: { type: 'object' }
+    },
+    iframeBodyStyle: {
+      control: { type: 'object' }
+    },
+    passEventsThrough: {
+      control: { type: 'boolean' }
+    },
+  }
 };
+
 export default storyoptions;
 
 const Template = (args: MlMarkerProps) => <MlMarker {...args} />;
