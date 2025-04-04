@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Paper from '@mui/material/Paper';
 import useMap from '../../hooks/useMap';
 import maplibregl from 'maplibre-gl';
+import { Box } from '@mui/material';
 
 export interface MlMarkerProps {
 	mapId?: string;
@@ -15,15 +15,15 @@ export interface MlMarkerProps {
 	iframeStyle?: React.CSSProperties;
 	iframeBodyStyle?: React.CSSProperties;
 	anchor?:
-		| 'center'
-		| 'top'
-		| 'bottom'
-		| 'left'
-		| 'right'
-		| 'top-left'
-		| 'top-right'
-		| 'bottom-left'
-		| 'bottom-right';
+	| 'center'
+	| 'top'
+	| 'bottom'
+	| 'left'
+	| 'right'
+	| 'top-left'
+	| 'top-right'
+	| 'bottom-left'
+	| 'bottom-right';
 }
 
 const MlMarker = (props: MlMarkerProps) => {
@@ -83,7 +83,7 @@ const MlMarker = (props: MlMarkerProps) => {
 	const iframeRef = useRef<HTMLIFrameElement>(null);
 
 	return container.current && createPortal(
-		<Paper
+		<Box
 			sx={{
 				opacity: 0.7,
 				position: 'absolute',
@@ -120,9 +120,10 @@ const MlMarker = (props: MlMarkerProps) => {
 				sandbox="allow-same-origin allow-popups-to-escape-sandbox allow-scripts"
 				title={mapHook.componentId}
 			/>
-		</Paper>,
+		</Box>,
 		container.current
 	);
 };
+
 
 export default MlMarker;
