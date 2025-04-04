@@ -5,17 +5,29 @@ import maplibregl from 'maplibre-gl';
 import { Box } from '@mui/material';
 
 export interface MlMarkerProps {
+	/** ID of the map to add the marker to */
 	mapId?: string;
+	/** Layer ID before which to insert the marker */
 	insertBeforeLayer?: string;
+	/** Longitude of the marker position */
 	lng: number;
+	/** Latitude of the marker position */
 	lat: number;
+	/** HTML content for the marker popup */
 	content?: string;
+	/** CSS properties to apply to the marker dot */
 	markerStyle?: React.CSSProperties;
+	/** CSS properties to apply to the content container */
 	containerStyle?: React.CSSProperties;
+	/** CSS properties to apply to the iframe element */
 	iframeStyle?: React.CSSProperties;
+	/** CSS properties to apply to the body of the iframe */
 	iframeBodyStyle?: React.CSSProperties;
+	/** Offset in pixels between the marker and its content */
 	contentOffset?: number;
+	/** Whether mouse events pass through the marker content */
 	passEventsThrough?: boolean;
+	/** Anchor position of the marker relative to its coordinates */
 	anchor?:
 	| 'top'
 	| 'bottom'
@@ -49,25 +61,24 @@ const getBoxTransform = (anchor: MlMarkerProps['anchor'] = 'top') => {
 	}
 };
 
-function getBoxMargins(anchor: MlMarkerProps['anchor'], style?: React.CSSProperties, contentOffset?: number) {
+function getBoxMargins(anchor: MlMarkerProps['anchor'], offset: number, style?: React.CSSProperties) {
 	const w = parseInt(String(style?.width || 14), 10);
 	const h = parseInt(String(style?.height || 14), 10);
-	const offset = contentOffset || 7;
 	const m: Record<string, string> = {};
 	switch (anchor) {
-		case 'bottom': m.marginTop = `-${h + offset}px`; break;
-		case 'left': m.marginLeft = `-${w + offset}px`; break;
-		case 'right': m.marginRight = `-${w + offset}px`; break;
-		case 'top-left': m.marginTop = `-${h + offset}px`; m.marginLeft = `-${w + offset}px`; break;
-		case 'top-right': m.marginTop = `-${h + offset}px`; m.marginRight = `-${w + offset}px`; break;
-		case 'bottom-left': m.marginBottom = `-${h + offset}px`; m.marginLeft = `-${w + offset}px`; break;
-		case 'bottom-right': m.marginBottom = `-${h + offset}px`; m.marginRight = `-${w + offset}px`; break;
+		case 'bottom': m.marginTop = `${offset}px`; break;
+		case 'left': m.marginLeft = `-${offset}px`; break;
+		case 'right': m.marginLeft = `${w + offset}px`; break;
+		case 'top-left': m.marginTop = `-${h + offset}px`; m.marginLeft = `-${offset}px`; break;
+		case 'top-right': m.marginTop = `-${h + offset}px`; m.marginLeft = `${w + offset}px`; break;
+		case 'bottom-left': m.marginTop = `${offset}px`; m.marginLeft = `-${offset}px`; break;
+		case 'bottom-right': m.marginTop = `${offset}px`; m.marginLeft = `${w + offset}px`; break;
 		case 'top': default: m.marginTop = `-${h + offset}px`; break;
 	}
 	return m;
 }
 
-const MlMarker = ({ passEventsThrough = true, ...props }: MlMarkerProps) => {
+const MlMarker = ({ passEventsThrough = true, contentOffset = 5, ...props }: MlMarkerProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
@@ -83,8 +94,8 @@ const MlMarker = ({ passEventsThrough = true, ...props }: MlMarkerProps) => {
 		container.current = document.createElement('div');
 
 		const defaultMarkerStyle = {
-			width: '16px',
-			height: '16px',
+			width: '12px',
+			height: '12px',
 			background: 'linear-gradient(135deg, rgb(186, 208, 218) 0%, rgb(96, 209, 253) 100%)',
 			border: '1px solid rgba(255, 255, 255, 0.7)',
 			boxShadow: '0 2px 6px rgba(90, 0, 0, 0.2), 0 0 0 2px rgba(240, 147, 251, 0.2)',
@@ -146,7 +157,7 @@ const MlMarker = ({ passEventsThrough = true, ...props }: MlMarkerProps) => {
 					opacity: passEventsThrough ? 1 : 0.7,
 					zIndex: -1,
 					transform: getBoxTransform(props.anchor),
-					...getBoxMargins(props.anchor, props.markerStyle, props.contentOffset),
+					...getBoxMargins(props.anchor, contentOffset, props.markerStyle),
 					pointerEvents: passEventsThrough ? 'none' : 'auto',
 					'&:hover': {
 						opacity: 1,
