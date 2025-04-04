@@ -60,9 +60,7 @@ const MlMarker = (props: MlMarkerProps) => {
 
 		if (markerStyle) {
 			Object.entries(markerStyle).forEach(([key, value]) => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				markerDot.style[key] = value;
+				markerDot.style.setProperty(key, String(value));
 			});
 		}
 
