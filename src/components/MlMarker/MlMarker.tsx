@@ -13,6 +13,7 @@ export interface MlMarkerProps {
 	markerStyle?: React.CSSProperties;
 	containerStyle?: React.CSSProperties;
 	iframeStyle?: React.CSSProperties;
+	iframeBodyStyle?: React.CSSProperties;
 	anchor?:
 		| 'center'
 		| 'top'
@@ -100,9 +101,21 @@ const MlMarker = (props: MlMarkerProps) => {
 			<iframe
 				style={{
 					width: '100%',
+					borderStyle: 'none',
 					...(props.iframeStyle || {}),
 				}}
-				srcDoc={props.content}
+				srcDoc={`
+			<div>
+	  <style>
+		body {
+		${Object.entries(props.iframeBodyStyle || {})
+						.map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`)
+						.join(' ')}
+		}
+	  </style>
+	  ${props.content || ''}
+			</div>
+  `}
 				ref={iframeRef}
 				sandbox="allow-same-origin allow-popups-to-escape-sandbox allow-scripts"
 				title={mapHook.componentId}
