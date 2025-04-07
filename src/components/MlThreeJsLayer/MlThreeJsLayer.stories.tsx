@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import MlThreeJsLayer from './MlThreeJsLayer';
 import { LoadingOverlayContext } from '../../ui_components/LoadingOverlayContext';
 import MlNavigationTools from '../MlNavigationTools/MlNavigationTools';
+import { useMap } from '../../index';
 
 const storyoptions = {
 	title: 'MapComponents/MlThreeJsLayer',
@@ -27,6 +28,10 @@ const Template = () => {
 		setControlled?: (controlled: boolean) => void;
 		setLoadingDone?: (done: boolean) => void;
 	};
+
+	const mapHook = useMap();
+	mapHook.map?.setZoom(14.5);
+	mapHook.map?.setCenter([7.1, 50.736]);
 
 	return (
 		<>
