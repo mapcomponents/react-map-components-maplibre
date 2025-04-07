@@ -49,16 +49,16 @@ const catalgoueTemplate = () => {
 	const getInstructionText = (drawMode?: keyof MapboxDraw.Modes, selectedGeoJson?: Feature) => {
 		if (drawMode === 'simple_select' && selectedGeoJson) {
 			const geoType = selectedGeoJson.geometry.type;
-			return `Edit ${geoType}`;
+			return `Edit ${geoType}: Click the geometry to edit.`;
 		}
 
 		switch (drawMode) {
 			case 'draw_point':
 				return 'Click to draw point.';
 			case 'draw_line_string':
-				return 'Click to add nodes. Double click to complete drawing.';
+				return 'Click to add vertices. Double-click to finish drawing.';
 			case 'draw_polygon':
-				return 'Click to add nodes. Double click to complete drawing.';
+				return 'Click to add vertices. Double-click to finish drawing.';
 			default:
 				return 'Select a sketch tool.';
 		}
