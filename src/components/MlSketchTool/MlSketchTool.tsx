@@ -216,9 +216,18 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									_sketchState.geometries[_sketchState.activeGeometryIndex].geometry.type ===
 										'Point'
 								) {
-									const selectedCoords = _sketchState.selectedGeoJson.geometry.coordinates;
-									const activeCoords =
-										_sketchState.geometries[_sketchState.activeGeometryIndex].geometry.coordinates;
+									const selectedCoords = (
+										_sketchState.selectedGeoJson?.geometry as
+											| GeoJSON.Point
+											| GeoJSON.LineString
+											| GeoJSON.Polygon
+									)?.coordinates;
+									const activeCoords = (
+										_sketchState.geometries[_sketchState.activeGeometryIndex]?.geometry as
+											| GeoJSON.Point
+											| GeoJSON.LineString
+											| GeoJSON.Polygon
+									)?.coordinates;
 
 									// Compare coordinates
 									return JSON.stringify(selectedCoords) !== JSON.stringify(activeCoords);
