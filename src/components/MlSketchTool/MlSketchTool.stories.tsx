@@ -80,7 +80,6 @@ const catalgoueTemplate = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Sketch Tool'}>
-				{/* <MlSketchTool onChange={(state) => console.log(state)} /> */}
 				<MlSketchTool
 					onChange={(state) => {
 						const { drawMode, selectedGeoJson } = state;
