@@ -236,7 +236,6 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 							};
 
 							if (changedPoint()) {
-								console.log('Test');
 								_sketchState.drawMode = undefined;
 							}
 
