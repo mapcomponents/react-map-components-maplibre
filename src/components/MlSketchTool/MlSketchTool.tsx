@@ -73,6 +73,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	});
 
 	console.log(sketchState);
+
 	useEffect(() => {
 		if (!(typeof props.onChange === 'function')) return;
 
@@ -91,23 +92,32 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 	// 		selectedGeoJson: undefined,
 	// 	}));
 	// };
-
 	const buttonClickHandler = (buttonDrawMode: keyof MapboxDraw.Modes) => {
-		setSketchState((prevState) => ({
-			...prevState,
-			drawMode: undefined,
-			activeGeometryIndex: undefined,
-			selectedGeoJson: undefined,
-		}));
+		let modeRef: string | undefined = undefined;
+		setSketchState((prevState) => {
+			modeRef = prevState.drawMode;
+			return {
+				...prevState,
+				drawMode: undefined,
+				activeGeometryIndex: undefined,
+				selectedGeoJson: undefined,
+			};
+		});
 
-		setTimeout(() => {
+		requestAnimationFrame(() => {
 			setSketchState((prevState) => {
+				if (
+					(modeRef === 'draw_polygon' || modeRef === 'draw_line_string') &&
+					buttonDrawMode === 'draw_point'
+				) {
+					return { ...prevState, drawMode: undefined };
+				}
 				return {
 					...prevState,
 					drawMode: buttonDrawMode,
 				};
 			});
-		}, 0);
+		});
 	};
 
 	const removeGeoJson = (geoJson: Feature): void => {
@@ -189,6 +199,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					mode={sketchState.drawMode}
 					geojson={sketchState.selectedGeoJson}
 					onChange={(feature: Feature[]) => {
+						console.log(feature);
 						if (!feature?.[0]) return;
 
 						setSketchState((_sketchState) => {
