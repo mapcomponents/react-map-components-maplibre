@@ -1,5 +1,26 @@
 # Change Log
 
+## [v1.2.0]
+
+## Changed
+- update React v18 -> v19
+- replace enzyme in jest tests with @testing-library/react
+
+## [v1.1.0] - 2025-03-21
+
+### Added
+- add dependabot
+
+### Changed
+- update @dnd-kit and actions/setup-node@v2
+- update actions/cache@v2 -> v3 
+- update dependencies
+- update publish workflow node version
+- change Design/ml measure tool
+
+### Fixed
+- fix MlNavigation Zoom
+
 ## [v1.0.11] - 2025-02-14
 
 ### Fixed

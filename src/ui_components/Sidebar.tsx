@@ -5,7 +5,7 @@ import { Paper, Drawer, IconButton, PaperProps, DrawerProps, Theme } from '@mui/
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import { Global } from '@emotion/react';
-import { Typography, SwipeableDrawer } from '@mui/material/';
+import { Typography, SwipeableDrawer } from '@mui/material';
 
 const DrawerHeader = styled('div')(() => ({
 	display: 'flex',

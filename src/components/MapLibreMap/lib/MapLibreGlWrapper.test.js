@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useContext, useState } from "react";
-import { mount } from "enzyme";
 import MapContext, { MapComponentsProvider } from "../../../contexts/MapContext";
 import { v4 as uuidv4 } from "uuid";
 import MapLibreMap from "../MapLibreMap";
+import {render, screen} from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 
 // create plain MapLibre mock for this test
 var mockMapLibreMethods = {
@@ -47,6 +48,7 @@ const MapLibreGlWrapperTestComponent = (props) => {
 		<>
 			<button
 				className="toggle_children_are_visible"
+				data-testid="toggle_children_are_visible"
 				onClick={() => {
 					setChildrenAreVisible(!childrenAreVisible);
 				}}
@@ -108,7 +110,7 @@ const LayerTestComponent = (props) => {
 
 describe("MapLibreGlWrapper - layer tests", () => {
 	it("should add a layer using addLayer to MapLibreGl", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<LayerTestComponent cnt={1} />
@@ -120,7 +122,7 @@ describe("MapLibreGlWrapper - layer tests", () => {
 	});
 
 	it("should remove a layer using removeLayer from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<LayerTestComponent cnt={1} />
@@ -130,13 +132,13 @@ describe("MapLibreGlWrapper - layer tests", () => {
 
 		expect(mockMapLibreMethods.addLayer).toHaveBeenCalledTimes(1);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeLayer).toHaveBeenCalledTimes(1);
 	});
 
 	it("should remove 3 layers using removeLayer from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<LayerTestComponent cnt={3} />
@@ -146,7 +148,7 @@ describe("MapLibreGlWrapper - layer tests", () => {
 
 		expect(mockMapLibreMethods.addLayer).toHaveBeenCalledTimes(3);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeLayer).toHaveBeenCalledTimes(3);
 	});
@@ -168,7 +170,7 @@ const SourceTestComponent = (props) => {
 
 describe("MapLibreGlWrapper - source tests", () => {
 	it("should add a source using addSource to MapLibreGl", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<SourceTestComponent cnt={1} />
@@ -180,7 +182,7 @@ describe("MapLibreGlWrapper - source tests", () => {
 	});
 
 	it("should remove a source using removeSource from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<SourceTestComponent cnt={1} />
@@ -190,13 +192,13 @@ describe("MapLibreGlWrapper - source tests", () => {
 
 		expect(mockMapLibreMethods.addSource).toHaveBeenCalledTimes(1);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeSource).toHaveBeenCalledTimes(1);
 	});
 
 	it("should remove 3 sources using removeSource from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<SourceTestComponent cnt={3} />
@@ -206,7 +208,7 @@ describe("MapLibreGlWrapper - source tests", () => {
 
 		expect(mockMapLibreMethods.addSource).toHaveBeenCalledTimes(3);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeSource).toHaveBeenCalledTimes(3);
 	});
@@ -228,7 +230,7 @@ const ImageTestComponent = (props) => {
 
 describe("MapLibreGlWrapper - image tests", () => {
 	it("should add an image using addImage to MapLibreGl", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<ImageTestComponent cnt={1} />
@@ -240,7 +242,7 @@ describe("MapLibreGlWrapper - image tests", () => {
 	});
 
 	it("should remove an image using removeImage from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<ImageTestComponent cnt={1} />
@@ -250,13 +252,13 @@ describe("MapLibreGlWrapper - image tests", () => {
 
 		expect(mockMapLibreMethods.addImage).toHaveBeenCalledTimes(1);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeImage).toHaveBeenCalledTimes(1);
 	});
 
 	it("should remove 3 images using removeImage from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<ImageTestComponent cnt={3} />
@@ -266,7 +268,7 @@ describe("MapLibreGlWrapper - image tests", () => {
 
 		expect(mockMapLibreMethods.addImage).toHaveBeenCalledTimes(3);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeImage).toHaveBeenCalledTimes(3);
 	});
@@ -288,7 +290,7 @@ const EventTestComponent = (props) => {
 
 describe("MapLibreGlWrapper - event tests", () => {
 	it("should add a event listener using on to MapLibreGl", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<EventTestComponent cnt={1} />
@@ -301,7 +303,7 @@ describe("MapLibreGlWrapper - event tests", () => {
 	});
 
 	it("should remove an event using off from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<EventTestComponent cnt={1} />
@@ -312,13 +314,13 @@ describe("MapLibreGlWrapper - event tests", () => {
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(5);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(1);
 	});
 
 	it("should remove 3 events using off from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<EventTestComponent cnt={3} />
@@ -329,7 +331,7 @@ describe("MapLibreGlWrapper - event tests", () => {
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
 		expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(7);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(3);
 	});
@@ -350,7 +352,7 @@ const ControlTestComponent = (props) => {
 
 describe("MapLibreGlWrapper - control tests", () => {
 	it("should add a control using addControl to MapLibreGl", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<ControlTestComponent cnt={1} />
@@ -362,7 +364,7 @@ describe("MapLibreGlWrapper - control tests", () => {
 	});
 
 	it("should remove a control using removeControl from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<ControlTestComponent cnt={1} />
@@ -372,13 +374,13 @@ describe("MapLibreGlWrapper - control tests", () => {
 
 		expect(mockMapLibreMethods.addControl).toHaveBeenCalledTimes(1);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeControl).toHaveBeenCalledTimes(1);
 	});
 
 	it("should remove 3 controls using removeControl from MapLibreGl using MapLibreGlWrapper.cleanup(componentId)", async () => {
-		const wrapper = mount(
+		render(
 			<MapComponentsProvider>
 				<MapLibreGlWrapperTestComponent>
 					<ControlTestComponent cnt={3} />
@@ -388,7 +390,7 @@ describe("MapLibreGlWrapper - control tests", () => {
 
 		expect(mockMapLibreMethods.addControl).toHaveBeenCalledTimes(3);
 
-		wrapper.find(".toggle_children_are_visible").simulate("click");
+		await userEvent.click(screen.getByTestId('toggle_children_are_visible'));
 
 		expect(mockMapLibreMethods.removeControl).toHaveBeenCalledTimes(3);
 	});

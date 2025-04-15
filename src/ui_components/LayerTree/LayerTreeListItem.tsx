@@ -21,14 +21,12 @@ import {
 	WmsLayerConfig,
 } from '../../stores/map.store';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	ArrowCircleDown as ArrowCircleDownIcon,
-	ArrowCircleUp as ArrowCircleUpIcon,
-	Delete as DeleteIcon,
-	ExpandMore,
-	KeyboardArrowRight as ExpandLess,
-	Tune as TuneIcon,
-} from '@mui/icons-material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import DeleteIcon from '@mui/icons-material/Delete';
+import TuneIcon from '@mui/icons-material/Tune';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ConfirmDialog from '../ConfirmDialog';
 import LayerPropertyForm from './util/LayerPropertyForm';
 
@@ -320,7 +318,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }} secondaryAction={undefined}>
 						<ListItemIconStyled>
 							<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
-								{open ? <ExpandMore /> : <ExpandLess />}
+								{open ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
 							</IconButtonStyled>
 							<CheckboxListItemIcon>
 								<CheckboxStyled
@@ -399,7 +397,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }}>
 						<ListItemIconStyled>
 							<IconButtonStyled edge="end" aria-label="open" onClick={() => setOpen(!open)}>
-								{open ? <ExpandMore /> : <ExpandLess />}
+								{open ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
 							</IconButtonStyled>
 							<CheckboxListItemIcon>
 								<CheckboxStyled

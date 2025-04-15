@@ -5,16 +5,22 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Button, TextField, useMediaQuery } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import Draggable from 'react-draggable';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Sidebar from '../../ui_components/Sidebar';
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
+import Draggable from 'react-draggable';
 
 const PaperComponent = (props: object) => {
+	const nodeRef = React.useRef<HTMLDivElement>(null);
+
 	return (
-		<Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-			<Paper {...props} />
+		<Draggable
+			nodeRef={nodeRef as React.RefObject<HTMLDivElement>}
+			handle="#draggable-dialog-title"
+			cancel={'[class*="MuiDialogContent-root"]'}
+		>
+			<Paper {...props} ref={nodeRef} />
 		</Draggable>
 	);
 };
@@ -215,7 +221,7 @@ const additionalInfoTemplate = () => {
 					const title = options.formData.get('title') as string;
 					const text = options.formData.get('description') as string;
 					const centerY = pageWidth / 2;
-					const fontSizes: {[key:string]:any} = {
+					const fontSizes: { [key: string]: any } = {
 						a4: {
 							width: 210,
 							textSize: 10,

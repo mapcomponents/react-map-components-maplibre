@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import StopIcon from '@mui/icons-material/Stop';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
-import { Slider, Drawer, Button, Grid, Typography, useMediaQuery, Theme } from '@mui/material';
+import { Button, Drawer, Grid, Slider, Theme, Typography, useMediaQuery } from '@mui/material';
 
 export interface TemporalControllerPlayerProps {
 	currentVal: number;
@@ -68,7 +68,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 			clearInterval(intervalRef.current);
 		}
 
-		intervalRef.current = setInterval(function () {
+		intervalRef.current = setInterval(function() {
 			if (counter >= range) {
 				if (intervalRef.current) clearInterval(intervalRef.current);
 				setIsPlaying(false);
@@ -134,62 +134,66 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 
 	return (
 		<>
-			<Drawer
-				anchor="bottom"
-				open={props.open || true}
-				variant="persistent"
-				sx={{
-					flexShrink: 0,
-					'& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
-				}}
-			>
-				<Grid container>
-					{mediaIsMobile ? <></> : <Grid item xs={3} />}
-					<Grid item xs={mediaIsMobile ? 12 : 6} textAlign="center">
-						<Button onClick={handleFastRewind}>
-							<FastRewindIcon />
-						</Button>
-						<Button onClick={handleStop}>
-							<StopIcon />
-						</Button>
-						<Button onClick={handlePlayPause}>
-							{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-						</Button>
-						<Button onClick={handleFastForward}>
-							<FastForwardIcon />
-						</Button>
-					</Grid>
-
-					{props.display && !mediaIsMobile && (
-						<Grid item xs={3}>
-							<Typography variant={'h5'} textAlign={'right'} sx={{ paddingRight: '25px' }}>
-								{Math.floor(currentVal)}
-							</Typography>
-						</Grid>
-					)}
+		<Drawer
+			anchor="bottom"
+			open={props.open || true}
+			variant="persistent"
+			sx={{
+				flexShrink: 0,
+				'& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
+			}}
+		>
+			<Grid container alignItems="center" justifyContent="space-between">
+				{/* Buttons - Centered */}
+				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+				{/*@ts-expect-error*/}
+				<Grid item xs={12} sm={10} textAlign="center">
+					<Button onClick={handleFastRewind}>
+						<FastRewindIcon />
+					</Button>
+					<Button onClick={handleStop}>
+						<StopIcon />
+					</Button>
+					<Button onClick={handlePlayPause}>
+						{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+					</Button>
+					<Button onClick={handleFastForward}>
+						<FastForwardIcon />
+					</Button>
 				</Grid>
+				{props.display && !mediaIsMobile && (
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					<Grid item xs={12} sm={5} textAlign="right">
+				<Typography variant={'h5'} sx={{ paddingRight: '25px' }}>
+					{Math.floor(currentVal)}
+				</Typography>
+			</Grid>
+			)}
+		</Grid>
 
-				<Slider
-					sx={{
-						position: 'flex',
-						width: '95%',
-						paddingTop: '10px',
-						alignSelf: 'center',
-					}}
-					aria-label="Custom marks"
-					defaultValue={props.minVal}
-					value={currentVal}
-					step={props.step}
-					onChange={handleChange}
-					min={props.minVal}
-					max={props.maxVal}
-				/>
-				{mediaIsMobile && props.display && (
-					<Typography variant={'body1'} textAlign={'right'}>
-						{Math.floor(currentVal)}
-					</Typography>
-				)}
-			</Drawer>
-		</>
-	);
+		<Slider
+			sx={{
+				position: 'flex',
+				width: '95%',
+				paddingTop: '10px',
+				alignSelf: 'center',
+			}}
+			aria-label="Custom marks"
+			defaultValue={props.minVal}
+			value={currentVal}
+			step={props.step}
+			onChange={handleChange}
+			min={props.minVal}
+			max={props.maxVal}
+		/>
+		{mediaIsMobile && props.display && (
+			<Typography variant={'body1'} textAlign={'right'}>
+				{Math.floor(currentVal)}
+			</Typography>
+		)}
+		</Drawer>
+</>
+)
+	;
 }
