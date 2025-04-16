@@ -25,7 +25,7 @@ const getDefaultPaintPropsByType = (
 				// 'line-width': 5,
 				// 'line-blur': 0,
 				'line-color': '#009EE0',
-				'line-width': 5,
+				'line-width': 4,
 				'line-blur': 0,
 			};
 		case 'circle':
