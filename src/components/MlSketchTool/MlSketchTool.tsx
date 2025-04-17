@@ -295,7 +295,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			)}
 
 			<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
-				{sketchState.geometries.map((el) => (
+				{sketchState.geometries.map((el, index) => (
 					<>
 						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
 							<br />
@@ -314,6 +314,34 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									setHoveredGeometry(undefined);
 								}}
 							>
+								{/* Input field for user-defined name */}
+								<input
+									type="text"
+									value={el.properties?.name || ''}
+									placeholder="Assign name"
+									onChange={(e) => {
+										const newName = e.target.value;
+										setSketchState((_sketchState) => {
+											const updatedGeometries = [..._sketchState.geometries];
+											if (!updatedGeometries[index].properties) {
+												updatedGeometries[index].properties = {};
+											}
+											updatedGeometries[index].properties!.name = newName;
+											return {
+												..._sketchState,
+												geometries: updatedGeometries,
+											};
+										});
+									}}
+									style={{
+										padding: '5px',
+										border: '1px solid #ccc',
+										borderRadius: '4px',
+										outline: 'none',
+									}}
+									onFocus={(e) => (e.target.style.borderColor = '#009ee0')}
+									onBlur={(e) => (e.target.style.borderColor = '#ccc')}
+								/>
 								{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 								{/* @ts-ignore-next-line */}
 								<LayerListItem
@@ -330,7 +358,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 										/>
 									}
 									type={'layer'}
-									name={String(el.id)}
+									name={el.properties?.name || String(el.id)}
 									description={el.geometry.type}
 								></LayerListItem>
 								<Box
