@@ -15,7 +15,7 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature } from 'geojson';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Button, Theme } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup, Theme } from '@mui/material';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
@@ -45,6 +45,14 @@ export interface MlSketchToolProps {
 	 * First parameter contains all geometries in the `geometries` prop.
 	 */
 	onChange?: (para: SketchStateType) => void;
+	/**
+	 * Determines whether the instruction text should be shown.
+	 */
+	showInstruction?: boolean;
+	/**
+	 * Callback function triggered when the "Show instructions" checkbox is toggled.
+	 */
+	onShowInstructionChange?: (value: boolean) => void;
 }
 
 type SketchStateType = {
@@ -136,6 +144,10 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		});
 	};
 
+	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		props.onShowInstructionChange?.(event.target.checked);
+	};
+
 	const SketchToolButtons = () => {
 		return (
 			<>
@@ -192,6 +204,21 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				<ButtonGroup>
 					<SketchToolButtons />
 				</ButtonGroup>
+			</Box>
+
+			<Box sx={{ marginTop: '10px' }}>
+				<FormGroup>
+					<FormControlLabel
+						control={
+							<Checkbox
+								size="small"
+								checked={props.showInstruction}
+								onChange={handleCheckboxChange}
+							/>
+						}
+						label="Show instructions"
+					/>
+				</FormGroup>
 			</Box>
 
 			{sketchState.drawMode && (
