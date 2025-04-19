@@ -13,6 +13,7 @@ const storyoptions = {
 	argTypes: {},
 	decorators: mapContextDecorator,
 };
+
 export default storyoptions;
 
 const routeJson: Feature = {
@@ -37,34 +38,21 @@ const routeJson: Feature = {
 };
 
 const marks = [
-	{
-		value: 15,
-		label: '15',
-	},
-	{
-		value: 16,
-		label: '16',
-	},
-	{
-		value: 17,
-		label: '17',
-	},
-	{
-		value: 18,
-		label: '18',
-	},
-	{
-		value: 19,
-		label: '19',
-	},
-	{
-		value: 20,
-		label: '20',
-	},
+	{ value: 15, label: '15' },
+	{ value: 16, label: '16' },
+	{ value: 17, label: '17' },
+	{ value: 18, label: '18' },
+	{ value: 19, label: '19' },
+	{ value: 20, label: '20' },
 ];
 
 const Template = () => {
-	const [state, setState] = useState({ pause: true, zoom: 18, speed: 1, pitch: 60 });
+	const [state, setState] = useState({
+		pause: true,
+		zoom: 18,
+		speed: 1,
+		pitch: 60,
+	});
 
 	const CameraFollowPath = useCameraFollowPath({
 		route: routeJson,
@@ -77,13 +65,56 @@ const Template = () => {
 	const [showRoute, setShowRoute] = useState(true);
 	const [openSidebar, setOpenSidebar] = useState(true);
 
+	// Toggle sidebar visibility
+	const toggleSidebar = () => setOpenSidebar((prev) => !prev);
+
+	// Handle start/pause toggle
+	const togglePause = () => {
+		setState((prev) => ({
+			...prev,
+			pause: !prev.pause,
+		}));
+	};
+
+	// Handle reset to default state
+	const resetCameraSettings = () => {
+		setState({ pause: true, zoom: 18, speed: 1, pitch: 60 });
+		setTimeout(() => {
+			CameraFollowPath.reset();
+		}, 50);
+	};
+
+	// Handle zoom change
+	const handleZoomChange = (value: number) => {
+		setState((prev) => ({
+			...prev,
+			zoom: value,
+		}));
+	};
+
+	// Handle speed change
+	const handleSpeedChange = (value:number) => {
+		setState((prev) => ({
+			...prev,
+			speed: value,
+		}));
+	};
+
+	// Toggle pitch between 2D and 3D
+	const togglePitch = () => {
+		setState((prev) => ({
+			...prev,
+			pitch: prev.pitch === 0 ? 60 : 0,
+		}));
+	};
+
 	return (
 		<>
 			<TopToolbar
 				buttons={
 					<Button
 						variant={openSidebar ? 'contained' : 'outlined'}
-						onClick={() => setOpenSidebar(!openSidebar)}
+						onClick={toggleSidebar}
 						sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 					>
 						Camera Settings
@@ -91,65 +122,37 @@ const Template = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Camera Settings'}>
-				<MenuItem onClick={() => setShowRoute(!showRoute)}>
+				<MenuItem onClick={() => setShowRoute((prev) => !prev)}>
 					<Typography>{showRoute ? 'Hide route' : 'Show route'}</Typography>
 				</MenuItem>
-				{showRoute ? (
+				{showRoute && (
 					<MlGeoJsonLayer
 						geojson={routeJson}
 						type="line"
-						paint={{
-							'line-width': 2,
-							'line-color': 'blue',
+						options={{
+							paint: {
+								'line-width': 2,
+								'line-color': 'blue',
+							},
 						}}
 					/>
-				) : null}
-				<MenuItem
-					disabled={!state.pause}
-					onClick={() =>
-						setState((current) => {
-							return { ...current, pause: false };
-						})
-					}
-				>
-					<Typography>Start</Typography>
+				)}
+				<MenuItem onClick={togglePause} disabled={state.pause}>
+					<Typography>{state.pause ? 'Start' : 'Pause'}</Typography>
 				</MenuItem>
-				<MenuItem
-					disabled={state.pause}
-					onClick={() =>
-						setState((current) => {
-							return { ...current, pause: true };
-						})
-					}
-				>
-					<Typography>Pause</Typography>
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						setState((current) => {
-							return { ...current, pause: true, pitch: 60, zoom: 18, speed: 1 };
-						});
-						setTimeout(() => {
-							CameraFollowPath.reset();
-						}, 50);
-					}}
-				>
+				<MenuItem onClick={resetCameraSettings}>
 					<Typography>Reset</Typography>
 				</MenuItem>
+
 				<MenuItem>
 					<Typography id="discrete-slider" style={{ marginLeft: '10px', marginRight: '10px' }}>
-						<Typography>Zoom:</Typography>
+						Zoom:
 					</Typography>
 					<Slider
 						value={state.zoom}
-						onChange={(_ev, value) => {
-							setState((current) => {
-								return { ...current, zoom: Number(value) };
-							});
-						}}
+						onChange={(_ev, value) => handleZoomChange(value)}
 						getAriaValueText={(value) => value.toString()}
 						aria-labelledby="discrete-slider"
-						//valueLabelDisplay="auto"
 						step={1}
 						marks={marks}
 						min={15}
@@ -169,14 +172,9 @@ const Template = () => {
 					</Typography>
 					<Slider
 						value={state.speed}
-						onChange={(_ev, value) => {
-							setState((current) => {
-								return { ...current, speed: Number(value) };
-							});
-						}}
+						onChange={(_ev, value) => handleSpeedChange(value)}
 						getAriaValueText={(value) => value.toString()}
 						aria-labelledby="discrete-slider2"
-						//valueLabelDisplay="auto"
 						step={0.1}
 						marks
 						min={0.1}
@@ -188,19 +186,7 @@ const Template = () => {
 						}}
 					/>
 				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						if (state.pitch === 0) {
-							setState((current) => {
-								return { ...current, pitch: 60 };
-							});
-						} else {
-							setState((current) => {
-								return { ...current, pitch: 0 };
-							});
-						}
-					}}
-				>
+				<MenuItem onClick={togglePitch}>
 					<Typography>{state.pitch === 0 ? '3D' : '2D'}</Typography>
 				</MenuItem>
 			</Sidebar>

@@ -40,6 +40,7 @@ const MlDialog = ({
 			hideBackdrop={true}
 			PaperComponent={PaperComponent}
 			aria-labelledby="draggable-dialog-title"
+			disableScrollLock
 			sx={{
 				justifyContent: 'flex-start',
 				minHeight: '40px',
