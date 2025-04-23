@@ -167,7 +167,7 @@
 			"^.+\\.svg$": "<rootDir>/config/jest/fileTransform.js"
 		},
 		"transformIgnorePatterns": [
-			"[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+			"[/\\\\]node_modules[/\\\\](?!three/examples/jsm/).+\\.(js|jsx|mjs|cjs|ts|tsx)$",
 			"^.+\\.module\\.(css|sass|scss)$"
 		],
 		"modulePaths": [],
