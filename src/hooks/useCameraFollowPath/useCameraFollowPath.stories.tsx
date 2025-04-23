@@ -137,7 +137,7 @@ const Template = () => {
 						}}
 					/>
 				)}
-				<MenuItem onClick={togglePause} disabled={state.pause}>
+				<MenuItem onClick={togglePause}>
 					<Typography>{state.pause ? 'Start' : 'Pause'}</Typography>
 				</MenuItem>
 				<MenuItem onClick={resetCameraSettings}>
