@@ -17,7 +17,7 @@ CatalogueDemo.args = {
 		position: { xs: 'absolute' },
 		transform: { xs: 'scale(4)' },
 		left: { xs: '75%', sm: '65%', md: '55%' },
-		top: { xs: '50%', md: '55%' },
+		top: { xs: '50%', md: '75%' },
 	},
 };
 export const StyleExample = Template.bind({});
