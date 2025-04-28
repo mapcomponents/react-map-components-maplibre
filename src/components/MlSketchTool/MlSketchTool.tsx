@@ -15,7 +15,7 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature } from 'geojson';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Button, Checkbox, FormControlLabel, FormGroup, Theme } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup, Theme, Typography } from '@mui/material';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
@@ -315,33 +315,49 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 								}}
 							>
 								{/* Input field for user-defined name */}
-								<input
-									type="text"
-									value={el.properties?.name || ''}
-									placeholder="Assign name"
-									onChange={(e) => {
-										const newName = e.target.value;
-										setSketchState((_sketchState) => {
-											const updatedGeometries = [..._sketchState.geometries];
-											if (!updatedGeometries[index].properties) {
-												updatedGeometries[index].properties = {};
-											}
-											updatedGeometries[index].properties!.name = newName;
-											return {
-												..._sketchState,
-												geometries: updatedGeometries,
-											};
-										});
-									}}
-									style={{
-										padding: '5px',
-										border: '1px solid #ccc',
-										borderRadius: '4px',
-										outline: 'none',
-									}}
-									onFocus={(e) => (e.target.style.borderColor = '#009ee0')}
-									onBlur={(e) => (e.target.style.borderColor = '#ccc')}
-								/>
+								{!el.properties?.customName && (
+									<input
+										type="text"
+										value={el.properties?.name || ''}
+										placeholder="Assign name"
+										onChange={(e) => {
+											const newName = e.target.value;
+											setSketchState((_sketchState) => {
+												const updatedGeometries = [..._sketchState.geometries];
+												if (!updatedGeometries[index].properties) {
+													updatedGeometries[index].properties = {};
+												}
+												updatedGeometries[index].properties!.name = newName;
+												return {
+													..._sketchState,
+													geometries: updatedGeometries,
+												};
+											});
+										}}
+										style={{
+											padding: '5px',
+											border: '1px solid #ccc',
+											borderRadius: '4px',
+											outline: 'none',
+										}}
+										onFocus={(e) => (e.target.style.borderColor = '#009ee0')}
+										onBlur={(e) => {
+											e.target.style.borderColor = '#ccc';
+											setSketchState((_sketchState) => {
+												const updatedGeometries = [..._sketchState.geometries];
+												if (!updatedGeometries[index].properties) {
+													updatedGeometries[index].properties = {};
+												}
+												updatedGeometries[index].properties!.customName = true;
+												return {
+													..._sketchState,
+													geometries: updatedGeometries,
+												};
+											});
+										}}
+									/>
+								)}
+
 								{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 								{/* @ts-ignore-next-line */}
 								<LayerListItem
@@ -358,7 +374,30 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 										/>
 									}
 									type={'layer'}
-									name={el.properties?.name || String(el.id)}
+									name={
+										<Typography
+											onClick={() => {
+												setSketchState((_sketchState) => {
+													const updatedGeometries = [..._sketchState.geometries];
+													if (!updatedGeometries[index].properties) {
+														updatedGeometries[index].properties = {};
+													}
+													updatedGeometries[index].properties!.customName = false;
+													return {
+														..._sketchState,
+														geometries: updatedGeometries,
+													};
+												});
+											}}
+											sx={{
+												cursor: 'pointer',
+												overflow: 'hidden',
+												whiteSpace: 'nowrap',
+											}}
+										>
+											{el.properties?.name || String(el.id)}
+										</Typography>
+									}
 									description={el.geometry.type}
 								></LayerListItem>
 								<Box
