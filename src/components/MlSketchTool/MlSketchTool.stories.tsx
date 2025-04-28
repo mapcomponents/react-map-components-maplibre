@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 
 import MlSketchTool from './MlSketchTool';
 import { Feature } from 'geojson';
-import { Feature } from 'geojson';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { Button, Paper, Typography } from '@mui/material';
 import { Button, Paper, Typography } from '@mui/material';
 
 const storyoptions = {
