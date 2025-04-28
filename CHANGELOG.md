@@ -1,5 +1,17 @@
 # Change Log
 
+## [v1.3.0]
+
+## Changed
+- UI design/ogc in MlSketchTool and MlOgcApiFeatures
+
+## Fixed
+- fix MlMarker and improve performance by using a maplibre marker instead of an absolute positioned HTML element
+- fix Storybook demos: MlLayerSwitcher, useCameraFollowPath, MlVectorTileLayer, MlPdfForm, MlThreeJsLayer, MlNavigationCompass
+
+## Removed
+- remove MlComponentTemplate from storybook
+
 ## [v1.2.0]
 
 ## Changed

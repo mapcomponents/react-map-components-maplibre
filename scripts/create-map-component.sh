@@ -20,7 +20,7 @@ if [ ! -d "$target_path$component_name" ]; then
 
   mv $target_path$component_name/$template_name.meta_.json $target_path$component_name/$component_name.meta_.json
 
-  mv $target_path$component_name/$template_name.stories.tsx $target_path$component_name/$component_name.stories.tsx
+  mv $target_path$component_name/$template_name.stories_.tsx $target_path$component_name/$component_name.stories.tsx
 
   sed -i "s/$template_name/$component_name/g" $target_path$component_name/$component_name.tsx
   sed -i "s/$template_name/$component_name/g" $target_path$component_name/$component_name.meta_.json

@@ -2,7 +2,7 @@ import React, { useContext, useRef, useEffect } from 'react';
 import MapContext from '../../contexts/MapContext';
 import maplibregl, { CustomLayerInterface, LngLatLike, Map } from 'maplibre-gl';
 import * as THREE from 'three';
-import GLTFLoader from './lib/GLTFLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import MapLibreGlWrapper from '../MapLibreMap/lib/MapLibreGlWrapper';
 
 /**

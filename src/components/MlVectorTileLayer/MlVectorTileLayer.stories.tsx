@@ -45,7 +45,7 @@ ExampleConfig.args = {
 	url: 'https://wms.wheregroup.com/tileserver/tile/tileserver.php?/europe-0-14/index.json?/europe-0-14/{z}/{x}/{y}.pbf',
 	layers: [
 		{
-			id: 'water',
+			id: 'water-vector-tile',
 			type: 'fill',
 			'source-layer': 'water',
 			layout: {},

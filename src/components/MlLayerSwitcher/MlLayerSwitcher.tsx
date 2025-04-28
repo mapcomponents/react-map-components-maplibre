@@ -145,7 +145,11 @@ const MlLayerSwitcher: React.FC<MlLayerSwitcherProps> = (props) => {
 	};
 
 	const changeLayerState = (layer: string, visible: 'none' | 'visible' = 'none') => {
-		mapContext.map?.setLayoutProperty(layer, 'visibility', visible);
+		if (mapContext.map?.getLayer(layer)) {
+			mapContext.map.setLayoutProperty(layer, 'visibility', visible);
+		} else {
+			console.warn(`Layer "${layer}" does not exist on the map.`);
+		}
 	};
 
 	return (
