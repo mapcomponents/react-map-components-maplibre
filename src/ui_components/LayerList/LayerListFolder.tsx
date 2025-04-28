@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 import { Box, styled } from '@mui/system';
 import { Checkbox, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -30,7 +30,7 @@ const ListStyled = styled(List)({
 
 interface LayerListFolderProps {
 	visible: boolean;
-	name?: string;
+	name?: string | ReactNode;
 	children: JSX.Element | JSX.Element[];
 	setVisible?: (visible: boolean | ((val: unknown) => boolean)) => void;
 }
