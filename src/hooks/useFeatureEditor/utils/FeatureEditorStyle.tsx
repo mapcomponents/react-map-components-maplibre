@@ -1,4 +1,5 @@
 import { Theme, useMediaQuery } from '@mui/material';
+
 function featureEditorStyle() {
 	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
@@ -78,8 +79,7 @@ function featureEditorStyle() {
 			},
 			paint: {
 				'line-color': '#009EE0',
-				'line-width': 10,
-				'line-opacity': 0.2,
+				'line-width': 4,
 			},
 		},
 		{
@@ -234,4 +234,5 @@ function featureEditorStyle() {
 	];
 	return featureEditorStyle;
 }
+
 export default featureEditorStyle;

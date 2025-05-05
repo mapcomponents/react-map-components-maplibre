@@ -42,9 +42,11 @@ const Template = () => {
 
 const catalgoueTemplate = () => {
 	// const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
+	// const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [instructionText, setInstructionText] = useState('Select a sketch tool.');
+	const [showInstruction, setShowInstruction] = useState(true);
 
 	const getInstructionText = (drawMode?: keyof MapboxDraw.Modes, selectedGeoJson?: Feature) => {
 		if (drawMode === 'simple_select' && selectedGeoJson) {
@@ -81,6 +83,8 @@ const catalgoueTemplate = () => {
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Sketch Tool'}>
 				<MlSketchTool
+					showInstruction={showInstruction}
+					onShowInstructionChange={setShowInstruction}
 					onChange={(state) => {
 						const { drawMode, selectedGeoJson } = state;
 						setInstructionText(getInstructionText(drawMode, selectedGeoJson));
@@ -88,22 +92,24 @@ const catalgoueTemplate = () => {
 				/>
 			</Sidebar>
 
-			<Paper
-				sx={{
-					position: 'fixed',
-					bottom: '25px',
-					left: '50%',
-					padding: '10px',
-					zIndex: 101,
-				}}
-			>
-				<Typography>
-					{/* {mediaIsMobile
+			{showInstruction && (
+				<Paper
+					sx={{
+						position: 'fixed',
+						bottom: '25px',
+						left: '50%',
+						padding: '10px',
+						zIndex: 101,
+					}}
+				>
+					<Typography>
+						{/* {mediaIsMobile
 						? 'Zum Beenden erneut auf denselben Punkt klicken.'
 						: 'Die Zeichnung kann beendet werden, indem erneut auf den zuletzt gezeichneten Punkt geklickt wird.'} */}
-					{instructionText}
-				</Typography>
-			</Paper>
+						{instructionText}
+					</Typography>
+				</Paper>
+			)}
 		</>
 	);
 };

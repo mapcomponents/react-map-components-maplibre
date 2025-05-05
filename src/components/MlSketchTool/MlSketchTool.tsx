@@ -15,7 +15,7 @@ import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature } from 'geojson';
 import { LngLatLike } from 'maplibre-gl';
 import { SxProps } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import { Button, Theme } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup, Theme, Typography } from '@mui/material';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import PolylineIcon from '@mui/icons-material/Polyline';
 
@@ -45,6 +45,14 @@ export interface MlSketchToolProps {
 	 * First parameter contains all geometries in the `geometries` prop.
 	 */
 	onChange?: (para: SketchStateType) => void;
+	/**
+	 * Determines whether the instruction text should be shown.
+	 */
+	showInstruction?: boolean;
+	/**
+	 * Callback function triggered when the "Show instructions" checkbox is toggled.
+	 */
+	onShowInstructionChange?: (value: boolean) => void;
 }
 
 type SketchStateType = {
@@ -136,6 +144,10 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 		});
 	};
 
+	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		props.onShowInstructionChange?.(event.target.checked);
+	};
+
 	const SketchToolButtons = () => {
 		return (
 			<>
@@ -192,6 +204,21 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 				<ButtonGroup>
 					<SketchToolButtons />
 				</ButtonGroup>
+			</Box>
+
+			<Box sx={{ marginTop: '10px' }}>
+				<FormGroup>
+					<FormControlLabel
+						control={
+							<Checkbox
+								size="small"
+								checked={props.showInstruction}
+								onChange={handleCheckboxChange}
+							/>
+						}
+						label="Show instructions"
+					/>
+				</FormGroup>
 			</Box>
 
 			{sketchState.drawMode && (
@@ -268,7 +295,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 			)}
 
 			<List sx={{ zIndex: 105, marginBottom: '-10px' }}>
-				{sketchState.geometries.map((el) => (
+				{sketchState.geometries.map((el, index) => (
 					<>
 						<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
 							<br />
@@ -287,6 +314,50 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									setHoveredGeometry(undefined);
 								}}
 							>
+								{/* Input field for user-defined name */}
+								{!el.properties?.customName && (
+									<input
+										type="text"
+										value={el.properties?.name || ''}
+										placeholder="Assign name"
+										onChange={(e) => {
+											const newName = e.target.value;
+											setSketchState((_sketchState) => {
+												const updatedGeometries = [..._sketchState.geometries];
+												if (!updatedGeometries[index].properties) {
+													updatedGeometries[index].properties = {};
+												}
+												updatedGeometries[index].properties!.name = newName;
+												return {
+													..._sketchState,
+													geometries: updatedGeometries,
+												};
+											});
+										}}
+										style={{
+											padding: '5px',
+											border: '1px solid #ccc',
+											borderRadius: '4px',
+											outline: 'none',
+										}}
+										onFocus={(e) => (e.target.style.borderColor = '#009ee0')}
+										onBlur={(e) => {
+											e.target.style.borderColor = '#ccc';
+											setSketchState((_sketchState) => {
+												const updatedGeometries = [..._sketchState.geometries];
+												if (!updatedGeometries[index].properties) {
+													updatedGeometries[index].properties = {};
+												}
+												updatedGeometries[index].properties!.customName = true;
+												return {
+													..._sketchState,
+													geometries: updatedGeometries,
+												};
+											});
+										}}
+									/>
+								)}
+
 								{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 								{/* @ts-ignore-next-line */}
 								<LayerListItem
@@ -303,7 +374,30 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 										/>
 									}
 									type={'layer'}
-									name={String(el.id)}
+									name={
+										<Typography
+											onClick={() => {
+												setSketchState((_sketchState) => {
+													const updatedGeometries = [..._sketchState.geometries];
+													if (!updatedGeometries[index].properties) {
+														updatedGeometries[index].properties = {};
+													}
+													updatedGeometries[index].properties!.customName = false;
+													return {
+														..._sketchState,
+														geometries: updatedGeometries,
+													};
+												});
+											}}
+											sx={{
+												cursor: 'pointer',
+												overflow: 'hidden',
+												whiteSpace: 'nowrap',
+											}}
+										>
+											{el.properties?.name || String(el.id)}
+										</Typography>
+									}
 									description={el.geometry.type}
 								></LayerListItem>
 								<Box

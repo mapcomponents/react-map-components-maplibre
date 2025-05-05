@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { LayerSpecification } from 'maplibre-gl';
 import { IconButton, ListItemText, styled, SxProps } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -28,7 +28,7 @@ interface LayerListItemProps {
 	visible: boolean;
 	configurable: boolean;
 	type?: 'background' | 'background-labels' | 'layer' | 'wms-layer' | 'vector-tile-layer';
-	name: string;
+	name: string | ReactNode;
 	description?: string;
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
