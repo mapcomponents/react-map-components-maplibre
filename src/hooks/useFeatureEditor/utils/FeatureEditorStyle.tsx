@@ -1,4 +1,5 @@
 import { Theme, useMediaQuery } from '@mui/material';
+
 function featureEditorStyle() {
 	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
@@ -120,12 +121,10 @@ function featureEditorStyle() {
 			type: 'circle',
 			filter: ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point'], ['!=', 'mode', 'static']],
 			paint: {
-				paint: {
-					'circle-radius': mediaIsMobile ? 7 : 5,
-					'circle-color': '#ffffff',
-					'circle-stroke-color': '#009EE0',
-					'circle-stroke-width': 1,
-				},
+				'circle-radius': mediaIsMobile ? 7 : 5,
+				'circle-color': '#ffffff',
+				'circle-stroke-color': '#009EE0',
+				'circle-stroke-width': 1,
 			},
 		},
 		{
@@ -235,4 +234,5 @@ function featureEditorStyle() {
 	];
 	return featureEditorStyle;
 }
+
 export default featureEditorStyle;
