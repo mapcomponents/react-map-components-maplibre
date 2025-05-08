@@ -80,7 +80,7 @@ const catalogueTemplate = () => {
 					/>
 					<FormControlLabel
 						control={<Switch checked={ThreeDButton} onChange={handleChange1} />}
-						label="Show 3D button"
+						label="Show 2D/3D button"
 					/>
 					<FormControlLabel
 						control={<Switch checked={CenterLocationButton} onChange={handleChange2} />}
