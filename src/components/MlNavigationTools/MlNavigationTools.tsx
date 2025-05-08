@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -97,7 +97,6 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		setPitch(mapHook.map.getPitch());
 		const targetPitch = mapHook.map.getPitch() !== 0 ? 0 : 60;
 		mapHook.map.easeTo({ pitch: targetPitch });
-		
 	}, [mapHook.map]);
 
 	return (
@@ -132,11 +131,11 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				{props.showZoomButtons && (
 					<>
 						<Button variant="navtools" onClick={zoomIn}>
-							<ControlPointIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 						<Divider sx={{ zIndex: 500, marginLeft: '7px', marginRight: '7px' }} />
 						<Button variant="navtools" onClick={zoomOut}>
-							<RemoveCircleOutlineIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+							<RemoveIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 					</>
 				)}
