@@ -130,11 +130,26 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 			>
 				{props.showZoomButtons && (
 					<>
-						<Button variant="navtools" onClick={zoomIn}>
+						<Button
+							variant="navtools"
+							onClick={zoomIn}
+							sx={{
+								borderBottomLeftRadius: 0,
+								borderBottomRightRadius: 0,
+							}}
+						>
 							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
-						<Divider sx={{ zIndex: 500, marginLeft: '7px', marginRight: '7px' }} />
-						<Button variant="navtools" onClick={zoomOut}>
+						<Divider />
+						<Button
+							variant="navtools"
+							onClick={zoomOut}
+							sx={{
+								margin: 0,
+								borderTopLeftRadius: 0,
+								borderTopRightRadius: 0,
+							}}
+						>
 							<RemoveIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 					</>
