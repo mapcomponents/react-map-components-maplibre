@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Box from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/material';
-import Divider from '@mui/material/Divider';
 import MlNavigationCompass from '../MlNavigationCompass/MlNavigationCompass';
 import MlFollowGps from '../MlFollowGps/MlFollowGps';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -136,11 +135,21 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 							sx={{
 								borderBottomLeftRadius: 0,
 								borderBottomRightRadius: 0,
+								position: 'relative',
+								'&::after': {
+									content: '""',
+									position: 'absolute',
+									left: '20%',
+									bottom: 0,
+									width: '60%',
+									height: '1px',
+									backgroundColor: '#ccc',
+									borderRadius: '1px',
+								},
 							}}
 						>
-							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' }, transform: 'scale(1.1)' }} />
 						</Button>
-						<Divider />
 						<Button
 							variant="navtools"
 							onClick={zoomOut}
@@ -150,7 +159,9 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 								borderTopRightRadius: 0,
 							}}
 						>
-							<RemoveIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+							<RemoveIcon
+								sx={{ fontSize: { xs: '1.4em', md: '1em' }, transform: 'scale(1.1) scaleY(1.1)' }}
+							/>
 						</Button>
 					</>
 				)}
