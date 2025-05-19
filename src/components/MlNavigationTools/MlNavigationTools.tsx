@@ -148,7 +148,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 								},
 							}}
 						>
-							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' }, transform: 'scale(1.1)' }} />
+							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 						<Button
 							variant="navtools"
@@ -159,9 +159,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 								borderTopRightRadius: 0,
 							}}
 						>
-							<RemoveIcon
-								sx={{ fontSize: { xs: '1.4em', md: '1em' }, transform: 'scale(1.1) scaleY(1.1)' }}
-							/>
+							<RemoveIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
 					</>
 				)}
