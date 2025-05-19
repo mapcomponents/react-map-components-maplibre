@@ -9,7 +9,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
-
+import { useTheme } from '@mui/material';
 
 const storyoptions = {
 	title: 'MapComponents/MlNavigationTools',
@@ -23,7 +23,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (props: MlNavigationToolsProps ) => <MlNavigationTools {...props} />;
+const Template = (props: MlNavigationToolsProps) => <MlNavigationTools {...props} />;
 
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
@@ -33,6 +33,8 @@ const catalogueTemplate = () => {
 	const [FollowGpsButton, setFollowGpsButton] = useState(false);
 	const [showCustomButton, setShowCustomButton] = useState<boolean>(false);
 	const [alternativePosition, setAlternativePosition] = useState(false);
+
+	const theme = useTheme();
 
 	const handleChange1 = () => {
 		setThreeDButton(!ThreeDButton);
@@ -101,7 +103,12 @@ const catalogueTemplate = () => {
 				</FormGroup>
 			</Sidebar>
 			<MlNavigationTools
-				sx={alternativePosition ? { top: '80px' } : undefined}
+				sx={{
+					'& button': {
+						color: theme.palette.mode === 'dark' ? '#fff' : '#747577',
+					},
+					...(alternativePosition ? { top: '80px' } : {}),
+				}}
 				show3DButton={ThreeDButton}
 				showCenterLocationButton={CenterLocationButton}
 				showZoomButtons={ZoomButtons}
