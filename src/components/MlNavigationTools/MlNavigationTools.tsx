@@ -145,7 +145,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 									height: '1px',
 									backgroundColor: '#ccc',
 									borderRadius: '1px',
-								},
+								}, // Dividing line
 							}}
 						>
 							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
