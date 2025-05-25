@@ -5,7 +5,7 @@ import BubbleStyle, { BubbleForInstructionProps } from './BubbleForInstructions'
 export interface StepObject {
 	duration: number;
 	props: BubbleForInstructionProps;
-	content: JSX.Element;
+	content: React.JSX.Element;
 }
 
 export interface InstructionProps {

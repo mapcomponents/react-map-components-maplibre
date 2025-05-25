@@ -24,7 +24,7 @@ const DeleteIconButton = styled(IconButton)({
 });
 
 interface LayerListItemProps {
-	layerComponent: JSX.Element;
+	layerComponent: React.JSX.Element;
 	visible: boolean;
 	configurable: boolean;
 	type?: 'background' | 'background-labels' | 'layer' | 'wms-layer' | 'vector-tile-layer';
@@ -33,7 +33,7 @@ interface LayerListItemProps {
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
 	listItemSx?: SxProps;
-	buttons?: JSX.Element;
+	buttons?: React.JSX.Element;
 	layerId?: string;
 	sortable?: boolean;
 }

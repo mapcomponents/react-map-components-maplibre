@@ -41,7 +41,7 @@ export interface MlNavigationToolsProps {
 	/**
 	 * Additional JSX Elements to be rendered below MlNavigationTools buttons
 	 */
-	children?: JSX.Element;
+	children?: React.JSX.Element;
 	/**
 	 * Style attribute for NavigationTools container
 	 */
