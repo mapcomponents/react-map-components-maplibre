@@ -10,6 +10,7 @@ import MlFollowGps from '../MlFollowGps/MlFollowGps';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
 import MlCenterPosition from '../MlCenterPosition/MlCenterPosition';
+import { useTheme } from '@mui/material';
 
 export interface MlNavigationToolsProps {
 	/**
@@ -63,6 +64,8 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 
 	const [pitch, setPitch] = useState(0);
 	const mediaIsMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+
+	const theme = useTheme();
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -123,7 +126,8 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				orientation="vertical"
 				sx={{
 					border: 'none',
-					Button: { minWidth: '20px !important' },
+					Button: { minWidth: '20px !important',
+					 color: theme.palette.navigation.buttonColor },
 					'Button:hover': { border: 'none' },
 				}}
 			>
@@ -136,6 +140,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 								borderBottomLeftRadius: 0,
 								borderBottomRightRadius: 0,
 								position: 'relative',
+
 								'&::after': {
 									content: '""',
 									position: 'absolute',

@@ -9,7 +9,6 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
-import { useTheme } from '@mui/material';
 
 const storyoptions = {
 	title: 'MapComponents/MlNavigationTools',
@@ -34,8 +33,7 @@ const catalogueTemplate = () => {
 	const [showCustomButton, setShowCustomButton] = useState<boolean>(false);
 	const [alternativePosition, setAlternativePosition] = useState(false);
 
-	const theme = useTheme();
-
+	
 	const handleChange1 = () => {
 		setThreeDButton(!ThreeDButton);
 	};
@@ -104,9 +102,7 @@ const catalogueTemplate = () => {
 			</Sidebar>
 			<MlNavigationTools
 				sx={{
-					'& button': {
-						color: theme.palette.mode === 'dark' ? '#fff' : '#747577',
-					},
+				
 					...(alternativePosition ? { top: '80px' } : {}),
 				}}
 				show3DButton={ThreeDButton}
