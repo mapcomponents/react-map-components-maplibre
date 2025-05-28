@@ -31,7 +31,7 @@ const ListStyled = styled(List)({
 interface LayerListFolderProps {
 	visible: boolean;
 	name?: string | ReactNode;
-	children: JSX.Element | JSX.Element[];
+	children: React.JSX.Element | React.JSX.Element[];
 	setVisible?: (visible: boolean | ((val: unknown) => boolean)) => void;
 }
 

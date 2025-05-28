@@ -6,7 +6,7 @@ const ListStyled = styled(List)({
 });
 interface LayerListProps {
 	mapId?: string;
-	children?: JSX.Element | JSX.Element[];
+	children?: React.JSX.Element | React.JSX.Element[];
 }
 
 function LayerList(props: LayerListProps) {

@@ -38,7 +38,7 @@ interface LayerTreeListItemProps {
 	setLayerState?: (state: unknown) => void;
 	showDeleteButton?: boolean;
 	listItemSx?: SxProps;
-	buttons?: JSX.Element;
+	buttons?: React.JSX.Element;
 	sortable?: boolean;
 	mapConfigKey: string;
 	layerOrderConfig: LayerOrderItem;
