@@ -4,12 +4,12 @@ import React__default, { useMemo, useEffect, useCallback, useState, useRef, useC
 import { createTheme, ThemeProvider, styled as styled$2, useTheme } from '@mui/material/styles';
 import { v4 } from 'uuid';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Button, CircularProgress, useMediaQuery, FormControl, InputLabel, Select, MenuItem, FormLabel, RadioGroup, FormControlLabel, Radio, styled, List, ListItem, ListItemIcon, IconButton, Checkbox, ListItemText, Grid, Paper, Box as Box$1, Typography, TextField, Slider, Drawer, Tooltip, Snackbar, DialogTitle as DialogTitle$1, DialogActions as DialogActions$1, ListItemButton, ListItemAvatar, Avatar, DialogContent as DialogContent$1, OutlinedInput, Accordion, AccordionSummary, Dialog as Dialog$1 } from '@mui/material';
+import { Button, CircularProgress, useMediaQuery, FormControl, InputLabel, Select, MenuItem, FormLabel, RadioGroup, FormControlLabel, Radio, styled, List, ListItem, ListItemIcon, IconButton, Checkbox, ListItemText, Grid, Paper, Box as Box$1, Typography, TextField, Slider, Drawer, SwipeableDrawer, Tooltip, Snackbar, FormGroup, DialogTitle as DialogTitle$1, DialogActions as DialogActions$1, ListItemButton, ListItemAvatar, Avatar, DialogContent as DialogContent$1, OutlinedInput, Accordion, AccordionSummary, Dialog as Dialog$1 } from '@mui/material';
 import FilterCenterFocusIcon from '@mui/icons-material/FilterCenterFocus';
 import PrinterIcon from '@mui/icons-material/Print';
 import Button$1 from '@mui/material/Button';
 import jsPDF from 'jspdf';
-import ReactDOM from 'react-dom';
+import ReactDOM, { createPortal } from 'react-dom';
 import Moveable from 'react-moveable';
 import * as turf from '@turf/turf';
 import { point, circle, lineArc, bbox, booleanContains, bboxPolygon, featureCollection, distance, lineOffset } from '@turf/turf';
@@ -20,10 +20,12 @@ import Box$2 from '@mui/material/Box';
 import Grid$1 from '@mui/material/Grid';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import PentagonIcon from '@mui/icons-material/Pentagon';
-import { ExpandMore, KeyboardArrowRight, Tune, Delete, ExpandLess, ArrowCircleDown, ArrowCircleUp, CenterFocusWeak } from '@mui/icons-material';
-import { styled as styled$1, Box } from '@mui/system';
-import { ChromePicker } from 'react-color';
+import DeleteIcon from '@mui/icons-material/Delete';
 import TuneIcon from '@mui/icons-material/Tune';
+import { styled as styled$1, Box } from '@mui/system';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ChromePicker } from 'react-color';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -34,16 +36,12 @@ import { CSS } from '@dnd-kit/utilities';
 import CloseIcon from '@mui/icons-material/Close';
 import useMediaQuery$1 from '@mui/material/useMediaQuery';
 import { Global } from '@emotion/react';
-import { Typography as Typography$1, SwipeableDrawer } from '@mui/material/';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Divider from '@mui/material/Divider';
 import syncMove from '@mapbox/mapbox-gl-sync-move';
-import Paper$1 from '@mui/material/Paper';
 import * as xmldom from '@xmldom/xmldom';
-import PropTypes from 'prop-types';
 import { featureCollection as featureCollection$1, lineString, polygon } from '@turf/helpers';
 import WMSCapabilities from 'wms-capabilities';
 import InfoIcon from '@mui/icons-material/Info';
@@ -64,6 +62,9 @@ import osm2geojson from 'osm2geojson-lite';
 import { feature } from 'topojson-client';
 import * as externParser from '@tmcw/togeojson';
 import * as d3 from 'd3';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import CenterFocusWeakIcon from '@mui/icons-material/CenterFocusWeak';
 import { useSensor, PointerSensor, MouseSensor, useSensors, DndContext, closestCenter } from '@dnd-kit/core';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
@@ -86,6 +87,7 @@ import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -101,7 +103,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
 
 
 var __assign = function() {
@@ -138,8 +140,8 @@ function __awaiter(thisArg, _arguments, P, generator) {
 }
 
 function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -180,7 +182,6 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 var MapLibreGlWrapper = /** @class */ (function () {
     function MapLibreGlWrapper(props) {
         var _this = this;
@@ -482,7 +483,6 @@ var MapLibreGlWrapper = /** @class */ (function () {
                 self.initRegisteredElements(componentId);
                 self.registeredElements[componentId].events.push(_arguments);
             }
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             (_a = self.map).on.apply(_a, _arguments);
             return _this;
@@ -530,7 +530,6 @@ var MapLibreGlWrapper = /** @class */ (function () {
                 // cleanup events
                 self.registeredElements[componentId].events.forEach(function (item) {
                     var _a;
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     (_a = self.map).off.apply(_a, item);
                 });
@@ -1063,8 +1062,8 @@ var defaultProps$1 = {
  */
 var MapLibreMap = function (props) {
     var _a, _b;
-    var mapRef = useRef();
-    var mapContainer = useRef();
+    var mapRef = useRef(null);
+    var mapContainer = useRef(null);
     var mapContext = useContext(MapContext);
     var mapIdRef = useRef(props.mapId);
     var initializedRef = useRef(false);
@@ -1078,7 +1077,7 @@ var MapLibreMap = function (props) {
             if (mapRef.current) {
                 (_b = (_a = mapRef.current.map) === null || _a === void 0 ? void 0 : _a.remove) === null || _b === void 0 ? void 0 : _b.call(_a);
                 mapRef.current.cancelled = true;
-                mapRef.current = undefined;
+                mapRef.current = null;
             }
         };
     }, []);
@@ -1132,11 +1131,11 @@ function useMapState(props) {
     // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
     var mapContext = useContext(MapContext);
     var initializedRef = useRef(false);
-    var mapRef = useRef();
+    var mapRef = useRef(null);
     var _a = useState(), viewport = _a[0], setViewport = _a[1];
     var viewportRef = useRef(undefined);
     var _b = useState([]), layers = _b[0], setLayers = _b[1];
-    var layersRef = useRef();
+    var layersRef = useRef("");
     //const mapRef = useRef(props.map);
     var componentId = useRef(v4());
     /**
@@ -1176,7 +1175,7 @@ function useMapState(props) {
             // cleanup all event listeners
             if (mapRef.current) {
                 mapRef.current.cleanup(_componentId);
-                mapRef.current = undefined;
+                mapRef.current = null;
             }
             initializedRef.current = false;
         };
@@ -1243,7 +1242,7 @@ function useMap(props) {
             includeBaseLayers: true,
         },
     });
-    var mapRef = useRef();
+    var mapRef = useRef(null);
     var componentId = useRef(v4());
     var cleanup = function () {
         if (mapRef.current) {
@@ -1253,13 +1252,13 @@ function useMap(props) {
     useEffect(function () {
         return function () {
             cleanup();
-            mapRef.current = undefined;
+            mapRef.current = null;
         };
     }, []);
     useEffect(function () {
         var _a;
         if (mapRef.current && mapRef.current.cancelled === true) {
-            mapRef.current = undefined;
+            mapRef.current = null;
             setState({ map: undefined, ready: false });
         }
         if (mapRef.current || !mapContext.mapExists(props === null || props === void 0 ? void 0 : props.mapId))
@@ -1373,6 +1372,8 @@ var createExport = function (options) {
         bearing: 0,
         pitch: 0,
         interactive: false,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         preserveDrawingBuffer: true,
         fadeDuration: 0,
         attributionControl: false,
@@ -1583,7 +1584,7 @@ var PdfContextProvider = function (_a) {
         orientation: 'portrait',
         fixedScale: 0,
     }), options = _d[0], setOptions = _d[1];
-    var geojsonRef = useRef();
+    var geojsonRef = useRef(null);
     var template = useMemo(function () {
         if (typeof PdfTemplates[format][quality] !== 'undefined') {
             return options.orientation === 'portrait'
@@ -1646,7 +1647,7 @@ function PdfPreview(props) {
     var _a;
     var mapState = useMapState({ mapId: props.mapId, watch: { layers: false, viewport: true } });
     var targetRef = useRef(null);
-    var fixedScaleRef = useRef();
+    var fixedScaleRef = useRef(null);
     var moveableRef = useRef(null);
     var mapContainerRef = useRef(document.querySelector('.mapContainer'));
     //const [transform, setTransform] = useState('translate(452.111px, 15.6148px)');
@@ -1890,7 +1891,6 @@ function PdfForm(props) {
     var _c = useState(false), loading = _c[0], setLoading = _c[1];
     var pdfContext = useContext(PdfContext);
     var mapHook = useMap({
-        // eslint-disable-next-line react/prop-types
         mapId: props.mapId,
     });
     var mapExporter = useExportMap({ mapId: props.mapId });
@@ -1919,7 +1919,6 @@ function PdfForm(props) {
                 .then(function (res) {
                 if (typeof props.onCreatePdf === 'function') {
                     res.formData = new FormData(document.getElementById('createPdfFormID'));
-                    console.log('testlog');
                     props.onCreatePdf(res);
                 }
                 setLoading(false);
@@ -2069,7 +2068,7 @@ function featureEditorStyle() {
             },
             paint: {
                 'line-color': '#009EE0',
-                'line-width': 3,
+                'line-width': 4,
             },
         },
         {
@@ -2081,7 +2080,7 @@ function featureEditorStyle() {
                 'line-join': 'round',
             },
             paint: {
-                'line-color': "#009EE0",
+                'line-color': '#009EE0',
                 'line-dasharray': [0.2, 2],
                 'line-width': 2,
             },
@@ -2094,7 +2093,7 @@ function featureEditorStyle() {
                 'circle-radius': mediaIsMobile ? 5 : 4,
                 'circle-color': '#ffffff',
                 'circle-stroke-color': '#009EE0',
-                'circle-stroke-width': 1
+                'circle-stroke-width': 1,
             },
         },
         {
@@ -2114,7 +2113,7 @@ function featureEditorStyle() {
                 'circle-radius': mediaIsMobile ? 7 : 5,
                 'circle-color': '#ffffff',
                 'circle-stroke-color': '#009EE0',
-                'circle-stroke-width': 1
+                'circle-stroke-width': 1,
             },
         },
         {
@@ -2229,7 +2228,7 @@ function featureEditorStyle() {
  * GeoJson Feature editor that allows to create or manipulate GeoJson data
  */
 var useFeatureEditor = function (props) {
-    var draw = useRef();
+    var draw = useRef(null);
     var mapHook = useMap({
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
@@ -2631,16 +2630,22 @@ var getDefaultPaintPropsByType = function (type, defaultPaintOverrides) {
                 return defaultPaintOverrides.fill;
             }
             return {
-                'fill-color': 'rgba(10,240,256,0.6)',
-                'fill-outline-color': 'rgba(20,230,256,0.8)',
+                // 'fill-color': 'rgba(10,240,256,0.6)',
+                // 'fill-outline-color': 'rgba(20,230,256,0.8)',
+                'fill-color': '#009EE0',
+                'fill-outline-color': '#009EE0'
             };
         case 'line':
             if (defaultPaintOverrides === null || defaultPaintOverrides === void 0 ? void 0 : defaultPaintOverrides.line) {
+                console.log(defaultPaintOverrides.line);
                 return defaultPaintOverrides.line;
             }
             return {
-                'line-color': 'rgb(203,211,2)',
-                'line-width': 5,
+                // // 'line-color': 'rgb(203,211,2)',
+                // 'line-width': 5,
+                // 'line-blur': 0,
+                'line-color': '#009EE0',
+                'line-width': 4,
                 'line-blur': 0,
             };
         case 'circle':
@@ -2648,10 +2653,14 @@ var getDefaultPaintPropsByType = function (type, defaultPaintOverrides) {
                 return defaultPaintOverrides.circle;
             }
             return {
-                'circle-color': 'rgba(10,240,256,0.8)',
+                // 'circle-color': 'rgba(10,240,256,0.8)',
+                // 'circle-stroke-color': '#fff',
+                // 'circle-stroke-width': 2,
+                // 'circle-radius': 4,
+                'circle-color': '#009EE0',
                 'circle-stroke-color': '#fff',
                 'circle-stroke-width': 2,
-                'circle-radius': 4,
+                'circle-radius': 5,
             };
         default:
             return {};
@@ -2923,7 +2932,7 @@ var MlFollowGps = function (props) {
         isFollowed && userLocationGeoJson && (React__default.createElement(MlGeoJsonLayer, { geojson: accuracyGeoJson, type: 'fill', paint: __assign({ 'fill-color': '#cbd300', 'fill-opacity': 0.3 }, props.accuracyPaint), insertBeforeLayer: props.insertBeforeLayer })),
         isFollowed && orientationCone && (React__default.createElement(MlGeoJsonLayer, { geojson: orientationCone, type: 'fill', paint: __assign({ 'fill-color': '#0000ff', 'fill-antialias': false, 'fill-opacity': 0.3 }, props.orientationConePaint), insertBeforeLayer: props.insertBeforeLayer })),
         isFollowed && userLocationGeoJson && (React__default.createElement(MlGeoJsonLayer, { geojson: userLocationGeoJson, type: 'circle', paint: __assign({ 'circle-color': '#009ee0', 'circle-radius': 5, 'circle-stroke-color': '#fafaff', 'circle-stroke-width': 1 }, props.circlePaint), insertBeforeLayer: props.insertBeforeLayer })),
-        React__default.createElement(Button, { variant: "navtools", sx: {
+        React__default.createElement(Button, { variant: "navtools", "data-testid": "mlFollowGpsBtn", sx: {
                 zIndex: 1002,
                 color: isFollowed
                     ? function (theme) { return theme.palette.GPS.GPSActiveColor; }
@@ -3164,7 +3173,7 @@ function LayerListFolder(_a) {
     return (React__default.createElement(React__default.Fragment, null,
         React__default.createElement(ListItemStyled$2, null,
             React__default.createElement(ListItemIconStyled$1, null,
-                React__default.createElement(IconButtonStyled$2, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default.createElement(ExpandMore, null) : React__default.createElement(KeyboardArrowRight, null)),
+                React__default.createElement(IconButtonStyled$2, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default.createElement(ExpandMoreIcon, null) : React__default.createElement(ExpandLessIcon, null)),
                 React__default.createElement(CheckboxStyled$1, { disabled: setVisible ? false : !visible, checked: setVisible ? visible : localVisible, onClick: function () {
                         if (setVisible) {
                             setVisible(function (val) { return !val; });
@@ -3192,7 +3201,7 @@ var ColorPicker = function (_a) {
     var value = (props === null || props === void 0 ? void 0 : props.value) || '';
     return (React__default.createElement(React__default.Fragment, null,
         React__default.createElement(Grid, { container: true, sx: { flexWrap: 'nowrap' } },
-            React__default.createElement(Grid, { xs: 12, item: true },
+            React__default.createElement(Grid, { size: 12 },
                 React__default.createElement(Button, { variant: "outlined", onClick: function () { return setShowPicker(true); }, sx: {
                         minWidth: '100%',
                         padding: '5px',
@@ -3292,7 +3301,7 @@ function LayerPropertyForm$1(_a) {
                 case 'slider':
                     return (React__default.createElement(React__default.Fragment, { key: key },
                         label,
-                        React__default.createElement(Slider, __assign({}, inputPropsByPropKey$1[key], { inputProps: { inputMode: 'decimal', pattern: '[0-9]*' }, value: paintProps[key], valueLabelDisplay: "auto", onChange: function (_ev, value) {
+                        React__default.createElement(Slider, __assign({}, inputPropsByPropKey$1[key], { value: paintProps[key], valueLabelDisplay: "auto", onChange: function (_ev, value) {
                                 if (value) {
                                     setPaintProps(function (current) {
                                         var _a;
@@ -3437,7 +3446,8 @@ function LayerListItem(_a) {
     var deletedRef = useRef(false);
     var visibleRef = useRef(visible);
     // this state variable is used for layer components that provide a paint attribute
-    var _u = useState(((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint) || ((_d = (_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.options) === null || _d === void 0 ? void 0 : _d.paint) ||
+    var _u = useState(((_b = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _b === void 0 ? void 0 : _b.paint) ||
+        ((_d = (_c = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _c === void 0 ? void 0 : _c.options) === null || _d === void 0 ? void 0 : _d.paint) ||
         getDefaultPaintPropsByType(((_e = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _e === void 0 ? void 0 : _e.type) || getDefaulLayerTypeByGeometry(layerComponent.props.geojson))), paintProps = _u[0], setPaintProps = _u[1];
     var _visible = useMemo(function () {
         if (!visible) {
@@ -3493,7 +3503,7 @@ function LayerListItem(_a) {
                         layout: {
                             visibility: _visible ? 'visible' : 'none',
                         },
-                        options: __assign(__assign({}, (_a = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _a === void 0 ? void 0 : _a.options), (setLayerState ? {} : { paint: paintProps }))
+                        options: __assign(__assign({}, (_a = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _a === void 0 ? void 0 : _a.options), (setLayerState ? {} : { paint: paintProps })),
                     });
             }
         }
@@ -3517,7 +3527,7 @@ function LayerListItem(_a) {
                         return !current;
                     });
                 } },
-                React__default.createElement(Tune, null)))) : undefined },
+                React__default.createElement(TuneIcon, null)))) : undefined },
         React__default.createElement(CheckboxListItemIcon, null,
             React__default.createElement(CheckboxStyled, { disabled: !visible, checked: localVisible, onClick: function () {
                     setLocalVisible(function (val) { return !val; });
@@ -3525,7 +3535,7 @@ function LayerListItem(_a) {
         React__default.createElement(ListItemText, { variant: "layerlist", primary: name, secondary: description, primaryTypographyProps: { overflow: 'hidden' } })));
     return (React__default.createElement(React__default.Fragment, null,
         props.sortable && props.layerId && !((_j = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _j === void 0 ? void 0 : _j.layers) && (React__default.createElement(SortableContainer, { layerId: props.layerId }, listContent)),
-        !props.sortable && !((_k = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _k === void 0 ? void 0 : _k.layers) && (listContent),
+        !props.sortable && !((_k = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _k === void 0 ? void 0 : _k.layers) && listContent,
         _layerComponent,
         !((_l = layerComponent === null || layerComponent === void 0 ? void 0 : layerComponent.props) === null || _l === void 0 ? void 0 : _l.layers) &&
             Object.keys(paintProps).length > 0 &&
@@ -3537,7 +3547,7 @@ function LayerListItem(_a) {
                             setShowDeletionConfirmationDialog(true);
                         }
                     } },
-                    React__default.createElement(Delete, null)),
+                    React__default.createElement(DeleteIcon, null)),
                 showDeletionConfirmationDialog && (React__default.createElement(ConfirmDialog, { open: showDeletionConfirmationDialog, onConfirm: function () {
                         if (typeof setLayerState === 'function') {
                             deletedRef.current = true;
@@ -3588,7 +3598,7 @@ function Sidebar(_a) {
                             lg: '350px',
                         }, boxSizing: 'border-box' }, drawerPaperProps === null || drawerPaperProps === void 0 ? void 0 : drawerPaperProps.sx) }), sx: __assign({ flexGrow: 1, zIndex: 105, position: 'absolute', bottom: 0, display: 'flex', flexDirection: 'column', maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' } }, (drawerOpen ? {} : { left: mediaIsMobile ? '-90vw' : '-20vw' })) }, props),
                 React__default.createElement(DrawerHeader, __assign({}, drawerHeaderProps),
-                    React__default.createElement(Typography$1, { variant: "h6" }, props.name),
+                    React__default.createElement(Typography, { variant: "h6" }, props.name),
                     React__default.createElement(IconButton, { onClick: setOpen
                             ? function () {
                                 setOpen === null || setOpen === void 0 ? void 0 : setOpen(false);
@@ -3635,7 +3645,7 @@ function Sidebar(_a) {
                         left: 0,
                     } },
                     React__default.createElement(Puller, null),
-                    React__default.createElement(Typography$1, { variant: "h6", sx: { p: '13px' } }, props.name)),
+                    React__default.createElement(Typography, { variant: "h6", sx: { p: '13px' } }, props.name)),
                 React__default.createElement(Paper, { sx: {
                         px: '15px',
                         pb: '15px',
@@ -3682,14 +3692,16 @@ var MlMultiMeasureTool = function (props) {
         });
     };
     useEffect(function () {
-        reload && setReload(false);
-        reload &&
+        if (reload) {
+            setReload(false);
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             measureState &&
-            setMeasureList(function (current) {
-                var newList = __spreadArray([], current, true);
-                newList.push(measureState);
-                return newList;
-            });
+                setMeasureList(function (current) {
+                    var newList = __spreadArray([], current, true);
+                    newList.push(measureState);
+                    return newList;
+                });
+        }
     }, [reload]);
     useEffect(function () {
         setMeasureState(undefined);
@@ -3699,7 +3711,7 @@ var MlMultiMeasureTool = function (props) {
             React__default.createElement(Box$2, { sx: { flexGrow: 1 } },
                 React__default.createElement("br", null),
                 React__default.createElement(Grid$1, { container: true, spacing: 4, justifyContent: "flex-start" },
-                    React__default.createElement(Grid$1, { item: true, xs: 3 },
+                    React__default.createElement(Grid$1, { size: 3 },
                         React__default.createElement(Tooltip, { title: "Measure Area" },
                             React__default.createElement(Button, { variant: "outlined", sx: {
                                     backgroundColor: selectedMode === 'polygon'
@@ -3714,7 +3726,7 @@ var MlMultiMeasureTool = function (props) {
                                     setReload(true);
                                 } },
                                 React__default.createElement(PentagonIcon, null)))),
-                    React__default.createElement(Grid$1, { item: true, xs: 3 },
+                    React__default.createElement(Grid$1, { size: 3 },
                         React__default.createElement(Tooltip, { title: "Measure Distance" },
                             React__default.createElement(Button, { variant: "outlined", sx: {
                                     backgroundColor: selectedMode === 'line'
@@ -3730,7 +3742,7 @@ var MlMultiMeasureTool = function (props) {
                                 } },
                                 React__default.createElement(PolylineIcon, null)))))),
             React__default.createElement("br", null),
-            React__default.createElement(Grid$1, { item: true, xs: 4 },
+            React__default.createElement(Grid$1, { size: 4 },
                 React__default.createElement(FormControl, null,
                     React__default.createElement(InputLabel, { id: "unit-select-label" }, "Unit"),
                     React__default.createElement(Select, { labelId: "unit-select-label", id: "unit-select", value: selectedUnit, label: "Unit", onChange: function (e) {
@@ -3802,56 +3814,24 @@ MlMultiMeasureTool.defaultProps = {
     buttonStyleOverride: {},
 };
 
-var _g;
-function _extends$2() { _extends$2 = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
-var SvgCompassNeedle = function SvgCompassNeedle(props) {
-  return /*#__PURE__*/React.createElement("svg", _extends$2({
-    width: 10,
-    height: 40,
-    viewBox: "0 0 10 40",
-    fill: "none",
-    id: "svg6"
-  }, props), _g || (_g = /*#__PURE__*/React.createElement("g", {
-    id: "g14",
-    transform: "translate(0.67544,-1.25e-5)"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "m 3.34715,4.52028 c 0.22737,-1.05154 1.72745,-1.05154 1.95482,0 L 8.64912,20 H 0 Z",
-    fill: "#cf003d"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "m 3.34715,35.4797 c 0.22737,1.0516 1.72745,1.0516 1.95482,0 L 8.64912,20 H 0 Z",
-    fill: "#d3dcf0"
-  }))));
+var CompassBackground = function (_a) {
+    var _b = _a.className, className = _b === void 0 ? '' : _b, title = _a.title, onClick = _a.onClick, style = _a.style;
+    return (React__default.createElement("svg", { width: "52", height: "53", viewBox: "0 0 52 53", fill: "none", className: className, onClick: onClick, role: title ? 'img' : 'presentation', "aria-hidden": !title, style: style },
+        title && React__default.createElement("title", null, title),
+        React__default.createElement("circle", { cx: "26.0001", cy: "26.1843", r: "24", fill: "white", stroke: "#009EE0", strokeWidth: "2" }),
+        React__default.createElement("path", { d: "M26.4915 7.59161C26.3524 8.07338 25.6698 8.07338 25.5307 7.59161L24.2998 3.3276C24.2075 3.0079 24.4474 2.68893 24.7802 2.68893H27.242C27.5748 2.68893 27.8147 3.0079 27.7224 3.3276L26.4915 7.59161Z", fill: "#009EE0" }),
+        React__default.createElement("path", { d: "M25.5085 44.7598C25.6476 44.278 26.3302 44.278 26.4693 44.7598L27.7002 49.0238C27.7925 49.3435 27.5526 49.6625 27.2198 49.6625H24.758C24.4252 49.6625 24.1853 49.3435 24.2776 49.0238L25.5085 44.7598Z", fill: "#009EE0" }),
+        React__default.createElement("path", { d: "M44.6641 26.4915C44.1823 26.3524 44.1823 25.6698 44.6641 25.5307L48.9281 24.2998C49.2478 24.2075 49.5668 24.4474 49.5668 24.7802V27.242C49.5668 27.5747 49.2478 27.8147 48.9281 27.7224L44.6641 26.4915Z", fill: "#009EE0" }),
+        React__default.createElement("path", { d: "M7.3959 25.6085C7.87766 25.7476 7.87766 26.4302 7.3959 26.5693L3.13189 27.8002C2.81218 27.8925 2.49321 27.6526 2.49321 27.3198L2.49321 24.858C2.49321 24.5253 2.81218 24.2853 3.13189 24.3776L7.3959 25.6085Z", fill: "#009EE0" })));
 };
 
-var _circle, _path$1, _path2$1, _path3, _path4;
-function _extends$1() { _extends$1 = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
-var SvgCompassBackground = function SvgCompassBackground(props) {
-  return /*#__PURE__*/React.createElement("svg", _extends$1({
-    width: 52,
-    height: 53,
-    viewBox: "0 0 52 53",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _circle || (_circle = /*#__PURE__*/React.createElement("circle", {
-    cx: 26.0001,
-    cy: 26.1843,
-    r: 24,
-    fill: "white",
-    stroke: "#009EE0",
-    strokeWidth: 2
-  })), _path$1 || (_path$1 = /*#__PURE__*/React.createElement("path", {
-    d: "M26.4915 7.59161C26.3524 8.07338 25.6698 8.07338 25.5307 7.59161L24.2998 3.3276C24.2075 3.0079 24.4474 2.68893 24.7802 2.68893H27.242C27.5748 2.68893 27.8147 3.0079 27.7224 3.3276L26.4915 7.59161Z",
-    fill: "#009EE0"
-  })), _path2$1 || (_path2$1 = /*#__PURE__*/React.createElement("path", {
-    d: "M25.5085 44.7598C25.6476 44.278 26.3302 44.278 26.4693 44.7598L27.7002 49.0238C27.7925 49.3435 27.5526 49.6625 27.2198 49.6625H24.758C24.4252 49.6625 24.1853 49.3435 24.2776 49.0238L25.5085 44.7598Z",
-    fill: "#009EE0"
-  })), _path3 || (_path3 = /*#__PURE__*/React.createElement("path", {
-    d: "M44.6641 26.4915C44.1823 26.3524 44.1823 25.6698 44.6641 25.5307L48.9281 24.2998C49.2478 24.2075 49.5668 24.4474 49.5668 24.7802V27.242C49.5668 27.5747 49.2478 27.8147 48.9281 27.7224L44.6641 26.4915Z",
-    fill: "#009EE0"
-  })), _path4 || (_path4 = /*#__PURE__*/React.createElement("path", {
-    d: "M7.3959 25.6085C7.87766 25.7476 7.87766 26.4302 7.3959 26.5693L3.13189 27.8002C2.81218 27.8925 2.49321 27.6526 2.49321 27.3198L2.49321 24.858C2.49321 24.5253 2.81218 24.2853 3.13189 24.3776L7.3959 25.6085Z",
-    fill: "#009EE0"
-  })));
+var CompassNeedle = function (_a) {
+    var _b = _a.className, className = _b === void 0 ? '' : _b, title = _a.title, onClick = _a.onClick, style = _a.style;
+    return (React__default.createElement("svg", { width: "10", height: "40", viewBox: "0 0 10 40", fill: "none", className: className, onClick: onClick, role: title ? 'img' : 'presentation', "aria-hidden": !title, style: style },
+        title && React__default.createElement("title", null, title),
+        React__default.createElement("g", { transform: "translate(0.67544,-1.25e-5)" },
+            React__default.createElement("path", { d: "m 3.34715,4.52028 c 0.22737,-1.05154 1.72745,-1.05154 1.95482,0 L 8.64912,20 H 0 Z", fill: "#cf003d" }),
+            React__default.createElement("path", { d: "m 3.34715,35.4797 c 0.22737,1.0516 1.72745,1.0516 1.95482,0 L 8.64912,20 H 0 Z", fill: "#d3dcf0" }))));
 };
 
 var BoxStyled$2 = styled(Box$1)(function (_a) {
@@ -3957,9 +3937,9 @@ var MlNavigationCompass = function (props) {
     return (React__default.createElement(React__default.Fragment, null,
         React__default.createElement(BoxStyled$2, { sx: __assign({}, props.style) },
             React__default.createElement(CompassBox, { onClick: rotate, sx: __assign({}, props.backgroundStyle) },
-                React__default.createElement(SvgCompassBackground, { style: { position: 'absolute', top: 0, left: 0 } }),
+                React__default.createElement(CompassBackground, { style: { position: 'absolute', top: 0, left: 0 } }),
                 React__default.createElement(NeedleBox, { onClick: rotate, sx: __assign({}, props.needleStyle) },
-                    React__default.createElement(SvgCompassNeedle, { style: {
+                    React__default.createElement(CompassNeedle, { style: {
                             transform: 'rotate(' + (bearing > 0 ? '-' + bearing : -1 * bearing) + 'deg)',
                         } }))))));
 };
@@ -3987,16 +3967,12 @@ var MlNavigationTools = function (props) {
     var zoomIn = useCallback(function () {
         if (!mapHook.map)
             return;
-        if (mapHook.map.transform._zoom + 0.5 <= mapHook.map.transform._maxZoom) {
-            mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom + 0.5 });
-        }
+        mapHook.map.easeTo({ zoom: mapHook.map.getZoom() + 0.5 });
     }, [mapHook.map]);
     var zoomOut = useCallback(function () {
         if (!mapHook.map)
             return;
-        if (mapHook.map.transform._zoom - 0.5 >= mapHook.map.transform._minZoom) {
-            mapHook.map.easeTo({ zoom: mapHook.map.transform._zoom - 0.5 });
-        }
+        mapHook.map.easeTo({ zoom: mapHook.map.getZoom() - 0.5 });
     }, [mapHook.map]);
     var adjustPitch = useCallback(function () {
         if (!mapHook.map)
@@ -4277,20 +4253,11 @@ MlLayerMagnify.defaultProps = {
     magnifierStyle: {},
 };
 
-var _path, _path2;
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var SvgIcononlyarrow = function SvgIcononlyarrow(props) {
-  return /*#__PURE__*/React.createElement("svg", _extends({
-    viewBox: "0 0 47 30",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, props), _path || (_path = /*#__PURE__*/React.createElement("path", {
-    d: "M29.5 21.25L35.75 15L29.5 8.75V21.25Z",
-    fill: "#009EE0"
-  })), _path2 || (_path2 = /*#__PURE__*/React.createElement("path", {
-    d: "M17.5 8.75L11.25 15L17.5 21.25V8.75Z",
-    fill: "#009EE0"
-  })));
+var SwipeIcon = function (_a) {
+    var _b = _a.className, className = _b === void 0 ? '' : _b, title = _a.title, onClick = _a.onClick, style = _a.style, color = _a.color;
+    return (React__default.createElement("svg", { viewBox: "0 0 47 30", fill: "none", xmlns: "http://www.w3.org/2000/svg", className: className, onClick: onClick, role: title ? 'img' : 'presentation', "aria-hidden": !title, style: style, color: color },
+        React__default.createElement("path", { d: "M29.5 21.25L35.75 15L29.5 8.75V21.25Z", fill: "#009EE0" }),
+        React__default.createElement("path", { d: "M17.5 8.75L11.25 15L17.5 21.25V8.75Z", fill: "#009EE0" })));
 };
 
 /**
@@ -4362,12 +4329,12 @@ var MlLayerSwipe = function (props) {
         document.removeEventListener('mouseup', onMouseUp);
     };
     function adjustWindowSize() {
-        var clipWidth = mapContext.maps[props.map2Id]
+        var clipWidth = parseFloat(mapContext.maps[props.map2Id]
             .getContainer()
             .style.clip.split(',')[1]
-            .replace('px', '');
+            .replace('px', ''));
         var canvasWidth = mapContext.maps[props.map1Id].getCanvas().getBoundingClientRect().width;
-        if (parseFloat(clipWidth) < canvasWidth) {
+        if (clipWidth < canvasWidth) {
             var newPosition = parseFloat(((clipWidth / canvasWidth) * 100).toFixed(2));
             setSwipeX(newPosition);
         }
@@ -4384,7 +4351,7 @@ var MlLayerSwipe = function (props) {
         };
     }, [mapContext]);
     return (React__default.createElement("div", { style: __assign({ position: 'absolute', left: swipeX + '%', top: '50%', borderRadius: '50%', width: '65px', height: '65px', background: 'rgba(234, 235, 241, 0.75)', border: '2px solid rgba(0, 158, 224, 0.75)', cursor: 'pointer', zIndex: '110', marginLeft: '-35px', marginTop: '-50px', textAlign: 'center', lineHeight: '91px', fontSize: '2em', color: '#fafafa', userSelect: 'none' }, props.buttonStyle), onTouchStart: onDown, onMouseDown: onDown },
-        React__default.createElement(SvgIcononlyarrow, { color: "#0066ff", style: {
+        React__default.createElement(SwipeIcon, { color: "#0066ff", style: {
                 width: '65px',
                 height: '65px',
                 justifyContent: 'center',
@@ -4395,6 +4362,23 @@ MlLayerSwipe.defaultProps = {
     buttonStyle: {},
 };
 
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
+function _arrayWithoutHoles(r) {
+  if (Array.isArray(r)) return _arrayLikeToArray(r);
+}
+function _iterableToArray(r) {
+  if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
+}
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _toConsumableArray(r) {
+  return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
+}
 function _typeof(o) {
   "@babel/helpers - typeof";
 
@@ -4404,33 +4388,15 @@ function _typeof(o) {
     return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
   }, _typeof(o);
 }
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-  return arr2;
-}
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return _arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+  }
 }
 
-var _showNextTransitionSegment = function _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson) {
+var _showNextTransitionSegment2 = function _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson) {
   var _arguments = arguments;
   if (typeof transitionGeojsonDataRef.current[currentTransitionStepRef.current] !== "undefined") {
     // if at last transition step set to target geojson
@@ -4443,7 +4409,7 @@ var _showNextTransitionSegment = function _showNextTransitionSegment(props, map,
     currentTransitionStepRef.current++;
     if (transitionInProgressRef.current && currentTransitionStepRef.current < transitionGeojsonDataRef.current.length) {
       transitionTimeoutRef.current = setTimeout(function () {
-        return _showNextTransitionSegment.apply(void 0, _toConsumableArray(_arguments));
+        return _showNextTransitionSegment2.apply(void 0, _toConsumableArray(_arguments));
       }, msPerStep);
     } else {
       if (typeof props.onTransitionEnd === "function") {
@@ -4533,7 +4499,7 @@ var _transitionToGeojson = function _transitionToGeojson(props, transitionGeojso
   currentTransitionStepRef.current = 1;
   transitionInProgressRef.current = true;
   transitionTimeoutRef.current = setTimeout(function () {
-    return _showNextTransitionSegment(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson);
+    return _showNextTransitionSegment2(props, map, transitionInProgressRef, transitionGeojsonDataRef, transitionGeojsonCommonDataRef, currentTransitionStepRef, msPerStep, transitionTimeoutRef, setDisplayGeojson);
   }, msPerStep);
 };
 var createTransitionSteps = function createTransitionSteps(linestringCoordinates, perStepDistance, stepCnt) {
@@ -4568,7 +4534,7 @@ var MlTransitionGeoJsonLayer = function (props) {
     });
     var initializedRef = useRef(false);
     // transition effect variables
-    var oldGeojsonRef = useRef();
+    var oldGeojsonRef = useRef(null);
     var transitionInProgressRef = useRef(false);
     var transitionTimeoutRef = useRef(undefined);
     var currentTransitionStepRef = useRef(false);
@@ -4598,7 +4564,9 @@ var MlTransitionGeoJsonLayer = function (props) {
             transitionGeojsonCommonDataRef.current = [];
             transitionToGeojson();
         }
-        oldGeojsonRef.current = props.geojson;
+        if (props.geojson) {
+            oldGeojsonRef.current = props.geojson;
+        }
     }, [mapHook.map, transitionToGeojson, props]);
     var startTransition = useCallback(function () {
         if (props.type === 'line' &&
@@ -4620,76 +4588,130 @@ var MlTransitionGeoJsonLayer = function (props) {
         React__default.createElement(MlGeoJsonLayer, __assign({}, restProps, { geojson: displayGeojson }))));
 };
 
-/**
- * Adds a marker to the map and displays the contents of the "content" property in an iframe next to it
- */
-var MlMarker = function (props) {
+var getBoxTransform = function (anchor) {
+    if (anchor === void 0) { anchor = 'top'; }
+    switch (anchor) {
+        case 'bottom':
+            return 'translate(-50%, 0%)';
+        case 'left':
+            return 'translate(-100%, -50%)';
+        case 'right':
+            return 'translate(0%, -50%)';
+        case 'top-left':
+            return 'translate(-100%, -100%)';
+        case 'top-right':
+            return 'translate(0%, -100%)';
+        case 'bottom-left':
+            return 'translate(-100%, 0%)';
+        case 'bottom-right':
+            return 'translate(0%, 0%)';
+        default:
+        case 'top':
+            return 'translate(-50%, -100%)';
+    }
+};
+function getBoxMargins(anchor, offset, style) {
+    var w = parseInt(String((style === null || style === void 0 ? void 0 : style.width) || 14), 10);
+    var h = parseInt(String((style === null || style === void 0 ? void 0 : style.height) || 14), 10);
+    var m = {};
+    switch (anchor) {
+        case 'bottom':
+            m.marginTop = "".concat(offset, "px");
+            break;
+        case 'left':
+            m.marginLeft = "-".concat(offset, "px");
+            break;
+        case 'right':
+            m.marginLeft = "".concat(w + offset, "px");
+            break;
+        case 'top-left':
+            m.marginTop = "-".concat(h + offset, "px");
+            m.marginLeft = "-".concat(offset, "px");
+            break;
+        case 'top-right':
+            m.marginTop = "-".concat(h + offset, "px");
+            m.marginLeft = "".concat(w + offset, "px");
+            break;
+        case 'bottom-left':
+            m.marginTop = "".concat(offset, "px");
+            m.marginLeft = "-".concat(offset, "px");
+            break;
+        case 'bottom-right':
+            m.marginTop = "".concat(offset, "px");
+            m.marginLeft = "".concat(w + offset, "px");
+            break;
+        case 'top':
+        default:
+            m.marginTop = "-".concat(h + offset, "px");
+            break;
+    }
+    return m;
+}
+var MlMarker = function (_a) {
+    var _b = _a.passEventsThrough, passEventsThrough = _b === void 0 ? true : _b, _c = _a.contentOffset, contentOffset = _c === void 0 ? 5 : _c, props = __rest(_a, ["passEventsThrough", "contentOffset"]);
     var mapHook = useMap({
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
     });
-    var mapState = useMapState({
-        mapId: props.mapId,
-        watch: { viewport: true },
-    });
-    var iframe = useRef(null);
-    var _a = useState({
-        width: "400px",
-        height: "500px",
-    }), iframeDimensions = _a[0], setIframeDimensions = _a[1];
-    var _b = useState(), markerPixelPos = _b[0], setMarkerPixelPos = _b[1];
+    var _d = useState(null), marker = _d[0], setMarker = _d[1];
+    var container = useRef(null);
+    var iframeRef = useRef(null);
     useEffect(function () {
-        var _a, _b;
-        if (!((_b = (_a = mapHook.map) === null || _a === void 0 ? void 0 : _a.map) === null || _b === void 0 ? void 0 : _b.project))
+        if (!mapHook.map)
             return;
-        var _pixelPos = mapHook.map.map.project([props.lng, props.lat]);
-        setMarkerPixelPos(_pixelPos);
-    }, [mapHook.map, props.lng, props.lat, mapState.viewport]);
-    useEffect(function () {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
-        if (!mapHook.map ||
-            !((_d = (_c = (_b = (_a = iframe.current) === null || _a === void 0 ? void 0 : _a.contentWindow) === null || _b === void 0 ? void 0 : _b.document) === null || _c === void 0 ? void 0 : _c.body) === null || _d === void 0 ? void 0 : _d.scrollHeight))
-            return;
-        var mapHeight = mapHook.map.map._container.clientHeight;
-        var _pixelPos = mapHook.map.map.project([props.lng, props.lat]);
-        var pixelToBottom = mapHeight - _pixelPos.y;
-        var iframeHeight = (_h = (_g = (_f = (_e = iframe.current) === null || _e === void 0 ? void 0 : _e.contentWindow) === null || _f === void 0 ? void 0 : _f.document) === null || _g === void 0 ? void 0 : _g.body) === null || _h === void 0 ? void 0 : _h.scrollHeight;
-        var iframeWidth = (_m = (_l = (_k = (_j = iframe.current) === null || _j === void 0 ? void 0 : _j.contentWindow) === null || _k === void 0 ? void 0 : _k.document) === null || _l === void 0 ? void 0 : _l.body) === null || _m === void 0 ? void 0 : _m.scrollWidth;
-        setIframeDimensions({
-            width: iframeWidth + "px",
-            height: (pixelToBottom < iframeHeight ? pixelToBottom : iframeHeight) + "px",
+        container.current = document.createElement('div');
+        var defaultMarkerStyle = {
+            width: '12px',
+            height: '12px',
+            background: 'linear-gradient(135deg, rgb(186, 208, 218) 0%, rgb(96, 209, 253) 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.7)',
+            boxShadow: '0 2px 6px rgba(90, 0, 0, 0.2), 0 0 0 2px rgba(240, 147, 251, 0.2)',
+            borderRadius: '50%',
+        };
+        var markerStyle = __assign(__assign({}, defaultMarkerStyle), props.markerStyle);
+        var maplibreMarker = new maplibregl.Marker({
+            element: container.current,
+            anchor: 'center',
+        })
+            .setLngLat([props.lng, props.lat])
+            .addTo(mapHook.map.map);
+        setMarker(maplibreMarker);
+        var markerDot = document.createElement('div');
+        Object.entries(markerStyle).forEach(function (_a) {
+            var key = _a[0], value = _a[1];
+            markerDot.style.setProperty(key.replace(/([A-Z])/g, '-$1').toLowerCase(), String(value));
         });
-    }, [props.lng, props.lat, props.content]);
-    return (React__default.createElement(React__default.Fragment, null,
-        React__default.createElement(MlGeoJsonLayer, { geojson: {
-                type: "Feature",
-                geometry: {
-                    type: "Point",
-                    coordinates: [props.lng, props.lat],
-                },
-                properties: {},
-            }, paint: {
-                "circle-radius": 14,
-                "circle-color": "rgba(40,200,20,0.5)",
-            }, type: "circle", mapId: props.mapId }),
-        markerPixelPos && (React__default.createElement(Paper$1, { sx: {
-                opacity: 0.7,
-                position: "fixed",
-                display: "flex",
-                /** TODO: fix positioning delay when moving the map */
-                left: markerPixelPos.x,
-                top: markerPixelPos.y,
-                width: iframeDimensions.width,
-                height: iframeDimensions.height,
-                "&:hover": {
+        container.current.appendChild(markerDot);
+        return function () {
+            var _a;
+            markerDot.remove();
+            maplibreMarker.remove();
+            (_a = container.current) === null || _a === void 0 ? void 0 : _a.remove();
+        };
+    }, [mapHook.map, props.lng, props.lat, props.markerStyle, props.anchor]);
+    useEffect(function () {
+        if (marker) {
+            marker.setLngLat([props.lng, props.lat]);
+        }
+    }, [marker, props.lng, props.lat]);
+    function handleIframeLoad() {
+        var _a, _b, _c;
+        var iframeDoc = (_b = (_a = iframeRef.current) === null || _a === void 0 ? void 0 : _a.contentWindow) === null || _b === void 0 ? void 0 : _b.document;
+        if (iframeDoc && ((_c = iframeRef.current) === null || _c === void 0 ? void 0 : _c.parentElement)) {
+            var scrollHeight = iframeDoc.documentElement.scrollHeight;
+            iframeRef.current.parentElement.style.height = "".concat(scrollHeight, "px");
+        }
+    }
+    return (container.current &&
+        createPortal(React__default.createElement(Box$1, { sx: __assign(__assign(__assign({ position: 'absolute', display: 'flex', width: '300px', maxHeight: '500px', opacity: passEventsThrough ? 1 : 0.7, zIndex: -1, transform: getBoxTransform(props.anchor) }, getBoxMargins(props.anchor, contentOffset, props.markerStyle)), { pointerEvents: passEventsThrough ? 'none' : 'auto', '&:hover': {
                     opacity: 1,
-                },
-                zIndex: -1,
-            } },
-            React__default.createElement("iframe", { style: { width: "100%" }, srcDoc: props.content, ref: iframe, sandbox: "allow-same-origin allow-popups-to-escape-sandbox", frameBorder: "0", title: mapHook.componentId })))));
-};
-MlMarker.defaultProps = {
-    mapId: undefined,
+                } }), props.containerStyle) },
+            React__default.createElement("iframe", { ref: iframeRef, onLoad: handleIframeLoad, style: __assign({ width: '100%', borderStyle: 'none' }, props.iframeStyle), srcDoc: "<div>\n\t<style>\n\t\tbody {\n\t\t\t".concat(Object.entries(props.iframeBodyStyle || {})
+                    .map(function (_a) {
+                    var key = _a[0], val = _a[1];
+                    return "".concat(key.replace(/([A-Z])/g, '-$1').toLowerCase(), ": ").concat(val, ";");
+                })
+                    .join(' '), "\n\t\t}\n\t</style>\n\t").concat(props.content || '', "\n</div>"), sandbox: "allow-same-origin allow-popups-to-escape-sandbox allow-scripts", title: mapHook.componentId })), container.current));
 };
 
 /**
@@ -5390,7 +5412,7 @@ var MlShareMapState = function (props) {
     // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
     var mapContext = useContext(MapContext);
     var initializedRef = useRef(false);
-    var mapRef = useRef();
+    var mapRef = useRef(null);
     var _a = useState(undefined), map = _a[0], setMap = _a[1];
     var layersFromUrlParamsRef = useRef({});
     var componentId = useRef((props.idPrefix ? props.idPrefix : 'MlShareMapState-') + v4());
@@ -5405,7 +5427,7 @@ var MlShareMapState = function (props) {
         },
     });
     var allStatesRestoredRef = useRef(false);
-    var layerStatesRestored = useRef();
+    var layerStatesRestored = useRef(null);
     var restoredStatesRef = useRef({
         viewport: {
             center: false,
@@ -5451,7 +5473,7 @@ var MlShareMapState = function (props) {
             // check for the existence of map.style before calling getLayer or getSource
             if (mapRef.current) {
                 mapRef.current.cleanup(_componentId);
-                mapRef.current = undefined;
+                mapRef.current = null;
             }
             initializedRef.current = false;
         };
@@ -5489,7 +5511,7 @@ var MlShareMapState = function (props) {
         if (!((_a = mapState === null || mapState === void 0 ? void 0 : mapState.layers) === null || _a === void 0 ? void 0 : _a.length))
             return;
         if (typeof layerStatesRestored.current === 'undefined') {
-            layerStatesRestored.current = undefined;
+            layerStatesRestored.current = null;
             (_b = initialUrlParams === null || initialUrlParams === void 0 ? void 0 : initialUrlParams.layers) === null || _b === void 0 ? void 0 : _b.forEach(function (layer) {
                 var _a;
                 if ((_a = layerStatesRestored.current) === null || _a === void 0 ? void 0 : _a[layer.id]) {
@@ -5569,12 +5591,6 @@ var MlShareMapState = function (props) {
 MlShareMapState.defaultProps = {
     mapId: undefined,
 };
-MlShareMapState.propTypes = {
-    /**
-     * Id of the target MapLibre instance in mapContext
-     */
-    mapId: PropTypes.string,
-};
 
 function getElevationData(_geojsonInfo, elevationFactor) {
     var createStep = function (x, y, z, x2, y2) {
@@ -5603,7 +5619,7 @@ function getElevationData(_geojsonInfo, elevationFactor) {
     _geojsonInfo.line.geometry.coordinates.forEach(function (coordinate, index) {
         //const point = createPoint(coordinate[0],coordinate[1],coordinate[2]-min);
         //points.push(point);
-        if (_geojsonInfo.line.geometry.coordinates[index + 1]) {
+        if (_geojsonInfo.line.geometry.coordinates[index + 1] && Array.isArray(coordinate)) {
             var wayLength = distance([coordinate[0], coordinate[1]], [
                 _geojsonInfo.line.geometry.coordinates[index + 1][0],
                 _geojsonInfo.line.geometry.coordinates[index + 1][1],
@@ -5772,7 +5788,7 @@ var MlVectorTileLayer = function (props) {
                 var layerPaintConfString = JSON.stringify(layer.paint);
                 if (layerPaintConfString !== layerPaintConfsRef.current[layer.id]) {
                     for (var paintKey in layer.paint) {
-                        mapHook.map.map.setPaintProperty(layer.id, paintKey, layer.paint[paintKey]);
+                        mapHook.map.setPaintProperty(layer.id, paintKey, layer.paint[paintKey]);
                     }
                 }
                 layerPaintConfsRef.current[layer.id] = layerPaintConfString;
@@ -5780,7 +5796,7 @@ var MlVectorTileLayer = function (props) {
                 var layerLayoutConfString = JSON.stringify(layer.layout);
                 if (layerLayoutConfString !== layerLayoutConfsRef.current[layer.id]) {
                     for (var layoutKey in layer.layout) {
-                        mapHook.map.map.setLayoutProperty(layer.id, layoutKey, layer.layout[layoutKey]);
+                        mapHook.map.setLayoutProperty(layer.id, layoutKey, layer.layout[layoutKey]);
                     }
                 }
                 layerLayoutConfsRef.current[layer.id] = layerLayoutConfString;
@@ -5920,12 +5936,6 @@ var MlWmsFeatureInfoPopup = function (props) {
 MlWmsFeatureInfoPopup.defaultProps = {
     mapId: undefined,
 };
-MlWmsFeatureInfoPopup.propTypes = {
-    /**
-     * Id of the target MapLibre instance in mapContext
-     */
-    mapId: PropTypes.string,
-};
 
 var defaultProps = {
     visible: true,
@@ -6037,51 +6047,6 @@ var MlWmsLayer = function (props) {
     return React__default.createElement(React__default.Fragment, null);
 };
 MlWmsLayer.defaultProps = __assign({}, defaultProps);
-MlWmsLayer.propTypes = {
-    /**
-     * WMS URL
-     */
-    url: PropTypes.string.isRequired,
-    /**
-     * URL query parameters that will be added to the WMS URL. A layers property (string) is mandatory. Any value defined on this attribute will extend the default object.
-     */
-    urlParameters: PropTypes.shape({
-        layers: PropTypes.string.isRequired,
-        bbox: PropTypes.string,
-        format: PropTypes.string,
-        service: PropTypes.string,
-        version: PropTypes.string,
-        request: PropTypes.string,
-        srs: PropTypes.string,
-        width: PropTypes.number,
-        height: PropTypes.number,
-    }),
-    /**
-     * Id of the target MapLibre instance in mapContext
-     */
-    mapId: PropTypes.string,
-    /**
-     * MapLibre attribution shown in the bottom right of the map, if this layer is visible
-     */
-    attribution: PropTypes.string,
-    /**
-     * Object that is passed to the MapLibre.addLayer call as config option parameter
-     */
-    layerOptions: PropTypes.object,
-    /**
-     * Object that is passed to the MapLibre.addSource call as config option parameter
-     */
-    sourceOptions: PropTypes.object,
-    /**
-     * Id of an existing layer in the mapLibre instance to help specify the layer order
-     * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
-     */
-    insertBeforeLayer: PropTypes.string,
-    /**
-     * Sets layer "visibility" property to "visible" if true or "none" if false
-     */
-    visible: PropTypes.bool,
-};
 
 function useWms(props) {
     // Use a useRef hook to reference the layer object to be able to access it later inside useEffect hooks
@@ -6393,7 +6358,7 @@ var MlWmsLoader = function (props) {
                     }
                 }, disabled: !(layers === null || layers === void 0 ? void 0 : layers.some(function (layer) { return layer.visible && layer.queryable; })) },
                 React__default.createElement(InfoIcon, null))),
-            React__default.createElement(IconButton$1, { edge: props.showDeleteButton ? false : 'end', sx: __assign({ padding: '4px', marginTop: '-3px' }, (props.showDeleteButton ? { marginRight: '4px' } : {})), "aria-label": "open", onClick: function () { return setOpen(function (current) { return !current; }); } }, open ? React__default.createElement(ExpandLess, null) : React__default.createElement(ExpandMore, null)),
+            React__default.createElement(IconButton$1, { edge: props.showDeleteButton ? false : 'end', sx: __assign({ padding: '4px', marginTop: '-3px' }, (props.showDeleteButton ? { marginRight: '4px' } : {})), "aria-label": "open", onClick: function () { return setOpen(function (current) { return !current; }); } }, open ? React__default.createElement(ExpandLessIcon, null) : React__default.createElement(ExpandMoreIcon, null)),
             props.showDeleteButton && (React__default.createElement(React__default.Fragment, null,
                 React__default.createElement(IconButton$1, { "aria-label": "delete", edge: "end", onClick: function () {
                         if (typeof props.onConfigChange === 'function') {
@@ -6666,7 +6631,7 @@ function TemporalControllerPlayer(props) {
     var _a = useState(props.currentVal), currentVal = _a[0], setCurrentVal = _a[1];
     var _b = useState(props.isPlaying), isPlaying = _b[0], setIsPlaying = _b[1];
     var range = props.maxVal - props.minVal;
-    var intervalRef = useRef();
+    var intervalRef = useRef(null);
     var mediaIsMobile = useMediaQuery(function (theme) { return theme.breakpoints.down('md'); });
     useEffect(function () {
         return function () {
@@ -6686,7 +6651,8 @@ function TemporalControllerPlayer(props) {
         }
         intervalRef.current = setInterval(function () {
             if (counter >= range) {
-                clearInterval(intervalRef.current);
+                if (intervalRef.current)
+                    clearInterval(intervalRef.current);
                 setIsPlaying(false);
             }
             else {
@@ -6704,18 +6670,21 @@ function TemporalControllerPlayer(props) {
         else {
             setIsPlaying(false);
             if (isPlaying) {
-                clearInterval(intervalRef.current);
+                if (intervalRef.current)
+                    clearInterval(intervalRef.current);
             }
         }
     };
     var handleStop = function () {
-        clearInterval(intervalRef.current);
+        if (intervalRef.current)
+            clearInterval(intervalRef.current);
         setCurrentVal(props.minVal);
         setIsPlaying(false);
     };
     var handleFastRewind = function () {
         if (isPlaying) {
-            clearInterval(intervalRef.current);
+            if (intervalRef.current)
+                clearInterval(intervalRef.current);
             setCurrentVal(currentVal - range / 10);
             play();
         }
@@ -6725,7 +6694,8 @@ function TemporalControllerPlayer(props) {
     };
     var handleFastForward = function () {
         if (isPlaying) {
-            clearInterval(intervalRef.current);
+            if (intervalRef.current)
+                clearInterval(intervalRef.current);
             setCurrentVal(currentVal + range / 10);
             play();
         }
@@ -6740,7 +6710,8 @@ function TemporalControllerPlayer(props) {
         }
         else {
             if (e) {
-                clearInterval(intervalRef.current);
+                if (intervalRef.current)
+                    clearInterval(intervalRef.current);
                 setCurrentVal(newValue);
                 play();
             }
@@ -6751,9 +6722,8 @@ function TemporalControllerPlayer(props) {
                 flexShrink: 0,
                 '& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
             } },
-            React__default.createElement(Grid, { container: true },
-                mediaIsMobile ? React__default.createElement(React__default.Fragment, null) : React__default.createElement(Grid, { item: true, xs: 3 }),
-                React__default.createElement(Grid, { item: true, xs: mediaIsMobile ? 12 : 6, textAlign: "center" },
+            React__default.createElement(Grid, { container: true, alignItems: "center", justifyContent: "space-between" },
+                React__default.createElement(Grid, { item: true, xs: 12, sm: 10, textAlign: "center" },
                     React__default.createElement(Button, { onClick: handleFastRewind },
                         React__default.createElement(FastRewindIcon, null)),
                     React__default.createElement(Button, { onClick: handleStop },
@@ -6761,8 +6731,11 @@ function TemporalControllerPlayer(props) {
                     React__default.createElement(Button, { onClick: handlePlayPause }, isPlaying ? React__default.createElement(PauseIcon, null) : React__default.createElement(PlayArrowIcon, null)),
                     React__default.createElement(Button, { onClick: handleFastForward },
                         React__default.createElement(FastForwardIcon, null))),
-                props.display && !mediaIsMobile && (React__default.createElement(Grid, { item: true, xs: 3 },
-                    React__default.createElement(Typography, { variant: 'h5', textAlign: 'right', sx: { paddingRight: '25px' } }, Math.floor(currentVal))))),
+                props.display && !mediaIsMobile && (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                React__default.createElement(Grid, { item: true, xs: 12, sm: 5, textAlign: "right" },
+                    React__default.createElement(Typography, { variant: 'h5', sx: { paddingRight: '25px' } }, Math.floor(currentVal))))),
             React__default.createElement(Slider, { sx: {
                     position: 'flex',
                     width: '95%',
@@ -6866,13 +6839,14 @@ var MlTemporalController = function (props) {
             setCurrentVal(props.initialVal);
         }
     }, []);
-    if (typeof props.onStateChange === 'function') {
-        // this is not in a useEffect hook because currentVal and paint are changing on almost every render
-        props.onStateChange({
-            current: currentVal,
-            paint: paint,
-        });
-    }
+    useEffect(function () {
+        if (typeof props.onStateChange === 'function') {
+            props.onStateChange({
+                current: currentVal,
+                paint: paint,
+            });
+        }
+    }, [props.onStateChange]);
     // Fit map to bbox
     useEffect(function () {
         var _a;
@@ -7016,40 +6990,60 @@ var sketchTools = [
  *
  */
 var MlSketchTool = function (props) {
-    var _a, _b;
     var mapHook = useMap({
         mapId: props.mapId,
         waitForLayer: props.insertBeforeLayer,
     });
-    var _c = useState(), hoveredGeometry = _c[0], setHoveredGeometry = _c[1];
-    var _d = useState({
+    var _a = useState(), hoveredGeometry = _a[0], setHoveredGeometry = _a[1];
+    var _b = useState({
         activeGeometryIndex: undefined,
         selectedGeoJson: undefined,
         geometries: [],
         drawMode: undefined,
-    }), sketchState = _d[0], setSketchState = _d[1];
+    }), sketchState = _b[0], setSketchState = _b[1];
+    console.log(sketchState);
     useEffect(function () {
         if (!(typeof props.onChange === 'function'))
             return;
         props.onChange(sketchState);
     }, [sketchState, props.onChange]);
     var buttonStyle = __assign({}, props.buttonStyleOverride);
+    // const buttonClickHandler = (buttonDrawMode: keyof MapboxDraw.Modes) => {
+    // 	setSketchState((_state) => ({
+    // 		drawMode: _state.drawMode !== buttonDrawMode ? buttonDrawMode : undefined,
+    // 		geometries: _state.geometries,
+    // 		activeGeometryIndex: undefined,
+    // 		selectedGeoJson: undefined,
+    // 	}));
+    // };
     var buttonClickHandler = function (buttonDrawMode) {
-        setSketchState(function (_state) { return ({
-            drawMode: _state.drawMode !== buttonDrawMode ? buttonDrawMode : undefined,
-            geometries: _state.geometries,
-            activeGeometryIndex: undefined,
-            selectedGeoJson: undefined,
-        }); });
+        var modeRef = undefined;
+        setSketchState(function (prevState) {
+            modeRef = prevState.drawMode;
+            return __assign(__assign({}, prevState), { drawMode: undefined, activeGeometryIndex: undefined, selectedGeoJson: undefined });
+        });
+        requestAnimationFrame(function () {
+            setSketchState(function (prevState) {
+                if ((modeRef === 'draw_polygon' || modeRef === 'draw_line_string') &&
+                    buttonDrawMode === 'draw_point') {
+                    return __assign(__assign({}, prevState), { drawMode: undefined });
+                }
+                return __assign(__assign({}, prevState), { drawMode: buttonDrawMode });
+            });
+        });
     };
     var removeGeoJson = function (geoJson) {
         setSketchState(function (_sketchState) {
             var _geometries = __spreadArray([], _sketchState.geometries, true);
             _geometries.splice(_geometries.indexOf(geoJson), 1);
-            return __assign(__assign({}, _sketchState), { geometries: _geometries, activeGeometryIndex: _sketchState.activeGeometryIndex
+            return __assign(__assign({}, _sketchState), { drawMode: undefined, geometries: _geometries, activeGeometryIndex: _sketchState.activeGeometryIndex
                     ? _sketchState.activeGeometryIndex - 1
                     : undefined });
         });
+    };
+    var handleCheckboxChange = function (event) {
+        var _a;
+        (_a = props.onShowInstructionChange) === null || _a === void 0 ? void 0 : _a.call(props, event.target.checked);
     };
     var SketchToolButtons = function () {
         return (React__default.createElement(React__default.Fragment, null, sketchTools.map(function (el) {
@@ -7071,7 +7065,7 @@ var MlSketchTool = function (props) {
             };
             return (React__default.createElement(React__default.Fragment, null,
                 React__default.createElement(Tooltip$1, { title: el.name },
-                    React__default.createElement(Button, { sx: __assign({ color: stateIconColor, backgroundColor: stateColor, '&:hover': {
+                    React__default.createElement(Button, { key: el.name, sx: __assign({ color: stateIconColor, backgroundColor: stateColor, '&:hover': {
                                 backgroundColor: stateColor,
                             } }, buttonStyle), onClick: function () { return buttonClickHandler(el.mode); } }, el.icon))));
         })));
@@ -7082,19 +7076,46 @@ var MlSketchTool = function (props) {
             } },
             React__default.createElement(ButtonGroup, null,
                 React__default.createElement(SketchToolButtons, null))),
+        React__default.createElement(Box, { sx: { marginTop: '10px' } },
+            React__default.createElement(FormGroup, null,
+                React__default.createElement(FormControlLabel, { control: React__default.createElement(Checkbox, { size: "small", checked: props.showInstruction, onChange: handleCheckboxChange }), label: "Show instructions" }))),
         sketchState.drawMode && (React__default.createElement(MlFeatureEditor, { mode: sketchState.drawMode, geojson: sketchState.selectedGeoJson, onChange: function (feature) {
+                console.log(feature);
                 if (!(feature === null || feature === void 0 ? void 0 : feature[0]))
                     return;
                 setSketchState(function (_sketchState) {
                     var _geometries = __spreadArray([], sketchState.geometries, true);
                     if (typeof _sketchState.activeGeometryIndex === 'undefined') {
                         var tempFeature = feature[0];
-                        tempFeature.properties.id = tempFeature.id;
+                        if (tempFeature && tempFeature.properties) {
+                            tempFeature.properties.id = tempFeature.id;
+                        }
+                        else {
+                            console.error('tempFeature or tempFeature.properties is null or undefined');
+                        }
                         _sketchState.activeGeometryIndex = _geometries.length;
                         _geometries.push(tempFeature);
                     }
                     else {
                         _geometries[_sketchState.activeGeometryIndex] = feature[0];
+                    }
+                    // Check if the geometry type is point and if the coordinates have changed to exit draw mode after editing
+                    var changedPoint = function () {
+                        var _a, _b, _c, _d;
+                        if (_sketchState.selectedGeoJson &&
+                            typeof _sketchState.activeGeometryIndex !== 'undefined' &&
+                            _sketchState.geometries[_sketchState.activeGeometryIndex] &&
+                            _sketchState.geometries[_sketchState.activeGeometryIndex].geometry.type ===
+                                'Point') {
+                            var selectedCoords = (_b = (_a = _sketchState.selectedGeoJson) === null || _a === void 0 ? void 0 : _a.geometry) === null || _b === void 0 ? void 0 : _b.coordinates;
+                            var activeCoords = (_d = (_c = _sketchState.geometries[_sketchState.activeGeometryIndex]) === null || _c === void 0 ? void 0 : _c.geometry) === null || _d === void 0 ? void 0 : _d.coordinates;
+                            // Compare coordinates
+                            return JSON.stringify(selectedCoords) !== JSON.stringify(activeCoords);
+                        }
+                        return false;
+                    };
+                    if (changedPoint()) {
+                        _sketchState.drawMode = undefined;
                     }
                     return __assign(__assign({}, _sketchState), { geometries: _geometries });
                 });
@@ -7102,59 +7123,128 @@ var MlSketchTool = function (props) {
                 setSketchState(function (_sketchState) { return (__assign(__assign({}, _sketchState), { drawMode: undefined, activeGeometryIndex: undefined, selectedGeoJson: undefined })); });
             } })),
         React__default.createElement(List$1, { sx: { zIndex: 105, marginBottom: '-10px' } },
-            sketchState.geometries.map(function (el) { return (React__default.createElement(React__default.Fragment, null,
-                React__default.createElement(Box, { key: el.id, sx: { display: 'flex', flexDirection: 'column' } },
-                    React__default.createElement("br", null),
-                    React__default.createElement(Box, { flexDirection: 'row', sx: {
-                            '&:hover': {
-                                backgroundColor: 'rgb(177, 177, 177, 0.2)',
-                            },
-                            marginTop: '25px',
-                        }, onMouseOver: function () {
-                            setHoveredGeometry(el);
-                        }, onMouseLeave: function () {
-                            setHoveredGeometry(undefined);
-                        } },
-                        React__default.createElement(LayerListItem, { listItemSx: buttonStyle, configurable: true, layerComponent: React__default.createElement(MlGeoJsonLayer, { mapId: props.mapId, geojson: el, layerId: String(el.id) }), type: 'layer', name: String(el.id), description: el.geometry.type }),
-                        React__default.createElement(Box, { sx: {
-                                padding: '3px 30px',
+            sketchState.geometries.map(function (el, index) {
+                var _a, _b, _c;
+                return (React__default.createElement(React__default.Fragment, null,
+                    React__default.createElement(Box, { key: el.id, sx: { display: 'flex', flexDirection: 'column' } },
+                        React__default.createElement("br", null),
+                        React__default.createElement(Box, { flexDirection: 'row', sx: {
+                                '&:hover': {
+                                    backgroundColor: 'rgb(177, 177, 177, 0.2)',
+                                },
+                                marginTop: '25px',
+                            }, onMouseOver: function () {
+                                setHoveredGeometry(el);
+                            }, onMouseLeave: function () {
+                                setHoveredGeometry(undefined);
                             } },
-                            React__default.createElement(ButtonGroup, { size: "small" },
-                                React__default.createElement(Button, { onClick: function () {
-                                        var _a;
-                                        (_a = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _a === void 0 ? void 0 : _a.map.setCenter(el.geometry.type === 'Point'
-                                            ? el.geometry.coordinates
-                                            : turf.centerOfMass(el).geometry.coordinates);
-                                    } },
-                                    React__default.createElement(GpsFixedIcon, null)),
-                                React__default.createElement(Button, { sx: buttonStyle, onClick: function () {
-                                        setSketchState(function (_sketchState) { return (__assign(__assign({}, _sketchState), { selectedGeoJson: el, activeGeometryIndex: _sketchState.geometries.indexOf(el), drawMode: 'simple_select' })); });
-                                    } },
-                                    React__default.createElement(EditIcon, null)),
-                                React__default.createElement(Button, { sx: buttonStyle, onClick: function () {
-                                        removeGeoJson(el);
-                                        setHoveredGeometry(undefined);
-                                    } },
-                                    React__default.createElement(DeleteIcon, null)))))))); }),
+                            !((_a = el.properties) === null || _a === void 0 ? void 0 : _a.customName) && (React__default.createElement("input", { type: "text", value: ((_b = el.properties) === null || _b === void 0 ? void 0 : _b.name) || '', placeholder: "Assign name", onChange: function (e) {
+                                    var newName = e.target.value;
+                                    setSketchState(function (_sketchState) {
+                                        var updatedGeometries = __spreadArray([], _sketchState.geometries, true);
+                                        if (!updatedGeometries[index].properties) {
+                                            updatedGeometries[index].properties = {};
+                                        }
+                                        updatedGeometries[index].properties.name = newName;
+                                        return __assign(__assign({}, _sketchState), { geometries: updatedGeometries });
+                                    });
+                                }, style: {
+                                    padding: '5px',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '4px',
+                                    outline: 'none',
+                                }, onFocus: function (e) { return (e.target.style.borderColor = '#009ee0'); }, onBlur: function (e) {
+                                    e.target.style.borderColor = '#ccc';
+                                    setSketchState(function (_sketchState) {
+                                        var updatedGeometries = __spreadArray([], _sketchState.geometries, true);
+                                        if (!updatedGeometries[index].properties) {
+                                            updatedGeometries[index].properties = {};
+                                        }
+                                        updatedGeometries[index].properties.customName = true;
+                                        return __assign(__assign({}, _sketchState), { geometries: updatedGeometries });
+                                    });
+                                } })),
+                            React__default.createElement(LayerListItem, { listItemSx: buttonStyle, configurable: true, layerComponent: React__default.createElement(MlGeoJsonLayer, { mapId: props.mapId, geojson: el, layerId: String(el.id), defaultPaintOverrides: {
+                                        fill: { 'fill-opacity': 0.5 },
+                                    } }), type: 'layer', name: React__default.createElement(Typography, { onClick: function () {
+                                        setSketchState(function (_sketchState) {
+                                            var updatedGeometries = __spreadArray([], _sketchState.geometries, true);
+                                            if (!updatedGeometries[index].properties) {
+                                                updatedGeometries[index].properties = {};
+                                            }
+                                            updatedGeometries[index].properties.customName = false;
+                                            return __assign(__assign({}, _sketchState), { geometries: updatedGeometries });
+                                        });
+                                    }, sx: {
+                                        cursor: 'pointer',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap',
+                                    } }, ((_c = el.properties) === null || _c === void 0 ? void 0 : _c.name) || String(el.id)), description: el.geometry.type }),
+                            React__default.createElement(Box, { sx: {
+                                    padding: '3px 30px',
+                                } },
+                                React__default.createElement(ButtonGroup, { size: "small" },
+                                    React__default.createElement(Tooltip$1, { title: "Center" },
+                                        React__default.createElement(Button, { sx: __assign({ color: function (theme) { return theme.palette.primary.main; }, backgroundColor: function (theme) { return theme.palette.navigation.navColor; } }, buttonStyle), onClick: function () {
+                                                var _a;
+                                                (_a = mapHook === null || mapHook === void 0 ? void 0 : mapHook.map) === null || _a === void 0 ? void 0 : _a.map.setCenter(el.geometry.type === 'Point'
+                                                    ? el.geometry.coordinates
+                                                    : turf.centerOfMass(el).geometry.coordinates);
+                                            } },
+                                            React__default.createElement(GpsFixedIcon, null))),
+                                    React__default.createElement(Tooltip$1, { title: "Edit" },
+                                        React__default.createElement(Button, { sx: __assign({ color: function (theme) {
+                                                    var _a;
+                                                    if (sketchState.drawMode === 'simple_select' &&
+                                                        ((_a = sketchState.selectedGeoJson) === null || _a === void 0 ? void 0 : _a.id) === el.id) {
+                                                        return theme.palette.navigation.navColor;
+                                                    }
+                                                    else {
+                                                        return theme.palette.primary.main;
+                                                    }
+                                                }, backgroundColor: function (theme) {
+                                                    var _a;
+                                                    if (sketchState.drawMode === 'simple_select' &&
+                                                        ((_a = sketchState.selectedGeoJson) === null || _a === void 0 ? void 0 : _a.id) === el.id) {
+                                                        return theme.palette.primary.main;
+                                                    }
+                                                    else {
+                                                        return theme.palette.navigation.navColor;
+                                                    }
+                                                } }, buttonStyle), onClick: function () {
+                                                setSketchState(function (_sketchState) {
+                                                    var _a;
+                                                    var newDrawMode = _sketchState.drawMode === 'simple_select' &&
+                                                        ((_a = _sketchState.selectedGeoJson) === null || _a === void 0 ? void 0 : _a.id) === el.id
+                                                        ? undefined
+                                                        : 'simple_select';
+                                                    return __assign(__assign({}, _sketchState), { selectedGeoJson: el, activeGeometryIndex: _sketchState.geometries.indexOf(el), drawMode: newDrawMode });
+                                                });
+                                            } },
+                                            React__default.createElement(EditIcon, null))),
+                                    React__default.createElement(Tooltip$1, { title: "Delete" },
+                                        React__default.createElement(Button, { sx: __assign({ color: function (theme) { return theme.palette.primary.main; }, backgroundColor: function (theme) { return theme.palette.navigation.navColor; } }, buttonStyle), onClick: function () {
+                                                removeGeoJson(el);
+                                                setHoveredGeometry(undefined);
+                                            } },
+                                            React__default.createElement(DeleteIcon, null)))))))));
+            }),
             hoveredGeometry && (React__default.createElement(MlGeoJsonLayer, { mapId: props.mapId, geojson: { type: 'FeatureCollection', features: [hoveredGeometry] }, layerId: 'highlightBorder', defaultPaintOverrides: {
                     circle: {
-                        'circle-color': '#dd9900',
-                        'circle-opacity': 0.4,
+                        'circle-color': '#000000',
+                        'circle-opacity': 0.2,
                         'circle-radius': 10,
                     },
                     line: {
-                        'line-color': '#dd9900',
-                        'line-opacity': 0.4,
+                        'line-color': '#000000',
+                        'line-opacity': 0.2,
                         'line-width': 10,
                     },
                     fill: {
-                        'fill-color': '#dd9900',
-                        'fill-opacity': 0.4
+                        'fill-color': '#000000',
+                        'fill-opacity': 0.2,
                     },
-                } }))),
-        sketchState.drawMode === 'simple_select' && (React__default.createElement(Typography, { sx: { fontSize: '0.6em' } },
-            "Edit ", (_b = (_a = sketchState.selectedGeoJson) === null || _a === void 0 ? void 0 : _a.geometry) === null || _b === void 0 ? void 0 :
-            _b.type))));
+                } })))));
 };
 MlSketchTool.defaultProps = {
     mapId: undefined,
@@ -7174,7 +7264,7 @@ var useCameraFollowPath = function (props) {
     var pitch = useRef(props.pitch);
     var step = useRef(1);
     var speed = useRef(props.speed);
-    var timeoutId = useRef();
+    var timeoutId = useRef(null);
     var kmPerStep = props.kmPerStep || 0.01;
     var routeDistance = turf.length(props.route);
     var stepDuration = props.stepDuration || 70;
@@ -7516,7 +7606,6 @@ function convertOSM(params) {
         });
     });
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 var OSMProtocolHandler = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     var parsedParams, data;
     return __generator(this, function (_a) {
@@ -7536,7 +7625,6 @@ var OSMProtocolHandler = function (params) { return __awaiter(void 0, void 0, vo
 
 function reduceFeatures(geojson) {
     var newFeatures = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     geojson.features.forEach(function (e) {
         if (!e.features) {
             newFeatures.push({
@@ -7569,6 +7657,7 @@ function convertTopojson(params) {
                                 topoJsonData = JSON.parse(rawData);
                             }
                             catch (e) {
+                                console.error('Error converting topojson', e);
                                 throw 'Invalid TopoJson';
                             }
                             // Convert the data
@@ -7577,15 +7666,16 @@ function convertTopojson(params) {
                                 features: [],
                             };
                             if (topoJsonData.type === 'Topology' && topoJsonData.objects !== undefined) {
+                                var topoJsonDataObjects_1 = topoJsonData.objects;
                                 // add the "fromObject" property in each topojson feature
                                 Object.keys(topoJsonData.objects).map(function (key) {
-                                    var _a, _b, _c, _d, _e, _f, _g;
-                                    if (((_a = topoJsonData.objects) === null || _a === void 0 ? void 0 : _a[key].type) === 'GeometryCollection') {
-                                        (_c = (_b = topoJsonData.objects) === null || _b === void 0 ? void 0 : _b[key].geometries) === null || _c === void 0 ? void 0 : _c.forEach(function (e) { return (e.properties = __assign({ fromObject: key }, e.properties)); });
+                                    var _a, _b;
+                                    if ((topoJsonDataObjects_1 === null || topoJsonDataObjects_1 === void 0 ? void 0 : topoJsonDataObjects_1[key].type) === 'GeometryCollection') {
+                                        (_a = topoJsonDataObjects_1 === null || topoJsonDataObjects_1 === void 0 ? void 0 : topoJsonDataObjects_1[key].geometries) === null || _a === void 0 ? void 0 : _a.forEach(function (e) { return (e.properties = __assign({ fromObject: key }, e.properties)); });
                                     }
-                                    else if (((_d = topoJsonData === null || topoJsonData === void 0 ? void 0 : topoJsonData.objects) === null || _d === void 0 ? void 0 : _d[key]) &&
-                                        ((_f = (_e = topoJsonData === null || topoJsonData === void 0 ? void 0 : topoJsonData.objects) === null || _e === void 0 ? void 0 : _e[key]) === null || _f === void 0 ? void 0 : _f.type) !== 'GeometryCollection') {
-                                        topoJsonData.objects[key].properties = __assign({ fromObject: key }, (_g = topoJsonData.objects) === null || _g === void 0 ? void 0 : _g[key].properties);
+                                    else if ((topoJsonDataObjects_1 === null || topoJsonDataObjects_1 === void 0 ? void 0 : topoJsonDataObjects_1[key]) &&
+                                        ((_b = topoJsonDataObjects_1 === null || topoJsonDataObjects_1 === void 0 ? void 0 : topoJsonDataObjects_1[key]) === null || _b === void 0 ? void 0 : _b.type) !== 'GeometryCollection') {
+                                        topoJsonDataObjects_1[key].properties = __assign({ fromObject: key }, topoJsonDataObjects_1 === null || topoJsonDataObjects_1 === void 0 ? void 0 : topoJsonDataObjects_1[key].properties);
                                     }
                                 });
                                 //convert the data into a geoJson object
@@ -7656,7 +7746,6 @@ function convertXML(params) {
         });
     });
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 var XMLProtocolHandler = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     var parsedParams, data;
     return __generator(this, function (_a) {
@@ -7760,9 +7849,6 @@ var SimpleDataProvider = function (props) {
         setData: setData,
     };
     return (React__default.createElement(SimpleDataContextProvider, { value: value }, props.children));
-};
-SimpleDataProvider.propTypes = {
-    children: PropTypes.node.isRequired,
 };
 
 var IconButtonStyled$1 = styled(IconButton)({
@@ -7871,13 +7957,13 @@ function LayerListItemFactory(props) {
                                     React__default.createElement(IconButtonStyled$1, { disabled: idx === layers.length - 1, onClick: function () {
                                             layerContext.moveDown(layer.id || '');
                                         } },
-                                        React__default.createElement(ArrowCircleDown, null)),
+                                        React__default.createElement(ArrowCircleDownIcon, null)),
                                     React__default.createElement(IconButtonStyled$1, { disabled: idx === 0, onClick: function () {
                                             layerContext.moveUp(layer.id || '');
                                         } },
-                                        React__default.createElement(ArrowCircleUp, null)),
+                                        React__default.createElement(ArrowCircleUpIcon, null)),
                                     React__default.createElement(IconButtonStyled$1, { onClick: function () { return fitLayer(layer); } },
-                                        React__default.createElement(CenterFocusWeak, null))), setLayerState: function (layerConfig) {
+                                        React__default.createElement(CenterFocusWeakIcon, null))), setLayerState: function (layerConfig) {
                                     return setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
                                         var _layers = __spreadArray([], current, true);
                                         if (layerConfig === false) {
@@ -7917,26 +8003,26 @@ function LayerListItemFactory(props) {
                                         React__default.createElement(IconButtonStyled$1, { disabled: idx === layers.length - 1, onClick: function () {
                                                 layerContext.moveDown(layer.id || '');
                                             } },
-                                            React__default.createElement(ArrowCircleDown, null)),
+                                            React__default.createElement(ArrowCircleDownIcon, null)),
                                         React__default.createElement(IconButtonStyled$1, { disabled: idx === 0, onClick: function () {
                                                 layerContext.moveUp(layer.id || '');
                                             } },
-                                            React__default.createElement(ArrowCircleUp, null)),
+                                            React__default.createElement(ArrowCircleUpIcon, null)),
                                         React__default.createElement(IconButtonStyled$1, { onClick: function () { return fitLayer(layer); } },
-                                            React__default.createElement(CenterFocusWeak, null))) }))));
+                                            React__default.createElement(CenterFocusWeakIcon, null))) }))));
                         case 'vt':
                             return (React__default.createElement(React__default.Fragment, { key: (layer === null || layer === void 0 ? void 0 : layer.id) + '_listItem' },
                                 React__default.createElement(LayerListItem, { key: layer.id, name: (layer === null || layer === void 0 ? void 0 : layer.name) || (layer === null || layer === void 0 ? void 0 : layer.type) + ' layer' || 'unnamed layer', layerComponent: React__default.createElement(MlVectorTileLayer, { layers: ((_c = layer === null || layer === void 0 ? void 0 : layer.config) === null || _c === void 0 ? void 0 : _c.layers) || [], key: layer.id, mapId: layer === null || layer === void 0 ? void 0 : layer.config.mapId, sourceOptions: (_d = layer === null || layer === void 0 ? void 0 : layer.config) === null || _d === void 0 ? void 0 : _d.sourceOptions, layerId: layer.id, url: (_e = layer === null || layer === void 0 ? void 0 : layer.config) === null || _e === void 0 ? void 0 : _e.url }), buttons: React__default.createElement(React__default.Fragment, null,
                                         React__default.createElement(IconButtonStyled$1, { key: layer.id + '_button1', disabled: idx === layers.length - 1, onClick: function () {
                                                 layerContext.moveDown(layer.id || '');
                                             } },
-                                            React__default.createElement(ArrowCircleDown, null)),
+                                            React__default.createElement(ArrowCircleDownIcon, null)),
                                         React__default.createElement(IconButtonStyled$1, { key: layer.id + '_button2', disabled: idx === 0, onClick: function () {
                                                 layerContext.moveUp(layer.id || '');
                                             } },
-                                            React__default.createElement(ArrowCircleUp, null)),
+                                            React__default.createElement(ArrowCircleUpIcon, null)),
                                         React__default.createElement(IconButtonStyled$1, { onClick: function () { return fitLayer(layer); } },
-                                            React__default.createElement(CenterFocusWeak, null))), setLayerState: function (layerConfig) {
+                                            React__default.createElement(CenterFocusWeakIcon, null))), setLayerState: function (layerConfig) {
                                         return setLayers === null || setLayers === void 0 ? void 0 : setLayers(function (current) {
                                             var _layers = __spreadArray([], current, true);
                                             if (layerConfig === false) {
@@ -21676,18 +21762,18 @@ function LayerTreeListItem(props) {
                         React__default.createElement(IconButtonStyled, { disabled: false, onClick: function () {
                                 moveDown(layer.uuid);
                             } },
-                            React__default.createElement(ArrowCircleDown, null)),
+                            React__default.createElement(ArrowCircleDownIcon, null)),
                         React__default.createElement(IconButtonStyled, { disabled: false, onClick: function () {
                                 moveUp(layer.uuid);
                             } },
-                            React__default.createElement(ArrowCircleUp, null)),
+                            React__default.createElement(ArrowCircleUpIcon, null)),
                         layer.configurable && (React__default.createElement(React__default.Fragment, null,
                             React__default.createElement(TuneIconButton, { edge: 'end', "aria-label": "settings", onClick: function () {
                                     setPaintPropsFormVisible(function (current) {
                                         return !current;
                                     });
                                 } },
-                                React__default.createElement(Tune, null))))) },
+                                React__default.createElement(TuneIcon, null))))) },
                     React__default.createElement(CheckboxListItemIcon, null,
                         React__default.createElement(CheckboxStyled, { checked: visible, disabled: layer.masterVisible === false, onClick: function () { return handleToggleVisibility(visible); } })),
                     React__default.createElement(ListItemText, { variant: "layerlist", primary: layer.name || '', secondary: props.description, primaryTypographyProps: { overflow: 'hidden' } }),
@@ -21695,7 +21781,7 @@ function LayerTreeListItem(props) {
                 layer.configurable && paintPropsFormVisible && (React__default.createElement(React__default.Fragment, null,
                     props.showDeleteButton && (React__default.createElement(React__default.Fragment, null,
                         React__default.createElement(DeleteIconButton, { edge: "end", "aria-label": "delete", onClick: function () { } },
-                            React__default.createElement(Delete, null)),
+                            React__default.createElement(DeleteIcon, null)),
                         showDeletionConfirmationDialog && (React__default.createElement(ConfirmDialog, { open: showDeletionConfirmationDialog, onConfirm: function () {
                                 setShowDeletionConfirmationDialog(false);
                             }, onCancel: function () {
@@ -21707,7 +21793,7 @@ function LayerTreeListItem(props) {
             return (React__default.createElement(React__default.Fragment, null,
                 React__default.createElement(ListItemStyled, { key: layer.uuid, sx: __assign({}, props.listItemSx), secondaryAction: undefined },
                     React__default.createElement(ListItemIconStyled, null,
-                        React__default.createElement(IconButtonStyled, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default.createElement(ExpandMore, null) : React__default.createElement(KeyboardArrowRight, null)),
+                        React__default.createElement(IconButtonStyled, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default.createElement(ExpandMoreIcon, null) : React__default.createElement(KeyboardArrowRightIcon, null)),
                         React__default.createElement(CheckboxListItemIcon, null,
                             React__default.createElement(CheckboxStyled, { checked: layer.visible, disabled: layer.masterVisible === false, onClick: function () { var _a; return handleToggleVisibility((_a = layer.visible) !== null && _a !== void 0 ? _a : false); } }))),
                     React__default.createElement(ListItemText, { primary: layer.name, secondary: props.description, primaryTypographyProps: { overflow: 'hidden' } })),
@@ -21737,7 +21823,7 @@ function LayerTreeListItem(props) {
             return (React__default.createElement(React__default.Fragment, null,
                 React__default.createElement(ListItemStyled, { key: layer.uuid, sx: __assign({}, props.listItemSx) },
                     React__default.createElement(ListItemIconStyled, null,
-                        React__default.createElement(IconButtonStyled, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default.createElement(ExpandMore, null) : React__default.createElement(KeyboardArrowRight, null)),
+                        React__default.createElement(IconButtonStyled, { edge: "end", "aria-label": "open", onClick: function () { return setOpen(!open); } }, open ? React__default.createElement(ExpandMoreIcon, null) : React__default.createElement(KeyboardArrowRightIcon, null)),
                         React__default.createElement(CheckboxListItemIcon, null,
                             React__default.createElement(CheckboxStyled, { checked: layer.visible, disabled: layer.masterVisible, onClick: function () { return handleToggleVisibility(layer.visible ? layer.visible : false); } }))),
                     React__default.createElement(ListItemText, { primary: layer.name, secondary: props.description, primaryTypographyProps: { overflow: 'hidden' } })),
