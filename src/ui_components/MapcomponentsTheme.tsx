@@ -5,7 +5,7 @@ import { Theme } from '@mui/system';
 declare module '@mui/material' {
 	interface Palette {
 		topToolbar: { barColor: string };
-		navigation: { navColor: string; navHover: string };
+		navigation: { buttonColor: string, navColor: string; navHover: string };
 		GPS: { GPSActiveColor: string; GPSInactiveColor: string; GPSActiveBackgroundColor: string };
 		compass: {
 			compColor: string;
@@ -54,7 +54,7 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						contrast: '#000',
 					},
 					topToolbar: { barColor: '#000' },
-					navigation: { navColor: '#313131', navHover: '#747577' },
+					navigation: { buttonColor: '#fff', navColor: '#313131', navHover: '#747577' },
 					GPS: {
 						GPSActiveColor: '#fff',
 						GPSInactiveColor: '#fff',
@@ -78,10 +78,10 @@ const getDesignTokens = (mode: 'light' | 'dark') => ({
 						contrast: '#fff',
 					},
 					topToolbar: { barColor: '#fff' },
-					navigation: { navColor: '#fff', navHover: '#f5f5f5' },
+					navigation: { buttonColor: '#747577', navColor: '#fff', navHover: '#f5f5f5' },
 					GPS: {
 						GPSActiveColor: '#009EE0',
-						GPSInactiveColor: '#000',
+						GPSInactiveColor: '#747577',
 						GPSActiveBackgroundColor: '#fff',
 					},
 					compass: {
