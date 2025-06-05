@@ -1,5 +1,10 @@
 # Change Log
 
+## [main]
+
+## Changed
+- Upgrade to maplibre to 5.6.0
+
 ## [v1.3.1]
 
 ## Changed
