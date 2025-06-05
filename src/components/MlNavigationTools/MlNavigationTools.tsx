@@ -116,7 +116,11 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		>
 			<MlNavigationCompass />
 			{props.show3DButton && (
-				<Button variant="navtools" onClick={adjustPitch}>
+				<Button
+					variant="navtools"
+					onClick={adjustPitch}
+					sx={{ color: (theme) => theme.palette.navigation.buttonColor }}
+				>
 					{pitch < 29 ? '2D' : '3D'}
 				</Button>
 			)}
@@ -126,8 +130,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				orientation="vertical"
 				sx={{
 					border: 'none',
-					Button: { minWidth: '20px !important',
-					 color: theme.palette.navigation.buttonColor },
+					Button: { minWidth: '20px !important', color: theme.palette.navigation.buttonColor },
 					'Button:hover': { border: 'none' },
 				}}
 			>

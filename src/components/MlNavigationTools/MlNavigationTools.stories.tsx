@@ -33,7 +33,6 @@ const catalogueTemplate = () => {
 	const [showCustomButton, setShowCustomButton] = useState<boolean>(false);
 	const [alternativePosition, setAlternativePosition] = useState(false);
 
-	
 	const handleChange1 = () => {
 		setThreeDButton(!ThreeDButton);
 	};
@@ -80,19 +79,19 @@ const catalogueTemplate = () => {
 					/>
 					<FormControlLabel
 						control={<Switch checked={ThreeDButton} onChange={handleChange1} />}
-						label="Show 2D/3D button"
+						label="Show 2D/3D Button"
 					/>
 					<FormControlLabel
 						control={<Switch checked={CenterLocationButton} onChange={handleChange2} />}
-						label="Show center location button"
+						label="Show CenterLocation Button"
 					/>
 					<FormControlLabel
 						control={<Switch checked={ZoomButtons} onChange={handleChange3} />}
-						label="Show zoom buttons"
+						label="Show Zoom Buttons"
 					/>
 					<FormControlLabel
 						control={<Switch checked={FollowGpsButton} onChange={handleChange4} />}
-						label="Show 'FollowGPS' Button"
+						label="Show FollowGPS Button"
 					/>
 					<FormControlLabel
 						control={<Switch checked={showCustomButton} onChange={handleCustomButtonChange} />}
@@ -101,17 +100,18 @@ const catalogueTemplate = () => {
 				</FormGroup>
 			</Sidebar>
 			<MlNavigationTools
-				sx={{
-				
-					...(alternativePosition ? { top: '80px' } : {}),
-				}}
+				sx={alternativePosition ? { top: '80px' } : undefined}
 				show3DButton={ThreeDButton}
 				showCenterLocationButton={CenterLocationButton}
 				showZoomButtons={ZoomButtons}
 				showFollowGpsButton={FollowGpsButton}
 			>
 				{showCustomButton ? (
-					<Button variant="navtools" onClick={() => {}}>
+					<Button
+						variant="navtools"
+						onClick={() => {}}
+						sx={{ color: (theme) => theme.palette.navigation.buttonColor }}
+					>
 						<BuildIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 					</Button>
 				) : (
@@ -161,7 +161,11 @@ export const CustomButton = Template.bind({});
 CustomButton.parameters = {};
 CustomButton.args = {
 	children: (
-		<Button variant="navtools" onClick={() => {}}>
+		<Button
+			variant="navtools"
+			onClick={() => {}}
+			sx={{ color: (theme) => theme.palette.navigation.buttonColor }}
+		>
 			<BuildIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 		</Button>
 	),
