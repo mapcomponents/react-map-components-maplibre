@@ -1,0 +1,14 @@
+{
+	"name": "MlGlobeButton",
+	"title": "Globe Button",
+	"description": "Displays the map as a globe or as a mercator projection.",
+	"i18n": {
+		"de": {
+			"title": "Globus Button",
+			"description": "Zeigt die Karte als Globus oder als Mercator-Projektion an."
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
+}
