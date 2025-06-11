@@ -8,7 +8,7 @@ interface geoJsonProviderValue {
 	getEmptyFeatureCollection: () => FeatureCollection;
 }
 
-const GeoJsonProvider = ({ children }:{children:JSX.Element}) => {
+const GeoJsonProvider = ({ children }:{children:React.JSX.Element}) => {
 	const [data, setData] = useState<FeatureCollection>({
 		type: "FeatureCollection",
 		features: [],

@@ -121,7 +121,7 @@ export interface MlWmsLoaderProps {
 	/**
 	 * Custom buttons to display for the WMSLoader
 	 */
-	buttons?: JSX.Element;
+	buttons?: React.JSX.Element;
 	sortable?: boolean;
 }
 

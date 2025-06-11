@@ -111,13 +111,13 @@ const LineStyler: React.FC<LineStylerProps> = ({ geojson, openSidebar, setOpenSi
 					<Typography>Feature to show:</Typography>
 
 					<FormControl>
-						<Select
+						<Select<string[]>
 							id="demo-multiple-checkbox"
 							multiple
 							native={false}
 							value={featuresToShow}
 							onChange={handleChange}
-							renderValue={(selected) => selected.join(', ')}
+							renderValue={(selected) => (Array.isArray(selected) ? selected.join(', ') : '')}
 							MenuProps={MenuProps}
 						>
 							{streetNames?.map((name) => (

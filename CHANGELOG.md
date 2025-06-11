@@ -1,5 +1,10 @@
 # Change Log
 
+## [v1.3.1]
+
+## Changed
+- 3f6b50c: Upgrade to maplibre to 5.5.0 (from 5.3.0) (#223)
+
 ## [v1.3.0]
 
 ## Changed
