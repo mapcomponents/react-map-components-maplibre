@@ -58,10 +58,12 @@ const MlCenterPosition = (props: MlCenterPositionProps) => {
 		<>
 			<Button
 				variant="navtools"
-				sx={{
+				sx={(theme) => ({
 					zIndex: 1002,
-					color: !locationAccessDenied ? props.onColor : props.offColor,
-				}}
+					color: !locationAccessDenied
+						? (props.onColor ?? theme.palette.navigation.buttonColor)
+						: (props.offColor ?? theme.palette.navigation.buttonColor),
+				})}
 				onClick={centerCurrentLocation}
 				disabled={locationAccessDenied}
 			>
