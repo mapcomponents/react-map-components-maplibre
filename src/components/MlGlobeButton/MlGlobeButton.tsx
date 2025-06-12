@@ -57,9 +57,9 @@ const MlGlobeButton = (props: MlGlobeButtonProps) => {
 		<>
 			<GlobeButtonStyled variant="navtools" onClick={handleClick} style={props.style}>
 				{projection === 'globe' ? (
-					<PublicIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+					<PublicIcon data-testid="PublicIcon" sx={{ fontSize: { xs: '1.4em', md: '1em' } }} /> // data-testid added for testing purposes
 				) : (
-					<MapIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
+					<MapIcon data-testid="MapIcon" sx={{ fontSize: { xs: '1.4em', md: '1em' } }} /> // data-testid added for testing purposes
 				)}
 			</GlobeButtonStyled>
 		</>
