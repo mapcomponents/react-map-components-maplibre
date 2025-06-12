@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MlGlobeButton from './MlGlobeButton';
+import MlGlobeButton, { MlGlobeButtonProps } from './MlGlobeButton';
 
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 
@@ -12,8 +12,15 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = () => <MlGlobeButton />;
+const Template = (props: MlGlobeButtonProps) => <MlGlobeButton {...props} />;
 
 export const CatalogueDemo = Template.bind({});
 CatalogueDemo.parameters = {};
-CatalogueDemo.args = {};
+CatalogueDemo.args = {
+	style: {
+		position: 'absolute',
+		transform: 'scale(5)',
+		left: '50%',
+		top: '60%',
+	},
+};

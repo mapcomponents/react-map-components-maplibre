@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import useMap from '../../hooks/useMap';
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
 
@@ -14,12 +14,22 @@ export interface MlGlobeButtonProps {
 	 * This layer will be visually beneath the layer with the "insertBeforeLayer" id.
 	 */
 	insertBeforeLayer?: string;
+	/**
+	 * Style object to adjust css definitions of the component.
+	 */
+	style?: CSSProperties;
 }
 
 /**
  * Projection component that displays the map as a globe or as a mercator projection.
  * @component
  */
+
+const GlobeButtonStyled = styled(Button)(({ theme }) => ({
+	zIndex: 1000,
+	color: theme.palette.navigation.buttonColor,
+	transform: 'scale(1)',
+}));
 
 const MlGlobeButton = (props: MlGlobeButtonProps) => {
 	const mapHook = useMap({
@@ -45,17 +55,13 @@ const MlGlobeButton = (props: MlGlobeButtonProps) => {
 
 	return (
 		<>
-			<Button
-				variant="navtools"
-				sx={{ zIndex: 1000, color: (theme) => theme.palette.navigation.buttonColor }}
-				onClick={handleClick}
-			>
+			<GlobeButtonStyled variant="navtools" onClick={handleClick} style={props.style}>
 				{projection === 'globe' ? (
 					<PublicIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 				) : (
 					<MapIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 				)}
-			</Button>
+			</GlobeButtonStyled>
 		</>
 	);
 };
