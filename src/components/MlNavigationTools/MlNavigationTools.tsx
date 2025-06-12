@@ -30,7 +30,7 @@ export interface MlNavigationToolsProps {
 	/**
 	 * Show global button
 	 */
-	showGlobalButton?: boolean;
+	showGlobeButton?: boolean;
 	/**
 	 * Show zoom button
 	 */
@@ -129,7 +129,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 					{pitch < 29 ? '2D' : '3D'}
 				</Button>
 			)}
-			{props.showGlobalButton && <MlGlobeButton />}
+			{props.showGlobeButton && <MlGlobeButton />}
 			{props.showFollowGpsButton && <MlFollowGps />}
 			{props.showCenterLocationButton && <MlCenterPosition />}
 			<ButtonGroup
@@ -186,7 +186,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 MlNavigationTools.defaultProps = {
 	mapId: undefined,
 	show3DButton: true,
-	showGlobalButton: false,
+	showGlobeButton: false,
 	showFollowGpsButton: true,
 	showCenterLocationButton: false,
 	showZoomButtons: true,

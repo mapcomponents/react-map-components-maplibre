@@ -27,7 +27,7 @@ const Template = (props: MlNavigationToolsProps) => <MlNavigationTools {...props
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [ThreeDButton, setThreeDButton] = useState(false);
-	const [GlobalButton, setGlobalButton] = useState(false);
+	const [GlobeButton, setGlobeButton] = useState(false);
 	const [CenterLocationButton, setCenterLocationButton] = useState(false);
 	const [ZoomButtons, setZoomButtons] = useState(true);
 	const [FollowGpsButton, setFollowGpsButton] = useState(false);
@@ -38,7 +38,7 @@ const catalogueTemplate = () => {
 		setThreeDButton(!ThreeDButton);
 	};
 	const handleChange2 = () => {
-		setGlobalButton(!GlobalButton);
+		setGlobeButton(!GlobeButton);
 	};
 	const handleChange3 = () => {
 		setCenterLocationButton(!CenterLocationButton);
@@ -86,8 +86,8 @@ const catalogueTemplate = () => {
 						label="Show 2D/3D Button"
 					/>
 					<FormControlLabel
-						control={<Switch checked={GlobalButton} onChange={handleChange2} />}
-						label="Show Global Button"
+						control={<Switch checked={GlobeButton} onChange={handleChange2} />}
+						label="Show Globe Button"
 					/>
 					<FormControlLabel
 						control={<Switch checked={CenterLocationButton} onChange={handleChange3} />}
@@ -110,7 +110,7 @@ const catalogueTemplate = () => {
 			<MlNavigationTools
 				sx={alternativePosition ? { top: '80px' } : undefined}
 				show3DButton={ThreeDButton}
-				showGlobalButton={GlobalButton}
+				showGlobeButton={GlobeButton}
 				showCenterLocationButton={CenterLocationButton}
 				showZoomButtons={ZoomButtons}
 				showFollowGpsButton={FollowGpsButton}
@@ -141,10 +141,10 @@ No3dButton.args = {
 	show3DButton: false,
 };
 
-export const ShowGobalButton = Template.bind({});
-ShowGobalButton.parameters = {};
-ShowGobalButton.args = {
-	showGlobalButton: true,
+export const ShowGlobeButton = Template.bind({});
+ShowGlobeButton.parameters = {};
+ShowGlobeButton.args = {
+	showGlobeButton: true,
 };
 
 export const ShowCenterLocationButton = Template.bind({});
