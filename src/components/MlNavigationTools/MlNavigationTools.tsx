@@ -10,6 +10,7 @@ import MlFollowGps from '../MlFollowGps/MlFollowGps';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
 import MlCenterPosition from '../MlCenterPosition/MlCenterPosition';
+import MlGlobeButton from '../MlGlobeButton/MlGlobeButton';
 import { useTheme } from '@mui/material';
 
 export interface MlNavigationToolsProps {
@@ -26,6 +27,10 @@ export interface MlNavigationToolsProps {
 	 * Show 3D button
 	 */
 	show3DButton?: boolean;
+	/**
+	 * Show global button
+	 */
+	showGlobalButton?: boolean;
 	/**
 	 * Show zoom button
 	 */
@@ -124,6 +129,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 					{pitch < 29 ? '2D' : '3D'}
 				</Button>
 			)}
+			{props.showGlobalButton && <MlGlobeButton />}
 			{props.showFollowGpsButton && <MlFollowGps />}
 			{props.showCenterLocationButton && <MlCenterPosition />}
 			<ButtonGroup

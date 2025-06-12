@@ -27,6 +27,7 @@ const Template = (props: MlNavigationToolsProps) => <MlNavigationTools {...props
 const catalogueTemplate = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 	const [ThreeDButton, setThreeDButton] = useState(false);
+	const [GlobalButton, setGlobalButton] = useState(false);
 	const [CenterLocationButton, setCenterLocationButton] = useState(false);
 	const [ZoomButtons, setZoomButtons] = useState(true);
 	const [FollowGpsButton, setFollowGpsButton] = useState(false);
@@ -37,12 +38,15 @@ const catalogueTemplate = () => {
 		setThreeDButton(!ThreeDButton);
 	};
 	const handleChange2 = () => {
-		setCenterLocationButton(!CenterLocationButton);
+		setGlobalButton(!GlobalButton);
 	};
 	const handleChange3 = () => {
-		setZoomButtons(!ZoomButtons);
+		setCenterLocationButton(!CenterLocationButton);
 	};
 	const handleChange4 = () => {
+		setZoomButtons(!ZoomButtons);
+	};
+	const handleChange5 = () => {
 		setFollowGpsButton(!FollowGpsButton);
 	};
 
@@ -82,15 +86,19 @@ const catalogueTemplate = () => {
 						label="Show 2D/3D Button"
 					/>
 					<FormControlLabel
-						control={<Switch checked={CenterLocationButton} onChange={handleChange2} />}
+						control={<Switch checked={GlobalButton} onChange={handleChange2} />}
+						label="Show Global Button"
+					/>
+					<FormControlLabel
+						control={<Switch checked={CenterLocationButton} onChange={handleChange3} />}
 						label="Show CenterLocation Button"
 					/>
 					<FormControlLabel
-						control={<Switch checked={ZoomButtons} onChange={handleChange3} />}
+						control={<Switch checked={ZoomButtons} onChange={handleChange4} />}
 						label="Show Zoom Buttons"
 					/>
 					<FormControlLabel
-						control={<Switch checked={FollowGpsButton} onChange={handleChange4} />}
+						control={<Switch checked={FollowGpsButton} onChange={handleChange5} />}
 						label="Show FollowGPS Button"
 					/>
 					<FormControlLabel
@@ -102,6 +110,7 @@ const catalogueTemplate = () => {
 			<MlNavigationTools
 				sx={alternativePosition ? { top: '80px' } : undefined}
 				show3DButton={ThreeDButton}
+				showGlobalButton={GlobalButton}
 				showCenterLocationButton={CenterLocationButton}
 				showZoomButtons={ZoomButtons}
 				showFollowGpsButton={FollowGpsButton}
@@ -130,6 +139,12 @@ export const No3dButton = Template.bind({});
 No3dButton.parameters = {};
 No3dButton.args = {
 	show3DButton: false,
+};
+
+export const ShowGobalButton = Template.bind({});
+ShowGobalButton.parameters = {};
+ShowGobalButton.args = {
+	showGlobalButton: true,
 };
 
 export const ShowCenterLocationButton = Template.bind({});
