@@ -186,6 +186,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 MlNavigationTools.defaultProps = {
 	mapId: undefined,
 	show3DButton: true,
+	showGlobalButton: false,
 	showFollowGpsButton: true,
 	showCenterLocationButton: false,
 	showZoomButtons: true,
