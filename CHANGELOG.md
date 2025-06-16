@@ -1,5 +1,11 @@
 # Change Log
 
+## [v1.3.2]
+
+## Changed
+- f2980b6: Design/navigation tool (#225)
+- 570987e: Upgrade to maplibre to 5.6.0 (from 5.5.0)
+
 ## [v1.3.1]
 
 ## Changed
