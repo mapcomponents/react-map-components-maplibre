@@ -70,7 +70,7 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = () => {
-	const [showCreatePdfForm, setShowCreatePdfForm] = useState(false);
+	const [showCreatePdfForm, setShowCreatePdfForm] = useState(true);
 	const mediaIsMobile = useMediaQuery('(max-width: 600px)');
 	const PdfForm = () => {
 		console.log(`Template: ${showCreatePdfForm}`);
@@ -192,7 +192,7 @@ const Template = () => {
 };
 
 const additionalInfoTemplate = () => {
-	const [showAdditionalPdfForm, setShowAdditionalPdfForm] = useState(false);
+	const [showAdditionalPdfForm, setShowAdditionalPdfForm] = useState(true);
 	const mediaIsMobile = useMediaQuery('(max-width: 600px)');
 	const PdfFormLong = () => {
 		return (
