@@ -2,13 +2,13 @@ import React from 'react';
 
 import MlGlobeButton, { MlGlobeButtonProps } from './MlGlobeButton';
 
-import mapContextDecorator from '../../decorators/MapContextDecorator';
+import lowZoomDecorator from '../../decorators/LowZoomDecorator';
 
 const storyoptions = {
 	title: 'MapComponents/MlGlobeButton',
 	component: MlGlobeButton,
 	argTypes: {},
-	decorators: mapContextDecorator,
+	decorators: lowZoomDecorator,
 };
 export default storyoptions;
 
