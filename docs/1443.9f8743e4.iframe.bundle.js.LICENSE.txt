@@ -273,7 +273,7 @@ and limitations under the License.
 
 /**
  * MapLibre GL JS
- * @license 3-Clause BSD. Full text of license: https://github.com/maplibre/maplibre-gl-js/blob/v5.5.0/LICENSE.txt
+ * @license 3-Clause BSD. Full text of license: https://github.com/maplibre/maplibre-gl-js/blob/v5.6.0/LICENSE.txt
  */
 
 /**
