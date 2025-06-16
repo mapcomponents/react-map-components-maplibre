@@ -1,29 +1,16 @@
 module.exports = {
-	stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
 
-	addons: [
-		'storybook-source-link',
-		//'@storybook/addon-storysource',
-		'@storybook/addon-links',
-		'@storybook/addon-essentials',
-		{
-			name: '@storybook/addon-docs',
-			options: {
-				configureJSX: true,
-			},
-		},
-	],
-
-	framework: {
+    framework: {
 		name: '@storybook/react-webpack5',
 		options: {},
 	},
 
-	core: {
+    core: {
 		disableTelemetry: true,
 	},
 
-	webpackFinal: async (config) => {
+    webpackFinal: async (config) => {
 		config.module.rules.push({
 			test: /\.(ts|tsx)$/,
 			use: [
@@ -39,7 +26,7 @@ module.exports = {
 		return config;
 	},
 
-	typescript: {
+    typescript: {
 		check: false,
 		checkOptions: {},
 		reactDocgen: 'react-docgen-typescript',
@@ -49,13 +36,11 @@ module.exports = {
 		},
 	},
 
-	docs: {
-		autodocs: true,
-	},
-	staticDirs: [
+    staticDirs: [
 		'../public',
 	],
-	features: {
+
+    features: {
 		buildStoriesJson: true,
-	},
+	}
 };

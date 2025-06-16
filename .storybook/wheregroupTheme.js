@@ -1,4 +1,4 @@
-import { create } from "@storybook/theming";
+import { create } from "storybook/theming";
 import logo from "./mapcomponents_logo.png";
 
 export default create({

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { themes } from "@storybook/theming";
+import { themes } from "storybook/theming";
 
 import "./style.css";
 
@@ -29,3 +29,4 @@ export const globalTypes = {
     },
   },
 };
+export const tags = ['autodocs'];

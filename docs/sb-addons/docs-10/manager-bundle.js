@@ -21,7 +21,7 @@ More info: ${i}
 This is deprecated and won't work in Storybook 8 anymore.
 `:""}
         Please provide an explicit spy to your args like this:
-          import { fn } from '@storybook/test';
+          import { fn } from 'storybook/test';
           ... 
           args: {
            ${t.name}: fn()
