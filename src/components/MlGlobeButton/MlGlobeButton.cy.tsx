@@ -1,5 +1,6 @@
 import React from 'react';
-import MlGlobeButton from '../../src/components/MlGlobeButton';
+import { mount } from '@cypress/react';
+import MlGlobeButton from './MlGlobeButton';
 
 // Export mock to access it in the test
 export const setProjectionMock = jest.fn();
@@ -22,13 +23,13 @@ describe('MlGlobeButton', () => {
 	});
 
 	it('shows the MapIcon when projection is mercator', () => {
-		cy.mount(<MlGlobeButton />);
+		mount(<MlGlobeButton />);
 		cy.get('button').find('svg[data-testid="MapIcon"]').should('exist');
 		cy.get('button').find('svg[data-testid="PublicIcon"]').should('not.exist');
 	});
 
 	it('calls setProjection on click and displays the PublicIcon (Globe)', () => {
-		cy.mount(<MlGlobeButton />);
+		mount(<MlGlobeButton />);
 		cy.get('button').click();
 
 		// Check whether setProjection has been called
