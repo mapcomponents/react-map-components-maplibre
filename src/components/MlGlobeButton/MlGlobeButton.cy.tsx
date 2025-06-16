@@ -2,41 +2,53 @@ import React from 'react';
 import { mount } from '@cypress/react';
 import MlGlobeButton from './MlGlobeButton';
 
-// Export mock to access it in the test
-export const setProjectionMock = jest.fn();
+// Extend Cypress' Chainable interface to include mockUseMap
+declare global {
+	namespace Cypress {
+		interface Chainable {
+			mockUseMap(): Chainable<void>;
+		}
+	}
+}
 
-// Mock for useMap Hook
-jest.mock('../../src/hooks/useMap', () => {
-	return () => ({
-		map: {
-			map: {
-				getProjection: () => ({ type: 'mercator' }),
-				setProjection: setProjectionMock,
-			},
+//  Mock implementation for useMap
+const mockMap = {
+	map: {
+		getProjection: () => ({ type: 'mercator' }),
+		setProjection: function ({ type }: { type: string }) {
+			this._type = type;
+			this.getProjection = () => ({ type });
 		},
-	});
+		_type: 'mercator',
+	},
+};
+
+const useMapMock = () => ({ map: mockMap });
+
+// Overwrites the import of useMap in the component with a mock for test purposes
+Cypress.Commands.add('mockUseMap', () => {
+	cy.stub(require('../../hooks/useMap'), 'default').callsFake(useMapMock);
 });
 
 describe('MlGlobeButton', () => {
 	beforeEach(() => {
-		setProjectionMock.mockClear();
+		cy.mockUseMap();
 	});
 
-	it('shows the MapIcon when projection is mercator', () => {
+	it('shows MapIcon as start state and changes to PublicIcon after click', () => {
 		mount(<MlGlobeButton />);
-		cy.get('button').find('svg[data-testid="MapIcon"]').should('exist');
-		cy.get('button').find('svg[data-testid="PublicIcon"]').should('not.exist');
-	});
-
-	it('calls setProjection on click and displays the PublicIcon (Globe)', () => {
-		mount(<MlGlobeButton />);
+		cy.get('[data-testid="MapIcon"]').should('exist');
+		cy.get('[data-testid="PublicIcon"]').should('not.exist');
 		cy.get('button').click();
+		cy.get('[data-testid="PublicIcon"]').should('exist');
+		cy.get('[data-testid="MapIcon"]').should('not.exist');
+	});
 
-		// Check whether setProjection has been called
-		expect(setProjectionMock).toHaveBeenCalled();
-
-		// Check whether the globe icon is displayed
-		cy.get('button').find('svg[data-testid="PublicIcon"]').should('exist');
-		cy.get('button').find('svg[data-testid="MapIcon"]').should('not.exist');
+	it('switches between Globe and Mercator when clicked again', () => {
+		mount(<MlGlobeButton />);
+		cy.get('button').click(); // Switches to Globe (PublicIcon)
+		cy.get('[data-testid="PublicIcon"]').should('exist');
+		cy.get('button').click(); // Switches back to Mercator (MapIcon)
+		cy.get('[data-testid="MapIcon"]').should('exist');
 	});
 });
