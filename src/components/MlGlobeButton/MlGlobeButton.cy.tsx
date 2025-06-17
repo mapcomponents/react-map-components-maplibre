@@ -3,23 +3,18 @@ import { mount } from '@cypress/react';
 import MlGlobeButton from './MlGlobeButton';
 import { expect } from 'chai';
 
-// Mock implementation for useMap using window
-const mockMap = {
-	getProjection: () => ({ type: 'mercator' }),
-	setProjection: function ({ type }: { type: string }) {
-		this._type = type;
-		this.getProjection = () => ({ type });
-	},
-	_type: 'mercator',
-};
-
-const useMapMock = () => ({ map: (window as any)._testMap });
-
+// Attach a map instance to the window before each test
 beforeEach(() => {
-	// Attach a fresh mock map to window for each test
-	(window as any)._testMap = { ...mockMap };
-	// Stub (replace) the useMap import in the tested component
-	cy.stub(require('../../hooks/useMap'), 'default').callsFake(useMapMock);
+	// Dummy map with Projection API
+	(window as any)._map = {
+		_type: 'mercator',
+		getProjection() {
+			return { type: this._type };
+		},
+		setProjection({ type }: { type: string }) {
+			this._type = type;
+		},
+	};
 });
 
 describe('MlGlobeButton', () => {
@@ -32,7 +27,7 @@ describe('MlGlobeButton', () => {
 		cy.get('[data-testid="MapIcon"]').should('not.exist');
 	});
 
-	it('switches between Globe and Mercator when clicked again', () => {
+	it('toggles between Globe and Mercator when clicked again', () => {
 		mount(<MlGlobeButton />);
 		cy.get('button').click(); // Switches to Globe (PublicIcon)
 		cy.get('[data-testid="PublicIcon"]').should('exist');
@@ -40,16 +35,16 @@ describe('MlGlobeButton', () => {
 		cy.get('[data-testid="MapIcon"]').should('exist');
 	});
 
-	it('actually changes the projection on the map mock', () => {
+	it('changes the projection on the map instance attached to window', () => {
 		mount(<MlGlobeButton />);
 		cy.get('button').click();
 		cy.window().then((win) => {
-			const map = (win as any)._testMap;
+			const map = (win as any)._map;
 			expect(map.getProjection().type).to.eq('globe');
 		});
 		cy.get('button').click();
 		cy.window().then((win) => {
-			const map = (win as any)._testMap;
+			const map = (win as any)._map;
 			expect(map.getProjection().type).to.eq('mercator');
 		});
 	});
