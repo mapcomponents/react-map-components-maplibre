@@ -1,40 +1,28 @@
 import React from 'react';
 import { mount } from '@cypress/react';
 import MlGlobeButton from './MlGlobeButton';
+import { expect } from 'chai';
 
-// Extend Cypress' Chainable interface to include mockUseMap
-declare global {
-	namespace Cypress {
-		interface Chainable {
-			mockUseMap(): Chainable<void>;
-		}
-	}
-}
-
-//  Mock implementation for useMap
+// Mock implementation for useMap using window
 const mockMap = {
-	map: {
-		getProjection: () => ({ type: 'mercator' }),
-		setProjection: function ({ type }: { type: string }) {
-			this._type = type;
-			this.getProjection = () => ({ type });
-		},
-		_type: 'mercator',
+	getProjection: () => ({ type: 'mercator' }),
+	setProjection: function ({ type }: { type: string }) {
+		this._type = type;
+		this.getProjection = () => ({ type });
 	},
+	_type: 'mercator',
 };
 
-const useMapMock = () => ({ map: mockMap });
+const useMapMock = () => ({ map: (window as any)._testMap });
 
-// Overwrites the import of useMap in the component with a mock for test purposes
-Cypress.Commands.add('mockUseMap', () => {
+beforeEach(() => {
+	// Attach a fresh mock map to window for each test
+	(window as any)._testMap = { ...mockMap };
+	// Stub (replace) the useMap import in the tested component
 	cy.stub(require('../../hooks/useMap'), 'default').callsFake(useMapMock);
 });
 
 describe('MlGlobeButton', () => {
-	beforeEach(() => {
-		cy.mockUseMap();
-	});
-
 	it('shows MapIcon as start state and changes to PublicIcon after click', () => {
 		mount(<MlGlobeButton />);
 		cy.get('[data-testid="MapIcon"]').should('exist');
@@ -50,5 +38,19 @@ describe('MlGlobeButton', () => {
 		cy.get('[data-testid="PublicIcon"]').should('exist');
 		cy.get('button').click(); // Switches back to Mercator (MapIcon)
 		cy.get('[data-testid="MapIcon"]').should('exist');
+	});
+
+	it('actually changes the projection on the map mock', () => {
+		mount(<MlGlobeButton />);
+		cy.get('button').click();
+		cy.window().then((win) => {
+			const map = (win as any)._testMap;
+			expect(map.getProjection().type).to.eq('globe');
+		});
+		cy.get('button').click();
+		cy.window().then((win) => {
+			const map = (win as any)._testMap;
+			expect(map.getProjection().type).to.eq('mercator');
+		});
 	});
 });
