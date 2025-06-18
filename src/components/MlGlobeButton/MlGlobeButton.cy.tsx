@@ -3,6 +3,7 @@ import { mount } from '@cypress/react';
 import MlGlobeButton from './MlGlobeButton';
 import { ThemeProvider } from '@mui/material/styles';
 import MapcomponentsTheme from '../../ui_components/MapcomponentsTheme';
+import { MapComponentsProvider } from '../../contexts/MapContext';
 import { expect } from 'chai';
 
 // Attach a map instance to the window before each test
@@ -21,15 +22,19 @@ beforeEach(() => {
 describe('MlGlobeButton', () => {
 	// Helper function to provide the theme in the test context
 	const mountWithTheme = (component: React.ReactNode) =>
-		mount(<ThemeProvider theme={MapcomponentsTheme('light')}>{component}</ThemeProvider>);
+		mount(
+			<ThemeProvider theme={MapcomponentsTheme('light')}>
+				<MapComponentsProvider>{component}</MapComponentsProvider>
+			</ThemeProvider>
+		);
 
 	it('shows MapIcon as start state and changes to PublicIcon after click', () => {
-		mountWithTheme(<MlGlobeButton />);
+		mountWithTheme(<MlGlobeButton mode="mercator" />);
 		cy.get('[data-testid="MapIcon"]').should('exist');
 		cy.get('[data-testid="PublicIcon"]').should('not.exist');
-		// cy.get('button').click();
-		// cy.get('[data-testid="PublicIcon"]').should('exist');
-		// cy.get('[data-testid="MapIcon"]').should('not.exist');
+		cy.get('button').click();
+		cy.get('[data-testid="PublicIcon"]').should('exist');
+		cy.get('[data-testid="MapIcon"]').should('not.exist');
 	});
 
 	it('toggles between Globe and Mercator when clicked again', () => {
