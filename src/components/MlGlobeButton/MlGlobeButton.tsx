@@ -18,6 +18,10 @@ export interface MlGlobeButtonProps {
 	 * Style object to adjust css definitions of the component.
 	 */
 	style?: CSSProperties;
+	/**
+	 * Initial projection mode of the map.
+	 */
+	mode?: 'globe' | 'mercator';
 }
 
 /**
@@ -37,19 +41,19 @@ const MlGlobeButton = (props: MlGlobeButtonProps) => {
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const [projection, setProjection] = useState<'globe' | 'mercator'>('mercator');
+	const [projection, setProjection] = useState<'globe' | 'mercator'>(props.mode || 'mercator');
 
 	useEffect(() => {
 		const current = mapHook.map?.map.getProjection?.()?.type;
-		if (current === 'globe' || current === 'mercator') {
-			setProjection(current);
+		if (current !== projection) {
+			mapHook.map?.setProjection({ type: projection });
 		}
 	}, [mapHook.map]);
 
 	const handleClick = () => {
 		if (!mapHook.map) return;
 		const next = projection === 'globe' ? 'mercator' : 'globe';
-		mapHook.map.map.setProjection({ type: next });
+		mapHook.map.setProjection({ type: next });
 		setProjection(next);
 	};
 
@@ -68,5 +72,6 @@ const MlGlobeButton = (props: MlGlobeButtonProps) => {
 
 MlGlobeButton.defaultProps = {
 	mapId: undefined,
+	mode: 'mercator',
 };
 export default MlGlobeButton;

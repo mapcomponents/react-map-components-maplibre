@@ -106,6 +106,12 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		mapHook.map.easeTo({ pitch: targetPitch });
 	}, [mapHook.map]);
 
+	useEffect(() => {
+		if (props.showGlobeButton && mapHook.map) {
+			mapHook.map.easeTo({ zoom: 2 });
+		}
+	}, [props.showGlobeButton, mapHook.map]);
+
 	return (
 		<Box
 			sx={{
@@ -129,7 +135,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 					{pitch < 29 ? '2D' : '3D'}
 				</Button>
 			)}
-			{props.showGlobeButton && <MlGlobeButton />}
+			{props.showGlobeButton && <MlGlobeButton mode="globe" />}
 			{props.showFollowGpsButton && <MlFollowGps />}
 			{props.showCenterLocationButton && <MlCenterPosition />}
 			<ButtonGroup
