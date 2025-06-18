@@ -31,7 +31,8 @@ export interface MlGlobeButtonProps {
 
 const GlobeButtonStyled = styled(Button)(({ theme }) => ({
 	zIndex: 1000,
-	color: theme.palette.navigation.buttonColor,
+	// color: theme.palette.navigation.buttonColor,
+	color: '#fff',
 	transform: 'scale(1)',
 }));
 

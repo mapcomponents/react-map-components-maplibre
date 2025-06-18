@@ -19,12 +19,12 @@ beforeEach(() => {
 });
 
 describe('MlGlobeButton', () => {
-	// Helper function to provide the theme in the test context
-	const mountWithTheme = (component: React.ReactNode) =>
-		mount(<ThemeProvider theme={MapcomponentsTheme('light')}>{component}</ThemeProvider>);
+	// // Helper function to provide the theme in the test context
+	// const mountWithTheme = (component: React.ReactNode) =>
+	// 	mount(<ThemeProvider theme={MapcomponentsTheme('light')}>{component}</ThemeProvider>);
 
 	it('shows MapIcon as start state and changes to PublicIcon after click', () => {
-		mountWithTheme(<MlGlobeButton />);
+		mount(<MlGlobeButton />);
 		cy.get('[data-testid="MapIcon"]').should('exist');
 		cy.get('[data-testid="PublicIcon"]').should('not.exist');
 		cy.get('button').click();
@@ -33,7 +33,7 @@ describe('MlGlobeButton', () => {
 	});
 
 	it('toggles between Globe and Mercator when clicked again', () => {
-		mountWithTheme(<MlGlobeButton />);
+		mount(<MlGlobeButton />);
 		cy.get('button').click(); // Switches to Globe (PublicIcon)
 		cy.get('[data-testid="PublicIcon"]').should('exist');
 		cy.get('button').click(); // Switches back to Mercator (MapIcon)
@@ -41,16 +41,16 @@ describe('MlGlobeButton', () => {
 	});
 
 	it('changes the projection on the map instance attached to window', () => {
-		mountWithTheme(<MlGlobeButton />);
-		cy.get('button').click();
-		cy.window().then((win) => {
-			const map = (win as any)._map;
-			expect(map.getProjection().type).to.eq('mercator');
-		});
+		mount(<MlGlobeButton />);
 		cy.get('button').click();
 		cy.window().then((win) => {
 			const map = (win as any)._map;
 			expect(map.getProjection().type).to.eq('globe');
+		});
+		cy.get('button').click();
+		cy.window().then((win) => {
+			const map = (win as any)._map;
+			expect(map.getProjection().type).to.eq('mercator');
 		});
 	});
 });
