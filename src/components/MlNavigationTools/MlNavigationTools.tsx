@@ -4,7 +4,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Box from '@mui/material/Box';
-import { SxProps, Theme } from '@mui/material';
+import { Divider, Paper, SxProps, Theme } from '@mui/material';
 import MlNavigationCompass from '../MlNavigationCompass/MlNavigationCompass';
 import MlFollowGps from '../MlFollowGps/MlFollowGps';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -149,21 +149,23 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 								borderBottomLeftRadius: 0,
 								borderBottomRightRadius: 0,
 								position: 'relative',
-
-								'&::after': {
-									content: '""',
-									position: 'absolute',
-									left: '20%',
-									bottom: 0,
-									width: '60%',
-									height: '1px',
-									backgroundColor: '#ccc',
-									borderRadius: '1px',
-								}, // Dividing line
 							}}
 						>
 							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
+						<Paper
+							sx={{
+								backgroundColor: '#fff',
+							}}
+						>
+							<Divider
+								sx={{
+									marginLeft: '6px',
+									marginRight: '6px',
+								}}
+							/>
+						</Paper>
+
 						<Button
 							variant="navtools"
 							onClick={zoomOut}
