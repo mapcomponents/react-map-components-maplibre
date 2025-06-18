@@ -29,7 +29,7 @@ describe('MlGlobeButton', () => {
 		);
 
 	it('shows MapIcon as start state and changes to PublicIcon after click', () => {
-		mountWithTheme(<MlGlobeButton mode="mercator" />);
+		mountWithTheme(<MlGlobeButton />);
 		cy.get('[data-testid="MapIcon"]').should('exist');
 		cy.get('[data-testid="PublicIcon"]').should('not.exist');
 		cy.get('button').click();
