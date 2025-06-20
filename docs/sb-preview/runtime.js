@@ -2176,22 +2176,22 @@ rashReport", A.TESTING_MODULE_PROGRESS_REPORT = "testingModuleProgressReport", A
 var yo = {
   "@storybook/global": "__STORYBOOK_MODULE_GLOBAL__",
   "storybook/internal/channels": "__STORYBOOK_MODULE_CHANNELS__",
-  "storybook/internal/channels": "__STORYBOOK_MODULE_CHANNELS__",
+  "@storybook/channels": "__STORYBOOK_MODULE_CHANNELS__",
   "@storybook/core/channels": "__STORYBOOK_MODULE_CHANNELS__",
   "storybook/internal/client-logger": "__STORYBOOK_MODULE_CLIENT_LOGGER__",
-  "storybook/internal/client-logger": "__STORYBOOK_MODULE_CLIENT_LOGGER__",
+  "@storybook/client-logger": "__STORYBOOK_MODULE_CLIENT_LOGGER__",
   "@storybook/core/client-logger": "__STORYBOOK_MODULE_CLIENT_LOGGER__",
   "storybook/internal/core-events": "__STORYBOOK_MODULE_CORE_EVENTS__",
-  "storybook/internal/core-events": "__STORYBOOK_MODULE_CORE_EVENTS__",
+  "@storybook/core-events": "__STORYBOOK_MODULE_CORE_EVENTS__",
   "@storybook/core/core-events": "__STORYBOOK_MODULE_CORE_EVENTS__",
   "storybook/internal/preview-errors": "__STORYBOOK_MODULE_CORE_EVENTS_PREVIEW_ERRORS__",
-  "storybook/internal/core-events/preview-errors": "__STORYBOOK_MODULE_CORE_EVENTS_PREVIEW_ERRORS__",
+  "@storybook/core-events/preview-errors": "__STORYBOOK_MODULE_CORE_EVENTS_PREVIEW_ERRORS__",
   "@storybook/core/preview-errors": "__STORYBOOK_MODULE_CORE_EVENTS_PREVIEW_ERRORS__",
   "storybook/internal/preview-api": "__STORYBOOK_MODULE_PREVIEW_API__",
-  "storybook/preview-api": "__STORYBOOK_MODULE_PREVIEW_API__",
+  "@storybook/preview-api": "__STORYBOOK_MODULE_PREVIEW_API__",
   "@storybook/core/preview-api": "__STORYBOOK_MODULE_PREVIEW_API__",
   "storybook/internal/types": "__STORYBOOK_MODULE_TYPES__",
-  "storybook/internal/types": "__STORYBOOK_MODULE_TYPES__",
+  "@storybook/types": "__STORYBOOK_MODULE_TYPES__",
   "@storybook/core/types": "__STORYBOOK_MODULE_TYPES__"
 }, cs = Object.keys(yo);
 
@@ -4691,7 +4691,7 @@ for-example-in-the-play-function",
 This is deprecated and won't work in Storybook 8 anymore.
 ` : ""}
         Please provide an explicit spy to your args like this:
-          import { fn } from 'storybook/test';
+          import { fn } from '@storybook/test';
           ... 
           args: {
            ${t.name}: fn()
@@ -7690,22 +7690,22 @@ n(ss, "simulatePageLoad");
 var Qa = {
   "@storybook/global": Ht,
   "storybook/internal/channels": br,
-  "storybook/internal/channels": br,
+  "@storybook/channels": br,
   "@storybook/core/channels": br,
   "storybook/internal/client-logger": mr,
-  "storybook/internal/client-logger": mr,
+  "@storybook/client-logger": mr,
   "@storybook/core/client-logger": mr,
   "storybook/internal/core-events": ge,
-  "storybook/internal/core-events": ge,
+  "@storybook/core-events": ge,
   "@storybook/core/core-events": ge,
   "storybook/internal/preview-errors": kr,
-  "storybook/internal/core-events/preview-errors": kr,
+  "@storybook/core-events/preview-errors": kr,
   "@storybook/core/preview-errors": kr,
   "storybook/internal/preview-api": Yr,
-  "storybook/preview-api": Yr,
+  "@storybook/preview-api": Yr,
   "@storybook/core/preview-api": Yr,
   "storybook/internal/types": Tr,
-  "storybook/internal/types": Tr,
+  "@storybook/types": Tr,
   "@storybook/core/types": Tr
 };
 
