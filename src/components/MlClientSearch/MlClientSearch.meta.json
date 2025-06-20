@@ -11,5 +11,11 @@
 	"tags": [],
 	"category": "",
 	"type": "component",
-	"components": ["MlGeoJsonLayer"]
+	"components": ["MlGeoJsonLayer"],
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlclientsearch--example-config&viewMode=story"
+		}
+	]
 }

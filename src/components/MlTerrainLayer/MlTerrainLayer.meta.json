@@ -10,5 +10,11 @@
 	},
 	"tags": ["Map layer"],
 	"category": "layer",
-	"type": "component"
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlterrainlayer--example-config&viewMode=story"
+		}
+	]
 }

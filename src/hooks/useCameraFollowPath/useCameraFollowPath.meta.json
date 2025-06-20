@@ -10,5 +10,11 @@
 	},
 	"tags": ["Map add-on"],
 	"category": "add-ons",
-	"type": "component"
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=hooks-usecamerafollowpath--example-config&viewMode=story"
+		}
+	]
 }
