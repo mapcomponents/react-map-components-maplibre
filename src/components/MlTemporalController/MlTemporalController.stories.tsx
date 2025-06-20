@@ -9,7 +9,7 @@ import jakobsweg from './assets/jackobsweg.json';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import useMap from '../../hooks/useMap';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 
 const storyoptions = {
 	title: 'MapComponents/MlTemporalController',

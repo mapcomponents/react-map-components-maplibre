@@ -4,7 +4,7 @@ import { MapComponentsProvider } from '../index';
 import './style.css';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
-import { StoryContext } from '@storybook/react';
+import { StoryContext } from '@storybook/react-webpack5';
 
 const decorators = [
   (Story: React.FC, context?: StoryContext): React.ReactElement => {

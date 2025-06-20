@@ -7,7 +7,7 @@ import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
 import MlScaleReference from '../components/MlScaleReference/MlScaleReference';
-import { Decorator } from '@storybook/react';
+import { Decorator } from '@storybook/react-webpack5';
 import { Paper } from '@mui/material';
 
 interface StoryContext {

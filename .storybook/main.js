@@ -1,19 +1,6 @@
 module.exports = {
 	stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
 
-	addons: [
-		'storybook-source-link',
-		//'@storybook/addon-storysource',
-		'@storybook/addon-links',
-		'@storybook/addon-essentials',
-		{
-			name: '@storybook/addon-docs',
-			options: {
-				configureJSX: true,
-			},
-		},
-	],
-
 	framework: {
 		name: '@storybook/react-webpack5',
 		options: {},
@@ -36,6 +23,14 @@ module.exports = {
 			],
 		});
 		config.resolve.extensions.push('.ts', '.tsx');
+
+		// Add fallbacks for Node.js core modules
+		config.resolve = config.resolve || {};
+		config.resolve.fallback = {
+			...(config.resolve.fallback || {}),
+			fs: false,
+			path: require.resolve('path-browserify'),
+		};
 		return config;
 	},
 
@@ -49,12 +44,10 @@ module.exports = {
 		},
 	},
 
-	docs: {
-		autodocs: true,
-	},
 	staticDirs: [
 		'../public',
 	],
+
 	features: {
 		buildStoriesJson: true,
 	},

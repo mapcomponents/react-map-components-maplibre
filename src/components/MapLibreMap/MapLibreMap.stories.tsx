@@ -6,7 +6,7 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 import {FeatureCollection} from 'geojson';
 import themeDecorator from '../../decorators/ThemeDecorator';
-import { StoryFn } from "@storybook/react";
+import { StoryFn } from "@storybook/react-webpack5";
 
 
 const storyoptions = {
