@@ -10,5 +10,11 @@
 	},
 	"tags": [],
 	"category": "",
-	"type": "ui_component"
+	"type": "ui_component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=uicomponents-speeddial--example-config&viewMode=story"
+		}
+	]
 }
