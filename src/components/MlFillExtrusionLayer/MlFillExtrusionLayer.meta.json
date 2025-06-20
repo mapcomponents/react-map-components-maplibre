@@ -16,5 +16,6 @@
 			"name": "Demo",
 			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlfillextrusionlayer--example-config&viewMode=story"
 		}
-	]
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlFillExtrusionLayer.png"
 }

@@ -16,5 +16,6 @@
 			"name": "Demo",
 			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlgpxviewer--example-config&viewMode=story"
 		}
-	]
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlGpxViewer.png"
 }

@@ -17,5 +17,6 @@
 			"name": "Demo",
 			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlclientsearch--example-config&viewMode=story"
 		}
-	]
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlClientSearch.png"
 }
