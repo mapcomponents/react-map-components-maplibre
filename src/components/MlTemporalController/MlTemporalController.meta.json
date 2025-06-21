@@ -8,14 +8,16 @@
       "description": "Nach einer numerischen Eigenschaft gefilterte Darstellung von GeoJSON Daten auf einer Karte, gesteuert durch eine lineare Fortschrittsanzeige."
     }
   },
-  "tags": ["Map add-on"],
+  "tags": [
+    "Map add-on"
+  ],
   "category": "add-ons",
   "type": "component",
-	"demos": [
-		{
-			"name": "Demo",
-			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mltemporalcontroller--docs&viewMode=story"
-		}
-	],
-	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlTemporalController.png"
+  "demos": [
+    {
+      "name": "Demo",
+      "url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mltemporalcontroller--catalogue-demo&viewMode=story"
+    }
+  ],
+  "thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlTemporalController.png"
 }

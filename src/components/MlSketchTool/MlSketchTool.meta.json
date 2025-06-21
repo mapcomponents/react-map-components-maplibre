@@ -8,14 +8,16 @@
       "description": "Erzeugen und bearbeiten von Geometrien."
     }
   },
-  "tags": ["Map add-on"],
+  "tags": [
+    "Map add-on"
+  ],
   "category": "add-ons",
   "type": "component",
-	"demos": [
-		{
-			"name": "Demo",
-			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlsketchtool--example-config&viewMode=story"
-		}
-	],
-	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlSketchTool.png"
+  "demos": [
+    {
+      "name": "Demo",
+      "url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlsketchtool--catalogue-demo&viewMode=story"
+    }
+  ],
+  "thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlSketchTool.png"
 }
