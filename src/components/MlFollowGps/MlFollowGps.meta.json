@@ -1,14 +1,23 @@
 {
-	"name": "MlFollowGps",
-	"title": "GPS tracker",
-	"description": "Display of the current position and viewing direction.",
-	"i18n": {
-		"de": {
-			"title": "GPS-Tracker",
-			"description": "Darstellung der aktuellen Position und Blickrichtung"
-		}
-	},
-	"tags": ["Map add-on"],
-	"category": "add-ons",
-	"type": "component"
+  "name": "MlFollowGps",
+  "title": "GPS tracker",
+  "description": "Display of the current position and viewing direction.",
+  "i18n": {
+    "de": {
+      "title": "GPS-Tracker",
+      "description": "Darstellung der aktuellen Position und Blickrichtung"
+    }
+  },
+  "tags": [
+    "Map add-on"
+  ],
+  "category": "add-ons",
+  "type": "component",
+  "demos": [
+    {
+      "name": "Demo",
+      "url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlfollowgps--catalogue-demo&viewMode=story"
+    }
+  ],
+  "thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlFollowGps.png"
 }

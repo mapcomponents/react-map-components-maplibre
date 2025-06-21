@@ -10,5 +10,12 @@
 	},
 	"tags": ["Map layer"],
 	"category": "layer",
-	"type": "component"
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mltransitiongeojsonlayer--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlTransitionGeoJsonLayer.png"
 }

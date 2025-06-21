@@ -8,7 +8,16 @@
       "description": "Erzeugen und Bearbeiten von Objekten."
     }
   },
-  "tags": ["Map add-on"],
+  "tags": [
+    "Map add-on"
+  ],
   "category": "add-ons",
-  "type": "component"
+  "type": "component",
+  "demos": [
+    {
+      "name": "Demo",
+      "url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlfeatureeditor--catalogue-demo&viewMode=story"
+    }
+  ],
+  "thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/thumbnails/MlFeatureEditor.png"
 }
