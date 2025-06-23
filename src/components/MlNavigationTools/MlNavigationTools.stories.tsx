@@ -31,32 +31,22 @@ const catalogueTemplate = () => {
 	const [CenterLocationButton, setCenterLocationButton] = useState(false);
 	const [ZoomButtons, setZoomButtons] = useState(true);
 	const [FollowGpsButton, setFollowGpsButton] = useState(false);
-	const [showCustomButton, setShowCustomButton] = useState<boolean>(false);
+	const [showCustomButton, setShowCustomButton] = useState(false);
 	const [alternativePosition, setAlternativePosition] = useState(false);
 
-	const handleChangeThreeDButton = () => {
-		setThreeDButton(!ThreeDButton);
-	};
-	const handleChangeGlobeButton = () => {
-		setGlobeButton(!GlobeButton);
-	};
-	const handleChangeCenterLocationButton = () => {
-		setCenterLocationButton(!CenterLocationButton);
-	};
-	const handleChangeZoomButtons = () => {
-		setZoomButtons(!ZoomButtons);
-	};
-	const handleChangeFollowGpsButton = () => {
-		setFollowGpsButton(!FollowGpsButton);
-	};
-
-	const handleCustomButtonChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setShowCustomButton(event.target.checked);
-	};
-
-	const handleAlternativePositionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setAlternativePosition(event.target.checked);
-	};
+	const tools = [
+		{ text: 'Alternative Position', const: alternativePosition, setter: setAlternativePosition },
+		{ text: 'Show 2D/3D Button', const: ThreeDButton, setter: setThreeDButton },
+		{ text: 'Show Globe Button', const: GlobeButton, setter: setGlobeButton },
+		{
+			text: 'Show CenterLocation Button',
+			const: CenterLocationButton,
+			setter: setCenterLocationButton,
+		},
+		{ text: 'Show Zoom Buttons', const: ZoomButtons, setter: setZoomButtons },
+		{ text: 'Show FollowGPS Button', const: FollowGpsButton, setter: setFollowGpsButton },
+		{ text: 'Add a custom Button', const: showCustomButton, setter: setShowCustomButton },
+	];
 
 	return (
 		<>
@@ -75,38 +65,15 @@ const catalogueTemplate = () => {
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Navigation Tools'}>
 				<FormGroup>
-					<FormControlLabel
-						control={
-							<Switch checked={alternativePosition} onChange={handleAlternativePositionChange} />
-						}
-						label="Alternative Position"
-					/>
-					<FormControlLabel
-						control={<Switch checked={ThreeDButton} onChange={handleChangeThreeDButton} />}
-						label="Show 2D/3D Button"
-					/>
-					<FormControlLabel
-						control={<Switch checked={GlobeButton} onChange={handleChangeGlobeButton} />}
-						label="Show Globe Button"
-					/>
-					<FormControlLabel
-						control={
-							<Switch checked={CenterLocationButton} onChange={handleChangeCenterLocationButton} />
-						}
-						label="Show CenterLocation Button"
-					/>
-					<FormControlLabel
-						control={<Switch checked={ZoomButtons} onChange={handleChangeZoomButtons} />}
-						label="Show Zoom Buttons"
-					/>
-					<FormControlLabel
-						control={<Switch checked={FollowGpsButton} onChange={handleChangeFollowGpsButton} />}
-						label="Show FollowGPS Button"
-					/>
-					<FormControlLabel
-						control={<Switch checked={showCustomButton} onChange={handleCustomButtonChange} />}
-						label="Add a custom Button"
-					/>
+					{tools.map((tool, index) => (
+						<FormControlLabel
+							key={index}
+							control={
+								<Switch checked={tool.const} onChange={() => tool.setter((current) => !current)} />
+							}
+							label={tool.text}
+						/>
+					))}
 				</FormGroup>
 			</Sidebar>
 			<MlNavigationTools

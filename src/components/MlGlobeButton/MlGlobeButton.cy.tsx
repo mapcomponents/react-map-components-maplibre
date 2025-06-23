@@ -39,7 +39,7 @@ describe('MlGlobeButton', () => {
 
 		cy.window().should((win) => {
 			const map = (win as any)._map;
-			expect(map.getProjection()).to.be.undefined;
+			expect(map.getProjection()).to.equal(undefined);
 		});
 
 		cy.get('button').click();
