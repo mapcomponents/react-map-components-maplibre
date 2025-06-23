@@ -8,7 +8,7 @@
 			"description": "Zeigt die Karte als Globus oder als Mercator-Projektion an. Um den Effekt zu sehen, am besten eine niedrige Zoomstufe einstellen."
 		}
 	},
-	"tags": [],
-	"category": "",
+	"tags": ["Map add-on"],
+	"category": "add-ons",
 	"type": "component"
 }
