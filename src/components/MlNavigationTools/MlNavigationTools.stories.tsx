@@ -65,9 +65,9 @@ const catalogueTemplate = () => {
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Navigation Tools'}>
 				<FormGroup>
-					{tools.map((tool, index) => (
+					{tools.map((tool, text) => (
 						<FormControlLabel
-							key={index}
+							key={text}
 							control={
 								<Switch checked={tool.const} onChange={() => tool.setter((current) => !current)} />
 							}
