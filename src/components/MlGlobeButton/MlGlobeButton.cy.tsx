@@ -7,8 +7,19 @@ import * as stories from './MlGlobeButton.stories';
 const { CatalogueDemo }: any = composeStories(stories);
 
 describe('MlGlobeButton', () => {
-	
-	it('shows MapIcon as start state and changes to PublicIcon after click', () => {
+	beforeEach(() => {
+		// Reset window._map so that each test gets a new, clean map context
+		cy.window().then((win) => {
+			delete (win as any)._map;
+			// Remove icon elements that might persist between tests
+			const mapIcon = win.document.querySelector('[data-testid="MapIcon"]');
+			if (mapIcon) mapIcon.remove();
+			const publicIcon = win.document.querySelector('[data-testid="PublicIcon"]');
+			if (publicIcon) publicIcon.remove();
+		});
+	});
+
+	it('shows MapIcon as start state and toggles between MapIcon and PublicIcon', () => {
 		mount(<CatalogueDemo />);
 		cy.window().should((win) => expect((win as any)._map).to.exist);
 
@@ -17,21 +28,19 @@ describe('MlGlobeButton', () => {
 		cy.get('button').click();
 		cy.get('[data-testid="PublicIcon"]').should('exist');
 		cy.get('[data-testid="MapIcon"]').should('not.exist');
-	});
-
-	it('toggles between Globe and Mercator when clicked again', () => {
-		mount(<CatalogueDemo />);
-		cy.window().should((win) => expect((win as any)._map).to.exist);
-
-		cy.get('button').click(); // Switches to Globe (PublicIcon)
-		cy.get('[data-testid="PublicIcon"]').should('exist');
-		cy.get('button').click(); // Switches back to Mercator (MapIcon)
+		cy.get('button').click();
 		cy.get('[data-testid="MapIcon"]').should('exist');
+		cy.get('[data-testid="PublicIcon"]').should('not.exist');
 	});
 
 	it('changes the projection on the map instance attached to window', () => {
 		mount(<CatalogueDemo />);
 		cy.window().should((win) => expect((win as any)._map).to.exist);
+
+		cy.window().should((win) => {
+			const map = (win as any)._map;
+			expect(map.getProjection()).to.be.undefined;
+		});
 
 		cy.get('button').click();
 		cy.window().should((win) => {
