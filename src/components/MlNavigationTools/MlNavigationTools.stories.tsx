@@ -34,19 +34,19 @@ const catalogueTemplate = () => {
 	const [showCustomButton, setShowCustomButton] = useState<boolean>(false);
 	const [alternativePosition, setAlternativePosition] = useState(false);
 
-	const handleChange1 = () => {
+	const handleChangeThreeDButton = () => {
 		setThreeDButton(!ThreeDButton);
 	};
-	const handleChange2 = () => {
+	const handleChangeGlobeButton = () => {
 		setGlobeButton(!GlobeButton);
 	};
-	const handleChange3 = () => {
+	const handleChangeCenterLocationButton = () => {
 		setCenterLocationButton(!CenterLocationButton);
 	};
-	const handleChange4 = () => {
+	const handleChangeZoomButtons = () => {
 		setZoomButtons(!ZoomButtons);
 	};
-	const handleChange5 = () => {
+	const handleChangeFollowGpsButton = () => {
 		setFollowGpsButton(!FollowGpsButton);
 	};
 
@@ -82,23 +82,25 @@ const catalogueTemplate = () => {
 						label="Alternative Position"
 					/>
 					<FormControlLabel
-						control={<Switch checked={ThreeDButton} onChange={handleChange1} />}
+						control={<Switch checked={ThreeDButton} onChange={handleChangeThreeDButton} />}
 						label="Show 2D/3D Button"
 					/>
 					<FormControlLabel
-						control={<Switch checked={GlobeButton} onChange={handleChange2} />}
+						control={<Switch checked={GlobeButton} onChange={handleChangeGlobeButton} />}
 						label="Show Globe Button"
 					/>
 					<FormControlLabel
-						control={<Switch checked={CenterLocationButton} onChange={handleChange3} />}
+						control={
+							<Switch checked={CenterLocationButton} onChange={handleChangeCenterLocationButton} />
+						}
 						label="Show CenterLocation Button"
 					/>
 					<FormControlLabel
-						control={<Switch checked={ZoomButtons} onChange={handleChange4} />}
+						control={<Switch checked={ZoomButtons} onChange={handleChangeZoomButtons} />}
 						label="Show Zoom Buttons"
 					/>
 					<FormControlLabel
-						control={<Switch checked={FollowGpsButton} onChange={handleChange5} />}
+						control={<Switch checked={FollowGpsButton} onChange={handleChangeFollowGpsButton} />}
 						label="Show FollowGPS Button"
 					/>
 					<FormControlLabel
