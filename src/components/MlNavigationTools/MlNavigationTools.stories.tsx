@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import MlNavigationTools, { MlNavigationToolsProps } from './MlNavigationTools';
 import noNavToolsDecorator from '../../decorators/NoNavToolsDecorator';
@@ -9,6 +9,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
+import useMap from '../../hooks/useMap';
 
 const storyoptions = {
 	title: 'MapComponents/MlNavigationTools',
@@ -25,28 +26,35 @@ export default storyoptions;
 const Template = (props: MlNavigationToolsProps) => <MlNavigationTools {...props} />;
 
 const catalogueTemplate = () => {
+	const mapHook = useMap();
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const [ThreeDButton, setThreeDButton] = useState(false);
-	const [GlobeButton, setGlobeButton] = useState(false);
-	const [CenterLocationButton, setCenterLocationButton] = useState(false);
-	const [ZoomButtons, setZoomButtons] = useState(true);
-	const [FollowGpsButton, setFollowGpsButton] = useState(false);
+	const [threeDButton, setThreeDButton] = useState(false);
+	const [globeButton, setGlobeButton] = useState(false);
+	const [centerLocationButton, setCenterLocationButton] = useState(false);
+	const [zoomButtons, setZoomButtons] = useState(true);
+	const [followGpsButton, setFollowGpsButton] = useState(false);
 	const [showCustomButton, setShowCustomButton] = useState(false);
 	const [alternativePosition, setAlternativePosition] = useState(false);
 
 	const tools = [
 		{ text: 'Alternative Position', const: alternativePosition, setter: setAlternativePosition },
-		{ text: 'Show 2D/3D Button', const: ThreeDButton, setter: setThreeDButton },
-		{ text: 'Show Globe Button', const: GlobeButton, setter: setGlobeButton },
+		{ text: 'Show 2D/3D Button', const: threeDButton, setter: setThreeDButton },
+		{ text: 'Show Globe Button', const: globeButton, setter: setGlobeButton },
 		{
 			text: 'Show CenterLocation Button',
-			const: CenterLocationButton,
+			const: centerLocationButton,
 			setter: setCenterLocationButton,
 		},
-		{ text: 'Show Zoom Buttons', const: ZoomButtons, setter: setZoomButtons },
-		{ text: 'Show FollowGPS Button', const: FollowGpsButton, setter: setFollowGpsButton },
+		{ text: 'Show Zoom Buttons', const: zoomButtons, setter: setZoomButtons },
+		{ text: 'Show FollowGPS Button', const: followGpsButton, setter: setFollowGpsButton },
 		{ text: 'Add a custom Button', const: showCustomButton, setter: setShowCustomButton },
 	];
+
+	useEffect(() => {
+		if (globeButton && mapHook.map) {
+			mapHook.map.easeTo({ zoom: 2 });
+		}
+	}, [globeButton, mapHook.map]);
 
 	return (
 		<>
@@ -78,11 +86,11 @@ const catalogueTemplate = () => {
 			</Sidebar>
 			<MlNavigationTools
 				sx={alternativePosition ? { top: '80px' } : undefined}
-				show3DButton={ThreeDButton}
-				showGlobeButton={GlobeButton}
-				showCenterLocationButton={CenterLocationButton}
-				showZoomButtons={ZoomButtons}
-				showFollowGpsButton={FollowGpsButton}
+				show3DButton={threeDButton}
+				showGlobeButton={globeButton}
+				showCenterLocationButton={centerLocationButton}
+				showZoomButtons={zoomButtons}
+				showFollowGpsButton={followGpsButton}
 			>
 				{showCustomButton ? (
 					<Button
