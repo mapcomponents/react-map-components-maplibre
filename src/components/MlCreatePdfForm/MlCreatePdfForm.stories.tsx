@@ -10,7 +10,6 @@ import Sidebar from '../../ui_components/Sidebar';
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Draggable from 'react-draggable';
-import { Description, Primary, Subtitle, Title } from '@storybook/addon-docs/blocks';
 
 
 const PaperComponent = (props: object) => {
