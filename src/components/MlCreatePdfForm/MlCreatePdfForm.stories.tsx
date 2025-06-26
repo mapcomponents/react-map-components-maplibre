@@ -11,6 +11,7 @@ import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Draggable from 'react-draggable';
 
+
 const PaperComponent = (props: object) => {
 	const nodeRef = React.useRef<HTMLDivElement>(null);
 
@@ -60,6 +61,11 @@ const storyoptions = {
 	component: MlCreatePdfForm,
 	argTypes: {},
 	decorators: mapContextDecorator,
+	parameters: {
+    docs: {
+      page: null,
+    },
+	},
 };
 export default storyoptions;
 
@@ -389,5 +395,8 @@ ExampleConfig.parameters = {};
 ExampleConfig.args = {};
 
 export const AdditionalInfo = additionalInfoTemplate.bind({});
-AdditionalInfo.parameters = {};
-AdditionalInfo.args = {};
+AdditionalInfo.parameters = {
+	docs: { page: null },
+};
+AdditionalInfo.args = {
+};

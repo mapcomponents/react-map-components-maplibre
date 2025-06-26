@@ -5,7 +5,7 @@ import './style.css';
 import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
-import { Decorator } from '@storybook/react'; // Adjust according to your actual import paths
+import { Decorator } from '@storybook/react-webpack5'; // Adjust according to your actual import paths
 
 interface StoryContext {
   globals: {

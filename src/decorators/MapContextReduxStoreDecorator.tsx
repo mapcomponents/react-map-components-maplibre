@@ -6,7 +6,7 @@ import './style.css';
 import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
-import { Decorator } from '@storybook/react';
+import { Decorator } from '@storybook/react-webpack5';
 import store from '../stores/map.store';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 

@@ -7,7 +7,7 @@ import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
 import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools';
 import { LngLatLike } from 'maplibre-gl';
-import { Decorator } from '@storybook/react';
+import { Decorator } from '@storybook/react-webpack5';
 
 interface StoryContext {
   globals: {

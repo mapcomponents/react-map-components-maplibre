@@ -5,7 +5,7 @@ import MapLibreMap from '../components/MapLibreMap/MapLibreMap';
 import './style.css';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
-import { Decorator } from '@storybook/react';
+import { Decorator } from '@storybook/react-webpack5';
 
 interface StoryContext {
   globals: {
