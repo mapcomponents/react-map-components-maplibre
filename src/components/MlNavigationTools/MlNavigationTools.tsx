@@ -4,12 +4,13 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Box from '@mui/material/Box';
-import { SxProps, Theme } from '@mui/material';
+import { Divider, Paper, SxProps, Theme } from '@mui/material';
 import MlNavigationCompass from '../MlNavigationCompass/MlNavigationCompass';
 import MlFollowGps from '../MlFollowGps/MlFollowGps';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useMap from '../../hooks/useMap';
 import MlCenterPosition from '../MlCenterPosition/MlCenterPosition';
+import MlGlobeButton from '../MlGlobeButton/MlGlobeButton';
 import { useTheme } from '@mui/material';
 
 export interface MlNavigationToolsProps {
@@ -26,6 +27,10 @@ export interface MlNavigationToolsProps {
 	 * Show 3D button
 	 */
 	show3DButton?: boolean;
+	/**
+	 * Show global button
+	 */
+	showGlobeButton?: boolean;
 	/**
 	 * Show zoom button
 	 */
@@ -101,6 +106,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 		mapHook.map.easeTo({ pitch: targetPitch });
 	}, [mapHook.map]);
 
+
 	return (
 		<Box
 			sx={{
@@ -124,6 +130,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 					{pitch < 29 ? '2D' : '3D'}
 				</Button>
 			)}
+			{props.showGlobeButton && <MlGlobeButton />}
 			{props.showFollowGpsButton && <MlFollowGps />}
 			{props.showCenterLocationButton && <MlCenterPosition />}
 			<ButtonGroup
@@ -143,21 +150,23 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 								borderBottomLeftRadius: 0,
 								borderBottomRightRadius: 0,
 								position: 'relative',
-
-								'&::after': {
-									content: '""',
-									position: 'absolute',
-									left: '20%',
-									bottom: 0,
-									width: '60%',
-									height: '1px',
-									backgroundColor: '#ccc',
-									borderRadius: '1px',
-								}, // Dividing line
 							}}
 						>
 							<AddIcon sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 						</Button>
+						<Paper
+							sx={{
+								backgroundColor: '#fff',
+							}}
+						>
+							<Divider
+								sx={{
+									marginLeft: '6px',
+									marginRight: '6px',
+								}}
+							/>
+						</Paper>
+
 						<Button
 							variant="navtools"
 							onClick={zoomOut}
@@ -180,6 +189,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 MlNavigationTools.defaultProps = {
 	mapId: undefined,
 	show3DButton: true,
+	showGlobeButton: false,
 	showFollowGpsButton: true,
 	showCenterLocationButton: false,
 	showZoomButtons: true,

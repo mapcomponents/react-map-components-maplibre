@@ -1,0 +1,14 @@
+{
+	"name": "MlGlobeButton",
+	"title": "Globe Button",
+	"description": "Displays the map as a globe or as a mercator projection. To see the effect, set a small zoom level.",
+	"i18n": {
+		"de": {
+			"title": "Globus Button",
+			"description": "Zeigt die Karte als Globus oder als Mercator-Projektion an. Um den Effekt zu sehen, am besten eine niedrige Zoomstufe einstellen."
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component"
+}
