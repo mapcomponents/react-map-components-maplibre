@@ -70,7 +70,7 @@
 		"@rollup/plugin-babel": "^6.0.4",
 		"@rollup/plugin-commonjs": "^28.0.3",
 		"@rollup/plugin-url": "^8.0.2",
-		"@storybook/addon-docs": "^9.0.10",
+		"@storybook/addon-docs": "^9.0.13",
 		"@storybook/addon-links": "^9.0.10",
 		"@storybook/addons": "^7.6.17",
 		"@storybook/react-webpack5": "^9.0.10",
