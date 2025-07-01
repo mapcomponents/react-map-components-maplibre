@@ -380,6 +380,7 @@ KML.args = {
 
 const TcxTemplate = () => {
 	const mapHook = useMap({ mapId: undefined });
+	//							url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
 
 	useAddProtocol({
 		protocol: 'tcx',
@@ -387,7 +388,7 @@ const TcxTemplate = () => {
 	});
 
 	useEffect(() => {
-		if (!mapHook.map?.getSource('kml-source')) {
+		if (!mapHook.map?.getSource('kml-source') && !mapHook.map?.getSource('tcx-source')) {
 			mapHook.map?.addSource('tcx-source', {
 				type: 'geojson',
 				data: `tcx://tcx/example.tcx`,
@@ -629,28 +630,28 @@ const CatalogueTemplate = () => {
 		layerContext.setLayers([
 			props.protocol === 'mbtiles'
 				? {
-						type: 'vt',
-						name: 'useAddProtocolLayer',
-						config: {
-							layerId: 'useAddProtocolLayer',
-							url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
-							layers: props.layers,
-							insertBeforeLayer: props.insertBeforeLayer,
-							sourceOptions: props.sourceOptions,
-						} as MlVectorTileLayerProps,
-				  }
+					type: 'vt',
+					name: 'useAddProtocolLayer',
+					config: {
+						layerId: 'useAddProtocolLayer',
+						url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
+						layers: props.layers,
+						insertBeforeLayer: props.insertBeforeLayer,
+						sourceOptions: props.sourceOptions,
+					} as MlVectorTileLayerProps,
+				}
 				: {
-						type: 'geojson',
-						name: 'useAddProtocolLayer',
-						config: {
-							layerId: 'useAddProtocolLayer',
-							type: props.type || 'line',
-							options: {
-								source: props.sourceId,
-							},
-							paint: props.paint,
-						} as MlGeoJsonLayerProps,
-				  },
+					type: 'geojson',
+					name: 'useAddProtocolLayer',
+					config: {
+						layerId: 'useAddProtocolLayer',
+						type: props.type || 'line',
+						options: {
+							source: props.sourceId,
+						},
+						paint: props.paint,
+					} as MlGeoJsonLayerProps,
+				},
 		]);
 	}, [currentDemo]);
 
