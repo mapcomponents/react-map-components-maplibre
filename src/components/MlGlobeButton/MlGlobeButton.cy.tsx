@@ -37,8 +37,9 @@ describe('MlGlobeButton', () => {
 		mount(<CatalogueDemo />);
 		cy.window().should((win) => expect((win as any)._map).to.exist);
 
-		cy.window().should((win) => {
+		cy.window().then((win) => {
 			const map = (win as any)._map;
+			cy.log(map.getProjection())
 			expect(map.getProjection()).to.equal(undefined);
 		});
 
