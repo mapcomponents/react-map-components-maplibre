@@ -1,5 +1,21 @@
 # Change Log
 
+## [v1.3.3]
+
+## Added
+- ea97284: add new Feature [MlGlobeButton](https://mapcomponents.github.io/react-map-components-maplibre/?path=/docs/mapcomponents-mlglobebutton--docs)
+
+## Fixed
+- 3cc7a83: fix useAddProtocol tcx view in storybook
+
+## Changed
+- a72811f: upgrade storybook v.8 -> v.9
+- e22698a: change meta.json (new catalogue system uses meta.json files)
+- 3cc7a83: upgrade dependencies
+
+## Removed
+- e22698a: remove stories.json (new catalogue system does not require it)
+
 ## [v1.3.2]
 
 ## Changed
