@@ -45,13 +45,13 @@ describe('MlGlobeButton', () => {
 		cy.get('button').click();
 		cy.window().should((win) => {
 			const map = (win as any)._map;
-			expect(map.getProjection().type).to.eq('globe');
+			expect(map.getProjection()?.type).to.eq('globe');
 		});
 
 		cy.get('button').click();
 		cy.window().should((win) => {
 			const map = (win as any)._map;
-			expect(map.getProjection().type).to.eq('mercator');
+			expect(map.getProjection()?.type).to.eq('mercator');
 		});
 	});
 });
