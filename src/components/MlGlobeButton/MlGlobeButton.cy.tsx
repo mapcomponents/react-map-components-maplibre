@@ -37,22 +37,21 @@ describe('MlGlobeButton', () => {
 		mount(<CatalogueDemo />);
 		cy.window().should((win) => expect((win as any)._map).to.exist);
 
-		cy.window().then((win) => {
+		cy.window().should((win) => {
 			const map = (win as any)._map;
-			cy.log(map.getProjection())
 			expect(map.getProjection()).to.equal(undefined);
 		});
 
 		cy.get('button').click();
 		cy.window().should((win) => {
 			const map = (win as any)._map;
-			expect(map.getProjection().type).to.eq('globe');
+			expect(map.getProjection()?.type).to.eq('globe');
 		});
 
 		cy.get('button').click();
 		cy.window().should((win) => {
 			const map = (win as any)._map;
-			expect(map.getProjection().type).to.eq('mercator');
+			expect(map.getProjection()?.type).to.eq('mercator');
 		});
 	});
 });
