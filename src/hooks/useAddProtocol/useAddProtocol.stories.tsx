@@ -380,7 +380,6 @@ KML.args = {
 
 const TcxTemplate = () => {
 	const mapHook = useMap({ mapId: undefined });
-	//							url: props.protocol + '://' + props.filePath + '/{z}/{x}/{y}',
 
 	useAddProtocol({
 		protocol: 'tcx',
@@ -388,7 +387,7 @@ const TcxTemplate = () => {
 	});
 
 	useEffect(() => {
-		if (!mapHook.map?.getSource('kml-source') && !mapHook.map?.getSource('tcx-source')) {
+		if (!mapHook.map?.getSource('tcx-source')) {
 			mapHook.map?.addSource('tcx-source', {
 				type: 'geojson',
 				data: `tcx://tcx/example.tcx`,
