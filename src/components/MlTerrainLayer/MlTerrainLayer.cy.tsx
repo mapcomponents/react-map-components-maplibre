@@ -1,5 +1,5 @@
 import React from 'react';
-import { composeStories } from '@storybook/react/testing';
+import { composeStories } from '@storybook/react';
 import { mount } from '@cypress/react';
 import * as stories from './MlTerrainLayer.stories';
 import {expect} from 'chai';
