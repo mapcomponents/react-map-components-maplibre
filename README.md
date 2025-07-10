@@ -25,15 +25,14 @@ The easiest way to start a new project using this framework is to bootstrap a re
 **Requirements:**
 
 1. node.js >=16
-2. yarn
 
 Run the following commands in the terminal:
 
 ```
 npx degit mapcomponents/template {your-app-name}
 cd {your-app-name}
-yarn
-yarn dev
+npm i
+npm run dev
 ```
 
 <img src="docs_md/initial_0.gif" />
@@ -47,7 +46,7 @@ This will start a development server that serves the mapcomponents app on port 5
 
 In this case, navigate to your project folder in a terminal and execute the following steps:
 
-1. Add @mapcomponents/react-maplibre as a dependency to your project using `yarn add @mapcomponents/react-maplibre`.
+1. Add @mapcomponents/react-maplibre as a dependency to your project using `npm i @mapcomponents/react-maplibre`.
 2. Add the MapComponentsProvider (named export of this module) to your applications react-DOM where it makes sense. Only children of this component will be able to render a map canvas or interact with a maplibre-gl instance. Place it in the index.js entrypoint if your application is a dedicated map app and all components have a high probability to interact with the maplibre-gl instance. Place it somewhere higher in the JSX tree if the map constitutes only a small portion of your app and components outside of the MapComponentsProvider have no need to interact with the map instance.
 3. Add a MapLibreMap component to the react-DOM wherever the map canvas is supposed to be placed.
 
