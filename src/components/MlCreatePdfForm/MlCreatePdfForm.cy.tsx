@@ -1,5 +1,5 @@
 import React from 'react';
-import { composeStories } from '@storybook/testing-react';
+import { composeStories } from '@storybook/react/testing';
 import { mount } from '@cypress/react';
 import * as stories from './MlCreatePdfForm.stories';
 

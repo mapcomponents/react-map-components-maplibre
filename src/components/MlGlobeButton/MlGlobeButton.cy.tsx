@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from '@cypress/react';
 import { expect } from 'chai';
-import { composeStories } from '@storybook/testing-react';
+import { composeStories } from '@storybook/react/testing';
 import * as stories from './MlGlobeButton.stories';
 
 const { CatalogueDemo }: any = composeStories(stories);
