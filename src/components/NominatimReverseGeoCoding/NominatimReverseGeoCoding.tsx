@@ -22,27 +22,27 @@ export interface NominatimReverseGeoCodingProps {
 	 */
 	mapId?: string;
 	/**
-	 * Direction from which the card slides in when appearing
+	 * Direction from which the card slides into view
 	 */
 	cardSlideInDirection: "left" | "right" | "up" | "down";
 	/**
-	 * Whether to show detailed information in tabs or simple address details
+	 * Whether to show detailed information in tabs or just basic address details
 	 */
 	showMoreDetails: boolean;
 	/**
-	 * Function to activate the card component
+	 * Callback function to activate the card component
 	 */
 	activateCard: () => void;
 	/**
-	 * Function to control the visibility of the card
+	 * Function to control the visibility state of the card
 	 */
 	setCardVisible: (visible: boolean) => void;
 	/**
-	 * Whether the card is currently in active state
+	 * Whether the card is currently in an active state
 	 */
 	isCardActive: boolean;
 	/**
-	 * Whether the card is currently visible to the user
+	 * Whether the card is currently visible on screen
 	 */
 	isCardVisible: boolean;
 	/**
