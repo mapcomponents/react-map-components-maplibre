@@ -1,0 +1,14 @@
+{
+  "name": "NominatimReverseGeoCoding",
+  "title": "",
+  "description": "",
+  "i18n": {
+    "de": {
+      "title": "",
+      "description": ""
+    }
+  },
+  "tags": [],
+  "category": "",
+  "type": "component"
+}
