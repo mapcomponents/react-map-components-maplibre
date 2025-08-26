@@ -1,4 +1,8 @@
 import '@testing-library/jest-dom';
+import { TextEncoder, TextDecoder } from 'util';
+
+Object.assign(global, { TextDecoder, TextEncoder });
+
 
 var uuid_regex = '[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
 export { uuid_regex };
@@ -17,6 +21,8 @@ var mockMapLibreMethods = {
 	}),
 };
 export { mockMapLibreMethods };
+
+
 
 jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 	const originalModule = jest.requireActual('maplibre-gl/dist/maplibre-gl');
