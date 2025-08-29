@@ -15,5 +15,5 @@ jobs:
           persist-credentials: false
       - name: Install and build 🔧
         run: | # Install packages and build the catalogue meta.json file for schema checks only
-          yarn
-          yarn build-catalogue-meta
+          npm i
+          npm run build-catalogue-meta

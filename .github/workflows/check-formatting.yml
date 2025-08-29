@@ -22,15 +22,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Node cache
-        id: yarn-cache
+        id: npm-cache
         uses: actions/cache@v3
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm i
 
       - id: files
         uses: jitterbit/get-changed-files@v1
@@ -42,5 +42,5 @@ jobs:
         with:
           files: ${{ steps.files.outputs.added_modified}}
           eslintTarget: "src/**/*.{jsx,tsx,ts,js}"
-          s0: "yarn run eslint"
-          s1: "yarn run prettier --check"
+          s0: "npm run eslint"
+          s1: "npm run prettier -- --check"
