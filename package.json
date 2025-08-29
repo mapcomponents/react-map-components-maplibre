@@ -18,7 +18,8 @@
 		"storybook-docs": "storybook dev --docs --no-manager-cache",
 		"build-catalogue-meta": "node scripts/build-catalogue-meta.js",
 		"create-component": "./scripts/create-map-component.sh",
-		"eslint": "eslint"
+		"eslint": "eslint",
+		"prettier": "prettier"
 	},
 	"dependencies": {
 		"@cypress/react": "^9.0.1",
