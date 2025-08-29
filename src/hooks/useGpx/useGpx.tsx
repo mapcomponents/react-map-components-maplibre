@@ -34,7 +34,7 @@ const useGpx = (props: useGpxProps) => {
 				const title = node.nodeName;
 
 				if (node.nodeName === 'link') {
-					value = node.getAttribute('href');
+					value = node.getAttribute('href') ?? "";
 				}
 				if (value?.trim().length) {
 					const metaDataEntry = {
