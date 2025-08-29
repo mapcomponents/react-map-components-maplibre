@@ -43,4 +43,4 @@ jobs:
           files: ${{ steps.files.outputs.added_modified}}
           eslintTarget: "src/**/*.{jsx,tsx,ts,js}"
           s0: "npm run eslint"
-          s1: "npm run prettier -- --check"
+          s1: "npm run prettier --check"
