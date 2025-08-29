@@ -131,6 +131,7 @@ const MapLibreMap: FC<MapLibreMapProps> = (props: MapLibreMapProps) => {
 			ref={mapContainer as RefObject<HTMLDivElement>}
 			className="mapContainer"
 			style={props.style}
+			data-testid={props.mapId ? `map-${props.mapId}` : 'map'}
 		/>
 	);
 };

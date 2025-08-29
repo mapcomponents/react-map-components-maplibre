@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import MapLibreMap, { MapLibreMapProps } from './MapLibreMap';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import { Button } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
-import {FeatureCollection} from 'geojson';
+import { FeatureCollection } from 'geojson';
 import themeDecorator from '../../decorators/ThemeDecorator';
 
 const storyoptions = {
@@ -25,7 +25,7 @@ const storyoptions = {
 };
 export default storyoptions;
 
-const Template = (args:MapLibreMapProps) => {
+const Template = (args: MapLibreMapProps) => {
 	return <MapLibreMap options={{ ...args.options }} />;
 };
 
@@ -46,7 +46,7 @@ const styles = [
 	},
 ];
 
-const StyleChangeTemplate = (args:MapLibreMapProps) => {
+const StyleChangeTemplate = (args: MapLibreMapProps) => {
 	const [activeStyle, setActiveStyle] = useState(styles[1].url);
 
 	return (
@@ -86,3 +86,39 @@ StyleChangeConfig.args = {
 	},
 };
 StyleChangeConfig.parameters = {};
+
+const AddMaplibreInstanceTemplate = (args: MapLibreMapProps) => {
+	const [isMap, setIsMap] = useState(false);
+
+	const toggleMap = () => {
+		setIsMap((prev) => !prev);
+	};
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<Button
+						variant="contained"
+						onClick={toggleMap}
+						sx={{ marginRight: '10px', marginTop: { xs: '10px', sm: '0px' } }}
+					>
+						{isMap ? 'Remove Map' : 'Add Map'}
+					</Button>
+				}
+			></TopToolbar>
+
+			{isMap && <MapLibreMap options={{ ...args.options }}></MapLibreMap>}
+		</>
+	);
+};
+
+export const AddMaplibreInstance = AddMaplibreInstanceTemplate.bind({});
+AddMaplibreInstance.args = {
+	options: {
+		style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
+		center: [8.607, 53.1409349],
+		zoom: 14,
+	},
+};
+AddMaplibreInstance.parameters = {};
