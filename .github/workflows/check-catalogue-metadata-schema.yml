@@ -18,9 +18,7 @@ jobs:
         run: npm install -g pnpm --force
       - name: Setup pnpm global bin
         run: pnpm setup
-      - name: Install NX CLI
-        run: pnpm add -g nx
       - name: Install and build 🔧
         run: |
           pnpm install --frozen-lockfile
-          nx run-many -t build-catalogue-meta
+          npx nx run-many -t build-catalogue-meta
