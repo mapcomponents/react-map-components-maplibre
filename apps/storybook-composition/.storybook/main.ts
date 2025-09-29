@@ -38,15 +38,15 @@ const config: StorybookConfig = {
 		return {
 			'react-maplibre': {
 				title: 'React MapLibreMap',
-				url: 'https://mapcomponents.github.io/mapcomponents/react-maplibre/',
+				url: 'https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/',
 			},
 			'deck-gl': {
 				title: 'Deck.gl',
-				url: 'https://mapcomponents.github.io/mapcomponents/deck-gl/',
+				url: 'https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/',
 			},
 			'ra-geospatial': {
 				title: 'React Admin Geospatial',
-				url: 'https://mapcomponents.github.io/mapcomponents/ra-geospatial/',
+				url: 'https://mapcomponents.github.io/react-map-components-maplibre/ra-geospatial/',
 			},
 		};
 	},

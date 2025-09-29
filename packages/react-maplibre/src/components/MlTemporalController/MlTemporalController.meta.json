@@ -14,8 +14,8 @@
 	"demos": [
 		{
 			"name": "Demo",
-			"url": "https://mapcomponents.github.io/mapcomponents/react-maplibre/iframe.html?id=mapcomponents-mltemporalcontroller--catalogue-demo&viewMode=story"
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mltemporalcontroller--catalogue-demo&viewMode=story"
 		}
 	],
-	"thumbnail": "https://mapcomponents.github.io/mapcomponents/react-maplibre/thumbnails/MlTemporalController.png"
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlTemporalController.png"
 }
