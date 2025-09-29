@@ -1,0 +1,21 @@
+{
+	"name": "MlVectorTileLayer",
+	"title": "Vector tile layer",
+	"description": "Adds a vector tile layer to the map",
+	"i18n": {
+		"de": {
+			"title": "Vector Tiles",
+			"description": "Baustein: Vektorenkacheln/Vector Tiles (der Anwendung/Karte hinzufügen)"
+		}
+	},
+	"tags": ["Map layer"],
+	"category": "layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/mapcomponents/react-maplibre/iframe.html?id=mapcomponents-mlvectortilelayer--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/mapcomponents/react-maplibre/thumbnails/MlVectorTileLayer.png"
+}

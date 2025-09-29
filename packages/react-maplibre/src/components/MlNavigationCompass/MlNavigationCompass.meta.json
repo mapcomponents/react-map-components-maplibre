@@ -1,0 +1,21 @@
+{
+	"name": "MlNavigationCompass",
+	"title": "Compass",
+	"description": "Tool to tilt, rotate and align the map.",
+	"i18n": {
+		"de": {
+			"title": "Kompass",
+			"description": "Tool zum Kippen, Drehen und Ausrichten der Karte"
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/mapcomponents/react-maplibre/iframe.html?id=mapcomponents-mlnavigationcompass--catalogue-demo&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/mapcomponents/react-maplibre/thumbnails/MlNavigationCompass.png"
+}

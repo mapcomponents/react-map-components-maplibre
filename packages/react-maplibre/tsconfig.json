@@ -1,0 +1,13 @@
+{
+	"files": [],
+	"include": [],
+	"references": [
+		{
+			"path": "./tsconfig.lib.json"
+		},
+		{
+			"path": "./cypress/tsconfig.json"
+		}
+	],
+	"extends": "../../tsconfig.base.json"
+}

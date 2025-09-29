@@ -1,0 +1,21 @@
+{
+	"name": "MlTerrainLayer",
+	"title": "Terrain layer",
+	"description": "Presents a terrain layer.",
+	"i18n": {
+		"de": {
+			"title": "Terrain-Layer",
+			"description": "Stellt ein Terrain Layer dar."
+		}
+	},
+	"tags": ["Map layer"],
+	"category": "layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/mapcomponents/react-maplibre/iframe.html?id=mapcomponents-mlterrainlayer--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/mapcomponents/react-maplibre/thumbnails/MlTerrainLayer.png"
+}

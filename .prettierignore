@@ -1,11 +1,20 @@
+# Add files here to ignore them from prettier formatting
+dist
+coverage
+.nx/cache
+.nx/workspace-data
 .cache
 .github
 .storybook
 .vscode
-coverage
-dist
-docs
-docs-build
-js-docs
-node_modules
-storybook-static
+coverage/
+docs/
+docs-build/
+js-docs/
+node_modules/
+storybook-static/
+pnpm-lock.yaml
+CHANGELOG.md
+README.md
+MonorepoNX-cheatsheet.md
+**/package.json

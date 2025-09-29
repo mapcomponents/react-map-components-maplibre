@@ -1,0 +1,17 @@
+{
+	"changelogPreset": "conventional-changelog-conventionalcommits",
+	"types": [
+		{ "type": "feat", "section": "Added" },
+		{ "type": "fix", "section": "Fixed" },
+		{ "type": "docs", "section": "Documentation" },
+		{ "type": "chore", "section": "Changed" },
+		{ "type": "refactor", "section": "Changed" },
+		{ "type": "perf", "section": "Changed" },
+		{ "type": "test", "section": "Added" },
+		{ "type": "remove", "section": "Removed" }
+	],
+	"header": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n",
+	"releaseCommitMessageFormat": "chore(release): {{currentTag}}",
+	"tagPrefix": "v",
+	"changelogHeaderPattern": "## [v{{version}}]"
+}

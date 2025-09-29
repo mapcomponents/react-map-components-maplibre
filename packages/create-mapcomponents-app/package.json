@@ -1,0 +1,15 @@
+{
+	"name": "create-mapcomponents-app",
+	"version": "1.6.0",
+	"files": [
+		"index.js"
+	],
+	"bin": {
+		"create-mapcomponents-app": "./index.js"
+	},
+	"type": "module",
+	"license": "MIT",
+	"dependencies": {
+		"degit": "^2.8.4"
+	}
+}

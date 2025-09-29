@@ -1,0 +1,23 @@
+{
+	"name": "@mapcomponents/deck-gl",
+	"version": "1.6.0",
+	"description": "",
+	"main": "src/index.ts",
+	"module": "dist/index.mjs",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"@deck.gl/aggregation-layers": "^9.1.14",
+		"@deck.gl/core": "^9.1.14",
+		"@deck.gl/mapbox": "^9.1.14",
+		"@mapcomponents/react-maplibre": "workspace:^",
+		"@mui/icons-material": "^7.3.2",
+		"@mui/material": "^7.3.2",
+		"@storybook/react": "^9.1.4",
+		"maplibre-gl": "^5.7.0"
+	},
+	"devDependencies": {
+		"@types/geojson": "^7946.0.16"
+	}
+}

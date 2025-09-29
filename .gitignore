@@ -1,45 +1,47 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# compiled output
+dist
+tmp
+out-tsc
 
 # dependencies
-/dist
-/storybook-static
-/node_modules
-/.pnp
-.pnp.js
-/.cache
-.jest-test-results.json
-/test-coverage
-/.yarn
+node_modules
 
-# testing
-/coverage
-
-# production
-/build
-/src/__image_snapshots__
-
-
-/.vscode
+# IDEs and editors
 /.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+
 # misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.eslintcache
+Thumbs.db
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.yarnrc.yml
+.nx/cache
+.nx/workspace-data
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
 
-*.swp
-*.swo
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
+test-output
 
-/js-docs
-!/js-docs/server.js
 
-cypress/videos
-cypress/screenshots
-cypress/downloads/*.pdf
+storybook-static
