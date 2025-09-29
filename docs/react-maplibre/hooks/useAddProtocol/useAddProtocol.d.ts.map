@@ -1,0 +1,1 @@
+{"version":3,"file":"useAddProtocol.d.ts","sourceRoot":"","sources":["../../../src/hooks/useAddProtocol/useAddProtocol.tsx"],"names":[],"mappings":"AAAA,OAAmB,EAAE,iBAAiB,EAAE,MAAM,aAAa,CAAC;AAG5D,MAAM,WAAW,mBAAmB;IACnC;;;OAGG;IACH,QAAQ,EAAE,MAAM,CAAC;IACjB;;OAEG;IACH,OAAO,EAAE,iBAAiB,CAAC;CAC3B;AAED;;;GAGG;AACH,QAAA,MAAM,cAAc;YAAW,mBAAmB;;;;CAYjD,CAAC;AAKF,eAAe,cAAc,CAAC"}

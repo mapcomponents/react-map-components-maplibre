@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/hooks/useExportMap/index.ts"],"names":[],"mappings":"AAEA,OAAO,EAAgB,mBAAmB,EAAE,MAAM,OAAO,CAAC;AAG1D,UAAU,cAAc;IACvB;;OAEG;IACH,KAAK,CAAC,EAAE,MAAM,CAAC;CACf;AAED,MAAM,CAAC,OAAO,UAAU,YAAY,CAAC,KAAK,EAAE,cAAc;6BAM7C,IAAI,CAAC,mBAAmB,EAAE,KAAK,CAAC,GAAG,OAAO,CAAC,IAAI,CAAC,mBAAmB,EAAE,KAAK,CAAC,CAAC;EAWxF"}

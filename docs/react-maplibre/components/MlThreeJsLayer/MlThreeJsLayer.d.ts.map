@@ -1,0 +1,1 @@
+{"version":3,"file":"MlThreeJsLayer.d.ts","sourceRoot":"","sources":["../../../src/components/MlThreeJsLayer/MlThreeJsLayer.tsx"],"names":[],"mappings":"AAOA;;;;GAIG;AAEH,MAAM,WAAW,mBAAmB;IACnC,KAAK,CAAC,EAAE,MAAM,CAAC;IACf,IAAI,CAAC,EAAE,MAAM,IAAI,CAAC;IAClB,MAAM,CAAC,EAAE,MAAM,IAAI,CAAC;CACpB;AAED,QAAA,MAAM,cAAc,GAAI,OAAO,mBAAmB,4CAiKjD,CAAC;AAEF,eAAe,cAAc,CAAC"}

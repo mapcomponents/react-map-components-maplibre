@@ -1,0 +1,1 @@
+{"version":3,"file":"GeoJsonProvider.d.ts","sourceRoot":"","sources":["../../../../src/components/MlGpxViewer/util/GeoJsonProvider.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAmB,MAAM,OAAO,CAAC;AAUxC,QAAA,MAAM,eAAe,GAAI,cAAc;IAAE,QAAQ,EAAE,KAAK,CAAC,GAAG,CAAC,OAAO,CAAA;CAAE,4CAkBrE,CAAC;AAEF,eAAe,eAAe,CAAC"}

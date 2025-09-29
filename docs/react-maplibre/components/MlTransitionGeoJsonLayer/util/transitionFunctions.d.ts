@@ -1,0 +1,3 @@
+export function _showNextTransitionSegment(props: any, map: any, transitionInProgressRef: any, transitionGeojsonDataRef: any, transitionGeojsonCommonDataRef: any, currentTransitionStepRef: any, msPerStep: any, transitionTimeoutRef: any, setDisplayGeojson: any): void;
+export function _transitionToGeojson(props: any, transitionGeojsonCommonDataRef: any, transitionGeojsonDataRef: any, transitionInProgressRef: any, oldGeojsonRef: any, msPerStep: any, currentTransitionStepRef: any, map: any, transitionTimeoutRef: any, setDisplayGeojson: any): void;
+//# sourceMappingURL=transitionFunctions.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"LoadingOverlayContext.d.ts","sourceRoot":"","sources":["../../src/ui_components/LoadingOverlayContext.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAkD,MAAM,OAAO,CAAC;AAGvE,QAAA,MAAM,qBAAqB,mBAA0B,CAAC;AAGtD,QAAA,MAAM,sBAAsB,GAAI,UAAU,KAAK,CAAC,SAAS,4CAgExD,CAAC;AAEF,OAAO,EAAE,qBAAqB,EAAE,sBAAsB,EAAE,CAAC"}

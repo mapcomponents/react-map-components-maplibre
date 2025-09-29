@@ -1,0 +1,1 @@
+{"version":3,"file":"UploadButton.d.ts","sourceRoot":"","sources":["../../src/ui_components/UploadButton.tsx"],"names":[],"mappings":"AAIA,KAAK,KAAK,GAAG;IACZ,OAAO,EAAE,CAAC,IAAI,EAAE,MAAM,KAAK,IAAI,CAAC;IAEhC,eAAe,EAAE,GAAG,CAAC;IACrB,MAAM,CAAC,EAAE,MAAM,CAAC;CAChB,CAAC;AAEF,MAAM,CAAC,OAAO,UAAU,YAAY,CAAC,KAAK,EAAE,KAAK,2CA+ChD"}

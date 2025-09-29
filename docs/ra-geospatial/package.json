@@ -1,0 +1,24 @@
+{
+	"name": "@mapcomponents/ra-geospatial",
+	"version": "1.6.0",
+	"main": "src/index.ts",
+	"types": "src/index.d.ts",
+	"module": "dist/index.js",
+	"type": "module",
+	"dependencies": {
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.1",
+		"@mapcomponents/react-maplibre": "workspace:^",
+		"@mui/icons-material": "^7.3.2",
+		"@mui/material": "^7.3.2",
+		"@turf/helpers": "^7.2.0",
+		"@turf/turf": "^7.2.0",
+		"@types/geojson": "^7946.0.16",
+		"lodash": "^4.17.21",
+		"maplibre-gl": "^5.7.0",
+		"ra-data-fakerest": "^5.11.0",
+		"react-admin": "^5.11.0",
+		"react-router-dom": "^7.8.2",
+		"wellknown": "^0.5.0"
+	}
+}
