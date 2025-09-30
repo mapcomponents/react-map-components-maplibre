@@ -9,7 +9,7 @@
 @mapcomponents is a monorepo containing react component libraries for declarative GIS application development.
 ## Links
 
-- Documentation: https://mapcomponents.github.io/mapcomponents/storybook-composition/
+- Documentation: https://mapcomponents.github.io/react-map-components-maplibre/storybook-composition/
 - Catalogue: https://www.mapcomponents.org/
 
 ## Getting started
