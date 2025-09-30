@@ -4,7 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/@mapcomponents%2Freact-maplibre.svg)](https://badge.fury.io/js/@mapcomponents%2Freact-maplibre) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![downloads](https://img.shields.io/npm/dt/@mapcomponents%2Freact-maplibre.svg) ![downloads](https://img.shields.io/npm/dm/@mapcomponents%2Freact-maplibre.svg)
 
-![Tests](https://github.com/mapcomponents/react-map-components-maplibre/actions/workflows/node_version_test.yml/badge.svg)
+![Tests](https://github.com/mapcomponents/react-map-components-maplibre/actions/workflows/node-version-test.yml/badge.svg)
 
 @mapcomponents/react-maplibre is a react component library for declarative GIS application development.
 ## Links
