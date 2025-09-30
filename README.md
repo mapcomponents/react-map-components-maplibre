@@ -16,13 +16,6 @@
 
 Use our Codesandbox template to quickly try out this library without any setup required. https://codesandbox.io/s/base-template-n0vp9
 
-## **Add any of our packages to your project**
-
-In this case, navigate to your project folder in a terminal and execute the following steps:
-
-1. Add @mapcomponents/{package} as a dependency to your project using `npm i @mapcomponents/{package}`.
-2. Add the MapComponentsProvider (named export of this module) to your applications react-DOM where it makes sense. Only children of this component will be able to render a map canvas or interact with a maplibre-gl instance. Place it in the index.js entrypoint if your application is a dedicated map app and all components have a high probability to interact with the maplibre-gl instance. Place it somewhere higher in the JSX tree if the map constitutes only a small portion of your app and components outside of the MapComponentsProvider have no need to interact with the map instance.
-3. Add a MapLibreMap component to the react-DOM wherever the map canvas is supposed to be placed.
 
 ## **How to use @mapcomponents/react-maplibre in a new project**
 
@@ -40,12 +33,12 @@ npm i
 npm run dev
 ```
 
-<img src="packages/react-maplibre/docs_md/initial_0.gif"/>
+<img src="https://github.com/mapcomponents/react-map-components-maplibre/blob/main/packages/react-maplibre/docs_md/initial_0.gif"/>
 
 
 This will start a development server that serves the mapcomponents app on port 5174 of your local machine as well as a browser tab with live reload enabled. This reloads the affected parts of the application if changes are detected to the corresponding files in the filesystem. Open the project folder in the IDE of your choice and start building your map client.
 
-<img src="packages/react-maplibre/docs_md/initial_3.gif" width="400" />
+<img src="https://github.com/mapcomponents/react-map-components-maplibre/blob/main/packages/react-maplibre/docs_md/initial_3.gif" width="400" />
 
 ## Adding data to the map
 
@@ -80,7 +73,15 @@ And add the following within the JSX.
 <MlGeoJsonLayer geojson={geojson_data} />
 ```
 
-<img src="packages/react-maplibre/docs_md/sample_screenshot.png" />
+<img src="https://github.com/mapcomponents/react-map-components-maplibre/blob/main/packages/react-maplibre/docs_md/sample_screenshot.png" />
+
+## **Add any of our packages to your project**
+
+In this case, navigate to your project folder in a terminal and execute the following steps:
+
+1. Add @mapcomponents/{package} as a dependency to your project using `npm i @mapcomponents/{package}`.
+2. Add the MapComponentsProvider (named export of this module) to your applications react-DOM where it makes sense. Only children of this component will be able to render a map canvas or interact with a maplibre-gl instance. Place it in the index.js entrypoint if your application is a dedicated map app and all components have a high probability to interact with the maplibre-gl instance. Place it somewhere higher in the JSX tree if the map constitutes only a small portion of your app and components outside of the MapComponentsProvider have no need to interact with the map instance.
+3. Add a MapLibreMap component to the react-DOM wherever the map canvas is supposed to be placed.
 
 Please take a look at our storybooks and the code examples provided in the {ComponentName}.stories.tsx files next to the Components in the `./src/components/` folder.
 
