@@ -26,18 +26,6 @@ Go to your package directory and run:
 
 ## Run Tasks
 
-To run the dev server for your app, use:
-
-```sh
-  npx nx serve {package-name}
-```
-
-To create a production bundle:
-
-```sh
-  npx nx build {package-name}
-```
-
 To see all available targets to run for a project, run:
 
 ```sh
@@ -162,15 +150,15 @@ You can adjust the composition based on the current development environment (e.g
 		return {
 			'react-maplibre': {
 				title: 'React MapLibreMap',
-				url: 'https://mapcomponents.github.io/react-map-components-maplibre/',
+				url: 'https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/',
 			},
 			'deck-gl': {
 				title: 'Deck.gl',
-				url: 'https://mapcomponents.github.io/mapcomponents/deck-gl/',
+				url: 'https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/',
 			},
 			'ra-geospatial': {
 				title: 'React Admin Geospatial',
-				url: 'https://mapcomponents.github.io/mapcomponents/ra-geospatial/',
+				url: 'https://mapcomponents.github.io/react-map-components-maplibre/ra-geospatial/',
 			},
 		};
 	};
