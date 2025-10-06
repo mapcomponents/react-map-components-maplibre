@@ -15,7 +15,7 @@ export interface TopToolbarProps {
 	logo?: React.ReactNode;
 }
 
-const ghPagesUrl = 'https://mapcomponents.github.io/react-map-components-maplibre/';
+const ghPagesUrl = 'https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/';
 const logoUrl = ghPagesUrl + 'assets/WG-MapComponents-Logo_rgb.svg';
 const logoUrl_dark = ghPagesUrl + 'assets/WG-MapComponents-Logo_rgb-weisse-schrift.svg';
 const logoUrl_mobile = ghPagesUrl + 'assets/mapcomponents_logo.png';
