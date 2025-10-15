@@ -1,53 +1,53 @@
 # MapComponents Monorepo
 
-## Sync `package.json` Files with Syncpack
-
-Keep your dependencies consistent across your monorepo using [Syncpack](https://github.com/JamieMason/syncpack):
-
-### List Mismatched Dependency Versions
+## Install requirements
 
 ```bash
-  npx syncpack list-mismatches
+npm i -g nx pnpm
 ```
 
-### Automatically Fix Mismatched Versions
+## Install dependencies
 
 ```bash
-  npx syncpack fix-mismatches
-```
-
-## Use Depcheck to Find Unused Dependencies
-
-Go to your package directory and run:
-
-```sh
-  npx depcheck --skip-missing
+pnpm install
 ```
 
 ## Run Tasks
 
+To see all projects maintained in this monorepo run:
+
+```bash
+nx show projects
+```
+
 To see all available targets to run for a project, run:
 
 ```sh
-  npx nx show project {package-name}
+nx show project {package-name}
 ```
 
 To run any task from any package, run:
 
 ```sh
-  npx nx run {package-name}:{task-name}
+nx run {package-name}:{task-name}
+```
+
+E.g. to start the dev environment of the react-maplibre project run:
+
+```sh
+nx run react-maplibre:dev
 ```
 
 Alternatively, you can also use:
 
 ```sh
-  npx nx {task-name} {package-name}
+nx {task-name} {package-name}
 ```
 
 To run all tasks in parallel, use:
 
 ```sh
-  npx nx run-many --target={task-name} --all
+nx run-many --target={task-name} --all
 ```
 
 ## Add New Projects
@@ -56,13 +56,13 @@ To run all tasks in parallel, use:
 To generate a new application, use:
 
 ```sh
-  npx nx g @nx/react:application --directory=apps/my-app --name=my-app --no-interactive --e2eTestRunner=none
+nx g @nx/react:application --directory=apps/my-app --name=my-app --no-interactive --e2eTestRunner=none
 ```
 
 To generate a new library, use:
 
 ```sh
-  npx nx g @nx/react:library --directory=packages/my-package --bundler=vite --name=my-package --importPath=@mapcomponents/my-package --no-interactive
+nx g @nx/react:library --directory=packages/my-package --bundler=vite --name=my-package --importPath=@mapcomponents/my-package --no-interactive
 ```
 
 Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to use the generator form.
@@ -120,7 +120,7 @@ Example:
 ## Add Storybook to an existing project
 
 ```sh
-  npx nx g @nx/react:storybook-configuration --project=my-package --generateStories=false --interactionTests=false --no-interactive
+nx g @nx/react:storybook-configuration --project=my-package --generateStories=false --interactionTests=false --no-interactive
 ```
 
 ## Storybook Composition: How to Use It
@@ -186,13 +186,13 @@ You need to statically set a different port for each project in the `project.jso
 This is the command to run all the Storybooks in composition mode locally and in parallel:
 
 ```shell
-  npx nx run storybook-composition:storybook-composition
+nx run storybook-composition:storybook-composition
 ```
 
 Then, in a new terminal, run:
 
 ```shell
-  npx nx run storybook-composition:storybook
+nx run storybook-composition:storybook
 ```
 
 If a new Storybook is added, make sure to add it to the run command in the `project.json` under `apps/storybook-composition/targets/storybook-composition/options/commands`.
@@ -235,7 +235,7 @@ Before running the command, go to the `project.json` and add the following to th
 ```
 
 ```sh
-  npx nx g @nx/react:cypress-component-configuration --project=my-package --build-target=my-package:build --no-interactive
+nx g @nx/react:cypress-component-configuration --project=my-package --build-target=my-package:build --no-interactive
 ```
 
 ## Increase Version and Publish
@@ -255,7 +255,31 @@ Before publishing change the out dir in the build setting of the `vite.config.js
 Make sure not to forget this flag: `--skip-publish`
 
 ```sh
-  npx nx release --skip-publish
+nx release --skip-publish
 ```
 ### *Don't forget to Push the automatically commited tag*
 Make sure to replace "This was a version bump only, there were no code changes." with the relevant changes in the `CHANGELOG.md`.
+
+## Sync `package.json` Files with Syncpack
+
+Keep your dependencies consistent across your monorepo using [Syncpack](https://github.com/JamieMason/syncpack):
+
+### List Mismatched Dependency Versions
+
+```bash
+  npx syncpack list-mismatches
+```
+
+### Automatically Fix Mismatched Versions
+
+```bash
+  npx syncpack fix-mismatches
+```
+
+## Use Depcheck to Find Unused Dependencies
+
+Go to your package directory and run:
+
+```sh
+  npx depcheck --skip-missing
+```
