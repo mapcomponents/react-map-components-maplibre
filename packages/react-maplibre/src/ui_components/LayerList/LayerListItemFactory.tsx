@@ -108,7 +108,7 @@ function LayerListItemFactory(props: LayerListItemFactoryProps) {
 			'order-labels',
 		];
 
-		return layerIds.reverse();
+		return layerIds;
 	}, [layerContext.layers]);
 
 	const layers: LayerConfig[] = useMemo(() => {
