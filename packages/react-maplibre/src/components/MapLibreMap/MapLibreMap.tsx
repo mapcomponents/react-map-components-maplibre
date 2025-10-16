@@ -91,6 +91,9 @@ const MapLibreMap: MapLibreMapComponent = (props: MapLibreMapProps) => {
 
 		if (mapContainer.current) {
 			initializedRef.current = true;
+			if (props?.options?.style) {
+				currentStyle.current = JSON.stringify(props.options.style);
+			}
 			mapRef.current = new MapLibreGlWrapper({
 				mapOptions: {
 					style: '',
@@ -120,13 +123,12 @@ const MapLibreMap: MapLibreMapComponent = (props: MapLibreMapProps) => {
 	}, [props.options, props.mapId]);
 
 	useEffect(() => {
-		if (
-			mapRef.current?.map &&
-			props?.options?.style &&
-			currentStyle.current !== props.options.style
-		) {
-			currentStyle.current = props.options.style;
-			mapRef.current.map.setStyle(props.options.style);
+		if (mapRef.current?.map && props?.options?.style) {
+			const newStyleString = JSON.stringify(props.options.style);
+			if (currentStyle.current !== newStyleString) {
+				currentStyle.current = newStyleString;
+				mapRef.current.map.setStyle(props.options.style);
+			}
 		}
 	}, [props?.options?.style]);
 
