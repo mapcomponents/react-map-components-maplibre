@@ -1,6 +1,11 @@
-## 1.6.1 (2025-10-16)
+## [v1.6.1]
 
-This was a version bump only, there were no code changes.
+## @mapcomponents/react-maplibre
+
+### Fixed
+
+- c5faf0a: Fix/set style update bug (#242)
+- 1186589: Fix layer order by removing reverse on layerIds in LayerListItemFactory to adjust with fixed MlOrderlayers order
 
 ## [v1.6.0]
 
@@ -16,13 +21,6 @@ This was a version bump only, there were no code changes.
 ---
 ## All versions between v1.3.3 and v1.6.0 (excluding those two) were dedicated to setting up the monorepo.
 
----
-
-## @mapcomponents/deck-gl
-
-### Added
-
-- add testing changelog
 
 ## [v1.3.3]
 
