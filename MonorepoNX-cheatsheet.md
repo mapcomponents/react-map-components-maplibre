@@ -35,7 +35,7 @@ nx run {package-name}:{task-name}
 E.g. to start the dev environment of the react-maplibre project run:
 
 ```sh
-nx run react-maplibre:dev
+nx run react-maplibre:storybook
 ```
 
 Alternatively, you can also use:
@@ -47,7 +47,13 @@ nx {task-name} {package-name}
 To run all tasks in parallel, use:
 
 ```sh
-nx run-many --target={task-name} --all
+nx run-many -t {task-name}
+```
+
+E.g. to start all storybooks in dev mode run:
+
+```sh
+nx run-many -t storybook
 ```
 
 ## Add New Projects
