@@ -9,12 +9,12 @@ interface PackageChanges {
 async function resolveChangeLog(): Promise<PackageChanges[]> {
 	const finalChanges: PackageChanges[] = [];
 	const data = await fs.readFile('CHANGELOG.md', 'utf-8');
-	const formatedData: string = data.replace(/#/g, '');
+	const formatedData: string = data;
 	const splitByVersion: string[] = formatedData.split('[v');
 	for (const versionEntry of splitByVersion) {
 		if (versionEntry !== '') {
 			const completeVersionEntry: string = '[v' + versionEntry;
-			const changesInVersion: string[] | undefined = completeVersionEntry.split('@mapcomponents/');
+			const changesInVersion: string[] | undefined = completeVersionEntry.split('## @mapcomponents/');
 			const version: string = changesInVersion[0];
 			if (changesInVersion) {
 				const packageChangeList: string[] = changesInVersion.slice(1);
@@ -59,15 +59,14 @@ async function writeChangelog(sortetEntries: { [key: string]: PackageChanges[] }
 		if (pathToChangeLog !== '') {
 			await fs.writeFile(pathToChangeLog, '');
 			for (const entry of value) {
-				await fs.appendFile(pathToChangeLog, '## ' + entry.version.trim());
+				const trimmedVersion = entry.version.trim();
+				if (trimmedVersion !== '') {
+					await fs.appendFile(pathToChangeLog, '## ' + trimmedVersion);
+				}
 				for (const change of entry.changes.split('\n')) {
-					if (
-						change.match(/added/i) ||
-						change.match(/fixed/i) ||
-						change.match(/removed/i) ||
-						change.match(/changed/i)
-					)
-						await fs.appendFile(pathToChangeLog, `### ${change}\n`);
+					if (change.match(/^##\s+/i))continue;
+					if (change.match(/^###\s+(added|fixed|removed|changed)/i))
+						await fs.appendFile(pathToChangeLog, `${change}\n`);
 					else await fs.appendFile(pathToChangeLog, change + '\n');
 				}
 			}

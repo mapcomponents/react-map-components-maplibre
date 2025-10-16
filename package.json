@@ -5,7 +5,7 @@
 	"private": true,
 	"scripts": {
 		"prettier:check": "prettier --check .",
-		"migrate-changelog": "ts-node ./scripts/mirgate_changelog.ts"
+		"migrate-changelog": "ts-node ./scripts/migrate_changelog.ts"
 	},
 	"dependencies": {
 		"@babel/plugin-transform-typescript": "^7.28.0",
