@@ -114,7 +114,7 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 
 		const changeHandler = (ev: unknown) => {
 			let features: Feature[] = [];
-			
+
 			if (ev && typeof ev === 'object' && 'features' in ev && ev.features) {
 				features = ev.features as Feature[];
 			}
