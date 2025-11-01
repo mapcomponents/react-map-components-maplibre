@@ -74,7 +74,7 @@ const testAttributes = {
 };
 
 describe('<MlFeatureEditor>', () => {
-	it('should register 2 event listeners to the maplibre instance', async () => {
+	it('should register 3 event listeners to the maplibre instance', async () => {
 		render(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
@@ -82,10 +82,10 @@ describe('<MlFeatureEditor>', () => {
 		);
 
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
-		await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(7));
+		await waitFor(() => expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(8));
 	});
 
-	it('should deregister 2 event listeners to the maplibre instance', async () => {
+	it('should deregister 3 event listeners to the maplibre instance', async () => {
 		render(
 			<MapComponentsProvider>
 				<MlFeatureEditorTestComponent {...testAttributes} />
@@ -93,11 +93,11 @@ describe('<MlFeatureEditor>', () => {
 		);
 
 		// MapLibreGlWrapper now subscribes to "data", "move" events on its own
-		expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(7);
+		expect(mockMapLibreMethods.on).toHaveBeenCalledTimes(8);
 
 		await userEvent.click(screen.getByTestId('toggle_layer_visible'));
 
-		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(3);
+		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(7);
 	});
 
 	it('should add MapBox-Gl-draw instance using map.addControl to the maplibre instance', async () => {
