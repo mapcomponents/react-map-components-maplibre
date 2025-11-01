@@ -1,3 +1,13 @@
+## 1.6.2 (2025-11-01)
+
+### 🩹 Fixes
+
+- improve useFeatureEditor change handler to correctly process features from events ([#243](https://github.com/mapcomponents/react-map-components-maplibre/pull/243))
+
+### ❤️ Thank You
+
+- Max Tobias Weber
+
 ## [v1.6.1]
 
 ## @mapcomponents/react-maplibre
