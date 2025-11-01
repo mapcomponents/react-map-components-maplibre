@@ -7,7 +7,7 @@ process works.**
 
 ## 1. Release first:
 
-Before you change the changelog, create a release with this command: `npx nx release --skip-publish`
+Before you change the changelog, create a release with this command: `nx release --skip-publish`
 Nx will write the latest commits in the root changelog. **Check if all commits are listed and
 don't forget to push and push the tags! If the new entry does not follow the rules below, the
 migration process will not work.**
