@@ -110,14 +110,10 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 	}, [mapHook.map, props, drawToolsInitialized, modeChangeHandler]);
 
 	useEffect(() => {
-		if (!mapHook.map || !drawToolsReady) return;
+		if (!mapHook.map || !drawToolsReady || !draw.current) return;
 
 		const changeHandler = (ev: unknown) => {
-			let features: Feature[] = [];
-
-			if (ev && typeof ev === 'object' && 'features' in ev && ev.features) {
-				features = ev.features as Feature[];
-			}
+			const features = (ev as { features: Feature[] })?.features || [];
 
 			setFeature(features);
 
@@ -126,16 +122,18 @@ const useFeatureEditor = (props: useFeatureEditorProps) => {
 			}
 		};
 
-		mapHook.map.on('mouseup', changeHandler);
-		mapHook.map.on('touchend', changeHandler);
+		mapHook.map.on('draw.create' as MapLibreGlEventName, changeHandler, mapHook.componentId);
+		mapHook.map.on('draw.update' as MapLibreGlEventName, changeHandler, mapHook.componentId);
+		mapHook.map.on('draw.delete' as MapLibreGlEventName, changeHandler, mapHook.componentId);
 
 		return () => {
 			if (!mapHook.map) return;
 
-			mapHook.map.map.off('mouseup', changeHandler);
-			mapHook.map.map.off('touchend', changeHandler);
+			mapHook.map.map.off('draw.create', changeHandler);
+			mapHook.map.map.off('draw.update', changeHandler);
+			mapHook.map.map.off('draw.delete', changeHandler);
 		};
-	}, [drawToolsReady, mapHook.map]);
+	}, [drawToolsReady, mapHook.map, props.onChange]);
 
 	useEffect(() => {
 		if (draw.current && props.geojson?.geometry) {
