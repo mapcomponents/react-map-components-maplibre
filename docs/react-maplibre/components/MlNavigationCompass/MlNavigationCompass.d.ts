@@ -23,7 +23,7 @@ export interface MlNavigationCompassProps {
     needleStyle?: CSSProperties;
 }
 /**
- * Navigation component that displays a compass component which indicates the current oriantation of the map it is registered for and offers controls to turn the bearing 90° left/right or reset north to point up.
+ * Navigation component that displays a compass component which indicates the current orientation of the map it is registered for and offers controls to turn the bearing 90° left/right or reset north to point up.
  *
  * All style props are applied using @mui/material/styled to allow more complex css selectors.
  *
