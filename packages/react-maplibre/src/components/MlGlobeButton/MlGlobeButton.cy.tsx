@@ -21,9 +21,20 @@ describe('MlGlobeButton', () => {
 
 	it('shows MapIcon as start state and toggles between MapIcon and PublicIcon', () => {
 		mount(<CatalogueDemo />);
-		cy.window().should((win) => expect((win as any)._map).to.exist);
+		cy.window()
+			.should((win) => expect((win as any)._map).to.exist)
+			.then((win) => {
+				const map = (win as any)._map;
+				return new Cypress.Promise((resolve) => {
+					if (map.loaded()) {
+						resolve();
+					} else {
+						map.on('load', resolve);
+					}
+				});
+			});
 
-		cy.get('[data-testid="MapIcon"]').should('exist');
+		cy.get('[data-testid="MapIcon"]', { timeout: 10000 }).should('exist');
 		cy.get('[data-testid="PublicIcon"]').should('not.exist');
 		cy.get('button').click();
 		cy.get('[data-testid="PublicIcon"]').should('exist');
@@ -35,7 +46,18 @@ describe('MlGlobeButton', () => {
 
 	it('changes the projection on the map instance attached to window', () => {
 		mount(<CatalogueDemo />);
-		cy.window().should((win) => expect((win as any)._map).to.exist);
+		cy.window()
+			.should((win) => expect((win as any)._map).to.exist)
+			.then((win) => {
+				const map = (win as any)._map;
+				return new Cypress.Promise((resolve) => {
+					if (map.loaded()) {
+						resolve();
+					} else {
+						map.on('load', resolve);
+					}
+				});
+			});
 
 		cy.window().should((win) => {
 			const map = (win as any)._map;
