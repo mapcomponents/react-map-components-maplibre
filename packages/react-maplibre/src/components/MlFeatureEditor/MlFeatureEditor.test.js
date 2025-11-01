@@ -97,7 +97,7 @@ describe('<MlFeatureEditor>', () => {
 
 		await userEvent.click(screen.getByTestId('toggle_layer_visible'));
 
-		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(4);
+		expect(mockMapLibreMethods.off).toHaveBeenCalledTimes(7);
 	});
 
 	it('should add MapBox-Gl-draw instance using map.addControl to the maplibre instance', async () => {
