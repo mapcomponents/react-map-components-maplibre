@@ -1,3 +1,9 @@
+## [v1.6.2]
+
+### Fixes
+
+- ee8c7ff: improve useFeatureEditor change handler to correctly process features from events ([#243](https://github.com/mapcomponents/react-map-components-maplibre/pull/243))
+
 ## [v1.6.1]
 
 ### Fixed
