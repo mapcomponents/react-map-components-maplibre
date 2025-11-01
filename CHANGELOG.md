@@ -1,3 +1,13 @@
+## 1.6.3 (2025-11-01)
+
+### 🩹 Fixes
+
+- change handler to use draw events and fix feature onChange updates ([#244](https://github.com/mapcomponents/react-map-components-maplibre/pull/244))
+
+### ❤️ Thank You
+
+- Max Tobias Weber @cioddi
+
 ## [v1.6.2]
 
 ## @mapcomponents/react-maplibre
