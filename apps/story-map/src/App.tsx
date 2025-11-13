@@ -1,4 +1,4 @@
-import { MapLibreMap, TopToolbar, MlMarker } from '@mapcomponents/react-maplibre';
+import { MapLibreMap, MlMarker, TopToolbar } from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -7,7 +7,9 @@ import { useState } from 'react';
 import './i18n';
 import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
-import MlThreeJsLayer from './Components/MlThreeJsLayer';
+import MlThreeJsLayer from './components/MlThreeJsLayer';
+/*import { StationType, useStationContext } from './contexts/StationContext';*/
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 interface AutoplayOptions {
 	isStarted: boolean;
@@ -21,6 +23,7 @@ function App() {
 	const [autoplay, setAutoplay] = useState<AutoplayOptions>({ isStarted: false, isPaused: true });
 
 	const { t } = useTranslation();
+/*	const { stationInformation, selectStationById } = useStationContext();*/
 
 	const handleChangeLanguage = () => {
 		console.log('switch');
@@ -53,32 +56,54 @@ function App() {
 				sx={{
 					height: 'calc(100% - 62px)',
 					padding: '1rem',
+					display: 'flex',
+					flexDirection: 'column',
 				}}
 			>
-				<Grid container sx={{ height: 'calc(100% - 45px)', width: '100%' }}>
-					<Grid size={12}></Grid>
+				<Grid container gap={1} sx={{ width: '100%', flexGrow: 0 }}>
+					{/*{stationInformation.map((station: StationType) => (
+						<Grid key={station.id} size={12}>
+							<Button
+								sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
+								variant={station.selected ? 'contained' : 'outlined'}
+								onClick={() => selectStationById(station.id)}
+							>
+								<Typography>{station.label}</Typography>
+								{station.selected && <RemoveRedEyeIcon sx={{color: '#fff', border:'red 1px'}}/>}
+							</Button>
+						</Grid>
+					))}*/}
 				</Grid>
 
 				{!autoplay.isStarted ? (
 					<Button
 						size={'large'}
 						variant="outlined"
-						sx={{ color: '#4b4b4b', borderColor: '#696969', width: '100%', maxWidth: '80' }}
+						sx={{
+							color: '#4b4b4b',
+							borderColor: '#696969',
+							width: '100%',
+							maxWidth: '80',
+							marginTop: 'auto',
+						}}
+						onClick={() => {
+							setAutoplay({
+								isStarted: true,
+								isPaused: false,
+							});
+						}}
 					>
-						<Typography
-							onClick={() => {
-								setAutoplay({
-									isStarted: true,
-									isPaused: false,
-								});
-							}}
-						>
-							{t('StartWalkThroughButton')}
-						</Typography>
+						<Typography>{t('StartWalkThroughButton')}</Typography>
 					</Button>
 				) : (
 					<ButtonGroup
-						sx={{ color: '#4b4b4b', borderColor: '#696969', width: '100%', maxWidth: '80' }}
+						sx={{
+							color: '#4b4b4b',
+							borderColor: '#696969',
+							width: '100%',
+							maxWidth: '80',
+							marginTop: 'auto',
+						}}
 					>
 						<Button
 							size={'large'}
@@ -128,7 +153,7 @@ function App() {
 						style: 'https://wms.wheregroup.com/tileserver/style/klokantech-basic.json',
 						zoom: 16,
 						maxZoom: 24,
-						center: [7.1, 50.77],
+						center: [7.101608817894373, 50.7638952494396],
 						pitch: 60,
 						bearing: 150,
 					}}
@@ -137,6 +162,12 @@ function App() {
 						width: '100%',
 						height: '100%',
 					}}
+				/>
+				<MlThreeJsLayer
+					url={'/WhereGroupLogo3D.glb'}
+					position={[7.104, 50.764]}
+					rotation={[0, 180, -28]}
+					scale={0.0001}
 				/>
 				<MlMarker
 					lng={7.103249}
