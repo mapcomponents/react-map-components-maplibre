@@ -1,4 +1,4 @@
-import { MapLibreMap, TopToolbar } from '@mapcomponents/react-maplibre';
+import { MapLibreMap, TopToolbar, MlMarker } from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -138,7 +138,22 @@ function App() {
 						height: '100%',
 					}}
 				/>
-				<MlThreeJsLayer url={'/WhereGroupLogo3D.glb'} position={[7.101608817894373, 50.7638952494396]} scale={0.0001} />
+				<MlMarker
+					lng={7.103249}
+					lat={50.763336}
+					containerStyle={{
+						borderRadius: '8px',
+						boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+						overflow: 'hidden',
+						backgroundColor: 'white',
+					}}
+					content={t('MlMarker')}
+				/>
+				<MlThreeJsLayer
+					url={'/WhereGroupLogo3D.glb'}
+					position={[7.101608817894373, 50.7638952494396]}
+					scale={0.0001}
+				/>
 			</Grid>
 		</Grid>
 	);
