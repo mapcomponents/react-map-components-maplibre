@@ -14,6 +14,7 @@ export interface MlThreeJsLayerProps {
 	mapId?: string;
 	url: string;
 	position: number[];
+	rotation: number[];
 	scale: number;
 	init?: () => void;
 	onDone?: () => void;
@@ -24,6 +25,10 @@ type ThreeJsCustomLayer = CustomLayerInterface & {
 	scene?: THREE.Scene;
 	map?: maplibregl.Map;
 	renderer?: THREE.WebGLRenderer;
+};
+
+const convertDegreeToRadians = (degree: number) => {
+	return degree * (Math.PI / 180);
 };
 
 const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
@@ -57,8 +62,14 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 		// parameters to ensure the model is georeferenced correctly on the map
 		const modelOrigin = props.position ?? [7.099771581806502, 50.73395746209983];
 		// 50.73395746209983, 7.099771581806502
-		const modelAltitude = 0;
-		const modelRotate = [Math.PI / 2, 90, 0];
+		const modelAltitude = props.position[2] ?? 0;
+		const modelRotate = props.rotation
+			? [
+					convertDegreeToRadians(props.rotation[0]),
+					convertDegreeToRadians(props.rotation[1]),
+					convertDegreeToRadians(props.rotation[2]),
+				]
+			: [Math.PI / 2, 90, 0];
 
 		const modelAsMercatorCoordinate = maplibregl.MercatorCoordinate.fromLngLat(
 			modelOrigin as LngLatLike,
@@ -96,24 +107,32 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 				this.camera = new THREE.Camera();
 				this.scene = new THREE.Scene();
 
-				// create two three.js lights to illuminate the model
-				const directionalLight = new THREE.DirectionalLight(0xffffff);
-				directionalLight.position.set(0, -70, 100).normalize();
-				this.scene.add(directionalLight);
 
-				const directionalLight2 = new THREE.DirectionalLight(0xffffff);
-				directionalLight2.position.set(0, 70, 100).normalize();
-				this.scene.add(directionalLight2);
+				const sunLight = new THREE.DirectionalLight(0xffffff, 3); // RGB(229, 227, 165), intensity 4
+				sunLight.position.set(
+					-5.619660954998525e-14,
+					888.4981803423489,
+					-458.8801406994369
+				);
+				console.log(sunLight.position);
+				sunLight.name = "sunlight";
+				this.scene.add(sunLight);
+
+// Enable shadows if needed (deck.gl had _shadow: false)
+				sunLight.castShadow = false; // Set to true to enable
 
 				// use the three.js GLTF loader to add the 3D model to the three.js scene
 				const loader = new GLTFLoader();
 				loader.load(
 					props.url,
-					//"https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf",
 					function (gltf: { scene: THREE.Object3D<THREE.Object3DEventMap> }) {
+						gltf.scene.traverse((node) => {
+							if ((node as THREE.Mesh).isMesh) {
+								node.castShadow = true;
+							}
+						});
 						self.scene?.add(gltf.scene);
 						if (typeof props.onDone === 'function') {
-							console.log('geladen');
 							props.onDone();
 						}
 					}.bind(this)
@@ -128,6 +147,8 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 				});
 
 				this.renderer.autoClear = false;
+				this.renderer.shadowMap.enabled = true;
+				this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 			},
 			render: function (_gl, matrix) {
 				const rotationX = new THREE.Matrix4().makeRotationAxis(
@@ -161,8 +182,8 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 
 				if (this.camera && this.scene) {
 					this.camera.projectionMatrix = m.multiply(l);
-					this.renderer.resetState();
-					this.renderer.render(this.scene, this.camera);
+					this.renderer?.resetState();
+					this.renderer?.render(this.scene, this.camera);
 					this.map?.triggerRepaint();
 				}
 			},
