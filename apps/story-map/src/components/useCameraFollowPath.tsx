@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import * as turf from '@turf/turf';
 import { useMap } from '@mapcomponents/react-maplibre';
-import { LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
+import { LngLatLike } from 'maplibre-gl';
 
 interface useCameraFollowPathProps {
 	/**
@@ -105,18 +105,6 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 		mapHook.map.map['touchZoomRotate'].enable();
 	}, [mapHook.map]);
 
-	function centerRoute() {
-		if (!mapHook.map || !props.route) return;
-		const bbox = turf.bbox(props.route);
-		let bounds: LngLatBoundsLike;
-		if (bbox && bbox.length > 3) {
-			bounds = [
-				[bbox[0], bbox[1]],
-				[bbox[2], bbox[3]],
-			];
-			mapHook.map.map.fitBounds(bounds, { padding: 100 });
-		}
-	}
 	function play() {
 		if (!mapHook.map) return;
 
@@ -163,20 +151,17 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 					essential: true,
 				});
 
-				props.onPositionChange?.(alongRoutelati);
-
 				if (typeof speed.current !== 'undefined') {
 					step.current = step.current + speed.current;
 				} else {
 					step.current++;
 				}
 				setTimeout(() => {
+					props.onPositionChange?.(alongRoutelati);
 					play();
 				}, 100);
 			} else {
 				bearingRef.current = null;
-				mapHook.map.map.setPitch(0);
-				centerRoute();
 				enableInteractivity();
 				console.log('ENABLE CONTROLS');
 				step.current = 1;
@@ -188,7 +173,6 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 
 	function reset() {
 		if (!mapHook.map) return;
-		centerRoute();
 		enableInteractivity();
 		step.current = 1;
 	}
@@ -196,7 +180,6 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	useEffect(() => {
 		if (!mapHook.map || initializedRef.current) return;
 		initializedRef.current = true;
-		centerRoute();
 	}, [mapHook.map]);
 
 	useEffect(() => {
