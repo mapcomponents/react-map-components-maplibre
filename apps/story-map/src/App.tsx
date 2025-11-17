@@ -1,4 +1,4 @@
-import { MapLibreMap, MlMarker, TopToolbar } from '@mapcomponents/react-maplibre';
+import { MapLibreMap, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -8,10 +8,11 @@ import './i18n';
 import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
 import MlThreeJsLayer from './components/MlThreeJsLayer';
-/*import { StationType, useStationContext } from './contexts/StationContext';*/
+import { StationType, useStationContext } from './contexts/StationContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import CameraController from './components/CameraController';
 
-interface AutoplayOptions {
+export interface AutoplayOptions {
 	isStarted: boolean;
 	isPaused: boolean;
 }
@@ -20,10 +21,20 @@ type LanguageSelection = 'en' | 'de';
 
 function App() {
 	const [language, setLanguage] = useState<LanguageSelection>('de');
-	const [autoplay, setAutoplay] = useState<AutoplayOptions>({ isStarted: false, isPaused: true });
+	const [autoplay, setAutoplay] = useState<AutoplayOptions>({ isStarted: false, isPaused: false });
 
 	const { t } = useTranslation();
-/*	const { stationInformation, selectStationById } = useStationContext();*/
+	const { stationInformations, selectedStation, selectStationById } = useStationContext();
+	const mapHook = useMap();
+	mapHook.map?.setProjection({type: 'globe'});
+	mapHook.map?.setSky({
+		"sky-color": "#199EF3",
+		"sky-horizon-blend": 0.5,
+		"horizon-color": "#ffffff",
+		"horizon-fog-blend": 0.9,
+		"fog-color": "#0000ff",
+		"fog-ground-blend": 0.95,
+	});
 
 	const handleChangeLanguage = () => {
 		console.log('switch');
@@ -61,7 +72,7 @@ function App() {
 				}}
 			>
 				<Grid container gap={1} sx={{ width: '100%', flexGrow: 0 }}>
-					{/*{stationInformation.map((station: StationType) => (
+					{stationInformations.map((station: StationType) => (
 						<Grid key={station.id} size={12}>
 							<Button
 								sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
@@ -69,10 +80,10 @@ function App() {
 								onClick={() => selectStationById(station.id)}
 							>
 								<Typography>{station.label}</Typography>
-								{station.selected && <RemoveRedEyeIcon sx={{color: '#fff', border:'red 1px'}}/>}
+								{station.selected && <RemoveRedEyeIcon sx={{ color: '#fff', border: 'red 1px' }} />}
 							</Button>
 						</Grid>
-					))}*/}
+					))}
 				</Grid>
 
 				{!autoplay.isStarted ? (
@@ -105,7 +116,6 @@ function App() {
 							marginTop: 'auto',
 						}}
 					>
-						<Button>Test</Button>
 						<Button
 							size={'large'}
 							sx={{
@@ -115,8 +125,12 @@ function App() {
 							}}
 							onClick={() => {
 								setAutoplay({
+									isStarted: true,
+									isPaused: true,
+								});
+								setAutoplay({
 									isStarted: false,
-									isPaused: false,
+									isPaused: true,
 								});
 							}}
 						>
@@ -157,6 +171,9 @@ function App() {
 						center: [7.101608817894373, 50.7638952494396],
 						pitch: 60,
 						bearing: 150,
+						maxPitch:75,
+
+						canvasContextAttributes: { antialias: true },
 					}}
 					style={{
 						position: 'relative',
@@ -164,26 +181,21 @@ function App() {
 						height: '100%',
 					}}
 				/>
+				{autoplay.isStarted && (
+					<CameraController
+						pause={autoplay.isPaused}
+						zoom={selectedStation?.zoom ?? 17}
+						speed={selectedStation?.speed ?? 1}
+						pitch={selectedStation?.pitch ?? 80}
+						showRoute={false}
+						setAutoplay={setAutoplay}
+						selectStation={selectStationById}
+					/>
+				)}
 				<MlThreeJsLayer
 					url={'/WhereGroupLogo3D.glb'}
-					position={[7.104, 50.764]}
+					position={[7.104, 50.764, 40]}
 					rotation={[0, 180, -28]}
-					scale={0.0001}
-				/>
-				<MlMarker
-					lng={7.103249}
-					lat={50.763336}
-					containerStyle={{
-						borderRadius: '8px',
-						boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-						overflow: 'hidden',
-						backgroundColor: 'white',
-					}}
-					content={t('MlMarker')}
-				/>
-				<MlThreeJsLayer
-					url={'/WhereGroupLogo3D.glb'}
-					position={[7.101608817894373, 50.7638952494396]}
 					scale={0.0001}
 				/>
 			</Grid>
