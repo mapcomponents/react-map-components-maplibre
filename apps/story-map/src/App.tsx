@@ -1,4 +1,4 @@
-import { MapLibreMap, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
+import { MapLibreMap, MlMarker, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -11,6 +11,7 @@ import MlThreeJsLayer from './components/MlThreeJsLayer';
 import { StationType, useStationContext } from './contexts/StationContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CameraController from './components/CameraController';
+import { createMarkerContentHtml } from './utils/markerContent';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -26,14 +27,14 @@ function App() {
 	const { t } = useTranslation();
 	const { stationInformations, selectedStation, selectStationById } = useStationContext();
 	const mapHook = useMap();
-	mapHook.map?.setProjection({type: 'globe'});
+	mapHook.map?.setProjection({ type: 'globe' });
 	mapHook.map?.setSky({
-		"sky-color": "#199EF3",
-		"sky-horizon-blend": 0.5,
-		"horizon-color": "#ffffff",
-		"horizon-fog-blend": 0.9,
-		"fog-color": "#0000ff",
-		"fog-ground-blend": 0.95,
+		'sky-color': '#199EF3',
+		'sky-horizon-blend': 0.5,
+		'horizon-color': '#ffffff',
+		'horizon-fog-blend': 0.9,
+		'fog-color': '#0000ff',
+		'fog-ground-blend': 0.95,
 	});
 
 	const handleChangeLanguage = () => {
@@ -171,7 +172,7 @@ function App() {
 						center: [7.101608817894373, 50.7638952494396],
 						pitch: 60,
 						bearing: 150,
-						maxPitch:75,
+						maxPitch: 75,
 
 						canvasContextAttributes: { antialias: true },
 					}}
@@ -192,6 +193,27 @@ function App() {
 						selectStation={selectStationById}
 					/>
 				)}
+				{stationInformations
+					.filter((station: StationType) => station.selected)
+					.map((station: StationType) => (
+						<MlMarker
+							key={station.id}
+							lng={station.markerCoordinates[0]}
+							lat={station.markerCoordinates[1]}
+							content={createMarkerContentHtml(
+								t,
+								station.label,
+								station.description,
+								`${station.markerCoordinates[1]}, ${station.markerCoordinates[0]}`
+							)}
+							containerStyle={{
+								borderRadius: '8px',
+								boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+								overflow: 'hidden',
+								backgroundColor: 'white',
+							}}
+						/>
+					))}
 				<MlThreeJsLayer
 					url={'/WhereGroupLogo3D.glb'}
 					position={[7.104, 50.764, 40]}

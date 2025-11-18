@@ -12,7 +12,7 @@ export const createMarkerContentHtml = (
 	t: TFunction,
 	label: string,
 	description: string,
-	coordinates: string
+	markerCoordinates: string
 ): string => {
 	return `
 		<div style="padding: 12px; font-family: Arial, sans-serif; max-width: 220px;">
@@ -21,7 +21,7 @@ export const createMarkerContentHtml = (
 			</div>
 			<p style="margin: 0 0 8px 0;">${t(description)}</p>
 			<div style="font-size: 13px; color: #6b7280;">
-				<div>📍 ${coordinates}</div>
+				<div>📍 ${markerCoordinates}</div>
 			</div>
 		</div>
 	`;

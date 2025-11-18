@@ -10,7 +10,7 @@ import React, {
 export interface StationType {
 	label: string;
 	id: string;
-	descriptionId: string;
+	description: string;
 	selected: boolean;
 	position: number[];
 	zoom: number;
@@ -22,7 +22,7 @@ export interface StationType {
 
 interface StationContextType {
 	stationInformations: StationType[];
-	setStationInformations: Dispatch<SetStateAction<StationType[]>>
+	setStationInformations: Dispatch<SetStateAction<StationType[]>>;
 	selectStationById: (id: string) => void;
 	selectedStation: StationType | undefined;
 }
@@ -34,158 +34,158 @@ export const StationProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
 		{
 			label: 'MlMarker',
 			id: 'MlMarker-Station',
-			descriptionId: '',
+			description: 'MlMarker.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.08563805, 50.76945741],
-			markerCoordinates: []
+			markerCoordinates: [7.08563805, 50.76945741],
 		},
 		{
 			label: 'useCameraFollowPath',
 			id: 'useCameraFollowPath-Station',
-			descriptionId: '',
+			description: 'useCameraFollowPath.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.09261471, 50.76729082],
-			markerCoordinates: []
+			markerCoordinates: [7.09261471, 50.76729082],
 		},
 		{
 			label: 'MlThreeJsLayer',
 			id: 'MlThreeJsLayer-Station',
-			descriptionId: '',
+			description: 'MlThreeJsLayer.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.09818544, 50.76463773],
-			markerCoordinates: []
+			markerCoordinates: [7.09818544, 50.76463773],
 		},
 		{
 			label: 'MlGeoJsonLayer',
 			id: 'MlGeoJsonLayer-Station',
-			descriptionId: '',
+			description: 'MlGeoJsonLayer.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.08735555, 50.75253403],
-			markerCoordinates: []
+			markerCoordinates: [7.08735555, 50.75253403],
 		},
 		{
-			label: 'SimpleBuildings',
-			id: 'SimpleBuildings-Station',
-			descriptionId: '',
+			label: 'MlFillExtrusionLayer',
+			id: 'MlFillExtrusionLayer-Station',
+			description: 'MlFillExtrusionLayer.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
-			breakpoint: [7.08995806, 50.74361200],
-			markerCoordinates: []
+			breakpoint: [7.08995806, 50.743612],
+			markerCoordinates: [7.08995806, 50.743612],
 		},
 		{
 			label: 'MlIconLayer',
 			id: 'MlIconLayer-Station',
-			descriptionId: '',
+			description: 'MlIconLayer.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.09893916, 50.74014847],
-			markerCoordinates: []
+			markerCoordinates: [7.09893916, 50.74014847],
 		},
 		{
-			label: 'MapCurtain',
-			id: 'MapCurtain-Station',
-			descriptionId: '',
+			label: 'MlLayerSwipe',
+			id: 'MlLayerSwipe-Station',
+			description: 'MlLayerSwipe.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.0779001, 50.72942599],
-			markerCoordinates: []
+			markerCoordinates: [7.0779001, 50.72942599],
 		},
 		{
 			label: 'NoiseMap',
 			id: 'NoiseMap-Station',
-			descriptionId: '',
+			description: 'NoiseMap.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.11740515, 50.71906657],
-			markerCoordinates: []
+			markerCoordinates: [7.11740515, 50.71906657],
 		},
 		{
 			label: 'PointCloud',
 			id: 'PointCloud-Station',
-			descriptionId: '',
+			description: 'PointCloud.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.14343185, 50.71761182],
-			markerCoordinates: []
+			markerCoordinates: [7.14343185, 50.71761182],
 		},
 		{
-			label: 'MlCreatePdf',
-			id: 'MlCreatePdf-Station',
-			descriptionId: '',
+			label: 'MlCreatePdfForm',
+			id: 'MlCreatePdfForm-Station',
+			description: 'MlCreatePdfForm.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.22596388, 50.76098226],
-			markerCoordinates: []
+			markerCoordinates: [7.22596388, 50.76098226],
 		},
 		{
-			label: 'TerrainLayer',
-			id: 'TerrainLayer-Station',
-			descriptionId: '',
+			label: 'MlTerrainLayer',
+			id: 'MlTerrainLayer-Station',
+			description: 'MlTerrainLayer.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.27501663, 50.78439052],
-			markerCoordinates: []
+			markerCoordinates: [7.27501663, 50.78439052],
 		},
 		{
-			label: 'Multitab',
-			id: 'Multitab-Station',
-			descriptionId: '',
+			label: 'MultiTab',
+			id: 'MultiTab-Station',
+			description: 'MultiTab.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [7.19364709, 50.87354148],
-			markerCoordinates: []
+			markerCoordinates: [7.19364709, 50.87354148],
 		},
 		{
-			label: '3dTiles',
-			id: '3dTiles-Station',
-			descriptionId: '',
+			label: '3DTiles',
+			id: '3DTiles-Station',
+			description: '3DTiles.description',
 			selected: false,
 			position: [],
 			zoom: 16,
 			speed: 5,
 			pitch: 60,
 			breakpoint: [9.92849209, 53.43130876],
-			markerCoordinates: []
+			markerCoordinates: [9.92849209, 53.43130876],
 		},
 	]);
 	const [selectedStation, setSelectedStation] = useState<StationType>();
@@ -199,7 +199,7 @@ export const StationProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
 			});
 			if (id === station.id) setSelectedStation(station);
 		}
-			setStationInformations(tempArry);
+		setStationInformations(tempArry);
 	};
 	return (
 		<StationContext.Provider
@@ -207,7 +207,7 @@ export const StationProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
 				stationInformations,
 				setStationInformations,
 				selectStationById,
-				selectedStation
+				selectedStation,
 			}}
 		>
 			{children}
