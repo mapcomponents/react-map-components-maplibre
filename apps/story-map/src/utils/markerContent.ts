@@ -19,6 +19,9 @@ export const createMarkerContentHtml = (
 			<div style="font-size: 18px; font-weight: bold; margin-bottom: 8px; color: #3b82f6;">
 				${t(label)}
 			</div>
+			<div style="display: flex; align-items: center; margin-bottom: 10px;">
+				<span style="color: #6b7280; font-size: 14px;">${t(label)}</span>
+			</div>
 			<p style="margin: 0 0 8px 0;">${t(description)}</p>
 			<div style="font-size: 13px; color: #6b7280;">
 				<div>📍 ${markerCoordinates}</div>

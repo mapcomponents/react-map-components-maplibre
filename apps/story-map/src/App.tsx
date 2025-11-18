@@ -1,4 +1,4 @@
-import { MapLibreMap, MlMarker, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
+import { MapLibreMap, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -11,7 +11,7 @@ import MlThreeJsLayer from './components/MlThreeJsLayer';
 import { StationType, useStationContext } from './contexts/StationContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CameraController from './components/CameraController';
-import { createMarkerContentHtml } from './utils/markerContent';
+import MarkerComponent from './components/MarkerComponent';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -81,7 +81,7 @@ function App() {
 								onClick={() => selectStationById(station.id)}
 							>
 								<Typography>{station.label}</Typography>
-								{selectedStation?.id === station.id && <RemoveRedEyeIcon sx={{ color: '#fff'}} />}
+								{selectedStation?.id === station.id && <RemoveRedEyeIcon sx={{ color: '#fff' }} />}
 							</Button>
 						</Grid>
 					))}
@@ -192,27 +192,7 @@ function App() {
 						setAutoplay={setAutoplay}
 					/>
 				)}
-				{stationInformations
-					.filter((station: StationType) => station.selected)
-					.map((station: StationType) => (
-						<MlMarker
-							key={station.id}
-							lng={station.markerCoordinates[0]}
-							lat={station.markerCoordinates[1]}
-							content={createMarkerContentHtml(
-								t,
-								station.label,
-								station.description,
-								`${station.markerCoordinates[1]}, ${station.markerCoordinates[0]}`
-							)}
-							containerStyle={{
-								borderRadius: '8px',
-								boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-								overflow: 'hidden',
-								backgroundColor: 'white',
-							}}
-						/>
-					))}
+				<MarkerComponent selectedStation={selectedStation} />
 				<MlThreeJsLayer
 					url={'/WhereGroupLogo3D.glb'}
 					position={[7.104, 50.764, 40]}
