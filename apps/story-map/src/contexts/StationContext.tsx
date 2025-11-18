@@ -11,6 +11,7 @@ import React, {
 export interface StationType {
 	label: string;
 	id: string;
+	stationTitle: string;
 	description: string;
 	selected: boolean;
 	position: number[];
@@ -37,6 +38,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlMarker',
 			id: 'MlMarker-Station',
+			stationTitle: 'MlMarker.title',
 			description: 'MlMarker.description',
 			selected: false,
 			position: [],
@@ -49,6 +51,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'useCameraFollowPath',
 			id: 'useCameraFollowPath-Station',
+			stationTitle: 'useCameraFollowPath.title',
 			description: 'useCameraFollowPath.description',
 			selected: false,
 			position: [],
@@ -61,6 +64,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlThreeJsLayer',
 			id: 'MlThreeJsLayer-Station',
+			stationTitle: 'MlThreeJsLayer.title',
 			description: 'MlThreeJsLayer.description',
 			selected: false,
 			position: [],
@@ -73,6 +77,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlGeoJsonLayer',
 			id: 'MlGeoJsonLayer-Station',
+			stationTitle: 'MlGeoJsonLayer.title',
 			description: 'MlGeoJsonLayer.description',
 			selected: false,
 			position: [],
@@ -85,6 +90,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlFillExtrusionLayer',
 			id: 'MlFillExtrusionLayer-Station',
+			stationTitle: 'MlFillExtrusionLayer.title',
 			description: 'MlFillExtrusionLayer.description',
 			selected: false,
 			position: [],
@@ -97,6 +103,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlIconLayer',
 			id: 'MlIconLayer-Station',
+			stationTitle: 'MlIconLayer.title',
 			description: 'MlIconLayer.description',
 			selected: false,
 			position: [],
@@ -109,6 +116,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlLayerSwipe',
 			id: 'MlLayerSwipe-Station',
+			stationTitle: 'MlLayerSwipe.title',
 			description: 'MlLayerSwipe.description',
 			selected: false,
 			position: [],
@@ -119,9 +127,10 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			markerCoordinates: [7.0779001, 50.72942599],
 		},
 		{
-			label: 'NoiseMap',
-			id: 'NoiseMap-Station',
-			description: 'NoiseMap.description',
+			label: 'MlHexagonMap',
+			id: 'MlHexagonMap-Station',
+			stationTitle: 'MlHexagonMap.title',
+			description: 'MlHexagonMap.description',
 			selected: false,
 			position: [],
 			zoom: 16,
@@ -133,6 +142,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'PointCloud',
 			id: 'PointCloud-Station',
+			stationTitle: 'PointCloud.title',
 			description: 'PointCloud.description',
 			selected: false,
 			position: [],
@@ -145,6 +155,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlCreatePdfForm',
 			id: 'MlCreatePdfForm-Station',
+			stationTitle: 'MlCreatePdfForm.title',
 			description: 'MlCreatePdfForm.description',
 			selected: false,
 			position: [],
@@ -157,6 +168,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MlTerrainLayer',
 			id: 'MlTerrainLayer-Station',
+			stationTitle: 'MlTerrainLayer.title',
 			description: 'MlTerrainLayer.description',
 			selected: false,
 			position: [],
@@ -169,6 +181,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: 'MultiTab',
 			id: 'MultiTab-Station',
+			stationTitle: 'MultiTab.title',
 			description: 'MultiTab.description',
 			selected: false,
 			position: [],
@@ -181,6 +194,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		{
 			label: '3DTiles',
 			id: '3DTiles-Station',
+			stationTitle: '3DTiles.title',
 			description: '3DTiles.description',
 			selected: false,
 			position: [],

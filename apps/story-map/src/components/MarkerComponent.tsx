@@ -21,6 +21,7 @@ const MarkerComponent = ({ selectedStation }: MarkerComponentProps) => {
 			lat={selectedStation.markerCoordinates[1]}
 			content={createMarkerContentHtml(
 				t,
+				selectedStation.stationTitle,
 				selectedStation.label,
 				selectedStation.description,
 				`${selectedStation.markerCoordinates[1]}, ${selectedStation.markerCoordinates[0]}`
