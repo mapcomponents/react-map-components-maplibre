@@ -1,7 +1,7 @@
 import { Feature } from 'geojson';
 import { MlGeoJsonLayer } from '@mapcomponents/react-maplibre';
 import routeData from '../assets/route.json';
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef } from 'react';
 import useCameraFollowPath from './useCameraFollowPath';
 import { StationType, useStationContext } from '../contexts/StationContext';
 import { AutoplayOptions } from '../App';
@@ -13,7 +13,6 @@ interface CameraControllerProps {
 	pitch: number;
 	showRoute: boolean;
 	setAutoplay: Dispatch<SetStateAction<AutoplayOptions>>;
-	selectStation: (id: string) => void;
 }
 
 export function distanceBetweenPoints(
@@ -38,11 +37,13 @@ export function distanceBetweenPoints(
 		)
 	);
 }
-
 const CameraController = (props: CameraControllerProps) => {
 	const route = routeData as Feature;
-	const { stationInformations } = useStationContext();
-	const breakPoints = stationInformations.map((station: StationType) => station.breakpoint);
+	const { stationInformations, selectStationById } = useStationContext();
+	const breakPoints = useMemo(
+		() => stationInformations.map((station: StationType) => station.breakpoint),
+		[stationInformations]
+	);
 	const breakPoint = useRef<number>(0);
 
 	const handlePositionChange = useCallback(
@@ -57,15 +58,17 @@ const CameraController = (props: CameraControllerProps) => {
 			);
 
 			if (dist < 0.01) {
+				console.log('stop');
 				props.setAutoplay((prev) => ({
 					...prev,
 					isPaused: true,
 				}));
-
+				const currentStationId = stationInformations[breakPoint.current].id;
+				/*selectStationById(currentStationId);*/
 				breakPoint.current += 1;
 			}
 		},
-		[breakPoints, stationInformations, props.setAutoplay]
+		[breakPoints, selectStationById, props]
 	);
 
 	const cameraFollowPath = useCameraFollowPath({
@@ -87,10 +90,12 @@ const CameraController = (props: CameraControllerProps) => {
 				<MlGeoJsonLayer
 					geojson={route}
 					type="line"
-					paint={{
-						'line-color': '#ec9a00',
-						'line-width': 5,
-						'line-opacity': 0.8,
+					options={{
+						paint: {
+							'line-color': '#ec9a00',
+							'line-width': 5,
+							'line-opacity': 0.8,
+						},
 					}}
 				/>
 			)}

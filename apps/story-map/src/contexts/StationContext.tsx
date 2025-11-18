@@ -3,6 +3,7 @@ import React, {
 	Dispatch,
 	PropsWithChildren,
 	SetStateAction,
+	useCallback,
 	useContext,
 	useState,
 } from 'react';
@@ -22,15 +23,17 @@ export interface StationType {
 
 interface StationContextType {
 	stationInformations: StationType[];
-	setStationInformations: Dispatch<SetStateAction<StationType[]>>;
 	selectStationById: (id: string) => void;
 	selectedStation: StationType | undefined;
+	setSelectedStation: Dispatch<SetStateAction<StationType | undefined>>;
 }
 
 const StationContext = createContext<StationContextType | undefined>(undefined);
 
-export const StationProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-	const [stationInformations, setStationInformations] = useState<StationType[]>([
+export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>> = ({
+	children,
+}) => {
+	const stationInformations = [
 		{
 			label: 'MlMarker',
 			id: 'MlMarker-Station',
@@ -187,27 +190,24 @@ export const StationProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
 			breakpoint: [9.92849209, 53.43130876],
 			markerCoordinates: [9.92849209, 53.43130876],
 		},
-	]);
-	const [selectedStation, setSelectedStation] = useState<StationType>();
+	];
 
-	const selectStationById = (id: string) => {
-		const tempArry: StationType[] = [];
-		for (const station of stationInformations) {
-			tempArry.push({
-				...station,
-				selected: id === station.id,
-			});
-			if (id === station.id) setSelectedStation(station);
+	const [selectedStation, setSelectedStation] = useState<StationType | undefined>();
+
+	const selectStationById = useCallback((id: string) => {
+		const station = stationInformations.find((s) => s.id === id);
+		if (station) {
+			setSelectedStation(station);
 		}
-		setStationInformations(tempArry);
-	};
+	}, []);
+
 	return (
 		<StationContext.Provider
 			value={{
 				stationInformations,
-				setStationInformations,
-				selectStationById,
 				selectedStation,
+				setSelectedStation,
+				selectStationById,
 			}}
 		>
 			{children}
@@ -219,6 +219,6 @@ export default StationContext;
 
 export const useStationContext = () => {
 	const ctx = useContext(StationContext);
-	if (!ctx) throw new Error("useViewer must be used within ViewerProvider");
+	if (!ctx) throw new Error('useStationContext must be used within StationProvider');
 	return ctx;
-}
+};

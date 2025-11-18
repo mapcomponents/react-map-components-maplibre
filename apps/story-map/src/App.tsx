@@ -77,11 +77,11 @@ function App() {
 						<Grid key={station.id} size={12}>
 							<Button
 								sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
-								variant={station.selected ? 'contained' : 'outlined'}
+								variant={selectedStation?.id === station.id ? 'contained' : 'outlined'}
 								onClick={() => selectStationById(station.id)}
 							>
 								<Typography>{station.label}</Typography>
-								{station.selected && <RemoveRedEyeIcon sx={{ color: '#fff', border: 'red 1px' }} />}
+								{selectedStation?.id === station.id && <RemoveRedEyeIcon sx={{ color: '#fff'}} />}
 							</Button>
 						</Grid>
 					))}
@@ -190,7 +190,6 @@ function App() {
 						pitch={selectedStation?.pitch ?? 80}
 						showRoute={false}
 						setAutoplay={setAutoplay}
-						selectStation={selectStationById}
 					/>
 				)}
 				{stationInformations
