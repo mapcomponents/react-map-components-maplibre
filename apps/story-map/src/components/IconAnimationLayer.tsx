@@ -4,11 +4,33 @@ import * as d3 from 'd3';
 import { useStationContext } from '../contexts/StationContext';
 import carPathsData from '../assets/carPaths.json';
 
-const IconAnimationLayer = () => {
-	const carIcon = '/icon-layer-car.png';
-	const mapHook = useMap({ mapId: undefined });
+export interface IconAnimationLayerProps {
+	mapId?: string;
+	iconUrl?: string;
+	iconSize?: number;
+	animationDuration?: number;
+	fps?: number;
+	showPaths?: boolean;
+	pathColor?: string;
+	pathWidth?: number;
+}
+
+const IconAnimationLayer = ({
+	mapId,
+	iconUrl = '/icon-layer-car.png',
+	iconSize = 1,
+	animationDuration = 20000,
+	fps = 30,
+	showPaths = false,
+	pathColor = '#000',
+	pathWidth = 2,
+}: IconAnimationLayerProps) => {
+	const icon = iconUrl;
+	const mapHook = useMap({ mapId });
 	const { selectedStation } = useStationContext();
-	const [carPositions, setCarPositions] = useState<Record<string, [number, number]>>({});
+	const [iconPositions, setIconPositions] = useState<
+		Record<string, { position: [number, number]; bearing: number }>
+	>({});
 	const animationFrameRef = useRef<number | undefined>(undefined);
 	const lastUpdateTimeRef = useRef<number>(0);
 
@@ -17,19 +39,38 @@ const IconAnimationLayer = () => {
 	// Import paths from external JSON file
 	const paths = useMemo(() => carPathsData as unknown as Record<string, [number, number][]>, []);
 
-	const getCarGeoJson = useMemo(
+	const getPathGeoJson = useMemo(
 		(): GeoJSON.FeatureCollection => ({
 			type: 'FeatureCollection',
-			features: Object.entries(carPositions).map(([pathName, coordinates]) => ({
+			features: Object.entries(paths).map(([pathName, coordinates]) => ({
 				type: 'Feature',
-				properties: { name: pathName, icon: 'car' },
+				properties: { name: pathName },
 				geometry: {
-					type: 'Point',
+					type: 'LineString',
 					coordinates: coordinates,
 				},
 			})),
 		}),
-		[carPositions]
+		[paths]
+	);
+
+	const getIconGeoJson = useMemo(
+		(): GeoJSON.FeatureCollection => ({
+			type: 'FeatureCollection',
+			features: Object.entries(iconPositions).map(([pathName, data]) => ({
+				type: 'Feature',
+				properties: {
+					name: pathName,
+					icon: 'icon',
+					bearing: data.bearing,
+				},
+				geometry: {
+					type: 'Point',
+					coordinates: data.position,
+				},
+			})),
+		}),
+		[iconPositions]
 	);
 
 	useEffect(() => {
@@ -37,14 +78,14 @@ const IconAnimationLayer = () => {
 
 		// Load the car icon
 		const loadImage = async () => {
-			if (mapHook.map?.hasImage('car')) return;
+			if (mapHook.map?.hasImage('icon')) return;
 
 			const img = new Image();
-			img.src = carIcon;
+			img.src = icon;
 			await new Promise<void>((resolve, reject) => {
 				img.onload = () => {
-					if (!mapHook.map?.hasImage('car')) {
-						mapHook.map?.addImage('car', img);
+					if (!mapHook.map?.hasImage('icon')) {
+						mapHook.map?.addImage('icon', img);
 					}
 					resolve();
 				};
@@ -78,10 +119,28 @@ const IconAnimationLayer = () => {
 		});
 
 		// Animation parameters
-		const duration = 10000;
-		const FPS_TARGET = 30;
+		const duration = animationDuration;
+		const FPS_TARGET = fps;
 		const FRAME_DURATION = 1000 / FPS_TARGET;
 		const startTime = performance.now();
+
+		// Calculate bearing between two geographic points (in degrees)
+		const calculateBearing = (start: [number, number], end: [number, number]): number => {
+			const [lon1, lat1] = start;
+			const [lon2, lat2] = end;
+
+			const dLon = ((lon2 - lon1) * Math.PI) / 180;
+			const lat1Rad = (lat1 * Math.PI) / 180;
+			const lat2Rad = (lat2 * Math.PI) / 180;
+
+			const y = Math.sin(dLon) * Math.cos(lat2Rad);
+			const x =
+				Math.cos(lat1Rad) * Math.sin(lat2Rad) -
+				Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon);
+
+			const bearing = Math.atan2(y, x);
+			return ((bearing * 180) / Math.PI + 360) % 360;
+		};
 
 		// Binary search for segment
 		const findSegment = (segments: PathSegment[], targetDistance: number): PathSegment => {
@@ -100,7 +159,7 @@ const IconAnimationLayer = () => {
 			return segments[left];
 		};
 
-		// Single animation loop for all cars
+		// Single animation loop for all icons
 		const animate = (currentTime: number) => {
 			// Throttle to target FPS
 			if (currentTime - lastUpdateTimeRef.current < FRAME_DURATION) {
@@ -111,8 +170,8 @@ const IconAnimationLayer = () => {
 			lastUpdateTimeRef.current = currentTime;
 			const elapsed = currentTime - startTime;
 
-			// Calculate all positions in one pass
-			const newPositions: Record<string, [number, number]> = {};
+			// Calculate all positions and bearings in one pass
+			const newPositions: Record<string, { position: [number, number]; bearing: number }> = {};
 
 			pathInterpolators.forEach(({ pathName, segments, totalDistance }, index) => {
 				const offsetElapsed = (elapsed + index * 2500) % duration;
@@ -124,11 +183,18 @@ const IconAnimationLayer = () => {
 
 				// Calculate position within the segment
 				const segmentProgress = (targetDistance - currentSegment.start) / currentSegment.distance;
-				newPositions[pathName] = currentSegment.interpolator(segmentProgress);
+				const position = currentSegment.interpolator(segmentProgress);
+
+				// Calculate bearing: look slightly ahead on the path for smooth rotation
+				const lookAheadProgress = Math.min(segmentProgress + 0.01, 1);
+				const lookAheadPosition = currentSegment.interpolator(lookAheadProgress);
+				const bearing = calculateBearing(position, lookAheadPosition);
+
+				newPositions[pathName] = { position, bearing };
 			});
 
-			// Single state update for all cars
-			setCarPositions(newPositions);
+			// Single state update for all icons
+			setIconPositions(newPositions);
 
 			animationFrameRef.current = requestAnimationFrame(animate);
 		};
@@ -142,7 +208,7 @@ const IconAnimationLayer = () => {
 				cancelAnimationFrame(animationFrameRef.current);
 			}
 		};
-	}, [mapHook.map, paths, carIcon, isActive]);
+	}, [mapHook.map, paths, icon, isActive, animationDuration, fps]);
 
 	if (!isActive) {
 		return null;
@@ -150,13 +216,25 @@ const IconAnimationLayer = () => {
 
 	return (
 		<>
+			{showPaths && (
+				<MlGeoJsonLayer
+					geojson={getPathGeoJson}
+					type="line"
+					options={{
+						paint: { 'line-color': pathColor, 'line-width': pathWidth },
+					}}
+				/>
+			)}
+
 			<MlGeoJsonLayer
-				geojson={getCarGeoJson}
+				geojson={getIconGeoJson}
 				type="symbol"
 				options={{
 					layout: {
-						'icon-image': 'car',
-						'icon-size': 0.15,
+						'icon-image': 'icon',
+						'icon-size': iconSize,
+						'icon-rotate': ['get', 'bearing'],
+						'icon-rotation-alignment': 'map',
 						'icon-allow-overlap': true,
 						'icon-ignore-placement': true,
 					},

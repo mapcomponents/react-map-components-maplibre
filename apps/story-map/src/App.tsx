@@ -200,7 +200,7 @@ function App() {
 					rotation={[0, 180, -28]}
 					scale={0.0001}
 				/>
-				<IconAnimationLayer />
+				<IconAnimationLayer iconSize={0.1} showPaths={true} />
 			</Grid>
 		</Grid>
 	);
