@@ -1,9 +1,15 @@
-import { MapLibreMap, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
+import {
+	MapLibreMap,
+	MlGeoJsonLayer,
+	MlLayer,
+	TopToolbar,
+	useMap,
+} from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './i18n';
 import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +17,11 @@ import MlThreeJsLayer from './components/MlThreeJsLayer';
 import { StationType, useStationContext } from './contexts/StationContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CameraController from './components/CameraController';
-import MarkerComponent from './components/MarkerComponent';
+import MarkerStationComponent from './components/Marker-StationComponent';
+import GeoJsonStationComponent from './components/GeoJson-StationComponent';
+import { LngLatLike } from 'maplibre-gl';
+import { Feature, LineString } from 'geojson';
+import routeData from './assets/route.json';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -23,9 +33,11 @@ type LanguageSelection = 'en' | 'de';
 function App() {
 	const [language, setLanguage] = useState<LanguageSelection>('de');
 	const [autoplay, setAutoplay] = useState<AutoplayOptions>({ isStarted: false, isPaused: false });
+	const [useCutRoute, setUseCutRoute] = useState<boolean>(false);
 
 	const { t } = useTranslation();
 	const { stationInformations, selectedStation, selectStationById } = useStationContext();
+
 	const mapHook = useMap();
 	mapHook.map?.setProjection({ type: 'globe' });
 	mapHook.map?.setSky({
@@ -37,8 +49,24 @@ function App() {
 		'fog-ground-blend': 0.95,
 	});
 
+	useEffect(() => {
+		mapHook.map?.setProjection({ type: 'globe' });
+		mapHook.map?.setSky({
+			'sky-color': '#199EF3',
+			'sky-horizon-blend': 0.5,
+			'horizon-color': '#ffffff',
+			'horizon-fog-blend': 0.9,
+			'fog-color': '#0000ff',
+			'fog-ground-blend': 0.95,
+			'atmosphere-blend': 0.5
+		});
+		mapHook.map?.addSource('Test_OldMap', {
+			url: 'cog://http://localhost:5173/OldMap_COG.tif',
+			type: 'raster',
+		});
+	}, [mapHook.map]);
+
 	const handleChangeLanguage = () => {
-		console.log('switch');
 		const newLanguage: LanguageSelection = language === 'de' ? 'en' : 'de';
 		setLanguage(newLanguage);
 		i18n.changeLanguage(newLanguage);
@@ -79,6 +107,27 @@ function App() {
 								sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
 								variant={selectedStation?.id === station.id ? 'contained' : 'outlined'}
 								onClick={() => selectStationById(station.id)}
+								onClick={() => {
+									selectStationById(station.id);
+									setAutoplay({
+										isStarted: false,
+										isPaused: true,
+									});
+									setUseCutRoute(true);
+									if (mapHook.map) {
+										if (station.presentationPosition) {
+											mapHook.map.easeTo({
+												center: station.breakpoint as LngLatLike,
+												...station.presentationPosition,
+											});
+										} else {
+											mapHook.map.easeTo({
+												center: station.breakpoint as LngLatLike,
+												zoom: station.zoom,
+											});
+										}
+									}
+								}}
 							>
 								<Typography>{station.label}</Typography>
 								{selectedStation?.id === station.id && <RemoveRedEyeIcon sx={{ color: '#fff' }} />}
@@ -99,10 +148,10 @@ function App() {
 							marginTop: 'auto',
 						}}
 						onClick={() => {
-							setAutoplay({
+							setAutoplay((prevState) => ({
+								...prevState,
 								isStarted: true,
-								isPaused: false,
-							});
+							}));
 						}}
 					>
 						<Typography>{t('StartWalkThroughButton')}</Typography>
@@ -187,18 +236,34 @@ function App() {
 						pause={autoplay.isPaused}
 						zoom={selectedStation?.zoom ?? 17}
 						speed={selectedStation?.speed ?? 1}
-						pitch={selectedStation?.pitch ?? 80}
-						showRoute={false}
+						pitch={80}
 						setAutoplay={setAutoplay}
+						useCutRoute={useCutRoute}
+						showRoute={false}
 					/>
 				)}
-				<MarkerComponent selectedStation={selectedStation} />
+				{autoplay.isPaused && <MarkerStationComponent selectedStation={selectedStation} />}
+				<GeoJsonStationComponent />
 				<MlThreeJsLayer
 					url={'/WhereGroupLogo3D.glb'}
 					position={[7.104, 50.764, 40]}
 					rotation={[0, 180, -28]}
 					scale={0.0001}
 				/>
+				{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
+					routeData && (
+						<MlGeoJsonLayer
+							geojson={routeData as Feature<LineString>}
+							type="line"
+							options={{
+								paint: {
+									'line-color': '#ec9a00',
+									'line-width': 5,
+									'line-opacity': 0.8,
+								},
+							}}
+						/>
+					)}
 			</Grid>
 		</Grid>
 	);

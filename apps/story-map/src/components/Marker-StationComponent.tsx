@@ -7,7 +7,7 @@ interface MarkerComponentProps {
 	selectedStation: StationType | undefined;
 }
 
-const MarkerComponent = ({ selectedStation }: MarkerComponentProps) => {
+const MarkerStationComponent = ({ selectedStation }: MarkerComponentProps) => {
 	const { t } = useTranslation();
 
 	if (!selectedStation) {
@@ -35,4 +35,4 @@ const MarkerComponent = ({ selectedStation }: MarkerComponentProps) => {
 	);
 };
 
-export default MarkerComponent;
+export default MarkerStationComponent;

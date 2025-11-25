@@ -31,7 +31,7 @@ interface useCameraFollowPathProps {
 	/* timeoutId is an useRef const */
 	timeoutId?: number;
 
-	onPositionChange?: (position: number[]) => void;
+	onPositionChange?: (position: LngLatLike) => void;
 }
 export type { useCameraFollowPathProps };
 
@@ -63,6 +63,7 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 	useEffect(() => {
 		pause.current = props.pause;
 		if (!pause.current) {
+			if (props.pitch) mapHook.map?.setPitch(props.pitch);
 			play();
 		}
 	}, [props.pause]);
@@ -157,6 +158,8 @@ const useCameraFollowPath = (props: useCameraFollowPathProps) => {
 					step.current++;
 				}
 				setTimeout(() => {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
 					props.onPositionChange?.(alongRoutelati);
 					play();
 				}, 100);

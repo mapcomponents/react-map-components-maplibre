@@ -50,7 +50,6 @@ const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
 		if (typeof initFuncRef.current === 'function') {
 			initFuncRef.current();
 		}
-
 		return cleanup;
 	}, []);
 
