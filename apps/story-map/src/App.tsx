@@ -12,6 +12,7 @@ import { StationType, useStationContext } from './contexts/StationContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CameraController from './components/CameraController';
 import MarkerComponent from './components/MarkerComponent';
+import IconAnimationLayer from './components/IconAnimationLayer';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -199,6 +200,7 @@ function App() {
 					rotation={[0, 180, -28]}
 					scale={0.0001}
 				/>
+				<IconAnimationLayer />
 			</Grid>
 		</Grid>
 	);

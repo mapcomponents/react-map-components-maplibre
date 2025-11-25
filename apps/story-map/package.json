@@ -16,6 +16,7 @@
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@turf/turf": "^7.2.0",
+    "d3": "^7.9.0",
     "geojson": "^0.5.0",
     "i18next": "^25.6.1",
     "maplibre-gl": "^5.12.0",
