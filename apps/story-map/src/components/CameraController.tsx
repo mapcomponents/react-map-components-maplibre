@@ -83,6 +83,9 @@ const CameraController = (props: CameraControllerProps) => {
 
 	const route = useMemo(() => {
 		if (props.useCutRoute && selectedStation) {
+			stationInformations.find((station, index) => {
+				if (station.id === selectedStation.id) breakPoint.current = index + 1;
+			});
 			return cutRoute(selectedStation.breakpoint, routeData as Feature<LineString>);
 		} else return routeData as Feature<LineString>;
 	}, [props.useCutRoute, selectedStation, routeData]);
