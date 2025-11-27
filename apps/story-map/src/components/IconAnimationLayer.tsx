@@ -35,8 +35,6 @@ const IconAnimationLayer = ({
 	// Import paths from external JSON file
 	const paths = useMemo(() => carPathsData as GeoJSON.FeatureCollection, []);
 
-	const getPathGeoJson = useMemo((): GeoJSON.FeatureCollection => paths, [paths]);
-
 	const getIconGeoJson = useMemo(
 		(): GeoJSON.FeatureCollection => ({
 			type: 'FeatureCollection',
@@ -202,7 +200,7 @@ const IconAnimationLayer = ({
 		<>
 			{showPaths && (
 				<MlGeoJsonLayer
-					geojson={getPathGeoJson}
+					geojson={paths}
 					type="line"
 					options={{
 						paint: { 'line-color': pathColor, 'line-width': pathWidth },
