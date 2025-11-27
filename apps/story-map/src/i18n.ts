@@ -16,7 +16,7 @@ const resources = {
 			'MlGeoJsonLayer.title': 'GeoJSON objects',
 			'MlFillExtrusionLayer.title': '2D to 3D (extrusion)',
 			'MlIconLayer.title': 'Animation of icons',
-			'MlLayerSwipe.title': 'Map curtain',
+			'MlMapMagnify.title': 'Map curtain',
 			'MlHexagonMap.title': 'Noise Map (with deck.gl)',
 			'PointCloud.title': 'Point Cloud',
 			'MlCreatePdfForm.title': 'PDF of a map view',
@@ -65,7 +65,7 @@ const resources = {
 			'MlGeoJsonLayer.title': 'GeoJSON Objekte',
 			'MlFillExtrusionLayer.title': '2D zu 3D (Extrusion)',
 			'MlIconLayer.title': 'Animation von Symbolen',
-			'MlLayerSwipe.title': 'Kartenvorhang',
+			'MlMapMagnify.title': 'Kartenvorhang',
 			'MlHexagonMap.title': 'Lärmkarte (mit deck.gl)',
 			'PointCloud.title': 'Punktwolke',
 			'MlCreatePdfForm.title': 'PDF eines Kartenausschnitts',
@@ -84,7 +84,7 @@ const resources = {
 			'MlFillExtrusionLayer.description':
 				'Einfach aus 2D 3D machen? Warum nicht! Ich mache das durch Extrusion.',
 			'MlIconLayer.description': 'Das ist ja cool! Jetzt kommt richtig Bewegung auf die Karte!',
-			'MlLayerSwipe.description':
+			'MlMapMagnify.description':
 				'Kurz mal hinter den Vorhang linsen! Was sich dahinter wohl verbirgt?',
 			'MlHexagonMap.description':
 				'Ganz schön laut hier auf der Straße! Zeit, mal eine Lärmkarte zu erstellen.',
