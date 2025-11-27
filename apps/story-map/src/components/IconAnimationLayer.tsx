@@ -33,22 +33,9 @@ const IconAnimationLayer = ({
 	const lastUpdateTimeRef = useRef<number>(0);
 
 	// Import paths from external JSON file
-	const paths = useMemo(() => carPathsData as unknown as Record<string, [number, number][]>, []);
+	const paths = useMemo(() => carPathsData as GeoJSON.FeatureCollection, []);
 
-	const getPathGeoJson = useMemo(
-		(): GeoJSON.FeatureCollection => ({
-			type: 'FeatureCollection',
-			features: Object.entries(paths).map(([pathName, coordinates]) => ({
-				type: 'Feature',
-				properties: { name: pathName },
-				geometry: {
-					type: 'LineString',
-					coordinates: coordinates,
-				},
-			})),
-		}),
-		[paths]
-	);
+	const getPathGeoJson = useMemo((): GeoJSON.FeatureCollection => paths, [paths]);
 
 	const getIconGeoJson = useMemo(
 		(): GeoJSON.FeatureCollection => ({
@@ -98,7 +85,12 @@ const IconAnimationLayer = ({
 		}
 
 		// Pre-calculate all interpolators once
-		const pathInterpolators = Object.entries(paths).map(([pathName, coordinates]) => {
+		const pathInterpolators = paths.features.map((feature) => {
+			const pathName = feature.properties?.id || 'unknown';
+			const coordinates = (feature.geometry as GeoJSON.LineString).coordinates as [
+				number,
+				number,
+			][];
 			const segments: PathSegment[] = [];
 			let totalDistance = 0;
 
