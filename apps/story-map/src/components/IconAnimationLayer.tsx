@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MlGeoJsonLayer, useMap } from '@mapcomponents/react-maplibre';
 import * as d3 from 'd3';
-import { useStationContext } from '../contexts/StationContext';
 import carPathsData from '../assets/carPaths.json';
 
 export interface IconAnimationLayerProps {
@@ -27,14 +26,11 @@ const IconAnimationLayer = ({
 }: IconAnimationLayerProps) => {
 	const icon = iconUrl;
 	const mapHook = useMap({ mapId });
-	const { selectedStation } = useStationContext();
 	const [iconPositions, setIconPositions] = useState<
 		Record<string, { position: [number, number]; bearing: number }>
 	>({});
 	const animationFrameRef = useRef<number | undefined>(undefined);
 	const lastUpdateTimeRef = useRef<number>(0);
-
-	const isActive = selectedStation?.label === 'MlIconLayer';
 
 	// Import paths from external JSON file
 	const paths = useMemo(() => carPathsData as unknown as Record<string, [number, number][]>, []);
@@ -74,7 +70,7 @@ const IconAnimationLayer = ({
 	);
 
 	useEffect(() => {
-		if (!mapHook.map || !isActive) return;
+		if (!mapHook.map) return;
 
 		// Load the car icon
 		const loadImage = async () => {
@@ -208,11 +204,7 @@ const IconAnimationLayer = ({
 				cancelAnimationFrame(animationFrameRef.current);
 			}
 		};
-	}, [mapHook.map, paths, icon, isActive, animationDuration, fps]);
-
-	if (!isActive) {
-		return null;
-	}
+	}, [mapHook.map, paths, icon, animationDuration, fps]);
 
 	return (
 		<>
