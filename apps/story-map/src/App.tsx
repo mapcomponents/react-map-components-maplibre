@@ -1,10 +1,4 @@
-import {
-	MapLibreMap,
-	MlGeoJsonLayer,
-	MlLayer,
-	TopToolbar,
-	useMap,
-} from '@mapcomponents/react-maplibre';
+import { MapLibreMap, MlGeoJsonLayer, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -17,11 +11,12 @@ import MlThreeJsLayer from './components/MlThreeJsLayer';
 import { StationType, useStationContext } from './contexts/StationContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CameraController from './components/CameraController';
-import MarkerStationComponent from './components/Marker-StationComponent';
+import MarkerComponent from './components/MarkerComponent';
 import GeoJsonStationComponent from './components/GeoJson-StationComponent';
 import { LngLatLike } from 'maplibre-gl';
 import { Feature, LineString } from 'geojson';
 import routeData from './assets/route.json';
+import MapMagnifyStationComponent from './components/MapMagnify-StationComponent';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -39,15 +34,6 @@ function App() {
 	const { stationInformations, selectedStation, selectStationById } = useStationContext();
 
 	const mapHook = useMap();
-	mapHook.map?.setProjection({ type: 'globe' });
-	mapHook.map?.setSky({
-		'sky-color': '#199EF3',
-		'sky-horizon-blend': 0.5,
-		'horizon-color': '#ffffff',
-		'horizon-fog-blend': 0.9,
-		'fog-color': '#0000ff',
-		'fog-ground-blend': 0.95,
-	});
 
 	useEffect(() => {
 		mapHook.map?.setProjection({ type: 'globe' });
@@ -58,11 +44,6 @@ function App() {
 			'horizon-fog-blend': 0.9,
 			'fog-color': '#0000ff',
 			'fog-ground-blend': 0.95,
-			'atmosphere-blend': 0.5
-		});
-		mapHook.map?.addSource('Test_OldMap', {
-			url: 'cog://http://localhost:5173/OldMap_COG.tif',
-			type: 'raster',
 		});
 	}, [mapHook.map]);
 
@@ -106,7 +87,6 @@ function App() {
 							<Button
 								sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
 								variant={selectedStation?.id === station.id ? 'contained' : 'outlined'}
-								onClick={() => selectStationById(station.id)}
 								onClick={() => {
 									selectStationById(station.id);
 									setAutoplay({
@@ -211,59 +191,91 @@ function App() {
 				size={10}
 				sx={{
 					height: 'calc(100% - 62px)',
+					position: 'relative',
 				}}
 			>
-				<MapLibreMap
-					options={{
-						style: 'https://wms.wheregroup.com/tileserver/style/klokantech-basic.json',
-						zoom: 16,
-						maxZoom: 24,
-						center: [7.101608817894373, 50.7638952494396],
-						pitch: 60,
-						bearing: 150,
-						maxPitch: 75,
+				<div style={{ position: 'relative', width: '100%', height: '100%' }}>
+					<MapLibreMap
+						mapId={'map_1'}
+						options={{
+							style: 'https://wms.wheregroup.com/tileserver/style/klokantech-basic.json',
+							zoom: 16,
+							maxZoom: 24,
+							center: [7.101608817894373, 50.7638952494396],
+							pitch: 60,
+							bearing: 150,
+							maxPitch: 75,
 
-						canvasContextAttributes: { antialias: true },
-					}}
-					style={{
-						position: 'relative',
-						width: '100%',
-						height: '100%',
-					}}
-				/>
-				{autoplay.isStarted && (
-					<CameraController
-						pause={autoplay.isPaused}
-						zoom={selectedStation?.zoom ?? 17}
-						speed={selectedStation?.speed ?? 1}
-						pitch={80}
-						setAutoplay={setAutoplay}
-						useCutRoute={useCutRoute}
-						showRoute={false}
+							canvasContextAttributes: { antialias: true },
+						}}
+						style={{
+							position: 'absolute',
+							top: 0,
+							left: 0,
+							width: '100%',
+							height: '100%',
+							zIndex: 2, // todo: change dynamically if MlMagnify is enabled to 1
+						}}
 					/>
-				)}
-				{autoplay.isPaused && <MarkerStationComponent selectedStation={selectedStation} />}
-				<GeoJsonStationComponent />
-				<MlThreeJsLayer
-					url={'/WhereGroupLogo3D.glb'}
-					position={[7.104, 50.764, 40]}
-					rotation={[0, 180, -28]}
-					scale={0.0001}
-				/>
-				{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
-					routeData && (
-						<MlGeoJsonLayer
-							geojson={routeData as Feature<LineString>}
-							type="line"
-							options={{
-								paint: {
-									'line-color': '#ec9a00',
-									'line-width': 5,
-									'line-opacity': 0.8,
-								},
-							}}
+					<MapLibreMap
+						mapId={'map_2'}
+						options={{
+							style: 'https://wms.wheregroup.com/tileserver/style/klokantech-basic.json',
+							zoom: 16,
+							maxZoom: 24,
+							center: [7.101608817894373, 50.7638952494396],
+							pitch: 60,
+							bearing: 150,
+							maxPitch: 75,
+
+							canvasContextAttributes: { antialias: true },
+						}}
+						style={{
+							position: 'absolute',
+							top: 0,
+							left: 0,
+							width: '100%',
+							height: '100%',
+							zIndex: 1, // todo: change dynamically if MlMagnify is enabled to 2
+						}}
+					/>
+					{/* Map Components*/}
+					{autoplay.isStarted && (
+						<CameraController
+							pause={autoplay.isPaused}
+							zoom={selectedStation?.zoom ?? 17}
+							speed={selectedStation?.speed ?? 1}
+							pitch={80}
+							setAutoplay={setAutoplay}
+							useCutRoute={useCutRoute}
+							showRoute={false}
 						/>
 					)}
+					{autoplay.isPaused && <MarkerComponent selectedStation={selectedStation} />}
+					<GeoJsonStationComponent />
+					<MlThreeJsLayer
+						url={'/WhereGroupLogo3D.glb'}
+						position={[7.104, 50.764, 40]}
+						rotation={[0, 180, -28]}
+						scale={0.0001}
+					/>
+					{/*Todo: Add button automation for that; IDEA: If button presses move MakerLayer to second map (map_2)*/}
+					<MapMagnifyStationComponent showMapMagnify={false} />{' '}
+					{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
+						routeData && (
+							<MlGeoJsonLayer
+								geojson={routeData as Feature<LineString>}
+								type="line"
+								options={{
+									paint: {
+										'line-color': '#ec9a00',
+										'line-width': 5,
+										'line-opacity': 0.8,
+									},
+								}}
+							/>
+						)}
+				</div>
 			</Grid>
 		</Grid>
 	);

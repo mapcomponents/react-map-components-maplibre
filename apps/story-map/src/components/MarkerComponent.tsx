@@ -7,7 +7,7 @@ interface MarkerComponentProps {
 	selectedStation: StationType | undefined;
 }
 
-const MarkerStationComponent = ({ selectedStation }: MarkerComponentProps) => {
+const MarkerComponent = ({ selectedStation }: MarkerComponentProps) => {
 	const { t } = useTranslation();
 
 	if (!selectedStation) {
@@ -19,6 +19,7 @@ const MarkerStationComponent = ({ selectedStation }: MarkerComponentProps) => {
 			key={selectedStation.id}
 			lng={selectedStation.markerCoordinates[0]}
 			lat={selectedStation.markerCoordinates[1]}
+			mapId={'map_1'}
 			content={createMarkerContentHtml(
 				t,
 				selectedStation.label,
@@ -35,4 +36,4 @@ const MarkerStationComponent = ({ selectedStation }: MarkerComponentProps) => {
 	);
 };
 
-export default MarkerStationComponent;
+export default MarkerComponent;

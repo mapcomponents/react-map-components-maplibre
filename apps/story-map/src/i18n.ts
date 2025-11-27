@@ -21,7 +21,7 @@ const resources = {
 				"I'm a MapComponents component that converts 2D layers into 3D layers using extrusion.",
 			'MlIconLayer.description':
 				"I'm a MapComponents component that displays animated symbols on a layer.",
-			'MlLayerSwipe.description':
+			'MlMapMagnify.description':
 				"I'm a MapComponents component that hides part of one of two overlapping maps, thus creating a map curtain.",
 			'NoiseMap.description':
 				"I'm a MapComponents component that displays an added DeckGL HexagonLayer using the useDeckGL hook. The example shows a noise map.",

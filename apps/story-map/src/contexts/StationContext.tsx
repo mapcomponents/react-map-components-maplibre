@@ -94,13 +94,18 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			markerCoordinates: [7.09893916, 50.74014847],
 		},
 		{
-			label: 'MlLayerSwipe',
-			id: 'MlLayerSwipe-Station',
-			description: 'MlLayerSwipe.description',
+			label: 'MlMapMagnify',
+			id: 'MlMapMagnify-Station',
+			description: 'MlMapMagnify.description',
 			zoom: 17,
 			speed: 2,
 			breakpoint: [7.077900099390418, 50.72942598571806],
-			markerCoordinates: [7.0779001, 50.72942599],
+			markerCoordinates: [7.070940, 50.730640],
+			presentationPosition: {
+				zoom: 14.9,
+				pitch: 50,
+				bearing: 230
+			}
 		},
 		{
 			label: 'NoiseMap',
