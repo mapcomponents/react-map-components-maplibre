@@ -35,7 +35,7 @@ const resources = {
 			'MlFillExtrusionLayer.description':
 				'Simply turn 2D into 3D? Why not! I do this by extrusion.',
 			'MlIconLayer.description': "That's cool! Now there's really some movement on the map!",
-			'MlLayerSwipe.description':
+			'MlMapMagnify.description':
 				'Take a quick peek behind the curtain! What could be hiding behind it?',
 			'MlHexagonMap.description':
 				"It's pretty noisy here on the street! Time to create a noise map.",

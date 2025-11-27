@@ -1,10 +1,12 @@
-import { Feature } from 'geojson';
-import { MlGeoJsonLayer } from '@mapcomponents/react-maplibre';
+import { Feature, LineString, Position } from 'geojson';
+import { MlGeoJsonLayer, useMap } from '@mapcomponents/react-maplibre';
 import routeData from '../assets/route.json';
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef } from 'react';
 import useCameraFollowPath from './useCameraFollowPath';
 import { StationType, useStationContext } from '../contexts/StationContext';
 import { AutoplayOptions } from '../App';
+import { LngLatLike } from 'maplibre-gl';
+import * as turf from '@turf/turf';
 
 interface CameraControllerProps {
 	pause: boolean;
@@ -12,7 +14,14 @@ interface CameraControllerProps {
 	speed: number;
 	pitch: number;
 	showRoute: boolean;
+	useCutRoute: boolean;
 	setAutoplay: Dispatch<SetStateAction<AutoplayOptions>>;
+}
+
+export interface CameraPositionType {
+	zoom?: number;
+	pitch?: number;
+	bearing?: number;
 }
 
 export function distanceBetweenPoints(
@@ -37,19 +46,53 @@ export function distanceBetweenPoints(
 		)
 	);
 }
+
+const cutRoute = (coordinates: Position, route: Feature<LineString>) => {
+	const snappedPoint = turf.nearestPointOnLine(route, coordinates);
+	const snappedCoords = snappedPoint.geometry.coordinates;
+	const coords = route.geometry.coordinates;
+
+	const idx = coords.findIndex(
+		([lng, lat]) => Math.abs(lng - snappedCoords[0]) < 1e-9 && Math.abs(lat - snappedCoords[1]) < 1e-9
+	);
+
+	if (idx > 0 && idx < coords.length - 1) {
+		// Split manually at the vertex
+		return {
+			...route,
+			geometry: {
+				...route.geometry,
+				coordinates: coords.slice(idx),
+			},
+		};
+	}
+
+	// Fallback to turf.lineSplit for non-vertex points
+	const split = turf.lineSplit(route, snappedPoint);
+	return split.features[1] || route;
+};
+
 const CameraController = (props: CameraControllerProps) => {
-	const route = routeData as Feature;
-	const { stationInformations, selectStationById } = useStationContext();
+	const { selectedStation, stationInformations, selectStationById } = useStationContext();
 	const breakPoints = useMemo(
 		() => stationInformations.map((station: StationType) => station.breakpoint),
 		[stationInformations]
 	);
+	const mapHook = useMap();
 	const breakPoint = useRef<number>(0);
 
-	const handlePositionChange = useCallback(
-		(position: number[]) => {
-			if (breakPoint.current >= breakPoints.length) return;
+	const route = useMemo(() => {
+		if (props.useCutRoute && selectedStation) {
+			stationInformations.find((station, index) => {
+				if (station.id === selectedStation.id) breakPoint.current = index + 1;
+			});
+			return cutRoute(selectedStation.breakpoint, routeData as Feature<LineString>);
+		} else return routeData as Feature<LineString>;
+	}, [props.useCutRoute, selectedStation, routeData]);
 
+	const handlePositionChange = useCallback(
+		(position: LngLatLike) => {
+			if (breakPoint.current >= breakPoints.length) return;
 			const dist = distanceBetweenPoints(
 				breakPoints[breakPoint.current][0],
 				breakPoints[breakPoint.current][1],
@@ -58,18 +101,32 @@ const CameraController = (props: CameraControllerProps) => {
 			);
 
 			if (dist < 0.01) {
-				console.log('stop');
 				props.setAutoplay((prev) => ({
 					...prev,
 					isPaused: true,
 				}));
-				const currentStationId = stationInformations[breakPoint.current].id;
-				/*selectStationById(currentStationId);*/
+				const currentStation = stationInformations[breakPoint.current];
+				if (stationInformations[breakPoint.current].presentationPosition)
+					positionCamera(position, stationInformations[breakPoint.current].presentationPosition);
+				selectStationById(currentStation.id);
 				breakPoint.current += 1;
 			}
 		},
 		[breakPoints, selectStationById, props]
 	);
+
+	const positionCamera = (position: LngLatLike, cameraPosition: CameraPositionType | undefined) => {
+		setTimeout(() => {
+			if (mapHook.map && cameraPosition && position) {
+				mapHook.map.easeTo({
+					center: position,
+					...cameraPosition,
+					easing: (t) => t,
+					essential: true,
+				});
+			}
+		}, 100);
+	};
 
 	const cameraFollowPath = useCameraFollowPath({
 		route: route,

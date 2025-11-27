@@ -1,9 +1,9 @@
-import { MapLibreMap, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
+import { MapLibreMap, MlGeoJsonLayer, TopToolbar, useMap } from '@mapcomponents/react-maplibre';
 import './App.css';
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './i18n';
 import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,11 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CameraController from './components/CameraController';
 import MarkerComponent from './components/MarkerComponent';
 import IconAnimationLayer from './components/IconAnimationLayer';
+import GeoJsonStationComponent from './components/GeoJson-StationComponent';
+import { LngLatLike } from 'maplibre-gl';
+import { Feature, LineString } from 'geojson';
+import routeData from './assets/route.json';
+import MapMagnifyStationComponent from './components/MapMagnify-StationComponent';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -24,22 +29,26 @@ type LanguageSelection = 'en' | 'de';
 function App() {
 	const [language, setLanguage] = useState<LanguageSelection>('de');
 	const [autoplay, setAutoplay] = useState<AutoplayOptions>({ isStarted: false, isPaused: false });
+	const [useCutRoute, setUseCutRoute] = useState<boolean>(false);
 
 	const { t } = useTranslation();
 	const { stationInformations, selectedStation, selectStationById } = useStationContext();
+
 	const mapHook = useMap();
-	mapHook.map?.setProjection({ type: 'globe' });
-	mapHook.map?.setSky({
-		'sky-color': '#199EF3',
-		'sky-horizon-blend': 0.5,
-		'horizon-color': '#ffffff',
-		'horizon-fog-blend': 0.9,
-		'fog-color': '#0000ff',
-		'fog-ground-blend': 0.95,
-	});
+
+	useEffect(() => {
+		mapHook.map?.setProjection({ type: 'globe' });
+		mapHook.map?.setSky({
+			'sky-color': '#199EF3',
+			'sky-horizon-blend': 0.5,
+			'horizon-color': '#ffffff',
+			'horizon-fog-blend': 0.9,
+			'fog-color': '#0000ff',
+			'fog-ground-blend': 0.95,
+		});
+	}, [mapHook.map]);
 
 	const handleChangeLanguage = () => {
-		console.log('switch');
 		const newLanguage: LanguageSelection = language === 'de' ? 'en' : 'de';
 		setLanguage(newLanguage);
 		i18n.changeLanguage(newLanguage);
@@ -79,7 +88,27 @@ function App() {
 							<Button
 								sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
 								variant={selectedStation?.id === station.id ? 'contained' : 'outlined'}
-								onClick={() => selectStationById(station.id)}
+								onClick={() => {
+									selectStationById(station.id);
+									setAutoplay({
+										isStarted: false,
+										isPaused: true,
+									});
+									setUseCutRoute(true);
+									if (mapHook.map) {
+										if (station.presentationPosition) {
+											mapHook.map.easeTo({
+												center: station.breakpoint as LngLatLike,
+												...station.presentationPosition,
+											});
+										} else {
+											mapHook.map.easeTo({
+												center: station.breakpoint as LngLatLike,
+												zoom: station.zoom,
+											});
+										}
+									}
+								}}
 							>
 								<Typography>{station.label}</Typography>
 								{selectedStation?.id === station.id && <RemoveRedEyeIcon sx={{ color: '#fff' }} />}
@@ -100,10 +129,10 @@ function App() {
 							marginTop: 'auto',
 						}}
 						onClick={() => {
-							setAutoplay({
+							setAutoplay((prevState) => ({
+								...prevState,
 								isStarted: true,
-								isPaused: false,
-							});
+							}));
 						}}
 					>
 						<Typography>{t('StartWalkThroughButton')}</Typography>
@@ -163,44 +192,93 @@ function App() {
 				size={10}
 				sx={{
 					height: 'calc(100% - 62px)',
+					position: 'relative',
 				}}
 			>
-				<MapLibreMap
-					options={{
-						style: 'https://wms.wheregroup.com/tileserver/style/klokantech-basic.json',
-						zoom: 16,
-						maxZoom: 24,
-						center: [7.101608817894373, 50.7638952494396],
-						pitch: 60,
-						bearing: 150,
-						maxPitch: 75,
+				<div style={{ position: 'relative', width: '100%', height: '100%' }}>
+					<MapLibreMap
+						mapId={'map_1'}
+						options={{
+							style: 'https://wms.wheregroup.com/tileserver/style/klokantech-basic.json',
+							zoom: 16,
+							maxZoom: 24,
+							center: [7.101608817894373, 50.7638952494396],
+							pitch: 60,
+							bearing: 150,
+							maxPitch: 75,
 
-						canvasContextAttributes: { antialias: true },
-					}}
-					style={{
-						position: 'relative',
-						width: '100%',
-						height: '100%',
-					}}
-				/>
-				{autoplay.isStarted && (
-					<CameraController
-						pause={autoplay.isPaused}
-						zoom={selectedStation?.zoom ?? 17}
-						speed={selectedStation?.speed ?? 1}
-						pitch={selectedStation?.pitch ?? 80}
-						showRoute={false}
-						setAutoplay={setAutoplay}
+							canvasContextAttributes: { antialias: true },
+						}}
+						style={{
+							position: 'absolute',
+							top: 0,
+							left: 0,
+							width: '100%',
+							height: '100%',
+							zIndex: 2, // todo: change dynamically if MlMagnify is enabled to 1; will be retested to default if user leaves the station
+						}}
 					/>
-				)}
-				<MarkerComponent selectedStation={selectedStation} />
-				<MlThreeJsLayer
-					url={'/WhereGroupLogo3D.glb'}
-					position={[7.104, 50.764, 40]}
-					rotation={[0, 180, -28]}
-					scale={0.0001}
-				/>
-				<IconAnimationLayer iconSize={0.1} />
+					<MapLibreMap
+						mapId={'map_2'}
+						options={{
+							style: 'https://wms.wheregroup.com/tileserver/style/klokantech-basic.json',
+							zoom: 16,
+							maxZoom: 24,
+							center: [7.101608817894373, 50.7638952494396],
+							pitch: 60,
+							bearing: 150,
+							maxPitch: 75,
+
+							canvasContextAttributes: { antialias: true },
+						}}
+						style={{
+							position: 'absolute',
+							top: 0,
+							left: 0,
+							width: '100%',
+							height: '100%',
+							zIndex: 1, // todo: change dynamically if MlMagnify is enabled to 2; will be retested to default if user leaves the station
+							pointerEvents: 'none',
+						}}
+					/>
+					{/* Map Components*/}
+					{autoplay.isStarted && (
+						<CameraController
+							pause={autoplay.isPaused}
+							zoom={selectedStation?.zoom ?? 17}
+							speed={selectedStation?.speed ?? 1}
+							pitch={80}
+							setAutoplay={setAutoplay}
+							useCutRoute={useCutRoute}
+							showRoute={false}
+						/>
+					)}
+					{autoplay.isPaused && <MarkerComponent selectedStation={selectedStation} />}
+					<GeoJsonStationComponent />
+					<MlThreeJsLayer
+						url={'/WhereGroupLogo3D.glb'}
+						position={[7.104, 50.764, 40]}
+						rotation={[0, 180, -28]}
+						scale={0.0001}
+					/>
+					{/*Todo: Add button automation for that; IDEA: If button presses move MakerLayer to second map (map_2); will be retested to default if user leaves the station*/}
+					<MapMagnifyStationComponent showMapMagnify={false} />
+					<IconAnimationLayer iconSize={0.1} />
+					{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
+						routeData && (
+							<MlGeoJsonLayer
+								geojson={routeData as Feature<LineString>}
+								type="line"
+								options={{
+									paint: {
+										'line-color': '#ec9a00',
+										'line-width': 5,
+										'line-opacity': 0.8,
+									},
+								}}
+							/>
+						)}
+				</div>
 			</Grid>
 		</Grid>
 	);

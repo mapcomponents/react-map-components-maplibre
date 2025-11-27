@@ -7,19 +7,19 @@ import React, {
 	useContext,
 	useState,
 } from 'react';
+import { CameraPositionType } from '../components/CameraController';
+import { Position } from 'geojson';
 
 export interface StationType {
 	label: string;
 	id: string;
 	stationTitle: string;
 	description: string;
-	selected: boolean;
-	position: number[];
 	zoom: number;
 	speed: number;
-	pitch: number;
-	breakpoint: number[];
-	markerCoordinates: number[];
+	breakpoint: Position;
+	markerCoordinates: Position;
+	presentationPosition?: CameraPositionType;
 }
 
 interface StationContextType {
@@ -40,12 +40,9 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MlMarker-Station',
 			stationTitle: 'MlMarker.title',
 			description: 'MlMarker.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.08563805, 50.76945741],
+			zoom: 17,
+			speed: 2,
+			breakpoint: [7.085638047138517, 50.76945740939362],
 			markerCoordinates: [7.08563805, 50.76945741],
 		},
 		{
@@ -53,12 +50,9 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'useCameraFollowPath-Station',
 			stationTitle: 'useCameraFollowPath.title',
 			description: 'useCameraFollowPath.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.09261471, 50.76729082],
+			zoom: 17,
+			speed: 2,
+			breakpoint: [7.092614706387437, 50.76729082257119],
 			markerCoordinates: [7.09261471, 50.76729082],
 		},
 		{
@@ -66,12 +60,9 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MlThreeJsLayer-Station',
 			stationTitle: 'MlThreeJsLayer.title',
 			description: 'MlThreeJsLayer.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.09818544, 50.76463773],
+			zoom: 17,
+			speed: 3,
+			breakpoint: [7.098185442221093, 50.7646377315985],
 			markerCoordinates: [7.09818544, 50.76463773],
 		},
 		{
@@ -79,25 +70,24 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MlGeoJsonLayer-Station',
 			stationTitle: 'MlGeoJsonLayer.title',
 			description: 'MlGeoJsonLayer.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.08735555, 50.75253403],
-			markerCoordinates: [7.08735555, 50.75253403],
+			zoom: 17,
+			speed: 2,
+			breakpoint: [7.087355551216711, 50.75253402948829],
+			markerCoordinates: [7.084156, 50.755443],
+			presentationPosition: {
+				zoom: 14.9,
+				pitch: 0,
+				bearing: 330,
+			},
 		},
 		{
 			label: 'MlFillExtrusionLayer',
 			id: 'MlFillExtrusionLayer-Station',
 			stationTitle: 'MlFillExtrusionLayer.title',
 			description: 'MlFillExtrusionLayer.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.08995806, 50.743612],
+			zoom: 17,
+			speed: 1,
+			breakpoint: [7.089958056461611, 50.74361199615757],
 			markerCoordinates: [7.08995806, 50.743612],
 		},
 		{
@@ -105,38 +95,34 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MlIconLayer-Station',
 			stationTitle: 'MlIconLayer.title',
 			description: 'MlIconLayer.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.09893916, 50.74014847],
+			zoom: 17,
+			speed: 1,
+			breakpoint: [7.098939161759019, 50.74014846518186],
 			markerCoordinates: [7.09893916, 50.74014847],
 		},
 		{
-			label: 'MlLayerSwipe',
-			id: 'MlLayerSwipe-Station',
-			stationTitle: 'MlLayerSwipe.title',
-			description: 'MlLayerSwipe.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.0779001, 50.72942599],
-			markerCoordinates: [7.0779001, 50.72942599],
+			label: 'MlMapMagnify',
+			id: 'MlMapMagnify-Station',
+			stationTitle: 'MlMapMagnify.title',
+			description: 'MlMapMagnify.description',
+			zoom: 17,
+			speed: 2,
+			breakpoint: [7.077900099390418, 50.72942598571806],
+			markerCoordinates: [7.07094, 50.73064],
+			presentationPosition: {
+				zoom: 14.9,
+				pitch: 50,
+				bearing: 230,
+			},
 		},
 		{
 			label: 'MlHexagonMap',
 			id: 'MlHexagonMap-Station',
 			stationTitle: 'MlHexagonMap.title',
 			description: 'MlHexagonMap.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.11740515, 50.71906657],
+			zoom: 17,
+			speed: 1,
+			breakpoint: [7.117405153027723, 50.719066572026435],
 			markerCoordinates: [7.11740515, 50.71906657],
 		},
 		{
@@ -144,12 +130,9 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'PointCloud-Station',
 			stationTitle: 'PointCloud.title',
 			description: 'PointCloud.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.14343185, 50.71761182],
+			zoom: 17,
+			speed: 3,
+			breakpoint: [7.143431851902436, 50.71761182062817],
 			markerCoordinates: [7.14343185, 50.71761182],
 		},
 		{
@@ -157,12 +140,9 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MlCreatePdfForm-Station',
 			stationTitle: 'MlCreatePdfForm.title',
 			description: 'MlCreatePdfForm.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.22596388, 50.76098226],
+			zoom: 17,
+			speed: 2,
+			breakpoint: [7.225963879312019, 50.76098226444658],
 			markerCoordinates: [7.22596388, 50.76098226],
 		},
 		{
@@ -170,12 +150,9 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MlTerrainLayer-Station',
 			stationTitle: 'MlTerrainLayer.title',
 			description: 'MlTerrainLayer.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [7.27501663, 50.78439052],
+			zoom: 12,
+			speed: 3,
+			breakpoint: [7.27501663089742, 50.78439051649292],
 			markerCoordinates: [7.27501663, 50.78439052],
 		},
 		{
@@ -183,12 +160,9 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MultiTab-Station',
 			stationTitle: 'MultiTab.title',
 			description: 'MultiTab.description',
-			selected: false,
-			position: [],
-			zoom: 16,
+			zoom: 8,
 			speed: 5,
-			pitch: 60,
-			breakpoint: [7.19364709, 50.87354148],
+			breakpoint: [7.193647087933583, 50.87354147861542],
 			markerCoordinates: [7.19364709, 50.87354148],
 		},
 		{
@@ -196,17 +170,14 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: '3DTiles-Station',
 			stationTitle: '3DTiles.title',
 			description: '3DTiles.description',
-			selected: false,
-			position: [],
-			zoom: 16,
-			speed: 5,
-			pitch: 60,
-			breakpoint: [9.92849209, 53.43130876],
+			zoom: 17,
+			speed: 1,
+			breakpoint: [9.928492094755804, 53.43130875716747],
 			markerCoordinates: [9.92849209, 53.43130876],
 		},
 	];
 
-	const [selectedStation, setSelectedStation] = useState<StationType | undefined>();
+	const [selectedStation, setSelectedStation] = useState<StationType>();
 
 	const selectStationById = useCallback((id: string) => {
 		const station = stationInformations.find((s) => s.id === id);
