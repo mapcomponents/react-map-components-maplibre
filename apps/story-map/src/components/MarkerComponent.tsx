@@ -19,7 +19,6 @@ const MarkerComponent = ({ selectedStation }: MarkerComponentProps) => {
 			key={selectedStation.id}
 			lng={selectedStation.markerCoordinates[0]}
 			lat={selectedStation.markerCoordinates[1]}
-			mapId={'map_1'}
 			content={createMarkerContentHtml(
 				t,
 				selectedStation.label,

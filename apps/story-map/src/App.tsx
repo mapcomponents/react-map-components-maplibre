@@ -214,7 +214,7 @@ function App() {
 							left: 0,
 							width: '100%',
 							height: '100%',
-							zIndex: 2, // todo: change dynamically if MlMagnify is enabled to 1
+							zIndex: 2, // todo: change dynamically if MlMagnify is enabled to 1; will be retested to default if user leaves the station
 						}}
 					/>
 					<MapLibreMap
@@ -236,7 +236,8 @@ function App() {
 							left: 0,
 							width: '100%',
 							height: '100%',
-							zIndex: 1, // todo: change dynamically if MlMagnify is enabled to 2
+							zIndex: 1, // todo: change dynamically if MlMagnify is enabled to 2; will be retested to default if user leaves the station
+							pointerEvents: 'none',
 						}}
 					/>
 					{/* Map Components*/}
@@ -259,7 +260,7 @@ function App() {
 						rotation={[0, 180, -28]}
 						scale={0.0001}
 					/>
-					{/*Todo: Add button automation for that; IDEA: If button presses move MakerLayer to second map (map_2)*/}
+					{/*Todo: Add button automation for that; IDEA: If button presses move MakerLayer to second map (map_2); will be retested to default if user leaves the station*/}
 					<MapMagnifyStationComponent showMapMagnify={false} />{' '}
 					{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
 						routeData && (
