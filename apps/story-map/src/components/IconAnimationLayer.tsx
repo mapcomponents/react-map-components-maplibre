@@ -174,7 +174,7 @@ const IconAnimationLayer = ({
 			const newPositions: Record<string, { position: [number, number]; bearing: number }> = {};
 
 			pathInterpolators.forEach(({ pathName, segments, totalDistance }, index) => {
-				const offsetElapsed = (elapsed + index * 2500) % duration;
+				const offsetElapsed = (elapsed + index * 3500) % duration;
 				const t = offsetElapsed / duration;
 				const targetDistance = t * totalDistance;
 
