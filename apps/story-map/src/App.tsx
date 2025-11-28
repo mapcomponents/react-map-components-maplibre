@@ -19,6 +19,7 @@ import { Feature, LineString } from 'geojson';
 import routeData from './assets/route.json';
 import MapMagnifyStationComponent from './components/MapMagnify-StationComponent';
 import  MlHexagonMap from './components/MlHexagonMap';
+import PointCloudComponent from './components/PointCloudComponent';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -274,6 +275,8 @@ function App() {
 					<IconAnimationLayer mapId={'map_1'} iconSize={0.1} />
 
 					<MlHexagonMap mapId={'map_1'} elevationRange={[1,5]}/>
+
+					<PointCloudComponent/>
 
 					{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
 						routeData && (
