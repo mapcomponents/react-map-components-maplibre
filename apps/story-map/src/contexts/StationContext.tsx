@@ -31,7 +31,7 @@ interface StationContextType {
 
 const StationContext = createContext<StationContextType | undefined>(undefined);
 
-export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>> = ({
+export const StationProvider: React.FC<PropsWithChildren> = ({
 	children,
 }) => {
 	const stationInformations = [
@@ -76,7 +76,7 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			markerCoordinates: [7.084156, 50.755443],
 			presentationPosition: {
 				zoom: 14.9,
-				pitch: 0,
+				pitch: 20,
 				bearing: 330,
 			},
 		},
@@ -99,6 +99,11 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			speed: 1,
 			breakpoint: [7.098939161759019, 50.74014846518186],
 			markerCoordinates: [7.09893916, 50.74014847],
+			presentationPosition: {
+				zoom: 16,
+				pitch: 45,
+				bearing: 180
+			},
 		},
 		{
 			label: 'MlMapMagnify',
@@ -120,10 +125,15 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			id: 'MlHexagonMap-Station',
 			stationTitle: 'MlHexagonMap.title',
 			description: 'MlHexagonMap.description',
-			zoom: 17,
-			speed: 1,
+			zoom: 16,
+			speed: 2,
 			breakpoint: [7.117405153027723, 50.719066572026435],
-			markerCoordinates: [7.11740515, 50.71906657],
+			markerCoordinates: [7.1161140331124955, 50.724392629576926],
+			presentationPosition: {
+				zoom: 14.9,
+				pitch: 75,
+				bearing: 120
+			},
 		},
 		{
 			label: 'PointCloud',
@@ -199,8 +209,6 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 		</StationContext.Provider>
 	);
 };
-
-export default StationContext;
 
 export const useStationContext = () => {
 	const ctx = useContext(StationContext);

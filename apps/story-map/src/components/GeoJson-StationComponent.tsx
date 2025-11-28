@@ -7,6 +7,7 @@ function GeoJsonStationComponent() {
 	return (
 		<>
 			<MlGeoJsonLayer
+				mapId={'map_1'}
 				geojson={area}
 				type="fill"
 				options={{
@@ -17,6 +18,7 @@ function GeoJsonStationComponent() {
 				}}
 			/>
 			<MlGeoJsonLayer
+				mapId={'map_1'}
 				geojson={lines}
 				type="line"
 				options={{
@@ -27,6 +29,7 @@ function GeoJsonStationComponent() {
 				}}
 			/>
 			<MlGeoJsonLayer
+				mapId={'map_1'}
 				geojson={points}
 				type="circle"
 				options={{

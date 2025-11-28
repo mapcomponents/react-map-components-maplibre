@@ -16,6 +16,7 @@ const MarkerComponent = ({ selectedStation }: MarkerComponentProps) => {
 
 	return (
 		<MlMarker
+			mapId={'map_1'}
 			key={selectedStation.id}
 			lng={selectedStation.markerCoordinates[0]}
 			lat={selectedStation.markerCoordinates[1]}
