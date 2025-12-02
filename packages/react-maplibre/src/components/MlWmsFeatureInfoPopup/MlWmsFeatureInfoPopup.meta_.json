@@ -1,0 +1,20 @@
+{
+	"name": "MlWmsFeatureInfoPopup",
+	"title": "",
+	"description": "",
+	"i18n": {
+		"de": {
+			"title": "",
+			"description": ""
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/iframe.html?id=mapcomponents-mlvectortilelayer--example-config&viewMode=story"
+		}
+	]
+}

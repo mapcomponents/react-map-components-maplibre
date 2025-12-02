@@ -1,0 +1,21 @@
+{
+	"name": "MlLayerMagnify",
+	"title": "Map magnifier",
+	"description": "Hides a part of a map that is superimposed on another MapLibre map.",
+	"i18n": {
+		"de": {
+			"title": "Kartenlupe",
+			"description": "Kartenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus."
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mllayermagnify--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlLayerMagnify.png"
+}

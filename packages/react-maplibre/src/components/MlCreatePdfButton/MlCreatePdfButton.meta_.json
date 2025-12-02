@@ -1,0 +1,14 @@
+{
+	"name": "MlCreatePdfButton",
+	"title": "Export PDF",
+	"description": "Creates a PDF file with the current map view.",
+	"i18n": {
+		"de": {
+			"title": "PDF Export",
+			"description": "Erzeugt eine PDF Datei aus der aktuellen Kartenansicht."
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component"
+}

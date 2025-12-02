@@ -1,0 +1,15 @@
+{
+	"name": "react-maplibre",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/react-maplibre/src",
+	"projectType": "library",
+	"tags": [],
+	"// targets": "to see all targets run: nx show project react-maplibre --web",
+	"targets": {
+		"storybook": {
+			"options": {
+				"port": 4400
+			}
+		}
+	}
+}

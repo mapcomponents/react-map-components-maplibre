@@ -1,0 +1,21 @@
+{
+	"name": "useCameraFollowPath",
+	"title": "Move camera along linestring",
+	"description": "The Component accepts an array consisting of coordinates and travels this route with the camera. Options for speed, initial zoom level and final zoom level are also available.",
+	"i18n": {
+		"de": {
+			"title": "Kamerafahrt entlang eines Linestrings",
+			"description": "Das Component akzeptiert einen Array bestehend aus Koordinaten und fährt diese Strecke mit der Kamera ab. Einstellungsmöglichkeiten für Geschwindigkeit, Initiale Zoomstufe und End-Zoomstufe sind ebenfalls vorhanden."
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=hooks-usecamerafollowpath--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/useCameraFollowPath.png"
+}

@@ -1,0 +1,21 @@
+{
+	"name": "MlTemporalController",
+	"title": "Temporal navigation",
+	"description": "Component that displays GeoJSON data on the map filtered by a numeral property controlled by a linear progress bar.",
+	"i18n": {
+		"de": {
+			"title": "Zeitsteuerung",
+			"description": "Nach einer numerischen Eigenschaft gefilterte Darstellung von GeoJSON Daten auf einer Karte, gesteuert durch eine lineare Fortschrittsanzeige."
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mltemporalcontroller--catalogue-demo&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlTemporalController.png"
+}

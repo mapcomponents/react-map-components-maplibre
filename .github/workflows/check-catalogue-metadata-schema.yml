@@ -1,3 +1,4 @@
+# /* eslint-disable */
 name: catalogue-meta-schema-check
 on:
   push:
@@ -12,8 +13,12 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
         with:
-          persist-credentials: false
+         persist-credentials: false
+      - name: Install pnpm
+        run: npm install -g pnpm --force
+      - name: Setup pnpm global bin
+        run: pnpm setup
       - name: Install and build 🔧
-        run: | # Install packages and build the catalogue meta.json file for schema checks only
-          yarn
-          yarn build-catalogue-meta
+        run: |
+          pnpm install --frozen-lockfile
+          npx nx run-many -t build-catalogue-meta

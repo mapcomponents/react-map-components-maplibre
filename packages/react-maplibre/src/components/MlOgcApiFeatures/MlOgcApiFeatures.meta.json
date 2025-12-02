@@ -1,0 +1,21 @@
+{
+	"name": "MlOgcApiFeatures",
+	"title": "OGC API Features",
+	"description": "Adds OGC API Features as Geojson to the Maplibre Map",
+	"i18n": {
+		"de": {
+			"title": "OGC API Features",
+			"description": "Fügt der Maplibre Karte Geojson Layer basierend auf OGC API Features hinzu"
+		}
+	},
+	"tags": ["Map layer"],
+	"category": "layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlogcapifeatures--catalogue-demo&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlOgcApiFeatures.png"
+}

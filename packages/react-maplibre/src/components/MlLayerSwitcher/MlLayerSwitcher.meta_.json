@@ -1,0 +1,14 @@
+{
+	"name": "MlLayerSwitcher",
+	"title": "Layer switcher",
+	"description": "",
+	"i18n": {
+		"de": {
+			"title": "Ebenen wechsler",
+			"description": ""
+		}
+	},
+	"tags": [],
+	"category": "",
+	"type": "component"
+}

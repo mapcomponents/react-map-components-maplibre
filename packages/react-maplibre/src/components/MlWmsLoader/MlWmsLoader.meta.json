@@ -1,0 +1,21 @@
+{
+	"name": "MlWmsLoader",
+	"title": "WMS loader",
+	"description": "Presentation of WMS services with the feature of an information query.",
+	"i18n": {
+		"de": {
+			"title": "WMS Feature Info",
+			"description": "Darstellung von WMS Diensten mit Feature Info Abfrage"
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlwmsloader--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlWmsLoader.png"
+}

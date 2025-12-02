@@ -1,0 +1,34 @@
+name: cypress-testing
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Cypress binary
+        run: npx cypress install
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Remove Xvfb lock file (if exists)
+        run: rm -f /tmp/.X99-lock
+
+      - name: Run Cypress tests
+        run: npx nx run-many -t component-test --parallel=false

@@ -1,0 +1,21 @@
+{
+	"name": "storybook-composition",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "apps/StorybookComposition/src",
+	"projectType": "application",
+	"tags": [],
+	"// targets": "to see all targets run: nx show project StorybookComposition --web",
+	"targets": {
+		"storybook-composition": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"nx storybook deck-gl",
+					"nx storybook ra-geospatial",
+					"nx storybook react-maplibre"
+				],
+				"parallel": true
+			}
+		}
+	}
+}

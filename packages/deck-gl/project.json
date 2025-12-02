@@ -1,0 +1,13 @@
+{
+	"name": "deck-gl",
+	"projectType": "library",
+	"root": "packages/deck-gl",
+	"sourceRoot": "packages/deck-gl/src",
+	"targets": {
+		"storybook": {
+			"options": {
+				"port": 4401
+			}
+		}
+	}
+}

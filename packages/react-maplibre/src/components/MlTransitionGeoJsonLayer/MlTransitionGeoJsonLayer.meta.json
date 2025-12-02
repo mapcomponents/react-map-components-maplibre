@@ -1,0 +1,21 @@
+{
+	"name": "MlTransitionGeoJsonLayer",
+	"title": "Transition GeoJSON layer",
+	"description": "Representation of an animated GeoJSON layer on a map.",
+	"i18n": {
+		"de": {
+			"title": "Animierte GeoJSON Ebene",
+			"description": "Darstellung einer animierte GeoJSON-Ebene auf einer Karte."
+		}
+	},
+	"tags": ["Map layer"],
+	"category": "layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mltransitiongeojsonlayer--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlTransitionGeoJsonLayer.png"
+}

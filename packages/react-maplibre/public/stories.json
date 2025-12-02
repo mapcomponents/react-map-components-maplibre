@@ -1,0 +1,2238 @@
+{
+	"v": 3,
+	"stories": {
+		"core-maplibremap--docs": {
+			"id": "core-maplibremap--docs",
+			"title": "Core/MapLibreMap",
+			"name": "Docs",
+			"importPath": "./src/components/MapLibreMap/MapLibreMap.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "Core/MapLibreMap",
+			"story": "Docs",
+			"parameters": {
+				"__id": "core-maplibremap--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MapLibreMap/MapLibreMap.stories.tsx"
+			}
+		},
+		"core-maplibremap--example-config": {
+			"id": "core-maplibremap--example-config",
+			"name": "Example Config",
+			"title": "Core/MapLibreMap",
+			"importPath": "./src/components/MapLibreMap/MapLibreMap.stories.tsx",
+			"tags": ["story"],
+			"kind": "Core/MapLibreMap",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "core-maplibremap--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MapLibreMap/MapLibreMap.stories.tsx"
+			}
+		},
+		"core-maplibremap--style-change-config": {
+			"id": "core-maplibremap--style-change-config",
+			"name": "Style Change Config",
+			"title": "Core/MapLibreMap",
+			"importPath": "./src/components/MapLibreMap/MapLibreMap.stories.tsx",
+			"tags": ["story"],
+			"kind": "Core/MapLibreMap",
+			"story": "Style Change Config",
+			"parameters": {
+				"__id": "core-maplibremap--style-change-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MapLibreMap/MapLibreMap.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcenterposition--docs": {
+			"id": "mapcomponents-mlcenterposition--docs",
+			"title": "MapComponents/MlCenterPosition",
+			"name": "Docs",
+			"importPath": "./src/components/MlCenterPosition/MlCenterPosition.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlCenterPosition",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlcenterposition--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlCenterPosition/MlCenterPosition.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcenterposition--example-config": {
+			"id": "mapcomponents-mlcenterposition--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlCenterPosition",
+			"importPath": "./src/components/MlCenterPosition/MlCenterPosition.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlCenterPosition",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlcenterposition--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlCenterPosition/MlCenterPosition.stories.tsx"
+			}
+		},
+		"mapcomponents-mlclientsearch--docs": {
+			"id": "mapcomponents-mlclientsearch--docs",
+			"title": "MapComponents/MlClientSearch",
+			"name": "Docs",
+			"importPath": "./src/components/MlClientSearch/MlClientSearch.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlClientSearch",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlclientsearch--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlClientSearch/MlClientSearch.stories.tsx"
+			}
+		},
+		"mapcomponents-mlclientsearch--example-config": {
+			"id": "mapcomponents-mlclientsearch--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlClientSearch",
+			"importPath": "./src/components/MlClientSearch/MlClientSearch.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlClientSearch",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlclientsearch--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlClientSearch/MlClientSearch.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcomponenttemplate--docs": {
+			"id": "mapcomponents-mlcomponenttemplate--docs",
+			"title": "MapComponents/MlComponentTemplate",
+			"name": "Docs",
+			"importPath": "./src/components/MlComponentTemplate/MlComponentTemplate.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlComponentTemplate",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlcomponenttemplate--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlComponentTemplate/MlComponentTemplate.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcomponenttemplate--example-config": {
+			"id": "mapcomponents-mlcomponenttemplate--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlComponentTemplate",
+			"importPath": "./src/components/MlComponentTemplate/MlComponentTemplate.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlComponentTemplate",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlcomponenttemplate--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlComponentTemplate/MlComponentTemplate.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcreatepdfbutton--docs": {
+			"id": "mapcomponents-mlcreatepdfbutton--docs",
+			"title": "MapComponents/MlCreatePdfButton",
+			"name": "Docs",
+			"importPath": "./src/components/MlCreatePdfButton/MlCreatePdfButton.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlCreatePdfButton",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlcreatepdfbutton--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlCreatePdfButton/MlCreatePdfButton.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcreatepdfbutton--example-config": {
+			"id": "mapcomponents-mlcreatepdfbutton--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlCreatePdfButton",
+			"importPath": "./src/components/MlCreatePdfButton/MlCreatePdfButton.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlCreatePdfButton",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlcreatepdfbutton--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlCreatePdfButton/MlCreatePdfButton.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcreatepdfform--docs": {
+			"id": "mapcomponents-mlcreatepdfform--docs",
+			"title": "MapComponents/MlCreatePdfForm",
+			"name": "Docs",
+			"importPath": "./src/components/MlCreatePdfForm/MlCreatePdfForm.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlCreatePdfForm",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlcreatepdfform--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlCreatePdfForm/MlCreatePdfForm.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcreatepdfform--example-config": {
+			"id": "mapcomponents-mlcreatepdfform--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlCreatePdfForm",
+			"importPath": "./src/components/MlCreatePdfForm/MlCreatePdfForm.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlCreatePdfForm",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlcreatepdfform--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlCreatePdfForm/MlCreatePdfForm.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcreatepdfform--additional-info": {
+			"id": "mapcomponents-mlcreatepdfform--additional-info",
+			"name": "Additional Info",
+			"title": "MapComponents/MlCreatePdfForm",
+			"importPath": "./src/components/MlCreatePdfForm/MlCreatePdfForm.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlCreatePdfForm",
+			"story": "Additional Info",
+			"parameters": {
+				"__id": "mapcomponents-mlcreatepdfform--additional-info",
+				"docsOnly": false,
+				"fileName": "./src/components/MlCreatePdfForm/MlCreatePdfForm.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcreatepngbutton--docs": {
+			"id": "mapcomponents-mlcreatepngbutton--docs",
+			"title": "MapComponents/MlCreatePngButton",
+			"name": "Docs",
+			"importPath": "./src/components/MlCreatePngButton/MlCreatePngButton.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlCreatePngButton",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlcreatepngbutton--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlCreatePngButton/MlCreatePngButton.stories.tsx"
+			}
+		},
+		"mapcomponents-mlcreatepngbutton--example-config": {
+			"id": "mapcomponents-mlcreatepngbutton--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlCreatePngButton",
+			"importPath": "./src/components/MlCreatePngButton/MlCreatePngButton.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlCreatePngButton",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlcreatepngbutton--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlCreatePngButton/MlCreatePngButton.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--docs": {
+			"id": "mapcomponents-mlfeatureeditor--docs",
+			"title": "MapComponents/MlFeatureEditor",
+			"name": "Docs",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--edit-polygon": {
+			"id": "mapcomponents-mlfeatureeditor--edit-polygon",
+			"name": "Edit Polygon",
+			"title": "MapComponents/MlFeatureEditor",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Edit Polygon",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--edit-polygon",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--edit-point": {
+			"id": "mapcomponents-mlfeatureeditor--edit-point",
+			"name": "Edit Point",
+			"title": "MapComponents/MlFeatureEditor",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Edit Point",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--edit-point",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--edit-linestring": {
+			"id": "mapcomponents-mlfeatureeditor--edit-linestring",
+			"name": "Edit Linestring",
+			"title": "MapComponents/MlFeatureEditor",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Edit Linestring",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--edit-linestring",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--draw-polygon": {
+			"id": "mapcomponents-mlfeatureeditor--draw-polygon",
+			"name": "Draw Polygon",
+			"title": "MapComponents/MlFeatureEditor",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Draw Polygon",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--draw-polygon",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--draw-point": {
+			"id": "mapcomponents-mlfeatureeditor--draw-point",
+			"name": "Draw Point",
+			"title": "MapComponents/MlFeatureEditor",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Draw Point",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--draw-point",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--draw-linestring": {
+			"id": "mapcomponents-mlfeatureeditor--draw-linestring",
+			"name": "Draw Linestring",
+			"title": "MapComponents/MlFeatureEditor",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Draw Linestring",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--draw-linestring",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfeatureeditor--catalogue-demo": {
+			"id": "mapcomponents-mlfeatureeditor--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlFeatureEditor",
+			"importPath": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFeatureEditor",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlfeatureeditor--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFeatureEditor/MlFeatureEditor.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfillextrusionlayer--docs": {
+			"id": "mapcomponents-mlfillextrusionlayer--docs",
+			"title": "MapComponents/MlFillExtrusionLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlFillExtrusionLayer/MlFillExtrusionLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlFillExtrusionLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlfillextrusionlayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlFillExtrusionLayer/MlFillExtrusionLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfillextrusionlayer--example-config": {
+			"id": "mapcomponents-mlfillextrusionlayer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlFillExtrusionLayer",
+			"importPath": "./src/components/MlFillExtrusionLayer/MlFillExtrusionLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFillExtrusionLayer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlfillextrusionlayer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFillExtrusionLayer/MlFillExtrusionLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfollowgps--docs": {
+			"id": "mapcomponents-mlfollowgps--docs",
+			"title": "MapComponents/MlFollowGps",
+			"name": "Docs",
+			"importPath": "./src/components/MlFollowGps/MlFollowGps.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlFollowGps",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlfollowgps--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlFollowGps/MlFollowGps.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfollowgps--standard-config": {
+			"id": "mapcomponents-mlfollowgps--standard-config",
+			"name": "Standard Config",
+			"title": "MapComponents/MlFollowGps",
+			"importPath": "./src/components/MlFollowGps/MlFollowGps.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFollowGps",
+			"story": "Standard Config",
+			"parameters": {
+				"__id": "mapcomponents-mlfollowgps--standard-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFollowGps/MlFollowGps.stories.tsx"
+			}
+		},
+		"mapcomponents-mlfollowgps--catalogue-demo": {
+			"id": "mapcomponents-mlfollowgps--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlFollowGps",
+			"importPath": "./src/components/MlFollowGps/MlFollowGps.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlFollowGps",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlfollowgps--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlFollowGps/MlFollowGps.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--docs": {
+			"id": "mapcomponents-mlgeojsonlayer--docs",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--circle": {
+			"id": "mapcomponents-mlgeojsonlayer--circle",
+			"name": "Circle",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Circle",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--circle",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--osm-protocol": {
+			"id": "mapcomponents-mlgeojsonlayer--osm-protocol",
+			"name": "Osm Protocol",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Osm Protocol",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--osm-protocol",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--label": {
+			"id": "mapcomponents-mlgeojsonlayer--label",
+			"name": "Label",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Label",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--label",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--linestring": {
+			"id": "mapcomponents-mlgeojsonlayer--linestring",
+			"name": "Linestring",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Linestring",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--linestring",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--polygon": {
+			"id": "mapcomponents-mlgeojsonlayer--polygon",
+			"name": "Polygon",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Polygon",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--polygon",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--heat-map": {
+			"id": "mapcomponents-mlgeojsonlayer--heat-map",
+			"name": "Heat Map",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Heat Map",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--heat-map",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--symbol": {
+			"id": "mapcomponents-mlgeojsonlayer--symbol",
+			"name": "Symbol",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Symbol",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--symbol",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--default-paint-overrides": {
+			"id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
+			"name": "Default Paint Overrides",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Default Paint Overrides",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--default-paint-overrides",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayer--catalogue-demo": {
+			"id": "mapcomponents-mlgeojsonlayer--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlGeoJsonLayer",
+			"importPath": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeoJsonLayer",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayer--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeoJsonLayer/MlGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayerwithsource--docs": {
+			"id": "mapcomponents-mlgeojsonlayerwithsource--docs",
+			"title": "MapComponents/MlGeojsonLayerWithSource",
+			"name": "Docs",
+			"importPath": "./src/components/MlGeojsonLayerWithSource/MlGeojsonLayerWithSource.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlGeojsonLayerWithSource",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayerwithsource--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlGeojsonLayerWithSource/MlGeojsonLayerWithSource.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgeojsonlayerwithsource--example-config": {
+			"id": "mapcomponents-mlgeojsonlayerwithsource--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlGeojsonLayerWithSource",
+			"importPath": "./src/components/MlGeojsonLayerWithSource/MlGeojsonLayerWithSource.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGeojsonLayerWithSource",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlgeojsonlayerwithsource--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGeojsonLayerWithSource/MlGeojsonLayerWithSource.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgpxviewer--docs": {
+			"id": "mapcomponents-mlgpxviewer--docs",
+			"title": "MapComponents/MlGpxViewer",
+			"name": "Docs",
+			"importPath": "./src/components/MlGpxViewer/MlGpxViewer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlGpxViewer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlgpxviewer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlGpxViewer/MlGpxViewer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlgpxviewer--example-config": {
+			"id": "mapcomponents-mlgpxviewer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlGpxViewer",
+			"importPath": "./src/components/MlGpxViewer/MlGpxViewer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlGpxViewer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlgpxviewer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlGpxViewer/MlGpxViewer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlimagemarkerlayer--docs": {
+			"id": "mapcomponents-mlimagemarkerlayer--docs",
+			"title": "MapComponents/MlImageMarkerLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlImageMarkerLayer/MlImageMarkerLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlImageMarkerLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlimagemarkerlayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlImageMarkerLayer/MlImageMarkerLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlimagemarkerlayer--example-config": {
+			"id": "mapcomponents-mlimagemarkerlayer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlImageMarkerLayer",
+			"importPath": "./src/components/MlImageMarkerLayer/MlImageMarkerLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlImageMarkerLayer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlimagemarkerlayer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlImageMarkerLayer/MlImageMarkerLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mllayermagnify--docs": {
+			"id": "mapcomponents-mllayermagnify--docs",
+			"title": "MapComponents/MlLayerMagnify",
+			"name": "Docs",
+			"importPath": "./src/components/MlLayerMagnify/MlLayerMagnify.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlLayerMagnify",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mllayermagnify--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlLayerMagnify/MlLayerMagnify.stories.tsx"
+			}
+		},
+		"mapcomponents-mllayermagnify--example-config": {
+			"id": "mapcomponents-mllayermagnify--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlLayerMagnify",
+			"importPath": "./src/components/MlLayerMagnify/MlLayerMagnify.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlLayerMagnify",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mllayermagnify--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlLayerMagnify/MlLayerMagnify.stories.tsx"
+			}
+		},
+		"mapcomponents-mllayerswipe--docs": {
+			"id": "mapcomponents-mllayerswipe--docs",
+			"title": "MapComponents/MlLayerSwipe",
+			"name": "Docs",
+			"importPath": "./src/components/MlLayerSwipe/MlLayerSwipe.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlLayerSwipe",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mllayerswipe--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlLayerSwipe/MlLayerSwipe.stories.tsx"
+			}
+		},
+		"mapcomponents-mllayerswipe--example-config": {
+			"id": "mapcomponents-mllayerswipe--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlLayerSwipe",
+			"importPath": "./src/components/MlLayerSwipe/MlLayerSwipe.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlLayerSwipe",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mllayerswipe--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlLayerSwipe/MlLayerSwipe.stories.tsx"
+			}
+		},
+		"mapcomponents-mllayerswitcher--docs": {
+			"id": "mapcomponents-mllayerswitcher--docs",
+			"title": "MapComponents/MlLayerSwitcher",
+			"name": "Docs",
+			"importPath": "./src/components/MlLayerSwitcher/MlLayerSwitcher.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlLayerSwitcher",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mllayerswitcher--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlLayerSwitcher/MlLayerSwitcher.stories.tsx"
+			}
+		},
+		"mapcomponents-mllayerswitcher--example-config": {
+			"id": "mapcomponents-mllayerswitcher--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlLayerSwitcher",
+			"importPath": "./src/components/MlLayerSwitcher/MlLayerSwitcher.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlLayerSwitcher",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mllayerswitcher--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlLayerSwitcher/MlLayerSwitcher.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmarker--docs": {
+			"id": "mapcomponents-mlmarker--docs",
+			"title": "MapComponents/MlMarker",
+			"name": "Docs",
+			"importPath": "./src/components/MlMarker/MlMarker.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlMarker",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlmarker--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlMarker/MlMarker.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmarker--example-config": {
+			"id": "mapcomponents-mlmarker--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlMarker",
+			"importPath": "./src/components/MlMarker/MlMarker.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlMarker",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlmarker--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlMarker/MlMarker.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmeasuretool--docs": {
+			"id": "mapcomponents-mlmeasuretool--docs",
+			"title": "MapComponents/MlMeasureTool",
+			"name": "Docs",
+			"importPath": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlMeasureTool",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlmeasuretool--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmeasuretool--measure-line": {
+			"id": "mapcomponents-mlmeasuretool--measure-line",
+			"name": "Measure Line",
+			"title": "MapComponents/MlMeasureTool",
+			"importPath": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlMeasureTool",
+			"story": "Measure Line",
+			"parameters": {
+				"__id": "mapcomponents-mlmeasuretool--measure-line",
+				"docsOnly": false,
+				"fileName": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmeasuretool--measure-polygon": {
+			"id": "mapcomponents-mlmeasuretool--measure-polygon",
+			"name": "Measure Polygon",
+			"title": "MapComponents/MlMeasureTool",
+			"importPath": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlMeasureTool",
+			"story": "Measure Polygon",
+			"parameters": {
+				"__id": "mapcomponents-mlmeasuretool--measure-polygon",
+				"docsOnly": false,
+				"fileName": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmeasuretool--catalogue-demo": {
+			"id": "mapcomponents-mlmeasuretool--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlMeasureTool",
+			"importPath": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlMeasureTool",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlmeasuretool--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlMeasureTool/MlMeasureTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmultimeasuretool--docs": {
+			"id": "mapcomponents-mlmultimeasuretool--docs",
+			"title": "MapComponents/MlMultiMeasureTool",
+			"name": "Docs",
+			"importPath": "./src/components/MlMultiMeasureTool/MlMultiMeasureTool.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlMultiMeasureTool",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlmultimeasuretool--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlMultiMeasureTool/MlMultiMeasureTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlmultimeasuretool--example-config": {
+			"id": "mapcomponents-mlmultimeasuretool--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlMultiMeasureTool",
+			"importPath": "./src/components/MlMultiMeasureTool/MlMultiMeasureTool.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlMultiMeasureTool",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlmultimeasuretool--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlMultiMeasureTool/MlMultiMeasureTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationcompass--docs": {
+			"id": "mapcomponents-mlnavigationcompass--docs",
+			"title": "MapComponents/MlNavigationCompass",
+			"name": "Docs",
+			"importPath": "./src/components/MlNavigationCompass/MlNavigationCompass.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlNavigationCompass",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationcompass--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlNavigationCompass/MlNavigationCompass.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationcompass--catalogue-demo": {
+			"id": "mapcomponents-mlnavigationcompass--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlNavigationCompass",
+			"importPath": "./src/components/MlNavigationCompass/MlNavigationCompass.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationCompass",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationcompass--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationCompass/MlNavigationCompass.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationcompass--style-example": {
+			"id": "mapcomponents-mlnavigationcompass--style-example",
+			"name": "Style Example",
+			"title": "MapComponents/MlNavigationCompass",
+			"importPath": "./src/components/MlNavigationCompass/MlNavigationCompass.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationCompass",
+			"story": "Style Example",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationcompass--style-example",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationCompass/MlNavigationCompass.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--docs": {
+			"id": "mapcomponents-mlnavigationtools--docs",
+			"title": "MapComponents/MlNavigationTools",
+			"name": "Docs",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--default-config": {
+			"id": "mapcomponents-mlnavigationtools--default-config",
+			"name": "Default Config",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "Default Config",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--default-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--no-3-d-button": {
+			"id": "mapcomponents-mlnavigationtools--no-3-d-button",
+			"name": "No 3 D Button",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "No 3 D Button",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--no-3-d-button",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--show-center-location-button": {
+			"id": "mapcomponents-mlnavigationtools--show-center-location-button",
+			"name": "Show Center Location Button",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "Show Center Location Button",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--show-center-location-button",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--alternative-position": {
+			"id": "mapcomponents-mlnavigationtools--alternative-position",
+			"name": "Alternative Position",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "Alternative Position",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--alternative-position",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--no-zoom-buttons": {
+			"id": "mapcomponents-mlnavigationtools--no-zoom-buttons",
+			"name": "No Zoom Buttons",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "No Zoom Buttons",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--no-zoom-buttons",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--no-follow-gps-button": {
+			"id": "mapcomponents-mlnavigationtools--no-follow-gps-button",
+			"name": "No Follow Gps Button",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "No Follow Gps Button",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--no-follow-gps-button",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--custom-button": {
+			"id": "mapcomponents-mlnavigationtools--custom-button",
+			"name": "Custom Button",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "Custom Button",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--custom-button",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlnavigationtools--catalogue-demo": {
+			"id": "mapcomponents-mlnavigationtools--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlNavigationTools",
+			"importPath": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlNavigationTools",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlnavigationtools--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlNavigationTools/MlNavigationTools.stories.tsx"
+			}
+		},
+		"mapcomponents-mlogcapifeatures--docs": {
+			"id": "mapcomponents-mlogcapifeatures--docs",
+			"title": "MapComponents/MlOgcApiFeatures",
+			"name": "Docs",
+			"importPath": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlOgcApiFeatures",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlogcapifeatures--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx"
+			}
+		},
+		"mapcomponents-mlogcapifeatures--point": {
+			"id": "mapcomponents-mlogcapifeatures--point",
+			"name": "Point",
+			"title": "MapComponents/MlOgcApiFeatures",
+			"importPath": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlOgcApiFeatures",
+			"story": "Point",
+			"parameters": {
+				"__id": "mapcomponents-mlogcapifeatures--point",
+				"docsOnly": false,
+				"fileName": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx"
+			}
+		},
+		"mapcomponents-mlogcapifeatures--ogc-api-loader": {
+			"id": "mapcomponents-mlogcapifeatures--ogc-api-loader",
+			"name": "Ogc Api Loader",
+			"title": "MapComponents/MlOgcApiFeatures",
+			"importPath": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlOgcApiFeatures",
+			"story": "Ogc Api Loader",
+			"parameters": {
+				"__id": "mapcomponents-mlogcapifeatures--ogc-api-loader",
+				"docsOnly": false,
+				"fileName": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx"
+			}
+		},
+		"mapcomponents-mlogcapifeatures--catalogue-demo": {
+			"id": "mapcomponents-mlogcapifeatures--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlOgcApiFeatures",
+			"importPath": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlOgcApiFeatures",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlogcapifeatures--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlOgcApiFeatures/MlOgcApiFeatures.stories.tsx"
+			}
+		},
+		"mapcomponents-mlorderlayers--docs": {
+			"id": "mapcomponents-mlorderlayers--docs",
+			"title": "MapComponents/MlOrderLayers",
+			"name": "Docs",
+			"importPath": "./src/components/MlOrderLayers/MlOrderLayers.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlOrderLayers",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlorderlayers--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlOrderLayers/MlOrderLayers.stories.tsx"
+			}
+		},
+		"mapcomponents-mlorderlayers--example-config": {
+			"id": "mapcomponents-mlorderlayers--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlOrderLayers",
+			"importPath": "./src/components/MlOrderLayers/MlOrderLayers.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlOrderLayers",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlorderlayers--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlOrderLayers/MlOrderLayers.stories.tsx"
+			}
+		},
+		"mapcomponents-mlscalereference--docs": {
+			"id": "mapcomponents-mlscalereference--docs",
+			"title": "MapComponents/MlScaleReference",
+			"name": "Docs",
+			"importPath": "./src/components/MlScaleReference/MlScaleReference.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlScaleReference",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlscalereference--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlScaleReference/MlScaleReference.stories.tsx"
+			}
+		},
+		"mapcomponents-mlscalereference--toolbar": {
+			"id": "mapcomponents-mlscalereference--toolbar",
+			"name": "Toolbar",
+			"title": "MapComponents/MlScaleReference",
+			"importPath": "./src/components/MlScaleReference/MlScaleReference.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlScaleReference",
+			"story": "Toolbar",
+			"parameters": {
+				"__id": "mapcomponents-mlscalereference--toolbar",
+				"docsOnly": false,
+				"fileName": "./src/components/MlScaleReference/MlScaleReference.stories.tsx"
+			}
+		},
+		"mapcomponents-mlscalereference--overlay": {
+			"id": "mapcomponents-mlscalereference--overlay",
+			"name": "Overlay",
+			"title": "MapComponents/MlScaleReference",
+			"importPath": "./src/components/MlScaleReference/MlScaleReference.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlScaleReference",
+			"story": "Overlay",
+			"parameters": {
+				"__id": "mapcomponents-mlscalereference--overlay",
+				"docsOnly": false,
+				"fileName": "./src/components/MlScaleReference/MlScaleReference.stories.tsx"
+			}
+		},
+		"mapcomponents-mlscalereference--catalogue-demo": {
+			"id": "mapcomponents-mlscalereference--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlScaleReference",
+			"importPath": "./src/components/MlScaleReference/MlScaleReference.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlScaleReference",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlscalereference--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlScaleReference/MlScaleReference.stories.tsx"
+			}
+		},
+		"mapcomponents-mlsharemapstate--docs": {
+			"id": "mapcomponents-mlsharemapstate--docs",
+			"title": "MapComponents/MlShareMapState",
+			"name": "Docs",
+			"importPath": "./src/components/MlShareMapState/MlShareMapState.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlShareMapState",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlsharemapstate--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlShareMapState/MlShareMapState.stories.tsx"
+			}
+		},
+		"mapcomponents-mlsharemapstate--example-config": {
+			"id": "mapcomponents-mlsharemapstate--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlShareMapState",
+			"importPath": "./src/components/MlShareMapState/MlShareMapState.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlShareMapState",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlsharemapstate--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlShareMapState/MlShareMapState.stories.tsx"
+			}
+		},
+		"mapcomponents-mlsketchtool--docs": {
+			"id": "mapcomponents-mlsketchtool--docs",
+			"title": "MapComponents/MlSketchTool",
+			"name": "Docs",
+			"importPath": "./src/components/MlSketchTool/MlSketchTool.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlSketchTool",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlsketchtool--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlSketchTool/MlSketchTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlsketchtool--example-config": {
+			"id": "mapcomponents-mlsketchtool--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlSketchTool",
+			"importPath": "./src/components/MlSketchTool/MlSketchTool.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlSketchTool",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlsketchtool--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlSketchTool/MlSketchTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlsketchtool--catalogue-demo": {
+			"id": "mapcomponents-mlsketchtool--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlSketchTool",
+			"importPath": "./src/components/MlSketchTool/MlSketchTool.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlSketchTool",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mlsketchtool--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlSketchTool/MlSketchTool.stories.tsx"
+			}
+		},
+		"mapcomponents-mlspatialelevationprofile--docs": {
+			"id": "mapcomponents-mlspatialelevationprofile--docs",
+			"title": "MapComponents/MlSpatialElevationProfile",
+			"name": "Docs",
+			"importPath": "./src/components/MlSpatialElevationProfile/MlSpatialElevationProfile.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlSpatialElevationProfile",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlspatialelevationprofile--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlSpatialElevationProfile/MlSpatialElevationProfile.stories.tsx"
+			}
+		},
+		"mapcomponents-mlspatialelevationprofile--example-config": {
+			"id": "mapcomponents-mlspatialelevationprofile--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlSpatialElevationProfile",
+			"importPath": "./src/components/MlSpatialElevationProfile/MlSpatialElevationProfile.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlSpatialElevationProfile",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlspatialelevationprofile--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlSpatialElevationProfile/MlSpatialElevationProfile.stories.tsx"
+			}
+		},
+		"mapcomponents-mltemporalcontroller--docs": {
+			"id": "mapcomponents-mltemporalcontroller--docs",
+			"title": "MapComponents/MlTemporalController",
+			"name": "Docs",
+			"importPath": "./src/components/MlTemporalController/MlTemporalController.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlTemporalController",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mltemporalcontroller--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlTemporalController/MlTemporalController.stories.tsx"
+			}
+		},
+		"mapcomponents-mltemporalcontroller--fill-config": {
+			"id": "mapcomponents-mltemporalcontroller--fill-config",
+			"name": "Fill Config",
+			"title": "MapComponents/MlTemporalController",
+			"importPath": "./src/components/MlTemporalController/MlTemporalController.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlTemporalController",
+			"story": "Fill Config",
+			"parameters": {
+				"__id": "mapcomponents-mltemporalcontroller--fill-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlTemporalController/MlTemporalController.stories.tsx"
+			}
+		},
+		"mapcomponents-mltemporalcontroller--circle-config": {
+			"id": "mapcomponents-mltemporalcontroller--circle-config",
+			"name": "Circle Config",
+			"title": "MapComponents/MlTemporalController",
+			"importPath": "./src/components/MlTemporalController/MlTemporalController.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlTemporalController",
+			"story": "Circle Config",
+			"parameters": {
+				"__id": "mapcomponents-mltemporalcontroller--circle-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlTemporalController/MlTemporalController.stories.tsx"
+			}
+		},
+		"mapcomponents-mltemporalcontroller--line-config": {
+			"id": "mapcomponents-mltemporalcontroller--line-config",
+			"name": "Line Config",
+			"title": "MapComponents/MlTemporalController",
+			"importPath": "./src/components/MlTemporalController/MlTemporalController.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlTemporalController",
+			"story": "Line Config",
+			"parameters": {
+				"__id": "mapcomponents-mltemporalcontroller--line-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlTemporalController/MlTemporalController.stories.tsx"
+			}
+		},
+		"mapcomponents-mltemporalcontroller--catalogue-demo": {
+			"id": "mapcomponents-mltemporalcontroller--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "MapComponents/MlTemporalController",
+			"importPath": "./src/components/MlTemporalController/MlTemporalController.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlTemporalController",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "mapcomponents-mltemporalcontroller--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/components/MlTemporalController/MlTemporalController.stories.tsx"
+			}
+		},
+		"mapcomponents-mlterrainlayer--docs": {
+			"id": "mapcomponents-mlterrainlayer--docs",
+			"title": "MapComponents/MlTerrainLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlTerrainLayer/MlTerrainLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlTerrainLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlterrainlayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlTerrainLayer/MlTerrainLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlterrainlayer--example-config": {
+			"id": "mapcomponents-mlterrainlayer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlTerrainLayer",
+			"importPath": "./src/components/MlTerrainLayer/MlTerrainLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlTerrainLayer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlterrainlayer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlTerrainLayer/MlTerrainLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlthreejslayer--docs": {
+			"id": "mapcomponents-mlthreejslayer--docs",
+			"title": "MapComponents/MlThreeJsLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlThreeJsLayer/MlThreeJsLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlThreeJsLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlthreejslayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlThreeJsLayer/MlThreeJsLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlthreejslayer--example-config": {
+			"id": "mapcomponents-mlthreejslayer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlThreeJsLayer",
+			"importPath": "./src/components/MlThreeJsLayer/MlThreeJsLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlThreeJsLayer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlthreejslayer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlThreeJsLayer/MlThreeJsLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mltransitiongeojsonlayer--docs": {
+			"id": "mapcomponents-mltransitiongeojsonlayer--docs",
+			"title": "MapComponents/MlTransitionGeoJsonLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlTransitionGeoJsonLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mltransitiongeojsonlayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mltransitiongeojsonlayer--example-config": {
+			"id": "mapcomponents-mltransitiongeojsonlayer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlTransitionGeoJsonLayer",
+			"importPath": "./src/components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlTransitionGeoJsonLayer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mltransitiongeojsonlayer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlTransitionGeoJsonLayer/MlTransitionGeoJsonLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlusemapdebugger--docs": {
+			"id": "mapcomponents-mlusemapdebugger--docs",
+			"title": "MapComponents/MlUseMapDebugger",
+			"name": "Docs",
+			"importPath": "./src/components/MlUseMapDebugger/MlUseMapDebugger.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlUseMapDebugger",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlusemapdebugger--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlUseMapDebugger/MlUseMapDebugger.stories.tsx"
+			}
+		},
+		"mapcomponents-mlusemapdebugger--example-config": {
+			"id": "mapcomponents-mlusemapdebugger--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlUseMapDebugger",
+			"importPath": "./src/components/MlUseMapDebugger/MlUseMapDebugger.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlUseMapDebugger",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlusemapdebugger--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlUseMapDebugger/MlUseMapDebugger.stories.tsx"
+			}
+		},
+		"mapcomponents-mlvectortilelayer--docs": {
+			"id": "mapcomponents-mlvectortilelayer--docs",
+			"title": "MapComponents/MlVectorTileLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlVectorTileLayer/MlVectorTileLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlVectorTileLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlvectortilelayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlVectorTileLayer/MlVectorTileLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlvectortilelayer--example-config": {
+			"id": "mapcomponents-mlvectortilelayer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlVectorTileLayer",
+			"importPath": "./src/components/MlVectorTileLayer/MlVectorTileLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlVectorTileLayer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlvectortilelayer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlVectorTileLayer/MlVectorTileLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlwmsfeatureinfopopup--docs": {
+			"id": "mapcomponents-mlwmsfeatureinfopopup--docs",
+			"title": "MapComponents/MlWmsFeatureInfoPopup",
+			"name": "Docs",
+			"importPath": "./src/components/MlWmsFeatureInfoPopup/MlWmsFeatureInfoPopup.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlWmsFeatureInfoPopup",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlwmsfeatureinfopopup--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlWmsFeatureInfoPopup/MlWmsFeatureInfoPopup.stories.tsx"
+			}
+		},
+		"mapcomponents-mlwmsfeatureinfopopup--example-config": {
+			"id": "mapcomponents-mlwmsfeatureinfopopup--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlWmsFeatureInfoPopup",
+			"importPath": "./src/components/MlWmsFeatureInfoPopup/MlWmsFeatureInfoPopup.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlWmsFeatureInfoPopup",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlwmsfeatureinfopopup--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlWmsFeatureInfoPopup/MlWmsFeatureInfoPopup.stories.tsx"
+			}
+		},
+		"mapcomponents-mlwmslayer--docs": {
+			"id": "mapcomponents-mlwmslayer--docs",
+			"title": "MapComponents/MlWmsLayer",
+			"name": "Docs",
+			"importPath": "./src/components/MlWmsLayer/MlWmsLayer.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlWmsLayer",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlwmslayer--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlWmsLayer/MlWmsLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlwmslayer--example-config": {
+			"id": "mapcomponents-mlwmslayer--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlWmsLayer",
+			"importPath": "./src/components/MlWmsLayer/MlWmsLayer.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlWmsLayer",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlwmslayer--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlWmsLayer/MlWmsLayer.stories.tsx"
+			}
+		},
+		"mapcomponents-mlwmsloader--docs": {
+			"id": "mapcomponents-mlwmsloader--docs",
+			"title": "MapComponents/MlWmsLoader",
+			"name": "Docs",
+			"importPath": "./src/components/MlWmsLoader/MlWmsLoader.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "MapComponents/MlWmsLoader",
+			"story": "Docs",
+			"parameters": {
+				"__id": "mapcomponents-mlwmsloader--docs",
+				"docsOnly": true,
+				"fileName": "./src/components/MlWmsLoader/MlWmsLoader.stories.tsx"
+			}
+		},
+		"mapcomponents-mlwmsloader--example-config": {
+			"id": "mapcomponents-mlwmsloader--example-config",
+			"name": "Example Config",
+			"title": "MapComponents/MlWmsLoader",
+			"importPath": "./src/components/MlWmsLoader/MlWmsLoader.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlWmsLoader",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "mapcomponents-mlwmsloader--example-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlWmsLoader/MlWmsLoader.stories.tsx"
+			}
+		},
+		"mapcomponents-mlwmsloader--example-fixed-config": {
+			"id": "mapcomponents-mlwmsloader--example-fixed-config",
+			"name": "Example Fixed Config",
+			"title": "MapComponents/MlWmsLoader",
+			"importPath": "./src/components/MlWmsLoader/MlWmsLoader.stories.tsx",
+			"tags": ["story"],
+			"kind": "MapComponents/MlWmsLoader",
+			"story": "Example Fixed Config",
+			"parameters": {
+				"__id": "mapcomponents-mlwmsloader--example-fixed-config",
+				"docsOnly": false,
+				"fileName": "./src/components/MlWmsLoader/MlWmsLoader.stories.tsx"
+			}
+		},
+		"hooks-useaddimage--docs": {
+			"id": "hooks-useaddimage--docs",
+			"title": "hooks/useAddImage",
+			"name": "Docs",
+			"importPath": "./src/hooks/useAddImage/useAddImage.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "hooks/useAddImage",
+			"story": "Docs",
+			"parameters": {
+				"__id": "hooks-useaddimage--docs",
+				"docsOnly": true,
+				"fileName": "./src/hooks/useAddImage/useAddImage.stories.tsx"
+			}
+		},
+		"hooks-useaddimage--example-config": {
+			"id": "hooks-useaddimage--example-config",
+			"name": "Example Config",
+			"title": "hooks/useAddImage",
+			"importPath": "./src/hooks/useAddImage/useAddImage.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddImage",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "hooks-useaddimage--example-config",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddImage/useAddImage.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--docs": {
+			"id": "hooks-useaddprotocol--docs",
+			"title": "hooks/useAddProtocol",
+			"name": "Docs",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "hooks/useAddProtocol",
+			"story": "Docs",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--docs",
+				"docsOnly": true,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--mb-tiles": {
+			"id": "hooks-useaddprotocol--mb-tiles",
+			"name": "Mb Tiles",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "Mb Tiles",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--mb-tiles",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--csv-or-tsv": {
+			"id": "hooks-useaddprotocol--csv-or-tsv",
+			"name": "CSV Or TSV",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "CSV Or TSV",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--csv-or-tsv",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--csv-with-options": {
+			"id": "hooks-useaddprotocol--csv-with-options",
+			"name": "CSV With Options",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "CSV With Options",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--csv-with-options",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--osm": {
+			"id": "hooks-useaddprotocol--osm",
+			"name": "OSM",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "OSM",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--osm",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--gpx": {
+			"id": "hooks-useaddprotocol--gpx",
+			"name": "GPX",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "GPX",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--gpx",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--kml": {
+			"id": "hooks-useaddprotocol--kml",
+			"name": "KML",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "KML",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--kml",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--tcx": {
+			"id": "hooks-useaddprotocol--tcx",
+			"name": "TCX",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "TCX",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--tcx",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--topojson": {
+			"id": "hooks-useaddprotocol--topojson",
+			"name": "Topojson",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "Topojson",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--topojson",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-useaddprotocol--catalogue-demo": {
+			"id": "hooks-useaddprotocol--catalogue-demo",
+			"name": "Catalogue Demo",
+			"title": "hooks/useAddProtocol",
+			"importPath": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useAddProtocol",
+			"story": "Catalogue Demo",
+			"parameters": {
+				"__id": "hooks-useaddprotocol--catalogue-demo",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useAddProtocol/useAddProtocol.stories.tsx"
+			}
+		},
+		"hooks-usecamerafollowpath--docs": {
+			"id": "hooks-usecamerafollowpath--docs",
+			"title": "Hooks/useCameraFollowPath",
+			"name": "Docs",
+			"importPath": "./src/hooks/useCameraFollowPath/useCameraFollowPath.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "Hooks/useCameraFollowPath",
+			"story": "Docs",
+			"parameters": {
+				"__id": "hooks-usecamerafollowpath--docs",
+				"docsOnly": true,
+				"fileName": "./src/hooks/useCameraFollowPath/useCameraFollowPath.stories.tsx"
+			}
+		},
+		"hooks-usecamerafollowpath--example-config": {
+			"id": "hooks-usecamerafollowpath--example-config",
+			"name": "Example Config",
+			"title": "Hooks/useCameraFollowPath",
+			"importPath": "./src/hooks/useCameraFollowPath/useCameraFollowPath.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useCameraFollowPath",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "hooks-usecamerafollowpath--example-config",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useCameraFollowPath/useCameraFollowPath.stories.tsx"
+			}
+		},
+		"hooks-uselayerfilter--docs": {
+			"id": "hooks-uselayerfilter--docs",
+			"title": "hooks/useLayerFilter",
+			"name": "Docs",
+			"importPath": "./src/hooks/useLayerFilter/useLayerFilter.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "hooks/useLayerFilter",
+			"story": "Docs",
+			"parameters": {
+				"__id": "hooks-uselayerfilter--docs",
+				"docsOnly": true,
+				"fileName": "./src/hooks/useLayerFilter/useLayerFilter.stories.tsx"
+			}
+		},
+		"hooks-uselayerfilter--example-config": {
+			"id": "hooks-uselayerfilter--example-config",
+			"name": "Example Config",
+			"title": "hooks/useLayerFilter",
+			"importPath": "./src/hooks/useLayerFilter/useLayerFilter.stories.tsx",
+			"tags": ["story"],
+			"kind": "hooks/useLayerFilter",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "hooks-uselayerfilter--example-config",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useLayerFilter/useLayerFilter.stories.tsx"
+			}
+		},
+		"hooks-layerhoverpopup--docs": {
+			"id": "hooks-layerhoverpopup--docs",
+			"title": "Hooks/LayerHoverPopup",
+			"name": "Docs",
+			"importPath": "./src/hooks/useLayerHoverPopup/LayerHoverPopup.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "Hooks/LayerHoverPopup",
+			"story": "Docs",
+			"parameters": {
+				"__id": "hooks-layerhoverpopup--docs",
+				"docsOnly": true,
+				"fileName": "./src/hooks/useLayerHoverPopup/LayerHoverPopup.stories.tsx"
+			}
+		},
+		"hooks-layerhoverpopup--example-config": {
+			"id": "hooks-layerhoverpopup--example-config",
+			"name": "Example Config",
+			"title": "Hooks/LayerHoverPopup",
+			"importPath": "./src/hooks/useLayerHoverPopup/LayerHoverPopup.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/LayerHoverPopup",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "hooks-layerhoverpopup--example-config",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useLayerHoverPopup/LayerHoverPopup.stories.tsx"
+			}
+		},
+		"hooks-usemapstate--docs": {
+			"id": "hooks-usemapstate--docs",
+			"title": "Hooks/useMapState",
+			"name": "Docs",
+			"importPath": "./src/hooks/useMapState.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "Hooks/useMapState",
+			"story": "Docs",
+			"parameters": {
+				"__id": "hooks-usemapstate--docs",
+				"docsOnly": true,
+				"fileName": "./src/hooks/useMapState.stories.tsx"
+			}
+		},
+		"hooks-usemapstate--viewport-only": {
+			"id": "hooks-usemapstate--viewport-only",
+			"name": "Viewport Only",
+			"title": "Hooks/useMapState",
+			"importPath": "./src/hooks/useMapState.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useMapState",
+			"story": "Viewport Only",
+			"parameters": {
+				"__id": "hooks-usemapstate--viewport-only",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useMapState.stories.tsx"
+			}
+		},
+		"hooks-usemapstate--include-base-layers": {
+			"id": "hooks-usemapstate--include-base-layers",
+			"name": "Include Base Layers",
+			"title": "Hooks/useMapState",
+			"importPath": "./src/hooks/useMapState.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useMapState",
+			"story": "Include Base Layers",
+			"parameters": {
+				"__id": "hooks-usemapstate--include-base-layers",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useMapState.stories.tsx"
+			}
+		},
+		"hooks-usemapstate--match-layer-id-string": {
+			"id": "hooks-usemapstate--match-layer-id-string",
+			"name": "Match Layer Id String",
+			"title": "Hooks/useMapState",
+			"importPath": "./src/hooks/useMapState.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useMapState",
+			"story": "Match Layer Id String",
+			"parameters": {
+				"__id": "hooks-usemapstate--match-layer-id-string",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useMapState.stories.tsx"
+			}
+		},
+		"hooks-usemapstate--match-layer-id-regexp": {
+			"id": "hooks-usemapstate--match-layer-id-regexp",
+			"name": "Match Layer Id Regexp",
+			"title": "Hooks/useMapState",
+			"importPath": "./src/hooks/useMapState.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useMapState",
+			"story": "Match Layer Id Regexp",
+			"parameters": {
+				"__id": "hooks-usemapstate--match-layer-id-regexp",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useMapState.stories.tsx"
+			}
+		},
+		"hooks-usemapstate--non-base-layers-only": {
+			"id": "hooks-usemapstate--non-base-layers-only",
+			"name": "Non Base Layers Only",
+			"title": "Hooks/useMapState",
+			"importPath": "./src/hooks/useMapState.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useMapState",
+			"story": "Non Base Layers Only",
+			"parameters": {
+				"__id": "hooks-usemapstate--non-base-layers-only",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useMapState.stories.tsx"
+			}
+		},
+		"hooks-usesource--docs": {
+			"id": "hooks-usesource--docs",
+			"title": "Hooks/useSource",
+			"name": "Docs",
+			"importPath": "./src/hooks/useSources.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "Hooks/useSource",
+			"story": "Docs",
+			"parameters": {
+				"__id": "hooks-usesource--docs",
+				"docsOnly": true,
+				"fileName": "./src/hooks/useSources.stories.tsx"
+			}
+		},
+		"hooks-usesource--use-geojson-source-example": {
+			"id": "hooks-usesource--use-geojson-source-example",
+			"name": "Use Geojson Source Example",
+			"title": "Hooks/useSource",
+			"importPath": "./src/hooks/useSources.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useSource",
+			"story": "Use Geojson Source Example",
+			"parameters": {
+				"__id": "hooks-usesource--use-geojson-source-example",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useSources.stories.tsx"
+			}
+		},
+		"hooks-usesource--use-vector-source-example": {
+			"id": "hooks-usesource--use-vector-source-example",
+			"name": "Use Vector Source Example",
+			"title": "Hooks/useSource",
+			"importPath": "./src/hooks/useSources.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useSource",
+			"story": "Use Vector Source Example",
+			"parameters": {
+				"__id": "hooks-usesource--use-vector-source-example",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useSources.stories.tsx"
+			}
+		},
+		"hooks-usesource--use-raster-source-example": {
+			"id": "hooks-usesource--use-raster-source-example",
+			"name": "Use Raster Source Example",
+			"title": "Hooks/useSource",
+			"importPath": "./src/hooks/useSources.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useSource",
+			"story": "Use Raster Source Example",
+			"parameters": {
+				"__id": "hooks-usesource--use-raster-source-example",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useSources.stories.tsx"
+			}
+		},
+		"hooks-usesource--remove-source-example": {
+			"id": "hooks-usesource--remove-source-example",
+			"name": "Remove Source Example",
+			"title": "Hooks/useSource",
+			"importPath": "./src/hooks/useSources.stories.tsx",
+			"tags": ["story"],
+			"kind": "Hooks/useSource",
+			"story": "Remove Source Example",
+			"parameters": {
+				"__id": "hooks-usesource--remove-source-example",
+				"docsOnly": false,
+				"fileName": "./src/hooks/useSources.stories.tsx"
+			}
+		},
+		"uicomponents-addlayerbutton--docs": {
+			"id": "uicomponents-addlayerbutton--docs",
+			"title": "UiComponents/AddLayerButton",
+			"name": "Docs",
+			"importPath": "./src/ui_components/AddLayerButton/AddLayerButton.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "UiComponents/AddLayerButton",
+			"story": "Docs",
+			"parameters": {
+				"__id": "uicomponents-addlayerbutton--docs",
+				"docsOnly": true,
+				"fileName": "./src/ui_components/AddLayerButton/AddLayerButton.stories.tsx"
+			}
+		},
+		"uicomponents-addlayerbutton--folder-example": {
+			"id": "uicomponents-addlayerbutton--folder-example",
+			"name": "Folder Example",
+			"title": "UiComponents/AddLayerButton",
+			"importPath": "./src/ui_components/AddLayerButton/AddLayerButton.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/AddLayerButton",
+			"story": "Folder Example",
+			"parameters": {
+				"__id": "uicomponents-addlayerbutton--folder-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/AddLayerButton/AddLayerButton.stories.tsx"
+			}
+		},
+		"uicomponents-addlayerbutton--style-json-example": {
+			"id": "uicomponents-addlayerbutton--style-json-example",
+			"name": "Style Json Example",
+			"title": "UiComponents/AddLayerButton",
+			"importPath": "./src/ui_components/AddLayerButton/AddLayerButton.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/AddLayerButton",
+			"story": "Style Json Example",
+			"parameters": {
+				"__id": "uicomponents-addlayerbutton--style-json-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/AddLayerButton/AddLayerButton.stories.tsx"
+			}
+		},
+		"uicomponents-layerlist--docs": {
+			"id": "uicomponents-layerlist--docs",
+			"title": "UiComponents/LayerList",
+			"name": "Docs",
+			"importPath": "./src/ui_components/LayerList/LayerList.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "UiComponents/LayerList",
+			"story": "Docs",
+			"parameters": {
+				"__id": "uicomponents-layerlist--docs",
+				"docsOnly": true,
+				"fileName": "./src/ui_components/LayerList/LayerList.stories.tsx"
+			}
+		},
+		"uicomponents-layerlist--folder-example": {
+			"id": "uicomponents-layerlist--folder-example",
+			"name": "Folder Example",
+			"title": "UiComponents/LayerList",
+			"importPath": "./src/ui_components/LayerList/LayerList.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerList",
+			"story": "Folder Example",
+			"parameters": {
+				"__id": "uicomponents-layerlist--folder-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerList/LayerList.stories.tsx"
+			}
+		},
+		"uicomponents-layerlist--vectortile-example": {
+			"id": "uicomponents-layerlist--vectortile-example",
+			"name": "Vectortile Example",
+			"title": "UiComponents/LayerList",
+			"importPath": "./src/ui_components/LayerList/LayerList.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerList",
+			"story": "Vectortile Example",
+			"parameters": {
+				"__id": "uicomponents-layerlist--vectortile-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerList/LayerList.stories.tsx"
+			}
+		},
+		"uicomponents-layerlist--wms-layer-example": {
+			"id": "uicomponents-layerlist--wms-layer-example",
+			"name": "Wms Layer Example",
+			"title": "UiComponents/LayerList",
+			"importPath": "./src/ui_components/LayerList/LayerList.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerList",
+			"story": "Wms Layer Example",
+			"parameters": {
+				"__id": "uicomponents-layerlist--wms-layer-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerList/LayerList.stories.tsx"
+			}
+		},
+		"uicomponents-layerlist--geo-json-layer-example": {
+			"id": "uicomponents-layerlist--geo-json-layer-example",
+			"name": "Geo Json Layer Example",
+			"title": "UiComponents/LayerList",
+			"importPath": "./src/ui_components/LayerList/LayerList.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerList",
+			"story": "Geo Json Layer Example",
+			"parameters": {
+				"__id": "uicomponents-layerlist--geo-json-layer-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerList/LayerList.stories.tsx"
+			}
+		},
+		"uicomponents-layerlist--configurable-example": {
+			"id": "uicomponents-layerlist--configurable-example",
+			"name": "Configurable Example",
+			"title": "UiComponents/LayerList",
+			"importPath": "./src/ui_components/LayerList/LayerList.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerList",
+			"story": "Configurable Example",
+			"parameters": {
+				"__id": "uicomponents-layerlist--configurable-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerList/LayerList.stories.tsx"
+			}
+		},
+		"uicomponents-layerlist--label-example": {
+			"id": "uicomponents-layerlist--label-example",
+			"name": "Label Example",
+			"title": "UiComponents/LayerList",
+			"importPath": "./src/ui_components/LayerList/LayerList.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerList",
+			"story": "Label Example",
+			"parameters": {
+				"__id": "uicomponents-layerlist--label-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerList/LayerList.stories.tsx"
+			}
+		},
+		"uicomponents-layertree--docs": {
+			"id": "uicomponents-layertree--docs",
+			"title": "UiComponents/LayerTree",
+			"name": "Docs",
+			"importPath": "./src/ui_components/LayerTree/LayerTree.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "UiComponents/LayerTree",
+			"story": "Docs",
+			"parameters": {
+				"__id": "uicomponents-layertree--docs",
+				"docsOnly": true,
+				"fileName": "./src/ui_components/LayerTree/LayerTree.stories.tsx"
+			}
+		},
+		"uicomponents-layertree--layer-tree-multiple-layertypes-example": {
+			"id": "uicomponents-layertree--layer-tree-multiple-layertypes-example",
+			"name": "Layer Tree Multiple Layertypes Example",
+			"title": "UiComponents/LayerTree",
+			"importPath": "./src/ui_components/LayerTree/LayerTree.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerTree",
+			"story": "Layer Tree Multiple Layertypes Example",
+			"parameters": {
+				"__id": "uicomponents-layertree--layer-tree-multiple-layertypes-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerTree/LayerTree.stories.tsx"
+			}
+		},
+		"uicomponents-layertree--multiple-layertrees-example": {
+			"id": "uicomponents-layertree--multiple-layertrees-example",
+			"name": "Multiple Layertrees Example",
+			"title": "UiComponents/LayerTree",
+			"importPath": "./src/ui_components/LayerTree/LayerTree.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/LayerTree",
+			"story": "Multiple Layertrees Example",
+			"parameters": {
+				"__id": "uicomponents-layertree--multiple-layertrees-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/LayerTree/LayerTree.stories.tsx"
+			}
+		},
+		"uicomponents-selectstylebutton--docs": {
+			"id": "uicomponents-selectstylebutton--docs",
+			"title": "UiComponents/SelectStyleButton",
+			"name": "Docs",
+			"importPath": "./src/ui_components/SelectStyleButton/SelectStyleButton.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "UiComponents/SelectStyleButton",
+			"story": "Docs",
+			"parameters": {
+				"__id": "uicomponents-selectstylebutton--docs",
+				"docsOnly": true,
+				"fileName": "./src/ui_components/SelectStyleButton/SelectStyleButton.stories.tsx"
+			}
+		},
+		"uicomponents-selectstylebutton--select-style-button-example": {
+			"id": "uicomponents-selectstylebutton--select-style-button-example",
+			"name": "Select Style Button Example",
+			"title": "UiComponents/SelectStyleButton",
+			"importPath": "./src/ui_components/SelectStyleButton/SelectStyleButton.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/SelectStyleButton",
+			"story": "Select Style Button Example",
+			"parameters": {
+				"__id": "uicomponents-selectstylebutton--select-style-button-example",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/SelectStyleButton/SelectStyleButton.stories.tsx"
+			}
+		},
+		"uicomponents-speeddial--docs": {
+			"id": "uicomponents-speeddial--docs",
+			"title": "UiComponents/SpeedDial",
+			"name": "Docs",
+			"importPath": "./src/ui_components/SpeedDial/SpeedDial.stories.tsx",
+			"tags": ["docs", "autodocs"],
+			"storiesImports": [],
+			"kind": "UiComponents/SpeedDial",
+			"story": "Docs",
+			"parameters": {
+				"__id": "uicomponents-speeddial--docs",
+				"docsOnly": true,
+				"fileName": "./src/ui_components/SpeedDial/SpeedDial.stories.tsx"
+			}
+		},
+		"uicomponents-speeddial--example-config": {
+			"id": "uicomponents-speeddial--example-config",
+			"name": "Example Config",
+			"title": "UiComponents/SpeedDial",
+			"importPath": "./src/ui_components/SpeedDial/SpeedDial.stories.tsx",
+			"tags": ["story"],
+			"kind": "UiComponents/SpeedDial",
+			"story": "Example Config",
+			"parameters": {
+				"__id": "uicomponents-speeddial--example-config",
+				"docsOnly": false,
+				"fileName": "./src/ui_components/SpeedDial/SpeedDial.stories.tsx"
+			}
+		}
+	}
+}

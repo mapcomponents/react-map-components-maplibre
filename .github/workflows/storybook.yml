@@ -1,4 +1,4 @@
-name: Build and deploy storybook 
+name: Build and deploy storybook
 on:
   push:
     branches:
@@ -8,19 +8,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
+      # Install pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
       - name: Install and build 🔧
         run: | # Install packages and build the Storybook files
-          yarn
-          yarn build-catalogue-meta
-          yarn build-storybook
+          pnpm i 
+          npx nx run-many -t build-catalogue-meta --all --exclude docs
+          npx nx run-many -t build-storybook --all --exclude docs
+
+      - name: Collect Storybook builds 📦
+        run: |
+          mkdir -p docs-build
+          for dir in apps packages; do
+            echo "Collecting Storybook builds from $dir"
+            for subdir in $dir/*/; do
+              name=$(basename "$subdir")
+              if [ -d "$subdir/storybook-static" ]; then
+                echo "Processing $subdir"
+                mv "$subdir/storybook-static" "docs-build/$name"
+              fi
+            done
+          done
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: main # The branch the action should deploy to.
+          BRANCH: docs # The branch the action should deploy to.
           FOLDER: docs-build # The folder that the build-storybook script generates files.
           CLEAN: true # Automatically remove deleted files from the deploy branch
           TARGET_FOLDER: docs # The folder that we serve our Storybook files from

@@ -14,7 +14,13 @@ jobs:
         node-versions: [20.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Setup pnpm global bin
+        run: pnpm setup
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -22,25 +28,23 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Node cache
-        id: yarn-cache
-        uses: actions/cache@v3
+        id: pnpm-cache
+        uses: actions/cache@v4
         with:
           path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        run: pnpm install
 
       - id: files
         uses: jitterbit/get-changed-files@v1
         with:
           format: csv
 
-      - name: Run scoped actions
-        uses: DukeManh/scoped-actions@v1
-        with:
-          files: ${{ steps.files.outputs.added_modified}}
-          eslintTarget: "src/**/*.{jsx,tsx,ts,js}"
-          s0: "yarn run eslint"
-          s1: "yarn run prettier --check"
+      - name: Lint all projects
+        run: npx nx run-many --target=lint --all --exclude docs
+
+      - name: Prettier all projects
+        run: pnpm prettier:check

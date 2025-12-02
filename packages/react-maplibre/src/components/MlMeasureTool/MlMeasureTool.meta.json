@@ -1,0 +1,21 @@
+{
+	"name": "MlMeasureTool",
+	"title": "Measure tool",
+	"description": "A tool for measuring distances and areas.",
+	"i18n": {
+		"de": {
+			"title": "Messwerkzeug",
+			"description": "Ein Werkzeug zum Messen von Strecken und Flächen."
+		}
+	},
+	"tags": ["Map add-on"],
+	"category": "add-ons",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlmeasuretool--catalogue-demo&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlMeasureTool.png"
+}

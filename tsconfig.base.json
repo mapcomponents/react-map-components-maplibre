@@ -1,0 +1,33 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"baseUrl": ".",
+		"rootDir": ".",
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": true,
+		"isolatedModules": true,
+		"noEmitOnError": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"jsx": "react-jsx",
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "bundler",
+		"module": "es2015",
+		"types": ["vite/client", "node"],
+		"composite": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"target": "ES2023",
+		"paths": {
+			"@mapcomponents/deck-gl": ["packages/deck-gl/src/index.ts"],
+			"@mapcomponents/ra-geospatial": ["packages/ra-geospatial/src/index.ts"],
+			"@mapcomponents/react-maplibre": ["packages/react-maplibre/src/index.ts"]
+		}
+	}
+}
