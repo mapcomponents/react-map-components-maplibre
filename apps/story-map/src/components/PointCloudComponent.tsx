@@ -9,7 +9,6 @@ const PointCloudComponent = () => {
 
 	const initializedRef = useRef(false);
 
-
 	useEffect(() => {
 		if (
 			!mapHook.map ||
@@ -23,7 +22,7 @@ const PointCloudComponent = () => {
 			id: "pointcloud_Tileset",
 			data: 'tileset/tileset.json',
 
-			pointSize: 2,
+			pointSize: 1.5,
 		});
 
 		deckGlHook.addLayer(pointcloudLayer);

@@ -143,7 +143,12 @@ export const StationProvider: React.FC<PropsWithChildren> = ({
 			zoom: 17,
 			speed: 3,
 			breakpoint: [7.143431851902436, 50.71761182062817],
-			markerCoordinates: [7.14343185, 50.71761182],
+			markerCoordinates: [7.147225, 50.722738],
+			presentationPosition: {
+				zoom: 16.5,
+				pitch: 70,
+				bearing: 20
+			},
 		},
 		{
 			label: 'MlCreatePdfForm',

@@ -103,7 +103,7 @@ const MlHexagonMap = (props: MlHexagonMapProps) => {
 
 	const deckGlLayerProps = useMemo(() => {
 		return {
-			id: 'deckgl-layer',
+			id: 'MlHexagonLayer',
 
 			data: noiseData ? noiseData.features : [],
 			type: HexagonLayer,
@@ -151,6 +151,7 @@ const MlHexagonMap = (props: MlHexagonMapProps) => {
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
+
 	const initializedRef = useRef(false);
 
 	// add deckGl Layer
