@@ -18,7 +18,8 @@ import { LngLatLike } from 'maplibre-gl';
 import { Feature, LineString } from 'geojson';
 import routeData from './assets/route.json';
 import MapMagnifyStationComponent from './components/MapMagnify-StationComponent';
-import  MlHexagonMap from './components/MlHexagonMap';
+import CreatePdfFormStationComponent from './components/CreatePdfForm-StationComponent';
+import MlHexagonMap from './components/MlHexagonMap';
 import PointCloudComponent from './components/PointCloudComponent';
 
 export interface AutoplayOptions {
@@ -36,7 +37,7 @@ function App() {
 	const { t } = useTranslation();
 	const { stationInformations, selectedStation, selectStationById } = useStationContext();
 
-	const mapHook = useMap({mapId: 'map_1'});
+	const mapHook = useMap({ mapId: 'map_1' });
 
 	useEffect(() => {
 		mapHook.map?.setProjection({ type: 'globe' });
@@ -62,14 +63,19 @@ function App() {
 			<Grid size={12} sx={{ minHeight: '62px' }}>
 				<TopToolbar
 					unmovableButtons={
-						<Button
-							size="large"
-							onClick={() => {
-								handleChangeLanguage();
-							}}
-						>
-							{t('LanguageSwitcherButton')}
-						</Button>
+						<>
+							<Button
+								size="large"
+								onClick={() => {
+									handleChangeLanguage();
+								}}
+							>
+								{t('LanguageSwitcherButton')}
+							</Button>
+							{selectedStation?.id === 'MlCreatePdfForm-Station' && (
+								<CreatePdfFormStationComponent />
+							)}
+						</>
 					}
 				/>
 			</Grid>
@@ -274,9 +280,9 @@ function App() {
 
 					<IconAnimationLayer mapId={'map_1'} iconSize={0.1} />
 
-					<MlHexagonMap mapId={'map_1'} elevationRange={[1,5]}/>
+					<MlHexagonMap mapId={'map_1'} elevationRange={[1, 5]} />
 
-					<PointCloudComponent/>
+					<PointCloudComponent />
 
 					{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
 						routeData && (
