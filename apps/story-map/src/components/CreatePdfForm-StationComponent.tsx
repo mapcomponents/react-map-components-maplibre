@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import PdfForm, {
-	PdfFormProps,
-} from '@mapcomponents/react-maplibre/src/components/MlCreatePdfForm/lib/PdfForm';
-import { PdfContextProvider } from '@mapcomponents/react-maplibre/src/components/MlCreatePdfForm/lib/PdfContext';
+import { PdfForm, PdfFormProps } from '@mapcomponents/react-maplibre';
+import { PdfContextProvider } from '@mapcomponents/react-maplibre';
 import { Dialog, DialogContent, DialogTitle, Button, Paper } from '@mui/material';
 import Draggable from 'react-draggable';
-import '@mapcomponents/react-maplibre/src/components/MlCreatePdfForm/lib/preview.css';
+import '../assets/preview.css';
 
 const PaperComponent = (props: object) => {
 	const nodeRef = React.useRef<HTMLDivElement>(null);

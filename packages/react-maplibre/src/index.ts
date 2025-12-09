@@ -12,6 +12,8 @@ export { default as MlCreatePdfButton } from './components/MlCreatePdfButton/MlC
 export { default as MlCreatePdfForm } from './components/MlCreatePdfForm/MlCreatePdfForm';
 export { default as MlPdfPreview } from './components/MlCreatePdfForm/lib/PdfPreview';
 export { default as PdfContext } from './components/MlCreatePdfForm/lib/PdfContext';
+export { PdfContextProvider } from './components/MlCreatePdfForm/lib/PdfContext';
+export * from './components/MlCreatePdfForm/lib/PdfForm';
 export { default as PdfForm } from './components/MlCreatePdfForm/lib/PdfForm';
 
 export { default as MlFeatureEditor } from './components/MlFeatureEditor/MlFeatureEditor';
