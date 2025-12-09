@@ -18,6 +18,7 @@ import { LngLatLike } from 'maplibre-gl';
 import { Feature, LineString } from 'geojson';
 import routeData from './assets/route.json';
 import MapMagnifyStationComponent from './components/MapMagnify-StationComponent';
+import CreatePdfFormStationComponent from './components/CreatePdfForm-StationComponent';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -60,14 +61,19 @@ function App() {
 			<Grid size={12} sx={{ minHeight: '62px' }}>
 				<TopToolbar
 					unmovableButtons={
-						<Button
-							size="large"
-							onClick={() => {
-								handleChangeLanguage();
-							}}
-						>
-							{t('LanguageSwitcherButton')}
-						</Button>
+						<>
+							<Button
+								size="large"
+								onClick={() => {
+									handleChangeLanguage();
+								}}
+							>
+								{t('LanguageSwitcherButton')}
+							</Button>
+							{selectedStation?.id === 'MlCreatePdfForm-Station' && (
+								<CreatePdfFormStationComponent />
+							)}
+						</>
 					}
 				/>
 			</Grid>

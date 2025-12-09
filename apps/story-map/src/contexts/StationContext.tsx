@@ -144,6 +144,11 @@ export const StationProvider: React.FC<PropsWithChildren<Record<string, never>>>
 			speed: 2,
 			breakpoint: [7.225963879312019, 50.76098226444658],
 			markerCoordinates: [7.22596388, 50.76098226],
+			presentationPosition: {
+				zoom: 14.9,
+				pitch: 0,
+				bearing: 0,
+			},
 		},
 		{
 			label: 'MlTerrainLayer',
