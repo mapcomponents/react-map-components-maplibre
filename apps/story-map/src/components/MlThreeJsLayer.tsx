@@ -32,7 +32,7 @@ const convertDegreeToRadians = (degree: number) => {
 };
 
 const MlThreeJsLayer = (props: MlThreeJsLayerProps) => {
-	const mapHook = useMap();
+	const mapHook = useMap({mapId: props.mapId});
 
 	const layerName = '3d-model';
 	const initializedRef = useRef(false);

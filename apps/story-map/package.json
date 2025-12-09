@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@deck.gl/aggregation-layers": "^9.2.2",
+    "@deck.gl/core": "^9.2.2",
+    "@deck.gl/geo-layers": "^9.2.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@geomatico/maplibre-cog-protocol": "^0.8.0",

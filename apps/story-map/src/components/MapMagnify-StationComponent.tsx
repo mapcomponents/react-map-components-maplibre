@@ -8,7 +8,7 @@ interface MapMagnifyStationComponentProps {
 }
 
 export default function MapMagnifyStationComponent(props: MapMagnifyStationComponentProps) {
-	const mapHook = useMap();
+	const mapHook = useMap({mapId: 'map_1'});
 
 	useEffect(() => {
 		maplibregl.addProtocol('cog', cogProtocol);

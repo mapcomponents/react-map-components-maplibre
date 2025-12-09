@@ -19,6 +19,8 @@ import { Feature, LineString } from 'geojson';
 import routeData from './assets/route.json';
 import MapMagnifyStationComponent from './components/MapMagnify-StationComponent';
 import CreatePdfFormStationComponent from './components/CreatePdfForm-StationComponent';
+import MlHexagonMap from './components/MlHexagonMap';
+import PointCloudComponent from './components/PointCloudComponent';
 
 export interface AutoplayOptions {
 	isStarted: boolean;
@@ -35,7 +37,7 @@ function App() {
 	const { t } = useTranslation();
 	const { stationInformations, selectedStation, selectStationById } = useStationContext();
 
-	const mapHook = useMap();
+	const mapHook = useMap({ mapId: 'map_1' });
 
 	useEffect(() => {
 		mapHook.map?.setProjection({ type: 'globe' });
@@ -135,10 +137,10 @@ function App() {
 							marginTop: 'auto',
 						}}
 						onClick={() => {
-							setAutoplay((prevState) => ({
-								...prevState,
+							setAutoplay({
 								isStarted: true,
-							}));
+								isPaused: false,
+							});
 						}}
 					>
 						<Typography>{t('StartWalkThroughButton')}</Typography>
@@ -247,32 +249,45 @@ function App() {
 							pointerEvents: 'none',
 						}}
 					/>
+
 					{/* Map Components*/}
 					{autoplay.isStarted && (
 						<CameraController
 							pause={autoplay.isPaused}
 							zoom={selectedStation?.zoom ?? 17}
 							speed={selectedStation?.speed ?? 1}
-							pitch={80}
+							pitch={75}
 							setAutoplay={setAutoplay}
 							useCutRoute={useCutRoute}
 							showRoute={false}
 						/>
 					)}
+
 					{autoplay.isPaused && <MarkerComponent selectedStation={selectedStation} />}
+
 					<GeoJsonStationComponent />
+
 					<MlThreeJsLayer
+						mapId={'map_1'}
 						url={'/WhereGroupLogo3D.glb'}
 						position={[7.104, 50.764, 40]}
 						rotation={[0, 180, -28]}
 						scale={0.0001}
 					/>
+
 					{/*Todo: Add button automation for that; IDEA: If button presses move MakerLayer to second map (map_2); will be retested to default if user leaves the station*/}
 					<MapMagnifyStationComponent showMapMagnify={false} />
-					<IconAnimationLayer iconSize={0.1} />
+
+					<IconAnimationLayer mapId={'map_1'} iconSize={0.1} />
+
+					<MlHexagonMap mapId={'map_1'} elevationRange={[1, 5]} />
+
+					<PointCloudComponent />
+
 					{(selectedStation ? selectedStation.id === 'useCameraFollowPath-Station' : false) &&
 						routeData && (
 							<MlGeoJsonLayer
+								mapId={'map_1'}
 								geojson={routeData as Feature<LineString>}
 								type="line"
 								options={{

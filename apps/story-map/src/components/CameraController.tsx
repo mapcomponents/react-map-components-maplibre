@@ -78,7 +78,7 @@ const CameraController = (props: CameraControllerProps) => {
 		() => stationInformations.map((station: StationType) => station.breakpoint),
 		[stationInformations]
 	);
-	const mapHook = useMap();
+	const mapHook = useMap({mapId: 'map_1'});
 	const breakPoint = useRef<number>(0);
 
 	const route = useMemo(() => {
@@ -129,6 +129,7 @@ const CameraController = (props: CameraControllerProps) => {
 	};
 
 	const cameraFollowPath = useCameraFollowPath({
+		mapId: 'map_1',
 		route: route,
 		pause: props.pause,
 		zoom: props.zoom,
@@ -145,6 +146,7 @@ const CameraController = (props: CameraControllerProps) => {
 		<>
 			{props.showRoute && route && (
 				<MlGeoJsonLayer
+					mapId={'map_1'}
 					geojson={route}
 					type="line"
 					options={{

@@ -21,6 +21,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
   },
-  "include": ["src", "../../packages/react-maplibre/src"],
+  "include": ["src", "../../packages/react-maplibre/src", "../../packages/deck-gl/src"],
 	"extends": "../../tsconfig.base.json"
 }
