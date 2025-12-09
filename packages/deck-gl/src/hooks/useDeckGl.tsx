@@ -9,8 +9,7 @@ function useDeckGl() {
 		deckGlContext.setDeckGlLayerArray(prevState => [...prevState, layer])
 	}
 	function removeLayer(layer: Layer) {
-		const newDeckGLLayerArray = deckGlContext.deckGlLayerArray.filter((l) => l !== layer);
-		deckGlContext.setDeckGlLayerArray(newDeckGLLayerArray);
+		deckGlContext.setDeckGlLayerArray(prevState => prevState.filter((l) => l !== layer));
 	}
 	return {
 		addLayer,
