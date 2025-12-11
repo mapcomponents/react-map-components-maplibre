@@ -24,7 +24,7 @@ interface MlWmsLoaderStoryProps {
 	url: string;
 }
 const Template: any = (props: MlWmsLoaderStoryProps) => {
-	const [url, setUrl] = useState(props.url || 'https://magosm.magellium.com/geoserver/wms');
+	const [url, setUrl] = useState(props.url || 'https://img.nj.gov/imagerywms/Infrared1995');
 	const [demoMode, setDemoMode] = useState(false);
 	const [guide, setGuide] = useState(false);
 	const [openSidebar, setOpenSidebar] = useState(true);
@@ -100,6 +100,7 @@ const Template: any = (props: MlWmsLoaderStoryProps) => {
 						url={url}
 						onConfigChange={(config) => console.log(config)}
 						zoomToExtent={true}
+						layerId="WMS-layer"
 						featureInfoActive={featureInfoActive}
 						setFeatureInfoActive={setFeatureInfoActive}
 					/>

@@ -48,14 +48,14 @@ const wmsServices = [
 		id: '1',
 		title: 'HistOSM',
 		description: 'Historic objects stored in the OpenStreetMap database',
-		link: 'https://maps.heigit.org/histosm/wms',
+		link: 'https://maps.heigit.org/histosm/wms/',
 	},
 	{
 		id: '2',
-		title: 'MagOSM',
+		title: 'New Jersey Infrared 1995',
 		description:
-			'MagOSM is a project of the company Magellium which offers services related to thematic data from OpenStreetMap. Currently these services are provided at the scale of metropolitan France. The data of the different services are updated daily.',
-		link: 'https://magosm.magellium.com/geoserver/wms',
+			'This service was created to provide convenient internet access to 1995 - 1997 New Jersey orthophotos in false color infrared.',
+		link: 'https://img.nj.gov/imagerywms/Infrared1995',
 	},
 	{
 		id: '3',
