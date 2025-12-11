@@ -8,6 +8,7 @@ const resources = {
 			LanguageSwitcherButton: 'deutsch',
 			StartWalkThroughButton: 'start walk through',
 			StopWalkThroughButton: 'stop walk through',
+			ControlInformationButton: 'Controls',
 
 			// marker content - titles
 			'MlMarker.title': 'Marker',
@@ -57,6 +58,7 @@ const resources = {
 			LanguageSwitcherButton: 'english',
 			StartWalkThroughButton: 'durchlauf starten',
 			StopWalkThroughButton: 'durchlauf stoppen',
+			ControlInformationButton: 'Bewegungs-Information',
 
 			// marker content - titles
 			'MlMarker.title': 'Marker',

@@ -25,15 +25,14 @@ export interface StationType {
 interface StationContextType {
 	stationInformations: StationType[];
 	selectStationById: (id: string) => void;
-	selectedStation: StationType | undefined;
-	setSelectedStation: Dispatch<SetStateAction<StationType | undefined>>;
+	selectedStation: StationType;
+	setSelectedStation: Dispatch<SetStateAction<StationType>>;
+	selectedStationIndex: number;
 }
 
 const StationContext = createContext<StationContextType | undefined>(undefined);
 
-export const StationProvider: React.FC<PropsWithChildren> = ({
-	children,
-}) => {
+export const StationProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	const stationInformations = [
 		{
 			label: 'MlMarker',
@@ -102,7 +101,7 @@ export const StationProvider: React.FC<PropsWithChildren> = ({
 			presentationPosition: {
 				zoom: 16,
 				pitch: 45,
-				bearing: 180
+				bearing: 180,
 			},
 		},
 		{
@@ -132,7 +131,7 @@ export const StationProvider: React.FC<PropsWithChildren> = ({
 			presentationPosition: {
 				zoom: 14.9,
 				pitch: 75,
-				bearing: 120
+				bearing: 120,
 			},
 		},
 		{
@@ -147,7 +146,7 @@ export const StationProvider: React.FC<PropsWithChildren> = ({
 			presentationPosition: {
 				zoom: 16.5,
 				pitch: 70,
-				bearing: 20
+				bearing: 20,
 			},
 		},
 		{
@@ -170,8 +169,8 @@ export const StationProvider: React.FC<PropsWithChildren> = ({
 			id: 'MlTerrainLayer-Station',
 			stationTitle: 'MlTerrainLayer.title',
 			description: 'MlTerrainLayer.description',
-			zoom: 12,
-			speed: 3,
+			zoom: 15,
+			speed: 2,
 			breakpoint: [7.27501663089742, 50.78439051649292],
 			markerCoordinates: [7.27501663, 50.78439052],
 		},
@@ -197,12 +196,17 @@ export const StationProvider: React.FC<PropsWithChildren> = ({
 		},
 	];
 
-	const [selectedStation, setSelectedStation] = useState<StationType>();
+	const [selectedStation, setSelectedStation] = useState<StationType>(stationInformations[0]);
+	const [selectedStationIndex, setSelectedStationIndex] = useState<number>(0);
 
 	const selectStationById = useCallback((id: string) => {
 		const station = stationInformations.find((s) => s.id === id);
+		const index = stationInformations.findIndex((s) => s.id === id);
 		if (station) {
 			setSelectedStation(station);
+		}
+		if(index || index === 0) {
+			setSelectedStationIndex(index);
 		}
 	}, []);
 
@@ -211,6 +215,7 @@ export const StationProvider: React.FC<PropsWithChildren> = ({
 			value={{
 				stationInformations,
 				selectedStation,
+				selectedStationIndex,
 				setSelectedStation,
 				selectStationById,
 			}}
