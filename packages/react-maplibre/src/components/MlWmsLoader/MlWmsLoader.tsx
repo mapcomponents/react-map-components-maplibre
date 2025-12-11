@@ -10,7 +10,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import { LngLat, MapMouseEvent } from 'maplibre-gl';
-import { Layer2, Layer3 } from 'wms-capabilities';
 import useMap from '../../hooks/useMap';
 import { Box, Checkbox, ListItemIcon, Snackbar } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -66,7 +65,7 @@ export interface MlWmsLoaderProps {
 	/**
 	 * WMS URL
 	 */
-	url: string;
+	url?: string;
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
@@ -124,12 +123,56 @@ export interface MlWmsLoaderProps {
 	sortable?: boolean;
 }
 
+export interface WmsLayer {
+	Name?: string;
+	Title?: string;
+	Abstract?: string;
+	KeywordList?: string[];
+	CRS?: string | string[];
+	SRS?: string | string[];
+	EX_GeographicBoundingBox?: number[];
+	LatLonBoundingBox?: number[];
+	BoundingBox?: any[];
+	Dimension?: any;
+	Attribution?: { Title: string; OnlineResource?: string; LogoURL?: any };
+	AuthorityURL?: any[];
+	Identifier?: any[];
+	MetadataURL?: any[];
+	DataURL?: any[];
+	FeatureListURL?: any[];
+	Style?: any[];
+	MinScaleDenominator?: number;
+	MaxScaleDenominator?: number;
+	Layer?: WmsLayer[];
+	queryable?: boolean;
+	opaque?: boolean;
+	noSubsets?: boolean;
+	fixedWidth?: number;
+	fixedHeight?: number;
+}
+
 export type LayerType = {
 	visible: boolean;
 	Name: string;
 	Attribution?: { Title: string };
-} & Omit<Layer2, 'Layer' | 'CRS'> &
-	Partial<Pick<Layer2, 'Layer'>>;
+} & Omit<WmsLayer, 'Layer' | 'CRS'> &
+	Partial<Pick<WmsLayer, 'Layer'>>;
+
+const defaultProps = {
+	mapId: undefined,
+	url: '',
+	urlParameters: {
+		SERVICE: 'WMS',
+		VERSION: '1.3.0',
+		REQUEST: 'GetCapabilities',
+	},
+	wmsUrlParameters: {
+		TRANSPARENT: 'TRUE',
+	},
+	featureInfoEnabled: true,
+	zoomToExtent: false,
+	showDeleteButton: false,
+};
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
@@ -137,6 +180,7 @@ export type LayerType = {
  * @component
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
+	props = { ...defaultProps, ...props };
 	const {
 		capabilities: _capabilities,
 		error,
@@ -146,6 +190,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	}: useWmsReturnType = useWms({
 		urlParameters: props.urlParameters,
 	});
+
 	const [open, setOpen] = useState(props?.config?.open || false);
 	const [visible, setVisible] = useState<boolean>(props?.config?.visible || true);
 	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
@@ -167,6 +212,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const wmsUrl = useMemo(() => {
 		return props?.config?.wmsUrl || _wmsUrl;
 	}, [props?.config?.wmsUrl, _wmsUrl]);
+
 
 	const getFeatureInfoUrl = useMemo(() => {
 		return props?.config?.getFeatureInfoUrl || _getFeatureInfoUrl;
@@ -259,8 +305,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			let _gfiUrl: string | undefined = getFeatureInfoUrl;
 			let _gfiUrlParts;
 			if (_gfiUrl?.indexOf?.('?') !== -1) {
-				_gfiUrlParts = props.url.split('?');
-				_gfiUrl = _gfiUrlParts[0];
+				_gfiUrlParts = props?.url?.split('?') || props?.config?.wmsUrl?.split('?');
+				_gfiUrl = _gfiUrlParts?.[0];
 			}
 			const _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
 
@@ -317,6 +363,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	useEffect(() => {
 		if (!capabilities?.Service) return;
 
+		let _LatLonBoundingBox: Array<number> = [];
+
 		if (
 			capabilities?.Capability?.Layer?.CRS?.indexOf?.('EPSG:3857') === -1 &&
 			capabilities?.Capability?.Layer?.CRS?.indexOf?.('CRS:84') === -1
@@ -329,38 +377,34 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				'MlWmsLoader (' + capabilities.Service.Title + '): WGS 84/Pseudo-Mercator supported'
 			);
 
-			let _LatLonBoundingBox: Array<number> = [];
-
 			// collect queriable Layer2 layers
 			let _layers: LayerType[] = capabilities?.Capability?.Layer?.Layer.filter(
-				(el) => !el.Layer?.length
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-			).map((layer: Layer2 & { Name: string }, idx: number) => {
+				(el: WmsLayer) => !el.Layer?.length
+			).map((layer: WmsLayer, idx: number) => {
 				if (idx === 0) {
-					_LatLonBoundingBox = layer.EX_GeographicBoundingBox;
+					_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 				}
 				return {
 					visible: capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true,
 					Attribution: { Title: '' },
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					...(({ CRS, ..._layer }) => _layer)(layer),
-				};
+				} as LayerType;
 			});
 
 			// collect queriable Layer3 layers
-			capabilities?.Capability?.Layer?.Layer.forEach((el) => {
-				const tmpLayers = el?.Layer?.filter((el) => el.CRS.length).map(
-					(layer: Layer3, idx: number) => {
+			capabilities?.Capability?.Layer?.Layer.forEach((el: WmsLayer) => {
+				const tmpLayers = el?.Layer?.filter((el) => el.CRS?.length).map(
+					(layer: WmsLayer, idx: number) => {
 						if (idx === 0) {
-							_LatLonBoundingBox = layer.EX_GeographicBoundingBox;
+							_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 						}
 						return {
 							visible: false,
 							Attribution: { Title: '' },
 							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							...(({ CRS, ..._layer }) => _layer)(layer),
-						};
+						} as LayerType;
 					}
 				);
 
@@ -541,25 +585,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			)}
 		</>
 	);
-};
-//<p key="description" style={{ fontSize: '.7em' }}>
-//	{capabilities?.Capability?.Layer?.['Abstract']}
-//</p>
-
-MlWmsLoader.defaultProps = {
-	mapId: undefined,
-	url: '',
-	urlParameters: {
-		SERVICE: 'WMS',
-		VERSION: '1.3.0',
-		REQUEST: 'GetCapabilities',
-	},
-	wmsUrlParameters: {
-		TRANSPARENT: 'TRUE',
-	},
-	featureInfoEnabled: true,
-	zoomToExtent: false,
-	showDeleteButton: false,
 };
 
 export default MlWmsLoader;
