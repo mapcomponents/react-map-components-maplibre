@@ -100,7 +100,7 @@ const Template: any = (props: MlWmsLoaderStoryProps) => {
 						url={url}
 						onConfigChange={(config) => console.log(config)}
 						zoomToExtent={true}
-						layerId='WMS-layer'
+						layerId="WMS-layer"
 						featureInfoActive={featureInfoActive}
 						setFeatureInfoActive={setFeatureInfoActive}
 					/>
