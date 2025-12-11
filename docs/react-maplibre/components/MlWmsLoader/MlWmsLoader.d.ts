@@ -1,6 +1,5 @@
 import { default as React } from '../../../../../node_modules/.pnpm/react@19.1.0/node_modules/react';
 import { useWmsProps, useWmsReturnType } from '../../hooks/useWms';
-import { Layer2 } from 'wms-capabilities';
 export interface WmsConfig {
     /**
      * The URL to use for the getFeatureInfo request
@@ -31,7 +30,7 @@ export interface MlWmsLoaderProps {
     /**
      * WMS URL
      */
-    url: string;
+    url?: string;
     /**
      * Id of the target MapLibre instance in mapContext
      */
@@ -90,36 +89,50 @@ export interface MlWmsLoaderProps {
     buttons?: React.JSX.Element;
     sortable?: boolean;
 }
+export interface WmsLayer {
+    Name?: string;
+    Title?: string;
+    Abstract?: string;
+    KeywordList?: string[];
+    CRS?: string | string[];
+    SRS?: string | string[];
+    EX_GeographicBoundingBox?: number[];
+    LatLonBoundingBox?: number[];
+    BoundingBox?: any[];
+    Dimension?: any;
+    Attribution?: {
+        Title: string;
+        OnlineResource?: string;
+        LogoURL?: any;
+    };
+    AuthorityURL?: any[];
+    Identifier?: any[];
+    MetadataURL?: any[];
+    DataURL?: any[];
+    FeatureListURL?: any[];
+    Style?: any[];
+    MinScaleDenominator?: number;
+    MaxScaleDenominator?: number;
+    Layer?: WmsLayer[];
+    queryable?: boolean;
+    opaque?: boolean;
+    noSubsets?: boolean;
+    fixedWidth?: number;
+    fixedHeight?: number;
+}
 export type LayerType = {
     visible: boolean;
     Name: string;
     Attribution?: {
         Title: string;
     };
-} & Omit<Layer2, 'Layer' | 'CRS'> & Partial<Pick<Layer2, 'Layer'>>;
+} & Omit<WmsLayer, 'Layer' | 'CRS'> & Partial<Pick<WmsLayer, 'Layer'>>;
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
  *
  * @component
  */
-declare const MlWmsLoader: {
-    (props: MlWmsLoaderProps): import("react/jsx-runtime").JSX.Element;
-    defaultProps: {
-        mapId: undefined;
-        url: string;
-        urlParameters: {
-            SERVICE: string;
-            VERSION: string;
-            REQUEST: string;
-        };
-        wmsUrlParameters: {
-            TRANSPARENT: string;
-        };
-        featureInfoEnabled: boolean;
-        zoomToExtent: boolean;
-        showDeleteButton: boolean;
-    };
-};
+declare const MlWmsLoader: (props: MlWmsLoaderProps) => import("react/jsx-runtime").JSX.Element;
 export default MlWmsLoader;
 //# sourceMappingURL=MlWmsLoader.d.ts.map

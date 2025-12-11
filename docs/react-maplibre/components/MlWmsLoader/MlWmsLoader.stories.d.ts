@@ -1,23 +1,6 @@
 declare const storyoptions: {
     title: string;
-    component: {
-        (props: import('./MlWmsLoader').MlWmsLoaderProps): import("react/jsx-runtime").JSX.Element;
-        defaultProps: {
-            mapId: undefined;
-            url: string;
-            urlParameters: {
-                SERVICE: string;
-                VERSION: string;
-                REQUEST: string;
-            };
-            wmsUrlParameters: {
-                TRANSPARENT: string;
-            };
-            featureInfoEnabled: boolean;
-            zoomToExtent: boolean;
-            showDeleteButton: boolean;
-        };
-    };
+    component: (props: import('./MlWmsLoader').MlWmsLoaderProps) => import("react/jsx-runtime").JSX.Element;
     argTypes: {
         url: {};
         layer: {};
