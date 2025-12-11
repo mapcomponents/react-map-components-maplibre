@@ -213,7 +213,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		return props?.config?.wmsUrl || _wmsUrl;
 	}, [props?.config?.wmsUrl, _wmsUrl]);
 
-
 	const getFeatureInfoUrl = useMemo(() => {
 		return props?.config?.getFeatureInfoUrl || _getFeatureInfoUrl;
 	}, [props?.config?.getFeatureInfoUrl, _getFeatureInfoUrl]);
