@@ -9,12 +9,12 @@ import { DeckGlContextProvider } from '@mapcomponents/deck-gl';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<StationProvider>
-			<MapComponentsProvider>
+		<MapComponentsProvider>
+			<StationProvider>
 				<DeckGlContextProvider mapId={'map_1'}>
 					<App />
 				</DeckGlContextProvider>
-			</MapComponentsProvider>
-		</StationProvider>
+			</StationProvider>
+		</MapComponentsProvider>
 	</React.StrictMode>
 );

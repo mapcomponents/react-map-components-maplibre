@@ -18,8 +18,6 @@ import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
 import MlThreeJsLayer from './components/MlThreeJsLayer';
 import { useStationContext } from './contexts/StationContext';
-import CameraController from './components/CameraController';
-import MarkerComponent from './components/MarkerComponent';
 import IconAnimationLayer from './components/IconAnimationLayer';
 import GeoJsonStationComponent from './components/GeoJson-StationComponent';
 import { Feature, LineString } from 'geojson';
@@ -33,24 +31,28 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { LngLatLike } from 'maplibre-gl';
 import { grey } from '@mui/material/colors';
 
-export interface AutoplayOptions {
+interface AutoplayOptions {
 	isStarted: boolean;
 	isPaused: boolean;
 }
-
 type LanguageSelection = 'en' | 'de';
 
 function App() {
 	const [language, setLanguage] = useState<LanguageSelection>('de');
-	const [autoplay, setAutoplay] = useState<AutoplayOptions>({ isStarted: false, isPaused: false });
 	const [showControls, setSchowControlls] = useState<boolean>(false);
-	const [useCutRoute, setUseCutRoute] = useState<boolean>(false);
+	const [autoplay, setAutoplay] = useState<AutoplayOptions>({ isStarted: false, isPaused: false });
 
 	const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
 	const { t } = useTranslation();
-	const { stationInformations, selectedStation, selectedStationIndex, selectStationById } =
-		useStationContext();
+	const {
+		stationInformations,
+		selectedStation,
+		selectedStationIndex,
+		selectStationById,
+		nextStation,
+		resetStations
+	} = useStationContext();
 
 	const mapHook = useMap({ mapId: 'map_1' });
 
@@ -67,9 +69,11 @@ function App() {
 	}, [mapHook.map]);
 
 	useEffect(() => {
-		const ref = stepRefs.current[selectedStationIndex];
-		if (ref) {
-			ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		if (selectedStationIndex) {
+			const ref = stepRefs.current[selectedStationIndex];
+			if (ref) {
+				ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
 		}
 	}, [selectedStationIndex]);
 
@@ -127,7 +131,7 @@ function App() {
 				>
 					<Stepper
 						key={'station-list'}
-						activeStep={selectedStationIndex}
+						activeStep={selectedStationIndex === undefined ? -1 : selectedStationIndex}
 						orientation={'vertical'}
 						sx={{ overflow: 'auto', marginBottom: '0.5rem' }}
 					>
@@ -141,27 +145,31 @@ function App() {
 									<StepLabel>
 										{
 											<Button
-												sx={{ width: '100%', display: 'flex', justifyContent: 'space-between',  borderColor: grey[400]}}
-												variant={selectedStation?.id === station.id ? 'contained' : 'outlined'}
+												sx={{
+													width: '100%',
+													display: 'flex',
+													justifyContent: 'space-between',
+													borderColor:
+														selectedStationIndex && index <= selectedStationIndex
+															? grey[400]
+															: undefined,
+													color:
+														selectedStationIndex && index <= selectedStationIndex
+															? undefined
+															: grey[400],
+												}}
+												variant={(selectedStationIndex && stationInformations[selectedStationIndex].id === station.id) ? 'contained' : 'outlined'}
 												onClick={() => {
 													selectStationById(station.id);
 													setAutoplay({
 														isStarted: false,
 														isPaused: true,
 													});
-													setUseCutRoute(true);
 													if (mapHook.map) {
-														if (station.presentationPosition) {
-															mapHook.map.easeTo({
-																center: station.breakpoint as LngLatLike,
-																...station.presentationPosition,
-															});
-														} else {
-															mapHook.map.easeTo({
-																center: station.breakpoint as LngLatLike,
-																zoom: station.zoom,
-															});
-														}
+														mapHook.map.easeTo({
+															center: station.breakpoint as LngLatLike,
+															...station.presentationPosition,
+														});
 													}
 												}}
 											>
@@ -198,6 +206,7 @@ function App() {
 									isStarted: true,
 									isPaused: false,
 								});
+								nextStation();
 							}}
 						>
 							<Typography>{t('StartWalkThroughButton')}</Typography>
@@ -220,10 +229,7 @@ function App() {
 									width: '100%',
 								}}
 								onClick={() => {
-									setAutoplay({
-										isStarted: true,
-										isPaused: true,
-									});
+									resetStations();
 									setAutoplay({
 										isStarted: false,
 										isPaused: true,
@@ -239,14 +245,20 @@ function App() {
 									borderColor: '#696969',
 								}}
 								onClick={() => {
-									const tempBool = !autoplay.isPaused;
-									setAutoplay({
+									setAutoplay((prevState) => ({
 										isStarted: true,
-										isPaused: tempBool,
-									});
+										isPaused: !prevState.isPaused,
+									}));
+									nextStation();
+									setTimeout(() => {
+										setAutoplay((prevState) => ({
+											isStarted: true,
+											isPaused: !prevState.isPaused,
+										}));
+									}, 500);
 								}}
 							>
-								{autoplay.isPaused ? <PlayArrowIcon /> : <PauseIcon />}
+								{autoplay.isPaused ? <PauseIcon /> : <PlayArrowIcon />}
 							</Button>
 						</ButtonGroup>
 					)}
@@ -306,21 +318,6 @@ function App() {
 								pointerEvents: 'none',
 							}}
 						/>
-
-						{/* Map Components*/}
-						{autoplay.isStarted && (
-							<CameraController
-								pause={autoplay.isPaused}
-								zoom={selectedStation?.zoom ?? 17}
-								speed={selectedStation?.speed ?? 1}
-								pitch={75}
-								setAutoplay={setAutoplay}
-								useCutRoute={useCutRoute}
-								showRoute={false}
-							/>
-						)}
-
-						{autoplay.isPaused && <MarkerComponent selectedStation={selectedStation} />}
 
 						<GeoJsonStationComponent />
 
