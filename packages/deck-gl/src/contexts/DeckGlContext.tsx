@@ -27,6 +27,7 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 
 		overlayRef.current = new MapboxOverlay({
 			id: overlayId,
+			interleaved: true
 		});
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
