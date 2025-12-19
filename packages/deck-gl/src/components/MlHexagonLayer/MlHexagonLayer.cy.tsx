@@ -1,5 +1,5 @@
 import { composeStories } from '@storybook/react';
-import * as stories from './MlHexagonMap.stories';
+import * as stories from './MlHexagonLayer.stories';
 
 const { NoiseMap }: any = composeStories(stories);
 
