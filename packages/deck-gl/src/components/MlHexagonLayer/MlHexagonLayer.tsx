@@ -18,26 +18,30 @@ export interface MlHexagonMapProps extends HexagonLayerProps {
 const defaultProps = {
 	type: HexagonLayer,
 	layerOpacity: 0.8,
-	specularColor: [51, 51, 51],
-	elevationScale: 10,
+	elevationRange: [30, 75],
+	elevationScale: 1,
 	extruded: true,
 	coverage: 0.9,
 	autoHighlight: false,
-	material: {
-		ambient: 0.8,
-		diffuse: 0.5,
-		shininess: 20,
-	},
+	material: { ambient: 0.6, diffuse: 0.5, shininess: 10 },
 	radius: 16,
-	transitions: {
-		elevationScale: 1500,
-	},
+	transitions: { elevationScale: 1500 },
 	_filterData: null,
+	colorRange: [
+		[1, 152, 189, 125],
+		[73, 227, 206, 150],
+		[216, 254, 181, 175],
+		[254, 237, 177, 200],
+		[254, 173, 84, 225],
+		[209, 55, 78, 255],
+	],
 };
 
 const MlHexagonLayer = (props: MlHexagonMapProps) => {
 	const deckGlHook = useDeckGl();
 
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-expect-error
 	props = {
 		...defaultProps,
 		...props,

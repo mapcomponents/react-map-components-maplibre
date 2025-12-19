@@ -1,8 +1,9 @@
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlHexagonLayer from './MlHexagonLayer';
 import { DeckGlContextProvider } from '../../contexts/DeckGlContext';
-import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { useEffect, useState } from 'react';
+import { useMap } from '@mapcomponents/react-maplibre';
+import { HexagonLayer } from '@deck.gl/aggregation-layers';
 
 const storyoptions = {
 	title: 'MapComponents/MlHexagonMap',
@@ -17,15 +18,12 @@ const Template = (context: any) => {
 		type: '',
 		features: [],
 	});
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	const mapHook = useMap({ mapId: 'map_1' });
 
 	useEffect(() => {
 		let cancelled = false;
 		const load = async () => {
 			try {
-				setLoading(true);
-				setError(null);
 				const res = await fetch('/assets/3D/laerm_points.json', {
 					headers: {
 						'Content-Type': 'application/json',
@@ -34,18 +32,15 @@ const Template = (context: any) => {
 				});
 				if (!res.ok) throw new Error(`HTTP ${res.status}`);
 				const json = await res.json();
-				// Expect GeoJSON-like `{ type, features }`
 				const features = Array.isArray(json?.features) ? json.features : [];
 				if (!cancelled) {
 					setNoiseData({ type: json?.type ?? 'FeatureCollection', features });
 				}
-			} catch (e: any) {
+			} catch (e) {
+				console.error(e);
 				if (!cancelled) {
-					setError(e?.message || 'Failed to load data');
 					setNoiseData({ type: '', features: [] });
 				}
-			} finally {
-				if (!cancelled) setLoading(false);
 			}
 		};
 		load();
@@ -54,31 +49,55 @@ const Template = (context: any) => {
 		};
 	}, []);
 
-	if (loading) return <div>Loading noise data\u2026</div>;
-	if (error) return <div>Failed to load data: {error}</div>;
+	mapHook.map?.setPitch(60);
+	mapHook.map?.setZoom(13.5);
 
-	console.log(noiseData.features);
 	return (
-		<DeckGlContextProvider mapId={context.mapId}>
-			<MlHexagonLayer
-				data={noiseData.features}
-				getPosition={(d: any) => d.geometry.coordinates}
-				{...context}
-			/>
-		</DeckGlContextProvider>
+		<>
+			<DeckGlContextProvider mapId={context.mapId}>
+				<MlHexagonLayer
+					data={noiseData.features}
+					getPosition={(d: any) => d.geometry.coordinates}
+					{...context}
+				/>
+			</DeckGlContextProvider>
+		</>
 	);
 };
 
-// eslint-disable-next-line
-export const NoiseMap: { [key: string]: any } = Template.bind({});
-NoiseMap.parameters = {};
-NoiseMap.args = {
+export const DefaultSettings: { [key: string]: any } = Template.bind({});
+DefaultSettings.parameters = {};
+DefaultSettings.args = {
+	mapId: 'map_1',
+	type: HexagonLayer,
+	layerOpacity: 0.8,
+	elevationRange: [30, 75],
+	elevationScale: 1,
+	extruded: true,
+	coverage: 0.9,
+	autoHighlight: false,
+	material: { ambient: 0.6, diffuse: 0.5, shininess: 10 },
+	radius: 16,
+	transitions: { elevationScale: 1500 },
+	_filterData: null,
+	colorRange: [
+		[1, 152, 189, 125],
+		[73, 227, 206, 150],
+		[216, 254, 181, 175],
+		[254, 237, 177, 200],
+		[254, 173, 84, 225],
+		[209, 55, 78, 255],
+	],
+};
+export const CustomColorAndHightProfile: { [key: string]: any } = Template.bind({});
+CustomColorAndHightProfile.parameters = {};
+CustomColorAndHightProfile.args = {
 	mapId: 'map_1',
 	type: HexagonLayer,
 	layerOpacity: 0.8,
 	specularColor: [51, 51, 51],
-	elevationRange:[30, 75],
-	elevationScale: 2,
+	elevationRange: [30, 75],
+	elevationScale: 1,
 	extruded: true,
 	coverage: 0.9,
 	autoHighlight: false,
