@@ -226,7 +226,7 @@ importers:
         version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.9)
       '@mapcomponents/react-maplibre':
         specifier: workspace:^
-        version: link:../react-maplibre/dist
+        version: link:../react-maplibre
       '@mui/icons-material':
         specifier: ^7.3.2
         version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
@@ -254,7 +254,7 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
       '@mapcomponents/react-maplibre':
         specifier: workspace:^
-        version: link:../react-maplibre/dist
+        version: link:../react-maplibre
       '@mui/icons-material':
         specifier: ^7.3.2
         version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
@@ -649,9 +649,6 @@ importers:
       jspdf:
         specifier: ^3.0.2
         version: 3.0.2
-      maplibre-gl:
-        specifier: 5.6.0
-        version: 5.6.0
       osm2geojson-lite:
         specifier: ^1.1.2
         version: 1.1.2
@@ -788,6 +785,9 @@ importers:
       jest-watch-typeahead:
         specifier: 3.0.1
         version: 3.0.1(jest@30.0.5(@types/node@24.3.1)(babel-plugin-macros@3.1.0)(esbuild-register@3.6.0(esbuild@0.25.9))(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.9.2)))
+      maplibre-gl:
+        specifier: 5.6.0
+        version: 5.6.0
       mocha:
         specifier: ^11.7.2
         version: 11.7.2
@@ -9533,7 +9533,6 @@ packages:
   osm2geojson-lite@1.1.2:
     resolution: {integrity: sha512-6s1uW548fdyLTJ4Cp/hQTKvdgCl/E8nUvBMEzUXnAJPHAFHoIhwMqZ3KGdph2A1g48rsCeA6gVnkPruWGiwupw==}
     hasBin: true
-    bundledDependencies: []
 
   ospath@1.2.2:
     resolution: {integrity: sha512-o6E5qJV5zkAbIDNhGSIlyOhScKXgQrSRMilfph0clDfM0nEnBOlKlH4sWDmG95BW/CvwNz0vmm7dJVtU2KlMiA==}
