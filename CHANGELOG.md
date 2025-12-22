@@ -1,3 +1,7 @@
+## 1.6.4-5 (2025-12-22)
+
+This was a version bump only, there were no code changes.
+
 ## 1.6.4-4 (2025-12-22)
 
 This was a version bump only, there were no code changes.
