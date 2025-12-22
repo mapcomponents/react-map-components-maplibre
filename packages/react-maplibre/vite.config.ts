@@ -53,6 +53,7 @@ export default defineConfig(() => ({
 				'd3',
 				'sql.js',
 				'maplibre-gl/dist/maplibre-gl.css',
+				'maplibre-gl',
 				//...Object.keys(pkg.dependencies),
 				...Object.keys(pkg.devDependencies),
 			],
