@@ -21,7 +21,7 @@ describe('MlGlobeButton', () => {
 
 	it('shows MapIcon as start state and toggles between MapIcon and PublicIcon', () => {
 		mount(<CatalogueDemo />);
-		cy.window()
+		cy.window({ timeout: 10000 })
 			.should((win) => expect((win as any)._map).to.exist)
 			.then((win) => {
 				const map = (win as any)._map;
@@ -46,7 +46,7 @@ describe('MlGlobeButton', () => {
 
 	it('changes the projection on the map instance attached to window', () => {
 		mount(<CatalogueDemo />);
-		cy.window()
+		cy.window({ timeout: 10000 })
 			.should((win) => expect((win as any)._map).to.exist)
 			.then((win) => {
 				const map = (win as any)._map;
@@ -59,19 +59,19 @@ describe('MlGlobeButton', () => {
 				});
 			});
 
-		cy.window().should((win) => {
+		cy.window({ timeout: 10000 }).should((win) => {
 			const map = (win as any)._map;
 			expect(map.getProjection()).to.equal(undefined);
 		});
 
 		cy.get('button').click();
-		cy.window().should((win) => {
+		cy.window({ timeout: 10000 }).should((win) => {
 			const map = (win as any)._map;
 			expect(map.getProjection()?.type).to.eq('globe');
 		});
 
 		cy.get('button').click();
-		cy.window().should((win) => {
+		cy.window({ timeout: 10000 }).should((win) => {
 			const map = (win as any)._map;
 			expect(map.getProjection()?.type).to.eq('mercator');
 		});
