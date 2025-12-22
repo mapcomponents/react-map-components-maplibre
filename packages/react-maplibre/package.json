@@ -56,6 +56,10 @@
 		"maplibre-gl": "5.6.0",
 		"wms-capabilities": "^0.6.0"
 	},
+	"peerDependencies": {
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
+	},
 	"devDependencies": {
 		"@testing-library/react": "^16.3.0",
 		"react": "^19.1.0",
