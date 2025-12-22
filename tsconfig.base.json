@@ -27,7 +27,8 @@
 		"paths": {
 			"@mapcomponents/deck-gl": ["packages/deck-gl/src/index.ts"],
 			"@mapcomponents/ra-geospatial": ["packages/ra-geospatial/src/index.ts"],
-			"@mapcomponents/react-maplibre": ["packages/react-maplibre/src/index.ts"]
+			"@mapcomponents/react-maplibre": ["packages/react-maplibre/src/index.ts"],
+			"@mapcomponents/three": ["packages/three/src/index.ts"]
 		}
 	}
 }
