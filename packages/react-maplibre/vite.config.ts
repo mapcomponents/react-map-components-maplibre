@@ -5,9 +5,9 @@ import dts from 'vite-plugin-dts';
 import * as path from 'path';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
-/*import * as fs from 'node:fs';
+import * as fs from 'node:fs';
 
-const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));*/
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
 export default defineConfig(() => ({
 	root: __dirname,
@@ -52,8 +52,9 @@ export default defineConfig(() => ({
 				'react-dom',
 				'd3',
 				'sql.js',
-				/*				...Object.keys(pkg.dependencies),
-				...Object.keys(pkg.devDependencies),*/
+				'maplibre-gl/dist/maplibre-gl.css',
+				...Object.keys(pkg.dependencies),
+				...Object.keys(pkg.devDependencies),
 			],
 			input: [path.join(__dirname, 'src/index.ts')],
 		},

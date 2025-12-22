@@ -43,7 +43,6 @@
 		"csv2geojson": "^5.1.2",
 		"d3": "^7.9.0",
 		"jspdf": "^3.0.2",
-		"maplibre-gl": "5.6.0",
 		"osm2geojson-lite": "^1.1.2",
 		"pako": "^2.1.0",
 		"react-color": "^2.19.3",
@@ -56,8 +55,16 @@
 		"uuid": "^11.1.0",
 		"wms-capabilities": "^0.6.0"
 	},
+	"peerDependencies": {
+		"maplibre-gl": "5.6.0",
+		"react": "^18.0.0 || ^19.0.0",
+		"react-dom": "^18.0.0 || ^19.0.0"
+	},
 	"devDependencies": {
 		"@testing-library/react": "^16.3.0",
+		"maplibre-gl": "5.6.0",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0",
 		"@types/chai": "^5.2.2",
 		"@types/elasticlunr": "^0.9.9",
 		"@types/enzyme": "^3.10.19",
