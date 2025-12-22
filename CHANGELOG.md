@@ -1,34 +1,8 @@
-## 1.6.4 (2025-12-22)
+## [1.6.4] (2025-12-22)
 
-This was a version bump only, there were no code changes.
+### Fixes
 
-## 1.6.4-6 (2025-12-22)
-
-This was a version bump only, there were no code changes.
-
-## 1.6.4-5 (2025-12-22)
-
-This was a version bump only, there were no code changes.
-
-## 1.6.4-4 (2025-12-22)
-
-This was a version bump only, there were no code changes.
-
-## 1.6.4-3 (2025-12-22)
-
-This was a version bump only, there were no code changes.
-
-## 1.6.4-2 (2025-12-22)
-
-This was a version bump only, there were no code changes.
-
-## 1.6.4-1 (2025-12-22)
-
-This was a version bump only, there were no code changes.
-
-## 1.6.4-0 (2025-12-22)
-
-This was a version bump only, there were no code changes.
+- 1c5c9cb: mark devDeps as external, add react to peerDeps (#248)
 
 ## [1.6.3] (2025-11-01)
 
