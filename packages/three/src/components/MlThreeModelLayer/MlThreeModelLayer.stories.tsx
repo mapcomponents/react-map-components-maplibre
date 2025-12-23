@@ -105,108 +105,25 @@ const Template: any = () => {
 				}
 			/>
 			<Sidebar open={sidebarOpen} setOpen={setSidebarOpen} name="3D Model Config">
-				<Box sx={{ padding: '10px' }}>
-					<Button
-						color="primary"
-						variant={showLayer ? 'contained' : 'outlined'}
-						onClick={() => {
-							setShowLayer(!showLayer);
-							showLayerRef.current = !showLayer;
-						}}
-						sx={{ marginBottom: '20px' }}
-					>
-						3D model
-					</Button>
-					<Button
-						color="secondary"
-						variant={useMapCoords ? 'contained' : 'outlined'}
-						onClick={() => setUseMapCoords(!useMapCoords)}
-						sx={{ marginBottom: '20px', marginLeft: '10px' }}
-					>
-						{useMapCoords ? 'Map Coords' : 'Scene Coords'}
-					</Button>
-					<Typography gutterBottom>Scale: {scale}</Typography>
-					<Slider
-						value={scale}
-						onChange={(e, newValue) => setScale(newValue as number)}
-						min={0.01}
-						max={5}
-						step={0.01}
-					/>
-					<Typography gutterBottom>Rotation X: {rotation.x}°</Typography>
-					<Slider
-						value={rotation.x}
-						onChange={(e, newValue) => setRotation({ ...rotation, x: newValue as number })}
-						min={0}
-						max={360}
-					/>
-					<Typography gutterBottom>Rotation Y: {rotation.y}°</Typography>
-					<Slider
-						value={rotation.y}
-						onChange={(e, newValue) => setRotation({ ...rotation, y: newValue as number })}
-						min={0}
-						max={360}
-					/>
-					<Typography gutterBottom>Rotation Z: {rotation.z}°</Typography>
-					<Slider
-						value={rotation.z}
-						onChange={(e, newValue) => setRotation({ ...rotation, z: newValue as number })}
-						min={0}
-						max={360}
-					/>
-					{useMapCoords ? (
-						<>
-							<Typography gutterBottom>Longitude: {mapPosition.lng.toFixed(6)}</Typography>
-							<Slider
-								value={mapPosition.lng}
-								onChange={(e, newValue) => setMapPosition({ ...mapPosition, lng: newValue as number })}
-								min={7.09}
-								max={7.11}
-								step={0.0001}
-							/>
-							<Typography gutterBottom>Latitude: {mapPosition.lat.toFixed(6)}</Typography>
-							<Slider
-								value={mapPosition.lat}
-								onChange={(e, newValue) => setMapPosition({ ...mapPosition, lat: newValue as number })}
-								min={50.73}
-								max={50.74}
-								step={0.0001}
-							/>
-							<Typography gutterBottom>Altitude: {altitude} m</Typography>
-							<Slider
-								value={altitude}
-								onChange={(e, newValue) => setAltitude(newValue as number)}
-								min={-100}
-								max={500}
-							/>
-						</>
-					) : (
-						<>
-							<Typography gutterBottom>Position X: {position.x}</Typography>
-							<Slider
-								value={position.x}
-								onChange={(e, newValue) => setPosition({ ...position, x: newValue as number })}
-								min={-100}
-								max={100}
-							/>
-							<Typography gutterBottom>Position Y: {position.y}</Typography>
-							<Slider
-								value={position.y}
-								onChange={(e, newValue) => setPosition({ ...position, y: newValue as number })}
-								min={-100}
-								max={100}
-							/>
-							<Typography gutterBottom>Position Z: {position.z}</Typography>
-							<Slider
-								value={position.z}
-								onChange={(e, newValue) => setPosition({ ...position, z: newValue as number })}
-								min={-500}
-								max={100}
-							/>
-						</>
-					)}
-				</Box>
+				<ThreeObjectControls
+					showLayer={showLayer}
+					setShowLayer={setShowLayer}
+					scale={scale}
+					setScale={setScale}
+					rotation={rotation}
+					setRotation={setRotation}
+					useMapCoords={useMapCoords}
+					setUseMapCoords={setUseMapCoords}
+					mapPosition={mapPosition}
+					setMapPosition={setMapPosition}
+					altitude={altitude}
+					setAltitude={setAltitude}
+					position={position}
+					setPosition={setPosition}
+					layerName="Model"
+				/>
 			</Sidebar>
+			<MlNavigationTools showFollowGpsButton={false} />
 		</>
 	);
 };
