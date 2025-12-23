@@ -10,7 +10,7 @@
 		}
 	},
 	"dependencies": {
-		"@mapcomponents/react-maplibre": "workspace:^",
+		"@mapcomponents/react-maplibre": "1.6.4",
 		"@mui/material": "^7.3.2",
 		"maplibre-gl": "^5.7.0",
 		"three": "^0.182.0"

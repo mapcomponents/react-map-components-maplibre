@@ -1,0 +1,150 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { useMap } from '@mapcomponents/react-maplibre';
+import { Scene, PerspectiveCamera, Group, Matrix4 } from 'three';
+import { LngLatLike, CustomLayerInterface } from 'maplibre-gl';
+import ThreejsSceneHelper from '../lib/ThreejsSceneHelper';
+import ThreejsSceneRenderer from '../lib/ThreejsSceneRenderer';
+import ThreejsUtils from '../lib/ThreejsUtils';
+import { ThreeContext } from './ThreeContext';
+
+export interface ThreeProviderProps {
+    mapId?: string;
+    id: string;
+    refCenter?: LngLatLike;
+    envTexture?: string;
+    envIntensity?: number;
+    createLight?: boolean;
+    children?: React.ReactNode;
+    /**
+     * If true (default), Three.js layers share the same WebGL2RenderingContext as the MapLibre map,
+     * allowing 3D objects to be correctly interleaved with map layers.
+     * If false, a dedicated Three.js canvas is rendered on top of the base map.
+     */
+    interleaved?: boolean;
+    /**
+     * Id of an existing layer in the MapLibre instance to help specify the layer order.
+     * The Three.js layer will be rendered visually beneath the layer with the specified id.
+     * Only applicable when interleaved is true.
+     */
+    beforeId?: string;
+}
+
+export const ThreeProvider: React.FC<ThreeProviderProps> = ({
+    mapId,
+    id,
+    refCenter,
+    envTexture,
+    envIntensity = 1,
+    createLight = true,
+    children,
+    interleaved = true,
+    beforeId
+}) => {
+    const { map } = useMap({ mapId, waitForLayer: interleaved ? beforeId : undefined });
+    const [scene, setScene] = useState<Scene>();
+    const [camera, setCamera] = useState<PerspectiveCamera>();
+    const [renderer, setRenderer] = useState<ThreejsSceneRenderer>();
+    const [sceneRoot, setSceneRoot] = useState<Group>();
+    
+    const helperRef = useRef(new ThreejsSceneHelper());
+    const worldMatrixRef = useRef<Matrix4>(new Matrix4());
+    const worldMatrixInvRef = useRef<Matrix4>(new Matrix4());
+    const rendererRef = useRef<ThreejsSceneRenderer>();
+
+    useEffect(() => {
+        if (!map) return;
+
+        const helper = helperRef.current;
+        const threeScene = helper.createScene(createLight);
+        const root = helper.createGroup(threeScene, 'scene-root');
+        const threeCamera = helper.createCamera(root, 'camera-for-render');
+        
+        const customLayer: CustomLayerInterface = {
+            id: id,
+            type: 'custom',
+            renderingMode: '3d',
+            onAdd: (mapInstance, gl) => {
+                const threeRenderer = new ThreejsSceneRenderer(mapInstance, gl, interleaved);
+                rendererRef.current = threeRenderer;
+                setRenderer(threeRenderer);
+
+                const center = refCenter || mapInstance.getCenter();
+                worldMatrixRef.current = ThreejsUtils.updateWorldMatrix(mapInstance, center);
+                worldMatrixInvRef.current = worldMatrixRef.current.clone().invert();
+
+                if (envTexture) {
+                    helper.createEnvTexture(envTexture, threeScene);
+                }
+                threeScene.environmentIntensity = envIntensity;
+
+                mapInstance.triggerRepaint();
+            },
+            render: (gl, matrix) => {
+                if (!rendererRef.current || !threeScene || !threeCamera) return;
+
+                helper.updateCameraForRender(
+                    threeCamera, 
+                    map, 
+                    matrix, 
+                    worldMatrixRef.current, 
+                    worldMatrixInvRef.current
+                );
+
+                rendererRef.current.render(threeScene, threeCamera);
+                map.triggerRepaint();
+            },
+            onRemove: () => {
+                if (rendererRef.current) {
+                    rendererRef.current.dispose();
+                    rendererRef.current = undefined;
+                }
+                setRenderer(undefined);
+            }
+        };
+
+        if (!map.getLayer(id)) {
+            // Use beforeId only in interleaved mode for layer ordering
+            map.addLayer(customLayer, interleaved ? beforeId : undefined);
+        }
+
+        setScene(threeScene);
+        setCamera(threeCamera);
+        setSceneRoot(root);
+
+        return () => {
+            if (map.getLayer(id)) {
+                map.removeLayer(id);
+            }
+            // Cleanup is handled in onRemove
+        };
+    }, [map, id]); // Re-run if map or id changes.
+
+    // Handle dynamic prop changes
+    useEffect(() => {
+        if (scene && envTexture) {
+             helperRef.current.createEnvTexture(envTexture, scene);
+        }
+    }, [scene, envTexture]);
+
+    useEffect(() => {
+        if (scene) {
+            scene.environmentIntensity = envIntensity;
+        }
+    }, [scene, envIntensity]);
+
+    // Handle refCenter change
+    useEffect(() => {
+        if (map && refCenter) {
+             worldMatrixRef.current = ThreejsUtils.updateWorldMatrix(map, refCenter);
+             worldMatrixInvRef.current = worldMatrixRef.current.clone().invert();
+             map.triggerRepaint();
+        }
+    }, [map, refCenter]);
+
+
+    return (
+        <ThreeContext.Provider value={{ scene, camera, renderer, map, sceneRoot }}>
+            {children}
+        </ThreeContext.Provider>
+    );
+};
