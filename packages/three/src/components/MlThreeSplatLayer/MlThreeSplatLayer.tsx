@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { LngLatLike } from 'maplibre-gl';
 import { useThree } from '../ThreeContext';
 import { SplatLoader } from '../../lib/splats/loaders/SplatLoader';
 import { PlySplatLoader } from '../../lib/splats/loaders/PlySplatLoader';
+import ThreejsUtils from '../../lib/ThreejsUtils';
 
 /**
  * Renders splat 3D Models on the MapLibreMap referenced by props.mapId
@@ -14,6 +16,8 @@ export interface MlThreeSplatLayerProps {
 	mapId?: string;
 	url: string;
 	position?: { x: number; y: number; z: number };
+	mapPosition?: LngLatLike;
+	altitude?: number;
 	rotation?: { x: number; y: number; z: number };
 	scale?: { x: number; y: number; z: number } | number;
 	init?: () => void;
@@ -21,7 +25,7 @@ export interface MlThreeSplatLayerProps {
 }
 
 const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
-	const { scene } = useThree();
+	const { scene, worldMatrixInv } = useThree();
 	const modelRef = useRef<THREE.Object3D | undefined>(undefined);
 	const [model, setModel] = useState<THREE.Object3D | undefined>(undefined);
 
@@ -72,9 +76,14 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 	useEffect(() => {
 		if (!model) return;
 
-		if (props.position) {
+		// Handle position: mapPosition takes precedence over position
+		if (props.mapPosition && worldMatrixInv) {
+			const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, props.mapPosition, props.altitude);
+			model.position.set(scenePos.x, scenePos.y, scenePos.z);
+		} else if (props.position) {
 			model.position.set(props.position.x, props.position.y, props.position.z);
 		}
+
 		if (props.rotation) {
 			model.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
 		}
@@ -86,7 +95,7 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 			}
 		}
         model.updateMatrixWorld(true);
-	}, [model, props.position, props.rotation, props.scale]);
+	}, [model, props.position, props.mapPosition, props.altitude, props.rotation, props.scale]);
 
 	return <></>;
 };

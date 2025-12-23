@@ -17,10 +17,9 @@ const decorators = [
 			<div className="fullscreen_map">
 				<MapComponentsProvider>
 					<MUIThemeProvider theme={theme}>
-						<ThreeProvider 
-							mapId="map_1" 
-							id="three-scene-layer" 
-							refCenter={[7.099771581806502, 50.73395746209983]}
+						<ThreeProvider
+							mapId="map_1"
+							id="three-scene-layer"
 							interleaved={true}
 							beforeId="water_name_line"
 						>
@@ -30,7 +29,7 @@ const decorators = [
 							options={{
 								zoom: 14.5,
 								style: 'https://wms.wheregroup.com/tileserver/style/osm-liberty.json',
-								center: [7.0851268, 50.73884],
+								center: [7.099771581806502, 50.73395746209983],
 							}}
 							mapId="map_1"
 						/>
@@ -39,7 +38,11 @@ const decorators = [
 							showZoomButtons={false}
 							mapId="map_1"
 						/>
-						<MlTerrainLayer />
+						<MlTerrainLayer
+							sourceOptions={{
+								tiles: ['https://wms.wheregroup.com/dem_tileserver/raster_dem/{z}/{x}/{y}.webp'],
+							}}
+						/>
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

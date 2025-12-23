@@ -1,11 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import Slider from '@mui/material/Slider';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import MlThreeSplatLayer from './MlThreeSplatLayer';
-import { TopToolbar, Sidebar, MapComponentsProvider, MapLibreMap, MlNavigationTools, getTheme } from '@mapcomponents/react-maplibre';
+import { TopToolbar, Sidebar, MapComponentsProvider, MapLibreMap, MlNavigationTools, getTheme, useMap } from '@mapcomponents/react-maplibre';
 import MlThreeJsContextDecorator from '../../decorators/ThreejsContextDecorator';
+import { ThreeObjectControls } from '../ThreeObjectControls';
 
 
 const storyoptions = {
@@ -24,10 +22,29 @@ export default storyoptions;
 
 const Template: any = () => {
 	const [showLayer, setShowLayer] = useState(true);
-	const [scale, setScale] = useState(1);
+	const [scale, setScale] = useState(2);
 	const [rotation, setRotation] = useState({ x: 0, y: 0, z: 5 });
-	const [position, setPosition] = useState({ x: 80, y: -45, z: 0 });
+	const [useMapCoords, setUseMapCoords] = useState(true);
+	const [mapPosition, setMapPosition] = useState({ lng: 7.097, lat: 50.7355 });
+	const [altitude, setAltitude] = useState(76);
+	const [position, setPosition] = useState({ x: 0, y: 0, z: 100 });
 	const [sidebarOpen, setSidebarOpen] = useState(true);
+
+	const mapHook = useMap({ mapId: 'map_1' });
+	useEffect(() => {
+		if (!mapHook.map) return;
+		mapHook.map?.setZoom(15.5);
+		mapHook.map?.setPitch(44.5);
+		mapHook.map?.setCenter([7.097, 50.7355]);
+	}, [mapHook.map]);
+
+	// Center map on position when switching coordinate modes
+	useEffect(() => {
+		if (!mapHook.map) return;
+		if (useMapCoords) {
+			mapHook.map.setCenter([mapPosition.lng, mapPosition.lat]);
+		}
+	}, [useMapCoords, mapHook.map]);
 
 	return (
 		<>
@@ -40,7 +57,12 @@ const Template: any = () => {
 						z: (rotation.z * Math.PI) / 180,
 					}}
 					scale={scale}
-					position={position}
+					{...useMapCoords ? {
+						mapPosition: [mapPosition.lng, mapPosition.lat],
+						altitude: altitude
+					} : {
+						position: position
+					}}
 				/>
 			)}
 
@@ -55,95 +77,23 @@ const Template: any = () => {
 				}
 			/>
 			<Sidebar open={sidebarOpen} setOpen={setSidebarOpen} name="Splat Config">
-				<Box sx={{ padding: '10px' }}>
-					<Button
-						color="primary"
-						variant={showLayer ? 'contained' : 'outlined'}
-						onClick={() => {
-							setShowLayer(!showLayer);
-						}}
-					>
-						{showLayer ? 'Hide' : 'Show'} Layer
-					</Button>
-					<Typography id="scale-slider" gutterBottom>
-						Scale
-					</Typography>
-					<Slider
-						value={scale}
-						onChange={(e, newValue) => setScale(newValue as number)}
-						aria-labelledby="scale-slider"
-						min={0.1}
-						max={5}
-						step={0.1}
-						valueLabelDisplay="auto"
-					/>
-					<Typography id="rotation-x-slider" gutterBottom>
-						Rotation X
-					</Typography>
-					<Slider
-						value={rotation.x}
-						onChange={(e, newValue) => setRotation({ ...rotation, x: newValue as number })}
-						aria-labelledby="rotation-x-slider"
-						min={0}
-						max={360}
-						valueLabelDisplay="auto"
-					/>
-					<Typography id="rotation-y-slider" gutterBottom>
-						Rotation Y
-					</Typography>
-					<Slider
-						value={rotation.y}
-						onChange={(e, newValue) => setRotation({ ...rotation, y: newValue as number })}
-						aria-labelledby="rotation-y-slider"
-						min={0}
-						max={360}
-						valueLabelDisplay="auto"
-					/>
-					<Typography id="rotation-z-slider" gutterBottom>
-						Rotation Z
-					</Typography>
-					<Slider
-						value={rotation.z}
-						onChange={(e, newValue) => setRotation({ ...rotation, z: newValue as number })}
-						aria-labelledby="rotation-z-slider"
-						min={0}
-						max={360}
-						valueLabelDisplay="auto"
-					/>
-                    <Typography id="position-x-slider" gutterBottom>
-						Position X
-					</Typography>
-					<Slider
-						value={position.x}
-						onChange={(e, newValue) => setPosition({ ...position, x: newValue as number })}
-						aria-labelledby="position-x-slider"
-						min={-100}
-						max={100}
-						valueLabelDisplay="auto"
-					/>
-                    <Typography id="position-y-slider" gutterBottom>
-						Position Y
-					</Typography>
-					<Slider
-						value={position.y}
-						onChange={(e, newValue) => setPosition({ ...position, y: newValue as number })}
-						aria-labelledby="position-y-slider"
-						min={-100}
-						max={100}
-						valueLabelDisplay="auto"
-					/>
-                    <Typography id="position-z-slider" gutterBottom>
-						Position Z
-					</Typography>
-					<Slider
-						value={position.z}
-						onChange={(e, newValue) => setPosition({ ...position, z: newValue as number })}
-						aria-labelledby="position-z-slider"
-						min={-100}
-						max={100}
-						valueLabelDisplay="auto"
-					/>
-				</Box>
+				<ThreeObjectControls
+					showLayer={showLayer}
+					setShowLayer={setShowLayer}
+					scale={scale}
+					setScale={setScale}
+					rotation={rotation}
+					setRotation={setRotation}
+					useMapCoords={useMapCoords}
+					setUseMapCoords={setUseMapCoords}
+					mapPosition={mapPosition}
+					setMapPosition={setMapPosition}
+					altitude={altitude}
+					setAltitude={setAltitude}
+					position={position}
+					setPosition={setPosition}
+					layerName="Splat"
+				/>
 			</Sidebar>
 		</>
 	);
