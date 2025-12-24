@@ -19,6 +19,10 @@ export interface ThreeObjectControlsProps {
 	setAltitude: (altitude: number) => void;
 	position: { x: number; y: number; z: number };
 	setPosition: (position: { x: number; y: number; z: number }) => void;
+	enableTransformControls?: boolean;
+	setEnableTransformControls?: (enable: boolean) => void;
+	transformMode?: 'translate' | 'rotate' | 'scale';
+	setTransformMode?: (mode: 'translate' | 'rotate' | 'scale') => void;
 	layerName?: string;
 }
 
@@ -37,6 +41,10 @@ export const ThreeObjectControls = ({
 	setAltitude,
 	position,
 	setPosition,
+	enableTransformControls,
+	setEnableTransformControls,
+	transformMode,
+	setTransformMode,
 	layerName = 'Layer',
 }: ThreeObjectControlsProps) => {
 	return (
@@ -57,6 +65,46 @@ export const ThreeObjectControls = ({
 			>
 				{useMapCoords ? 'Map Coords' : 'Scene Coords'}
 			</Button>
+			{setEnableTransformControls && (
+				<Button
+					color="info"
+					variant={enableTransformControls ? 'contained' : 'outlined'}
+					onClick={() => setEnableTransformControls(!enableTransformControls)}
+					sx={{ marginBottom: '20px', marginLeft: '10px' }}
+				>
+					3D Gizmo
+				</Button>
+			)}
+			{setTransformMode && enableTransformControls && (
+				<Box sx={{ marginBottom: '20px' }}>
+					<Button
+						color="primary"
+						variant={transformMode === 'translate' ? 'contained' : 'outlined'}
+						onClick={() => setTransformMode('translate')}
+						sx={{ marginRight: '5px' }}
+						size="small"
+					>
+						Move
+					</Button>
+					<Button
+						color="primary"
+						variant={transformMode === 'rotate' ? 'contained' : 'outlined'}
+						onClick={() => setTransformMode('rotate')}
+						sx={{ marginRight: '5px' }}
+						size="small"
+					>
+						Rotate
+					</Button>
+					<Button
+						color="primary"
+						variant={transformMode === 'scale' ? 'contained' : 'outlined'}
+						onClick={() => setTransformMode('scale')}
+						size="small"
+					>
+						Scale
+					</Button>
+				</Box>
+			)}
 			<Typography gutterBottom>Scale: {scale.toFixed(2)}</Typography>
 			<Slider
 				value={scale}

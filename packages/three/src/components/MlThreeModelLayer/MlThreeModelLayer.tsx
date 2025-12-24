@@ -5,6 +5,7 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { LngLatLike } from 'maplibre-gl';
 import { useThree } from '../ThreeContext';
 import ThreejsUtils from '../../lib/ThreejsUtils';
+import MlTransformControls from '../MlTransformControls';
 
 /**
  * Renders obj or gltf 3D Models on the MapLibreMap referenced by props.mapId
@@ -20,6 +21,9 @@ export interface MlThreeModelLayerProps {
 	altitude?: number;
 	rotation?: { x: number; y: number; z: number };
 	scale?: { x: number; y: number; z: number } | number;
+	enableTransformControls?: boolean;
+	transformMode?: 'translate' | 'rotate' | 'scale';
+	onTransformChange?: (object: THREE.Object3D) => void;
 	init?: () => void;
 	onDone?: () => void;
 }
@@ -93,7 +97,17 @@ const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
 		}
 	}, [model, props.position, props.mapPosition, props.altitude, props.rotation, props.scale]);
 
-	return <></>;
+	return (
+		<>
+			{props.enableTransformControls && model && (
+				<MlTransformControls 
+					target={model} 
+					mode={props.transformMode}
+					onObjectChange={props.onTransformChange}
+				/>
+			)}
+		</>
+	);
 };
 
 export default MlThreeModelLayer;

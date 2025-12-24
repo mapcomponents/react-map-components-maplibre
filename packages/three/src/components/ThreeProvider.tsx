@@ -51,7 +51,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
     const helperRef = useRef(new ThreejsSceneHelper());
     const worldMatrixRef = useRef<Matrix4>(new Matrix4());
     const worldMatrixInvRef = useRef<Matrix4>(new Matrix4());
-    const rendererRef = useRef<ThreejsSceneRenderer>();
+    const rendererRef = useRef<ThreejsSceneRenderer | undefined>(undefined);
 
     useEffect(() => {
         if (!map) return;
@@ -66,7 +66,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
             type: 'custom',
             renderingMode: '3d',
             onAdd: (mapInstance, gl) => {
-                const threeRenderer = new ThreejsSceneRenderer(mapInstance, gl, interleaved);
+                const threeRenderer = new ThreejsSceneRenderer(mapInstance, gl as WebGL2RenderingContext, interleaved);
                 rendererRef.current = threeRenderer;
                 setRenderer(threeRenderer);
 
@@ -88,7 +88,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
 
                 helper.updateCameraForRender(
                     threeCamera, 
-                    map, 
+                    map.map, 
                     matrix, 
                     worldMatrixRef.current, 
                     worldMatrixInvRef.current
@@ -139,7 +139,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
     // Handle refCenter change
     useEffect(() => {
         if (map && refCenter) {
-             worldMatrixRef.current = ThreejsUtils.updateWorldMatrix(map, refCenter);
+             worldMatrixRef.current = ThreejsUtils.updateWorldMatrix(map.map, refCenter);
              worldMatrixInvRef.current = worldMatrixRef.current.clone().invert();
              setWorldMatrix(worldMatrixRef.current);
              setWorldMatrixInv(worldMatrixInvRef.current);
@@ -149,7 +149,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
 
 
     return (
-        <ThreeContext.Provider value={{ scene, camera, renderer, map, sceneRoot, worldMatrix, worldMatrixInv }}>
+        <ThreeContext.Provider value={{ scene, camera, renderer, map: map?.map, sceneRoot, worldMatrix, worldMatrixInv }}>
             {children}
         </ThreeContext.Provider>
     );

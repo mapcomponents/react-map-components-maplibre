@@ -5,6 +5,7 @@ import { useThree } from '../ThreeContext';
 import { SplatLoader } from '../../lib/splats/loaders/SplatLoader';
 import { PlySplatLoader } from '../../lib/splats/loaders/PlySplatLoader';
 import ThreejsUtils from '../../lib/ThreejsUtils';
+import MlTransformControls from '../MlTransformControls';
 
 /**
  * Renders splat 3D Models on the MapLibreMap referenced by props.mapId
@@ -20,6 +21,9 @@ export interface MlThreeSplatLayerProps {
 	altitude?: number;
 	rotation?: { x: number; y: number; z: number };
 	scale?: { x: number; y: number; z: number } | number;
+	enableTransformControls?: boolean;
+	transformMode?: 'translate' | 'rotate' | 'scale';
+	onTransformChange?: (object: THREE.Object3D) => void;
 	init?: () => void;
 	onDone?: () => void;
 }
@@ -97,7 +101,17 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
         model.updateMatrixWorld(true);
 	}, [model, props.position, props.mapPosition, props.altitude, props.rotation, props.scale]);
 
-	return <></>;
+	return (
+		<>
+			{props.enableTransformControls && model && (
+				<MlTransformControls 
+					target={model} 
+					mode={props.transformMode}
+					onObjectChange={props.onTransformChange}
+				/>
+			)}
+		</>
+	);
 };
 
 export default MlThreeSplatLayer;

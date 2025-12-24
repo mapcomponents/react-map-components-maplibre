@@ -55,6 +55,8 @@ const Template: any = () => {
 	const [mapPosition, setMapPosition] = useState({ lng: 7.097, lat: 50.7355 });
 	const [altitude, setAltitude] = useState(0);
 	const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
+	const [enableTransformControls, setEnableTransformControls] = useState(false);
+	const [transformMode, setTransformMode] = useState<'translate' | 'rotate' | 'scale'>('translate');
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 
 	const mapHook = useMap({ mapId: 'map_1' });
@@ -85,7 +87,7 @@ const Template: any = () => {
 						z: (rotation.z * Math.PI) / 180,
 					}}
 					scale={scale}
-					{...useMapCoords ? {
+					enableTransformControls={enableTransformControls}				transformMode={transformMode}					{...useMapCoords ? {
 						mapPosition: [mapPosition.lng, mapPosition.lat],
 						altitude: altitude
 					} : {
@@ -119,11 +121,12 @@ const Template: any = () => {
 					altitude={altitude}
 					setAltitude={setAltitude}
 					position={position}
-					setPosition={setPosition}
+					setPosition={setPosition}					enableTransformControls={enableTransformControls}
+					setEnableTransformControls={setEnableTransformControls}					transformMode={transformMode}
+					setTransformMode={setTransformMode}
 					layerName="Model"
 				/>
 			</Sidebar>
-			<MlNavigationTools showFollowGpsButton={false} />
 		</>
 	);
 };
