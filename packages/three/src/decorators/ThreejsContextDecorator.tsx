@@ -20,7 +20,6 @@ const decorators = [
 						<ThreeProvider
 							mapId="map_1"
 							id="three-scene-layer"
-							interleaved={true}
 							beforeId="water_name_line"
 						>
 							<Story />

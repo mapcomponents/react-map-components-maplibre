@@ -35,7 +35,6 @@ import {
     NearestFilter,
     RGFormat,
     Sphere,
-    InterleavedBufferAttribute,
 } from 'three';
 import { GaussianSplattingGeometry } from './GaussianSplattingGeometry';
 import { GaussianSplattingMaterial } from './GaussianSplattingMaterial';
@@ -267,35 +266,6 @@ export class GaussianSplattingMesh extends Mesh {
         colorArray[destinationIndex * 4 + 3] = color[3];
     }
 
-    private makeSplatFromAttribute(
-        sourceIndex: number,
-        destinationIndex: number,
-        positionBuffer: BufferAttribute | InterleavedBufferAttribute,
-        scaleBuffer: BufferAttribute | InterleavedBufferAttribute,
-        rotationBuffer: BufferAttribute | InterleavedBufferAttribute,
-        colorBuffer: BufferAttribute | InterleavedBufferAttribute,
-        opacityBuffer: BufferAttribute | InterleavedBufferAttribute,
-        covA: Uint16Array,
-        covB: Uint16Array,
-        colorArray: Uint8Array,
-        minimum: Vector3,
-        maximum: Vector3,
-        colorIsFloat = false
-    ): void {
-        const i = sourceIndex;
-        const colorScale = colorIsFloat ? 255 : 1;
-
-        this.tempPosition.set(positionBuffer.getX(i), positionBuffer.getY(i), positionBuffer.getZ(i));
-        this.tempScale.set(scaleBuffer.getX(i), scaleBuffer.getY(i), scaleBuffer.getZ(i));
-        this.tempQuaternion.set(rotationBuffer.getX(i), rotationBuffer.getY(i), rotationBuffer.getZ(i), rotationBuffer.getW(i)).normalize();
-        this.tempColor[0] = colorBuffer.getX(i) * colorScale;
-        this.tempColor[1] = colorBuffer.getY(i) * colorScale;
-        this.tempColor[2] = colorBuffer.getZ(i) * colorScale;
-        this.tempColor[3] = (opacityBuffer ? opacityBuffer.getX(i) : colorBuffer.getW(i)) * colorScale;
-
-        this.makeSplatFromComponents(sourceIndex, destinationIndex, this.tempPosition, this.tempScale, this.tempQuaternion, this.tempColor, covA, covB, colorArray, minimum, maximum);
-    }
-
     private makeSplatFromBuffer(sourceIndex: number, destinationIndex: number, fBuffer: Float32Array, uBuffer: Uint8Array, covA: Uint16Array, covB: Uint16Array, colorArray: Uint8Array, minimum: Vector3, maximum: Vector3): void {
         const baseF = 8 * sourceIndex;
         const baseU = 32 * sourceIndex;
@@ -427,62 +397,6 @@ export class GaussianSplattingMesh extends Mesh {
         runCoroutineSync(this.updateDataCoroutine(data, false, sh));
     }
 
-    private *updateDataFromGeometryCoroutine(geometry: BufferGeometry, isAsync: boolean): Coroutine<void> {
-        if (!this.covariancesATextureInternal) {
-            this.readyToDisplay = false;
-        }
-
-        const positionBuffer = geometry.getAttribute('position');
-        const scaleBuffer = geometry.getAttribute('scale');
-        const colorBuffer = geometry.getAttribute('color');
-        const opacityBuffer = geometry.getAttribute('opacity');
-        const rotationBuffer = geometry.getAttribute('rotation');
-
-        const colorIsFloat = colorBuffer.array instanceof Float32Array;
-        const colorNormalized = colorBuffer.normalized;
-        colorBuffer.normalized = false;
-
-        this.shDegreeValue = 0;
-        const vertexCount = positionBuffer.count;
-
-        if (vertexCount !== this.vertexCount) {
-            this.vertexCount = vertexCount;
-            this.geometry = GaussianSplattingGeometry.build(this.vertexCount);
-            this.material = GaussianSplattingMaterial.build(this.shDegreeValue);
-            this.updateSplatIndexBuffer(this.vertexCount);
-        }
-
-        const textureSize = this.getTextureSize(vertexCount);
-        const textureLength = textureSize.x * textureSize.y;
-
-        this.splatPositions = new Float32Array(4 * textureLength);
-        this.splatPositions2 = new Float32Array(4 * vertexCount);
-        const covA = new Uint16Array(textureLength * 4);
-        const covB = new Uint16Array((this.useRGBACovariants ? 4 : 2) * textureLength);
-        const colorArray = new Uint8Array(textureLength * 4);
-
-        const minimum = new Vector3(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
-        const maximum = new Vector3(-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
-
-        for (let i = 0; i < vertexCount; i++) {
-            this.makeSplatFromAttribute(i, i, positionBuffer, scaleBuffer, rotationBuffer, colorBuffer, opacityBuffer, covA, covB, colorArray, minimum, maximum, colorIsFloat);
-            if (isAsync && i % GaussianSplattingMesh.SPLAT_BATCH_SIZE === 0) {
-                yield;
-            }
-        }
-
-        this.updateTextures(covA, covB, colorArray);
-        this.updateBoundingInfo(minimum, maximum);
-        this.setEnabled(true);
-
-        colorBuffer.normalized = colorNormalized;
-        this.postToWorker(true);
-    }
-
-    updateDataFromGeometryAsync(geometry: BufferGeometry): Promise<void> {
-        return runCoroutineAsync(this.updateDataFromGeometryCoroutine(geometry, true), createYieldingScheduler());
-    }
-
     sortDataAsync(camera: Camera, forced = false): Promise<void> {
         if (!this.worker || !camera) {
             return Promise.resolve();
@@ -492,9 +406,6 @@ export class GaussianSplattingMesh extends Mesh {
         return this.postToWorker(forced) ?? Promise.resolve();
     }
 
-    updateDataFromGeometry(geometry: BufferGeometry): void {
-        runCoroutineSync(this.updateDataFromGeometryCoroutine(geometry, false));
-    }
 
     private updateSplatIndexBuffer(vertexCount: number): void {
         if (!this.splatIndex || vertexCount > this.splatIndex.length) {

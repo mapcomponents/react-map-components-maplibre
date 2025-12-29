@@ -16,15 +16,8 @@ export interface ThreeProviderProps {
     createLight?: boolean;
     children?: React.ReactNode;
     /**
-     * If true (default), Three.js layers share the same WebGL2RenderingContext as the MapLibre map,
-     * allowing 3D objects to be correctly interleaved with map layers.
-     * If false, a dedicated Three.js canvas is rendered on top of the base map.
-     */
-    interleaved?: boolean;
-    /**
      * Id of an existing layer in the MapLibre instance to help specify the layer order.
      * The Three.js layer will be rendered visually beneath the layer with the specified id.
-     * Only applicable when interleaved is true.
      */
     beforeId?: string;
 }
@@ -37,10 +30,9 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
     envIntensity = 1,
     createLight = true,
     children,
-    interleaved = true,
     beforeId
 }) => {
-    const { map } = useMap({ mapId, waitForLayer: interleaved ? beforeId : undefined });
+    const { map } = useMap({ mapId, waitForLayer: beforeId });
     const [scene, setScene] = useState<Scene>();
     const [camera, setCamera] = useState<PerspectiveCamera>();
     const [renderer, setRenderer] = useState<ThreejsSceneRenderer>();
@@ -66,7 +58,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
             type: 'custom',
             renderingMode: '3d',
             onAdd: (mapInstance, gl) => {
-                const threeRenderer = new ThreejsSceneRenderer(mapInstance, gl as WebGL2RenderingContext, interleaved);
+                const threeRenderer = new ThreejsSceneRenderer(mapInstance, gl as WebGL2RenderingContext);
                 rendererRef.current = threeRenderer;
                 setRenderer(threeRenderer);
 
@@ -107,8 +99,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
         };
 
         if (!map.getLayer(id)) {
-            // Use beforeId only in interleaved mode for layer ordering
-            map.addLayer(customLayer, interleaved ? beforeId : undefined);
+            map.addLayer(customLayer, beforeId);
         }
 
         setScene(threeScene);

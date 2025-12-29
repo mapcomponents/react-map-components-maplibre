@@ -4,7 +4,7 @@
  */
 
 import { type Map as MaplibreMap, MercatorCoordinate, LngLatLike } from 'maplibre-gl';
-import { Vector3, Quaternion, Euler, Matrix4 } from 'three';
+import { Vector3, Quaternion, Matrix4 } from 'three';
 import { Position } from './types';
 
 const DEG_TO_RAD = Math.PI / 180;
