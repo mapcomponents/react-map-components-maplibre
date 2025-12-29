@@ -110,7 +110,7 @@ export const ThreeObjectControls = ({
 				value={scale}
 				onChange={(e, newValue) => setScale(newValue as number)}
 				min={0.01}
-				max={5}
+				max={150}
 				step={0.01}
 				valueLabelDisplay="auto"
 			/>

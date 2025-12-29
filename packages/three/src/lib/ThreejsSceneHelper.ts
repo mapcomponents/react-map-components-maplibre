@@ -16,7 +16,7 @@ import {
     Quaternion,
     Euler,
 } from 'three';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import ThreejsUtils from './ThreejsUtils';
 
 export default class ThreejsSceneHelper {
@@ -206,7 +206,7 @@ export default class ThreejsSceneHelper {
     createEnvTexture(envTexture: string, scene: Scene): void {
         if (!envTexture?.endsWith('.hdr')) return;
 
-        new RGBELoader().load(envTexture, (texture) => {
+        new HDRLoader().load(envTexture, (texture) => {
             texture.mapping = EquirectangularReflectionMapping;
             scene.environment = texture;
             scene.environmentRotation.x = Math.PI / 2;
