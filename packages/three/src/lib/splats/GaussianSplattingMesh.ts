@@ -611,8 +611,8 @@ export class GaussianSplattingMesh extends Mesh {
 				UVMapping,
 				ClampToEdgeWrapping,
 				ClampToEdgeWrapping,
-				LinearFilter,
-				LinearFilter
+				NearestFilter,
+				NearestFilter
 			);
 			tex.generateMipmaps = false;
 			tex.needsUpdate = true;
@@ -629,8 +629,8 @@ export class GaussianSplattingMesh extends Mesh {
 				UVMapping,
 				ClampToEdgeWrapping,
 				ClampToEdgeWrapping,
-				LinearFilter,
-				LinearFilter
+				NearestFilter,
+				NearestFilter
 			);
 			tex.generateMipmaps = false;
 			tex.needsUpdate = true;
@@ -665,8 +665,8 @@ export class GaussianSplattingMesh extends Mesh {
 				UVMapping,
 				ClampToEdgeWrapping,
 				ClampToEdgeWrapping,
-				LinearFilter,
-				LinearFilter
+				NearestFilter,
+				NearestFilter
 			);
 			tex.generateMipmaps = false;
 			tex.needsUpdate = true;
