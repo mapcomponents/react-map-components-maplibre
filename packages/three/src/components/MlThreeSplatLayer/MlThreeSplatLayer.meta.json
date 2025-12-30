@@ -1,0 +1,21 @@
+{
+	"name": "MlThreeSplatLayer",
+	"title": "3D Splat Model",
+	"description": "Layer Component, that makes it possible to show 3D Gaussian Splatting Models on the map.",
+	"i18n": {
+		"de": {
+			"title": "3D Splat Modelle",
+			"description": "Layer Component, das es ermöglicht 3D Gaussian Splatting Modelle auf der Karte darzustellen."
+		}
+	},
+	"tags": ["Map layer", "3D", "Splat"],
+	"category": "layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/three/iframe.html?id=mapcomponents-mlthreesplatlayer--default&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/three/thumbnails/MlThreeSplatLayer.png"
+}

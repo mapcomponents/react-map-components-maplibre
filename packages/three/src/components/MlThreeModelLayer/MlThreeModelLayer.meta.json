@@ -14,8 +14,8 @@
 	"demos": [
 		{
 			"name": "Demo",
-			"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlthreemodellayer--example-config&viewMode=story"
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/three/iframe.html?id=mapcomponents-mlthreemodellayer--example-config&viewMode=story"
 		}
 	],
-	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlThreeJsLayer.png"
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/three/thumbnails/MlThreeModelLayer.png"
 }
