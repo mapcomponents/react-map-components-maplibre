@@ -29,36 +29,55 @@ export interface MlThreeModelLayerProps {
 }
 
 const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
+	const {
+		url,
+		position,
+		mapPosition,
+		altitude,
+		rotation,
+		scale,
+		enableTransformControls,
+		transformMode,
+		onTransformChange,
+		init,
+		onDone,
+	} = props;
 	const { scene, worldMatrixInv } = useThree();
 	const modelRef = useRef<THREE.Object3D | undefined>(undefined);
 	const [model, setModel] = useState<THREE.Object3D | undefined>(undefined);
 
+	// Use refs for callbacks to avoid re-triggering the effect when they change
+	const initRef = useRef(init);
+	const onDoneRef = useRef(onDone);
+	initRef.current = init;
+	onDoneRef.current = onDone;
+
 	useEffect(() => {
 		if (!scene) return;
 
-		if (typeof props.init === 'function') {
-			props.init();
+		if (typeof initRef.current === 'function') {
+			initRef.current();
 		}
 
-		const extension = props.url.split('.').pop()?.toLowerCase();
+		const extension = url.split('.').pop()?.toLowerCase();
 
 		const onLoad = (object: THREE.Object3D) => {
 			modelRef.current = object;
 			scene.add(object);
 			setModel(object);
-			if (typeof props.onDone === 'function') {
-				props.onDone();
+			if (typeof onDoneRef.current === 'function') {
+				onDoneRef.current();
 			}
 		};
 
 		if (extension === 'glb' || extension === 'gltf') {
 			const loader = new GLTFLoader();
-			loader.load(props.url, (gltf) => {
+			loader.load(url, (gltf) => {
 				onLoad(gltf.scene);
 			});
 		} else if (extension === 'obj') {
 			const loader = new OBJLoader();
-			loader.load(props.url, (obj) => {
+			loader.load(url, (obj) => {
 				onLoad(obj);
 			});
 		} else {
@@ -72,42 +91,41 @@ const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
 				setModel(undefined);
 			}
 		};
-	}, [scene, props.url]);
+	}, [scene, url]);
 
 	useEffect(() => {
 		if (!model) return;
 
 		// Handle position: mapPosition takes precedence over position
-		if (props.mapPosition && worldMatrixInv) {
-			const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, props.mapPosition, props.altitude);
+		if (mapPosition && worldMatrixInv) {
+			const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, mapPosition, altitude);
 			model.position.set(scenePos.x, scenePos.y, scenePos.z);
-		} else if (props.position) {
-			model.position.set(props.position.x, props.position.y, props.position.z);
+		} else if (position) {
+			model.position.set(position.x, position.y, position.z);
 		}
 
-		if (props.rotation) {
-			model.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
+		if (rotation) {
+			model.rotation.set(rotation.x, rotation.y, rotation.z);
 		}
-		if (props.scale) {
-			if (typeof props.scale === 'number') {
-				model.scale.set(props.scale, props.scale, props.scale);
+		if (scale) {
+			if (typeof scale === 'number') {
+				model.scale.set(scale, scale, scale);
 			} else {
-				model.scale.set(props.scale.x, props.scale.y, props.scale.z);
+				model.scale.set(scale.x, scale.y, scale.z);
 			}
 		}
-	}, [model, props.position, props.mapPosition, props.altitude, props.rotation, props.scale]);
+	}, [model, position, mapPosition, altitude, rotation, scale, worldMatrixInv]);
 
-	return (
-		<>
-			{props.enableTransformControls && model && (
-				<MlTransformControls 
-					target={model} 
-					mode={props.transformMode}
-					onObjectChange={props.onTransformChange}
-				/>
-			)}
-		</>
-	);
+	if (enableTransformControls && model) {
+		return (
+			<MlTransformControls
+				target={model}
+				mode={transformMode}
+				onObjectChange={onTransformChange}
+			/>
+		);
+	}
+	return null;
 };
 
 export default MlThreeModelLayer;

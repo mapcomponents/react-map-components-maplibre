@@ -4,7 +4,6 @@ import {
 	MapComponentsProvider,
 	MapLibreMap,
 	MlNavigationTools,
-	MlTerrainLayer,
 	getTheme,
 } from '@mapcomponents/react-maplibre';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';

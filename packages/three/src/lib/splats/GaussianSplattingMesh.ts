@@ -437,12 +437,18 @@ export class GaussianSplattingMesh extends Mesh {
         const te = this.tempMatrix.elements;
         const covBSItemSize = this.useRGBACovariants ? 4 : 2;
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions![4 * sourceIndex + 0] = position.x;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions![4 * sourceIndex + 1] = position.y;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions![4 * sourceIndex + 2] = position.z;
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions2![4 * sourceIndex + 0] = position.x;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions2![4 * sourceIndex + 1] = position.y;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions2![4 * sourceIndex + 2] = position.z;
 
         minimum.min(position);
@@ -478,7 +484,9 @@ export class GaussianSplattingMesh extends Mesh {
             factor = Math.max(factor, Math.abs(covariances[i]));
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions![4 * sourceIndex + 3] = factor;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.splatPositions2![4 * sourceIndex + 3] = factor;
 
         covA[destinationIndex * 4 + 0] = toHalfFloat(covariances[0] / factor);
@@ -549,6 +557,7 @@ export class GaussianSplattingMesh extends Mesh {
 
         this.covariancesATextureInternal = createF16Texture(covA, textureSize.x, textureSize.y, RGBAFormat);
         this.covariancesBTextureInternal = createF16Texture(covB, textureSize.x, textureSize.y, this.useRGBACovariants ? RGBAFormat : RGFormat);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.centersTextureInternal = createF32Texture(this.splatPositions!, textureSize.x, textureSize.y, RGBAFormat);
         this.colorsTextureInternal = createU8Texture(colorArray, textureSize.x, textureSize.y, RGBAFormat);
 
@@ -654,6 +663,7 @@ export class GaussianSplattingMesh extends Mesh {
         this.worker?.terminate();
         this.worker = new GaussianSplattingSorter();
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.worker.init(this.splatPositions2!, this.vertexCount);
         this.canPostToWorker = true;
 

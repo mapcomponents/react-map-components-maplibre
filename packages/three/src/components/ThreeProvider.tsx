@@ -112,6 +112,7 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
             }
             // Cleanup is handled in onRemove
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [map, id]); // Re-run if map or id changes.
 
     // Handle dynamic prop changes

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import MlThreeModelLayer from './MlThreeModelLayer';
-import { TopToolbar, useMap, MlNavigationTools, Sidebar } from '@mapcomponents/react-maplibre';
+import { useMap, TopToolbar, Sidebar } from '@mapcomponents/react-maplibre';
 import ThreejsContextDecorator from '../../decorators/ThreejsContextDecorator';
 import { useThree } from '../ThreeContext';
 import { ThreeObjectControls } from '../ThreeObjectControls';
@@ -50,7 +50,6 @@ const Lights = () => {
 const Template: any = () => {
 	const { worldMatrix } = useThree();
 	const [showLayer, setShowLayer] = useState(true);
-	const showLayerRef = useRef(true);
 	const [scale, setScale] = useState(1);
 	const [rotation, setRotation] = useState({ x: 90, y: 90, z: 0 });
 	const [useMapCoords, setUseMapCoords] = useState(true);
@@ -75,7 +74,7 @@ const Template: any = () => {
 		if (useMapCoords) {
 			mapHook.map.setCenter([mapPosition.lng, mapPosition.lat]);
 		}
-	}, [useMapCoords, mapHook.map]);
+	}, [useMapCoords, mapHook.map, mapPosition.lng, mapPosition.lat]);
 
 	const handleTransformChange = (object: THREE.Object3D) => {
 		setRotation({

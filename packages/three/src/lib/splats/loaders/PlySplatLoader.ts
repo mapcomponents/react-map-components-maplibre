@@ -5,7 +5,7 @@
  * Source: https://github.com/yangjs6/mapbox-3d-tiles
  */
 
-import { Vector3, FileLoader, Loader, LoadingManager, Quaternion, MathUtils } from 'three';
+import { Vector3, FileLoader, Loader, Quaternion, MathUtils } from 'three';
 import { GaussianSplattingMesh } from '../GaussianSplattingMesh';
 import { createYieldingScheduler, runCoroutineAsync } from '../../utils/coroutine';
 
@@ -88,9 +88,6 @@ export class PlySplatLoader extends Loader {
     private static readonly SH_C0 = 0.28209479177387814;
     private static readonly PLY_CONVERSION_BATCH_SIZE = 32768;
 
-    constructor(manager?: LoadingManager) {
-        super(manager);
-    }
 
     override load(
         url: string,
@@ -229,8 +226,11 @@ export class PlySplatLoader extends Loader {
             switch (prop.value) {
                 case PLYValue.PACKED_POSITION:
                     unpack111011(value, temp3);
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     position[0] = MathUtils.lerp(chunk!.min.x, chunk!.max.x, temp3.x);
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     position[1] = -MathUtils.lerp(chunk!.min.y, chunk!.max.y, temp3.y);
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     position[2] = MathUtils.lerp(chunk!.min.z, chunk!.max.z, temp3.z);
                     break;
                 case PLYValue.PACKED_ROTATION:
@@ -239,8 +239,11 @@ export class PlySplatLoader extends Loader {
                     break;
                 case PLYValue.PACKED_SCALE:
                     unpack111011(value, temp3);
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     scale[0] = Math.exp(MathUtils.lerp(chunk!.minScale.x, chunk!.maxScale.x, temp3.x));
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     scale[1] = Math.exp(MathUtils.lerp(chunk!.minScale.y, chunk!.maxScale.y, temp3.y));
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     scale[2] = Math.exp(MathUtils.lerp(chunk!.minScale.z, chunk!.maxScale.z, temp3.z));
                     break;
                 case PLYValue.PACKED_COLOR: unpack8888(value, rgba); break;

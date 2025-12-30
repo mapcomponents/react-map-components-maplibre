@@ -101,6 +101,7 @@ export function runCoroutineSync<T>(coroutine: Coroutine<T>, abortSignal?: Abort
         abortSignal
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return result!;
 }
 

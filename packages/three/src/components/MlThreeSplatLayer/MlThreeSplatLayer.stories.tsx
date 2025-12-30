@@ -1,9 +1,9 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import MlThreeSplatLayer from './MlThreeSplatLayer';
-import { TopToolbar, Sidebar, MapComponentsProvider, MapLibreMap, MlNavigationTools, getTheme, useMap } from '@mapcomponents/react-maplibre';
+import { useMap, TopToolbar, Sidebar } from '@mapcomponents/react-maplibre';
 import MlThreeJsContextDecorator from '../../decorators/ThreejsContextDecorator';
 import { ThreeObjectControls } from '../ThreeObjectControls';
 import { useThree } from '../ThreeContext';
@@ -50,7 +50,7 @@ const Template: any = () => {
 		if (useMapCoords) {
 			mapHook.map.setCenter([mapPosition.lng, mapPosition.lat]);
 		}
-	}, [useMapCoords, mapHook.map]);
+	}, [useMapCoords, mapHook.map, mapPosition.lng, mapPosition.lat]);
 
 	const handleTransformChange = (object: THREE.Object3D) => {
 		setRotation({

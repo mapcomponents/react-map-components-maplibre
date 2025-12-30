@@ -13,6 +13,7 @@ export interface MlTransformControlsProps {
 }
 
 const MlTransformControls = (props: MlTransformControlsProps) => {
+	const { target, mode, enabled, space, size, onObjectChange } = props;
 	const { scene, camera, renderer, map, sceneRoot } = useThree();
 	const controlsRef = useRef<TransformControls | null>(null);
 
@@ -24,10 +25,10 @@ const MlTransformControls = (props: MlTransformControlsProps) => {
 		controlsRef.current = controls;
 
 		// Set initial mode
-		controls.setMode(props.mode || 'translate');
-		controls.setSpace(props.space || 'world');
-		if (props.size) {
-			controls.setSize(props.size);
+		controls.setMode(mode || 'translate');
+		controls.setSpace(space || 'world');
+		if (size) {
+			controls.setSize(size);
 		}
 
 		// Add TransformControls root object to the sceneRoot
@@ -50,13 +51,13 @@ const MlTransformControls = (props: MlTransformControlsProps) => {
 		controls.addEventListener('dragging-changed', onDraggingChanged);
 
 		// Trigger callback on object change
-		if (props.onObjectChange) {
-			const onObjectChange = () => {
+		if (onObjectChange) {
+			const handleObjectChange = () => {
 				if (controls.object) {
-					props.onObjectChange?.(controls.object);
+					onObjectChange(controls.object);
 				}
 			};
-			controls.addEventListener('objectChange', onObjectChange);
+			controls.addEventListener('objectChange', handleObjectChange);
 		}
 
 		return () => {
@@ -66,43 +67,44 @@ const MlTransformControls = (props: MlTransformControlsProps) => {
 			controls.dispose();
 			controlsRef.current = null;
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [scene, camera, renderer, map, sceneRoot]);
 
 	// Update target object
 	useEffect(() => {
 		if (!controlsRef.current) return;
 
-		if (props.target) {
-			controlsRef.current.attach(props.target);
+		if (target) {
+			controlsRef.current.attach(target);
 		} else {
 			controlsRef.current.detach();
 		}
-	}, [props.target]);
+	}, [target]);
 
 	// Update mode
 	useEffect(() => {
 		if (!controlsRef.current) return;
 		// Directly set the mode to avoid detach/reattach cycle
-		(controlsRef.current as any).mode = props.mode || 'translate';
-	}, [props.mode]);
+		(controlsRef.current as any).mode = mode || 'translate';
+	}, [mode]);
 
 	// Update enabled state
 	useEffect(() => {
 		if (!controlsRef.current) return;
-		controlsRef.current.enabled = props.enabled !== false;
-	}, [props.enabled]);
+		controlsRef.current.enabled = enabled !== false;
+	}, [enabled]);
 
 	// Update space
 	useEffect(() => {
 		if (!controlsRef.current) return;
-		controlsRef.current.setSpace(props.space || 'world');
-	}, [props.space]);
+		controlsRef.current.setSpace(space || 'world');
+	}, [space]);
 
 	// Update size
 	useEffect(() => {
-		if (!controlsRef.current || !props.size) return;
-		controlsRef.current.setSize(props.size);
-	}, [props.size]);
+		if (!controlsRef.current || !size) return;
+		controlsRef.current.setSize(size);
+	}, [size]);
 
 	return null;
 };

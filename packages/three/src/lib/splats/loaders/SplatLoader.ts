@@ -5,17 +5,13 @@
  * Source: https://github.com/yangjs6/mapbox-3d-tiles
  */
 
-import { FileLoader, Loader, LoadingManager } from 'three';
+import { FileLoader, Loader } from 'three';
 import { GaussianSplattingMesh } from '../GaussianSplattingMesh';
 
 /**
  * Loader for .splat Gaussian Splatting files
  */
 export class SplatLoader extends Loader {
-    constructor(manager?: LoadingManager) {
-        super(manager);
-    }
-
     override load(
         url: string,
         onLoad: (mesh: GaussianSplattingMesh) => void,

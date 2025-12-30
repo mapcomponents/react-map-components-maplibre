@@ -53,8 +53,10 @@ describe('<MlThreeModelLayer />', () => {
     cy.window().should('have.property', '_map');
     cy.window().then((win: any) => {
       const map = win._map;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(map).to.exist;
       // Check for the layer added by ThreeProvider
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(map.getLayer('three-provider')).to.exist;
     });
   });
