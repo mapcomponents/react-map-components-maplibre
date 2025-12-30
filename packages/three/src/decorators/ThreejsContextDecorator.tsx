@@ -16,11 +16,7 @@ const decorators = [
 			<div className="fullscreen_map">
 				<MapComponentsProvider>
 					<MUIThemeProvider theme={theme}>
-						<ThreeProvider
-							mapId="map_1"
-							id="three-scene-layer"
-							beforeId="water_name_line"
-						>
+						<ThreeProvider mapId="map_1" id="three-scene-layer" beforeId="water_name_line">
 							<Story />
 						</ThreeProvider>
 						<MapLibreMap

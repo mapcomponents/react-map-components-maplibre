@@ -87,9 +87,9 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 		return () => {
 			if (modelRef.current) {
 				scene.remove(modelRef.current);
-                if ('dispose' in modelRef.current && typeof modelRef.current.dispose === 'function') {
-                    (modelRef.current as any).dispose();
-                }
+				if ('dispose' in modelRef.current && typeof modelRef.current.dispose === 'function') {
+					(modelRef.current as any).dispose();
+				}
 				modelRef.current = undefined;
 				setModel(undefined);
 			}
@@ -117,16 +117,12 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 				model.scale.set(scale.x, scale.y, scale.z);
 			}
 		}
-        model.updateMatrixWorld(true);
+		model.updateMatrixWorld(true);
 	}, [model, position, mapPosition, altitude, rotation, scale, worldMatrixInv]);
 
 	if (enableTransformControls && model) {
 		return (
-			<MlTransformControls
-				target={model}
-				mode={transformMode}
-				onObjectChange={onTransformChange}
-			/>
+			<MlTransformControls target={model} mode={transformMode} onObjectChange={onTransformChange} />
 		);
 	}
 	return null;

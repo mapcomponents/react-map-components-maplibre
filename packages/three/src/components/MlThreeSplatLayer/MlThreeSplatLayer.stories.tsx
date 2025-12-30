@@ -10,7 +10,6 @@ import { useThree } from '../ThreeContext';
 import ThreejsUtils from '../../lib/ThreejsUtils';
 import * as THREE from 'three';
 
-
 const storyoptions = {
 	title: 'MapComponents/MlThreeSplatLayer',
 	component: MlThreeSplatLayer,
@@ -31,10 +30,12 @@ const Template: any = () => {
 	const [scale, setScale] = useState(100);
 	const [rotation, setRotation] = useState({ x: 270, y: 0, z: 5 });
 	const [useMapCoords, setUseMapCoords] = useState(true);
-	const [mapPosition, setMapPosition] = useState({ lng: 7.096800, lat: 50.736000 });
+	const [mapPosition, setMapPosition] = useState({ lng: 7.0968, lat: 50.736 });
 	const [altitude, setAltitude] = useState(30);
 	const [position, setPosition] = useState({ x: 0, y: 0, z: 100 });
-	const [enableTransformControls, setEnableTransformControls] = useState(false);	const [transformMode, setTransformMode] = useState<'translate' | 'rotate' | 'scale'>('translate');	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [enableTransformControls, setEnableTransformControls] = useState(false);
+	const [transformMode, setTransformMode] = useState<'translate' | 'rotate' | 'scale'>('translate');
+	const [sidebarOpen, setSidebarOpen] = useState(true);
 
 	const mapHook = useMap({ mapId: 'map_1' });
 	useEffect(() => {
@@ -83,12 +84,14 @@ const Template: any = () => {
 					enableTransformControls={enableTransformControls}
 					transformMode={transformMode}
 					onTransformChange={handleTransformChange}
-					{...useMapCoords ? {
-						mapPosition: [mapPosition.lng, mapPosition.lat],
-						altitude: altitude
-					} : {
-						position: position
-					}}
+					{...(useMapCoords
+						? {
+								mapPosition: [mapPosition.lng, mapPosition.lat],
+								altitude: altitude,
+							}
+						: {
+								position: position,
+							})}
 				/>
 			)}
 
@@ -124,9 +127,16 @@ const Template: any = () => {
 					setTransformMode={setTransformMode}
 					layerName="Splat"
 				/>
-				<Typography variant="body2" sx={{ mt: 2, p: 1, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
+				<Typography
+					variant="body2"
+					sx={{ mt: 2, p: 1, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}
+				>
 					The splat used is from{' '}
-					<Link href="https://www.patreon.com/posts/cluster-fly-141866089" target="_blank" rel="noopener">
+					<Link
+						href="https://www.patreon.com/posts/cluster-fly-141866089"
+						target="_blank"
+						rel="noopener"
+					>
 						Cluster Fly
 					</Link>{' '}
 					by Dany Bittel published under CC.

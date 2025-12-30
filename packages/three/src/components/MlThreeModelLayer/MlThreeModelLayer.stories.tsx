@@ -108,12 +108,14 @@ const Template: any = () => {
 					enableTransformControls={enableTransformControls}
 					transformMode={transformMode}
 					onTransformChange={handleTransformChange}
-					{...useMapCoords ? {
-						mapPosition: [mapPosition.lng, mapPosition.lat],
-						altitude: altitude
-					} : {
-						position: position
-					}}
+					{...(useMapCoords
+						? {
+								mapPosition: [mapPosition.lng, mapPosition.lat],
+								altitude: altitude,
+							}
+						: {
+								position: position,
+							})}
 				/>
 			)}
 
@@ -142,8 +144,10 @@ const Template: any = () => {
 					altitude={altitude}
 					setAltitude={setAltitude}
 					position={position}
-					setPosition={setPosition}					enableTransformControls={enableTransformControls}
-					setEnableTransformControls={setEnableTransformControls}					transformMode={transformMode}
+					setPosition={setPosition}
+					enableTransformControls={enableTransformControls}
+					setEnableTransformControls={setEnableTransformControls}
+					transformMode={transformMode}
 					setTransformMode={setTransformMode}
 					layerName="Model"
 				/>

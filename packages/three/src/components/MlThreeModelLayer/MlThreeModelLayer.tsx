@@ -118,11 +118,7 @@ const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
 
 	if (enableTransformControls && model) {
 		return (
-			<MlTransformControls
-				target={model}
-				mode={transformMode}
-				onObjectChange={onTransformChange}
-			/>
+			<MlTransformControls target={model} mode={transformMode} onObjectChange={onTransformChange} />
 		);
 	}
 	return null;
