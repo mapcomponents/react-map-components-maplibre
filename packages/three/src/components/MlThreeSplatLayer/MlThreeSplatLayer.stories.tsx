@@ -35,9 +35,9 @@ const Template: any = () => {
 	const mapHook = useMap({ mapId: 'map_1' });
 	useEffect(() => {
 		if (!mapHook.map) return;
-		mapHook.map?.setZoom(15.5);
+		mapHook.map?.setZoom(17.5);
 		mapHook.map?.setPitch(44.5);
-		mapHook.map?.setCenter([7.097, 50.7355]);
+		mapHook.map?.setCenter([7.096614581535903, 50.736500960686556]);
 	}, [mapHook.map]);
 
 	// Center map on position when switching coordinate modes
