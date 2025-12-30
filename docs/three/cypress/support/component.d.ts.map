@@ -1,0 +1,1 @@
+{"version":3,"file":"component.d.ts","sourceRoot":"","sources":["../../../src/cypress/support/component.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,EAAE,MAAM,eAAe,CAAC;AACtC,OAAO,YAAY,CAAC;AAEpB,OAAO,CAAC,MAAM,CAAC;IAEd,UAAU,OAAO,CAAC;QACjB,UAAU,SAAS;YAClB,KAAK,EAAE,OAAO,KAAK,CAAC;SACpB;KACD;CACD"}

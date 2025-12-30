@@ -11,7 +11,7 @@
 		"@deck.gl/aggregation-layers": "^9.1.14",
 		"@deck.gl/core": "^9.1.14",
 		"@deck.gl/mapbox": "^9.1.14",
-		"@mapcomponents/react-maplibre": "workspace:^",
+		"@mapcomponents/react-maplibre": "1.6.4",
 		"@mui/icons-material": "^7.3.2",
 		"@mui/material": "^7.3.2",
 		"@storybook/react": "^9.1.4",
