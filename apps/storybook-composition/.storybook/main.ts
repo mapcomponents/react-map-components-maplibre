@@ -33,12 +33,20 @@ const config: StorybookConfig = {
 					title: 'Ra Geospatial',
 					url: 'http://localhost:4402',
 				},
+				'three': {
+					title: 'Three',
+					url: 'http://localhost:4403',
+				},
 			};
 		}
 		return {
 			'react-maplibre': {
 				title: 'React MapLibreMap',
 				url: 'https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/',
+			},
+			'three': {
+				title: 'three',
+				url: 'https://mapcomponents.github.io/react-map-components-maplibre/three/',
 			},
 			'deck-gl': {
 				title: 'Deck.gl',

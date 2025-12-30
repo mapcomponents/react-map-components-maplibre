@@ -1,0 +1,21 @@
+{
+	"name": "@mapcomponents/three",
+	"version": "0.0.1",
+	"main": "./index.js",
+	"types": "./index.d.ts",
+	"exports": {
+		".": {
+			"import": "./index.mjs",
+			"require": "./index.js"
+		}
+	},
+	"dependencies": {
+		"@mapcomponents/react-maplibre": "1.6.4",
+		"@mui/material": "^7.3.2",
+		"maplibre-gl": "^5.7.0",
+		"three": "^0.182.0"
+	},
+	"devDependencies": {
+		"@types/three": "^0.182.0"
+	}
+}
