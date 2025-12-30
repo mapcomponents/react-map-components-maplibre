@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -49,60 +50,57 @@ export const ThreeObjectControls = ({
 }: ThreeObjectControlsProps) => {
 	return (
 		<Box sx={{ padding: '10px' }}>
-			<Button
-				color="primary"
-				variant={showLayer ? 'contained' : 'outlined'}
-				onClick={() => setShowLayer(!showLayer)}
-				sx={{ marginBottom: '20px' }}
-			>
-				{showLayer ? 'Hide' : 'Show'} {layerName}
-			</Button>
-			<Button
-				color="secondary"
-				variant={useMapCoords ? 'contained' : 'outlined'}
-				onClick={() => setUseMapCoords(!useMapCoords)}
-				sx={{ marginBottom: '20px', marginLeft: '10px' }}
-			>
-				{useMapCoords ? 'Map Coords' : 'Scene Coords'}
-			</Button>
-			{setEnableTransformControls && (
+			<Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginBottom: 2 }}>
 				<Button
-					color="info"
-					variant={enableTransformControls ? 'contained' : 'outlined'}
-					onClick={() => setEnableTransformControls(!enableTransformControls)}
-					sx={{ marginBottom: '20px', marginLeft: '10px' }}
+					color="primary"
+					variant={showLayer ? 'contained' : 'outlined'}
+					onClick={() => setShowLayer(!showLayer)}
+					size="small"
 				>
-					3D Gizmo
+					{showLayer ? 'Hide' : 'Show'} {layerName}
 				</Button>
-			)}
+				<Button
+					color="secondary"
+					variant={useMapCoords ? 'contained' : 'outlined'}
+					onClick={() => setUseMapCoords(!useMapCoords)}
+					size="small"
+				>
+					{useMapCoords ? 'Map Coords' : 'Scene Coords'}
+				</Button>
+				{setEnableTransformControls && (
+					<Button
+						color="info"
+						variant={enableTransformControls ? 'contained' : 'outlined'}
+						onClick={() => setEnableTransformControls(!enableTransformControls)}
+						size="small"
+					>
+						3D Gizmo
+					</Button>
+				)}
+			</Box>
+
 			{setTransformMode && enableTransformControls && (
-				<Box sx={{ marginBottom: '20px' }}>
-					<Button
-						color="primary"
-						variant={transformMode === 'translate' ? 'contained' : 'outlined'}
-						onClick={() => setTransformMode('translate')}
-						sx={{ marginRight: '5px' }}
-						size="small"
-					>
-						Move
-					</Button>
-					<Button
-						color="primary"
-						variant={transformMode === 'rotate' ? 'contained' : 'outlined'}
-						onClick={() => setTransformMode('rotate')}
-						sx={{ marginRight: '5px' }}
-						size="small"
-					>
-						Rotate
-					</Button>
-					<Button
-						color="primary"
-						variant={transformMode === 'scale' ? 'contained' : 'outlined'}
-						onClick={() => setTransformMode('scale')}
-						size="small"
-					>
-						Scale
-					</Button>
+				<Box sx={{ marginBottom: 2 }}>
+					<ButtonGroup variant="outlined" size="small" fullWidth aria-label="transform mode">
+						<Button
+							variant={transformMode === 'translate' ? 'contained' : 'outlined'}
+							onClick={() => setTransformMode('translate')}
+						>
+							Move
+						</Button>
+						<Button
+							variant={transformMode === 'rotate' ? 'contained' : 'outlined'}
+							onClick={() => setTransformMode('rotate')}
+						>
+							Rotate
+						</Button>
+						<Button
+							variant={transformMode === 'scale' ? 'contained' : 'outlined'}
+							onClick={() => setTransformMode('scale')}
+						>
+							Scale
+						</Button>
+					</ButtonGroup>
 				</Box>
 			)}
 			<Typography gutterBottom>Scale: {scale.toFixed(2)}</Typography>

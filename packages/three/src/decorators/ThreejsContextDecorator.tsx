@@ -37,11 +37,6 @@ const decorators = [
 							showZoomButtons={false}
 							mapId="map_1"
 						/>
-						<MlTerrainLayer
-							sourceOptions={{
-								tiles: ['https://wms.wheregroup.com/dem_tileserver/raster_dem/{z}/{x}/{y}.webp'],
-							}}
-						/>
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>

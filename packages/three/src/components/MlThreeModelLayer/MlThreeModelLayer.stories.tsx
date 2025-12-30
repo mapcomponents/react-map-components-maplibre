@@ -5,6 +5,7 @@ import { TopToolbar, useMap, MlNavigationTools, Sidebar } from '@mapcomponents/r
 import ThreejsContextDecorator from '../../decorators/ThreejsContextDecorator';
 import { useThree } from '../ThreeContext';
 import { ThreeObjectControls } from '../ThreeObjectControls';
+import ThreejsUtils from '../../lib/ThreejsUtils';
 import * as THREE from 'three';
 
 const storyoptions = {
@@ -47,6 +48,7 @@ const Lights = () => {
 };
 
 const Template: any = () => {
+	const { worldMatrix } = useThree();
 	const [showLayer, setShowLayer] = useState(true);
 	const showLayerRef = useRef(true);
 	const [scale, setScale] = useState(1);
@@ -75,6 +77,23 @@ const Template: any = () => {
 		}
 	}, [useMapCoords, mapHook.map]);
 
+	const handleTransformChange = (object: THREE.Object3D) => {
+		setRotation({
+			x: (object.rotation.x * 180) / Math.PI,
+			y: (object.rotation.y * 180) / Math.PI,
+			z: (object.rotation.z * 180) / Math.PI,
+		});
+		setScale(object.scale.x);
+
+		if (useMapCoords && worldMatrix) {
+			const [lng, lat, alt] = ThreejsUtils.toMapPosition(worldMatrix, object.position);
+			setMapPosition({ lng, lat });
+			setAltitude(alt);
+		} else {
+			setPosition({ x: object.position.x, y: object.position.y, z: object.position.z });
+		}
+	};
+
 	return (
 		<>
 			<Lights />
@@ -87,7 +106,10 @@ const Template: any = () => {
 						z: (rotation.z * Math.PI) / 180,
 					}}
 					scale={scale}
-					enableTransformControls={enableTransformControls}				transformMode={transformMode}					{...useMapCoords ? {
+					enableTransformControls={enableTransformControls}
+					transformMode={transformMode}
+					onTransformChange={handleTransformChange}
+					{...useMapCoords ? {
 						mapPosition: [mapPosition.lng, mapPosition.lat],
 						altitude: altitude
 					} : {
