@@ -51,7 +51,8 @@ const Template: any = () => {
 		if (useMapCoords) {
 			mapHook.map.setCenter([mapPosition.lng, mapPosition.lat]);
 		}
-	}, [useMapCoords, mapHook.map, mapPosition.lng, mapPosition.lat]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [useMapCoords, mapHook.map]);
 
 	const handleTransformChange = (object: THREE.Object3D) => {
 		setRotation({

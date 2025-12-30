@@ -52,6 +52,11 @@ const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
 	initRef.current = init;
 	onDoneRef.current = onDone;
 
+	const transformRef = useRef({ position, mapPosition, altitude, rotation, scale });
+	transformRef.current = { position, mapPosition, altitude, rotation, scale };
+	const worldMatrixInvRef = useRef(worldMatrixInv);
+	worldMatrixInvRef.current = worldMatrixInv;
+
 	useEffect(() => {
 		if (!scene) return;
 
@@ -62,6 +67,27 @@ const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
 		const extension = url.split('.').pop()?.toLowerCase();
 
 		const onLoad = (object: THREE.Object3D) => {
+			const { position, mapPosition, altitude, rotation, scale } = transformRef.current;
+			const worldMatrixInv = worldMatrixInvRef.current;
+
+			if (mapPosition && worldMatrixInv) {
+				const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, mapPosition, altitude);
+				object.position.set(scenePos.x, scenePos.y, scenePos.z);
+			} else if (position) {
+				object.position.set(position.x, position.y, position.z);
+			}
+
+			if (rotation) {
+				object.rotation.set(rotation.x, rotation.y, rotation.z);
+			}
+			if (scale) {
+				if (typeof scale === 'number') {
+					object.scale.set(scale, scale, scale);
+				} else {
+					object.scale.set(scale.x, scale.y, scale.z);
+				}
+			}
+
 			modelRef.current = object;
 			scene.add(object);
 			setModel(object);
