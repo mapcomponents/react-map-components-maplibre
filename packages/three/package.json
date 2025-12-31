@@ -9,6 +9,9 @@
 			"require": "./index.js"
 		}
 	},
+	"publishConfig": {
+    "access": "public"
+  },
 	"dependencies": {
 		"@mapcomponents/react-maplibre": "workspace:*",
 		"@mui/material": "^7.3.2",
