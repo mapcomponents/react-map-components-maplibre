@@ -1,6 +1,16 @@
 ## 1.7.0 (2025-12-31)
 
-This was a version bump only, there were no code changes.
+## @mapcomponents/root
+
+### Added
+
+- b7a8b16: Add/three js package including MlThreeModelLayer and MlThreeSplatLayer (#249)
+
+## @mapcomponents/react-maplibre
+
+### Removed
+
+- b7a8b16: Removed MlThreeJsLayer and three dependency (#249)
 
 ## [1.6.4] (2025-12-22)
 
