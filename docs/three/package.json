@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/three",
-	"version": "0.0.1",
+	"version": "1.7.1",
 	"main": "./index.js",
 	"types": "./index.d.ts",
 	"exports": {
@@ -10,7 +10,7 @@
 		}
 	},
 	"dependencies": {
-		"@mapcomponents/react-maplibre": "1.6.4",
+		"@mapcomponents/react-maplibre": "workspace:*",
 		"@mui/material": "^7.3.2",
 		"maplibre-gl": "^5.7.0",
 		"three": "^0.182.0"
