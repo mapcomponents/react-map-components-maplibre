@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/three",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	"main": "./index.js",
 	"types": "./index.d.ts",
 	"exports": {
@@ -10,8 +10,8 @@
 		}
 	},
 	"publishConfig": {
-    "access": "public"
-  },
+		"access": "public"
+	},
 	"dependencies": {
 		"@mapcomponents/react-maplibre": "workspace:*",
 		"@mui/material": "^7.3.2",
