@@ -1,8 +1,4 @@
-## 1.7.2 (2025-12-31)
-
-This was a version bump only, there were no code changes.
-
-## [1.7.1] (2025-12-31)
+## [1.7.2] (2025-12-31)
 
 ## @mapcomponents/root
 
