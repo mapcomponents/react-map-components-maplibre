@@ -1,14 +1,4 @@
-## 1.7.1 (2025-12-31)
-
-### 🩹 Fixes
-
-- add release version options to nx.json ([58996666](https://github.com/mapcomponents/react-map-components-maplibre/commit/58996666))
-
-### ❤️ Thank You
-
-- Max Tobias Weber @cioddi
-
-## 1.7.0 (2025-12-31)
+## [1.7.1] (2025-12-31)
 
 ## @mapcomponents/root
 

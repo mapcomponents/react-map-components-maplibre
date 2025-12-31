@@ -22,7 +22,7 @@
 	"release": {
 		"version": {
 			"versionActionsOptions": {
-				"skipLockFileUpdate": true
+				"skipLockFileUpdate": false
 			}
 		}
 	},
