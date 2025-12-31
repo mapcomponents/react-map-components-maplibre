@@ -228,8 +228,8 @@ importers:
         specifier: ^9.1.14
         version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.9)
       '@mapcomponents/react-maplibre':
-        specifier: 1.6.4
-        version: 1.6.4(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../react-maplibre
       '@mui/icons-material':
         specifier: ^7.3.2
         version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
@@ -256,8 +256,8 @@ importers:
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
       '@mapcomponents/react-maplibre':
-        specifier: 1.6.4
-        version: 1.6.4(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../react-maplibre
       '@mui/icons-material':
         specifier: ^7.3.2
         version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
@@ -557,11 +557,276 @@ importers:
         specifier: ^9.5.4
         version: 9.5.4(typescript@5.9.2)(webpack@5.101.3(@swc/core@1.12.14(@swc/helpers@0.5.17))(esbuild@0.25.9))
 
+  packages/react-maplibre/dist:
+    dependencies:
+      '@dnd-kit/core':
+        specifier: ^6.3.1
+        version: 6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@dnd-kit/modifiers':
+        specifier: ^9.0.0
+        version: 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      '@dnd-kit/sortable':
+        specifier: ^10.0.0
+        version: 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      '@dnd-kit/utilities':
+        specifier: ^3.2.2
+        version: 3.2.2(react@19.1.0)
+      '@emotion/css':
+        specifier: ^11.13.5
+        version: 11.13.5
+      '@emotion/react':
+        specifier: ^11.14.0
+        version: 11.14.0(@types/react@19.1.12)(react@19.1.0)
+      '@emotion/styled':
+        specifier: ^11.14.1
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mapbox/mapbox-gl-draw':
+        specifier: 1.4.3
+        version: 1.4.3
+      '@mapbox/mapbox-gl-sync-move':
+        specifier: ^0.3.1
+        version: 0.3.1
+      '@mui/icons-material':
+        specifier: ^7.3.2
+        version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mui/material':
+        specifier: ^7.3.2
+        version: 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mui/system':
+        specifier: ^7.3.2
+        version: 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@reduxjs/toolkit':
+        specifier: ^2.9.0
+        version: 2.9.0(react-redux@9.2.0(@types/react@19.1.12)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
+      '@testing-library/jest-dom':
+        specifier: ^6.8.0
+        version: 6.8.0
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@tmcw/togeojson':
+        specifier: ^7.1.2
+        version: 7.1.2
+      '@turf/helpers':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@turf/turf':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@types/d3':
+        specifier: ^7.4.3
+        version: 7.4.3
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
+      '@types/react-color':
+        specifier: ^3.0.13
+        version: 3.0.13(@types/react@19.1.12)
+      '@types/topojson-client':
+        specifier: ^3.1.5
+        version: 3.1.5
+      '@types/topojson-specification':
+        specifier: ^1.0.5
+        version: 1.0.5
+      '@xmldom/xmldom':
+        specifier: ^0.9.8
+        version: 0.9.8
+      camelcase:
+        specifier: ^8.0.0
+        version: 8.0.0
+      csv2geojson:
+        specifier: ^5.1.2
+        version: 5.1.2
+      d3:
+        specifier: ^7.9.0
+        version: 7.9.0
+      jspdf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      maplibre-gl:
+        specifier: ^5.7.0
+        version: 5.7.1
+      osm2geojson-lite:
+        specifier: ^1.1.2
+        version: 1.1.2
+      pako:
+        specifier: ^2.1.0
+        version: 2.1.0
+      react-color:
+        specifier: ^2.19.3
+        version: 2.19.3(react@19.1.0)
+      react-moveable:
+        specifier: ^0.56.0
+        version: 0.56.0
+      react-redux:
+        specifier: ^9.2.0
+        version: 9.2.0(@types/react@19.1.12)(react@19.1.0)(redux@5.0.1)
+      redux:
+        specifier: ^5.0.1
+        version: 5.0.1
+      redux-thunk:
+        specifier: ^3.1.0
+        version: 3.1.0(redux@5.0.1)
+      topojson-client:
+        specifier: ^3.1.0
+        version: 3.1.0
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
+      wms-capabilities:
+        specifier: ^0.6.0
+        version: 0.6.0
+    devDependencies:
+      '@testing-library/react':
+        specifier: ^16.3.0
+        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@types/chai':
+        specifier: ^5.2.2
+        version: 5.2.2
+      '@types/elasticlunr':
+        specifier: ^0.9.9
+        version: 0.9.9
+      '@types/enzyme':
+        specifier: ^3.10.19
+        version: 3.10.19
+      '@types/expect':
+        specifier: ^24.3.2
+        version: 24.3.2
+      '@types/jest':
+        specifier: ^30.0.0
+        version: 30.0.0
+      '@types/mapbox__mapbox-gl-draw':
+        specifier: ^1.4.9
+        version: 1.4.9
+      '@types/mapbox__point-geometry':
+        specifier: ^0.1.4
+        version: 0.1.4
+      '@types/mapbox__vector-tile':
+        specifier: ^2.0.0
+        version: 2.0.0
+      '@types/mocha':
+        specifier: ^10.0.10
+        version: 10.0.10
+      '@types/pako':
+        specifier: ^2.0.4
+        version: 2.0.4
+      '@types/react':
+        specifier: ^19.1.12
+        version: 19.1.12
+      '@types/react-dom':
+        specifier: ^19.1.9
+        version: 19.1.9(@types/react@19.1.12)
+      '@types/sql.js':
+        specifier: ^1.4.9
+        version: 1.4.9
+      '@types/uuid':
+        specifier: ^10.0.0
+        version: 10.0.0
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^8.42.0
+        version: 8.42.0(@typescript-eslint/parser@8.42.0(eslint@9.34.0(jiti@2.4.2))(typescript@5.9.2))(eslint@9.34.0(jiti@2.4.2))(typescript@5.9.2)
+      '@typescript-eslint/parser':
+        specifier: ^8.42.0
+        version: 8.42.0(eslint@9.34.0(jiti@2.4.2))(typescript@5.9.2)
+      avj:
+        specifier: ^0.0.0
+        version: 0.0.0
+      babel-jest:
+        specifier: ^30.1.2
+        version: 30.1.2(@babel/core@7.28.3)
+      babel-loader:
+        specifier: ^10.0.0
+        version: 10.0.0(@babel/core@7.28.3)(webpack@5.101.3(@swc/core@1.12.14(@swc/helpers@0.5.17))(esbuild@0.25.9))
+      babel-plugin-inline-react-svg:
+        specifier: ^2.0.2
+        version: 2.0.2(@babel/core@7.28.3)
+      babel-plugin-styled-components:
+        specifier: ^2.1.4
+        version: 2.1.4(@babel/core@7.28.3)(styled-components@6.1.19(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+      babel-preset-react-app:
+        specifier: ^10.1.0
+        version: 10.1.0
+      chai:
+        specifier: ^6.0.1
+        version: 6.0.1
+      elasticlunr:
+        specifier: ^0.9.5
+        version: 0.9.5
+      eslint-plugin-storybook:
+        specifier: ^9.1.4
+        version: 9.1.4(eslint@9.34.0(jiti@2.4.2))(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.9.2)
+      glob:
+        specifier: ^11.0.3
+        version: 11.0.3
+      jest:
+        specifier: 30.0.5
+        version: 30.0.5(@types/node@24.3.1)(babel-plugin-macros@3.1.0)(esbuild-register@3.6.0(esbuild@0.25.9))(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.9.2))
+      jest-circus:
+        specifier: 30.0.5
+        version: 30.0.5(babel-plugin-macros@3.1.0)
+      jest-environment-jsdom:
+        specifier: ^30.1.2
+        version: 30.1.2
+      jest-enzyme:
+        specifier: ^7.1.2
+        version: 7.1.2(enzyme@3.11.0)(jest@30.0.5(@types/node@24.3.1)(babel-plugin-macros@3.1.0)(esbuild-register@3.6.0(esbuild@0.25.9))(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.9.2)))(react@19.1.0)
+      jest-resolve:
+        specifier: 30.0.5
+        version: 30.0.5
+      jest-watch-typeahead:
+        specifier: 3.0.1
+        version: 3.0.1(jest@30.0.5(@types/node@24.3.1)(babel-plugin-macros@3.1.0)(esbuild-register@3.6.0(esbuild@0.25.9))(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.9.2)))
+      mocha:
+        specifier: ^11.7.2
+        version: 11.7.2
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
+      path-browserify:
+        specifier: ^1.0.1
+        version: 1.0.1
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+      react-app-polyfill:
+        specifier: ^3.0.0
+        version: 3.0.0
+      react-dev-utils:
+        specifier: ^12.0.1
+        version: 12.0.1(eslint@9.34.0(jiti@2.4.2))(typescript@5.9.2)(webpack@5.101.3(@swc/core@1.12.14(@swc/helpers@0.5.17))(esbuild@0.25.9))
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.1.0(react@19.1.0)
+      react-draggable:
+        specifier: ^4.5.0
+        version: 4.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-i18next:
+        specifier: ^15.7.3
+        version: 15.7.3(i18next@25.5.1(typescript@5.9.2))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.2)
+      showdown:
+        specifier: ^2.1.0
+        version: 2.1.0
+      sql.js:
+        specifier: ^1.13.0
+        version: 1.13.0
+      ts-jest:
+        specifier: ^29.4.1
+        version: 29.4.1(@babel/core@7.28.3)(@jest/transform@30.1.2)(@jest/types@30.0.5)(babel-jest@30.1.2(@babel/core@7.28.3))(esbuild@0.25.9)(jest-util@30.0.5)(jest@30.0.5(@types/node@24.3.1)(babel-plugin-macros@3.1.0)(esbuild-register@3.6.0(esbuild@0.25.9))(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.9.2)))(typescript@5.9.2)
+      ts-loader:
+        specifier: ^9.5.4
+        version: 9.5.4(typescript@5.9.2)(webpack@5.101.3(@swc/core@1.12.14(@swc/helpers@0.5.17))(esbuild@0.25.9))
+
   packages/three:
     dependencies:
       '@mapcomponents/react-maplibre':
-        specifier: 1.6.4
-        version: 1.6.4(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: workspace:*
+        version: link:../react-maplibre
       '@mui/material':
         specifier: ^7.3.2
         version: 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2352,21 +2617,12 @@ packages:
   '@mapbox/unitbezier@0.0.1':
     resolution: {integrity: sha512-nMkuDXFv60aBr9soUG5q+GvZYL+2KZHVvsqFCzqnkGEf46U2fvmytHaEVc1/YZbiLn8X+eR3QzX1+dwDO1lxlw==}
 
-  '@mapbox/vector-tile@1.3.1':
-    resolution: {integrity: sha512-MCEddb8u44/xfQ3oD+Srl/tNcQoqTw3goGk2oLsrFxOTc3dUp+kAnby3PvAeeBYSMSjSPD1nd1AJA6W49WnoUw==}
-
   '@mapbox/vector-tile@2.0.4':
     resolution: {integrity: sha512-AkOLcbgGTdXScosBWwmmD7cDlvOjkg/DetGva26pIRiZPdeJYjYKarIlb4uxVzi6bwHO6EWH82eZ5Nuv4T5DUg==}
 
   '@mapbox/whoots-js@3.1.0':
     resolution: {integrity: sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==}
     engines: {node: '>=6.0.0'}
-
-  '@mapcomponents/react-maplibre@1.6.4':
-    resolution: {integrity: sha512-DLIG5ZHXu92r4Pt3+JaTsgjemhZP+QOPtKShIT+lgscQ6BfNq5IpOA/PXkAreNE3AcsHkNzcmf/G2GPnYB+v0w==}
-    peerDependencies:
-      react: ^19.1.0
-      react-dom: ^19.1.0
 
   '@maplibre/maplibre-gl-style-spec@23.3.0':
     resolution: {integrity: sha512-IGJtuBbaGzOUgODdBRg66p8stnwj9iDXkgbYKoYcNiiQmaez5WVRfXm4b03MCDwmZyX93csbfHFWEJJYHnn5oA==}
@@ -4553,9 +4809,6 @@ packages:
 
   '@types/mapbox__point-geometry@0.1.4':
     resolution: {integrity: sha512-mUWlSxAmYLfwnRBmgYV86tgYmMIICX4kza8YnE/eIlywGe2XoOxlpVnXWwir92xRLjwyarqwpu2EJKD2pk0IUA==}
-
-  '@types/mapbox__vector-tile@1.3.4':
-    resolution: {integrity: sha512-bpd8dRn9pr6xKvuEBQup8pwQfD4VUyqO/2deGjfpe6AwC8YRlyEipvefyRJUSiCJTZuCb8Pl1ciVV5ekqJ96Bg==}
 
   '@types/mapbox__vector-tile@2.0.0':
     resolution: {integrity: sha512-Cg8Ue+JIHTgi96eAjeOdT/Rj3ftU327v7bhi1buQ67xV5wdkaCOhzrLGq8E7vxZM/h2EqOKJTYETwwqm0lyvWw==}
@@ -7402,10 +7655,6 @@ packages:
     resolution: {integrity: sha512-awConJSVCHVGND6x3tmMaKcQvwXLhjdkmomy2W+Goaui8YPgYgXJZewhg3fWC+DlfqqQuWg8AwqjGTD2nAPVWg==}
     engines: {node: '>=6'}
 
-  global-prefix@4.0.0:
-    resolution: {integrity: sha512-w0Uf9Y9/nyHinEk5vMJKRie+wa4kR5hmDbEhGGds/kG1PwGLLHKRoNMeJOyCQjjBkANlnScqgzcFwGHgmgLkVA==}
-    engines: {node: '>=16'}
-
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
@@ -7771,10 +8020,6 @@ packages:
     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
     engines: {node: '>=10'}
 
-  ini@4.1.3:
-    resolution: {integrity: sha512-X7rqawQBvfdjS10YU1y1YVreA3SsLrW9dX2CewP2EbBJM4ypVNLDkO5y04gejPwKIY9lR+7r9gn3rFPt/kmWFg==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-
   inspect-with-kind@1.0.5:
     resolution: {integrity: sha512-MAQUJuIo7Xqk8EVNP+6d3CKq9c80hi4tjIbIAT6lmGW9W6WzlHiu9PS8uSuUYU+Do+j1baiFp3H25XEVxDIG2g==}
 
@@ -8058,10 +8303,6 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
-
-  isexe@3.1.1:
-    resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
-    engines: {node: '>=16'}
 
   isobject@2.1.0:
     resolution: {integrity: sha512-+OUdGJlgjOBZDfxnDjYYG6zp487z0JGNQq3cYQYg5f5hKR+syHMsaztzGeml/4kGG55CSpKSpWTY+jYGgsHLgA==}
@@ -8760,10 +9001,6 @@ packages:
   mapbox-gl@3.14.0:
     resolution: {integrity: sha512-KYhi9ZOQL4BB0J061admPH8O5ZZhhxsyiJ6DQCOkCaps0JEB4HF3SbJwu8S0pJKaQUxNS33sSbzW8iDSSauHPQ==}
 
-  maplibre-gl@5.6.0:
-    resolution: {integrity: sha512-7TuHMozUC4rlIp08bSsxCixFn18P24otrlZU/7UGCO5RufFTJadFzauTrvBHr9FB67MbJ6nvFXEftGd0bUl4Iw==}
-    engines: {node: '>=16.14.0', npm: '>=8.1.0'}
-
   maplibre-gl@5.7.1:
     resolution: {integrity: sha512-iCOQB6W/EGgQx8aU4SyfU5a5/GR2E+ELF92NMsqYfs3x+vnY+8mARmz4gor6XZHCz3tv19mnotVDRlRTMNKyGw==}
     engines: {node: '>=16.14.0', npm: '>=8.1.0'}
@@ -9246,7 +9483,6 @@ packages:
   osm2geojson-lite@1.1.2:
     resolution: {integrity: sha512-6s1uW548fdyLTJ4Cp/hQTKvdgCl/E8nUvBMEzUXnAJPHAFHoIhwMqZ3KGdph2A1g48rsCeA6gVnkPruWGiwupw==}
     hasBin: true
-    bundledDependencies: []
 
   ospath@1.2.2:
     resolution: {integrity: sha512-o6E5qJV5zkAbIDNhGSIlyOhScKXgQrSRMilfph0clDfM0nEnBOlKlH4sWDmG95BW/CvwNz0vmm7dJVtU2KlMiA==}
@@ -9416,10 +9652,6 @@ packages:
   pathval@2.0.1:
     resolution: {integrity: sha512-//nshmD55c46FuFw26xV/xFAaB5HF9Xdap7HJBBnrKdAd6/GxDBaNA1870O79+9ueg61cZLSVc+OaFlfmObYVQ==}
     engines: {node: '>= 14.16'}
-
-  pbf@3.3.0:
-    resolution: {integrity: sha512-XDF38WCH3z5OV/OVa8GKUNtLAyneuzbCisx7QUCF8Q6Nutx0WnJrQe5O+kOtBlLfRNUws98Y58Lblp+NJG5T4Q==}
-    hasBin: true
 
   pbf@4.0.1:
     resolution: {integrity: sha512-SuLdBvS42z33m8ejRbInMapQe8n0D3vN/Xd5fmWM3tufNgRQFBpaW2YVJxQZV4iPNqb0vEFvssMEo5w9c6BTIA==}
@@ -10809,9 +11041,6 @@ packages:
     peerDependencies:
       tslib: ^2
 
-  three@0.179.1:
-    resolution: {integrity: sha512-5y/elSIQbrvKOISxpwXCR4sQqHtGiOI+MKLc3SsBdDXA2hz3Mdp3X59aUp8DyybMa34aeBwbFTpdoLJaUDEWSw==}
-
   three@0.182.0:
     resolution: {integrity: sha512-GbHabT+Irv+ihI1/f5kIIsZ+Ef9Sl5A1Y7imvS5RQjWgtTPfPnZ43JmlYI7NtCRDK9zir20lQpfg8/9Yd02OvQ==}
 
@@ -11400,9 +11629,6 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vt-pbf@3.1.3:
-    resolution: {integrity: sha512-2LzDFzt0mZKZ9IpVF2r69G9bXaP2Q2sArJCmcCgvfTdCCZzSyz4aCLoQyUilu37Ll56tCblIZrXFIjNUpGIlmA==}
-
   w3c-hr-time@1.0.2:
     resolution: {integrity: sha512-z8P5DvDNjKDoFIHK7q8r8lackT6l+jo/Ye3HOle7l9nICP9lf1Ci25fy9vHd0JOWewkIFzXIEig3TdKT7JQ5fQ==}
     deprecated: Use your platform's native performance.now() and performance.timeOrigin.
@@ -11509,14 +11735,17 @@ packages:
 
   whatwg-encoding@1.0.5:
     resolution: {integrity: sha512-b5lim54JOPN9HtzvK9HFXvBma/rnfFeqsic0hSpjtDbVxR3dJKLc+KB4V6GgiGOvl7CY/KNh8rxSo9DKQrnUEw==}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-encoding@2.0.0:
     resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
     engines: {node: '>=12'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-fetch@3.6.20:
     resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
@@ -11564,11 +11793,6 @@ packages:
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
-    hasBin: true
-
-  which@4.0.0:
-    resolution: {integrity: sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==}
-    engines: {node: ^16.13.0 || >=18.0.0}
     hasBin: true
 
   why-is-node-running@2.3.0:
@@ -13764,10 +13988,6 @@ snapshots:
 
   '@mapbox/unitbezier@0.0.1': {}
 
-  '@mapbox/vector-tile@1.3.1':
-    dependencies:
-      '@mapbox/point-geometry': 0.1.0
-
   '@mapbox/vector-tile@2.0.4':
     dependencies:
       '@mapbox/point-geometry': 1.1.0
@@ -13775,56 +13995,6 @@ snapshots:
       pbf: 4.0.1
 
   '@mapbox/whoots-js@3.1.0': {}
-
-  '@mapcomponents/react-maplibre@1.6.4(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@dnd-kit/core': 6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@dnd-kit/modifiers': 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
-      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
-      '@dnd-kit/utilities': 3.2.2(react@19.1.0)
-      '@emotion/css': 11.13.5
-      '@emotion/react': 11.14.0(@types/react@19.1.12)(react@19.1.0)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
-      '@mapbox/mapbox-gl-draw': 1.4.3
-      '@mapbox/mapbox-gl-sync-move': 0.3.1
-      '@mui/icons-material': 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
-      '@mui/material': 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@mui/system': 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
-      '@reduxjs/toolkit': 2.9.0(react-redux@9.2.0(@types/react@19.1.12)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
-      '@testing-library/dom': 10.4.1
-      '@testing-library/jest-dom': 6.8.0
-      '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
-      '@tmcw/togeojson': 7.1.2
-      '@turf/helpers': 7.2.0
-      '@turf/turf': 7.2.0
-      '@types/d3': 7.4.3
-      '@types/geojson': 7946.0.16
-      '@types/react-color': 3.0.13(@types/react@19.1.12)
-      '@types/topojson-client': 3.1.5
-      '@types/topojson-specification': 1.0.5
-      '@xmldom/xmldom': 0.9.8
-      camelcase: 8.0.0
-      csv2geojson: 5.1.2
-      d3: 7.9.0
-      jspdf: 3.0.2
-      maplibre-gl: 5.6.0
-      osm2geojson-lite: 1.1.2
-      pako: 2.1.0
-      react: 19.1.0
-      react-color: 2.19.3(react@19.1.0)
-      react-dom: 19.1.0(react@19.1.0)
-      react-moveable: 0.56.0
-      react-redux: 9.2.0(@types/react@19.1.12)(react@19.1.0)(redux@5.0.1)
-      redux: 5.0.1
-      redux-thunk: 3.1.0(redux@5.0.1)
-      three: 0.179.1
-      topojson-client: 3.1.0
-      uuid: 11.1.0
-      wms-capabilities: 0.6.0
-    transitivePeerDependencies:
-      - '@mui/material-pigment-css'
-      - '@types/react'
-      - supports-color
 
   '@maplibre/maplibre-gl-style-spec@23.3.0':
     dependencies:
@@ -17439,12 +17609,6 @@ snapshots:
 
   '@types/mapbox__point-geometry@0.1.4': {}
 
-  '@types/mapbox__vector-tile@1.3.4':
-    dependencies:
-      '@types/geojson': 7946.0.16
-      '@types/mapbox__point-geometry': 0.1.4
-      '@types/pbf': 3.0.5
-
   '@types/mapbox__vector-tile@2.0.0':
     dependencies:
       '@mapbox/vector-tile': 2.0.4
@@ -20982,12 +21146,6 @@ snapshots:
       kind-of: 6.0.3
       which: 1.3.1
 
-  global-prefix@4.0.0:
-    dependencies:
-      ini: 4.1.3
-      kind-of: 6.0.3
-      which: 4.0.0
-
   globals@14.0.0: {}
 
   globals@15.15.0: {}
@@ -21409,8 +21567,6 @@ snapshots:
 
   ini@2.0.0: {}
 
-  ini@4.1.3: {}
-
   inspect-with-kind@1.0.5:
     dependencies:
       kind-of: 6.0.3
@@ -21650,8 +21806,6 @@ snapshots:
   isarray@2.0.5: {}
 
   isexe@2.0.0: {}
-
-  isexe@3.1.1: {}
 
   isobject@2.1.0:
     dependencies:
@@ -22752,35 +22906,6 @@ snapshots:
       supercluster: 8.0.1
       tinyqueue: 3.0.0
 
-  maplibre-gl@5.6.0:
-    dependencies:
-      '@mapbox/geojson-rewind': 0.5.2
-      '@mapbox/jsonlint-lines-primitives': 2.0.2
-      '@mapbox/point-geometry': 0.1.0
-      '@mapbox/tiny-sdf': 2.0.7
-      '@mapbox/unitbezier': 0.0.1
-      '@mapbox/vector-tile': 1.3.1
-      '@mapbox/whoots-js': 3.1.0
-      '@maplibre/maplibre-gl-style-spec': 23.3.0
-      '@types/geojson': 7946.0.16
-      '@types/geojson-vt': 3.2.5
-      '@types/mapbox__point-geometry': 0.1.4
-      '@types/mapbox__vector-tile': 1.3.4
-      '@types/pbf': 3.0.5
-      '@types/supercluster': 7.1.3
-      earcut: 3.0.2
-      geojson-vt: 4.0.2
-      gl-matrix: 3.4.4
-      global-prefix: 4.0.0
-      kdbush: 4.0.2
-      murmurhash-js: 1.0.0
-      pbf: 3.3.0
-      potpack: 2.1.0
-      quickselect: 3.0.0
-      supercluster: 8.0.1
-      tinyqueue: 3.0.0
-      vt-pbf: 3.1.3
-
   maplibre-gl@5.7.1:
     dependencies:
       '@mapbox/geojson-rewind': 0.5.2
@@ -23717,11 +23842,6 @@ snapshots:
   pathe@2.0.3: {}
 
   pathval@2.0.1: {}
-
-  pbf@3.3.0:
-    dependencies:
-      ieee754: 1.2.1
-      resolve-protobuf-schema: 2.1.0
 
   pbf@4.0.1:
     dependencies:
@@ -25406,8 +25526,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  three@0.179.1: {}
-
   three@0.182.0: {}
 
   throttleit@1.0.1: {}
@@ -26026,12 +26144,6 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vt-pbf@3.1.3:
-    dependencies:
-      '@mapbox/point-geometry': 0.1.0
-      '@mapbox/vector-tile': 1.3.1
-      pbf: 3.3.0
-
   w3c-hr-time@1.0.2:
     dependencies:
       browser-process-hrtime: 1.0.0
@@ -26283,10 +26395,6 @@ snapshots:
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
-
-  which@4.0.0:
-    dependencies:
-      isexe: 3.1.1
 
   why-is-node-running@2.3.0:
     dependencies:
