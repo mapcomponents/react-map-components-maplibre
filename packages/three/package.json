@@ -14,8 +14,12 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"dependencies": {
+	"peerDependencies": {
 		"@mapcomponents/react-maplibre": "workspace:*",
+		"react": ">=18.0.0",
+		"react-dom": ">=18.0.0"
+	},
+	"dependencies": {
 		"@mui/material": "^7.3.2",
 		"maplibre-gl": "^5.7.0",
 		"three": "^0.182.0"
