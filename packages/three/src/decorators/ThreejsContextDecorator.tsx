@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ThreeProvider } from '../components/ThreeProvider';
+import { ThreeProvider } from '../contexts/ThreeProvider';
 import {
 	MapComponentsProvider,
 	MapLibreMap,

@@ -26,7 +26,7 @@ export default defineConfig(() => ({
 	// Configuration for building your library.
 	// See: https://vitejs.dev/guide/build.html#library-mode
 	build: {
-		outDir: '../../dist/packages/three',
+		outDir: 'dist',
 		emptyOutDir: true,
 		reportCompressedSize: true,
 		commonjsOptions: {
@@ -39,7 +39,7 @@ export default defineConfig(() => ({
 			fileName: 'index',
 			// Change this to the formats you want to support.
 			// Don't forget to update your package.json as well.
-			formats: ['es' as const],
+			formats: ['es' as const, 'cjs' as const],
 		},
 		rollupOptions: {
 			// External packages that should not be bundled into your library.

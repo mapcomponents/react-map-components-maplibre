@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
-import { useThree } from './ThreeContext';
+import { useThree } from '../contexts/ThreeContext';
 
-export interface MlTransformControlsProps {
+export interface MlThreeGizmoProps {
 	target?: THREE.Object3D;
 	mode?: 'translate' | 'rotate' | 'scale';
 	enabled?: boolean;
@@ -12,7 +12,7 @@ export interface MlTransformControlsProps {
 	onObjectChange?: (object: THREE.Object3D) => void;
 }
 
-const MlTransformControls = (props: MlTransformControlsProps) => {
+const MlThreeGizmo = (props: MlThreeGizmoProps) => {
 	const { target, mode, enabled, space, size, onObjectChange } = props;
 	const { scene, camera, renderer, map, sceneRoot } = useThree();
 	const controlsRef = useRef<TransformControls | null>(null);
@@ -109,4 +109,4 @@ const MlTransformControls = (props: MlTransformControlsProps) => {
 	return null;
 };
 
-export default MlTransformControls;
+export default MlThreeGizmo;

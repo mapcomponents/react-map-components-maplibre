@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { MapComponentsProvider, MapLibreMap, useMap } from '@mapcomponents/react-maplibre';
-import { ThreeProvider } from '../ThreeProvider';
+import { ThreeProvider } from '../../contexts/ThreeProvider';
 import MlThreeSplatLayer from './MlThreeSplatLayer';
 
 const MapExposer = () => {
@@ -20,8 +20,7 @@ const TestComponent = ({ onDone }: { onDone: () => void }) => {
 			<ThreeProvider id="three-provider" mapId="map_1">
 				<MlThreeSplatLayer
 					url="assets/splats/output.splat"
-					mapPosition={[13.404954, 52.520008]}
-					scale={1}
+					position={[13.404954, 52.520008]}
 					onDone={onDone}
 				/>
 			</ThreeProvider>
