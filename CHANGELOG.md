@@ -1,6 +1,15 @@
-## 1.7.3 (2026-01-09)
+## [1.7.3] (2026-01-09)
 
-This was a version bump only, there were no code changes.
+## @mapcomponents/three
+
+### Added
+
+- 51eaf52: add MlThreeGizmo Component for positioning 3D Object on the map
+
+### Changed
+
+- 51eaf52: streamline MlThreeModelLayer and MlThreeSplatLayer props for transform
+handling
 
 ## [1.7.2] (2025-12-31)
 
