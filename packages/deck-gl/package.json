@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/deck-gl",
-	"version": "1.7.3",
+	"version": "1.7.4",
 	"description": "",
 	"main": "src/index.ts",
 	"module": "dist/index.mjs",

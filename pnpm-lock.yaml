@@ -833,10 +833,41 @@ importers:
       maplibre-gl:
         specifier: ^5.7.0
         version: 5.7.1
+      react:
+        specifier: '>=18.0.0'
+        version: 19.1.0
+      react-dom:
+        specifier: '>=18.0.0'
+        version: 19.1.0(react@19.1.0)
       three:
         specifier: ^0.182.0
         version: 0.182.0
     devDependencies:
+      '@types/three':
+        specifier: ^0.182.0
+        version: 0.182.0
+
+  packages/three/dist:
+    dependencies:
+      '@mui/material':
+        specifier: ^7.3.2
+        version: 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      maplibre-gl:
+        specifier: ^5.7.0
+        version: 5.7.1
+      react:
+        specifier: '>=18.0.0'
+        version: 19.1.0
+      react-dom:
+        specifier: '>=18.0.0'
+        version: 19.1.0(react@19.1.0)
+      three:
+        specifier: ^0.182.0
+        version: 0.182.0
+    devDependencies:
+      '@mapcomponents/react-maplibre':
+        specifier: workspace:*
+        version: link:../../react-maplibre
       '@types/three':
         specifier: ^0.182.0
         version: 0.182.0
