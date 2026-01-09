@@ -1,36 +1,12 @@
-import { LngLatLike } from 'maplibre-gl';
-import * as THREE from 'three';
+import { UseThreeModelProps } from '../../hooks/useThreeModel';
 /**
- * Renders splat 3D Models on the MapLibreMap referenced by props.mapId
+ * Renders splat 3D Models on the MapLibreMap
  *
  * @component
  */
-export interface MlThreeSplatLayerProps {
+export type MlThreeSplatLayerProps = Omit<UseThreeModelProps, 'loaders'> & {
     mapId?: string;
-    url: string;
-    position?: {
-        x: number;
-        y: number;
-        z: number;
-    };
-    mapPosition?: LngLatLike;
-    altitude?: number;
-    rotation?: {
-        x: number;
-        y: number;
-        z: number;
-    };
-    scale?: {
-        x: number;
-        y: number;
-        z: number;
-    } | number;
-    enableTransformControls?: boolean;
-    transformMode?: 'translate' | 'rotate' | 'scale';
-    onTransformChange?: (object: THREE.Object3D) => void;
-    init?: () => void;
-    onDone?: () => void;
-}
-declare const MlThreeSplatLayer: (props: MlThreeSplatLayerProps) => import("react/jsx-runtime").JSX.Element | null;
+};
+declare const MlThreeSplatLayer: (props: MlThreeSplatLayerProps) => null;
 export default MlThreeSplatLayer;
 //# sourceMappingURL=MlThreeSplatLayer.d.ts.map
