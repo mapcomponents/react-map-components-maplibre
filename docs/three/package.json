@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/three",
-	"version": "1.7.3",
+	"version": "1.7.4",
 	"license": "MIT",
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.mjs",
@@ -14,8 +14,12 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"dependencies": {
+	"peerDependencies": {
 		"@mapcomponents/react-maplibre": "workspace:*",
+		"react": ">=18.0.0",
+		"react-dom": ">=18.0.0"
+	},
+	"dependencies": {
 		"@mui/material": "^7.3.2",
 		"maplibre-gl": "^5.7.0",
 		"three": "^0.182.0"
