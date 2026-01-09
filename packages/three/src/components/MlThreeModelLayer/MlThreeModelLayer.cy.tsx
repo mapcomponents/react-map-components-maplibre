@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { MapComponentsProvider, MapLibreMap, useMap } from '@mapcomponents/react-maplibre';
-import { ThreeProvider } from '../ThreeProvider';
+import { ThreeProvider } from '../../contexts/ThreeProvider';
 import MlThreeModelLayer from './MlThreeModelLayer';
 
 const MapExposer = () => {
@@ -20,8 +20,7 @@ const TestComponent = ({ onDone }: { onDone: () => void }) => {
 			<ThreeProvider id="three-provider" mapId="map_1">
 				<MlThreeModelLayer
 					url="assets/3D/godzilla_simple.glb"
-					mapPosition={[13.404954, 52.520008]}
-					scale={10}
+					position={[13.404954, 52.520008]}
 					onDone={onDone}
 				/>
 			</ThreeProvider>
