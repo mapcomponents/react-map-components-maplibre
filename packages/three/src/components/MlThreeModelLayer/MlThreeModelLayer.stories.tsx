@@ -3,8 +3,8 @@ import Button from '@mui/material/Button';
 import MlThreeModelLayer from './MlThreeModelLayer';
 import { useMap, TopToolbar, Sidebar } from '@mapcomponents/react-maplibre';
 import ThreejsContextDecorator from '../../decorators/ThreejsContextDecorator';
-import { useThree } from '../ThreeContext';
-import { ThreeObjectControls } from '../ThreeObjectControls';
+import { useThree } from '../../contexts/ThreeContext';
+import { MlThreeObjectControls } from '../MlThreeObjectControls';
 import * as THREE from 'three';
 
 const storyoptions = {
@@ -53,6 +53,8 @@ const Template: any = () => {
 	const [mapPosition, setMapPosition] = useState({ lng: 7.097, lat: 50.7355 });
 	const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
 	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [enableTransformControls, setEnableTransformControls] = useState(false);
+	const [transformMode, setTransformMode] = useState<'translate' | 'rotate' | 'scale'>('translate');
 
 	const mapHook = useMap({ mapId: 'map_1' });
 	useEffect(() => {
@@ -92,7 +94,7 @@ const Template: any = () => {
 				}
 			/>
 			<Sidebar open={sidebarOpen} setOpen={setSidebarOpen} name="3D Model Config">
-				<ThreeObjectControls
+				<MlThreeObjectControls
 					showLayer={showLayer}
 					setShowLayer={setShowLayer}
 					scale={scale}
@@ -104,6 +106,10 @@ const Template: any = () => {
 					position={position}
 					setPosition={setPosition}
 					layerName="Model"
+					enableTransformControls={enableTransformControls}
+					setEnableTransformControls={setEnableTransformControls}
+					transformMode={transformMode}
+					setTransformMode={setTransformMode}
 				/>
 			</Sidebar>
 		</>

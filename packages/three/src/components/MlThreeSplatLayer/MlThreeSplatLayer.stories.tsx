@@ -5,7 +5,7 @@ import Link from '@mui/material/Link';
 import MlThreeSplatLayer from './MlThreeSplatLayer';
 import { useMap, TopToolbar, Sidebar } from '@mapcomponents/react-maplibre';
 import MlThreeJsContextDecorator from '../../decorators/ThreejsContextDecorator';
-import { ThreeObjectControls } from '../ThreeObjectControls';
+import { MlThreeObjectControls } from '../MlThreeObjectControls';
 
 const storyoptions = {
 	title: 'MapComponents/MlThreeSplatLayer',
@@ -28,6 +28,8 @@ const Template: any = () => {
 	const [mapPosition, setMapPosition] = useState({ lng: 7.0968, lat: 50.736 });
 	const [position, setPosition] = useState({ x: 0, y: 0, z: 30 });
 	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [enableTransformControls, setEnableTransformControls] = useState(false);
+	const [transformMode, setTransformMode] = useState<'translate' | 'rotate' | 'scale'>('translate');
 
 	const mapHook = useMap({ mapId: 'map_1' });
 	useEffect(() => {
@@ -54,7 +56,6 @@ const Template: any = () => {
 					}}
 				/>
 			)}
-
 			<TopToolbar
 				unmovableButtons={
 					<Button
@@ -66,7 +67,7 @@ const Template: any = () => {
 				}
 			/>
 			<Sidebar open={sidebarOpen} setOpen={setSidebarOpen} name="Splat Config">
-				<ThreeObjectControls
+				<MlThreeObjectControls
 					showLayer={showLayer}
 					setShowLayer={setShowLayer}
 					scale={scale}
@@ -78,6 +79,10 @@ const Template: any = () => {
 					position={position}
 					setPosition={setPosition}
 					layerName="Splat"
+					enableTransformControls={enableTransformControls}
+					setEnableTransformControls={setEnableTransformControls}
+					transformMode={transformMode}
+					setTransformMode={setTransformMode}
 				/>
 				<Typography
 					variant="body2"
