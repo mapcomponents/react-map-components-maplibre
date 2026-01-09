@@ -14,29 +14,25 @@ export type MlThreeModelLayerProps = Omit<UseThreeModelProps, 'loaders'> & {
 };
 
 const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
-	const {
-		url,
-		position,
-		transform,
-		init,
-		onDone,
-		customLoaders,
-	} = props;
+	const { url, position, transform, init, onDone, customLoaders } = props;
 
-	const loaders = useMemo<Record<string, ModelLoader>>(() => ({
-		gltf: (url, onLoad) => {
-			const loader = new GLTFLoader();
-			loader.load(url, (gltf) => onLoad(gltf.scene));
-		},
-		glb: (url, onLoad) => {
-			const loader = new GLTFLoader();
-			loader.load(url, (gltf) => onLoad(gltf.scene));
-		},
-		obj: (url, onLoad) => {
-			const loader = new OBJLoader();
-			loader.load(url, (obj) => onLoad(obj));
-		},
-	}), []);
+	const loaders = useMemo<Record<string, ModelLoader>>(
+		() => ({
+			gltf: (url, onLoad) => {
+				const loader = new GLTFLoader();
+				loader.load(url, (gltf) => onLoad(gltf.scene));
+			},
+			glb: (url, onLoad) => {
+				const loader = new GLTFLoader();
+				loader.load(url, (gltf) => onLoad(gltf.scene));
+			},
+			obj: (url, onLoad) => {
+				const loader = new OBJLoader();
+				loader.load(url, (obj) => onLoad(obj));
+			},
+		}),
+		[]
+	);
 
 	useThreeModel({
 		url,

@@ -29,7 +29,7 @@ const disposeObject = (obj: THREE.Object3D): void => {
 	if ((obj as any).geometry) {
 		(obj as any).geometry.dispose();
 	}
-	
+
 	if ((obj as any).material) {
 		const material = (obj as any).material;
 		if (Array.isArray(material)) {
@@ -38,7 +38,7 @@ const disposeObject = (obj: THREE.Object3D): void => {
 			material.dispose();
 		}
 	}
-	
+
 	if ('dispose' in obj && typeof (obj as any).dispose === 'function') {
 		(obj as any).dispose();
 	}
@@ -63,21 +63,14 @@ export const useThreeModel = (props: UseThreeModelProps) => {
 	const worldMatrixInvRef = useRef(worldMatrixInv);
 	worldMatrixInvRef.current = worldMatrixInv;
 
-	const allLoaders = useMemo(
-		() => ({ ...loaders, ...customLoaders }),
-		[loaders, customLoaders]
-	);
+	const allLoaders = useMemo(() => ({ ...loaders, ...customLoaders }), [loaders, customLoaders]);
 
 	const updateModelTransform = useCallback(
 		(object: THREE.Object3D, currentWorldMatrixInv: THREE.Matrix4 | undefined) => {
 			const { position: currentPosition, transform: currentTransform } = transformRef.current;
 
 			if (currentPosition && currentWorldMatrixInv) {
-				const scenePos = ThreejsUtils.toScenePosition(
-					currentWorldMatrixInv,
-					currentPosition,
-					0
-				);
+				const scenePos = ThreejsUtils.toScenePosition(currentWorldMatrixInv, currentPosition, 0);
 				object.position.set(scenePos.x, scenePos.y, scenePos.z);
 
 				if (currentTransform?.position) {
@@ -97,11 +90,7 @@ export const useThreeModel = (props: UseThreeModelProps) => {
 
 			if (currentTransform?.scale) {
 				if (typeof currentTransform.scale === 'number') {
-					object.scale.set(
-						currentTransform.scale,
-						currentTransform.scale,
-						currentTransform.scale
-					);
+					object.scale.set(currentTransform.scale, currentTransform.scale, currentTransform.scale);
 				} else {
 					object.scale.set(
 						currentTransform.scale.x,

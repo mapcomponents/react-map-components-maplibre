@@ -163,127 +163,127 @@ export const MlThreeObjectControls = ({
 				/>
 			)}
 			<Box sx={{ padding: '10px' }}>
-			<Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginBottom: 2 }}>
-				<Button
-					color="primary"
-					variant={showLayer ? 'contained' : 'outlined'}
-					onClick={() => setShowLayer(!showLayer)}
-					size="small"
-				>
-					{showLayer ? 'Hide' : 'Show'} {layerName}
-				</Button>
-				{setEnableTransformControls && (
+				<Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', marginBottom: 2 }}>
 					<Button
-						color="info"
-						variant={enableTransformControls ? 'contained' : 'outlined'}
-						onClick={() => setEnableTransformControls(!enableTransformControls)}
+						color="primary"
+						variant={showLayer ? 'contained' : 'outlined'}
+						onClick={() => setShowLayer(!showLayer)}
 						size="small"
 					>
-						3D Gizmo
+						{showLayer ? 'Hide' : 'Show'} {layerName}
 					</Button>
-				)}
-			</Box>
-
-			{setTransformMode && enableTransformControls && (
-				<Box sx={{ marginBottom: 2 }}>
-					<ButtonGroup variant="outlined" size="small" fullWidth aria-label="transform mode">
+					{setEnableTransformControls && (
 						<Button
-							variant={transformMode === 'translate' ? 'contained' : 'outlined'}
-							onClick={() => setTransformMode('translate')}
+							color="info"
+							variant={enableTransformControls ? 'contained' : 'outlined'}
+							onClick={() => setEnableTransformControls(!enableTransformControls)}
+							size="small"
 						>
-							Move
+							3D Gizmo
 						</Button>
-						<Button
-							variant={transformMode === 'rotate' ? 'contained' : 'outlined'}
-							onClick={() => setTransformMode('rotate')}
-						>
-							Rotate
-						</Button>
-						<Button
-							variant={transformMode === 'scale' ? 'contained' : 'outlined'}
-							onClick={() => setTransformMode('scale')}
-						>
-							Scale
-						</Button>
-					</ButtonGroup>
+					)}
 				</Box>
-			)}
-			<Typography gutterBottom>Scale: {scale.toFixed(2)}</Typography>
-			<Slider
-				value={scale}
-				onChange={(e, newValue) => setScale(newValue as number)}
-				min={0.01}
-				max={150}
-				step={0.01}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Rotation X: {rotation.x}°</Typography>
-			<Slider
-				value={rotation.x}
-				onChange={(e, newValue) => setRotation({ ...rotation, x: newValue as number })}
-				min={0}
-				max={360}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Rotation Y: {rotation.y}°</Typography>
-			<Slider
-				value={rotation.y}
-				onChange={(e, newValue) => setRotation({ ...rotation, y: newValue as number })}
-				min={0}
-				max={360}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Rotation Z: {rotation.z}°</Typography>
-			<Slider
-				value={rotation.z}
-				onChange={(e, newValue) => setRotation({ ...rotation, z: newValue as number })}
-				min={0}
-				max={360}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Longitude: {mapPosition.lng.toFixed(6)}</Typography>
-			<Slider
-				value={mapPosition.lng}
-				onChange={(e, newValue) => setMapPosition({ ...mapPosition, lng: newValue as number })}
-				min={7.09}
-				max={7.11}
-				step={0.0001}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Latitude: {mapPosition.lat.toFixed(6)}</Typography>
-			<Slider
-				value={mapPosition.lat}
-				onChange={(e, newValue) => setMapPosition({ ...mapPosition, lat: newValue as number })}
-				min={50.73}
-				max={50.74}
-				step={0.0001}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Position X: {position.x}</Typography>
-			<Slider
-				value={position.x}
-				onChange={(e, newValue) => setPosition({ ...position, x: newValue as number })}
-				min={-100}
-				max={100}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Position Y: {position.y}</Typography>
-			<Slider
-				value={position.y}
-				onChange={(e, newValue) => setPosition({ ...position, y: newValue as number })}
-				min={-100}
-				max={100}
-				valueLabelDisplay="auto"
-			/>
-			<Typography gutterBottom>Position Z: {position.z}</Typography>
-			<Slider
-				value={position.z}
-				onChange={(e, newValue) => setPosition({ ...position, z: newValue as number })}
-				min={-500}
-				max={100}
-				valueLabelDisplay="auto"
-			/>
-		</Box>
+
+				{setTransformMode && enableTransformControls && (
+					<Box sx={{ marginBottom: 2 }}>
+						<ButtonGroup variant="outlined" size="small" fullWidth aria-label="transform mode">
+							<Button
+								variant={transformMode === 'translate' ? 'contained' : 'outlined'}
+								onClick={() => setTransformMode('translate')}
+							>
+								Move
+							</Button>
+							<Button
+								variant={transformMode === 'rotate' ? 'contained' : 'outlined'}
+								onClick={() => setTransformMode('rotate')}
+							>
+								Rotate
+							</Button>
+							<Button
+								variant={transformMode === 'scale' ? 'contained' : 'outlined'}
+								onClick={() => setTransformMode('scale')}
+							>
+								Scale
+							</Button>
+						</ButtonGroup>
+					</Box>
+				)}
+				<Typography gutterBottom>Scale: {scale.toFixed(2)}</Typography>
+				<Slider
+					value={scale}
+					onChange={(e, newValue) => setScale(newValue as number)}
+					min={0.01}
+					max={150}
+					step={0.01}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Rotation X: {rotation.x}°</Typography>
+				<Slider
+					value={rotation.x}
+					onChange={(e, newValue) => setRotation({ ...rotation, x: newValue as number })}
+					min={0}
+					max={360}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Rotation Y: {rotation.y}°</Typography>
+				<Slider
+					value={rotation.y}
+					onChange={(e, newValue) => setRotation({ ...rotation, y: newValue as number })}
+					min={0}
+					max={360}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Rotation Z: {rotation.z}°</Typography>
+				<Slider
+					value={rotation.z}
+					onChange={(e, newValue) => setRotation({ ...rotation, z: newValue as number })}
+					min={0}
+					max={360}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Longitude: {mapPosition.lng.toFixed(6)}</Typography>
+				<Slider
+					value={mapPosition.lng}
+					onChange={(e, newValue) => setMapPosition({ ...mapPosition, lng: newValue as number })}
+					min={7.09}
+					max={7.11}
+					step={0.0001}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Latitude: {mapPosition.lat.toFixed(6)}</Typography>
+				<Slider
+					value={mapPosition.lat}
+					onChange={(e, newValue) => setMapPosition({ ...mapPosition, lat: newValue as number })}
+					min={50.73}
+					max={50.74}
+					step={0.0001}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Position X: {position.x}</Typography>
+				<Slider
+					value={position.x}
+					onChange={(e, newValue) => setPosition({ ...position, x: newValue as number })}
+					min={-100}
+					max={100}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Position Y: {position.y}</Typography>
+				<Slider
+					value={position.y}
+					onChange={(e, newValue) => setPosition({ ...position, y: newValue as number })}
+					min={-100}
+					max={100}
+					valueLabelDisplay="auto"
+				/>
+				<Typography gutterBottom>Position Z: {position.z}</Typography>
+				<Slider
+					value={position.z}
+					onChange={(e, newValue) => setPosition({ ...position, z: newValue as number })}
+					min={-500}
+					max={100}
+					valueLabelDisplay="auto"
+				/>
+			</Box>
 		</>
 	);
 };
