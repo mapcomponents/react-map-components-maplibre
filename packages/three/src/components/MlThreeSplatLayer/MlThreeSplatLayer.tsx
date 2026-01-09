@@ -5,7 +5,6 @@ import { useThree } from '../ThreeContext';
 import { SplatLoader } from '../../lib/splats/loaders/SplatLoader';
 import { PlySplatLoader } from '../../lib/splats/loaders/PlySplatLoader';
 import ThreejsUtils from '../../lib/ThreejsUtils';
-import MlTransformControls from '../MlTransformControls';
 
 /**
  * Renders splat 3D Models on the MapLibreMap referenced by props.mapId
@@ -16,14 +15,12 @@ import MlTransformControls from '../MlTransformControls';
 export interface MlThreeSplatLayerProps {
 	mapId?: string;
 	url: string;
-	position?: { x: number; y: number; z: number };
-	mapPosition?: LngLatLike;
-	altitude?: number;
-	rotation?: { x: number; y: number; z: number };
-	scale?: { x: number; y: number; z: number } | number;
-	enableTransformControls?: boolean;
-	transformMode?: 'translate' | 'rotate' | 'scale';
-	onTransformChange?: (object: THREE.Object3D) => void;
+	position: LngLatLike;
+	transform?: {
+		rotation?: { x: number; y: number; z: number };
+		scale?: { x: number; y: number; z: number } | number;
+		position?: { x: number; y: number; z: number };
+	};
 	init?: () => void;
 	onDone?: () => void;
 }
@@ -32,13 +29,7 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 	const {
 		url,
 		position,
-		mapPosition,
-		altitude,
-		rotation,
-		scale,
-		enableTransformControls,
-		transformMode,
-		onTransformChange,
+		transform,
 		init,
 		onDone,
 	} = props;
@@ -52,8 +43,8 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 	initRef.current = init;
 	onDoneRef.current = onDone;
 
-	const transformRef = useRef({ position, mapPosition, altitude, rotation, scale });
-	transformRef.current = { position, mapPosition, altitude, rotation, scale };
+	const transformRef = useRef({ position, transform });
+	transformRef.current = { position, transform };
 	const worldMatrixInvRef = useRef(worldMatrixInv);
 	worldMatrixInvRef.current = worldMatrixInv;
 
@@ -67,24 +58,29 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 		const extension = url.split('.').pop()?.toLowerCase();
 
 		const onLoad = (object: THREE.Object3D) => {
-			const { position, mapPosition, altitude, rotation, scale } = transformRef.current;
+			const { position, transform } = transformRef.current;
 			const worldMatrixInv = worldMatrixInvRef.current;
 
-			if (mapPosition && worldMatrixInv) {
-				const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, mapPosition, altitude);
+			if (position && worldMatrixInv) {
+				const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, position, 0);
 				object.position.set(scenePos.x, scenePos.y, scenePos.z);
-			} else if (position) {
-				object.position.set(position.x, position.y, position.z);
+				
+				// Apply local position offset if provided
+				if (transform?.position) {
+					object.position.x += transform.position.x;
+					object.position.y += transform.position.y;
+					object.position.z += transform.position.z;
+				}
 			}
 
-			if (rotation) {
-				object.rotation.set(rotation.x, rotation.y, rotation.z);
+			if (transform?.rotation) {
+				object.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z);
 			}
-			if (scale) {
-				if (typeof scale === 'number') {
-					object.scale.set(scale, scale, scale);
+			if (transform?.scale) {
+				if (typeof transform.scale === 'number') {
+					object.scale.set(transform.scale, transform.scale, transform.scale);
 				} else {
-					object.scale.set(scale.x, scale.y, scale.z);
+					object.scale.set(transform.scale.x, transform.scale.y, transform.scale.z);
 				}
 			}
 			object.updateMatrixWorld(true);
@@ -126,32 +122,31 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 	useEffect(() => {
 		if (!model) return;
 
-		// Handle position: mapPosition takes precedence over position
-		if (mapPosition && worldMatrixInv) {
-			const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, mapPosition, altitude);
+		if (position && worldMatrixInv) {
+			const scenePos = ThreejsUtils.toScenePosition(worldMatrixInv, position, 0);
 			model.position.set(scenePos.x, scenePos.y, scenePos.z);
-		} else if (position) {
-			model.position.set(position.x, position.y, position.z);
+			
+			// Apply local position offset if provided
+			if (transform?.position) {
+				model.position.x += transform.position.x;
+				model.position.y += transform.position.y;
+				model.position.z += transform.position.z;
+			}
 		}
 
-		if (rotation) {
-			model.rotation.set(rotation.x, rotation.y, rotation.z);
+		if (transform?.rotation) {
+			model.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z);
 		}
-		if (scale) {
-			if (typeof scale === 'number') {
-				model.scale.set(scale, scale, scale);
+		if (transform?.scale) {
+			if (typeof transform.scale === 'number') {
+				model.scale.set(transform.scale, transform.scale, transform.scale);
 			} else {
-				model.scale.set(scale.x, scale.y, scale.z);
+				model.scale.set(transform.scale.x, transform.scale.y, transform.scale.z);
 			}
 		}
 		model.updateMatrixWorld(true);
-	}, [model, position, mapPosition, altitude, rotation, scale, worldMatrixInv]);
+	}, [model, position, transform, worldMatrixInv]);
 
-	if (enableTransformControls && model) {
-		return (
-			<MlTransformControls target={model} mode={transformMode} onObjectChange={onTransformChange} />
-		);
-	}
 	return null;
 };
 
