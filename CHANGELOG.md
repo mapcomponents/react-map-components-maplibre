@@ -1,3 +1,7 @@
+## 1.7.3 (2026-01-09)
+
+This was a version bump only, there were no code changes.
+
 ## [1.7.2] (2025-12-31)
 
 ## @mapcomponents/root
