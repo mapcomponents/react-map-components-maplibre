@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as THREE from 'three';
 import { LngLatLike } from 'maplibre-gl';
 import { useThree } from '../components/ThreeContext';
@@ -10,13 +10,16 @@ export interface ThreeModelTransform {
 	position?: { x: number; y: number; z: number };
 }
 
+export type ModelLoader = (url: string, onSuccess: (object: THREE.Object3D) => void) => void;
+
 export interface UseThreeModelProps {
 	url: string;
 	position: LngLatLike;
 	transform?: ThreeModelTransform;
 	init?: () => void;
 	onDone?: () => void;
-	loadFn: (url: string, onSuccess: (object: THREE.Object3D) => void) => void;
+	loaders: Record<string, ModelLoader>;
+	customLoaders?: Record<string, ModelLoader>;
 }
 
 /**
@@ -45,7 +48,7 @@ const disposeObject = (obj: THREE.Object3D): void => {
  * Hook to manage loading, transforming, and rendering a 3D model in the MapLibre/Three.js context.
  */
 export const useThreeModel = (props: UseThreeModelProps) => {
-	const { url, position, transform, init, onDone, loadFn } = props;
+	const { url, position, transform, init, onDone, loaders, customLoaders } = props;
 	const { scene, worldMatrixInv } = useThree();
 	const [model, setModel] = useState<THREE.Object3D | undefined>(undefined);
 	const modelRef = useRef<THREE.Object3D | undefined>(undefined);
@@ -59,6 +62,11 @@ export const useThreeModel = (props: UseThreeModelProps) => {
 	transformRef.current = { position, transform };
 	const worldMatrixInvRef = useRef(worldMatrixInv);
 	worldMatrixInvRef.current = worldMatrixInv;
+
+	const allLoaders = useMemo(
+		() => ({ ...loaders, ...customLoaders }),
+		[loaders, customLoaders]
+	);
 
 	const updateModelTransform = useCallback(
 		(object: THREE.Object3D, currentWorldMatrixInv: THREE.Matrix4 | undefined) => {
@@ -125,6 +133,22 @@ export const useThreeModel = (props: UseThreeModelProps) => {
 			initRef.current();
 		}
 
+		let extension = '';
+		try {
+			const urlObj = new URL(url, window.location.origin);
+			extension = urlObj.pathname.split('.').pop()?.toLowerCase() || '';
+		} catch (e) {
+			extension = url.split('.').pop()?.toLowerCase() || '';
+		}
+
+		const loader = allLoaders[extension];
+		if (!loader) {
+			console.warn(
+				`useThreeModel: No loader found for file extension "${extension}". Supported extensions: ${Object.keys(allLoaders).join(', ')}`
+			);
+			return;
+		}
+
 		let isCanceled = false;
 
 		const handleLoad = (object: THREE.Object3D) => {
@@ -148,13 +172,13 @@ export const useThreeModel = (props: UseThreeModelProps) => {
 			}
 		};
 
-		loadFn(url, handleLoad);
+		loader(url, handleLoad);
 
 		return () => {
 			isCanceled = true;
 			cleanup();
 		};
-	}, [url, scene, loadFn, cleanup, updateModelTransform]);
+	}, [url, scene, allLoaders, cleanup, updateModelTransform]);
 
 	useEffect(() => {
 		if (model) {

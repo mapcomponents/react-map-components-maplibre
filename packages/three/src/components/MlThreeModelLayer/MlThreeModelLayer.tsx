@@ -1,17 +1,16 @@
-import { useCallback } from 'react';
-import * as THREE from 'three';
+import { useMemo } from 'react';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { useThreeModel, UseThreeModelProps } from '../../hooks/useThreeModel';
+import { useThreeModel, UseThreeModelProps, ModelLoader } from '../../hooks/useThreeModel';
 
 /**
- * Renders obj or gltf 3D Models on the MapLibreMap referenced by props.mapId
+ * Renders obj or gltf 3D Models on the MapLibreMap
  *
  * @component
  */
 
-export type MlThreeModelLayerProps = Omit<UseThreeModelProps, 'loadFn'> & {
-	mapId?: string; // Kept for compatibility but unused
+export type MlThreeModelLayerProps = Omit<UseThreeModelProps, 'loaders'> & {
+	mapId?: string;
 };
 
 const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
@@ -21,34 +20,23 @@ const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
 		transform,
 		init,
 		onDone,
+		customLoaders,
 	} = props;
 
-	const loadFn = useCallback((url: string, onLoad: (object: THREE.Object3D) => void) => {
-		// Robust extension extraction
-		let extension = '';
-		try {
-			// Handle absolute and relative URLs
-			const urlObj = new URL(url, window.location.origin);
-			extension = urlObj.pathname.split('.').pop()?.toLowerCase() || '';
-		} catch (e) {
-			// Fallback for simple strings or malformed URLs
-			extension = url.split('.').pop()?.toLowerCase() || '';
-		}
-
-		if (extension === 'glb' || extension === 'gltf') {
+	const loaders = useMemo<Record<string, ModelLoader>>(() => ({
+		gltf: (url, onLoad) => {
 			const loader = new GLTFLoader();
-			loader.load(url, (gltf) => {
-				onLoad(gltf.scene);
-			});
-		} else if (extension === 'obj') {
+			loader.load(url, (gltf) => onLoad(gltf.scene));
+		},
+		glb: (url, onLoad) => {
+			const loader = new GLTFLoader();
+			loader.load(url, (gltf) => onLoad(gltf.scene));
+		},
+		obj: (url, onLoad) => {
 			const loader = new OBJLoader();
-			loader.load(url, (obj) => {
-				onLoad(obj);
-			});
-		} else {
-			console.warn('MlThreeModelLayer: Unsupported file extension', extension);
-		}
-	}, []);
+			loader.load(url, (obj) => onLoad(obj));
+		},
+	}), []);
 
 	useThreeModel({
 		url,
@@ -56,7 +44,8 @@ const MlThreeModelLayer = (props: MlThreeModelLayerProps) => {
 		transform,
 		init,
 		onDone,
-		loadFn
+		loaders,
+		customLoaders,
 	});
 
 	return null;

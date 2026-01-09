@@ -1,16 +1,15 @@
-import { useCallback } from 'react';
-import * as THREE from 'three';
+import { useMemo } from 'react';
 import { SplatLoader } from '../../lib/splats/loaders/SplatLoader';
 import { PlySplatLoader } from '../../lib/splats/loaders/PlySplatLoader';
-import { useThreeModel, UseThreeModelProps } from '../../hooks/useThreeModel';
+import { useThreeModel, UseThreeModelProps, ModelLoader } from '../../hooks/useThreeModel';
 
 /**
- * Renders splat 3D Models on the MapLibreMap referenced by props.mapId
+ * Renders splat 3D Models on the MapLibreMap
  *
  * @component
  */
 
-export type MlThreeSplatLayerProps = Omit<UseThreeModelProps, 'loadFn'> & {
+export type MlThreeSplatLayerProps = Omit<UseThreeModelProps, 'loaders'> & {
 	mapId?: string;
 };
 
@@ -21,31 +20,19 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 		transform,
 		init,
 		onDone,
+		customLoaders,
 	} = props;
 
-	const loadFn = useCallback((url: string, onLoad: (object: THREE.Object3D) => void) => {
-		let extension = '';
-		try {
-			const urlObj = new URL(url, window.location.origin);
-			extension = urlObj.pathname.split('.').pop()?.toLowerCase() || '';
-		} catch (e) {
-			extension = url.split('.').pop()?.toLowerCase() || '';
-		}
-
-		if (extension === 'splat') {
+	const loaders = useMemo<Record<string, ModelLoader>>(() => ({
+		splat: (url, onLoad) => {
 			const loader = new SplatLoader();
-			loader.load(url, (splatMesh) => {
-				onLoad(splatMesh);
-			});
-		} else if (extension === 'ply') {
+			loader.load(url, (splatMesh) => onLoad(splatMesh));
+		},
+		ply: (url, onLoad) => {
 			const loader = new PlySplatLoader();
-			loader.load(url, (splatMesh) => {
-				onLoad(splatMesh);
-			});
-		} else {
-			console.warn('MlThreeSplatLayer: Unsupported file extension', extension);
-		}
-	}, []);
+			loader.load(url, (splatMesh) => onLoad(splatMesh));
+		},
+	}), []);
 
 	useThreeModel({
 		url,
@@ -53,7 +40,8 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 		transform,
 		init,
 		onDone,
-		loadFn
+		loaders,
+		customLoaders,
 	});
 
 	return null;
