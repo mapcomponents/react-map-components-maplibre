@@ -54,13 +54,11 @@ const Template = (context: any) => {
 
 	return (
 		<>
-			<DeckGlContextProvider mapId={context.mapId}>
 				<MlHexagonLayer
 					data={noiseData.features}
 					getPosition={(d: any) => d.geometry.coordinates}
 					{...context}
 				/>
-			</DeckGlContextProvider>
 		</>
 	);
 };

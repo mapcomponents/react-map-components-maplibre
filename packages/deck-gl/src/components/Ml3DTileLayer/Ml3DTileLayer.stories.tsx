@@ -12,9 +12,7 @@ export default storyoptions;
 
 const Template = (context: any) => {
 	return (
-		<DeckGlContextProvider mapId={context.mapId}>
 			<Ml3DTileLayer {...context} />
-		</DeckGlContextProvider>
 	);
 };
 

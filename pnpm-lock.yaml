@@ -98,7 +98,7 @@ importers:
         version: 9.1.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.50.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
       '@storybook/testing-react':
         specifier: ^2.0.1
-        version: 2.0.1(@storybook/client-logger@7.6.17)(@storybook/preview-api@7.6.17)(@storybook/react@9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3))(@storybook/types@7.6.17)(react@19.1.0)
+        version: 2.0.1(@storybook/client-logger@7.6.17)(@storybook/preview-api@7.6.17)(@storybook/react@10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3))(@storybook/types@7.6.17)(react@19.1.0)
       '@swc-node/register':
         specifier: ~1.10.10
         version: 1.10.10(@swc/core@1.12.14(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3)
@@ -259,29 +259,41 @@ importers:
   packages/deck-gl/dist:
     dependencies:
       '@deck.gl/aggregation-layers':
-        specifier: ^9.1.14
-        version: 9.1.14(@deck.gl/core@9.1.14)(@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.9)(@luma.gl/engine@9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9))))(@luma.gl/core@9.1.9)(@luma.gl/engine@9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9)))
+        specifier: ^9.2.5
+        version: 9.2.5(@deck.gl/core@9.2.5)(@deck.gl/layers@9.1.14(@deck.gl/core@9.2.5)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5))))(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))
       '@deck.gl/core':
-        specifier: ^9.1.14
-        version: 9.1.14
+        specifier: ^9.2.5
+        version: 9.2.5
+      '@deck.gl/geo-layers':
+        specifier: ^9.2.5
+        version: 9.2.5(@deck.gl/core@9.2.5)(@deck.gl/extensions@9.2.5(@deck.gl/core@9.2.5)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5))))(@deck.gl/layers@9.1.14(@deck.gl/core@9.2.5)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5))))(@deck.gl/mesh-layers@9.2.5(@deck.gl/core@9.2.5)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))(@luma.gl/gltf@9.2.5(@luma.gl/constants@9.2.5)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.5)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))
       '@deck.gl/mapbox':
-        specifier: ^9.1.14
-        version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.9)
+        specifier: ^9.2.5
+        version: 9.2.5(@deck.gl/core@9.2.5)(@luma.gl/constants@9.2.5)(@luma.gl/core@9.2.5)(@math.gl/web-mercator@4.1.0)
+      '@deck.gl/mesh-layers':
+        specifier: ^9.2.5
+        version: 9.2.5(@deck.gl/core@9.2.5)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))(@luma.gl/gltf@9.2.5(@luma.gl/constants@9.2.5)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5))
+      '@loaders.gl/3d-tiles':
+        specifier: ^4.3.4
+        version: 4.3.4(@loaders.gl/core@4.3.4)
       '@mapcomponents/react-maplibre':
         specifier: workspace:^
         version: link:../../react-maplibre/dist
       '@mui/icons-material':
-        specifier: ^7.3.2
-        version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+        specifier: ^7.3.7
+        version: 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
       '@mui/material':
-        specifier: ^7.3.2
-        version: 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^7.3.7
+        version: 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@storybook/react':
-        specifier: ^9.1.4
-        version: 9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.9.2)
+        specifier: ^10.1.11
+        version: 10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.9.2)
       maplibre-gl:
-        specifier: ^5.7.0
-        version: 5.7.1
+        specifier: ^5.15.0
+        version: 5.15.0
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
     devDependencies:
       '@types/geojson':
         specifier: ^7946.0.16
@@ -324,7 +336,52 @@ importers:
         version: 5.11.0(ra-core@5.11.0(react-dom@19.1.0(react@19.1.0))(react-hook-form@7.62.0(react@19.1.0))(react-router-dom@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-router@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0))
       react-admin:
         specifier: ^5.11.0
-        version: 5.11.0(@mui/system@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@mui/utils@7.3.2(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0)
+        version: 5.11.0(@mui/system@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@mui/utils@7.3.7(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(csstype@3.2.3)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)
+      react-router-dom:
+        specifier: ^7.8.2
+        version: 7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      wellknown:
+        specifier: ^0.5.0
+        version: 0.5.0
+
+  packages/ra-geospatial/dist:
+    dependencies:
+      '@emotion/react':
+        specifier: ^11.14.0
+        version: 11.14.0(@types/react@19.1.12)(react@19.1.0)
+      '@emotion/styled':
+        specifier: ^11.14.1
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mapcomponents/react-maplibre':
+        specifier: workspace:^
+        version: link:../../react-maplibre/dist
+      '@mui/icons-material':
+        specifier: ^7.3.2
+        version: 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mui/material':
+        specifier: ^7.3.2
+        version: 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@turf/helpers':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@turf/turf':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      maplibre-gl:
+        specifier: ^5.7.0
+        version: 5.15.0
+      ra-data-fakerest:
+        specifier: ^5.11.0
+        version: 5.11.0(ra-core@5.11.0(react-dom@19.1.0(react@19.1.0))(react-hook-form@7.62.0(react@19.1.0))(react-router-dom@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-router@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0))
+      react-admin:
+        specifier: ^5.11.0
+        version: 5.11.0(@mui/system@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@mui/utils@7.3.7(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(csstype@3.2.3)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)
       react-router-dom:
         specifier: ^7.8.2
         version: 7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1574,6 +1631,10 @@ packages:
     resolution: {integrity: sha512-9uIQ10o0WGdpP6GDhXcdOJPJuDgFtIDtN/9+ArJQ2NAfAmiuhTQdzkaTGR33v43GYS2UrSA0eX2pPPHoFVvpxA==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/runtime@7.28.4':
+    resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/template@7.27.2':
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
     engines: {node: '>=6.9.0'}
@@ -1659,14 +1720,6 @@ packages:
   '@daybrush/utils@1.13.0':
     resolution: {integrity: sha512-ALK12C6SQNNHw1enXK+UO8bdyQ+jaWNQ1Af7Z3FNxeAwjYhQT7do+TRE4RASAJ3ObaS2+TJ7TXR3oz2Gzbw0PQ==}
 
-  '@deck.gl/aggregation-layers@9.1.14':
-    resolution: {integrity: sha512-EEciz1/SL1bdf/lm+DRy9Arno81vLWc9frcz2w/ZFdIKxVfcJmAFtyKeo2BJdjR9aspNxpOW+RJdl3/tK/ICYw==}
-    peerDependencies:
-      '@deck.gl/core': ^9.1.0
-      '@deck.gl/layers': ^9.1.0
-      '@luma.gl/core': ~9.1.9
-      '@luma.gl/engine': ~9.1.9
-
   '@deck.gl/aggregation-layers@9.2.5':
     resolution: {integrity: sha512-WHb3W2IhpdppHA7YAco/s6VL3hH1S+TCIMB9S+KtGGfC557eBGycuJvqJEEPeuRz9vVNchEevwuY+0SXL+4dOw==}
     peerDependencies:
@@ -1674,9 +1727,6 @@ packages:
       '@deck.gl/layers': ~9.2.0
       '@luma.gl/core': ~9.2.4
       '@luma.gl/engine': ~9.2.4
-
-  '@deck.gl/core@9.1.14':
-    resolution: {integrity: sha512-tXakSSvi5g+EvxSsnnjoRO8z3XxHxISTRzzIqcs3AZuWHnDptK28y9iD0Da21ILop1IYLaWE1QTUe6IAdp/Wag==}
 
   '@deck.gl/core@9.2.5':
     resolution: {integrity: sha512-/PGNX4Wd7rEahYi6ivC4WExJ3U6Hqgl42R83guNzTL6gM2+02PUQRoQG9QdFagj5d6kWYVN0LVJME2a5WQmzOg==}
@@ -1706,12 +1756,6 @@ packages:
       '@loaders.gl/core': ^4.2.0
       '@luma.gl/core': ~9.1.9
       '@luma.gl/engine': ~9.1.9
-
-  '@deck.gl/mapbox@9.1.14':
-    resolution: {integrity: sha512-l3c5NFwKjIOeVWMtqK5LR8MA4grRe7tpLctkovNIo+owPBoW+q7gAWBJ1hGFmE1sxVFhoqZx70FqBAT9Mqn1ow==}
-    peerDependencies:
-      '@deck.gl/core': ^9.1.0
-      '@luma.gl/core': ~9.1.9
 
   '@deck.gl/mapbox@9.2.5':
     resolution: {integrity: sha512-VQPV/JMVNKjLbbfq+0CL7Fvf78x9k7zvXqnhMicT/clLWzHdc7r7yfadLVPaRwEGh0VpMKTUUOrdszUTkW95wA==}
@@ -2681,23 +2725,11 @@ packages:
     peerDependencies:
       '@loaders.gl/core': ^4.3.0
 
-  '@luma.gl/constants@9.1.9':
-    resolution: {integrity: sha512-yc9fml04OeTTcwK+7gmDMxoLQ67j4ZiAFXjmYvPomYyBVzS0NZxTDuwcCBmnxjLOiroOZW8FRRrVc/yOiFug2w==}
-
   '@luma.gl/constants@9.2.5':
     resolution: {integrity: sha512-Z+DC7LIw+kPcIthGJdSoquIc92kkUlTOINMuJtssPsvOgFYtlsRn29h95K9y8ehjh234q2+73ExjfDQFE64f5Q==}
 
-  '@luma.gl/core@9.1.9':
-    resolution: {integrity: sha512-1i9N7+I/UbFjx3axSMlc3/NufA+C2iBv/7mw51gRE/ypQPgvFmY/QqXBVZRe+nthF+OhlUMhO19TBndzYFTWhA==}
-
   '@luma.gl/core@9.2.5':
     resolution: {integrity: sha512-7tQ6wTTtQV6iWZxjMr+BDzS2o814EvaNW5efKtdzdvbbNyDWkDQZkyHkPvgGBB1o/+N2cbZS7GWyxOljCCH5uA==}
-
-  '@luma.gl/engine@9.1.9':
-    resolution: {integrity: sha512-n1GLK1sUMFkWxdb+aZYn6ZBFltFEMi7X+6ZPxn2pBsNT6oeF4AyvH5AyqhOpvHvUnCLDt3Zsf1UIfx3MI//YSw==}
-    peerDependencies:
-      '@luma.gl/core': ^9.1.0
-      '@luma.gl/shadertools': ^9.1.0
 
   '@luma.gl/engine@9.2.5':
     resolution: {integrity: sha512-swM+4VO+ab4DU58TB+cdSdby/MGLLWA9ez6BmaZ0HZwLN1HNdYwbQmT71Frtw+6lJpmBZHr78KOQi66Zx5+SOg==}
@@ -2722,11 +2754,6 @@ packages:
     resolution: {integrity: sha512-9upnT6r5exwotM1atc7Nwa7P69MKx+FavXWlabjk+nrRjeIJwzQ/3sXg9UfdDLavN/cDwGvnWz05UlbyABMmJg==}
     peerDependencies:
       '@luma.gl/core': ~9.2.0
-
-  '@luma.gl/webgl@9.1.9':
-    resolution: {integrity: sha512-jecHjhNSWkXH0v62rM6G5fIIkOmsrND27099iKgdutFvHIvd4QS4UzGWEEa9AEPlP0rTLqXkA6y6YL7f42ZkVg==}
-    peerDependencies:
-      '@luma.gl/core': ^9.1.0
 
   '@luma.gl/webgl@9.2.5':
     resolution: {integrity: sha512-FW5e+zxPuMI6gOJI6az5UnACrRwitzcghyUCVJBQq6/ZK/Z7bjBP5JQgd287DmFXrhLUrNBJ5NYRLmfbraGdDw==}
@@ -2801,8 +2828,18 @@ packages:
     resolution: {integrity: sha512-IGJtuBbaGzOUgODdBRg66p8stnwj9iDXkgbYKoYcNiiQmaez5WVRfXm4b03MCDwmZyX93csbfHFWEJJYHnn5oA==}
     hasBin: true
 
+  '@maplibre/maplibre-gl-style-spec@24.4.1':
+    resolution: {integrity: sha512-UKhA4qv1h30XT768ccSv5NjNCX+dgfoq2qlLVmKejspPcSQTYD4SrVucgqegmYcKcmwf06wcNAa/kRd0NHWbUg==}
+    hasBin: true
+
+  '@maplibre/mlt@1.1.2':
+    resolution: {integrity: sha512-SQKdJ909VGROkA6ovJgtHNs9YXV4YXUPS+VaZ50I2Mt951SLlUm2Cv34x5Xwc1HiFlsd3h2Yrs5cn7xzqBmENw==}
+
   '@maplibre/vt-pbf@4.0.3':
     resolution: {integrity: sha512-YsW99BwnT+ukJRkseBcLuZHfITB4puJoxnqPVjo72rhW/TaawVYsgQHcqWLzTxqknttYoDpgyERzWSa/XrETdA==}
+
+  '@maplibre/vt-pbf@4.2.0':
+    resolution: {integrity: sha512-bxrk/kQUwWXZgmqYgwOCnZCMONCRi3MJMqJdza4T3E4AeR5i+VyMnaJ8iDWtWxdfEAJRtrzIOeJtxZSy5mFrFA==}
 
   '@math.gl/core@4.1.0':
     resolution: {integrity: sha512-FrdHBCVG3QdrworwrUSzXIaK+/9OCRLscxI2OUy6sLOHyHgBMyfnEGs99/m3KNvs+95BsnQLWklVfpKfQzfwKA==}
@@ -3056,11 +3093,25 @@ packages:
   '@mui/core-downloads-tracker@7.3.2':
     resolution: {integrity: sha512-AOyfHjyDKVPGJJFtxOlept3EYEdLoar/RvssBTWVAvDJGIE676dLi2oT/Kx+FoVXFoA/JdV7DEMq/BVWV3KHRw==}
 
+  '@mui/core-downloads-tracker@7.3.7':
+    resolution: {integrity: sha512-8jWwS6FweMkpyRkrJooamUGe1CQfO1yJ+lM43IyUJbrhHW/ObES+6ry4vfGi8EKaldHL3t3BG1bcLcERuJPcjg==}
+
   '@mui/icons-material@7.3.2':
     resolution: {integrity: sha512-TZWazBjWXBjR6iGcNkbKklnwodcwj0SrChCNHc9BhD9rBgET22J1eFhHsEmvSvru9+opDy3umqAimQjokhfJlQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@mui/material': ^7.3.2
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@mui/icons-material@7.3.7':
+    resolution: {integrity: sha512-3Q+ulAqG+A1+R4ebgoIs7AccaJhIGy+Xi/9OnvX376jQ6wcy+rz4geDGrxQxCGzdjOQr4Z3NgyFSZCz4T999lA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@mui/material': ^7.3.7
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
@@ -3087,6 +3138,26 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/material@7.3.7':
+    resolution: {integrity: sha512-6bdIxqzeOtBAj2wAsfhWCYyMKPLkRO9u/2o5yexcL0C3APqyy91iGSWgT3H7hg+zR2XgE61+WAu12wXPON8b6A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
+      '@mui/material-pigment-css': ^7.3.7
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+      '@mui/material-pigment-css':
+        optional: true
+      '@types/react':
+        optional: true
+
   '@mui/private-theming@7.3.2':
     resolution: {integrity: sha512-ha7mFoOyZGJr75xeiO9lugS3joRROjc8tG1u4P50dH0KR7bwhHznVMcYg7MouochUy0OxooJm/OOSpJ7gKcMvg==}
     engines: {node: '>=14.0.0'}
@@ -3097,8 +3168,31 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/private-theming@7.3.7':
+    resolution: {integrity: sha512-w7r1+CYhG0syCAQUWAuV5zSaU2/67WA9JXUderdb7DzCIJdp/5RmJv6L85wRjgKCMsxFF0Kfn0kPgPbPgw/jdw==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   '@mui/styled-engine@7.3.2':
     resolution: {integrity: sha512-PkJzW+mTaek4e0nPYZ6qLnW5RGa0KN+eRTf5FA2nc7cFZTeM+qebmGibaTLrgQBy3UpcpemaqfzToBNkzuxqew==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.4.1
+      '@emotion/styled': ^11.3.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+
+  '@mui/styled-engine@7.3.7':
+    resolution: {integrity: sha512-y/QkNXv6cF6dZ5APztd/dFWfQ6LHKPx3skyYO38YhQD4+Cxd6sFAL3Z38WMSSC8LQz145Mpp3CcLrSCLKPwYAg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.4.1
@@ -3126,6 +3220,30 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/system@7.3.7':
+    resolution: {integrity: sha512-DovL3k+FBRKnhmatzUMyO5bKkhMLlQ9L7Qw5qHrre3m8zCZmE+31NDVBFfqrbrA7sq681qaEIHdkWD5nmiAjyQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+      '@types/react':
+        optional: true
+
+  '@mui/types@7.4.10':
+    resolution: {integrity: sha512-0+4mSjknSu218GW3isRqoxKRTOrTLd/vHi/7UC4+wZcUrOAqD9kRk7UQRL1mcrzqRoe7s3UT6rsRpbLkW5mHpQ==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   '@mui/types@7.4.6':
     resolution: {integrity: sha512-NVBbIw+4CDMMppNamVxyTccNv0WxtDb7motWDlMeSC8Oy95saj1TIZMGynPpFLePt3yOD8TskzumeqORCgRGWw==}
     peerDependencies:
@@ -3136,6 +3254,16 @@ packages:
 
   '@mui/utils@7.3.2':
     resolution: {integrity: sha512-4DMWQGenOdLnM3y/SdFQFwKsCLM+mqxzvoWp9+x2XdEzXapkznauHLiXtSohHs/mc0+5/9UACt1GdugCX2te5g==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@mui/utils@7.3.7':
+    resolution: {integrity: sha512-+YjnjMRnyeTkWnspzoxRdiSOgkrcpTikhNPoxOZW0APXx+urHtUoXJ9lbtCZRCA5a4dg5gSbd19alL1DvRs5fg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4098,6 +4226,13 @@ packages:
   '@storybook/preview-api@7.6.17':
     resolution: {integrity: sha512-wLfDdI9RWo1f2zzFe54yRhg+2YWyxLZvqdZnSQ45mTs4/7xXV5Wfbv3QNTtcdw8tT3U5KRTrN1mTfTCiRJc0Kw==}
 
+  '@storybook/react-dom-shim@10.1.11':
+    resolution: {integrity: sha512-o8WPhRlZbORUWG9lAgDgJP0pi905VHJUFJr1Kp8980gHqtlemtnzjPxKy5vFwj6glNhAlK8SS8OOYzWP7hloTQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      storybook: ^10.1.11
+
   '@storybook/react-dom-shim@9.1.1':
     resolution: {integrity: sha512-L+HCOXvOP+PwKrVS8od9aF+F4hO7zA0Nt1vnpbg2LeAHCxYghrjFVtioe7gSlzrlYdozQrPLY98a4OkDB7KGrw==}
     peerDependencies:
@@ -4112,13 +4247,6 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       storybook: ^9.1.4
 
-  '@storybook/react-dom-shim@9.1.5':
-    resolution: {integrity: sha512-blSq9uzSYnfgEYPHYKgM5O14n8hbXNiXx2GiVJyDSg8QPNicbsBg+lCb1TC7/USfV26pNZr/lGNNKGkcCEN6Gw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-      storybook: ^9.1.5
-
   '@storybook/react-vite@9.1.1':
     resolution: {integrity: sha512-9rMjAqgrcuVF/GS171fYSLuUs5QC3e0WPpIm2JOP7Z9qWctM1ApVb9UCYY7ZNl9Gc3kvjKsK5J1+A4Zw4a2+ag==}
     engines: {node: '>=20.0.0'}
@@ -4127,6 +4255,17 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       storybook: ^9.1.1
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0
+
+  '@storybook/react@10.1.11':
+    resolution: {integrity: sha512-rmMGmEwBaM2YpB8oDk2moM0MNjNMqtwyoPPZxjyruY9WVhYca8EDPGKEdRzUlb4qZJsTgLi7VU4eqg6LD/mL3Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      storybook: ^10.1.11
+      typescript: '>= 4.9.x'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@storybook/react@9.1.1':
     resolution: {integrity: sha512-F5vRFxDf1fzM6CG88olrzEH03iP6C1YAr4/nr5bkLNs6TNm9Hh7KmRVG2jFtoy5w9uCwbQ9RdY+TrRbBI7n67g==}
@@ -4147,18 +4286,6 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       storybook: ^9.1.4
-      typescript: '>= 4.9.x'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@storybook/react@9.1.5':
-    resolution: {integrity: sha512-fBVP7Go09gzpImtaMcZ2DipLEWdWeTmz7BrACr3Z8uCyKcoH8/d1Wv0JgIiBo1UKDh5ZgYx5pLafaPNqmVAepg==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-      storybook: ^9.1.5
       typescript: '>= 4.9.x'
     peerDependenciesMeta:
       typescript:
@@ -6620,6 +6747,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  csstype@3.2.3:
+    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
   csv2geojson@5.1.2:
     resolution: {integrity: sha512-G9A1mw7jwGta4z9x+mJehRj3OkVaFKMULRj8mZJxdjZ6XN/1Icp7G2RQ0T0vnQoYSNTufK8yPh2fRTRkBPAcdQ==}
@@ -9332,6 +9462,10 @@ packages:
   mapbox-gl@3.14.0:
     resolution: {integrity: sha512-KYhi9ZOQL4BB0J061admPH8O5ZZhhxsyiJ6DQCOkCaps0JEB4HF3SbJwu8S0pJKaQUxNS33sSbzW8iDSSauHPQ==}
 
+  maplibre-gl@5.15.0:
+    resolution: {integrity: sha512-pPeu/t4yPDX/+Uf9ibLUdmaKbNMlGxMAX+tBednYukol2qNk2TZXAlhdohWxjVvTO3is8crrUYv3Ok02oAaKzA==}
+    engines: {node: '>=16.14.0', npm: '>=8.1.0'}
+
   maplibre-gl@5.6.0:
     resolution: {integrity: sha512-7TuHMozUC4rlIp08bSsxCixFn18P24otrlZU/7UGCO5RufFTJadFzauTrvBHr9FB67MbJ6nvFXEftGd0bUl4Iw==}
     engines: {node: '>=16.14.0', npm: '>=8.1.0'}
@@ -10328,6 +10462,10 @@ packages:
     resolution: {integrity: sha512-kQKsqPLplY3Hx4jGnM3jpQcG3FQDt7ySz32uTHt3C9HAe45kNXG+3o16Eqn3Fw1GtMfHoN3b4J/z2e6cZJCmqQ==}
     engines: {node: ^20.9.0 || >=22}
 
+  react-docgen@8.0.2:
+    resolution: {integrity: sha512-+NRMYs2DyTP4/tqWz371Oo50JqmWltR1h2gcdgUMAWZJIAvrd0/SqlCfx7tpzpl/s36rzw6qH2MjoNrxtRNYhA==}
+    engines: {node: ^20.9.0 || >=22}
+
   react-dom@19.1.0:
     resolution: {integrity: sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==}
     peerDependencies:
@@ -10392,6 +10530,9 @@ packages:
 
   react-is@19.1.1:
     resolution: {integrity: sha512-tr41fA15Vn8p4X9ntI+yCyeGSf1TlYaY5vlTZfQmeLBrFo3psOPX6HhTDnFNL9uj3EhP0KAQ80cugCl4b4BERA==}
+
+  react-is@19.2.3:
+    resolution: {integrity: sha512-qJNJfu81ByyabuG7hPFEbXqNcWSU3+eVus+KJs+0ncpGfMyYdvSmxiJxbWR65lYi1I+/0HBcliO029gc4F+PnA==}
 
   react-moveable@0.56.0:
     resolution: {integrity: sha512-FmJNmIOsOA36mdxbrc/huiE4wuXSRlmon/o+/OrfNhSiYYYL0AV5oObtPluEhb2Yr/7EfYWBHTxF5aWAvjg1SA==}
@@ -11864,6 +12005,10 @@ packages:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
 
+  uuid@13.0.0:
+    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
+    hasBin: true
+
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
     deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
@@ -13219,6 +13364,8 @@ snapshots:
 
   '@babel/runtime@7.28.3': {}
 
+  '@babel/runtime@7.28.4': {}
+
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.27.1
@@ -13341,18 +13488,6 @@ snapshots:
 
   '@daybrush/utils@1.13.0': {}
 
-  '@deck.gl/aggregation-layers@9.1.14(@deck.gl/core@9.1.14)(@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.9)(@luma.gl/engine@9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9))))(@luma.gl/core@9.1.9)(@luma.gl/engine@9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9)))':
-    dependencies:
-      '@deck.gl/core': 9.1.14
-      '@deck.gl/layers': 9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.9)(@luma.gl/engine@9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9)))
-      '@luma.gl/constants': 9.1.9
-      '@luma.gl/core': 9.1.9
-      '@luma.gl/engine': 9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9))
-      '@luma.gl/shadertools': 9.1.9(@luma.gl/core@9.1.9)
-      '@math.gl/core': 4.1.0
-      '@math.gl/web-mercator': 4.1.0
-      d3-hexbin: 0.2.2
-
   '@deck.gl/aggregation-layers@9.2.5(@deck.gl/core@9.2.5)(@deck.gl/layers@9.1.14(@deck.gl/core@9.2.5)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5))))(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))':
     dependencies:
       '@deck.gl/core': 9.2.5
@@ -13364,26 +13499,6 @@ snapshots:
       '@math.gl/core': 4.1.0
       '@math.gl/web-mercator': 4.1.0
       d3-hexbin: 0.2.2
-
-  '@deck.gl/core@9.1.14':
-    dependencies:
-      '@loaders.gl/core': 4.3.4
-      '@loaders.gl/images': 4.3.4(@loaders.gl/core@4.3.4)
-      '@luma.gl/constants': 9.1.9
-      '@luma.gl/core': 9.1.9
-      '@luma.gl/engine': 9.1.9(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9))
-      '@luma.gl/shadertools': 9.1.9(@luma.gl/core@9.1.9)
-      '@luma.gl/webgl': 9.1.9(@luma.gl/core@9.1.9)
-      '@math.gl/core': 4.1.0
-      '@math.gl/sun': 4.1.0
-      '@math.gl/types': 4.1.0
-      '@math.gl/web-mercator': 4.1.0
-      '@probe.gl/env': 4.1.0
-      '@probe.gl/log': 4.1.0
-      '@probe.gl/stats': 4.1.0
-      '@types/offscreencanvas': 2019.7.3
-      gl-matrix: 3.4.4
-      mjolnir.js: 3.0.0
 
   '@deck.gl/core@9.2.5':
     dependencies:
@@ -13443,21 +13558,6 @@ snapshots:
     transitivePeerDependencies:
       - '@luma.gl/constants'
 
-  '@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.9)(@luma.gl/engine@9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9)))':
-    dependencies:
-      '@deck.gl/core': 9.1.14
-      '@loaders.gl/core': 4.3.4
-      '@loaders.gl/images': 4.3.4(@loaders.gl/core@4.3.4)
-      '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
-      '@luma.gl/core': 9.1.9
-      '@luma.gl/engine': 9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9))
-      '@luma.gl/shadertools': 9.1.9(@luma.gl/core@9.1.9)
-      '@mapbox/tiny-sdf': 2.0.7
-      '@math.gl/core': 4.1.0
-      '@math.gl/polygon': 4.1.0
-      '@math.gl/web-mercator': 4.1.0
-      earcut: 2.2.4
-
   '@deck.gl/layers@9.1.14(@deck.gl/core@9.2.5)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.5)(@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5)))':
     dependencies:
       '@deck.gl/core': 9.2.5
@@ -13472,13 +13572,6 @@ snapshots:
       '@math.gl/polygon': 4.1.0
       '@math.gl/web-mercator': 4.1.0
       earcut: 2.2.4
-
-  '@deck.gl/mapbox@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.9)':
-    dependencies:
-      '@deck.gl/core': 9.1.14
-      '@luma.gl/constants': 9.1.9
-      '@luma.gl/core': 9.1.9
-      '@math.gl/web-mercator': 4.1.0
 
   '@deck.gl/mapbox@9.2.5(@deck.gl/core@9.2.5)(@luma.gl/constants@9.2.5)(@luma.gl/core@9.2.5)(@math.gl/web-mercator@4.1.0)':
     dependencies:
@@ -14517,17 +14610,7 @@ snapshots:
       jszip: 3.10.1
       md5: 2.3.0
 
-  '@luma.gl/constants@9.1.9': {}
-
   '@luma.gl/constants@9.2.5': {}
-
-  '@luma.gl/core@9.1.9':
-    dependencies:
-      '@math.gl/types': 4.1.0
-      '@probe.gl/env': 4.1.0
-      '@probe.gl/log': 4.1.0
-      '@probe.gl/stats': 4.1.0
-      '@types/offscreencanvas': 2019.7.3
 
   '@luma.gl/core@9.2.5':
     dependencies:
@@ -14536,24 +14619,6 @@ snapshots:
       '@probe.gl/log': 4.1.0
       '@probe.gl/stats': 4.1.0
       '@types/offscreencanvas': 2019.7.3
-
-  '@luma.gl/engine@9.1.9(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9))':
-    dependencies:
-      '@luma.gl/core': 9.1.9
-      '@luma.gl/shadertools': 9.1.9(@luma.gl/core@9.1.9)
-      '@math.gl/core': 4.1.0
-      '@math.gl/types': 4.1.0
-      '@probe.gl/log': 4.1.0
-      '@probe.gl/stats': 4.1.0
-
-  '@luma.gl/engine@9.2.5(@luma.gl/core@9.1.9)(@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9))':
-    dependencies:
-      '@luma.gl/core': 9.1.9
-      '@luma.gl/shadertools': 9.1.9(@luma.gl/core@9.1.9)
-      '@math.gl/core': 4.1.0
-      '@math.gl/types': 4.1.0
-      '@probe.gl/log': 4.1.0
-      '@probe.gl/stats': 4.1.0
 
   '@luma.gl/engine@9.2.5(@luma.gl/core@9.2.5)(@luma.gl/shadertools@9.2.5(@luma.gl/core@9.2.5))':
     dependencies:
@@ -14575,13 +14640,6 @@ snapshots:
       '@luma.gl/shadertools': 9.2.5(@luma.gl/core@9.2.5)
       '@math.gl/core': 4.1.0
 
-  '@luma.gl/shadertools@9.1.9(@luma.gl/core@9.1.9)':
-    dependencies:
-      '@luma.gl/core': 9.1.9
-      '@math.gl/core': 4.1.0
-      '@math.gl/types': 4.1.0
-      wgsl_reflect: 1.2.3
-
   '@luma.gl/shadertools@9.1.9(@luma.gl/core@9.2.5)':
     dependencies:
       '@luma.gl/core': 9.2.5
@@ -14595,13 +14653,6 @@ snapshots:
       '@math.gl/core': 4.1.0
       '@math.gl/types': 4.1.0
       wgsl_reflect: 1.2.3
-
-  '@luma.gl/webgl@9.1.9(@luma.gl/core@9.1.9)':
-    dependencies:
-      '@luma.gl/constants': 9.1.9
-      '@luma.gl/core': 9.1.9
-      '@math.gl/types': 4.1.0
-      '@probe.gl/env': 4.1.0
 
   '@luma.gl/webgl@9.2.5(@luma.gl/core@9.2.5)':
     dependencies:
@@ -14685,7 +14736,31 @@ snapshots:
       rw: 1.3.3
       tinyqueue: 3.0.0
 
+  '@maplibre/maplibre-gl-style-spec@24.4.1':
+    dependencies:
+      '@mapbox/jsonlint-lines-primitives': 2.0.2
+      '@mapbox/unitbezier': 0.0.1
+      json-stringify-pretty-compact: 4.0.0
+      minimist: 1.2.8
+      quickselect: 3.0.0
+      rw: 1.3.3
+      tinyqueue: 3.0.0
+
+  '@maplibre/mlt@1.1.2':
+    dependencies:
+      '@mapbox/point-geometry': 1.1.0
+
   '@maplibre/vt-pbf@4.0.3':
+    dependencies:
+      '@mapbox/point-geometry': 1.1.0
+      '@mapbox/vector-tile': 2.0.4
+      '@types/geojson-vt': 3.2.5
+      '@types/supercluster': 7.1.3
+      geojson-vt: 4.0.2
+      pbf: 4.0.1
+      supercluster: 8.0.1
+
+  '@maplibre/vt-pbf@4.2.0':
     dependencies:
       '@mapbox/point-geometry': 1.1.0
       '@mapbox/vector-tile': 2.0.4
@@ -15150,10 +15225,20 @@ snapshots:
 
   '@mui/core-downloads-tracker@7.3.2': {}
 
+  '@mui/core-downloads-tracker@7.3.7': {}
+
   '@mui/icons-material@7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)':
     dependencies:
       '@babel/runtime': 7.28.3
       '@mui/material': 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+    optionalDependencies:
+      '@types/react': 19.1.12
+
+  '@mui/icons-material@7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@mui/material': 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
     optionalDependencies:
       '@types/react': 19.1.12
@@ -15179,10 +15264,40 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
       '@types/react': 19.1.12
 
+  '@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@mui/core-downloads-tracker': 7.3.7
+      '@mui/system': 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mui/types': 7.4.10(@types/react@19.1.12)
+      '@mui/utils': 7.3.7(@types/react@19.1.12)(react@19.1.0)
+      '@popperjs/core': 2.11.8
+      '@types/react-transition-group': 4.4.12(@types/react@19.1.12)
+      clsx: 2.1.1
+      csstype: 3.2.3
+      prop-types: 15.8.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      react-is: 19.2.3
+      react-transition-group: 4.4.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+    optionalDependencies:
+      '@emotion/react': 11.14.0(@types/react@19.1.12)(react@19.1.0)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@types/react': 19.1.12
+
   '@mui/private-theming@7.3.2(@types/react@19.1.12)(react@19.1.0)':
     dependencies:
       '@babel/runtime': 7.28.3
       '@mui/utils': 7.3.2(@types/react@19.1.12)(react@19.1.0)
+      prop-types: 15.8.1
+      react: 19.1.0
+    optionalDependencies:
+      '@types/react': 19.1.12
+
+  '@mui/private-theming@7.3.7(@types/react@19.1.12)(react@19.1.0)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@mui/utils': 7.3.7(@types/react@19.1.12)(react@19.1.0)
       prop-types: 15.8.1
       react: 19.1.0
     optionalDependencies:
@@ -15195,6 +15310,19 @@ snapshots:
       '@emotion/serialize': 1.3.3
       '@emotion/sheet': 1.4.0
       csstype: 3.1.3
+      prop-types: 15.8.1
+      react: 19.1.0
+    optionalDependencies:
+      '@emotion/react': 11.14.0(@types/react@19.1.12)(react@19.1.0)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+
+  '@mui/styled-engine@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@emotion/cache': 11.14.0
+      '@emotion/serialize': 1.3.3
+      '@emotion/sheet': 1.4.0
+      csstype: 3.2.3
       prop-types: 15.8.1
       react: 19.1.0
     optionalDependencies:
@@ -15217,6 +15345,28 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
       '@types/react': 19.1.12
 
+  '@mui/system@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@mui/private-theming': 7.3.7(@types/react@19.1.12)(react@19.1.0)
+      '@mui/styled-engine': 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(react@19.1.0)
+      '@mui/types': 7.4.10(@types/react@19.1.12)
+      '@mui/utils': 7.3.7(@types/react@19.1.12)(react@19.1.0)
+      clsx: 2.1.1
+      csstype: 3.2.3
+      prop-types: 15.8.1
+      react: 19.1.0
+    optionalDependencies:
+      '@emotion/react': 11.14.0(@types/react@19.1.12)(react@19.1.0)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@types/react': 19.1.12
+
+  '@mui/types@7.4.10(@types/react@19.1.12)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+    optionalDependencies:
+      '@types/react': 19.1.12
+
   '@mui/types@7.4.6(@types/react@19.1.12)':
     dependencies:
       '@babel/runtime': 7.28.3
@@ -15232,6 +15382,18 @@ snapshots:
       prop-types: 15.8.1
       react: 19.1.0
       react-is: 19.1.1
+    optionalDependencies:
+      '@types/react': 19.1.12
+
+  '@mui/utils@7.3.7(@types/react@19.1.12)(react@19.1.0)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@mui/types': 7.4.10(@types/react@19.1.12)
+      '@types/prop-types': 15.7.15
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 19.1.0
+      react-is: 19.2.3
     optionalDependencies:
       '@types/react': 19.1.12
 
@@ -16557,6 +16719,18 @@ snapshots:
       ts-dedent: 2.2.0
       util-deprecate: 1.0.2
 
+  '@storybook/react-dom-shim@10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))':
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      storybook: 9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
+
+  '@storybook/react-dom-shim@10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))':
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      storybook: 9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
+
   '@storybook/react-dom-shim@9.1.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))':
     dependencies:
       react: 19.1.0
@@ -16570,18 +16744,6 @@ snapshots:
       storybook: 9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
 
   '@storybook/react-dom-shim@9.1.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      storybook: 9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
-
-  '@storybook/react-dom-shim@9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      storybook: 9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
-
-  '@storybook/react-dom-shim@9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))':
     dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -16607,6 +16769,32 @@ snapshots:
       - supports-color
       - typescript
 
+  '@storybook/react@10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3)':
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@storybook/react-dom-shim': 10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))
+      react: 19.1.0
+      react-docgen: 8.0.2
+      react-dom: 19.1.0(react@19.1.0)
+      storybook: 9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
+    optionalDependencies:
+      typescript: 5.8.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@storybook/react@10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.9.2)':
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@storybook/react-dom-shim': 10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))
+      react: 19.1.0
+      react-docgen: 8.0.2
+      react-dom: 19.1.0(react@19.1.0)
+      storybook: 9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
+    optionalDependencies:
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@storybook/react@9.1.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3)':
     dependencies:
       '@storybook/global': 5.0.0
@@ -16627,38 +16815,18 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
-  '@storybook/react@9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3)':
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      storybook: 9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
-    optionalDependencies:
-      typescript: 5.8.3
-
-  '@storybook/react@9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.9.2)':
-    dependencies:
-      '@storybook/global': 5.0.0
-      '@storybook/react-dom-shim': 9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      storybook: 9.1.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1))
-    optionalDependencies:
-      typescript: 5.9.2
-
   '@storybook/router@7.6.17':
     dependencies:
       '@storybook/client-logger': 7.6.17
       memoizerific: 1.11.3
       qs: 6.14.0
 
-  '@storybook/testing-react@2.0.1(@storybook/client-logger@7.6.17)(@storybook/preview-api@7.6.17)(@storybook/react@9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3))(@storybook/types@7.6.17)(react@19.1.0)':
+  '@storybook/testing-react@2.0.1(@storybook/client-logger@7.6.17)(@storybook/preview-api@7.6.17)(@storybook/react@10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3))(@storybook/types@7.6.17)(react@19.1.0)':
     dependencies:
       '@storybook/client-logger': 7.6.17
       '@storybook/csf': 0.1.13
       '@storybook/preview-api': 7.6.17
-      '@storybook/react': 9.1.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3)
+      '@storybook/react': 10.1.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.1.1(@testing-library/dom@10.4.0)(prettier@3.6.2)(vite@7.1.4(@types/node@24.3.1)(jiti@2.4.2)(terser@5.44.0)(yaml@2.8.1)))(typescript@5.8.3)
       '@storybook/types': 7.6.17
       react: 19.1.0
 
@@ -20289,6 +20457,8 @@ snapshots:
 
   csstype@3.1.3: {}
 
+  csstype@3.2.3: {}
+
   csv2geojson@5.1.2:
     dependencies:
       '@mapbox/sexagesimal': 1.2.0
@@ -20725,8 +20895,8 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.28.3
-      csstype: 3.1.3
+      '@babel/runtime': 7.28.4
+      csstype: 3.2.3
 
   dom-serializer@1.4.1:
     dependencies:
@@ -23769,6 +23939,32 @@ snapshots:
       supercluster: 8.0.1
       tinyqueue: 3.0.0
 
+  maplibre-gl@5.15.0:
+    dependencies:
+      '@mapbox/geojson-rewind': 0.5.2
+      '@mapbox/jsonlint-lines-primitives': 2.0.2
+      '@mapbox/point-geometry': 1.1.0
+      '@mapbox/tiny-sdf': 2.0.7
+      '@mapbox/unitbezier': 0.0.1
+      '@mapbox/vector-tile': 2.0.4
+      '@mapbox/whoots-js': 3.1.0
+      '@maplibre/maplibre-gl-style-spec': 24.4.1
+      '@maplibre/mlt': 1.1.2
+      '@maplibre/vt-pbf': 4.2.0
+      '@types/geojson': 7946.0.16
+      '@types/geojson-vt': 3.2.5
+      '@types/supercluster': 7.1.3
+      earcut: 3.0.2
+      geojson-vt: 4.0.2
+      gl-matrix: 3.4.4
+      kdbush: 4.0.2
+      murmurhash-js: 1.0.0
+      pbf: 4.0.1
+      potpack: 2.1.0
+      quickselect: 3.0.0
+      supercluster: 8.0.1
+      tinyqueue: 3.0.0
+
   maplibre-gl@5.6.0:
     dependencies:
       '@mapbox/geojson-rewind': 0.5.2
@@ -24995,17 +25191,17 @@ snapshots:
       - react-router
       - react-router-dom
 
-  ra-ui-materialui@5.11.0(a27cdfaff3fd3b2c6cf84994329ef854):
+  ra-ui-materialui@5.11.0(1df9dc913b94093507e99d0503efcc8f):
     dependencies:
-      '@mui/icons-material': 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
-      '@mui/material': 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@mui/system': 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
-      '@mui/utils': 7.3.2(@types/react@19.1.12)(react@19.1.0)
+      '@mui/icons-material': 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mui/material': 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mui/system': 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mui/utils': 7.3.7(@types/react@19.1.12)(react@19.1.0)
       '@tanstack/react-query': 5.86.0(react@19.1.0)
       autosuggest-highlight: 3.3.4
       clsx: 2.1.1
       css-mediaquery: 0.1.2
-      csstype: 3.1.3
+      csstype: 3.2.3
       diacritic: 0.0.2
       dompurify: 3.2.6
       inflection: 3.0.2
@@ -25019,7 +25215,7 @@ snapshots:
       react-error-boundary: 4.1.2(react@19.1.0)
       react-hook-form: 7.62.0(react@19.1.0)
       react-hotkeys-hook: 5.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      react-is: 19.1.1
+      react-is: 19.2.3
       react-router: 7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-router-dom: 7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-transition-group: 4.4.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -25060,17 +25256,17 @@ snapshots:
     dependencies:
       quickselect: 2.0.0
 
-  react-admin@5.11.0(@mui/system@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@mui/utils@7.3.2(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0):
+  react-admin@5.11.0(@mui/system@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@mui/utils@7.3.7(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(csstype@3.2.3)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0):
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.12)(react@19.1.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
-      '@mui/icons-material': 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
-      '@mui/material': 7.3.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mui/icons-material': 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.12)(react@19.1.0)
+      '@mui/material': 7.3.7(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react@19.1.0))(@types/react@19.1.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tanstack/react-query': 5.86.0(react@19.1.0)
       ra-core: 5.11.0(react-dom@19.1.0(react@19.1.0))(react-hook-form@7.62.0(react@19.1.0))(react-router-dom@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-router@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       ra-i18n-polyglot: 5.11.0(react-dom@19.1.0(react@19.1.0))(react-hook-form@7.62.0(react@19.1.0))(react-router-dom@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-router@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       ra-language-english: 5.11.0(react-dom@19.1.0(react@19.1.0))(react-hook-form@7.62.0(react@19.1.0))(react-router-dom@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-router@7.8.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
-      ra-ui-materialui: 5.11.0(a27cdfaff3fd3b2c6cf84994329ef854)
+      ra-ui-materialui: 5.11.0(1df9dc913b94093507e99d0503efcc8f)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       react-hook-form: 7.62.0(react@19.1.0)
@@ -25163,6 +25359,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  react-docgen@8.0.2:
+    dependencies:
+      '@babel/core': 7.28.3
+      '@babel/traverse': 7.28.3
+      '@babel/types': 7.28.2
+      '@types/babel__core': 7.20.5
+      '@types/babel__traverse': 7.28.0
+      '@types/doctrine': 0.0.9
+      '@types/resolve': 1.20.6
+      doctrine: 3.0.0
+      resolve: 1.22.10
+      strip-indent: 4.0.0
+    transitivePeerDependencies:
+      - supports-color
+
   react-dom@19.1.0(react@19.1.0):
     dependencies:
       react: 19.1.0
@@ -25216,6 +25427,8 @@ snapshots:
 
   react-is@19.1.1: {}
 
+  react-is@19.2.3: {}
+
   react-moveable@0.56.0:
     dependencies:
       '@daybrush/utils': 1.13.0
@@ -25263,7 +25476,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      '@babel/runtime': 7.28.3
+      '@babel/runtime': 7.28.4
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -26952,6 +27165,8 @@ snapshots:
     optional: true
 
   uuid@11.1.0: {}
+
+  uuid@13.0.0: {}
 
   uuid@3.4.0: {}
 

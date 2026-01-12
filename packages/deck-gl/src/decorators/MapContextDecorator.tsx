@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 
 import {
+	getTheme,
 	MapComponentsProvider,
 	MapLibreMap,
 	MlNavigationTools,
-	getTheme,
 } from '@mapcomponents/react-maplibre';
 import './style.css';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
+import { DeckGlContextProvider } from '../contexts/DeckGlContext';
 
 const decorators = [
-	// eslint-disable-next-line
 	(Story: any, context: any) => {
 		const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
 
@@ -18,13 +18,22 @@ const decorators = [
 			<div className="fullscreen_map">
 				<MapComponentsProvider>
 					<MUIThemeProvider theme={theme}>
+						<DeckGlContextProvider mapId={context.mapId}>
 						<Story />
+						</DeckGlContextProvider>
 						<MapLibreMap
-							options={{
-								zoom: 14.5,
-								style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
-								center: [7.0851268, 50.73884],
-							}}
+							options={
+								context?.parameters?.mapOptions
+									? {
+											style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
+											...context.parameters.mapOptions,
+										}
+									: {
+											zoom: 14.5,
+											style: 'https://wms.wheregroup.com/tileserver/style/osm-bright.json',
+											center: [7.0851268, 50.73884],
+										}
+							}
 							mapId="map_1"
 						/>
 						<MlNavigationTools
