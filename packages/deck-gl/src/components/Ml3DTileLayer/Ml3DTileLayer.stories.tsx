@@ -1,5 +1,4 @@
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { DeckGlContextProvider } from '../../contexts/DeckGlContext';
 import Ml3DTileLayer from './Ml3DTileLayer';
 
 const storyoptions = {
@@ -11,9 +10,7 @@ const storyoptions = {
 export default storyoptions;
 
 const Template = (context: any) => {
-	return (
-			<Ml3DTileLayer {...context} />
-	);
+	return <Ml3DTileLayer {...context} />;
 };
 
 export const PointCloudExample: { [key: string]: any } = Template.bind({});

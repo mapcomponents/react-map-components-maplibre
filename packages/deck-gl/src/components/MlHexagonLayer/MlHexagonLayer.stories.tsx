@@ -1,6 +1,5 @@
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import MlHexagonLayer from './MlHexagonLayer';
-import { DeckGlContextProvider } from '../../contexts/DeckGlContext';
 import { useEffect, useState } from 'react';
 import { useMap } from '@mapcomponents/react-maplibre';
 import { HexagonLayer } from '@deck.gl/aggregation-layers';
@@ -54,11 +53,11 @@ const Template = (context: any) => {
 
 	return (
 		<>
-				<MlHexagonLayer
-					data={noiseData.features}
-					getPosition={(d: any) => d.geometry.coordinates}
-					{...context}
-				/>
+			<MlHexagonLayer
+				data={noiseData.features}
+				getPosition={(d: any) => d.geometry.coordinates}
+				{...context}
+			/>
 		</>
 	);
 };

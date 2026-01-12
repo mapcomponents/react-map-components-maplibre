@@ -1,5 +1,4 @@
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { DeckGlContextProvider } from '../../contexts/DeckGlContext';
 import MlScenegraphLayer from './MlScenegraphLayer';
 
 type BartStation = {
@@ -68,14 +67,13 @@ const station_features = [
 const storyoptions = {
 	title: 'MapComponents/MlScenegraphLayer',
 	component: MlScenegraphLayer,
-	decorators: mapContextDecorator,
+	argTypes: {},
+	decorators: [mapContextDecorator],
 };
 export default storyoptions;
 
 const Template = (context: any) => {
-	return (
-			<MlScenegraphLayer {...context} />
-	);
+	return <MlScenegraphLayer {...context} />;
 };
 
 export const DeckglExample: { [key: string]: any } = Template.bind({});
@@ -102,16 +100,15 @@ DeckglExample.args = {
 	pickable: true,
 };
 
-export const TrainstationExample: {[key: string]: any} = Template.bind({});
-TrainstationExample.parameters= {};
+export const TrainstationExample: { [key: string]: any } = Template.bind({});
+TrainstationExample.parameters = {};
 TrainstationExample.args = {
 	mapId: 'map_1',
 	id: 'ScenegraphLayer',
 	data: station_features,
 	getPosition: (d: any) => d.geometry.coordinates,
 	getOrientation: (d: any) => [0, d.properties.rotation, 90],
-	scenegraph:
-		'/assets/3D/train.glb',
+	scenegraph: '/assets/3D/train.glb',
 	sizeScale: 200,
 	_animations: {
 		'*': { speed: 5 },
