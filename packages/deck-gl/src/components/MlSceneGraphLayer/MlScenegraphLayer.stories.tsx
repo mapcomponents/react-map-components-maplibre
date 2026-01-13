@@ -14,7 +14,7 @@ const station_features = [
 			coordinates: [7.1593141, 50.7150242],
 		},
 		properties: {
-			rotation: 90,
+			rotation: 50,
 		},
 		id: 'node/26945519',
 	},
@@ -36,7 +36,7 @@ const station_features = [
 			coordinates: [7.1596754, 50.6838092],
 		},
 		properties: {
-			rotation: 90,
+			rotation: 125,
 		},
 		id: 'node/2428355974',
 	},
@@ -47,7 +47,7 @@ const station_features = [
 			coordinates: [7.0967647, 50.7320436],
 		},
 		properties: {
-			rotation: 90,
+			rotation: 66,
 		},
 		id: 'node/2713060210',
 	},
@@ -58,7 +58,7 @@ const station_features = [
 			coordinates: [7.1814245, 50.6690703],
 		},
 		properties: {
-			rotation: 90,
+			rotation: 25,
 		},
 		id: 'node/3400717493',
 	},
@@ -68,7 +68,7 @@ const storyoptions = {
 	title: 'MapComponents/MlScenegraphLayer',
 	component: MlScenegraphLayer,
 	argTypes: {},
-	decorators: [mapContextDecorator],
+	decorators: mapContextDecorator,
 };
 export default storyoptions;
 
@@ -101,7 +101,14 @@ DeckglExample.args = {
 };
 
 export const TrainstationExample: { [key: string]: any } = Template.bind({});
-TrainstationExample.parameters = {};
+TrainstationExample.parameters = {
+	mapOptions: {
+		center: [7.142334661209816, 50.70764422231869],
+		pitch: 56,
+		zoom: 12.436840279038378,
+		bearing: 58.27667167686605,
+	},
+};
 TrainstationExample.args = {
 	mapId: 'map_1',
 	id: 'ScenegraphLayer',

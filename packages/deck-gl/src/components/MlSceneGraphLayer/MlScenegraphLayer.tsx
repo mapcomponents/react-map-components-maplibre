@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useMap } from '@mapcomponents/react-maplibre';
 import useDeckGl from '../../hooks/useDeckGl';
 
-interface MlScenegraphLayerProps extends ScenegraphLayerProps {
+export interface MlScenegraphLayerProps extends ScenegraphLayerProps {
 	/**
 	 * Id of the target MapLibre instance in mapContext
 	 */
