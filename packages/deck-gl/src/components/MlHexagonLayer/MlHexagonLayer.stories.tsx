@@ -86,9 +86,9 @@ DefaultSettings.args = {
 		[209, 55, 78, 255],
 	],
 };
-export const CustomColorAndHightProfile: { [key: string]: any } = Template.bind({});
-CustomColorAndHightProfile.parameters = {};
-CustomColorAndHightProfile.args = {
+export const CustomColorAndHeightProfile: { [key: string]: any } = Template.bind({});
+CustomColorAndHeightProfile.parameters = {};
+CustomColorAndHeightProfile.args = {
 	mapId: 'map_1',
 	type: HexagonLayer,
 	layerOpacity: 0.8,
