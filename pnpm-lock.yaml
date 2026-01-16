@@ -22515,7 +22515,7 @@ snapshots:
 
   i18next@25.5.1(typescript@5.9.2):
     dependencies:
-      '@babel/runtime': 7.28.3
+      '@babel/runtime': 7.28.4
     optionalDependencies:
       typescript: 5.9.2
 
