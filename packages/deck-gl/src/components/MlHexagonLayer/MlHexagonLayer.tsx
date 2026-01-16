@@ -65,7 +65,6 @@ const MlHexagonLayer = (props: MlHexagonMapProps) => {
 	}, [
 		HexagonLayerProps.beforeId,
 		HexagonLayerProps.data,
-
 		HexagonLayerProps.elevationScale,
 		HexagonLayerProps.extruded,
 		HexagonLayerProps.coverage,
