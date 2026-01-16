@@ -6,61 +6,54 @@ type BartStation = {
 	coordinates: [longitude: number, latitude: number];
 };
 
-const station_features = [
+const wgLocations = [
 	{
+		id: '1',
 		type: 'Feature',
-		geometry: {
-			type: 'Point',
-			coordinates: [7.1593141, 50.7150242],
-		},
 		properties: {
-			rotation: 50,
+			Standort: 'Bonn',
+			Mitarbeitende: 26,
 		},
-		id: 'node/26945519',
+		geometry: {
+			coordinates: [7.085121767634178, 50.738628929850876],
+			type: 'Point',
+		},
 	},
 	{
+		id: '2',
 		type: 'Feature',
-		geometry: {
-			type: 'Point',
-			coordinates: [7.1276816, 50.7385235],
-		},
 		properties: {
-			rotation: 180,
+			Standort: 'Freiburg',
+			Mitarbeitende: 10,
 		},
-		id: 'node/1271017705',
+		geometry: {
+			coordinates: [7.842759788570362, 47.98905444717667],
+			type: 'Point',
+		},
 	},
 	{
+		id: '3',
 		type: 'Feature',
-		geometry: {
-			type: 'Point',
-			coordinates: [7.1596754, 50.6838092],
-		},
 		properties: {
-			rotation: 125,
+			Standort: 'Berlin',
+			Mitarbeitende: 13,
 		},
-		id: 'node/2428355974',
+		geometry: {
+			coordinates: [13.330420447460796, 52.492768290796676],
+			type: 'Point',
+		},
 	},
 	{
+		id: '4',
 		type: 'Feature',
-		geometry: {
-			type: 'Point',
-			coordinates: [7.0967647, 50.7320436],
-		},
 		properties: {
-			rotation: 66,
+			Standort: 'Hamburg',
+			Mitarbeitende: 3,
 		},
-		id: 'node/2713060210',
-	},
-	{
-		type: 'Feature',
 		geometry: {
+			coordinates: [10.041789021808029, 53.5511363175323],
 			type: 'Point',
-			coordinates: [7.1814245, 50.6690703],
 		},
-		properties: {
-			rotation: 25,
-		},
-		id: 'node/3400717493',
 	},
 ];
 
@@ -100,23 +93,23 @@ DeckglExample.args = {
 	pickable: true,
 };
 
-export const TrainstationExample: { [key: string]: any } = Template.bind({});
-TrainstationExample.parameters = {
+export const WhereGroupLocationExample: { [key: string]: any } = Template.bind({});
+WhereGroupLocationExample.parameters = {
 	mapOptions: {
-		center: [7.142334661209816, 50.70764422231869],
+		center: [10.4, 50],
 		pitch: 56,
-		zoom: 12.436840279038378,
-		bearing: 58.27667167686605,
+		zoom: 6,
 	},
 };
-TrainstationExample.args = {
+WhereGroupLocationExample.args = {
 	mapId: 'map_1',
 	id: 'ScenegraphLayer',
-	data: station_features,
+	data: wgLocations,
 	getPosition: (d: any) => d.geometry.coordinates,
-	getOrientation: (d: any) => [0, d.properties.rotation, 90],
-	scenegraph: '/assets/3D/train.glb',
-	sizeScale: 200,
+	getOrientation: (d: any) => [0, 0, 90],
+	getColor: () => [255, 255, 255],
+	scenegraph: '/assets/3D/WhereGroupLogo.glb',
+	sizeScale: 100,
 	_animations: {
 		'*': { speed: 5 },
 	},

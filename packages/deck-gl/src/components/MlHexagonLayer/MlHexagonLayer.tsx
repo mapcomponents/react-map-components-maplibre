@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { HexagonLayer, HexagonLayerProps } from '@deck.gl/aggregation-layers';
 import { useMap } from '@mapcomponents/react-maplibre';
 import useDeckGl from '../../hooks/useDeckGl';
@@ -54,8 +54,6 @@ const MlHexagonLayer = (props: MlHexagonMapProps) => {
 		waitForLayer: HexagonLayerProps.beforeId,
 	});
 
-	const initializedRef = useRef(false);
-
 	// create deck.gl HexagonLayer once when its props change
 	const hexagonLayer = useMemo(() => {
 		if (!HexagonLayerProps.data) return null;
@@ -80,12 +78,10 @@ const MlHexagonLayer = (props: MlHexagonMapProps) => {
 	// add/remove the memoized layer
 	useEffect(() => {
 		if (!mapHook.map || !hexagonLayer) return;
-		initializedRef.current = true;
 		deckGlHook.addLayer(hexagonLayer);
 
 		return () => {
 			deckGlHook.removeLayer(hexagonLayer);
-			initializedRef.current = false;
 		};
 	}, [mapHook.map, hexagonLayer]);
 

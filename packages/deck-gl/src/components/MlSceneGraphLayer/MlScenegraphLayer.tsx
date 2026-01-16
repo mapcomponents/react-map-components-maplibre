@@ -1,5 +1,5 @@
 import { ScenegraphLayer, ScenegraphLayerProps } from '@deck.gl/mesh-layers';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useMap } from '@mapcomponents/react-maplibre';
 import useDeckGl from '../../hooks/useDeckGl';
 
@@ -16,8 +16,6 @@ export interface MlScenegraphLayerProps extends ScenegraphLayerProps {
 }
 
 const MlScenegraphLayer = (props: MlScenegraphLayerProps) => {
-	const initializedRef = useRef(false);
-
 	const { mapId, ...ScenegraphLayerProps } = props;
 
 	const mapHook = useMap({
@@ -34,18 +32,16 @@ const MlScenegraphLayer = (props: MlScenegraphLayerProps) => {
 	);
 
 	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-		initializedRef.current = true;
+		if (!mapHook.map || !scenegraphLayer) return;
 
 		deckGlHook.addLayer(scenegraphLayer);
 
 		return () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			scenegraphLayer && deckGlHook.removeLayer(scenegraphLayer);
-			initializedRef.current = false;
 		};
-	}, [mapHook.map]);
+	}, [mapHook.map, scenegraphLayer]);
 	return <></>;
 };
 
-export default MlScenegraphLayer
+export default MlScenegraphLayer;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useMap } from '@mapcomponents/react-maplibre';
 import { Tile3DLayer, Tile3DLayerProps } from '@deck.gl/geo-layers';
 import useDeckGl from '../../hooks/useDeckGl';
@@ -20,7 +20,6 @@ const Ml3DTileLayer = (props: Ml3DTileLayerProps) => {
 	const mapHook = useMap({ mapId: mapId });
 	const deckGlHook = useDeckGl();
 
-	const initializedRef = useRef(false);
 	const tile3dLayer = useMemo(() => {
 		if (!Ml3DTileProps.data) return null;
 		else
@@ -42,19 +41,15 @@ const Ml3DTileLayer = (props: Ml3DTileLayerProps) => {
 	]);
 
 	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-		initializedRef.current = true;
+		if (!mapHook.map || !tile3dLayer) return;
 
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
 		deckGlHook.addLayer(tile3dLayer);
 
 		return () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			tile3dLayer && deckGlHook.removeLayer(tile3dLayer);
-			initializedRef.current = false;
 		};
-	}, [mapHook.map]);
+	}, [mapHook.map, tile3dLayer]);
 
 	return <></>;
 };
