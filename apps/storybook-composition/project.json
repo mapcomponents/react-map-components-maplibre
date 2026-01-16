@@ -11,6 +11,7 @@
 			"options": {
 				"commands": [
 					"nx storybook deck-gl",
+					"nx storybook three",
 					"nx storybook ra-geospatial",
 					"nx storybook react-maplibre"
 				],

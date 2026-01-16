@@ -19,6 +19,13 @@
 		],
 		"sharedGlobals": []
 	},
+	"release": {
+		"version": {
+			"versionActionsOptions": {
+				"skipLockFileUpdate": false
+			}
+		}
+	},
 	"plugins": [
 		{
 			"plugin": "@nx/js/typescript",

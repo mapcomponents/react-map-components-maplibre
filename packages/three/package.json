@@ -1,0 +1,30 @@
+{
+	"name": "@mapcomponents/three",
+	"version": "1.7.5",
+	"license": "MIT",
+	"main": "dist/index.cjs.js",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "dist/index.mjs",
+			"require": "dist/index.cjs.js"
+		}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"peerDependencies": {
+		"@mapcomponents/react-maplibre": "workspace:*",
+		"react": ">=18.0.0",
+		"react-dom": ">=18.0.0"
+	},
+	"dependencies": {
+		"@mui/material": "^7.3.2",
+		"maplibre-gl": "^5.7.0",
+		"three": "^0.182.0"
+	},
+	"devDependencies": {
+		"@types/three": "^0.182.0"
+	}
+}
