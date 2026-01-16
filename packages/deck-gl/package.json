@@ -10,6 +10,7 @@
 	"dependencies": {
 		"@deck.gl/aggregation-layers": "^9.1.14",
 		"@deck.gl/core": "^9.1.14",
+		"@deck.gl/geo-layers": "^9.1.4",
 		"@deck.gl/mapbox": "^9.1.14",
 		"@mapcomponents/react-maplibre": "workspace:*",
 		"@mui/icons-material": "^7.3.2",
