@@ -19,7 +19,7 @@ const decorators = [
 				<MapComponentsProvider>
 					<MUIThemeProvider theme={theme}>
 						<DeckGlContextProvider mapId={context.mapId}>
-						<Story />
+							<Story />
 						</DeckGlContextProvider>
 						<MapLibreMap
 							options={
@@ -36,10 +36,7 @@ const decorators = [
 							}
 							mapId="map_1"
 						/>
-						<MlNavigationTools
-							showZoomButtons={false}
-							mapId="map_1"
-						/>
+						<MlNavigationTools showZoomButtons={false} mapId="map_1" />
 					</MUIThemeProvider>
 				</MapComponentsProvider>
 			</div>
