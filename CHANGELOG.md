@@ -1,3 +1,36 @@
+## [1.7.5] (2026-01-09)
+
+## @mapcomponents/three
+
+### Added
+
+- 51eaf52: add MlThreeGizmo Component for positioning 3D Object on the map
+
+### Changed
+
+- 51eaf52: streamline MlThreeModelLayer and MlThreeSplatLayer props for transform
+handling
+
+## [1.7.2] (2025-12-31)
+
+## @mapcomponents/root
+
+### Added
+
+- b7a8b16: Add/three js package including MlThreeModelLayer and MlThreeSplatLayer (#249)
+
+## @mapcomponents/react-maplibre
+
+### Removed
+
+- b7a8b16: Removed MlThreeJsLayer and three dependency (#249)
+
+## [1.6.4] (2025-12-22)
+
+### Fixes
+
+- 1c5c9cb: mark devDeps as external, add react to peerDeps (#248)
+
 ## [1.6.3] (2025-11-01)
 
 ## @mapcomponents/react-maplibre

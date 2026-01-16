@@ -1,0 +1,21 @@
+{
+	"name": "MlThreeModelLayer",
+	"title": "3D Model",
+	"description": "Layer Component, that makes it possible to show 3D Models on the map.",
+	"i18n": {
+		"de": {
+			"title": "3D Modelle",
+			"description": "Layer Component, das es ermöglicht 3D Modelle auf der Karte darzustellen."
+		}
+	},
+	"tags": ["Map layer"],
+	"category": "layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/three/iframe.html?id=mapcomponents-mlthreemodellayer--example-config&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/three/thumbnails/MlThreeModelLayer.png"
+}
