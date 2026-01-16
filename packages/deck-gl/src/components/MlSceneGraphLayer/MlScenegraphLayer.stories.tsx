@@ -106,7 +106,7 @@ WhereGroupLocationExample.args = {
 	id: 'ScenegraphLayer',
 	data: wgLocations,
 	getPosition: (d: any) => d.geometry.coordinates,
-	getOrientation: (d: any) => [0, 0, 90],
+	getOrientation: () => [0, 0, 90],
 	getColor: () => [255, 255, 255],
 	scenegraph: '/assets/3D/WhereGroupLogo.glb',
 	sizeScale: 100,

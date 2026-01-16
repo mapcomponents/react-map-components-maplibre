@@ -1,5 +1,4 @@
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { COORDINATE_SYSTEM } from '@deck.gl/core';
 import Ml3DTileLayer from './Ml3DTileLayer';
 
 const storyoptions = {
@@ -27,7 +26,7 @@ PointCloudExample.args = {
 	mapId: 'map_1',
 	id: 'PointCould',
 	data: 'assets/tiles/tileset.json',
-	pointSize: 2
+	pointSize: 2,
 };
 export const HamburgExample: { [key: string]: any } = Template.bind({});
 HamburgExample.parameters = {
