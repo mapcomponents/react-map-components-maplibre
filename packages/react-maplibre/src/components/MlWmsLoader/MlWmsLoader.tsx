@@ -548,10 +548,10 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			)}
 			{wmsUrl && (
 				<>
-					{props.layerId && props.sortable && (
-						<SortableContainer layerId={props.layerId}>{listContent}</SortableContainer>
+					{props.sortable && (
+						<SortableContainer>{listContent}</SortableContainer>
 					)}
-					{props.layerId && !props.sortable && listContent}
+					{!props.sortable && listContent}
 					<Box sx={{ display: open ? 'block' : 'none' }}>
 						<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
 							{wmsUrl &&
@@ -582,6 +582,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						{wmsUrl && layers?.length && (
 							<MlWmsLayer
 								key={mapHook.componentId}
+								layerId={props.layerId}
 								url={wmsUrl}
 								attribution={attribution}
 								visible={visible}

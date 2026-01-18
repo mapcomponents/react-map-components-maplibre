@@ -1,16 +1,14 @@
 import { ReactNode } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { v4 as uuid } from 'uuid';
 
 interface SortableContainerProps {
 	children: ReactNode;
-	layerId: string;
 }
 
-function SortableContainer({ children, layerId }: SortableContainerProps) {
-	const { attributes, listeners, setNodeRef, transform } = useSortable({
-		id: layerId,
-	});
+function SortableContainer({ children }: SortableContainerProps) {
+	const { attributes, listeners, setNodeRef, transform } = useSortable({id: uuid()});
 	const style = {
 		transform: CSS.Transform.toString(transform),
 	};
