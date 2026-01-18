@@ -129,6 +129,10 @@ export interface MlWmsLoaderProps {
 	 */
 	buttons?: React.JSX.Element;
 	sortable?: boolean;
+	/**
+	 * Array of layer Names (IDs) that should be visible at start. If not provided, default visibility logic applies.
+	 */
+	visibleLayersAtStart?: string[];
 }
 
 export interface WmsLayer {
@@ -394,8 +398,11 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				if (idx === 0) {
 					_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 				}
+				const isVisible = props.visibleLayersAtStart
+					? props.visibleLayersAtStart.includes(layer.Name || '')
+					: true;
 				return {
-					visible: true,
+					visible: isVisible,
 					Attribution: { Title: '' },
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					...(({ CRS, ..._layer }) => _layer)(layer),
@@ -409,8 +416,11 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						if (idx === 0) {
 							_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 						}
+						const isVisible = props.visibleLayersAtStart && layer.Name
+							? props.visibleLayersAtStart.includes(layer.Name)
+							: false;
 						return {
-							visible: false,
+							visible: isVisible,
 							Attribution: { Title: '' },
 							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							...(({ CRS, ..._layer }) => _layer)(layer),
