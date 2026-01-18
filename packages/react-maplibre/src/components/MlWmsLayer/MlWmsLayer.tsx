@@ -13,6 +13,7 @@ const defaultProps: MlWmsLayerProps = {
 		srs: 'EPSG:3857',
 		width: '256',
 		height: '256',
+		Transparent: 'true',
 		styles: '',
 	},
 };
@@ -123,10 +124,9 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 	}, [mapHook.map, props, tileUrl]);
 
 	useEffect(() => {
-		//@ts-ignore
 		if (
 			initializedRef.current &&
-			mapHook?.map?.map?.getSource?.(layerId.current)?.tiles?.[0] === tileUrl
+			(mapHook?.map?.map?.getSource?.(layerId.current) as RasterSourceSpecification)?.tiles?.[0] === tileUrl
 		)
 			return;
 
