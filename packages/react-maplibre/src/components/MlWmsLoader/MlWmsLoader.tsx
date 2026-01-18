@@ -592,7 +592,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 					{wmsUrl && layers?.length && (
 							<MlWmsLayer
 								key={mapHook.componentId}
-								layerId={props.layerId}
+								layerId={props.layerId || mapHook.componentId}
 								url={wmsUrl}
 								attribution={attribution}
 								visible={visible}
