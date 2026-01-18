@@ -421,9 +421,10 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						if (idx === 0) {
 							_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 						}
-						const isVisible = props.visibleLayersAtStart && layer.Name
-							? props.visibleLayersAtStart.includes(layer.Name)
-							: false;
+						const isVisible =
+							props.visibleLayersAtStart && layer.Name
+								? props.visibleLayersAtStart.includes(layer.Name)
+								: false;
 						return {
 							visible: isVisible,
 							Attribution: { Title: '' },
@@ -555,9 +556,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				<>
 					{props.showLayerList && (
 						<>
-							{props.sortable && (
-								<SortableContainer>{listContent}</SortableContainer>
-							)}
+							{props.sortable && <SortableContainer>{listContent}</SortableContainer>}
 							{!props.sortable && listContent}
 							<Box sx={{ display: open ? 'block' : 'none' }}>
 								<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
@@ -590,23 +589,23 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						</>
 					)}
 					{wmsUrl && layers?.length && (
-							<MlWmsLayer
-								key={mapHook.componentId}
-								layerId={props.layerId || mapHook.componentId}
-								url={wmsUrl}
-								attribution={attribution}
-								visible={visible}
-								urlParameters={{
-									...props.wmsUrlParameters,
-									layers: layers
-										?.filter?.((layer) => layer.visible)
-										.map((el) => el.Name)
-										.reverse()
-										.join(','),
-								}}
-								insertBeforeLayer={props?.insertBeforeLayer}
-							/>
-						)}
+						<MlWmsLayer
+							key={mapHook.componentId}
+							layerId={props.layerId || mapHook.componentId}
+							url={wmsUrl}
+							attribution={attribution}
+							visible={visible}
+							urlParameters={{
+								...props.wmsUrlParameters,
+								layers: layers
+									?.filter?.((layer) => layer.visible)
+									.map((el) => el.Name)
+									.reverse()
+									.join(','),
+							}}
+							insertBeforeLayer={props?.insertBeforeLayer}
+						/>
+					)}
 
 					{props.featureInfoEnabled && props.featureInfoMarkerEnabled && featureInfoLngLat && (
 						<MlMarker {...featureInfoLngLat} content={featureInfoContent} />

@@ -9,7 +9,7 @@ interface SortableContainerProps {
 
 function SortableContainer({ children }: SortableContainerProps) {
 	const idRef = useRef(uuid());
-	const { attributes, listeners, setNodeRef, transform } = useSortable({id: idRef.current});
+	const { attributes, listeners, setNodeRef, transform } = useSortable({ id: idRef.current });
 	const style = {
 		transform: CSS.Transform.toString(transform),
 	};

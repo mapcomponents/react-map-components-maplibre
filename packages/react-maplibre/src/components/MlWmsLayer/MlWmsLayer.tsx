@@ -126,7 +126,8 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 	useEffect(() => {
 		if (
 			initializedRef.current &&
-			(mapHook?.map?.map?.getSource?.(layerId.current) as RasterSourceSpecification)?.tiles?.[0] === tileUrl
+			(mapHook?.map?.map?.getSource?.(layerId.current) as RasterSourceSpecification)?.tiles?.[0] ===
+				tileUrl
 		)
 			return;
 
