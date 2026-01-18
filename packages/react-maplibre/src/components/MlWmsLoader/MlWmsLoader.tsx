@@ -298,6 +298,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				QUERY_LAYERS: layers
 					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
+				STYLES: '',
 				WIDTH: 100,
 				HEIGHT: 100,
 				srs: 'EPSG:3857',
