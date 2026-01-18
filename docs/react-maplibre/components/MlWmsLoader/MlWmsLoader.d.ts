@@ -68,6 +68,17 @@ export interface MlWmsLoaderProps {
      */
     setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
     /**
+     * Callback function that is called after the featureInfoRequest has succeeded
+     */
+    featureInfoSuccess?: (content: string, lngLat: {
+        lng: number;
+        lat: number;
+    }) => void;
+    /**
+     * If true, displays a marker at the feature info location
+     */
+    featureInfoMarkerEnabled?: boolean;
+    /**
      * The WMS configuration object
      */
     config?: WmsConfig;
@@ -88,6 +99,14 @@ export interface MlWmsLoaderProps {
      */
     buttons?: React.JSX.Element;
     sortable?: boolean;
+    /**
+     * Array of layer Names (IDs) that should be visible at start. If not provided, default visibility logic applies.
+     */
+    visibleLayersAtStart?: string[];
+    /**
+     * If true, renders the layer list UI. If false, only the WMS layer is rendered without UI controls.
+     */
+    showLayerList?: boolean;
 }
 export interface WmsLayer {
     Name?: string;
