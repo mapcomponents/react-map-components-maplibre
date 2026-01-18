@@ -202,7 +202,7 @@ function LayerListItem({
 	return (
 		<>
 			{props.sortable && props.layerId && !layerComponent?.props?.layers && (
-				<SortableContainer layerId={props.layerId}>{listContent}</SortableContainer>
+				<SortableContainer>{listContent}</SortableContainer>
 			)}
 			{!props.sortable && !layerComponent?.props?.layers && listContent}
 			{_layerComponent}
