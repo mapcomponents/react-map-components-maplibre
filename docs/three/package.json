@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/three",
-	"version": "1.7.5",
+	"version": "1.7.6",
 	"license": "MIT",
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.mjs",
@@ -16,12 +16,12 @@
 	},
 	"peerDependencies": {
 		"@mapcomponents/react-maplibre": "workspace:*",
-		"react": ">=18.0.0",
-		"react-dom": ">=18.0.0"
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
 	},
 	"dependencies": {
 		"@mui/material": "^7.3.2",
-		"maplibre-gl": "^5.7.0",
+		"maplibre-gl": "^5.16.0",
 		"three": "^0.182.0"
 	},
 	"devDependencies": {
