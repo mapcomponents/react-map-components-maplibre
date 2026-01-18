@@ -1,3 +1,7 @@
+## 1.7.6 (2026-01-18)
+
+This was a version bump only, there were no code changes.
+
 ## [1.7.5] (2026-01-09)
 
 ## @mapcomponents/three

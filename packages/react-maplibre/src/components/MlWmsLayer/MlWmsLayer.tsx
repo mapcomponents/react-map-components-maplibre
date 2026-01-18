@@ -13,6 +13,7 @@ const defaultProps: MlWmsLayerProps = {
 		srs: 'EPSG:3857',
 		width: '256',
 		height: '256',
+		Transparent: 'true',
 		styles: '',
 	},
 };
@@ -123,28 +124,15 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 	}, [mapHook.map, props, tileUrl]);
 
 	useEffect(() => {
-		if (initializedRef.current) return;
-
-		createLayer();
-	}, [createLayer]);
-
-	useEffect(() => {
 		if (
-			!mapHook.map ||
-			!mapHook.map?.map?.style?.sourceCaches?.[layerId.current] ||
-			!initializedRef.current
+			initializedRef.current &&
+			(mapHook?.map?.map?.getSource?.(layerId.current) as RasterSourceSpecification)?.tiles?.[0] ===
+				tileUrl
 		)
 			return;
 
-		const source = mapHook.map.map.getSource(layerId.current) as RasterSourceSpecification;
-		source.tiles = [tileUrl];
-
-		mapHook.map.map.style.sourceCaches[layerId.current].clearTiles();
-
-		mapHook.map.map.style.sourceCaches[layerId.current].update(mapHook.map.map.transform);
-
-		mapHook.map.map.triggerRepaint();
-	}, [mapHook.map, tileUrl]);
+		createLayer();
+	}, [createLayer]);
 
 	useEffect(() => {
 		if (!mapHook.map || !initializedRef.current) return;

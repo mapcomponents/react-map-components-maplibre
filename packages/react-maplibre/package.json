@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "1.7.5",
+	"version": "1.7.6",
 	"main": "dist/index.cjs.js",
 	"license": "MIT",
 	"module": "dist/index.mjs",
@@ -52,7 +52,7 @@
 		"redux-thunk": "^3.1.0",
 		"topojson-client": "^3.1.0",
 		"uuid": "^11.1.0",
-		"maplibre-gl": "^5.7.0",
+		"maplibre-gl": "^5.16.0",
 		"wms-capabilities": "^0.6.0"
 	},
 	"peerDependencies": {

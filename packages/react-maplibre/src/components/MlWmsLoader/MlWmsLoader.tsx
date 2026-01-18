@@ -101,6 +101,14 @@ export interface MlWmsLoaderProps {
 	 */
 	setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
 	/**
+	 * Callback function that is called after the featureInfoRequest has succeeded
+	 */
+	featureInfoSuccess?: (content: string, lngLat: { lng: number; lat: number }) => void;
+	/**
+	 * If true, displays a marker at the feature info location
+	 */
+	featureInfoMarkerEnabled?: boolean;
+	/**
 	 * The WMS configuration object
 	 */
 	config?: WmsConfig;
@@ -121,6 +129,14 @@ export interface MlWmsLoaderProps {
 	 */
 	buttons?: React.JSX.Element;
 	sortable?: boolean;
+	/**
+	 * Array of layer Names (IDs) that should be visible at start. If not provided, default visibility logic applies.
+	 */
+	visibleLayersAtStart?: string[];
+	/**
+	 * If true, renders the layer list UI. If false, only the WMS layer is rendered without UI controls.
+	 */
+	showLayerList?: boolean;
 }
 
 export interface WmsLayer {
@@ -170,8 +186,10 @@ const defaultProps = {
 		TRANSPARENT: 'TRUE',
 	},
 	featureInfoEnabled: true,
+	featureInfoMarkerEnabled: true,
 	zoomToExtent: false,
 	showDeleteButton: false,
+	showLayerList: true,
 };
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
@@ -289,6 +307,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				QUERY_LAYERS: layers
 					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
+				STYLES: '',
 				WIDTH: 100,
 				HEIGHT: 100,
 				srs: 'EPSG:3857',
@@ -327,6 +346,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				.then((text) => {
 					setFeatureInfoLngLat(ev.lngLat);
 					setFeatureInfoContent(text);
+					props.featureInfoSuccess?.(text, ev.lngLat);
 				})
 				.catch((error) => console.log(error));
 		},
@@ -383,8 +403,11 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				if (idx === 0) {
 					_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 				}
+				const isVisible = props.visibleLayersAtStart
+					? props.visibleLayersAtStart.includes(layer.Name || '')
+					: true;
 				return {
-					visible: capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true,
+					visible: isVisible,
 					Attribution: { Title: '' },
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					...(({ CRS, ..._layer }) => _layer)(layer),
@@ -398,8 +421,12 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						if (idx === 0) {
 							_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 						}
+						const isVisible =
+							props.visibleLayersAtStart && layer.Name
+								? props.visibleLayersAtStart.includes(layer.Name)
+								: false;
 						return {
-							visible: false,
+							visible: isVisible,
 							Attribution: { Title: '' },
 							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							...(({ CRS, ..._layer }) => _layer)(layer),
@@ -527,57 +554,60 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			)}
 			{wmsUrl && (
 				<>
-					{props.layerId && props.sortable && (
-						<SortableContainer layerId={props.layerId}>{listContent}</SortableContainer>
+					{props.showLayerList && (
+						<>
+							{props.sortable && <SortableContainer>{listContent}</SortableContainer>}
+							{!props.sortable && listContent}
+							<Box sx={{ display: open ? 'block' : 'none' }}>
+								<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
+									{wmsUrl &&
+										layers?.map?.((layer, idx) => {
+											return layer?.Name ? (
+												<ListItem
+													key={layer.Name + idx}
+													secondaryAction={<>{layer?.queryable && <InfoIcon />}</>}
+												>
+													<ListItemIcon sx={{ minWidth: '30px' }}>
+														<Checkbox
+															checked={layer.visible}
+															sx={{ padding: 0 }}
+															onClick={() => {
+																const _layers: Array<LayerType> = [...layers];
+																_layers[idx].visible = !_layers[idx].visible;
+																setLayers([..._layers]);
+															}}
+														/>
+													</ListItemIcon>
+													<ListItemText primary={layer?.Title} variant="layerlist" />
+												</ListItem>
+											) : (
+												<></>
+											);
+										})}
+								</List>
+							</Box>
+						</>
 					)}
-					{props.layerId && !props.sortable && listContent}
-					<Box sx={{ display: open ? 'block' : 'none' }}>
-						<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
-							{wmsUrl &&
-								layers?.map?.((layer, idx) => {
-									return layer?.Name ? (
-										<ListItem
-											key={layer.Name + idx}
-											secondaryAction={<>{layer?.queryable && <InfoIcon />}</>}
-										>
-											<ListItemIcon sx={{ minWidth: '30px' }}>
-												<Checkbox
-													checked={layer.visible}
-													sx={{ padding: 0 }}
-													onClick={() => {
-														const _layers: Array<LayerType> = [...layers];
-														_layers[idx].visible = !_layers[idx].visible;
-														setLayers([..._layers]);
-													}}
-												/>
-											</ListItemIcon>
-											<ListItemText primary={layer?.Title} variant="layerlist" />
-										</ListItem>
-									) : (
-										<></>
-									);
-								})}
-						</List>
-						{wmsUrl && layers?.length && (
-							<MlWmsLayer
-								key={mapHook.componentId}
-								url={wmsUrl}
-								attribution={attribution}
-								visible={visible}
-								urlParameters={{
-									...props.wmsUrlParameters,
-									layers: layers
-										?.filter?.((layer) => layer.visible)
-										.map((el) => el.Name)
-										.reverse()
-										.join(','),
-								}}
-								insertBeforeLayer={props?.insertBeforeLayer}
-							/>
-						)}
-					</Box>
+					{wmsUrl && layers?.length && (
+						<MlWmsLayer
+							key={mapHook.componentId}
+							layerId={props.layerId || mapHook.componentId}
+							url={wmsUrl}
+							attribution={attribution}
+							visible={visible}
+							urlParameters={{
+								...props.wmsUrlParameters,
+								layers: layers
+									?.filter?.((layer) => layer.visible)
+									.map((el) => el.Name)
+									.reverse()
+									.join(','),
+							}}
+							insertBeforeLayer={props?.insertBeforeLayer}
+						/>
+					)}
 
-					{props.featureInfoEnabled && featureInfoLngLat && (
+					{props.featureInfoEnabled && props.featureInfoMarkerEnabled && featureInfoLngLat && (
 						<MlMarker {...featureInfoLngLat} content={featureInfoContent} />
 					)}
 				</>

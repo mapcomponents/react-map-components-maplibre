@@ -17,7 +17,7 @@ describe('MlTerrainLayer Tests', () => {
 				const { _map }: any = win;
 				cy.wrap(_map).should((_map: any) => {
 					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-					expect(_map?.style?.sourceCaches?.terrain).to.not.be.undefined;
+					expect(_map?.style?.getSource('terrain')).to.not.be.undefined;
 					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 					expect(_map?.style?._layers?.hills).to.not.be.undefined;
 				});
@@ -33,7 +33,7 @@ describe('MlTerrainLayer Tests', () => {
 				const { _map }: any = win;
 				cy.wrap(_map).should((_map: any) => {
 					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-					expect(_map?.style?.sourceCaches?.terrain).to.be.undefined;
+					expect(_map?.style?.getSource('terrain')).to.be.undefined;
 					// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 					expect(_map?.style?._layers?.hills).to.be.undefined;
 				});
