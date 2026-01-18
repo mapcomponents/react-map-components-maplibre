@@ -101,6 +101,14 @@ export interface MlWmsLoaderProps {
 	 */
 	setFeatureInfoActive?: (val: boolean | ((current: boolean) => boolean)) => void;
 	/**
+	 * Callback function that is called after the featureInfoRequest has succeeded
+	 */
+	featureInfoSuccess?: (content: string, lngLat: { lng: number; lat: number }) => void;
+	/**
+	 * If true, displays a marker at the feature info location
+	 */
+	featureInfoMarkerEnabled?: boolean;
+	/**
 	 * The WMS configuration object
 	 */
 	config?: WmsConfig;
@@ -170,6 +178,7 @@ const defaultProps = {
 		TRANSPARENT: 'TRUE',
 	},
 	featureInfoEnabled: true,
+	featureInfoMarkerEnabled: true,
 	zoomToExtent: false,
 	showDeleteButton: false,
 };
@@ -327,6 +336,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				.then((text) => {
 					setFeatureInfoLngLat(ev.lngLat);
 					setFeatureInfoContent(text);
+					props.featureInfoSuccess?.(text, ev.lngLat);
 				})
 				.catch((error) => console.log(error));
 		},
@@ -577,7 +587,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						)}
 					</Box>
 
-					{props.featureInfoEnabled && featureInfoLngLat && (
+					{props.featureInfoEnabled && props.featureInfoMarkerEnabled && featureInfoLngLat && (
 						<MlMarker {...featureInfoLngLat} content={featureInfoContent} />
 					)}
 				</>
