@@ -395,7 +395,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 					_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 				}
 				return {
-					visible: capabilities?.Capability?.Layer?.Layer?.length > 2 ? idx > 1 : true,
+					visible: true,
 					Attribution: { Title: '' },
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					...(({ CRS, ..._layer }) => _layer)(layer),
