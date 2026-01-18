@@ -133,6 +133,10 @@ export interface MlWmsLoaderProps {
 	 * Array of layer Names (IDs) that should be visible at start. If not provided, default visibility logic applies.
 	 */
 	visibleLayersAtStart?: string[];
+	/**
+	 * If true, renders the layer list UI. If false, only the WMS layer is rendered without UI controls.
+	 */
+	showLayerList?: boolean;
 }
 
 export interface WmsLayer {
@@ -185,6 +189,7 @@ const defaultProps = {
 	featureInfoMarkerEnabled: true,
 	zoomToExtent: false,
 	showDeleteButton: false,
+	showLayerList: true,
 };
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
@@ -548,38 +553,43 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			)}
 			{wmsUrl && (
 				<>
-					{props.sortable && (
-						<SortableContainer>{listContent}</SortableContainer>
+					{props.showLayerList && (
+						<>
+							{props.sortable && (
+								<SortableContainer>{listContent}</SortableContainer>
+							)}
+							{!props.sortable && listContent}
+							<Box sx={{ display: open ? 'block' : 'none' }}>
+								<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
+									{wmsUrl &&
+										layers?.map?.((layer, idx) => {
+											return layer?.Name ? (
+												<ListItem
+													key={layer.Name + idx}
+													secondaryAction={<>{layer?.queryable && <InfoIcon />}</>}
+												>
+													<ListItemIcon sx={{ minWidth: '30px' }}>
+														<Checkbox
+															checked={layer.visible}
+															sx={{ padding: 0 }}
+															onClick={() => {
+																const _layers: Array<LayerType> = [...layers];
+																_layers[idx].visible = !_layers[idx].visible;
+																setLayers([..._layers]);
+															}}
+														/>
+													</ListItemIcon>
+													<ListItemText primary={layer?.Title} variant="layerlist" />
+												</ListItem>
+											) : (
+												<></>
+											);
+										})}
+								</List>
+							</Box>
+						</>
 					)}
-					{!props.sortable && listContent}
-					<Box sx={{ display: open ? 'block' : 'none' }}>
-						<List dense component="div" disablePadding sx={{ paddingLeft: '18px' }}>
-							{wmsUrl &&
-								layers?.map?.((layer, idx) => {
-									return layer?.Name ? (
-										<ListItem
-											key={layer.Name + idx}
-											secondaryAction={<>{layer?.queryable && <InfoIcon />}</>}
-										>
-											<ListItemIcon sx={{ minWidth: '30px' }}>
-												<Checkbox
-													checked={layer.visible}
-													sx={{ padding: 0 }}
-													onClick={() => {
-														const _layers: Array<LayerType> = [...layers];
-														_layers[idx].visible = !_layers[idx].visible;
-														setLayers([..._layers]);
-													}}
-												/>
-											</ListItemIcon>
-											<ListItemText primary={layer?.Title} variant="layerlist" />
-										</ListItem>
-									) : (
-										<></>
-									);
-								})}
-						</List>
-						{wmsUrl && layers?.length && (
+					{wmsUrl && layers?.length && (
 							<MlWmsLayer
 								key={mapHook.componentId}
 								layerId={props.layerId}
@@ -597,7 +607,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 								insertBeforeLayer={props?.insertBeforeLayer}
 							/>
 						)}
-					</Box>
 
 					{props.featureInfoEnabled && props.featureInfoMarkerEnabled && featureInfoLngLat && (
 						<MlMarker {...featureInfoLngLat} content={featureInfoContent} />
