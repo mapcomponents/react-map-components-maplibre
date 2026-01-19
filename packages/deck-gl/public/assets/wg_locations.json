@@ -1,0 +1,53 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"id": "1",
+			"type": "Feature",
+			"properties": {
+				"Standort": "Bonn",
+				"Mitarbeitende": 26
+			},
+			"geometry": {
+				"coordinates": [7.085121767634178, 50.738628929850876],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "2",
+			"type": "Feature",
+			"properties": {
+				"Standort": "Freiburg",
+				"Mitarbeitende": 10
+			},
+			"geometry": {
+				"coordinates": [7.842759788570362, 47.98905444717667],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "3",
+			"type": "Feature",
+			"properties": {
+				"Standort": "Berlin",
+				"Mitarbeitende": 13
+			},
+			"geometry": {
+				"coordinates": [13.330420447460796, 52.492768290796676],
+				"type": "Point"
+			}
+		},
+		{
+			"id": "4",
+			"type": "Feature",
+			"properties": {
+				"Standort": "Hamburg",
+				"Mitarbeitende": 3
+			},
+			"geometry": {
+				"coordinates": [10.041789021808029, 53.5511363175323],
+				"type": "Point"
+			}
+		}
+	]
+}

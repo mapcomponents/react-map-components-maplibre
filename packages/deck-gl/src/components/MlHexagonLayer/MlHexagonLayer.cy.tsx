@@ -1,12 +1,12 @@
+// MlHexagonLayer.cy.tsx
 import { composeStories } from '@storybook/react';
-import * as stories from './MlHexagonMap.stories';
+import * as stories from './MlHexagonLayer.stories';
 
-const { NoiseMap }: any = composeStories(stories);
+const { DefaultSettings }: any = composeStories(stories);
 
 describe('MlHexagonMap Test', () => {
 	it('Should display Maplibre map with MlHexagonMap', () => {
-		// see: https://on.cypress.io/mounting-react
-		cy.mount(<NoiseMap />);
+		cy.mount(<DefaultSettings />);
 		cy.window()
 			.should((win) => expect((win as any)._map).to.exist)
 			.then((win) => {

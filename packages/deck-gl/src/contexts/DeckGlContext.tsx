@@ -1,11 +1,13 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { useMap } from '@mapcomponents/react-maplibre';
-import { Layer } from '@deck.gl/core';
+import { Effect, Layer } from '@deck.gl/core';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 
 export interface DeckGlContextType {
 	deckGlLayerArray: Layer[];
 	setDeckGlLayerArray: React.Dispatch<React.SetStateAction<Layer[]>>;
+	deckGlEffectArray: Effect[];
+	setDeckGlEffectArray: React.Dispatch<React.SetStateAction<Effect[]>>;
 }
 
 interface DeckGlContextProviderProps {
@@ -21,12 +23,14 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 
 	const overlayRef = useRef<MapboxOverlay | undefined>(undefined);
 	const [deckGlLayerArray, setDeckGlLayerArray] = useState<Layer[]>([]);
+	const [deckGlEffectArray, setDeckGlEffectArray] = useState<Effect[]>([]);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
 
 		overlayRef.current = new MapboxOverlay({
 			id: overlayId,
+			interleaved: true,
 		});
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -44,12 +48,15 @@ const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) 
 		if (!overlayRef.current) return;
 		overlayRef.current.setProps({
 			layers: [...deckGlLayerArray],
+			effects: [...deckGlEffectArray],
 		});
-	}, [deckGlLayerArray]);
+	}, [deckGlLayerArray, deckGlEffectArray]);
 
 	const value = {
 		deckGlLayerArray,
 		setDeckGlLayerArray,
+		deckGlEffectArray,
+		setDeckGlEffectArray,
 	};
 	return <DeckGlContext.Provider value={value}>{children}</DeckGlContext.Provider>;
 };

@@ -1,24 +1,27 @@
 import DeckGlContext from '../contexts/DeckGlContext';
 import { useContext } from 'react';
-import { Layer } from '@deck.gl/core';
+import { Effect, Layer } from '@deck.gl/core';
 
 function useDeckGl() {
 	const deckGlContext = useContext(DeckGlContext);
-	const layerArray = deckGlContext.deckGlLayerArray;
 
+	function addEffect(effect: Effect) {
+		deckGlContext.setDeckGlEffectArray((prevState) => [...prevState, effect]);
+	}
+	function removeEffect(effect: Effect) {
+		deckGlContext.setDeckGlEffectArray((prevState) => prevState.filter((e) => e !== effect));
+	}
 	function addLayer(layer: Layer) {
-		const newDeckGLLayerArray = [...layerArray];
-		newDeckGLLayerArray.push(layer);
-		deckGlContext.setDeckGlLayerArray(newDeckGLLayerArray);
+		deckGlContext.setDeckGlLayerArray((prevState) => [...prevState, layer]);
 	}
 	function removeLayer(layer: Layer) {
-		const newDeckGLLayerArray = layerArray.filter((l) => l !== layer);
-		deckGlContext.setDeckGlLayerArray(newDeckGLLayerArray);
+		deckGlContext.setDeckGlLayerArray((prevState) => prevState.filter((l) => l !== layer));
 	}
 	return {
+		addEffect,
+		removeEffect,
 		addLayer,
 		removeLayer,
-		layerArray,
 	};
 }
 export default useDeckGl;
