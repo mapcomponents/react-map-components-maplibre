@@ -1,21 +1,28 @@
-## 1.7.6 (2026-01-18)
+## [v1.7.6] (2026-01-18)
 
-This was a version bump only, there were no code changes.
+## @mapcomponents/react-maplibre
 
-## [1.7.5] (2026-01-09)
+### Changed
+- e34eefa: update mapliebre-gl package
+
+### Fixed
+
+- bd163c3: Fix MlWmsLoader layer switch
+
+## [v1.7.5] (2026-01-09)
 
 ## @mapcomponents/three
 
 ### Added
 
-- 51eaf52: add MlThreeGizmo Component for positioning 3D Object on the map
+- 51eaf52: Add MlThreeGizmo Component for positioning 3D Object on the map
 
 ### Changed
 
 - 51eaf52: streamline MlThreeModelLayer and MlThreeSplatLayer props for transform
-handling
+	handling
 
-## [1.7.2] (2025-12-31)
+## [v1.7.2] (2025-12-31)
 
 ## @mapcomponents/root
 
@@ -29,13 +36,13 @@ handling
 
 - b7a8b16: Removed MlThreeJsLayer and three dependency (#249)
 
-## [1.6.4] (2025-12-22)
+## [v1.6.4] (2025-12-22)
 
 ### Fixes
 
 - 1c5c9cb: mark devDeps as external, add react to peerDeps (#248)
 
-## [1.6.3] (2025-11-01)
+## [v1.6.3] (2025-11-01)
 
 ## @mapcomponents/react-maplibre
 
