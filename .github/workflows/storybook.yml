@@ -32,7 +32,11 @@ jobs:
                 mv "$subdir/storybook-static" "docs-build/$name"
               fi
             done
-          done
+          done# Copy public folder to root
+          if [ -d "public" ]; then
+            cp -r public/* docs-build/
+          fi
+
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
