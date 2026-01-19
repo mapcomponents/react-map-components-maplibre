@@ -108,7 +108,8 @@ WhereGroupLocationExample.args = {
 	getPosition: (d: any) => d.geometry.coordinates,
 	getOrientation: () => [0, 0, 90],
 	getColor: () => [255, 255, 255],
-	scenegraph: '/assets/3D/WhereGroupLogo.glb',
+	scenegraph:
+		"https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/assets/3D/WhereGroupLogo.glb",
 	sizeScale: 100,
 	_animations: {
 		'*': { speed: 5 },

@@ -23,12 +23,15 @@ const Template = (context: any) => {
 		let cancelled = false;
 		const load = async () => {
 			try {
-				const res = await fetch('/assets/3D/laerm_points.json', {
-					headers: {
-						'Content-Type': 'application/json',
-						Accept: 'application/json',
-					},
-				});
+				const res = await fetch(
+					'https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/assets/3D/laerm_points.json',
+					{
+						headers: {
+							'Content-Type': 'application/json',
+							Accept: 'application/json',
+						},
+					}
+				);
 				if (!res.ok) throw new Error(`HTTP ${res.status}`);
 				const json = await res.json();
 				const features = Array.isArray(json?.features) ? json.features : [];
