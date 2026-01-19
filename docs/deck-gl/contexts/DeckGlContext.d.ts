@@ -1,8 +1,10 @@
 import { default as React, ReactNode } from '../../../../node_modules/.pnpm/react@19.1.0/node_modules/react';
-import { Layer } from '@deck.gl/core';
+import { Effect, Layer } from '@deck.gl/core';
 export interface DeckGlContextType {
     deckGlLayerArray: Layer[];
     setDeckGlLayerArray: React.Dispatch<React.SetStateAction<Layer[]>>;
+    deckGlEffectArray: Effect[];
+    setDeckGlEffectArray: React.Dispatch<React.SetStateAction<Effect[]>>;
 }
 interface DeckGlContextProviderProps {
     mapId: string;
