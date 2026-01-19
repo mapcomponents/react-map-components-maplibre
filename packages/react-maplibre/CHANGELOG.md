@@ -1,3 +1,19 @@
+## [v1.7.6] (2026-01-18)
+
+### Changed
+
+- e34eefa: update mapliebre-gl package
+
+### Fixed
+
+- bd163c3: Fix MlWmsLoader layer switch
+
+## [v1.7.2] (2025-12-31)
+
+### Removed
+
+- b7a8b16: Removed MlThreeJsLayer and three dependency (#249)
+
 ## [v1.6.3] (2025-11-01)
 
 ### Fixes

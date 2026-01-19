@@ -1,12 +1,32 @@
-## 1.8.0 (2026-01-19)
+## [V1.8.0] (2026-01-19)
 
-This was a version bump only, there were no code changes.
+## @mapcomponents/root
+
+### Changed
+
+- 447c360: deck-gl package upgrade (#252)
+
+## @mapcomponents/deck-gl
+
+### Added
+
+- 1d9a49e: add Ml3DTileLayer and MlScenegraphLayer
+- 15de9b1: add addEffect and removeEffect function to useDeckGl hook
+
+### Changed
+
+- 45499dc: change allow user to use Custom props for MlHexagonLayer.tsx
+
+### Fixed
+
+- 05744b6: fix useDeckGl.tsx multiple layers is possible again
 
 ## [v1.7.6] (2026-01-18)
 
 ## @mapcomponents/react-maplibre
 
 ### Changed
+
 - e34eefa: update mapliebre-gl package
 
 ### Fixed
