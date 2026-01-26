@@ -1,3 +1,7 @@
+## 1.8.1 (2026-01-26)
+
+This was a version bump only, there were no code changes.
+
 ## [V1.8.0] (2026-01-19)
 
 ## @mapcomponents/root
