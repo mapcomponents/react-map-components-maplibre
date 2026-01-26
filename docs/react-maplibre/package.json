@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "1.8.0",
+	"version": "1.8.1",
 	"main": "dist/index.cjs.js",
 	"license": "MIT",
 	"module": "dist/index.mjs",
