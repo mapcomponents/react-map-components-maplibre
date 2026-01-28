@@ -1,7 +1,7 @@
 import { MlMarkerProps } from './MlMarker';
 declare const storyoptions: {
     title: string;
-    component: ({ passEventsThrough, contentOffset, ...props }: MlMarkerProps) => import('../../../../../node_modules/.pnpm/react@19.1.0/node_modules/react').ReactPortal | null;
+    component: ({ passEventsThrough, contentOffset, showCloseButton, ...props }: MlMarkerProps) => import('../../../../../node_modules/.pnpm/react@19.1.0/node_modules/react').ReactPortal | null;
     decorators: import('@storybook/react-vite').Decorator[];
     parameters: {
         docs: {

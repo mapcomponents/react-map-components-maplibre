@@ -22,9 +22,13 @@ export interface MlMarkerProps {
     contentOffset?: number;
     /** Whether mouse events pass through the marker content */
     passEventsThrough?: boolean;
+    /** Whether to show a close button to remove the marker */
+    showCloseButton?: boolean;
+    /** Callback function when the close button is clicked */
+    onClose?: () => void;
     /** Anchor position of the marker relative to its coordinates */
     anchor?: 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
-declare const MlMarker: ({ passEventsThrough, contentOffset, ...props }: MlMarkerProps) => React.ReactPortal | null;
+declare const MlMarker: ({ passEventsThrough, contentOffset, showCloseButton, ...props }: MlMarkerProps) => React.ReactPortal | null;
 export default MlMarker;
 //# sourceMappingURL=MlMarker.d.ts.map

@@ -1,5 +1,5 @@
 import { default as React } from '../../../../../node_modules/.pnpm/react@19.1.0/node_modules/react';
-import { useWmsProps, useWmsReturnType } from '../../hooks/useWms';
+import { useWmsReturnType } from '../../hooks/useWms';
 export interface WmsConfig {
     /**
      * The URL to use for the getFeatureInfo request
@@ -38,13 +38,27 @@ export interface MlWmsLoaderProps {
     layerId?: string;
     insertBeforeLayer?: string;
     /**
-     * URL parameters that will be used in the getCapabilities request
+     * Base URL parameters that will be used for all WMS requests (GetCapabilities, GetMap, GetFeatureInfo)
      */
-    urlParameters?: useWmsProps['urlParameters'];
+    baseUrlParameters?: {
+        [key: string]: string;
+    };
     /**
-     * URL parameters that will be added when requesting WMS capabilities
+     * URL parameters specific to GetCapabilities requests
      */
-    wmsUrlParameters?: {
+    getCapabilitiesUrlParameters?: {
+        [key: string]: string;
+    };
+    /**
+     * URL parameters specific to GetMap requests
+     */
+    getMapUrlParameters?: {
+        [key: string]: string;
+    };
+    /**
+     * URL parameters specific to GetFeatureInfo requests
+     */
+    getFeatureInfoUrlParameters?: {
         [key: string]: string;
     };
     /**
