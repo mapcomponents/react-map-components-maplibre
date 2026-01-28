@@ -421,10 +421,9 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						if (idx === 0) {
 							_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 						}
-						const isVisible =
-							props.visibleLayersAtStart && layer.Name
-								? props.visibleLayersAtStart.includes(layer.Name)
-								: false;
+						const isVisible = props.visibleLayersAtStart
+							? props.visibleLayersAtStart.includes(layer.Name || '')
+							: true;
 						return {
 							visible: isVisible,
 							Attribution: { Title: '' },
