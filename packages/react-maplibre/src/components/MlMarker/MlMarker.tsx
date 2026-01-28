@@ -2,7 +2,18 @@ import React, { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import useMap from '../../hooks/useMap';
 import maplibregl from 'maplibre-gl';
-import { Box } from '@mui/material';
+import { Box, Paper, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
+// Constants for popup styling
+const POPUP_PADDING_VERTICAL = 12;
+const POPUP_PADDING_HORIZONTAL = 16;
+const CLOSE_BUTTON_SPACING = 4;
+const SCROLLBAR_WIDTH = 16; // Typical scrollbar width
+const CLOSE_BUTTON_OFFSET = SCROLLBAR_WIDTH + CLOSE_BUTTON_SPACING;
+const POPUP_MIN_WIDTH = 200;
+const POPUP_MAX_WIDTH = 750;
+const POPUP_MAX_HEIGHT = 500;
 
 export interface MlMarkerProps {
 	/** ID of the map to add the marker to */
@@ -27,6 +38,10 @@ export interface MlMarkerProps {
 	contentOffset?: number;
 	/** Whether mouse events pass through the marker content */
 	passEventsThrough?: boolean;
+	/** Whether to show a close button to remove the marker */
+	showCloseButton?: boolean;
+	/** Callback function when the close button is clicked */
+	onClose?: () => void;
 	/** Anchor position of the marker relative to its coordinates */
 	anchor?:
 		| 'top'
@@ -103,15 +118,32 @@ function getBoxMargins(
 	return m;
 }
 
-const MlMarker = ({ passEventsThrough = true, contentOffset = 5, ...props }: MlMarkerProps) => {
+const MlMarker = ({
+	passEventsThrough = true,
+	contentOffset = 5,
+	showCloseButton = true,
+	...props
+}: MlMarkerProps) => {
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.insertBeforeLayer,
 	});
 
 	const [marker, setMarker] = useState<maplibregl.Marker | null>(null);
+	const [contentWidth, setContentWidth] = useState<number>(300);
 	const container = useRef<HTMLDivElement | null>(null);
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
+
+	const handleClose = (event: React.MouseEvent) => {
+		event.stopPropagation();
+		if (props.onClose) {
+			props.onClose();
+		} else {
+			// Default behavior: remove the marker
+			marker?.remove();
+			container.current?.remove();
+		}
+	};
 
 	useEffect(() => {
 		if (!mapHook.map) return;
@@ -161,9 +193,17 @@ const MlMarker = ({ passEventsThrough = true, contentOffset = 5, ...props }: MlM
 
 	function handleIframeLoad() {
 		const iframeDoc = iframeRef.current?.contentWindow?.document;
-		if (iframeDoc && iframeRef.current?.parentElement) {
+		if (iframeDoc && iframeRef.current) {
 			const scrollHeight = iframeDoc.documentElement.scrollHeight;
-			iframeRef.current.parentElement.style.height = `${scrollHeight}px`;
+			const scrollWidth = iframeDoc.documentElement.scrollWidth;
+			iframeRef.current.style.height = `${scrollHeight}px`;
+
+			// Set width based on content, with min and max constraints
+			const calculatedWidth = Math.max(
+				POPUP_MIN_WIDTH,
+				Math.min(scrollWidth + POPUP_PADDING_HORIZONTAL * 2, POPUP_MAX_WIDTH)
+			);
+			setContentWidth(calculatedWidth);
 		}
 	}
 
@@ -173,41 +213,117 @@ const MlMarker = ({ passEventsThrough = true, contentOffset = 5, ...props }: MlM
 			<Box
 				sx={{
 					position: 'absolute',
-					display: 'flex',
-					width: '300px',
-					maxHeight: '500px',
-					opacity: passEventsThrough ? 1 : 0.7,
-					zIndex: -1,
 					transform: getBoxTransform(props.anchor),
 					...getBoxMargins(props.anchor, contentOffset, props.markerStyle),
-					pointerEvents: passEventsThrough ? 'none' : 'auto',
-					'&:hover': {
-						opacity: 1,
-					},
+					zIndex: -1,
 					...props.containerStyle,
 				}}
 			>
-				<iframe
-					ref={iframeRef}
-					onLoad={handleIframeLoad}
-					style={{
-						width: '100%',
-						borderStyle: 'none',
-						...props.iframeStyle,
+				<Paper
+					elevation={8}
+					sx={{
+						width: `${contentWidth}px`,
+						maxWidth: '90vw',
+						opacity: passEventsThrough ? 1 : 0.85,
+						pointerEvents: 'auto',
+						overflow: 'hidden',
+						position: 'relative',
+						transition: 'opacity 0.2s ease-in-out, width 0.2s ease-in-out',
+						'&:hover': {
+							opacity: 1,
+						},
 					}}
-					srcDoc={`<div>
+				>
+					{showCloseButton && (
+						<IconButton
+							onClick={handleClose}
+							sx={{
+								position: 'absolute',
+								top: CLOSE_BUTTON_SPACING,
+								right: CLOSE_BUTTON_OFFSET,
+								zIndex: 1,
+								padding: '4px',
+								backgroundColor: 'rgba(255, 255, 255, 0.9)',
+								'&:hover': {
+									backgroundColor: 'rgba(255, 255, 255, 1)',
+								},
+							}}
+							size="small"
+						>
+							<CloseIcon fontSize="small" />
+						</IconButton>
+					)}
+					<Box
+						sx={{
+							maxHeight: `${POPUP_MAX_HEIGHT}px`,
+							overflowY: 'auto',
+							overflowX: 'hidden',
+						}}
+					>
+						<iframe
+							ref={iframeRef}
+							onLoad={handleIframeLoad}
+							style={{
+								width: '100%',
+								border: 'none',
+								display: 'block',
+								...props.iframeStyle,
+							}}
+							srcDoc={`<div>
 	<style>
+		* {
+			box-sizing: border-box;
+		}
 		body {
+			margin: 0;
+			padding: ${POPUP_PADDING_VERTICAL}px ${POPUP_PADDING_HORIZONTAL}px;
+			${showCloseButton ? 'padding-top: 40px;' : ''}
+			background: transparent;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+			font-size: 14px;
+			line-height: 1.6;
+			color: rgba(0, 0, 0, 0.87);
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			overflow-x: hidden;
 			${Object.entries(props.iframeBodyStyle || {})
 				.map(([key, val]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${val};`)
 				.join(' ')}
 		}
+		h1, h2, h3, h4, h5, h6 {
+			margin: 0 0 8px 0;
+			font-weight: 500;
+		}
+		p {
+			margin: 0 0 8px 0;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			max-width: 100%;
+		}
+		th, td {
+			padding: 4px 8px;
+			text-align: left;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+			word-wrap: break-word;
+		}
+		th {
+			font-weight: 500;
+			color: rgba(0, 0, 0, 0.6);
+		}
+		img {
+			max-width: 100%;
+			height: auto;
+		}
 	</style>
 	${props.content || ''}
 </div>`}
-					sandbox="allow-same-origin allow-popups-to-escape-sandbox allow-scripts"
-					title={mapHook.componentId}
-				/>
+							sandbox="allow-same-origin allow-popups-to-escape-sandbox allow-scripts"
+							title={mapHook.componentId}
+						/>
+					</Box>
+				</Paper>
 			</Box>,
 			container.current
 		)

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlMarker from '../MlMarker/MlMarker';
-import useWms, { useWmsProps, useWmsReturnType } from '../../hooks/useWms';
+import useWms, { useWmsReturnType } from '../../hooks/useWms';
 
 import InfoIcon from '@mui/icons-material/Info';
 import List from '@mui/material/List';
@@ -19,6 +19,7 @@ import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
 import * as turf from '@turf/turf';
 import SortableContainer from '../../ui_components/LayerList/util/SortableContainer';
+import { normalizeWmsParams } from '../../utils/wmsUtils';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
@@ -73,13 +74,21 @@ export interface MlWmsLoaderProps {
 	layerId?: string;
 	insertBeforeLayer?: string;
 	/**
-	 * URL parameters that will be used in the getCapabilities request
+	 * Base URL parameters that will be used for all WMS requests (GetCapabilities, GetMap, GetFeatureInfo)
 	 */
-	urlParameters?: useWmsProps['urlParameters'];
+	baseUrlParameters?: { [key: string]: string };
 	/**
-	 * URL parameters that will be added when requesting WMS capabilities
+	 * URL parameters specific to GetCapabilities requests
 	 */
-	wmsUrlParameters?: { [key: string]: string };
+	getCapabilitiesUrlParameters?: { [key: string]: string };
+	/**
+	 * URL parameters specific to GetMap requests
+	 */
+	getMapUrlParameters?: { [key: string]: string };
+	/**
+	 * URL parameters specific to GetFeatureInfo requests
+	 */
+	getFeatureInfoUrlParameters?: { [key: string]: string };
 	/**
 	 * If true, zooms to the extent of the WMS layer after loading the getCapabilities response
 	 */
@@ -177,13 +186,25 @@ export type LayerType = {
 const defaultProps = {
 	mapId: undefined,
 	url: '',
-	urlParameters: {
+	baseUrlParameters: {
 		SERVICE: 'WMS',
 		VERSION: '1.3.0',
-		REQUEST: 'GetCapabilities',
 	},
-	wmsUrlParameters: {
+	getCapabilitiesUrlParameters: {},
+	getMapUrlParameters: {
 		TRANSPARENT: 'TRUE',
+	},
+	getFeatureInfoUrlParameters: {
+		FEATURE_COUNT: '10',
+		STYLES: '',
+		WIDTH: '100',
+		HEIGHT: '100',
+		SRS: 'EPSG:3857',
+		CRS: 'EPSG:3857',
+		X: '50',
+		Y: '50',
+		I: '50',
+		J: '50',
 	},
 	featureInfoEnabled: true,
 	featureInfoMarkerEnabled: true,
@@ -199,6 +220,16 @@ const defaultProps = {
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	props = { ...defaultProps, ...props };
+
+	const capabilitiesUrlParameters = useMemo(
+		() => ({
+			...props.baseUrlParameters,
+			...props.getCapabilitiesUrlParameters,
+			REQUEST: 'GetCapabilities',
+		}),
+		[props.baseUrlParameters, props.getCapabilitiesUrlParameters]
+	);
+
 	const {
 		capabilities: _capabilities,
 		error,
@@ -206,7 +237,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		getFeatureInfoUrl: _getFeatureInfoUrl,
 		wmsUrl: _wmsUrl,
 	}: useWmsReturnType = useWms({
-		urlParameters: props.urlParameters,
+		urlParameters: capabilitiesUrlParameters,
 	});
 
 	const [open, setOpen] = useState(props?.config?.open || false);
@@ -291,33 +322,20 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			const _sw = _bbox && lngLatToMeters({ lng: _bbox[0], lat: _bbox[1] } as LngLat);
 			const _ne = _bbox && lngLatToMeters({ lng: _bbox[2], lat: _bbox[3] } as LngLat);
 			const bbox = _sw && _ne && [_sw[0], _sw[1], _ne[0], _ne[1]];
+
 			const _getFeatureInfoUrlParams = {
 				REQUEST: 'GetFeatureInfo',
-
 				BBOX: bbox?.join(','),
-				SERVICE: 'WMS',
 				INFO_FORMAT:
 					capabilities?.Capability?.Request?.GetFeatureInfo.Format.indexOf('text/html') !== -1
 						? 'text/html'
 						: 'text/plain',
-				FEATURE_COUNT: '10',
 				LAYERS: layers
 					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
 				QUERY_LAYERS: layers
 					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
-				STYLES: '',
-				WIDTH: 100,
-				HEIGHT: 100,
-				srs: 'EPSG:3857',
-				CRS: 'EPSG:3857',
-				version: '1.3.0',
-				X: 50,
-				Y: 50,
-				I: 50,
-				J: 50,
-				buffer: '50',
 			};
 
 			let _gfiUrl: string | undefined = getFeatureInfoUrl;
@@ -329,14 +347,18 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			const _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
 
 			const urlParamsObj = {
-				...Object.fromEntries(_urlParamsFromUrl),
+				...normalizeWmsParams(defaultProps.baseUrlParameters),
+				...normalizeWmsParams(defaultProps.getFeatureInfoUrlParameters),
+				...normalizeWmsParams(_urlParamsFromUrl, (key) => key.toUpperCase() !== 'REQUEST'),
+				...normalizeWmsParams(props.baseUrlParameters),
+				...normalizeWmsParams(props.getFeatureInfoUrlParameters),
 				..._getFeatureInfoUrlParams,
 			};
 			// create URLSearchParams object to assemble the URL Parameters
 			// "as any" can be removed once the URLSearchParams ts spec is fixed
 			const urlParams = new URLSearchParams(urlParamsObj as unknown as Record<string, string>);
 
-			fetch(props.url + '?' + urlParams.toString())
+			fetch(_gfiUrl + '?' + urlParams.toString())
 				.then((res) => {
 					if (!res.ok) {
 						throw new Error('FeatureInfo could not be fetched');
@@ -421,10 +443,9 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						if (idx === 0) {
 							_LatLonBoundingBox = layer.EX_GeographicBoundingBox || layer?.LatLonBoundingBox || [];
 						}
-						const isVisible =
-							props.visibleLayersAtStart && layer.Name
-								? props.visibleLayersAtStart.includes(layer.Name)
-								: false;
+						const isVisible = props.visibleLayersAtStart
+							? props.visibleLayersAtStart.includes(layer.Name || '')
+							: true;
 						return {
 							visible: isVisible,
 							Attribution: { Title: '' },
@@ -596,7 +617,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 							attribution={attribution}
 							visible={visible}
 							urlParameters={{
-								...props.wmsUrlParameters,
+								...props.baseUrlParameters,
+								...props.getMapUrlParameters,
 								layers: layers
 									?.filter?.((layer) => layer.visible)
 									.map((el) => el.Name)

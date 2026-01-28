@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import WMSCapabilities, { WMSCapabilitiesJSON } from 'wms-capabilities';
+import { normalizeWmsParams } from '../utils/wmsUtils';
 
 export interface useWmsProps {
 	url?: string;
@@ -45,11 +46,14 @@ function useWms(props: useWmsProps): useWmsReturnType {
 		const _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
 
 		const urlParamsObj = {
-			...Object.fromEntries(_urlParamsFromUrl),
-			...props.urlParameters,
+			...normalizeWmsParams(_urlParamsFromUrl),
+			...normalizeWmsParams(props.urlParameters),
 		};
 		// create URLSearchParams object to assemble the URL Parameters
-		const urlParams = new URLSearchParams(urlParamsObj);
+		const urlParamsObjStringified = Object.fromEntries(
+			Object.entries(urlParamsObj).map(([key, value]) => [key, String(value)])
+		);
+		const urlParams = new URLSearchParams(urlParamsObjStringified);
 
 		const urlParamsStr =
 			decodeURIComponent(urlParams.toString()) + ''.replace(/%2F/g, '/').replace(/%3A/g, ':');

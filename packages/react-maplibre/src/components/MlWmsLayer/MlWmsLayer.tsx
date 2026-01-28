@@ -1,6 +1,7 @@
 import { useMemo, useRef, useEffect, useCallback } from 'react';
 import useMap from '../../hooks/useMap';
 import { RasterLayerSpecification, RasterSourceSpecification } from 'maplibre-gl';
+import { normalizeWmsParams } from '../../utils/wmsUtils';
 
 const defaultProps: MlWmsLayerProps = {
 	url: '',
@@ -11,6 +12,7 @@ const defaultProps: MlWmsLayerProps = {
 		version: '1.1.1',
 		request: 'GetMap',
 		srs: 'EPSG:3857',
+		crs: 'EPSG:3857',
 		width: '256',
 		height: '256',
 		Transparent: 'true',
@@ -62,11 +64,12 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 			_wmsUrl = _propsUrlParams[0];
 		}
 		const _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
+
 		// first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
 		const urlParamsObj = {
-			...defaultProps.urlParameters,
-			...Object.fromEntries(_urlParamsFromUrl),
-			...props.urlParameters,
+			...normalizeWmsParams(defaultProps.urlParameters),
+			...normalizeWmsParams(_urlParamsFromUrl),
+			...normalizeWmsParams(props.urlParameters),
 		};
 		const urlParams = new URLSearchParams(urlParamsObj as unknown as Record<string, string>);
 		const urlParamsStr =

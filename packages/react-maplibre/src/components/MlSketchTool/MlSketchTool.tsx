@@ -330,7 +330,9 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 											if (!updatedGeometries[index].properties) {
 												updatedGeometries[index].properties = {};
 											}
-											updatedGeometries[index].properties!.name = newName;
+											if (updatedGeometries[index].properties) {
+												updatedGeometries[index].properties.name = newName;
+											}
 											return {
 												..._sketchState,
 												geometries: updatedGeometries,
@@ -351,7 +353,9 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 											if (!updatedGeometries[index].properties) {
 												updatedGeometries[index].properties = {};
 											}
-											updatedGeometries[index].properties!.customName = true;
+											if (updatedGeometries[index].properties) {
+												updatedGeometries[index].properties.customName = true;
+											}
 											return {
 												..._sketchState,
 												geometries: updatedGeometries,
@@ -386,7 +390,9 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 												if (!updatedGeometries[index].properties) {
 													updatedGeometries[index].properties = {};
 												}
-												updatedGeometries[index].properties!.customName = false;
+												if (updatedGeometries[index].properties) {
+													updatedGeometries[index].properties.customName = false;
+												}
 												return {
 													..._sketchState,
 													geometries: updatedGeometries,
