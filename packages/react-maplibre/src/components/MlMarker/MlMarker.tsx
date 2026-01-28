@@ -11,6 +11,9 @@ const POPUP_PADDING_HORIZONTAL = 16;
 const CLOSE_BUTTON_SPACING = 4;
 const SCROLLBAR_WIDTH = 16; // Typical scrollbar width
 const CLOSE_BUTTON_OFFSET = SCROLLBAR_WIDTH + CLOSE_BUTTON_SPACING;
+const POPUP_MIN_WIDTH = 200;
+const POPUP_MAX_WIDTH = 750;
+const POPUP_MAX_HEIGHT = 500;
 
 export interface MlMarkerProps {
 	/** ID of the map to add the marker to */
@@ -128,6 +131,7 @@ const MlMarker = ({
 
 	const [marker, setMarker] = useState<maplibregl.Marker | null>(null);
 	const [contentWidth, setContentWidth] = useState<number>(300);
+	const [hasScrollbar, setHasScrollbar] = useState<boolean>(false);
 	const container = useRef<HTMLDivElement | null>(null);
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
@@ -195,8 +199,15 @@ const MlMarker = ({
 			const scrollWidth = iframeDoc.documentElement.scrollWidth;
 			iframeRef.current.style.height = `${scrollHeight}px`;
 
-			// Set width based on content, with min of 200px and max of 600px
-			const calculatedWidth = Math.max(200, Math.min(scrollWidth + POPUP_PADDING_HORIZONTAL * 2, 600));
+			// Check if the content box will have a vertical scrollbar
+			const hasVerticalScrollbar = scrollHeight > POPUP_MAX_HEIGHT;
+			setHasScrollbar(hasVerticalScrollbar);
+
+			// Set width based on content, with min and max constraints
+			const calculatedWidth = Math.max(
+				POPUP_MIN_WIDTH,
+				Math.min(scrollWidth + POPUP_PADDING_HORIZONTAL * 2, POPUP_MAX_WIDTH)
+			);
 			setContentWidth(calculatedWidth);
 		}
 	}
@@ -249,7 +260,7 @@ const MlMarker = ({
 					)}
 					<Box
 						sx={{
-							maxHeight: '500px',
+							maxHeight: `${POPUP_MAX_HEIGHT}px`,
 							overflowY: 'auto',
 							overflowX: 'hidden',
 						}}
