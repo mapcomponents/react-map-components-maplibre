@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/three",
-	"version": "1.8.1",
+	"version": "1.8.2",
 	"license": "MIT",
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.mjs",
