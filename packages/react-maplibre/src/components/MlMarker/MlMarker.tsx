@@ -5,6 +5,13 @@ import maplibregl from 'maplibre-gl';
 import { Box, Paper, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
+// Constants for popup styling
+const POPUP_PADDING_VERTICAL = 12;
+const POPUP_PADDING_HORIZONTAL = 16;
+const CLOSE_BUTTON_SPACING = 4;
+const SCROLLBAR_WIDTH = 16; // Typical scrollbar width
+const CLOSE_BUTTON_OFFSET = SCROLLBAR_WIDTH + CLOSE_BUTTON_SPACING;
+
 export interface MlMarkerProps {
 	/** ID of the map to add the marker to */
 	mapId?: string;
@@ -189,7 +196,7 @@ const MlMarker = ({
 			iframeRef.current.style.height = `${scrollHeight}px`;
 
 			// Set width based on content, with min of 200px and max of 600px
-			const calculatedWidth = Math.max(200, Math.min(scrollWidth + 32, 600));
+			const calculatedWidth = Math.max(200, Math.min(scrollWidth + POPUP_PADDING_HORIZONTAL * 2, 600));
 			setContentWidth(calculatedWidth);
 		}
 	}
@@ -226,8 +233,8 @@ const MlMarker = ({
 							onClick={handleClose}
 							sx={{
 								position: 'absolute',
-								top: 4,
-								right: 20,
+								top: CLOSE_BUTTON_SPACING,
+								right: CLOSE_BUTTON_OFFSET,
 								zIndex: 1,
 								padding: '4px',
 								backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -263,7 +270,7 @@ const MlMarker = ({
 		}
 		body {
 			margin: 0;
-			padding: 12px 16px;
+			padding: ${POPUP_PADDING_VERTICAL}px ${POPUP_PADDING_HORIZONTAL}px;
 			${showCloseButton ? 'padding-top: 40px;' : ''}
 			background: transparent;
 			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
