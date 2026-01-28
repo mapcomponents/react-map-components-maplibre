@@ -12,6 +12,7 @@ const defaultProps: MlWmsLayerProps = {
 		version: '1.1.1',
 		request: 'GetMap',
 		srs: 'EPSG:3857',
+		crs: 'EPSG:3857',
 		width: '256',
 		height: '256',
 		Transparent: 'true',
