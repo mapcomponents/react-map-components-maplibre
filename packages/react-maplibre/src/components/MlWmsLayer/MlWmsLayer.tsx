@@ -62,11 +62,26 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 			_wmsUrl = _propsUrlParams[0];
 		}
 		const _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
+
+		// Normalize all parameter keys to uppercase to avoid duplicates
+		const normalizedDefaultParams = Object.fromEntries(
+			Object.entries(defaultProps.urlParameters || {}).map(([key, value]) => [
+				key.toUpperCase(),
+				value,
+			])
+		);
+		const normalizedUrlParams = Object.fromEntries(
+			Array.from(_urlParamsFromUrl.entries()).map(([key, value]) => [key.toUpperCase(), value])
+		);
+		const normalizedPropsParams = Object.fromEntries(
+			Object.entries(props.urlParameters || {}).map(([key, value]) => [key.toUpperCase(), value])
+		);
+
 		// first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
 		const urlParamsObj = {
-			...defaultProps.urlParameters,
-			...Object.fromEntries(_urlParamsFromUrl),
-			...props.urlParameters,
+			...normalizedDefaultParams,
+			...normalizedUrlParams,
+			...normalizedPropsParams,
 		};
 		const urlParams = new URLSearchParams(urlParamsObj as unknown as Record<string, string>);
 		const urlParamsStr =
