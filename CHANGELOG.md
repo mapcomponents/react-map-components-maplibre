@@ -1,3 +1,7 @@
+## 1.8.2 (2026-01-28)
+
+This was a version bump only, there were no code changes.
+
 ## [v1.8.1] (2026-01-26)
 
 ## @mapcomponents/deck-gl
