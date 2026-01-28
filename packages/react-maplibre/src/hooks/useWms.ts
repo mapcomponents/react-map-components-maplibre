@@ -44,9 +44,17 @@ function useWms(props: useWmsProps): useWmsReturnType {
 		}
 		const _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
 
+		// Normalize all parameter keys to uppercase to avoid duplicates
+		const normalizedUrlParams = Object.fromEntries(
+			Array.from(_urlParamsFromUrl.entries()).map(([key, value]) => [key.toUpperCase(), value])
+		);
+		const normalizedPropsParams = Object.fromEntries(
+			Object.entries(props.urlParameters || {}).map(([key, value]) => [key.toUpperCase(), value])
+		);
+
 		const urlParamsObj = {
-			...Object.fromEntries(_urlParamsFromUrl),
-			...props.urlParameters,
+			...normalizedUrlParams,
+			...normalizedPropsParams,
 		};
 		// create URLSearchParams object to assemble the URL Parameters
 		const urlParams = new URLSearchParams(urlParamsObj);
@@ -54,6 +62,7 @@ function useWms(props: useWmsProps): useWmsReturnType {
 		const urlParamsStr =
 			decodeURIComponent(urlParams.toString()) + ''.replace(/%2F/g, '/').replace(/%3A/g, ':');
 
+		console.log(_wmsUrl + '?' + urlParamsStr);
 		fetch(_wmsUrl + '?' + urlParamsStr)
 			.then((res) => {
 				if (!res.ok) {
