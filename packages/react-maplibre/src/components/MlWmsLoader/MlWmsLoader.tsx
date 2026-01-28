@@ -351,7 +351,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				...normalizeWmsParams(defaultProps.getFeatureInfoUrlParameters),
 				...normalizeWmsParams(
 					_urlParamsFromUrl,
-					(key) => key.toUpperCase() !== 'REQUEST' || !key.match(/GetCapabilities/i)
+					(key) => key.toUpperCase() !== 'REQUEST'
 				),
 				...normalizeWmsParams(props.baseUrlParameters),
 				...normalizeWmsParams(props.getFeatureInfoUrlParameters),
