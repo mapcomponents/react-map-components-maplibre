@@ -73,13 +73,21 @@ export interface MlWmsLoaderProps {
 	layerId?: string;
 	insertBeforeLayer?: string;
 	/**
-	 * URL parameters that will be used in the getCapabilities request
+	 * Base URL parameters that will be used for all WMS requests (GetCapabilities, GetMap, GetFeatureInfo)
 	 */
-	urlParameters?: useWmsProps['urlParameters'];
+	baseUrlParameters?: { [key: string]: string };
 	/**
-	 * URL parameters that will be added when requesting WMS capabilities
+	 * URL parameters specific to GetCapabilities requests
 	 */
-	wmsUrlParameters?: { [key: string]: string };
+	getCapabilitiesUrlParameters?: { [key: string]: string };
+	/**
+	 * URL parameters specific to GetMap requests
+	 */
+	getMapUrlParameters?: { [key: string]: string };
+	/**
+	 * URL parameters specific to GetFeatureInfo requests
+	 */
+	getFeatureInfoUrlParameters?: { [key: string]: string };
 	/**
 	 * If true, zooms to the extent of the WMS layer after loading the getCapabilities response
 	 */
@@ -177,13 +185,25 @@ export type LayerType = {
 const defaultProps = {
 	mapId: undefined,
 	url: '',
-	urlParameters: {
+	baseUrlParameters: {
 		SERVICE: 'WMS',
 		VERSION: '1.3.0',
-		REQUEST: 'GetCapabilities',
 	},
-	wmsUrlParameters: {
+	getCapabilitiesUrlParameters: {},
+	getMapUrlParameters: {
 		TRANSPARENT: 'TRUE',
+	},
+	getFeatureInfoUrlParameters: {
+		FEATURE_COUNT: '10',
+		STYLES: '',
+		WIDTH: 100,
+		HEIGHT: 100,
+		SRS: 'EPSG:3857',
+		CRS: 'EPSG:3857',
+		X: 50,
+		Y: 50,
+		I: 50,
+		J: 50,
 	},
 	featureInfoEnabled: true,
 	featureInfoMarkerEnabled: true,
@@ -199,6 +219,16 @@ const defaultProps = {
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	props = { ...defaultProps, ...props };
+
+	const capabilitiesUrlParameters = useMemo(
+		() => ({
+			...props.baseUrlParameters,
+			...props.getCapabilitiesUrlParameters,
+			REQUEST: 'GetCapabilities',
+		}),
+		[props.baseUrlParameters, props.getCapabilitiesUrlParameters]
+	);
+
 	const {
 		capabilities: _capabilities,
 		error,
@@ -206,7 +236,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		getFeatureInfoUrl: _getFeatureInfoUrl,
 		wmsUrl: _wmsUrl,
 	}: useWmsReturnType = useWms({
-		urlParameters: props.urlParameters,
+		urlParameters: capabilitiesUrlParameters,
 	});
 
 	const [open, setOpen] = useState(props?.config?.open || false);
@@ -291,33 +321,20 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			const _sw = _bbox && lngLatToMeters({ lng: _bbox[0], lat: _bbox[1] } as LngLat);
 			const _ne = _bbox && lngLatToMeters({ lng: _bbox[2], lat: _bbox[3] } as LngLat);
 			const bbox = _sw && _ne && [_sw[0], _sw[1], _ne[0], _ne[1]];
+
 			const _getFeatureInfoUrlParams = {
 				REQUEST: 'GetFeatureInfo',
-
 				BBOX: bbox?.join(','),
-				SERVICE: 'WMS',
 				INFO_FORMAT:
 					capabilities?.Capability?.Request?.GetFeatureInfo.Format.indexOf('text/html') !== -1
 						? 'text/html'
 						: 'text/plain',
-				FEATURE_COUNT: '10',
 				LAYERS: layers
 					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
 				QUERY_LAYERS: layers
 					.map((layer: LayerType) => (layer.visible && layer.queryable ? layer.Name : undefined))
 					.filter((n) => n),
-				STYLES: '',
-				WIDTH: 100,
-				HEIGHT: 100,
-				srs: 'EPSG:3857',
-				CRS: 'EPSG:3857',
-				version: '1.3.0',
-				X: 50,
-				Y: 50,
-				I: 50,
-				J: 50,
-				buffer: '50',
 			};
 
 			let _gfiUrl: string | undefined = getFeatureInfoUrl;
@@ -328,15 +345,50 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			}
 			const _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
 
+			// Normalize all parameter keys to uppercase to avoid duplicates
+			const normalizedDefaultParams = Object.fromEntries(
+				Object.entries(defaultProps.baseUrlParameters).map(([key, value]) => [
+					key.toUpperCase(),
+					value,
+				])
+			);
+			const normalizedDefaultFeatureInfoParams = Object.fromEntries(
+				Object.entries(defaultProps.getFeatureInfoUrlParameters).map(([key, value]) => [
+					key.toUpperCase(),
+					value,
+				])
+			);
+			const normalizedUrlParams = Object.fromEntries(
+				Array.from(_urlParamsFromUrl.entries())
+					.filter(([key]) => key.toUpperCase() !== 'REQUEST' || !key.match(/GetCapabilities/i))
+					.map(([key, value]) => [key.toUpperCase(), value])
+			);
+			const normalizedBaseParams = Object.fromEntries(
+				Object.entries(props.baseUrlParameters || {}).map(([key, value]) => [
+					key.toUpperCase(),
+					value,
+				])
+			);
+			const normalizedFeatureInfoParams = Object.fromEntries(
+				Object.entries(props.getFeatureInfoUrlParameters || {}).map(([key, value]) => [
+					key.toUpperCase(),
+					value,
+				])
+			);
+
 			const urlParamsObj = {
-				...Object.fromEntries(_urlParamsFromUrl),
+				...normalizedDefaultParams,
+				...normalizedDefaultFeatureInfoParams,
+				...normalizedUrlParams,
+				...normalizedBaseParams,
+				...normalizedFeatureInfoParams,
 				..._getFeatureInfoUrlParams,
 			};
 			// create URLSearchParams object to assemble the URL Parameters
 			// "as any" can be removed once the URLSearchParams ts spec is fixed
 			const urlParams = new URLSearchParams(urlParamsObj as unknown as Record<string, string>);
 
-			fetch(props.url + '?' + urlParams.toString())
+			fetch(_gfiUrl + '?' + urlParams.toString())
 				.then((res) => {
 					if (!res.ok) {
 						throw new Error('FeatureInfo could not be fetched');
@@ -595,7 +647,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 							attribution={attribution}
 							visible={visible}
 							urlParameters={{
-								...props.wmsUrlParameters,
+								...props.baseUrlParameters,
+								...props.getMapUrlParameters,
 								layers: layers
 									?.filter?.((layer) => layer.visible)
 									.map((el) => el.Name)
