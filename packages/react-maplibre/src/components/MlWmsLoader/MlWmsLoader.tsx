@@ -19,6 +19,7 @@ import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
 import * as turf from '@turf/turf';
 import SortableContainer from '../../ui_components/LayerList/util/SortableContainer';
+import { normalizeWmsParams } from '../../utils/wmsUtils';
 
 const originShift = (2 * Math.PI * 6378137) / 2.0;
 const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
@@ -345,43 +346,15 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			}
 			const _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
 
-			// Normalize all parameter keys to uppercase to avoid duplicates
-			const normalizedDefaultParams = Object.fromEntries(
-				Object.entries(defaultProps.baseUrlParameters).map(([key, value]) => [
-					key.toUpperCase(),
-					value,
-				])
-			);
-			const normalizedDefaultFeatureInfoParams = Object.fromEntries(
-				Object.entries(defaultProps.getFeatureInfoUrlParameters).map(([key, value]) => [
-					key.toUpperCase(),
-					value,
-				])
-			);
-			const normalizedUrlParams = Object.fromEntries(
-				Array.from(_urlParamsFromUrl.entries())
-					.filter(([key]) => key.toUpperCase() !== 'REQUEST' || !key.match(/GetCapabilities/i))
-					.map(([key, value]) => [key.toUpperCase(), value])
-			);
-			const normalizedBaseParams = Object.fromEntries(
-				Object.entries(props.baseUrlParameters || {}).map(([key, value]) => [
-					key.toUpperCase(),
-					value,
-				])
-			);
-			const normalizedFeatureInfoParams = Object.fromEntries(
-				Object.entries(props.getFeatureInfoUrlParameters || {}).map(([key, value]) => [
-					key.toUpperCase(),
-					value,
-				])
-			);
-
 			const urlParamsObj = {
-				...normalizedDefaultParams,
-				...normalizedDefaultFeatureInfoParams,
-				...normalizedUrlParams,
-				...normalizedBaseParams,
-				...normalizedFeatureInfoParams,
+				...normalizeWmsParams(defaultProps.baseUrlParameters),
+				...normalizeWmsParams(defaultProps.getFeatureInfoUrlParameters),
+				...normalizeWmsParams(
+					_urlParamsFromUrl,
+					(key) => key.toUpperCase() !== 'REQUEST' || !key.match(/GetCapabilities/i)
+				),
+				...normalizeWmsParams(props.baseUrlParameters),
+				...normalizeWmsParams(props.getFeatureInfoUrlParameters),
 				..._getFeatureInfoUrlParams,
 			};
 			// create URLSearchParams object to assemble the URL Parameters

@@ -1,6 +1,7 @@
 import { useMemo, useRef, useEffect, useCallback } from 'react';
 import useMap from '../../hooks/useMap';
 import { RasterLayerSpecification, RasterSourceSpecification } from 'maplibre-gl';
+import { normalizeWmsParams } from '../../utils/wmsUtils';
 
 const defaultProps: MlWmsLayerProps = {
 	url: '',
@@ -63,25 +64,11 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 		}
 		const _urlParamsFromUrl = new URLSearchParams(_propsUrlParams?.[1]);
 
-		// Normalize all parameter keys to uppercase to avoid duplicates
-		const normalizedDefaultParams = Object.fromEntries(
-			Object.entries(defaultProps.urlParameters || {}).map(([key, value]) => [
-				key.toUpperCase(),
-				value,
-			])
-		);
-		const normalizedUrlParams = Object.fromEntries(
-			Array.from(_urlParamsFromUrl.entries()).map(([key, value]) => [key.toUpperCase(), value])
-		);
-		const normalizedPropsParams = Object.fromEntries(
-			Object.entries(props.urlParameters || {}).map(([key, value]) => [key.toUpperCase(), value])
-		);
-
 		// first spread in default props manually to enable overriding a single parameter without replacing the whole default urlParameters object
 		const urlParamsObj = {
-			...normalizedDefaultParams,
-			...normalizedUrlParams,
-			...normalizedPropsParams,
+			...normalizeWmsParams(defaultProps.urlParameters),
+			...normalizeWmsParams(_urlParamsFromUrl),
+			...normalizeWmsParams(props.urlParameters),
 		};
 		const urlParams = new URLSearchParams(urlParamsObj as unknown as Record<string, string>);
 		const urlParamsStr =
