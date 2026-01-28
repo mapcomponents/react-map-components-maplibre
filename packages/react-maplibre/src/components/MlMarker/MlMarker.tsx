@@ -131,7 +131,6 @@ const MlMarker = ({
 
 	const [marker, setMarker] = useState<maplibregl.Marker | null>(null);
 	const [contentWidth, setContentWidth] = useState<number>(300);
-	const [hasScrollbar, setHasScrollbar] = useState<boolean>(false);
 	const container = useRef<HTMLDivElement | null>(null);
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
@@ -198,10 +197,6 @@ const MlMarker = ({
 			const scrollHeight = iframeDoc.documentElement.scrollHeight;
 			const scrollWidth = iframeDoc.documentElement.scrollWidth;
 			iframeRef.current.style.height = `${scrollHeight}px`;
-
-			// Check if the content box will have a vertical scrollbar
-			const hasVerticalScrollbar = scrollHeight > POPUP_MAX_HEIGHT;
-			setHasScrollbar(hasVerticalScrollbar);
 
 			// Set width based on content, with min and max constraints
 			const calculatedWidth = Math.max(

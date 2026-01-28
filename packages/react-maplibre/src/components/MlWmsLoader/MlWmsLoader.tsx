@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlMarker from '../MlMarker/MlMarker';
-import useWms, { useWmsProps, useWmsReturnType } from '../../hooks/useWms';
+import useWms, { useWmsReturnType } from '../../hooks/useWms';
 
 import InfoIcon from '@mui/icons-material/Info';
 import List from '@mui/material/List';
@@ -349,10 +349,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			const urlParamsObj = {
 				...normalizeWmsParams(defaultProps.baseUrlParameters),
 				...normalizeWmsParams(defaultProps.getFeatureInfoUrlParameters),
-				...normalizeWmsParams(
-					_urlParamsFromUrl,
-					(key) => key.toUpperCase() !== 'REQUEST'
-				),
+				...normalizeWmsParams(_urlParamsFromUrl, (key) => key.toUpperCase() !== 'REQUEST'),
 				...normalizeWmsParams(props.baseUrlParameters),
 				...normalizeWmsParams(props.getFeatureInfoUrlParameters),
 				..._getFeatureInfoUrlParams,
