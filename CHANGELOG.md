@@ -1,17 +1,24 @@
-## 1.8.2 (2026-01-28)
+## [1.8.2] (2026-01-28)
 
-This was a version bump only, there were no code changes.
+## @mapcomponents/react-maplibre
+
+### Changed
+
+- bdeb006: clean up MlWmsLoader URL-prameter properties (add props baseUrlParams, getMapUrlParams, getCapabilitiesUrlParams, getFeatureInfoUrlParams)
+- bdeb006: improve MlMarker appearance and adjustment to unknown content dimensions
 
 ## [v1.8.1] (2026-01-26)
 
 ## @mapcomponents/deck-gl
 
 ## Added
+
 - 38a52cb: add license
 
 ## @mapcomponents/ra-geospatial
 
 ## Added
+
 - 38a52cb: add license
 
 ## [v1.8.0] (2026-01-19)
