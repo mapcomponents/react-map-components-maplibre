@@ -351,8 +351,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				...normalizeWmsParams(defaultProps.getFeatureInfoUrlParameters),
 				...normalizeWmsParams(_urlParamsFromUrl, (key) => key.toUpperCase() !== 'REQUEST'),
 				...normalizeWmsParams(props.baseUrlParameters),
-				...normalizeWmsParams(props.getFeatureInfoUrlParameters),
 				..._getFeatureInfoUrlParams,
+				...normalizeWmsParams(props.getFeatureInfoUrlParameters),
 			};
 			// create URLSearchParams object to assemble the URL Parameters
 			// "as any" can be removed once the URLSearchParams ts spec is fixed
