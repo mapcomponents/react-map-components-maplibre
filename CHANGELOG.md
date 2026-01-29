@@ -1,12 +1,10 @@
-## 1.8.3 (2026-01-29)
+## [1.8.3] (2026-01-29)
 
-### 🩹 Fixes
+## @mapcomponents/react-maplibre
+
+### Fixes
 
 - make getFeatureInfoUrlParameter overrides default params in MlWmsLoader ([076daddc](https://github.com/mapcomponents/react-map-components-maplibre/commit/076daddc))
-
-### ❤️ Thank You
-
-- Max Tobias Weber @cioddi
 
 ## [1.8.2] (2026-01-28)
 
