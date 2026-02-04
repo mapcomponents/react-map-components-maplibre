@@ -1,3 +1,7 @@
+## 1.8.4 (2026-02-04)
+
+This was a version bump only, there were no code changes.
+
 ## [1.8.3] (2026-01-29)
 
 ## @mapcomponents/react-maplibre
