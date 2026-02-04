@@ -166,3 +166,100 @@ const FixedConfigTemplate: any = () => {
 export const ExampleFixedConfig = FixedConfigTemplate.bind({});
 ExampleFixedConfig.parameters = {};
 ExampleFixedConfig.args = {};
+
+const CustomFeatureInfoTemplate: any = () => {
+	const [url] = useState('https://www.wms.nrw.de/geobasis/wms_nw_vdop');
+	const [openSidebar, setOpenSidebar] = useState(true);
+	const [featureInfoActive, setFeatureInfoActive] = useState(true);
+	const [featureInfoData, setFeatureInfoData] = useState<{
+		content: string;
+		lngLat: { lng: number; lat: number };
+	} | null>(null);
+	const mapHook = useMap({
+		mapId: undefined,
+	});
+
+	const initializedRef = useRef(false);
+
+	useEffect(() => {
+		if (!mapHook.map || initializedRef.current) return;
+
+		initializedRef.current = true;
+		mapHook.map.map.flyTo({ center: [2.3522, 48.8566], zoom: 12 });
+	}, [mapHook.map]);
+
+	const handleFeatureInfoSuccess = (content: string, lngLat: { lng: number; lat: number }) => {
+		setFeatureInfoData({ content, lngLat });
+	};
+
+	return (
+		<>
+			<TopToolbar
+				buttons={
+					<>
+						<Button
+							variant={openSidebar ? 'contained' : 'outlined'}
+							onClick={() => setOpenSidebar(!openSidebar)}
+							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
+						>
+							WMS Loader
+						</Button>
+					</>
+				}
+			/>
+
+			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'WMS Loader'}>
+				<List>
+					<MlWmsLoader
+						mapId={'map_1'}
+						url={url}
+						onConfigChange={(config) => console.log(config)}
+						zoomToExtent={true}
+						layerId="WMS-layer"
+						featureInfoActive={featureInfoActive}
+						setFeatureInfoActive={setFeatureInfoActive}
+						featureInfoMarkerEnabled={false}
+						featureInfoSuccess={handleFeatureInfoSuccess}
+					/>
+				</List>
+
+				{featureInfoData && (
+					<>
+						<FormControl fullWidth sx={{ marginTop: '20px' }}>
+							<TextField
+								label="Coordinates"
+								variant="outlined"
+								size="small"
+								value={`Lng: ${featureInfoData.lngLat.lng.toFixed(6)}, Lat: ${featureInfoData.lngLat.lat.toFixed(6)}`}
+								InputProps={{ readOnly: true }}
+								sx={{ marginBottom: '10px' }}
+							/>
+						</FormControl>
+						<FormControl fullWidth>
+							<TextField
+								label="Feature Info Response"
+								variant="outlined"
+								multiline
+								rows={10}
+								value={featureInfoData.content}
+								InputProps={{ readOnly: true }}
+							/>
+						</FormControl>
+						<Button
+							variant="outlined"
+							onClick={() => setFeatureInfoData(null)}
+							sx={{ marginTop: '10px' }}
+							fullWidth
+						>
+							Clear
+						</Button>
+					</>
+				)}
+			</Sidebar>
+		</>
+	);
+};
+
+export const CustomFeatureInfoDisplay = CustomFeatureInfoTemplate.bind({});
+CustomFeatureInfoDisplay.parameters = {};
+CustomFeatureInfoDisplay.args = {};
