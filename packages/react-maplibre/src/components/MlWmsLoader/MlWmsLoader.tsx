@@ -233,7 +233,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	// Apply simple defaults via destructuring
 	const {
 		mapId = defaultProps.mapId,
-		url = defaultProps.url,
 		featureInfoEnabled = defaultProps.featureInfoEnabled,
 		featureInfoMarkerEnabled = defaultProps.featureInfoMarkerEnabled,
 		zoomToExtent = defaultProps.zoomToExtent,
