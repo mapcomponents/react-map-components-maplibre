@@ -211,23 +211,27 @@ const defaultGetFeatureInfoUrlParameters = {
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	// Merge defaults with props using useMemo for stable references
-	// The dependencies are the prop objects - if consumers pass inline objects,
-	// they should memoize them. This follows standard React patterns.
+	// Use JSON.stringify for stable dependency comparison to prevent reinitialization
+	// when consumers pass inline objects as props
+	const baseUrlParametersJson = JSON.stringify(props.baseUrlParameters);
 	const baseUrlParameters = useMemo(
 		() => ({ ...defaultBaseUrlParameters, ...props.baseUrlParameters }),
-		[props.baseUrlParameters]
+		[baseUrlParametersJson]
 	);
+	const getCapabilitiesUrlParametersJson = JSON.stringify(props.getCapabilitiesUrlParameters);
 	const getCapabilitiesUrlParameters = useMemo(
 		() => ({ ...defaultGetCapabilitiesUrlParameters, ...props.getCapabilitiesUrlParameters }),
-		[props.getCapabilitiesUrlParameters]
+		[getCapabilitiesUrlParametersJson]
 	);
+	const getMapUrlParametersJson = JSON.stringify(props.getMapUrlParameters);
 	const getMapUrlParameters = useMemo(
 		() => ({ ...defaultGetMapUrlParameters, ...props.getMapUrlParameters }),
-		[props.getMapUrlParameters]
+		[getMapUrlParametersJson]
 	);
+	const getFeatureInfoUrlParametersJson = JSON.stringify(props.getFeatureInfoUrlParameters);
 	const getFeatureInfoUrlParameters = useMemo(
 		() => ({ ...defaultGetFeatureInfoUrlParameters, ...props.getFeatureInfoUrlParameters }),
-		[props.getFeatureInfoUrlParameters]
+		[getFeatureInfoUrlParametersJson]
 	);
 
 	const featureInfoSuccessRef = useRef(props.featureInfoSuccess);

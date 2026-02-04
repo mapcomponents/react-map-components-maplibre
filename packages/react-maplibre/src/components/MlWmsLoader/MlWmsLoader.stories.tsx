@@ -175,18 +175,6 @@ const CustomFeatureInfoTemplate: any = () => {
 		content: string;
 		lngLat: { lng: number; lat: number };
 	} | null>(null);
-	const mapHook = useMap({
-		mapId: undefined,
-	});
-
-	const initializedRef = useRef(false);
-
-	useEffect(() => {
-		if (!mapHook.map || initializedRef.current) return;
-
-		initializedRef.current = true;
-		mapHook.map.map.flyTo({ center: [2.3522, 48.8566], zoom: 12 });
-	}, [mapHook.map]);
 
 	const handleFeatureInfoSuccess = (content: string, lngLat: { lng: number; lat: number }) => {
 		setFeatureInfoData({ content, lngLat });
