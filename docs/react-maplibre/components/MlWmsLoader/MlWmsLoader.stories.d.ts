@@ -10,4 +10,5 @@ declare const storyoptions: {
 export default storyoptions;
 export declare const ExampleConfig: any;
 export declare const ExampleFixedConfig: any;
+export declare const CustomFeatureInfoDisplay: any;
 //# sourceMappingURL=MlWmsLoader.stories.d.ts.map
