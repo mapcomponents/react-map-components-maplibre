@@ -216,25 +216,21 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const baseUrlParametersJson = JSON.stringify(props.baseUrlParameters);
 	const baseUrlParameters = useMemo(
 		() => ({ ...defaultBaseUrlParameters, ...props.baseUrlParameters }),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[baseUrlParametersJson]
 	);
 	const getCapabilitiesUrlParametersJson = JSON.stringify(props.getCapabilitiesUrlParameters);
 	const getCapabilitiesUrlParameters = useMemo(
 		() => ({ ...defaultGetCapabilitiesUrlParameters, ...props.getCapabilitiesUrlParameters }),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getCapabilitiesUrlParametersJson]
 	);
 	const getMapUrlParametersJson = JSON.stringify(props.getMapUrlParameters);
 	const getMapUrlParameters = useMemo(
 		() => ({ ...defaultGetMapUrlParameters, ...props.getMapUrlParameters }),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getMapUrlParametersJson]
 	);
 	const getFeatureInfoUrlParametersJson = JSON.stringify(props.getFeatureInfoUrlParameters);
 	const getFeatureInfoUrlParameters = useMemo(
 		() => ({ ...defaultGetFeatureInfoUrlParameters, ...props.getFeatureInfoUrlParameters }),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getFeatureInfoUrlParametersJson]
 	);
 
