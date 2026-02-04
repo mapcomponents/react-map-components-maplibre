@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlMarker from '../MlMarker/MlMarker';
@@ -9,7 +9,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import { LngLat, MapMouseEvent } from 'maplibre-gl';
+import { MapMouseEvent } from 'maplibre-gl';
 import useMap from '../../hooks/useMap';
 import { Box, Checkbox, ListItemIcon, Snackbar } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -20,20 +20,6 @@ import ConfirmDialog from '../../ui_components/ConfirmDialog';
 import * as turf from '@turf/turf';
 import SortableContainer from '../../ui_components/LayerList/util/SortableContainer';
 import { normalizeWmsParams } from '../../utils/wmsUtils';
-
-const originShift = (2 * Math.PI * 6378137) / 2.0;
-const lngLatToMeters = function (lnglat: LngLat, accuracy = { enable: true, decimal: 1 }) {
-	const lng = lnglat.lng;
-	const lat = lnglat.lat;
-	let x = (lng * originShift) / 180.0;
-	let y = Math.log(Math.tan(((90 + lat) * Math.PI) / 360.0)) / (Math.PI / 180.0);
-	y = (y * originShift) / 180.0;
-	if (accuracy.enable) {
-		x = Number(x.toFixed(accuracy.decimal));
-		y = Number(y.toFixed(accuracy.decimal));
-	}
-	return [x, y];
-};
 
 export interface WmsConfig {
 	/**
@@ -186,32 +172,37 @@ export type LayerType = {
 const defaultProps = {
 	mapId: undefined,
 	url: '',
-	baseUrlParameters: {
-		SERVICE: 'WMS',
-		VERSION: '1.3.0',
-	},
-	getCapabilitiesUrlParameters: {},
-	getMapUrlParameters: {
-		TRANSPARENT: 'TRUE',
-	},
-	getFeatureInfoUrlParameters: {
-		FEATURE_COUNT: '10',
-		STYLES: '',
-		WIDTH: '100',
-		HEIGHT: '100',
-		SRS: 'EPSG:3857',
-		CRS: 'EPSG:3857',
-		X: '50',
-		Y: '50',
-		I: '50',
-		J: '50',
-	},
 	featureInfoEnabled: true,
 	featureInfoMarkerEnabled: true,
 	zoomToExtent: false,
 	showDeleteButton: false,
 	showLayerList: true,
 };
+
+const defaultBaseUrlParameters = {
+	SERVICE: 'WMS',
+	VERSION: '1.3.0',
+};
+
+const defaultGetCapabilitiesUrlParameters = {};
+
+const defaultGetMapUrlParameters = {
+	TRANSPARENT: 'TRUE',
+};
+
+const defaultGetFeatureInfoUrlParameters = {
+	FEATURE_COUNT: '10',
+	STYLES: '',
+	WIDTH: '100',
+	HEIGHT: '100',
+	SRS: 'EPSG:3857',
+	CRS: 'EPSG:3857',
+	X: '50',
+	Y: '50',
+	I: '50',
+	J: '50',
+};
+
 /**
  * Loads a WMS getCapabilities xml document and adds a MlWmsLayer component for each layer that is
  * offered by the WMS.
@@ -219,15 +210,46 @@ const defaultProps = {
  * @component
  */
 const MlWmsLoader = (props: MlWmsLoaderProps) => {
-	props = { ...defaultProps, ...props };
+	// Merge defaults with props using useMemo for stable references
+	// The dependencies are the prop objects - if consumers pass inline objects,
+	// they should memoize them. This follows standard React patterns.
+	const baseUrlParameters = useMemo(
+		() => ({ ...defaultBaseUrlParameters, ...props.baseUrlParameters }),
+		[props.baseUrlParameters]
+	);
+	const getCapabilitiesUrlParameters = useMemo(
+		() => ({ ...defaultGetCapabilitiesUrlParameters, ...props.getCapabilitiesUrlParameters }),
+		[props.getCapabilitiesUrlParameters]
+	);
+	const getMapUrlParameters = useMemo(
+		() => ({ ...defaultGetMapUrlParameters, ...props.getMapUrlParameters }),
+		[props.getMapUrlParameters]
+	);
+	const getFeatureInfoUrlParameters = useMemo(
+		() => ({ ...defaultGetFeatureInfoUrlParameters, ...props.getFeatureInfoUrlParameters }),
+		[props.getFeatureInfoUrlParameters]
+	);
+
+	const featureInfoSuccessRef = useRef(props.featureInfoSuccess);
+	featureInfoSuccessRef.current = props.featureInfoSuccess;
+
+	// Apply simple defaults via destructuring
+	const {
+		mapId = defaultProps.mapId,
+		featureInfoEnabled = defaultProps.featureInfoEnabled,
+		featureInfoMarkerEnabled = defaultProps.featureInfoMarkerEnabled,
+		zoomToExtent = defaultProps.zoomToExtent,
+		showDeleteButton = defaultProps.showDeleteButton,
+		showLayerList = defaultProps.showLayerList,
+	} = props;
 
 	const capabilitiesUrlParameters = useMemo(
 		() => ({
-			...props.baseUrlParameters,
-			...props.getCapabilitiesUrlParameters,
+			...baseUrlParameters,
+			...getCapabilitiesUrlParameters,
 			REQUEST: 'GetCapabilities',
 		}),
-		[props.baseUrlParameters, props.getCapabilitiesUrlParameters]
+		[baseUrlParameters, getCapabilitiesUrlParameters]
 	);
 
 	const {
@@ -244,7 +266,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 	const [visible, setVisible] = useState<boolean>(props?.config?.visible || true);
 	const [showDeletionConfirmationDialog, setShowDeletionConfirmationDialog] = useState(false);
 
-	const mapHook = useMap({ mapId: props?.mapId });
+	const mapHook = useMap({ mapId });
 	const [_layers, _setLayers] = useState<Array<LayerType>>(props?.config?.layers || []);
 
 	const [featureInfoEventsEnabled, setFeatureInfoEventsEnabled] = useState<boolean>(false);
@@ -315,13 +337,53 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		(ev: MapMouseEvent & unknown) => {
 			if (!mapHook.map) return;
 			resetFeatureInfo();
+
+			// First, determine what CRS/SRS will be used in the final request
+			let _gfiUrl: string | undefined = getFeatureInfoUrl;
+			let _gfiUrlParts;
+			if (_gfiUrl?.indexOf?.('?') !== -1) {
+				_gfiUrlParts = props?.url?.split('?') || props?.config?.wmsUrl?.split('?');
+				_gfiUrl = _gfiUrlParts?.[0];
+			}
+			const _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
+
+			// Build a temporary params object to determine the effective CRS
+			const tempParams = {
+				...normalizeWmsParams(defaultBaseUrlParameters),
+				...normalizeWmsParams(defaultGetFeatureInfoUrlParameters),
+				...normalizeWmsParams(_urlParamsFromUrl, (key) => key.toUpperCase() !== 'REQUEST'),
+				...normalizeWmsParams(baseUrlParameters),
+				...normalizeWmsParams(getFeatureInfoUrlParameters),
+			};
+
+			// Get the effective CRS (prefer CRS over SRS for WMS 1.3.0)
+			const crsValue = tempParams.CRS || tempParams.SRS || 'EPSG:3857';
+			const effectiveCrs = String(crsValue).toUpperCase();
+
+			// Calculate the bbox in the appropriate coordinate system
 			const unprojected = mapHook.map.unproject([ev.point.x, ev.point.y]);
 			const point = turf.point([unprojected.lng, unprojected.lat]);
 			const buffered = turf.buffer(point, 50, { units: 'meters' });
 			const _bbox = buffered && turf.bbox(buffered);
-			const _sw = _bbox && lngLatToMeters({ lng: _bbox[0], lat: _bbox[1] } as LngLat);
-			const _ne = _bbox && lngLatToMeters({ lng: _bbox[2], lat: _bbox[3] } as LngLat);
-			const bbox = _sw && _ne && [_sw[0], _sw[1], _ne[0], _ne[1]];
+
+			let bbox: number[] | undefined;
+			if (effectiveCrs === 'EPSG:4326' || effectiveCrs === 'CRS:84') {
+				// Use lat/lng coordinates directly for EPSG:4326/CRS:84
+				bbox = _bbox ? [..._bbox] : undefined;
+			} else {
+				// Convert to Web Mercator meters (EPSG:3857)
+				if (effectiveCrs !== 'EPSG:3857' && effectiveCrs !== 'EPSG:900913') {
+					console.warn(
+						`CRS "${effectiveCrs}" is not explicitly supported for GetFeatureInfo BBOX conversion; ` +
+							'BBOX will be computed in Web Mercator (EPSG:3857), which may be inaccurate for this CRS.'
+					);
+				}
+				if (_bbox) {
+					const swMercator = turf.toMercator(turf.point([_bbox[0], _bbox[1]]));
+					const neMercator = turf.toMercator(turf.point([_bbox[2], _bbox[3]]));
+					bbox = [...swMercator.geometry.coordinates, ...neMercator.geometry.coordinates];
+				}
+			}
 
 			const _getFeatureInfoUrlParams = {
 				REQUEST: 'GetFeatureInfo',
@@ -338,21 +400,13 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 					.filter((n) => n),
 			};
 
-			let _gfiUrl: string | undefined = getFeatureInfoUrl;
-			let _gfiUrlParts;
-			if (_gfiUrl?.indexOf?.('?') !== -1) {
-				_gfiUrlParts = props?.url?.split('?') || props?.config?.wmsUrl?.split('?');
-				_gfiUrl = _gfiUrlParts?.[0];
-			}
-			const _urlParamsFromUrl = new URLSearchParams(_gfiUrlParts?.[1]);
-
 			const urlParamsObj = {
-				...normalizeWmsParams(defaultProps.baseUrlParameters),
-				...normalizeWmsParams(defaultProps.getFeatureInfoUrlParameters),
+				...normalizeWmsParams(defaultBaseUrlParameters),
+				...normalizeWmsParams(defaultGetFeatureInfoUrlParameters),
 				...normalizeWmsParams(_urlParamsFromUrl, (key) => key.toUpperCase() !== 'REQUEST'),
-				...normalizeWmsParams(props.baseUrlParameters),
+				...normalizeWmsParams(baseUrlParameters),
 				..._getFeatureInfoUrlParams,
-				...normalizeWmsParams(props.getFeatureInfoUrlParameters),
+				...normalizeWmsParams(getFeatureInfoUrlParameters),
 			};
 			// create URLSearchParams object to assemble the URL Parameters
 			// "as any" can be removed once the URLSearchParams ts spec is fixed
@@ -368,11 +422,20 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				.then((text) => {
 					setFeatureInfoLngLat(ev.lngLat);
 					setFeatureInfoContent(text);
-					props.featureInfoSuccess?.(text, ev.lngLat);
+					featureInfoSuccessRef.current?.(text, ev.lngLat);
 				})
 				.catch((error) => console.log(error));
 		},
-		[capabilities, getFeatureInfoUrl, props, mapHook, layers]
+		[
+			capabilities,
+			getFeatureInfoUrl,
+			props?.url,
+			props?.config?.wmsUrl,
+			mapHook,
+			layers,
+			baseUrlParameters,
+			getFeatureInfoUrlParameters,
+		]
 	);
 
 	const _featureInfoEventsEnabled = useMemo(() => {
@@ -463,7 +526,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			setLayers(_layers);
 
 			// zoom to extent of first layer
-			if (props.zoomToExtent && mapHook?.map && _LatLonBoundingBox.length > 3) {
+			if (zoomToExtent && mapHook?.map && _LatLonBoundingBox.length > 3) {
 				mapHook?.map.fitBounds([
 					[_LatLonBoundingBox[0], _LatLonBoundingBox[1]],
 					[_LatLonBoundingBox[2], _LatLonBoundingBox[3]],
@@ -476,7 +539,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			secondaryAction={
 				<>
 					{props.buttons}
-					{props.featureInfoEnabled && (
+					{featureInfoEnabled && (
 						<IconButton
 							sx={{
 								padding: '4px',
@@ -502,18 +565,18 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						</IconButton>
 					)}
 					<IconButton
-						edge={props.showDeleteButton ? false : 'end'}
+						edge={showDeleteButton ? false : 'end'}
 						sx={{
 							padding: '4px',
 							marginTop: '-3px',
-							...(props.showDeleteButton ? { marginRight: '4px' } : {}),
+							...(showDeleteButton ? { marginRight: '4px' } : {}),
 						}}
 						aria-label="open"
 						onClick={() => setOpen((current) => !current)}
 					>
 						{open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
 					</IconButton>
-					{props.showDeleteButton && (
+					{showDeleteButton && (
 						<>
 							<IconButton
 								aria-label="delete"
@@ -575,7 +638,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			)}
 			{wmsUrl && (
 				<>
-					{props.showLayerList && (
+					{showLayerList && (
 						<>
 							{props.sortable && <SortableContainer>{listContent}</SortableContainer>}
 							{!props.sortable && listContent}
@@ -617,8 +680,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 							attribution={attribution}
 							visible={visible}
 							urlParameters={{
-								...props.baseUrlParameters,
-								...props.getMapUrlParameters,
+								...baseUrlParameters,
+								...getMapUrlParameters,
 								layers: layers
 									?.filter?.((layer) => layer.visible)
 									.map((el) => el.Name)
@@ -629,7 +692,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 						/>
 					)}
 
-					{props.featureInfoEnabled && props.featureInfoMarkerEnabled && featureInfoLngLat && (
+					{featureInfoEnabled && featureInfoMarkerEnabled && featureInfoLngLat && (
 						<MlMarker {...featureInfoLngLat} content={featureInfoContent} />
 					)}
 				</>
