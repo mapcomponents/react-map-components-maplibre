@@ -1,6 +1,8 @@
-## 1.8.4 (2026-02-04)
+## [1.8.4] (2026-02-04)
 
-This was a version bump only, there were no code changes.
+### Fixes
+
+- 0bd85e5: fix MlWmsLoader reinitialization on prop change bug (#255)
 
 ## [1.8.3] (2026-01-29)
 
