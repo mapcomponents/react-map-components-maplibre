@@ -1,3 +1,13 @@
+## 1.8.5 (2026-02-04)
+
+### 🩹 Fixes
+
+- improve prop handling in MlWmsLoader to prevent reinitialization ([#256](https://github.com/mapcomponents/react-map-components-maplibre/pull/256))
+
+### ❤️ Thank You
+
+- Max Tobias Weber @cioddi
+
 ## [1.8.4] (2026-02-04)
 
 ### Fixes
