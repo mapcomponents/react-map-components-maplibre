@@ -371,7 +371,9 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			} else {
 				// Convert to Web Mercator meters (EPSG:3857)
 				if (effectiveCrs !== 'EPSG:3857' && effectiveCrs !== 'EPSG:900913') {
-					console.warn(`CRS "${effectiveCrs}" not supported for GetFeatureInfo BBOX conversion, using EPSG:3857`);
+					console.warn(
+						`CRS "${effectiveCrs}" not supported for GetFeatureInfo BBOX conversion, using EPSG:3857`
+					);
 				}
 				if (_bbox) {
 					const swMercator = turf.toMercator(turf.point([_bbox[0], _bbox[1]]));
@@ -421,7 +423,17 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				})
 				.catch((error) => console.log(error));
 		},
-		[capabilities, getFeatureInfoUrl, props?.url, props?.config?.wmsUrl, props.featureInfoSuccess, mapHook, layers, baseUrlParameters, getFeatureInfoUrlParameters]
+		[
+			capabilities,
+			getFeatureInfoUrl,
+			props?.url,
+			props?.config?.wmsUrl,
+			props.featureInfoSuccess,
+			mapHook,
+			layers,
+			baseUrlParameters,
+			getFeatureInfoUrlParameters,
+		]
 	);
 
 	const _featureInfoEventsEnabled = useMemo(() => {
