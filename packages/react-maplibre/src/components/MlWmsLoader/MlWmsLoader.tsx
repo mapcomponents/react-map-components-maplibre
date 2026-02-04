@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import MlWmsLayer from '../MlWmsLayer/MlWmsLayer';
 import MlMarker from '../MlMarker/MlMarker';
@@ -230,6 +230,9 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 		[props.getFeatureInfoUrlParameters]
 	);
 
+	const featureInfoSuccessRef = useRef(props.featureInfoSuccess);
+	featureInfoSuccessRef.current = props.featureInfoSuccess;
+
 	// Apply simple defaults via destructuring
 	const {
 		mapId = defaultProps.mapId,
@@ -371,7 +374,8 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				// Convert to Web Mercator meters (EPSG:3857)
 				if (effectiveCrs !== 'EPSG:3857' && effectiveCrs !== 'EPSG:900913') {
 					console.warn(
-						`CRS "${effectiveCrs}" not supported for GetFeatureInfo BBOX conversion, using EPSG:3857`
+						`CRS "${effectiveCrs}" is not explicitly supported for GetFeatureInfo BBOX conversion; ` +
+							'BBOX will be computed in Web Mercator (EPSG:3857), which may be inaccurate for this CRS.'
 					);
 				}
 				if (_bbox) {
@@ -418,7 +422,7 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 				.then((text) => {
 					setFeatureInfoLngLat(ev.lngLat);
 					setFeatureInfoContent(text);
-					props.featureInfoSuccess?.(text, ev.lngLat);
+					featureInfoSuccessRef.current?.(text, ev.lngLat);
 				})
 				.catch((error) => console.log(error));
 		},
@@ -427,7 +431,6 @@ const MlWmsLoader = (props: MlWmsLoaderProps) => {
 			getFeatureInfoUrl,
 			props?.url,
 			props?.config?.wmsUrl,
-			props.featureInfoSuccess,
 			mapHook,
 			layers,
 			baseUrlParameters,
