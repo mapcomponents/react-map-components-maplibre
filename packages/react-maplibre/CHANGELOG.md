@@ -1,3 +1,26 @@
+## [v## [1.8.5] (2026-02-04)
+
+### Fixes
+
+- 0bd85e5, fd417a9: fix MlWmsLoader reinitialization on prop change bug (#255)
+
+
+
+## [v## [1.8.5] (2026-02-04)
+
+### Fixes
+
+- make getFeatureInfoUrlParameter overrides default params in MlWmsLoader ([076daddc](https://github.com/mapcomponents/react-map-components-maplibre/commit/076daddc))
+
+
+
+## [v## [1.8.5] (2026-02-04)
+
+### Changed
+
+- bdeb006: clean up MlWmsLoader URL-prameter properties (add props baseUrlParams, getMapUrlParams, getCapabilitiesUrlParams, getFeatureInfoUrlParams)
+- bdeb006: improve MlMarker appearance and adjustment to unknown content dimensions
+
 ## [v1.7.6] (2026-01-18)
 
 ### Changed

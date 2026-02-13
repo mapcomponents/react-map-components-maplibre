@@ -1,5 +1,7 @@
 ## [1.8.5] (2026-02-04)
 
+## @mapcomponents/react-maplibre
+
 ### Fixes
 
 - 0bd85e5, fd417a9: fix MlWmsLoader reinitialization on prop change bug (#255)
