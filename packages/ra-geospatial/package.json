@@ -15,7 +15,7 @@
 		"@turf/helpers": "^7.2.0",
 		"@turf/turf": "^7.2.0",
 		"@types/geojson": "^7946.0.16",
-		"lodash": "^4.17.21",
+		"lodash": "^4.17.23",
 		"maplibre-gl": "^5.16.0",
 		"ra-data-fakerest": "^5.11.0",
 		"react-admin": "^5.11.0",
