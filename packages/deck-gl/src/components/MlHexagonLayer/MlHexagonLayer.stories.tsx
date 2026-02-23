@@ -60,6 +60,7 @@ const Template = (context: any) => {
 				data={noiseData.features}
 				getPosition={(d: any) => d.geometry.coordinates}
 				{...context}
+				beforeId={'waterway-name'}
 			/>
 		</>
 	);
