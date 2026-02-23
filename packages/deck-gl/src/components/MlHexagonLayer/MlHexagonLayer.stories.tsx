@@ -5,7 +5,7 @@ import { useMap } from '@mapcomponents/react-maplibre';
 import { HexagonLayer } from '@deck.gl/aggregation-layers';
 
 const storyoptions = {
-	title: 'MapComponents/MlHexagonMap',
+	title: 'MapComponents/MlHexagonLayer',
 	component: MlHexagonLayer,
 	argTypes: {},
 	decorators: mapContextDecorator,
