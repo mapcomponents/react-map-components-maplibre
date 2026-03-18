@@ -1,3 +1,7 @@
+## 1.8.8 (2026-03-18)
+
+This was a version bump only, there were no code changes.
+
 ## [1.8.7] (2026-03-18)
 
 ### Fixes
