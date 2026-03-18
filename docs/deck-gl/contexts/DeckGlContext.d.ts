@@ -7,7 +7,7 @@ export interface DeckGlContextType {
     setDeckGlEffectArray: React.Dispatch<React.SetStateAction<Effect[]>>;
 }
 interface DeckGlContextProviderProps {
-    mapId: string;
+    mapId?: string;
     children: ReactNode;
 }
 declare const DeckGlContext: React.Context<DeckGlContextType>;
