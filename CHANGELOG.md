@@ -1,19 +1,11 @@
-## 1.8.6 (2026-03-18)
+## [1.8.6] (2026-03-18)
 
-### 🚀 Features
+### Fixes
 
-- add beforeId prop to MlHexagonLayer story ([0eec3ec9](https://github.com/mapcomponents/react-map-components-maplibre/commit/0eec3ec9))
-
-### 🩹 Fixes
-
-- update story title for MlHexagonLayer component ([c815fef4](https://github.com/mapcomponents/react-map-components-maplibre/commit/c815fef4))
-- update mapId prop in MapContextDecorator component ([22e1cebe](https://github.com/mapcomponents/react-map-components-maplibre/commit/22e1cebe))
-- update peerDependencies and external packages in deck-gl configu… ([#260](https://github.com/mapcomponents/react-map-components-maplibre/pull/260))
-
-### ❤️ Thank You
-
-- jannik brack
-- Max Tobias Weber @cioddi
+- 048d626: fix peerDependencies and external packages config in deck-gl
+- c815fef4: update story title for MlHexagonLayer component
+- 22e1cebe: update mapId prop in MapContextDecorator component
+- 0eec3ec: 9add beforeId prop to MlHexagonLayer story
 
 ## [1.8.5] (2026-02-04)
 
