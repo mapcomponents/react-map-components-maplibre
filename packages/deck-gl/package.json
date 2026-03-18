@@ -21,7 +21,7 @@
 	},
 	"peerDependencies": {
 		"@mapcomponents/react-maplibre": "workspace:*",
-		"maplibre-gl": "^5.16.0",
+		"maplibre-gl": "^5.16.0"
 	},
 	"devDependencies": {
 		"@types/geojson": "^7946.0.16"
