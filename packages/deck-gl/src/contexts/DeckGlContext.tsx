@@ -11,7 +11,7 @@ export interface DeckGlContextType {
 }
 
 interface DeckGlContextProviderProps {
-	mapId: string;
+	mapId?: string;
 	children: ReactNode;
 }
 
