@@ -1,12 +1,8 @@
-## 1.8.7 (2026-03-18)
+## [1.8.7] (2026-03-18)
 
-### 🩹 Fixes
+### Fixes
 
-- move deck.gl dependencies to peerDependencies in package.json an… ([#261](https://github.com/mapcomponents/react-map-components-maplibre/pull/261))
-
-### ❤️ Thank You
-
-- Max Tobias Weber @cioddi
+- fb119e7: move all deck.gl dependencies to peerDependencies in package.json and update Vite config (#261)
 
 ## [1.8.6] (2026-03-18)
 
