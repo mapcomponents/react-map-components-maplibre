@@ -1,3 +1,13 @@
+## 1.8.7 (2026-03-18)
+
+### 🩹 Fixes
+
+- move deck.gl dependencies to peerDependencies in package.json an… ([#261](https://github.com/mapcomponents/react-map-components-maplibre/pull/261))
+
+### ❤️ Thank You
+
+- Max Tobias Weber @cioddi
+
 ## [1.8.6] (2026-03-18)
 
 ### Fixes
