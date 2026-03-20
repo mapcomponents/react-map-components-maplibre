@@ -16,28 +16,29 @@ export interface Ml3DTileLayerProps extends Tile3DLayerProps {
 }
 
 const Ml3DTileLayer = (props: Ml3DTileLayerProps) => {
-	const { mapId, ...Ml3DTileProps } = props;
-	const mapHook = useMap({ mapId: mapId });
+	const mapHook = useMap({ mapId: props.mapId });
 	const deckGlHook = useDeckGl();
 
 	const tile3dLayer = useMemo(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { mapId, ...Ml3DTileProps } = props;
 		if (!Ml3DTileProps.data) return null;
 		else
 			return new Tile3DLayer({
 				...Ml3DTileProps,
 			});
 	}, [
-		Ml3DTileProps.data,
-		Ml3DTileProps.id,
-		Ml3DTileProps.pickable,
-		Ml3DTileProps.onTileLoad,
-		Ml3DTileProps.onTileUnload,
-		Ml3DTileProps.loadOptions,
-		Ml3DTileProps.loaders,
-		Ml3DTileProps.visible,
-		Ml3DTileProps.opacity,
-		Ml3DTileProps.pointSize,
-		Ml3DTileProps.beforeId,
+		props.data,
+		props.id,
+		props.pickable,
+		props.onTileLoad,
+		props.onTileUnload,
+		props.loadOptions,
+		props.loaders,
+		props.visible,
+		props.opacity,
+		props.pointSize,
+		props.beforeId,
 	]);
 
 	useEffect(() => {

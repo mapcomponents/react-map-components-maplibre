@@ -40,38 +40,34 @@ const defaultProps = {
 const MlHexagonLayer = (props: MlHexagonMapProps) => {
 	const deckGlHook = useDeckGl();
 
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-expect-error
-	props = {
-		...defaultProps,
-		...props,
-	};
-
-	const { mapId, ...HexagonLayerProps } = props;
-
 	const mapHook = useMap({
-		mapId: mapId,
-		waitForLayer: HexagonLayerProps.beforeId,
+		mapId: props.mapId,
+		waitForLayer: props.beforeId,
 	});
 
 	// create deck.gl HexagonLayer once when its props change
 	const hexagonLayer = useMemo(() => {
-		if (!HexagonLayerProps.data) return null;
+		if (!props.data) return null;
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { mapId, ...HexagonLayerProps } = props;
+
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
+		// @ts-expect-error
 		return new HexagonLayer({
+			...defaultProps,
 			...HexagonLayerProps,
 		} as unknown as HexagonLayerProps);
 	}, [
-		HexagonLayerProps.beforeId,
-		HexagonLayerProps.data,
-		HexagonLayerProps.elevationScale,
-		HexagonLayerProps.extruded,
-		HexagonLayerProps.coverage,
-		HexagonLayerProps.autoHighlight,
-		HexagonLayerProps.material,
-		HexagonLayerProps.radius,
-		HexagonLayerProps.transitions,
+		props.beforeId,
+		props.data,
+		props.elevationScale,
+		props.extruded,
+		props.coverage,
+		props.autoHighlight,
+		props.material,
+		props.radius,
+		props.transitions,
 	]);
 
 	// add/remove the memoized layer
