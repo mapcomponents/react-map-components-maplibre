@@ -1,3 +1,24 @@
+## 1.8.8 (2026-03-18)
+
+### Fixes
+
+- c41af13: Make mapId in DeckGlContextProvider optional (#262) …
+
+## [1.8.7] (2026-03-18)
+
+### Fixes
+
+- fb119e7: move all deck.gl dependencies to peerDependencies in package.json and update Vite config (#261)
+
+## [1.8.6] (2026-03-18)
+
+### Fixes
+
+- 048d626: fix peerDependencies and external packages config in deck-gl
+- c815fef4: update story title for MlHexagonLayer component
+- 22e1cebe: update mapId prop in MapContextDecorator component
+- 0eec3ec: 9add beforeId prop to MlHexagonLayer story
+
 ## [1.8.5] (2026-02-04)
 
 ## @mapcomponents/react-maplibre

@@ -39,7 +39,18 @@ export default defineConfig(() => ({
 		},
 		rollupOptions: {
 			// External packages that should not be bundled into your library.
-			external: ['react', 'react-dom', 'react/jsx-runtime'],
+			external: [
+				'react',
+				'react-dom',
+				'react/jsx-runtime',
+				'@mapcomponents/react-maplibre',
+				'maplibre-gl',
+				'@deck.gl/aggregation-layers',
+				'@deck.gl/core',
+				'@deck.gl/geo-layers',
+				'@deck.gl/mapbox',
+				'@deck.gl/mesh-layers',
+			],
 		},
 	},
 }));
