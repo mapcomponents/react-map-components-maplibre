@@ -69,7 +69,6 @@ const Template = (context: any) => {
 export const DefaultSettings: { [key: string]: any } = Template.bind({});
 DefaultSettings.parameters = {};
 DefaultSettings.args = {
-	mapId: 'map_1',
 	type: HexagonLayer,
 	layerOpacity: 0.8,
 	elevationRange: [30, 75],
@@ -93,7 +92,6 @@ DefaultSettings.args = {
 export const CustomColorAndHeightProfile: { [key: string]: any } = Template.bind({});
 CustomColorAndHeightProfile.parameters = {};
 CustomColorAndHeightProfile.args = {
-	mapId: 'map_1',
 	type: HexagonLayer,
 	layerOpacity: 0.8,
 	specularColor: [51, 51, 51],

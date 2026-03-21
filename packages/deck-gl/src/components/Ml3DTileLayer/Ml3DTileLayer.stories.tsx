@@ -23,7 +23,6 @@ PointCloudExample.parameters = {
 	},
 };
 PointCloudExample.args = {
-	mapId: 'map_1',
 	id: 'PointCould',
 	data: 'assets/tiles/tileset.json',
 	pointSize: 2,
@@ -38,6 +37,5 @@ HamburgExample.parameters = {
 	},
 };
 HamburgExample.args = {
-	mapId: 'map_1',
 	data: 'https://3dtiles.wheregroup.com/tileset.json',
 };
