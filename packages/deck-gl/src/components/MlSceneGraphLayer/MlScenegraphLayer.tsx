@@ -22,7 +22,7 @@ const MlScenegraphLayer = (props: MlScenegraphLayerProps) => {
 	});
 	const deckGlHook = useDeckGl();
 	const scenegraphLayer = useMemo(() => {
-		const { mapId, ...ScenegraphLayerProps } = props;
+		const { mapId: _mapId, ...ScenegraphLayerProps } = props;
 		return new ScenegraphLayer({
 			...ScenegraphLayerProps,
 		});
