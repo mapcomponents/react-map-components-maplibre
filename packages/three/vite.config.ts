@@ -9,6 +9,16 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 export default defineConfig(() => ({
 	root: __dirname,
 	cacheDir: '../../node_modules/.vite/packages/three',
+	resolve: {
+		dedupe: [
+			'react',
+			'react-dom',
+			'@mui/material',
+			'@mui/system',
+			'@emotion/react',
+			'@emotion/styled',
+		],
+	},
 	plugins: [
 		react(),
 		nxViteTsPaths(),
@@ -51,6 +61,9 @@ export default defineConfig(() => ({
 				'three',
 				'maplibre-gl',
 				'@mui/material',
+				'@mui/system',
+				'@emotion/react',
+				'@emotion/styled',
 			],
 		},
 	},

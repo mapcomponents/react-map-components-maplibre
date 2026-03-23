@@ -113,6 +113,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 				position: 'absolute',
 				display: 'flex',
 				flexDirection: 'column',
+				padding: 1,
 				right: mediaIsMobile ? '15px' : '25px',
 				bottom: mediaIsMobile ? '20px' : '40px',
 				...(mediaIsMobile ? { margin: '80px 10px 50px 10px' } : { marginTop: '50px' }),
@@ -160,8 +161,8 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 						>
 							<Divider
 								sx={{
-									marginLeft: '6px',
-									marginRight: '6px',
+									marginLeft: '4px',
+									marginRight: '4px',
 								}}
 							/>
 						</Paper>
@@ -170,7 +171,7 @@ const MlNavigationTools = (props: MlNavigationToolsProps) => {
 							variant="navtools"
 							onClick={zoomOut}
 							sx={{
-								margin: 0,
+								marginTop: 0,
 								borderTopLeftRadius: 0,
 								borderTopRightRadius: 0,
 							}}

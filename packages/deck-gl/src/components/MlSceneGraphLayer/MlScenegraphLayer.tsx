@@ -24,8 +24,7 @@ const MlScenegraphLayer = (props: MlScenegraphLayerProps) => {
 	const deckGlHook = useDeckGl();
 	const scenegraphLayer = useMemo(
 		() => {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { mapId, beforeId, ...ScenegraphLayerProps } = props;
+			const { _mapId, _beforeId, ...ScenegraphLayerProps } = props;
 			return new ScenegraphLayer({
 				...ScenegraphLayerProps,
 			})

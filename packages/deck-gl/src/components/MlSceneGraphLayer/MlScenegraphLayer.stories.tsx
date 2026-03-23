@@ -78,7 +78,6 @@ DeckglExample.parameters = {
 	},
 };
 DeckglExample.args = {
-	mapId: 'map_1',
 	id: 'ScenegraphLayer',
 	data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/bart-stations.json',
 	getPosition: (d: BartStation) => d.coordinates,
@@ -102,7 +101,6 @@ WhereGroupLocationExample.parameters = {
 	},
 };
 WhereGroupLocationExample.args = {
-	mapId: 'map_1',
 	id: 'ScenegraphLayer',
 	data: wgLocations,
 	getPosition: (d: any) => d.geometry.coordinates,
