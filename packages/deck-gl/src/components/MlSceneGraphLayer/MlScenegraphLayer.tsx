@@ -16,21 +16,18 @@ export interface MlScenegraphLayerProps extends ScenegraphLayerProps {
 }
 
 const MlScenegraphLayer = (props: MlScenegraphLayerProps) => {
-
 	const mapHook = useMap({
 		mapId: props.mapId,
 		waitForLayer: props.beforeId,
 	});
 	const deckGlHook = useDeckGl();
-	const scenegraphLayer = useMemo(
-		() => {
-			const { _mapId, _beforeId, ...ScenegraphLayerProps } = props;
-			return new ScenegraphLayer({
-				...ScenegraphLayerProps,
-			})
-		},
-		[props]
-	);
+	const scenegraphLayer = useMemo(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { mapId, beforeId, ...ScenegraphLayerProps } = props;
+		return new ScenegraphLayer({
+			...ScenegraphLayerProps,
+		});
+	}, [props]);
 
 	useEffect(() => {
 		if (!mapHook.map || !scenegraphLayer) return;

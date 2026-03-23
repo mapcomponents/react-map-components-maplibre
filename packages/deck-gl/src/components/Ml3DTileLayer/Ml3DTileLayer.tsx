@@ -21,7 +21,7 @@ const Ml3DTileLayer = (props: Ml3DTileLayerProps) => {
 
 	const tile3dLayer = useMemo(() => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { mapId, ...Ml3DTileProps } = props;
+		const { mapId, beforeId, ...Ml3DTileProps } = props;
 		if (!Ml3DTileProps.data) return null;
 		else
 			return new Tile3DLayer({

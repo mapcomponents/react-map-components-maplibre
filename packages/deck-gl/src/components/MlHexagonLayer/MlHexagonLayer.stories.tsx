@@ -27,7 +27,7 @@ const Template = (context: any) => {
 					'https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/assets/3D/laerm_points.json',
 					{
 						headers: {
-							'Accept': 'application/json',
+							Accept: 'application/json',
 						},
 					}
 				);
