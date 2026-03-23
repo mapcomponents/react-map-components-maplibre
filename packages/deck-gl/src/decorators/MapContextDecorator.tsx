@@ -34,7 +34,7 @@ const decorators = [
 											center: [7.0851268, 50.73884],
 										}
 							}
-							mapId={context.mapId}
+							mapId={"map_1"}
 						/>
 						<MlNavigationTools showZoomButtons={false} mapId="map_1" />
 					</MUIThemeProvider>
