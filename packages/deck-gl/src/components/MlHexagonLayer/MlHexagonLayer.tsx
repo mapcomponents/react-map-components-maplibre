@@ -50,7 +50,7 @@ const MlHexagonLayer = (props: MlHexagonMapProps) => {
 		if (!props.data) return null;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { mapId, ...HexagonLayerProps } = props;
+		const { mapId, beforeId, ...HexagonLayerProps } = props;
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
