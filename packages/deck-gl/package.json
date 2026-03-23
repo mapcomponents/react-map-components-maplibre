@@ -9,11 +9,11 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
-		"@deck.gl/aggregation-layers": "^9.2.6",
-		"@deck.gl/core": "^9.2.6",
-		"@deck.gl/geo-layers": "^9.2.6",
-		"@deck.gl/mapbox": "^9.2.6",
-		"@deck.gl/mesh-layers": "^9.2.6",
+		"@deck.gl/aggregation-layers": "^9.2.11",
+		"@deck.gl/core": "^9.2.11",
+		"@deck.gl/geo-layers": "^9.2.11",
+		"@deck.gl/mapbox": "^9.2.11",
+		"@deck.gl/mesh-layers": "^9.2.11",
 		"@mapcomponents/react-maplibre": "workspace:*",
 		"@mui/icons-material": "^7.3.2",
 		"@mui/material": "^7.3.2",
