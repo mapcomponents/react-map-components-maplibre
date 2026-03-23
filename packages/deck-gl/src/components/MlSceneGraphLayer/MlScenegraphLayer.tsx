@@ -25,7 +25,7 @@ const MlScenegraphLayer = (props: MlScenegraphLayerProps) => {
 	const scenegraphLayer = useMemo(
 		() => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { mapId, ...ScenegraphLayerProps } = props;
+			const { mapId, beforeId, ...ScenegraphLayerProps } = props;
 			return new ScenegraphLayer({
 				...ScenegraphLayerProps,
 			})
