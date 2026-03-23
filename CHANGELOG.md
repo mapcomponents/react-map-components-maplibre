@@ -1,4 +1,20 @@
-## 1.8.8 (2026-03-18)
+## [1.8.9] (2026-03-21)
+
+## @mapcomponents/deck-gl
+
+### Fixes
+
+- 00f9417: Fix/deckgl scenegraphlayer (#264) …
+
+## @mapcomponents/react-maplibre
+
+### Fixes
+
+- dcf92c5: Fix CSS issue on navigation tool (#263) …
+
+## [1.8.8] (2026-03-18)
+
+## @mapcomponents/deck-gl
 
 ### Fixes
 
@@ -6,11 +22,15 @@
 
 ## [1.8.7] (2026-03-18)
 
+## @mapcomponents/deck-gl
+
 ### Fixes
 
 - fb119e7: move all deck.gl dependencies to peerDependencies in package.json and update Vite config (#261)
 
 ## [1.8.6] (2026-03-18)
+
+## @mapcomponents/deck-gl
 
 ### Fixes
 

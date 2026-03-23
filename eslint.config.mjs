@@ -102,7 +102,16 @@ export default [
 			'**/*.cjs',
 			'**/*.mjs',
 		],
-		rules: {},
+		rules: {
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{
+					argsIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					destructuredArrayIgnorePattern: '^_',
+				},
+			],
+		},
 	},
 	...storybook.configs['flat/recommended'],
 ];

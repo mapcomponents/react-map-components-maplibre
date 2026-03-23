@@ -9,6 +9,16 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 export default defineConfig(() => ({
 	root: __dirname,
 	cacheDir: '../../node_modules/.vite/packages/deck-gl',
+	resolve: {
+		dedupe: [
+			'react',
+			'react-dom',
+			'@mui/material',
+			'@mui/system',
+			'@emotion/react',
+			'@emotion/styled',
+		],
+	},
 	plugins: [
 		react(),
 		nxViteTsPaths(),
@@ -50,6 +60,11 @@ export default defineConfig(() => ({
 				'@deck.gl/geo-layers',
 				'@deck.gl/mapbox',
 				'@deck.gl/mesh-layers',
+				'@mui/material',
+				'@mui/system',
+				'@mui/icons-material',
+				'@emotion/react',
+				'@emotion/styled',
 			],
 		},
 	},

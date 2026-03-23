@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/three",
-	"version": "1.8.8",
+	"version": "1.8.9",
 	"license": "MIT",
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.mjs",
@@ -20,7 +20,10 @@
 		"react-dom": "^19.1.0"
 	},
 	"dependencies": {
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.1",
 		"@mui/material": "^7.3.2",
+		"@mui/system": "^7.3.2",
 		"maplibre-gl": "^5.16.0",
 		"three": "^0.182.0"
 	},

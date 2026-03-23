@@ -16,20 +16,17 @@ export interface MlScenegraphLayerProps extends ScenegraphLayerProps {
 }
 
 const MlScenegraphLayer = (props: MlScenegraphLayerProps) => {
-	const { mapId, ...ScenegraphLayerProps } = props;
-
 	const mapHook = useMap({
-		mapId: mapId,
-		waitForLayer: ScenegraphLayerProps.beforeId,
+		mapId: props.mapId,
+		waitForLayer: props.beforeId,
 	});
 	const deckGlHook = useDeckGl();
-	const scenegraphLayer = useMemo(
-		() =>
-			new ScenegraphLayer({
-				...ScenegraphLayerProps,
-			}),
-		[ScenegraphLayerProps]
-	);
+	const scenegraphLayer = useMemo(() => {
+		const { mapId: _mapId, ...ScenegraphLayerProps } = props;
+		return new ScenegraphLayer({
+			...ScenegraphLayerProps,
+		});
+	}, [props]);
 
 	useEffect(() => {
 		if (!mapHook.map || !scenegraphLayer) return;
