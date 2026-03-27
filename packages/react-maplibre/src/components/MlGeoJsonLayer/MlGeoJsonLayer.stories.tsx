@@ -444,7 +444,7 @@ const catalogueTemplate = (context: any) => {
 				}
 			/>
 
-			{selectedLayer === 'circle' && <CircleTemplate geojson={context.args.geojson} />}
+			{selectedLayer === 'circle' && <CircleTemplate geojson={context.geojson} />}
 			{selectedLayer === 'line' && (
 				<LineStyler
 					openSidebar={openSidebar}
