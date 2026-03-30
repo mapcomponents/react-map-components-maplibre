@@ -47,7 +47,7 @@ const MlHexagonLayer = (props: MlHexagonMapProps) => {
 
 	// create deck.gl HexagonLayer once when its props change
 	const hexagonLayer = useMemo(() => {
-	const { mapId: _mapId, ...HexagonLayerProps } = props;
+		const { mapId: _mapId, ...HexagonLayerProps } = props;
 		if (!HexagonLayerProps.data) return null;
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
