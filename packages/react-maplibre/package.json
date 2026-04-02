@@ -31,8 +31,8 @@
 		"@testing-library/jest-dom": "^6.8.0",
 		"@testing-library/user-event": "^14.6.1",
 		"@tmcw/togeojson": "^7.1.2",
-		"@turf/helpers": "^7.2.0",
-		"@turf/turf": "^7.2.0",
+		"@turf/helpers": "^7.3.4",
+		"@turf/turf": "^7.3.4",
 		"@types/d3": "^7.4.3",
 		"@types/geojson": "^7946.0.16",
 		"@types/react-color": "^3.0.13",
@@ -86,7 +86,7 @@
 		"babel-preset-react-app": "^10.1.0",
 		"chai": "^6.0.1",
 		"elasticlunr": "^0.9.5",
-		"eslint-plugin-storybook": "^9.1.4",
+		"eslint-plugin-storybook": "^9.1.20",
 		"glob": "^11.0.3",
 		"jest": "30.0.5",
 		"jest-circus": "30.0.5",
@@ -133,7 +133,7 @@
 			"^.+\\.svg$": "<rootDir>/config/jest/fileTransform.js"
 		},
 		"transformIgnorePatterns": [
-			"[/\\\\]node_modules[/\\\\](?!three/examples/jsm/).+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+			"[/\\\\]node_modules[/\\\\](?!three/examples/jsm/|kdbush/|geokdbush/|tinyqueue/|\\.pnpm/).+\\.(js|jsx|mjs|cjs|ts|tsx)$",
 			"^.+\\.module\\.(css|sass|scss)$"
 		],
 		"modulePaths": [],
