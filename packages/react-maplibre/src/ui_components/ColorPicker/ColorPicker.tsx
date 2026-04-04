@@ -10,7 +10,7 @@ export interface ColorPickerProps {
 	value?: string;
 }
 
-const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
+const ColorPicker = ({ convert = 'hex', ...props }: ColorPickerProps) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const value = props?.value || '';
 
