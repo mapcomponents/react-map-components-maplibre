@@ -85,7 +85,39 @@ const BoxStyled = styled(Box)<{ open: boolean }>(({ open }) => ({
 display: open ? 'block' : 'none',
 }));
 const ListStyled = styled(List)({
-marginLeft: '50px',
+	marginLeft: '50px',
+});
+
+// ── Arrow reorder buttons (memoized, avoids re-creating on parent render) ──
+
+interface ArrowButtonsProps {
+	uuid: string;
+	show: boolean;
+	isFirst?: boolean;
+	isLast?: boolean;
+	moveUp: (uuid: string) => void;
+	moveDown: (uuid: string) => void;
+}
+
+const ArrowButtons = React.memo(function ArrowButtons({
+	uuid,
+	show,
+	isFirst,
+	isLast,
+	moveUp,
+	moveDown,
+}: ArrowButtonsProps) {
+	if (!show) return null;
+	return (
+		<>
+			<IconButtonStyled disabled={isLast} onClick={() => moveDown(uuid)}>
+				<ArrowCircleDownIcon />
+			</IconButtonStyled>
+			<IconButtonStyled disabled={isFirst} onClick={() => moveUp(uuid)}>
+				<ArrowCircleUpIcon />
+			</IconButtonStyled>
+		</>
+	);
 });
 
 function LayerTreeListItem(props: LayerTreeListItemProps) {
@@ -240,21 +272,9 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		setOpen((prev) => !prev);
 	}, []);
 
-	// ── Shared arrow buttons fragment ──────────────────────────
+	// ── Derived: should arrow buttons show? ───────────────────
 
-	function ArrowButtons({ uuid }: { uuid: string }) {
-		if (!showArrows || isSingleItem) return null;
-		return (
-			<>
-				<IconButtonStyled disabled={props.isLast} onClick={() => moveDown(uuid)}>
-					<ArrowCircleDownIcon />
-				</IconButtonStyled>
-				<IconButtonStyled disabled={props.isFirst} onClick={() => moveUp(uuid)}>
-					<ArrowCircleUpIcon />
-				</IconButtonStyled>
-			</>
-		);
-	}
+	const showArrowButtons = showArrows && !isSingleItem;
 
 	// ── Render per layer type ──────────────────────────────────
 
@@ -271,7 +291,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<ArrowButtons uuid={layer.uuid} />
+								<ArrowButtons uuid={layer.uuid} show={showArrowButtons} isFirst={props.isFirst} isLast={props.isLast} moveUp={moveUp} moveDown={moveDown} />
 								{layer.configurable && (
 									<TuneIconButton edge="end" aria-label="settings" onClick={handleTogglePaintProps}>
 										<TuneIcon />
@@ -334,7 +354,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<ArrowButtons uuid={layer.uuid} />
+								<ArrowButtons uuid={layer.uuid} show={showArrowButtons} isFirst={props.isFirst} isLast={props.isLast} moveUp={moveUp} moveDown={moveDown} />
 							</>
 						}
 					>
@@ -403,7 +423,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<ArrowButtons uuid={layer.uuid} />
+								<ArrowButtons uuid={layer.uuid} show={showArrowButtons} isFirst={props.isFirst} isLast={props.isLast} moveUp={moveUp} moveDown={moveDown} />
 							</>
 						}
 					>
@@ -458,7 +478,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<ArrowButtons uuid={layer.uuid} />
+								<ArrowButtons uuid={layer.uuid} show={showArrowButtons} isFirst={props.isFirst} isLast={props.isLast} moveUp={moveUp} moveDown={moveDown} />
 							</>
 						}
 					>

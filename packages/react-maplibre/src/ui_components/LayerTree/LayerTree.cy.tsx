@@ -10,7 +10,9 @@ import useMapStore, {
 	setMapConfig,
 	MapConfig,
 	LayerConfig,
+	updateStyle,
 } from '../../stores/map.store';
+import { STYLE_LAYER_UUIDS } from './styleLayerUuids';
 
 // ---------------------------------------------------------------------------
 // Test fixtures — deterministic UUIDs so selectors are stable across runs
@@ -535,6 +537,293 @@ describe('LayerTree — checkbox visibility', () => {
 					assertMapLayerVisibility((win as any)._map, GEOJSON_UUID, 'visible');
 				});
 			});
+		});
+	});
+});
+
+// ---------------------------------------------------------------------------
+// Layer order tests — verifies MapLayerRenderer stacking zones
+// ---------------------------------------------------------------------------
+
+const ORDER_GEOJSON_UUID = 'order-test-geojson';
+const ORDER_VT_UUID = 'order-test-vt';
+const ORDER_VT_SUB1 = 'order-test-vt-sub1';
+const ORDER_VT_SUB2 = 'order-test-vt-sub2';
+const ORDER_WMS_UUID = 'order-test-wms';
+const ORDER_MAP_KEY = 'order-test-map';
+
+// Minimal fake style with background + symbol layers to trigger the three-zone
+// ordering inside MapLayerRenderer.
+const FAKE_STYLE_BG_LAYER_ID = 'fake-bg-fill';
+const FAKE_STYLE_LABEL_LAYER_ID = 'fake-label-symbol';
+
+const FAKE_STYLE = {
+	version: 8 as const,
+	name: 'FakeStyle',
+	sources: {
+		fakesource: {
+			type: 'vector' as const,
+			tiles: ['https://example.com/{z}/{x}/{y}.pbf'],
+		},
+	},
+	layers: [
+		{
+			id: FAKE_STYLE_BG_LAYER_ID,
+			type: 'fill',
+			source: 'fakesource',
+			'source-layer': 'water',
+			paint: { 'fill-color': '#aad3df' },
+		},
+		{
+			id: FAKE_STYLE_LABEL_LAYER_ID,
+			type: 'symbol',
+			source: 'fakesource',
+			'source-layer': 'place',
+			layout: { 'text-field': '{name}' },
+		},
+	],
+};
+
+function buildOrderTestConfig(): MapConfig {
+	return {
+		name: 'Order Test Map',
+		mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
+		layers: [
+			{
+				type: 'geojson',
+				uuid: ORDER_GEOJSON_UUID,
+				name: 'Test GeoJSON',
+				config: {
+					type: 'circle',
+					geojson: {
+						type: 'FeatureCollection',
+						features: [
+							{
+								type: 'Feature',
+								geometry: { type: 'Point', coordinates: [7.0851268, 50.73884] },
+								properties: {},
+							},
+						],
+					},
+					options: {
+						paint: { 'circle-color': 'red', 'circle-radius': 5 },
+						layout: { visibility: 'visible' },
+					},
+				},
+			},
+		] as LayerConfig[],
+		layerOrder: [{ uuid: ORDER_GEOJSON_UUID }],
+	};
+}
+
+/** Wrapper component that sets up the store, then triggers updateStyle. */
+function OrderTestWrapper() {
+	useEffect(() => {
+		// 1. Set the map config with custom layers
+		setMapConfig(ORDER_MAP_KEY, buildOrderTestConfig());
+
+		// 2. After a tick, apply the fake style (simulates SelectStyleButton)
+		const timer = setTimeout(() => {
+			updateStyle(ORDER_MAP_KEY, FAKE_STYLE as any);
+		}, 500);
+
+		(window as any).__mapStore = useMapStore;
+
+		return () => {
+			clearTimeout(timer);
+			useMapStore.getState().removeMapConfig(ORDER_MAP_KEY);
+		};
+	}, []);
+
+	return (
+		<div style={{ display: 'flex', width: '100%', height: '600px' }}>
+			<div style={{ width: '300px', height: '100%', overflow: 'auto', background: '#fff', zIndex: 10, position: 'relative' }}>
+				<LayerTree mapId={ORDER_MAP_KEY} />
+			</div>
+			<div style={{ flex: 1, position: 'relative' }}>
+				<MapLibreMap
+					options={{
+						zoom: 12,
+						style: {
+							version: 8,
+							name: 'blank',
+							sources: {},
+							layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#fff' } }],
+						},
+						center: [7.0851268, 50.73884],
+					}}
+					mapId="map_1"
+				/>
+			</div>
+		</div>
+	);
+}
+
+function mountOrderTest() {
+	const theme = getTheme('light');
+	mount(
+		<MapComponentsProvider>
+			<MUIThemeProvider theme={theme}>
+				<OrderTestWrapper />
+			</MUIThemeProvider>
+		</MapComponentsProvider>
+	);
+}
+
+/**
+ * Return the array of layer ids from the MapLibre style, bottom to top.
+ */
+function getMapLayerIds(map: any): string[] {
+	return (map.getStyle()?.layers ?? []).map((l: any) => l.id);
+}
+
+/**
+ * Assert `a` appears at a higher visual position than `b` in the MapLibre
+ * layer stack (i.e. `a` has a larger index).
+ */
+function assertAbove(layerIds: string[], a: string, b: string) {
+	const idxA = layerIds.indexOf(a);
+	const idxB = layerIds.indexOf(b);
+	if (idxA === -1) throw new Error(`layer "${a}" not found in stack`);
+	if (idxB === -1) throw new Error(`layer "${b}" not found in stack`);
+	expect(idxA, `"${a}" should be above "${b}" (idx ${idxA} > ${idxB})`).to.be.greaterThan(idxB);
+}
+
+describe('Layer order — MapLayerRenderer stacking zones', () => {
+	beforeEach(() => {
+		cy.window().then((win) => {
+			if ((win as any).__mapStore) {
+				(win as any).__mapStore.getState().removeMapConfig(ORDER_MAP_KEY);
+			}
+		});
+	});
+
+	it('custom geojson layer exists on the map', () => {
+		mountOrderTest();
+
+		// Wait for the map to be ready and the geojson layer to appear
+		cy.window({ timeout: 30000 })
+			.should((win) => {
+				const map = (win as any)._map;
+				expect(map, 'map should exist').to.exist;
+				expect(map.getLayer(ORDER_GEOJSON_UUID), `layer ${ORDER_GEOJSON_UUID} should exist`).to.exist;
+			});
+	});
+
+	it('after style applied: custom layer is between order-labels and order-background', () => {
+		mountOrderTest();
+
+		// Wait for the style to be applied — the store will have style layer UUIDs
+		cy.window({ timeout: 30000 })
+			.should((win) => {
+				const state = (win as any).__mapStore.getState();
+				const mc = state.mapConfigs[ORDER_MAP_KEY];
+				// Style must have been applied (labels VT exists)
+				expect(mc?._layerIndex?.get(STYLE_LAYER_UUIDS.labelsVt), 'labels VT in store').to.exist;
+			});
+
+		// Give the reorder effect + idle time to settle
+		cy.wait(2000);
+
+		cy.window().should((win) => {
+			const map = (win as any)._map;
+			const ids = getMapLayerIds(map);
+
+			// The custom geojson layer should exist
+			expect(ids).to.include(ORDER_GEOJSON_UUID);
+
+			// Boundary markers should exist
+			expect(ids).to.include('order-labels');
+			expect(ids).to.include('order-background');
+
+			// Custom layer must be ABOVE order-background
+			assertAbove(ids, ORDER_GEOJSON_UUID, 'order-background');
+
+			// Custom layer must be BELOW order-labels
+			assertAbove(ids, 'order-labels', ORDER_GEOJSON_UUID);
+		});
+	});
+
+	it('after style applied: label style layers are above order-labels', () => {
+		mountOrderTest();
+
+		cy.window({ timeout: 30000 })
+			.should((win) => {
+				const state = (win as any).__mapStore.getState();
+				const mc = state.mapConfigs[ORDER_MAP_KEY];
+				expect(mc?._layerIndex?.get(STYLE_LAYER_UUIDS.labelsVt)).to.exist;
+			});
+
+		cy.wait(2000);
+
+		cy.window().should((win) => {
+			const map = (win as any)._map;
+			const ids = getMapLayerIds(map);
+
+			// If the fake label layer exists on the map, it should be
+			// above order-labels.
+			if (ids.includes(FAKE_STYLE_LABEL_LAYER_ID)) {
+				assertAbove(ids, FAKE_STYLE_LABEL_LAYER_ID, 'order-labels');
+			}
+		});
+	});
+
+	it('after style applied: background style layers are below order-background', () => {
+		mountOrderTest();
+
+		cy.window({ timeout: 30000 })
+			.should((win) => {
+				const state = (win as any).__mapStore.getState();
+				const mc = state.mapConfigs[ORDER_MAP_KEY];
+				expect(mc?._layerIndex?.get(STYLE_LAYER_UUIDS.bgVt)).to.exist;
+			});
+
+		cy.wait(2000);
+
+		cy.window().should((win) => {
+			const map = (win as any)._map;
+			const ids = getMapLayerIds(map);
+
+			// If the fake bg layer exists on the map, it should be
+			// below order-background.
+			if (ids.includes(FAKE_STYLE_BG_LAYER_ID)) {
+				assertAbove(ids, 'order-background', FAKE_STYLE_BG_LAYER_ID);
+			}
+		});
+	});
+
+	it('logs the full MapLibre layer stack for debugging', () => {
+		mountOrderTest();
+
+		cy.window({ timeout: 30000 })
+			.should((win) => {
+				const state = (win as any).__mapStore.getState();
+				const mc = state.mapConfigs[ORDER_MAP_KEY];
+				expect(mc?._layerIndex?.get(STYLE_LAYER_UUIDS.labelsVt)).to.exist;
+			});
+
+		cy.wait(3000);
+
+		cy.window().then((win) => {
+			const map = (win as any)._map;
+			const ids = getMapLayerIds(map);
+			cy.log('MapLibre layer stack (bottom → top):');
+			ids.forEach((id: string, i: number) => {
+				cy.log(`  [${i}] ${id}`);
+			});
+
+			// Also log the store order
+			const state = (win as any).__mapStore.getState();
+			const mc = state.mapConfigs[ORDER_MAP_KEY];
+			cy.log('Store layerOrder UUIDs:');
+			const walk = (items: any[], depth = 0) => {
+				for (const item of items) {
+					const cfg = mc._layerIndex?.get(item.uuid);
+					cy.log(`  ${'  '.repeat(depth)}${item.uuid} (${cfg?.type ?? '?'}) ${cfg?.name ?? ''}`);
+					if (item.layers) walk(item.layers, depth + 1);
+				}
+			};
+			if (mc?.layerOrder) walk(mc.layerOrder);
 		});
 	});
 });
