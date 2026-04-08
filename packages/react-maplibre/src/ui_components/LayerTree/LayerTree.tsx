@@ -1,7 +1,9 @@
 import { useLayerOrder, LayerOrderItem } from '../../stores/map.store';
 import LayerTreeListItem from './LayerTreeListItem';
+import { DragScopeProvider, type ReorderMode } from './useDragReorder';
+import { STYLE_LAYER_UUIDS, STYLE_LAYER_UUID_SET } from './styleLayerUuids';
 import { List, Stack, styled } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 import SelectStyleButton, {
 	SelectStyleButtonProps,
 } from '../SelectStyleButton/SelectStyleButton';
@@ -10,13 +12,26 @@ import AddLayerButton, {
 } from '../AddLayerButton/AddLayerButton';
 
 export interface LayerTreeProps {
-	mapConfigKey: string;
+	/** Store key – defaults to `'map_1'` (same as the default MapLibreMap mapId). */
+	mapId?: string;
 	/** Show a "Select Style" button above the layer list. Pass `true` for defaults or an object to customise. */
-	selectStyleButton?: boolean | Omit<SelectStyleButtonProps, 'mapConfigKey'>;
+	selectStyleButton?: boolean | Omit<SelectStyleButtonProps, 'mapId'>;
 	/** Show an "Add Layer" button above the layer list. Pass `true` for defaults or an object to customise. */
-	addLayerButton?: boolean | Omit<AddLayerButtonProps, 'mapConfigKey'>;
+	addLayerButton?: boolean | Omit<AddLayerButtonProps, 'mapId'>;
 	/** Extra React nodes rendered inside the toolbar row (between the built-in buttons). */
 	toolbarExtra?: React.ReactNode;
+	/**
+	 * How users can reorder layers:
+	 * - `'dnd'` – drag handle only
+	 * - `'arrows'` – up / down arrow buttons only
+	 * - `'both'` – drag handle **and** arrow buttons (default)
+	 * - `'none'` – reordering disabled
+	 */
+	reorderMode?: ReorderMode;
+	/** Show background style layers in the tree (default `true`). */
+	showBackground?: boolean;
+	/** Show label style layers in the tree (default `true`). */
+	showLabels?: boolean;
 }
 
 const ListStyled = styled(List)({
@@ -24,9 +39,43 @@ const ListStyled = styled(List)({
 });
 
 function LayerTree(props: LayerTreeProps) {
-	const layerOrder = useLayerOrder(props.mapConfigKey);
+	const mapId = props.mapId ?? 'map_1';
+	const layerOrder = useLayerOrder(mapId);
+	const reorderMode = props.reorderMode ?? 'both';
+	const showBackground = props.showBackground ?? true;
+	const showLabels = props.showLabels ?? true;
+
+	// Filter out background / labels folders when hidden
+	const filteredOrder = useMemo(() => {
+		if (!layerOrder) return undefined;
+		if (showBackground && showLabels) return layerOrder;
+		return layerOrder.filter((item) => {
+			if (!showBackground && STYLE_LAYER_UUIDS.bgFolder === item.uuid) return false;
+			if (!showLabels && STYLE_LAYER_UUIDS.labelsFolder === item.uuid) return false;
+			return true;
+		});
+	}, [layerOrder, showBackground, showLabels]);
 
 	const showToolbar = props.selectStyleButton || props.addLayerButton || props.toolbarExtra;
+	const showDragScope = reorderMode === 'dnd' || reorderMode === 'both';
+
+	// Count how many siblings are actually reorderable (not pinned style layers)
+	const reorderableSiblingCount = useMemo(
+		() => filteredOrder?.filter((el) => !STYLE_LAYER_UUID_SET.has(el.uuid)).length ?? 0,
+		[filteredOrder]
+	);
+
+	const items = filteredOrder?.map?.((el: LayerOrderItem, idx: number, arr: LayerOrderItem[]) => (
+		<LayerTreeListItem
+			key={el.uuid}
+			layerOrderConfig={el}
+			mapId={mapId}
+			reorderMode={reorderMode}
+			isFirst={idx === 0}
+			isLast={idx === arr.length - 1}
+			reorderableSiblingCount={reorderableSiblingCount}
+		/>
+	));
 
 	return (
 		<>
@@ -39,7 +88,7 @@ function LayerTree(props: LayerTreeProps) {
 				>
 					{props.selectStyleButton && (
 						<SelectStyleButton
-							mapConfigKey={props.mapConfigKey}
+							mapId={mapId}
 							{...(typeof props.selectStyleButton === 'object'
 								? props.selectStyleButton
 								: {})}
@@ -56,15 +105,7 @@ function LayerTree(props: LayerTreeProps) {
 				</Stack>
 			)}
 			<ListStyled>
-				{layerOrder?.map?.((el: LayerOrderItem, idx: number, arr: LayerOrderItem[]) => (
-					<LayerTreeListItem
-						key={el.uuid}
-						layerOrderConfig={el}
-						mapConfigKey={props.mapConfigKey}
-						isFirst={idx === 0}
-						isLast={idx === arr.length - 1}
-					/>
-				))}
+				{showDragScope ? <DragScopeProvider>{items}</DragScopeProvider> : items}
 			</ListStyled>
 		</>
 	);

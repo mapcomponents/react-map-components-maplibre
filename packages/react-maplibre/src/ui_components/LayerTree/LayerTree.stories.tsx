@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import LayerTree from './LayerTree';
 import Sidebar from '../Sidebar';
 import MapContextDecorator from '../../decorators/MapContextDecorator';
@@ -13,8 +13,9 @@ import {
 	setMapConfig,
 	useMapStore,
 } from '../../stores/map.store';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, ButtonGroup, Stack, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import type { ReorderMode } from './useDragReorder';
 
 const storyoptions = {
 	title: 'UiComponents/LayerTree',
@@ -145,7 +146,7 @@ const LayerTreeMultipleLayertypes = () => {
 	const demoData: MapState = useMemo(
 		() => ({
 			mapConfigs: {
-				mapConfig1: {
+				map_1: {
 					name: 'Demo Map',
 					mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
 					layers: [
@@ -222,7 +223,7 @@ const LayerTreeMultipleLayertypes = () => {
 	);
 
 	useEffect(() => {
-		setMapConfig('mapConfig1', demoData.mapConfigs['mapConfig1']);
+		setMapConfig('map_1', demoData.mapConfigs['map_1']);
 	}, [demoData]);
 
 	return (
@@ -230,7 +231,7 @@ const LayerTreeMultipleLayertypes = () => {
 			<Sidebar open={true}>
 				<Typography variant="h5">Example Layertree</Typography>
 				<LayerTree
-					mapConfigKey="mapConfig1"
+					mapId="map_1"
 					selectStyleButton
 					addLayerButton
 				/>
@@ -242,13 +243,13 @@ export const LayerTreeMultipleLayertypesExample: any = LayerTreeMultipleLayertyp
 LayerTreeMultipleLayertypesExample.parameters = {};
 LayerTreeMultipleLayertypesExample.args = {};
 
-// --- Story: Multiple Layer Trees ---
+// --- Story: Multiple Layer Trees (with / without background & labels) ---
 
 const MultipleLayerTrees: any = () => {
 	const demoData: MapState = useMemo(
 		() => ({
 			mapConfigs: {
-				mapConfig1: {
+				map_1: {
 					name: 'Demo Map',
 					mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
 					layers: [
@@ -297,16 +298,16 @@ const MultipleLayerTrees: any = () => {
 	);
 
 	useEffect(() => {
-		setMapConfig('mapConfig1', demoData.mapConfigs['mapConfig1']);
+		setMapConfig('map_1', demoData.mapConfigs['map_1']);
 	}, [demoData]);
 
 	return (
 		<>
 			<Sidebar open={true}>
-				<Typography variant="h5">Layertree 1</Typography>
-				<LayerTree mapConfigKey="mapConfig1" />
-				<Typography variant="h5">Layertree 2</Typography>
-				<LayerTree mapConfigKey="mapConfig1" />
+				<Typography variant="h5">With Background &amp; Labels</Typography>
+				<LayerTree mapId="map_1" showBackground showLabels />
+				<Typography variant="h5" sx={{ mt: 3 }}>Without Background &amp; Labels</Typography>
+				<LayerTree mapId="map_1" showBackground={false} showLabels={false} />
 			</Sidebar>
 		</>
 	);
@@ -315,7 +316,7 @@ export const MultipleLayertreesExample = MultipleLayerTrees.bind({});
 MultipleLayertreesExample.parameters = {};
 MultipleLayertreesExample.args = {};
 
-// --- Story: Large Layer Tree (100+ layers) ---
+// --- Story: Large Layer Tree ---
 
 const LargeLayerTree = () => {
 	const mapConfig: MapConfig = useMemo(() => {
@@ -323,7 +324,7 @@ const LargeLayerTree = () => {
 		const layerOrder: LayerOrderItem[] = [];
 
 		const folderCount = 5;
-		const layersPerFolder = 6; // 5 folders x 6 = 30 layers + 5 folders = 35 total
+		const layersPerFolder = 6;
 
 		for (let f = 0; f < folderCount; f++) {
 			const folderUuid = uuidv4();
@@ -374,7 +375,7 @@ const LargeLayerTree = () => {
 		<>
 			<Sidebar open={true}>
 				<Typography variant="h5">Large LayerTree ({mapConfig.layers.length} layers)</Typography>
-				<LayerTree mapConfigKey="largeConfig" />
+				<LayerTree mapId="largeConfig" />
 			</Sidebar>
 		</>
 	);
@@ -389,7 +390,6 @@ const DeeplyNestedFolders = () => {
 	const mapConfig: MapConfig = useMemo(() => {
 		const allLayers: LayerConfig[] = [];
 
-		// Build a 4-level deep hierarchy
 		function buildLevel(depth: number, prefix: string): LayerOrderItem {
 			const folderUuid = uuidv4();
 			allLayers.push({
@@ -401,14 +401,12 @@ const DeeplyNestedFolders = () => {
 
 			const children: LayerOrderItem[] = [];
 
-			// Add 2 leaf layers
 			for (let i = 0; i < 2; i++) {
 				const { layer, uuid } = generateGeojsonLayer(`${prefix} Layer ${i + 1}`, depth * 2 + i);
 				allLayers.push(layer);
 				children.push({ uuid });
 			}
 
-			// Recurse if not at max depth
 			if (depth < 3) {
 				for (let s = 0; s < 2; s++) {
 					children.push(buildLevel(depth + 1, `${prefix}.${s + 1}`));
@@ -438,7 +436,7 @@ const DeeplyNestedFolders = () => {
 				<Typography variant="h5">
 					Deeply Nested Folders ({mapConfig.layers.length} items)
 				</Typography>
-				<LayerTree mapConfigKey="nestedConfig" />
+				<LayerTree mapId="nestedConfig" />
 			</Sidebar>
 		</>
 	);
@@ -495,7 +493,6 @@ const DynamicLayerCRUD = () => {
 		const newLayers = [...mapConfig.layers, newLayer];
 		const newLayerOrder = JSON.parse(JSON.stringify(mapConfig.layerOrder)) as LayerOrderItem[];
 
-		// Add to first folder
 		if (newLayerOrder[0]?.layers) {
 			newLayerOrder[0].layers.push({ uuid: newUuid });
 		}
@@ -516,7 +513,7 @@ const DynamicLayerCRUD = () => {
 						Add Random Layer
 					</Button>
 				</Stack>
-				<LayerTree mapConfigKey="dynamicConfig" />
+				<LayerTree mapId="dynamicConfig" />
 			</Sidebar>
 		</>
 	);
@@ -524,3 +521,67 @@ const DynamicLayerCRUD = () => {
 export const DynamicLayerCRUDExample: any = DynamicLayerCRUD.bind({});
 DynamicLayerCRUDExample.parameters = {};
 DynamicLayerCRUDExample.args = {};
+
+// --- Story: Reorder Mode Switcher ---
+
+const reorderModeDemoConfig = (): MapConfig => {
+	const allLayers: LayerConfig[] = [];
+	const folderUuid = uuidv4();
+	allLayers.push({ type: 'folder', uuid: folderUuid, name: 'Sample Folder', visible: true });
+
+	const children: LayerOrderItem[] = [];
+	for (let i = 0; i < 4; i++) {
+		const { layer, uuid } = generateGeojsonLayer(`Layer ${i + 1}`, i);
+		allLayers.push(layer);
+		children.push({ uuid });
+	}
+
+	const { layer: wms, uuid: wmsUuid } = generateWmsLayer('WMS Layer');
+	allLayers.push(wms);
+
+	return {
+		name: 'Reorder Mode Demo',
+		mapProps: { center: [7.0851268, 50.73884] as [number, number], zoom: 12 },
+		layers: allLayers,
+		layerOrder: [{ uuid: folderUuid, layers: children }, { uuid: wmsUuid }],
+	};
+};
+
+const REORDER_MODES: ReorderMode[] = ['dnd', 'arrows', 'both', 'none'];
+
+const ReorderModeSwitcher = () => {
+	const [mode, setMode] = useState<ReorderMode>('both');
+	const mapConfig = useMemo(() => reorderModeDemoConfig(), []);
+
+	useEffect(() => {
+		setMapConfig('reorderSwitcher', mapConfig);
+	}, [mapConfig]);
+
+	return (
+		<Sidebar open={true}>
+			<Typography variant="h6" sx={{ px: 1, pt: 1 }}>
+				Reorder Mode Switcher
+			</Typography>
+			<Stack direction="row" spacing={1} sx={{ px: 1, py: 1 }}>
+				<ButtonGroup size="small">
+					{REORDER_MODES.map((m) => (
+						<Button
+							key={m}
+							variant={mode === m ? 'contained' : 'outlined'}
+							onClick={() => setMode(m)}
+						>
+							{m}
+						</Button>
+					))}
+				</ButtonGroup>
+			</Stack>
+			<Typography variant="caption" sx={{ px: 1 }}>
+				Current: <strong>{mode}</strong>
+			</Typography>
+			<LayerTree mapId="reorderSwitcher" reorderMode={mode} />
+		</Sidebar>
+	);
+};
+export const ReorderModeSwitcherExample: any = ReorderModeSwitcher.bind({});
+ReorderModeSwitcherExample.parameters = {};
+ReorderModeSwitcherExample.args = {};

@@ -13,9 +13,8 @@ import { StyleSpecification } from 'maplibre-gl';
 
 export interface SelectStyleButtonProps {
 	sx?: SxProps;
+	/** Store key – defaults to `'map_1'`. */
 	mapId?: string;
-	/** The mapConfig key to apply the style to. */
-	mapConfigKey?: string;
 	onComplete?: (style: StyleSpecification) => void;
 	styles?: StyleSpecification[];
 	defaultStyles?: boolean;
@@ -27,7 +26,7 @@ const defaultStyleThumbnailPath =
 
 const SelectStyleButton = ({
 	sx,
-	mapConfigKey = 'mapConfig1',
+	mapId = 'map_1',
 	styles = [],
 	defaultStyles = true,
 	styleThumbnailPaths,
@@ -68,7 +67,7 @@ const SelectStyleButton = ({
 				open={popupOpen}
 				setOpen={setPopupOpen}
 				onSelect={(style) => {
-					updateStyle(mapConfigKey, style);
+					updateStyle(mapId, style);
 					onComplete?.(style);
 					setPopupOpen(false);
 				}}

@@ -725,7 +725,7 @@ const CatalogueTemplate: StoryFn = () => {
 
 				<Box sx={{ height: '35%' }}>
 					<Typography variant="h6">{'Layers'}</Typography>
-					<LayerTree mapConfigKey={CATALOGUE_MAP_CONFIG} />
+					<LayerTree mapId={CATALOGUE_MAP_CONFIG} />
 				</Box>
 
 				<DemoDescriptions

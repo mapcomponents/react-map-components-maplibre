@@ -105,6 +105,7 @@ export { default as LayerListItem } from './ui_components/LayerListItem/LayerLis
 
 export { default as LayerTree } from './ui_components/LayerTree/LayerTree';
 export type { LayerTreeProps } from './ui_components/LayerTree/LayerTree';
+export type { ReorderMode } from './ui_components/LayerTree/useDragReorder';
 export { default as MapLayerRenderer } from './ui_components/LayerTree/MapLayerRenderer';
 export { default as LayerTreeListItem } from './ui_components/LayerTree/LayerTreeListItem';
 

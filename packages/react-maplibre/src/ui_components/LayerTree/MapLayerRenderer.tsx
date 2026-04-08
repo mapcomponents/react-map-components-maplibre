@@ -21,7 +21,7 @@ interface MapLayerRendererProps {
 }
 
 function MapLayerRenderer(props: MapLayerRendererProps) {
-	const mapConfigKey = props.mapConfigKey || 'mapConfig1';
+	const mapConfigKey = props.mapConfigKey || 'map_1';
 	const layers = useLayers(mapConfigKey);
 	const layerStoreOrder = useLayerOrder(mapConfigKey);
 	const mapHook = useMap({ mapId: props?.mapId });

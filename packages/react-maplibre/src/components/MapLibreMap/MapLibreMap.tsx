@@ -2,8 +2,9 @@ import { FC, RefObject, useContext, useEffect, useRef } from 'react';
 
 import MapContext, { MapContextType } from '../../contexts/MapContext';
 import MapLibreGlWrapper from './lib/MapLibreGlWrapper';
+import { updateStyle } from '../../stores/map.store';
 
-import { Map, MapOptions as MapOptionsType } from 'maplibre-gl';
+import { Map, MapOptions as MapOptionsType, StyleSpecification } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 export type MapLibreMapProps = {
@@ -21,6 +22,13 @@ export type MapLibreMapProps = {
 	 * css style definition passed to the map container DOM element
 	 */
 	style?: object;
+	/**
+	 * When set, the component will initialise the MapLibre instance with a blank
+	 * background and feed the resolved style through `updateStyle` on the Zustand
+	 * store so that layers appear in the LayerTree. Pass the same key you use on
+	 * `<LayerTree mapConfigKey="…" />`.
+	 */
+	mapConfigKey?: string;
 };
 
 const defaultProps: MapLibreMapProps = {
@@ -72,6 +80,28 @@ const MapLibreMap: MapLibreMapComponent = (props: MapLibreMapProps) => {
 	const initializedRef = useRef(false);
 	const currentStyle = useRef(props.options?.style);
 
+	// When mapConfigKey is set we route the style through the Zustand store
+	// instead of handing it to MapLibre directly.
+	const manageStyleViaStore = !!props.mapConfigKey && !!props.options?.style;
+
+	/**
+	 * Resolve a style value (URL string or inline object) to a
+	 * StyleSpecification and push it into the store via `updateStyle`.
+	 */
+	const applyStyleToStore = async (
+		style: string | StyleSpecification | object,
+		mapConfigKey: string
+	) => {
+		let resolved: StyleSpecification;
+		if (typeof style === 'string') {
+			const res = await fetch(style);
+			resolved = (await res.json()) as StyleSpecification;
+		} else {
+			resolved = style as StyleSpecification;
+		}
+		updateStyle(mapConfigKey, resolved);
+	};
+
 	useEffect(() => {
 		const mapId = mapIdRef.current;
 
@@ -94,13 +124,20 @@ const MapLibreMap: MapLibreMapComponent = (props: MapLibreMapProps) => {
 			if (props?.options?.style) {
 				currentStyle.current = JSON.stringify(props.options.style);
 			}
+
+			// When managing the style via the store, always start with the
+			// blank default background so the store owns the layer list.
+			const effectiveStyle = manageStyleViaStore
+				? defaultProps?.options?.style
+				: props?.options?.style || defaultProps?.options?.style;
+
 			mapRef.current = new MapLibreGlWrapper({
 				mapOptions: {
 					style: '',
 					...props.options,
-					...(props?.options?.style ? {} : { style: defaultProps?.options?.style }),
+					style: effectiveStyle,
 					container: mapContainer.current,
-				},
+				} as MapOptionsType,
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				onReady: (map: Map, wrapper: MapLibreGlWrapper) => {
@@ -113,6 +150,11 @@ const MapLibreMap: MapLibreMapComponent = (props: MapLibreMapProps) => {
 							} else {
 								mapContext.setMap(wrapper);
 							}
+
+							// Feed the original style into the store after map is ready
+							if (manageStyleViaStore && props.options?.style) {
+								applyStyleToStore(props.options.style, props.mapConfigKey!);
+							}
 						} else {
 							map.remove();
 						}
@@ -120,17 +162,22 @@ const MapLibreMap: MapLibreMapComponent = (props: MapLibreMapProps) => {
 				},
 			});
 		}
-	}, [props.options, props.mapId]);
+	}, [props.options, props.mapId, props.mapConfigKey]);
 
 	useEffect(() => {
-		if (mapRef.current?.map && props?.options?.style) {
-			const newStyleString = JSON.stringify(props.options.style);
-			if (currentStyle.current !== newStyleString) {
-				currentStyle.current = newStyleString;
+		if (!mapRef.current?.map || !props?.options?.style) return;
+		const newStyleString = JSON.stringify(props.options.style);
+		if (currentStyle.current !== newStyleString) {
+			currentStyle.current = newStyleString;
+			if (manageStyleViaStore) {
+				// Route style changes through the store — the MapLayerRenderer
+				// will apply them to the map instance.
+				applyStyleToStore(props.options.style, props.mapConfigKey!);
+			} else {
 				mapRef.current.map.setStyle(props.options.style);
 			}
 		}
-	}, [props?.options?.style]);
+	}, [props?.options?.style, manageStyleViaStore, props.mapConfigKey]);
 
 	return (
 		<div

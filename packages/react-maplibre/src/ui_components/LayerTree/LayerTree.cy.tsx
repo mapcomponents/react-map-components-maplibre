@@ -132,7 +132,7 @@ function TestWrapper() {
 	return (
 		<div style={{ display: 'flex', width: '100%', height: '600px' }}>
 			<div style={{ width: '300px', height: '100%', overflow: 'auto', background: '#fff', zIndex: 10, position: 'relative' }}>
-				<LayerTree mapConfigKey={MAP_CONFIG_KEY} />
+				<LayerTree mapId={MAP_CONFIG_KEY} />
 			</div>
 			<div style={{ flex: 1, position: 'relative' }}>
 				<MapLibreMap

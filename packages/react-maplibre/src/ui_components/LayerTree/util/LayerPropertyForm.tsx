@@ -77,12 +77,12 @@ export type paintPropsType =
 
 interface LayerPropertyFormProps {
 	layerUuid: string;
-	mapConfigKey: string;
+	mapId: string;
 }
 
 function LayerPropertyForm(props: LayerPropertyFormProps) {
 	const key = useRef(Math.round(Math.random() * 10000000000));
-	const layer = useLayerByUuid(props.mapConfigKey, props.layerUuid);
+	const layer = useLayerByUuid(props.mapId, props.layerUuid);
 
 	const paintProps = useMemo(() => {
 		if ((layer?.config as MlGeoJsonLayerProps | undefined)?.options?.paint) {
@@ -107,9 +107,9 @@ function LayerPropertyForm(props: LayerPropertyFormProps) {
 				},
 			} as LayerConfig;
 
-			setLayerInMapConfig(props.mapConfigKey, updatedLayer);
+			setLayerInMapConfig(props.mapId, updatedLayer);
 		},
-		[layer, props.mapConfigKey]
+		[layer, props.mapId]
 	);
 
 	const getFormInputByType = useCallback(

@@ -40,6 +40,7 @@ const makeMapContextDecorators = (options: MapLibreMapProps['options']): Decorat
 									...(options ? { ...options } : {}),
 								}}
 								mapId="map_1"
+								mapConfigKey="map_1"
 							/>
 							<MlNavigationTools showZoomButtons={false} mapId="map_1" />
 						</MUIThemeProvider>

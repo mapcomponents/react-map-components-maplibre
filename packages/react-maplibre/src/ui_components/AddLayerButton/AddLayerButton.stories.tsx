@@ -96,7 +96,7 @@ const AddLayerExample: any = () => {
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<AddLayerButton onComplete={handleAddLayer} />
-				<LayerTree mapConfigKey={MAP_CONFIG_KEY} />
+				<LayerTree mapId={MAP_CONFIG_KEY} />
 			</Sidebar>
 		</>
 	);

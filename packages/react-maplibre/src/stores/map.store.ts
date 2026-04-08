@@ -190,6 +190,43 @@ function moveInLayerOrder(
 	return { result: items, found: false };
 }
 
+/** Reorder: move `draggedUuid` before or after `targetUuid` within the same
+ *  sibling array, anywhere in the tree. Uses structural sharing. */
+function reorderInLayerOrder(
+	items: LayerOrderItem[],
+	draggedUuid: string,
+	targetUuid: string,
+	position: 'before' | 'after'
+): { result: LayerOrderItem[]; found: boolean } {
+	// Check if both items exist in this array
+	const dragIdx = items.findIndex((it) => it.uuid === draggedUuid);
+	const targetIdx = items.findIndex((it) => it.uuid === targetUuid);
+
+	if (dragIdx !== -1 && targetIdx !== -1) {
+		const newItems = [...items];
+		const [dragged] = newItems.splice(dragIdx, 1);
+		// After removal, recalculate target position
+		const insertIdx = newItems.findIndex((it) => it.uuid === targetUuid);
+		const finalIdx = position === 'after' ? insertIdx + 1 : insertIdx;
+		newItems.splice(finalIdx, 0, dragged);
+		return { result: newItems, found: true };
+	}
+
+	// Recurse into children
+	for (let i = 0; i < items.length; i++) {
+		const childLayers = items[i].layers;
+		if (childLayers && childLayers.length > 0) {
+			const sub = reorderInLayerOrder(childLayers, draggedUuid, targetUuid, position);
+			if (sub.found) {
+				const newItems = [...items];
+				newItems[i] = { ...items[i], layers: sub.result };
+				return { result: newItems, found: true };
+			}
+		}
+	}
+	return { result: items, found: false };
+}
+
 /** Extract all uuids from a nested layerOrder tree */
 function extractUuidsFromItems(items: LayerOrderItem[]): string[] {
 	const uuids: string[] = [];
@@ -577,5 +614,6 @@ export const clearMapConfigs = () => useMapStore.setState({ mapConfigs: {} });
 
 /** Exposed for use in LayerTreeListItem move operations (structural sharing, no JSON clone) */
 export const moveInLayerOrderHelper = moveInLayerOrder;
+export const reorderInLayerOrderHelper = reorderInLayerOrder;
 
 export default useMapStore;
