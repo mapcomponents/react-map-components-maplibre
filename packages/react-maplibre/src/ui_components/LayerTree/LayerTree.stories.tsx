@@ -2,8 +2,8 @@ import { useEffect, useMemo } from 'react';
 import LayerTree from './LayerTree';
 import Sidebar from '../Sidebar';
 import MapContextDecorator from '../../decorators/MapContextDecorator';
-import sample_polygon_1 from '../LayerList/assets/sample_polygon_1.json';
-import sample_points_inside_polygon from '../LayerList/assets/sample_points_inside_polygon.json';
+import sample_polygon_1 from './assets/sample_polygon_1.json';
+import sample_points_inside_polygon from './assets/sample_points_inside_polygon.json';
 import { FeatureCollection } from 'geojson';
 import {
 	MapState,

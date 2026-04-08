@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
-import { ListItem, IconButton, ListItemIcon, Checkbox, ListItemText, styled } from '@mui/material';
+import { ListItem, IconButton, ListItemText, styled } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import LayerPropertyForm from './LayerPropertyForm';
-import { MlVectorTileLayerProps } from '../../../components/MlVectorTileLayer/MlVectorTileLayer';
+import { MlVectorTileLayerProps } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
+import { CheckboxListItemIcon, CheckboxStyled } from '../LayerTree/styledComponents';
 
-export const ListItemStyled = styled(ListItem)((configurable) => ({
+export { CheckboxListItemIcon, CheckboxStyled };
+
+export const ListItemStyled = styled(ListItem)<{ configurable?: boolean }>(({ configurable }) => ({
 	paddingRight: configurable ? '56px' : 0,
 	paddingLeft: 0,
 	paddingTop: 0,
@@ -13,12 +16,6 @@ export const ListItemStyled = styled(ListItem)((configurable) => ({
 const TuneIconButton = styled(IconButton)({
 	padding: '4px',
 	marginTop: '-3px',
-});
-export const CheckboxListItemIcon = styled(ListItemIcon)({
-	minWidth: '30px',
-});
-export const CheckboxStyled = styled(Checkbox)({
-	padding: 0,
 });
 
 interface LayerListItemVectorLayerProps {
@@ -32,7 +29,7 @@ interface LayerListItemVectorLayerProps {
 type idIsStringObject = { [key: string]: any };
 
 function LayerListItemVectorLayer({
-	configurable,
+	configurable = true,
 	vtProps,
 	setVtProps,
 	id,
@@ -119,9 +116,5 @@ function LayerListItemVectorLayer({
 		</>
 	);
 }
-
-LayerListItemVectorLayer.defaultProps = {
-	configurable: true,
-};
 
 export default LayerListItemVectorLayer;

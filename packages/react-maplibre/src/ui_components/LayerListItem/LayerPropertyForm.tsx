@@ -5,7 +5,39 @@ import {
 	LineLayerSpecification,
 } from 'maplibre-gl';
 import { Box, ListItem, Paper, Slider, TextField, Typography, styled } from '@mui/material';
-import ColorPicker from './input/ColorPicker';
+import ColorPickerBase from '../ColorPicker/ColorPicker';
+
+export type paintPropsType =
+	| CircleLayerSpecification['paint']
+	| FillLayerSpecification['paint']
+	| LineLayerSpecification['paint'];
+
+/**
+ * Wrapper around the base ColorPicker that adapts it for paint-property editing.
+ */
+function PaintPropsColorPicker({
+	propKey,
+	value,
+	setPaintProps,
+}: {
+	key: string;
+	value: string;
+	propKey: string;
+	setPaintProps: (
+		paintProps: paintPropsType | ((current: paintPropsType) => paintPropsType)
+	) => void;
+}) {
+	return (
+		<ColorPickerBase
+			value={value}
+			onChange={(value: string) => {
+				setPaintProps((current: paintPropsType): paintPropsType => {
+					return { ...current, [propKey]: value };
+				});
+			}}
+		/>
+	);
+}
 
 const PaperStyled = styled(Paper)({
 	marginLeft: '-100px',
@@ -54,11 +86,6 @@ const inputPropsByPropKey: { [key: string]: { [K in 'step' | 'min' | 'max']: num
 		max: 100,
 	},
 };
-
-export type paintPropsType =
-	| CircleLayerSpecification['paint']
-	| FillLayerSpecification['paint']
-	| LineLayerSpecification['paint'];
 
 interface LayerPropertyFormProps {
 	paintProps: paintPropsType;
@@ -124,7 +151,7 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 							<React.Fragment key={key}>
 								{label}
 								<Box sx={{ '& > div': { width: 'initial !important' } }}>
-									<ColorPicker
+									<PaintPropsColorPicker
 										key={key}
 										value={paintProps[key]}
 										propKey={key}

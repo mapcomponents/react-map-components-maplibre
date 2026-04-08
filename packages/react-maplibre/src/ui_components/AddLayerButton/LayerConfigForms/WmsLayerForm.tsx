@@ -12,7 +12,7 @@ import {
 import ImageIcon from '@mui/icons-material/Image';
 import HttpIcon from '@mui/icons-material/Http';
 import React, { useMemo } from 'react';
-import { wmsConfig } from '../../../contexts/LayerContext';
+import { wmsConfig } from '../types';
 import { useTranslation } from 'react-i18next';
 
 export interface WmsLayerFormProps {

@@ -12,16 +12,16 @@ import { IconButton, ListItemText, styled, SxProps } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TuneIcon from '@mui/icons-material/Tune';
 import LayerListFolder from './LayerListFolder';
-import LayerPropertyForm from './util/LayerPropertyForm';
+import LayerPropertyForm from './LayerPropertyForm';
 import LayerListItemVectorLayer, {
 	CheckboxListItemIcon,
 	CheckboxStyled,
 	ListItemStyled,
-} from './util/LayerListItemVectorLayer';
+} from './LayerListItemVectorLayer';
 import ConfirmDialog from '../ConfirmDialog';
 import getDefaultLayerTypeByGeometry from '../../components/MlGeoJsonLayer/util/getDefaultLayerTypeByGeometry';
 import getDefaultPaintPropsByType from '../../components/MlGeoJsonLayer/util/getDefaultPaintPropsByType';
-import SortableContainer from './util/SortableContainer';
+import SortableContainer from '../SortableContainer/SortableContainer';
 
 const TuneIconButton = styled(IconButton)({
 	padding: '4px',
@@ -48,12 +48,14 @@ interface LayerListItemProps {
 
 function LayerListItem({
 	layerComponent,
-	visible,
-	type,
+	visible = true,
+	type = 'layer',
 	name,
 	description,
 	configurable,
 	setLayerState,
+	showDeleteButton = false,
+	buttons = <></>,
 	...props
 }: LayerListItemProps) {
 	const [localVisible, setLocalVisible] = useState(true);
@@ -166,7 +168,7 @@ function LayerListItem({
 			secondaryAction={
 				configurable && Object.keys(paintProps)?.length > 0 ? (
 					<>
-						{props?.buttons}
+						{buttons}
 						<TuneIconButton
 							edge={'end'}
 							aria-label="settings"
@@ -211,7 +213,7 @@ function LayerListItem({
 				configurable &&
 				paintPropsFormVisible && (
 					<>
-						{props.showDeleteButton && (
+						{showDeleteButton && (
 							<>
 								<DeleteIconButton
 									edge="end"
@@ -267,12 +269,5 @@ function LayerListItem({
 		</>
 	);
 }
-
-LayerListItem.defaultProps = {
-	type: 'layer',
-	visible: true,
-	showDeleteButton: false,
-	buttons: <></>,
-};
 
 export default LayerListItem;

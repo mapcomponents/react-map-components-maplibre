@@ -18,7 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from '../../ui_components/ConfirmDialog';
 
 import * as turf from '@turf/turf';
-import SortableContainer from '../../ui_components/LayerList/util/SortableContainer';
+import SortableContainer from '../../ui_components/SortableContainer/SortableContainer';
 import { normalizeWmsParams } from '../../utils/wmsUtils';
 
 export interface WmsConfig {

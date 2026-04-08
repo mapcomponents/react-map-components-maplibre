@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	FlyToOptions,
 	JumpToOptions,
@@ -20,9 +20,6 @@ import useMap from '../useMap';
 import TopToolbar from '../../ui_components/TopToolbar';
 import Sidebar from '../../ui_components/Sidebar';
 import AddLayerButton from '../../ui_components/AddLayerButton/AddLayerButton';
-import LayerContext from '../../contexts/LayerContext';
-import LayerList from '../../ui_components/LayerList/LayerList';
-import LayerListItemFactory from '../../ui_components/LayerList/LayerListItemFactory';
 import bright from '../../omt_styles/bright';
 import DemoDescriptions from '../../ui_components/DemoDescriptions';
 import protocolDescriptions from './utils/useAddProtocolTexts.json';
@@ -35,6 +32,15 @@ import MlLayer from '../../components/MlLayer/MlLayer';
 import { useLayerProps } from '../useLayer';
 import useSource from '../useSource';
 import { StoryFn } from '@storybook/react-vite';
+import {
+	LayerConfig,
+	setMapConfig,
+	setLayerInMapConfig,
+	updateStyle,
+} from '../../stores/map.store';
+import LayerTree from '../../ui_components/LayerTree/LayerTree';
+import { v4 as uuidv4 } from 'uuid';
+import { LayerConfig as FormLayerConfig } from '../../ui_components/AddLayerButton/types';
 
 const storyoptions = {
 	title: 'hooks/useAddProtocol',
@@ -57,24 +63,20 @@ interface TemplateProps {
 	sourceOptions?: VectorSourceSpecification;
 	layers?: LayerSpecification[];
 }
+const PROTOCOL_MAP_CONFIG = 'protocol-demo';
+
 const BackgroundLayers = () => {
-	const layerContext = useContext(LayerContext);
 	useEffect(() => {
-		layerContext.updateStyle(bright as unknown as StyleSpecification);
+		setMapConfig(PROTOCOL_MAP_CONFIG, {
+			name: 'Protocol Demo',
+			mapProps: { center: [0, 0], zoom: 2 },
+			layers: [],
+			layerOrder: [],
+		});
+		updateStyle(PROTOCOL_MAP_CONFIG, bright as unknown as StyleSpecification);
 	}, []);
 
-	return (
-		<div style={{ display: 'none' }}>
-			<LayerList>
-				<LayerListItemFactory
-					layers={layerContext.layers}
-					setLayers={layerContext.setLayers}
-					insertBeforeLayer="useAddProtocolLayer"
-					fitBoundsOptions={{ padding: { top: 50, bottom: 50, left: 25, right: 25 } }}
-				/>
-			</LayerList>
-		</div>
-	);
+	return null;
 };
 
 const MbtilesTemplate: StoryFn = () => {
@@ -591,11 +593,12 @@ const currentProps = {
 	},
 };
 
+const CATALOGUE_MAP_CONFIG = 'catalogue-demo';
+
 const CatalogueTemplate: StoryFn = () => {
 	const mapHook = useMap({ mapId: undefined });
 
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const layerContext = useContext(LayerContext);
 	const [currentDemo, setCurrentDemo] = useState<string>('csv');
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -609,11 +612,22 @@ const CatalogueTemplate: StoryFn = () => {
 	});
 
 	useEffect(() => {
-		layerContext.updateStyle(bright as unknown as StyleSpecification);
-		layerContext.setLayers([
+		setMapConfig(CATALOGUE_MAP_CONFIG, {
+			name: 'Catalogue Demo',
+			mapProps: { center: [0, 0], zoom: 2 },
+			layers: [],
+			layerOrder: [],
+		});
+		updateStyle(CATALOGUE_MAP_CONFIG, bright as unknown as StyleSpecification);
+	}, []);
+
+	useEffect(() => {
+		const layerUuid = 'protocol-layer-' + currentDemo;
+		const newLayer: LayerConfig =
 			props.protocol === 'mbtiles'
 				? {
 						type: 'vt',
+						uuid: layerUuid,
 						name: 'useAddProtocolLayer',
 						config: {
 							layerId: 'useAddProtocolLayer',
@@ -625,6 +639,7 @@ const CatalogueTemplate: StoryFn = () => {
 					}
 				: {
 						type: 'geojson',
+						uuid: layerUuid,
 						name: 'useAddProtocolLayer',
 						config: {
 							layerId: 'useAddProtocolLayer',
@@ -634,8 +649,8 @@ const CatalogueTemplate: StoryFn = () => {
 							},
 							paint: props.paint,
 						} as MlGeoJsonLayerProps,
-					},
-		]);
+					};
+		setLayerInMapConfig(CATALOGUE_MAP_CONFIG, newLayer);
 	}, [currentDemo]);
 
 	useEffect(() => {
@@ -650,6 +665,15 @@ const CatalogueTemplate: StoryFn = () => {
 			mapHook.map?.flyTo(props.flyTo as FlyToOptions);
 		}
 	}, [mapHook.map, currentDemo]);
+
+	const handleAddLayer = (config: FormLayerConfig) => {
+		const uuid = uuidv4();
+		const storeLayer: LayerConfig = {
+			...config,
+			uuid,
+		} as unknown as LayerConfig;
+		setLayerInMapConfig(CATALOGUE_MAP_CONFIG, storeLayer);
+	};
 
 	return (
 		<>
@@ -692,23 +716,16 @@ const CatalogueTemplate: StoryFn = () => {
 				setOpen={setOpenSidebar}
 				name={props.protocol.toUpperCase() + ' demo'}
 			>
-				<Tooltip title={'add a new' + props.protocol + ' to the map'}>
+				<Tooltip title={'add a new ' + props.protocol + ' to the map'}>
 					<AddLayerButton
-						onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
+						onComplete={handleAddLayer}
 						layerTypes={[props.protocol]}
 					/>
 				</Tooltip>
 
 				<Box sx={{ height: '35%' }}>
 					<Typography variant="h6">{'Layers'}</Typography>
-					<LayerList>
-						<LayerListItemFactory
-							layers={layerContext.layers}
-							setLayers={layerContext.setLayers}
-							insertBeforeLayer="useAddProtocolLayer"
-							fitBoundsOptions={{ padding: { top: 50, bottom: 50, left: 25, right: 25 } }}
-						/>
-					</LayerList>
+					<LayerTree mapConfigKey={CATALOGUE_MAP_CONFIG} />
 				</Box>
 
 				<DemoDescriptions

@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
-import { Button, FormControl, InputLabel, MenuItem, Select, SxProps, Tooltip } from '@mui/material';
+import { Button, FormControl, InputLabel, List, MenuItem, Select, SxProps, Tooltip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import * as turf from '@turf/turf';
@@ -7,8 +7,7 @@ import PolylineIcon from '@mui/icons-material/Polyline';
 import PentagonIcon from '@mui/icons-material/Pentagon';
 import { Feature } from 'geojson';
 import MlMeasureTool from '../MlMeasureTool/MlMeasureTool';
-import LayerList from '../../ui_components/LayerList/LayerList';
-import LayerListItem from '../../ui_components/LayerList/LayerListItem';
+import LayerListItem from '../../ui_components/LayerListItem/LayerListItem';
 import Sidebar from '../../ui_components/Sidebar';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
@@ -217,7 +216,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 						}}
 					/>
 				)}
-				<LayerList>
+				<List sx={{ marginTop: '15px' }}>
 					{measureList?.map(
 						(measure: { measure: number; unit?: string; geojson: Feature }, Index: number) => (
 							<>
@@ -305,7 +304,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 							}}
 						/>
 					)}
-				</LayerList>
+				</List>
 			</Sidebar>
 		</>
 	);

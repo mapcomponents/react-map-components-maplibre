@@ -6,7 +6,7 @@ import Sidebar from '../Sidebar';
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 import AddLayerButton from './AddLayerButton';
-import { LayerConfig as ContextLayerConfig } from '../../contexts/LayerContext';
+import { LayerConfig as ContextLayerConfig } from './types';
 import {
 	LayerConfig,
 	setMapConfig,

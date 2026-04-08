@@ -9,7 +9,7 @@ import {
 	styled,
 	SxProps,
 } from '@mui/material';
-import { CheckboxListItemIcon, CheckboxStyled } from '../LayerList/util/LayerListItemVectorLayer';
+import { CheckboxListItemIcon, CheckboxStyled } from './styledComponents';
 import {
 	LayerConfig,
 	LayerOrderItem,

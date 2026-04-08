@@ -6,7 +6,7 @@ import WmsLayerForm from './LayerConfigForms/WmsLayerForm';
 import ProtocolHandlerLayerForm from './LayerConfigForms/ProtocolHandlerLayerForm';
 import MbtilesLayerForm from './LayerConfigForms/MbtilesLayerForm';
 import { MlVectorTileLayerProps } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
-import { LayerConfig } from '../../contexts/LayerContext';
+import { LayerConfig } from './types';
 
 export interface AddLayerPopupProps {
 	open: boolean;

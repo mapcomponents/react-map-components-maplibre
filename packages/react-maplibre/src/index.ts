@@ -68,7 +68,6 @@ export { default as useMapState } from './hooks/useMapState';
 export { default as useSource } from './hooks/useSource';
 export { default as useWms } from './hooks/useWms';
 export { default as useFilterData } from './components/MlTemporalController/utils/useFilterData';
-export { default as useLayerContext } from './hooks/useLayerContext';
 export { default as useFeatureEditor } from './hooks/useFeatureEditor/useFeatureEditor';
 export { default as useAddProtocol } from './hooks/useAddProtocol/useAddProtocol';
 export { CSVProtocolHandler, convertCsv } from './protocol_handlers/csv';
@@ -82,25 +81,18 @@ export { MapComponentsProvider } from './contexts/MapContext';
 export { default as MapContext } from './contexts/MapContext';
 export { default as SimpleDataProvider } from './contexts/SimpleDataProvider';
 export { default as SimpleDataContext } from './contexts/SimpleDataContext';
-export { default as LayerContext } from './contexts/LayerContext';
-export { LayerContextProvider } from './contexts/LayerContext';
 
 // Theme
 export { default as getTheme } from './ui_components/MapcomponentsTheme';
 
 // UI Components
-export { default as LayerList } from './ui_components/LayerList/LayerList';
-export { default as LayerListItem } from './ui_components/LayerList/LayerListItem';
-export { default as LayerListFolder } from './ui_components/LayerList/LayerListFolder';
-export { default as LayerPropertyForm } from './ui_components/LayerList/util/LayerPropertyForm';
-export { default as LayerListItemVectorLayer } from './ui_components/LayerList/util/LayerListItemVectorLayer';
-export { default as LayerListItemFactory } from './ui_components/LayerList/LayerListItemFactory';
 export { default as AddLayerButton } from './ui_components/AddLayerButton/AddLayerButton';
 export { default as AddLayerPopup } from './ui_components/AddLayerButton/AddLayerPopup';
+export type { LayerConfig as AddLayerConfig, wmsConfig } from './ui_components/AddLayerButton/types';
 export { default as GeoJsonLayerForm } from './ui_components/AddLayerButton/LayerConfigForms/GeoJsonLayerForm';
 export { default as LayerTypeForm } from './ui_components/AddLayerButton/LayerConfigForms/LayerTypeForm';
 export { default as WmsLayerForm } from './ui_components/AddLayerButton/LayerConfigForms/WmsLayerForm';
-export { default as ColorPicker } from './ui_components/LayerList/util/input/ColorPicker';
+export { default as ColorPicker } from './ui_components/ColorPicker/ColorPicker';
 export { default as TopToolbar } from './ui_components/TopToolbar';
 export { default as Sidebar } from './ui_components/Sidebar';
 export { default as UploadButton } from './ui_components/UploadButton';
@@ -109,6 +101,7 @@ export type { SelectStyleButtonProps } from './ui_components/SelectStyleButton/S
 export { default as SelectStylePopup } from './ui_components/SelectStyleButton/SelectStylePopup';
 export { default as ConfirmDialog } from './ui_components/ConfirmDialog';
 export { default as SpeedDial } from './ui_components/SpeedDial/SpeedDial';
+export { default as LayerListItem } from './ui_components/LayerListItem/LayerListItem';
 
 export { default as LayerTree } from './ui_components/LayerTree/LayerTree';
 export type { LayerTreeProps } from './ui_components/LayerTree/LayerTree';

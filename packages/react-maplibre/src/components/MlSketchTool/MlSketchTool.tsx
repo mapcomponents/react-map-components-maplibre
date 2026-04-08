@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import * as turf from '@turf/turf';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Tooltip from '@mui/material/Tooltip';
-import LayerListItem from '../../ui_components/LayerList/LayerListItem';
+import LayerListItem from '../../ui_components/LayerListItem/LayerListItem';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { Feature, LineString, Point, Polygon } from 'geojson';
 import { LngLatLike } from 'maplibre-gl';
