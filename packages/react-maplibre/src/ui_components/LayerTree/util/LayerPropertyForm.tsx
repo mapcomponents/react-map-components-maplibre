@@ -16,24 +16,22 @@ import {
 } from '@mui/material';
 import ColorPicker from './input/ColorPicker';
 import {
-	getLayerByUuid,
 	LayerConfig,
-	RootState,
+	useLayerByUuid,
 	setLayerInMapConfig,
 } from '../../../stores/map.store';
-import { useDispatch, useSelector } from 'react-redux';
 import { MlGeoJsonLayerProps } from '../../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 
 const PaperStyled = styled(Paper)({
-	marginLeft: '-100px',
-	marginRight: '-21px',
-	paddingLeft: '53px',
-	borderRadius: '0px',
-	boxShadow: 'none',
-	backgroundColor: 'rgb(0, 0, 0, 0)',
+marginLeft: '-100px',
+marginRight: '-21px',
+paddingLeft: '53px',
+borderRadius: '0px',
+boxShadow: 'none',
+backgroundColor: 'rgb(0, 0, 0, 0)',
 });
 const BoxStyled = styled(Box)({
-	marginLeft: '61px',
+marginLeft: '61px',
 });
 
 const mapPropKeyToFormInputType: { [key: string]: string } = {
@@ -84,11 +82,7 @@ interface LayerPropertyFormProps {
 
 function LayerPropertyForm(props: LayerPropertyFormProps) {
 	const key = useRef(Math.round(Math.random() * 10000000000));
-	const layer = getLayerByUuid(
-		useSelector((state: RootState) => state.mapConfig),
-		props.layerUuid
-	);
-	const dispatch = useDispatch();
+	const layer = useLayerByUuid(props.mapConfigKey, props.layerUuid);
 
 	const paintProps = useMemo(() => {
 		if ((layer?.config as MlGeoJsonLayerProps | undefined)?.options?.paint) {
@@ -97,53 +91,51 @@ function LayerPropertyForm(props: LayerPropertyFormProps) {
 		return {};
 	}, [(layer?.config as MlGeoJsonLayerProps | undefined)?.options?.paint]);
 
-	const updatePaintProp = (key: keyof paintPropsType, value: number | string) => {
-		const updatedLayer = {
-			...layer,
-			config: {
-				...layer?.config,
-				options: {
-					...(layer?.config as MlGeoJsonLayerProps | undefined)?.options,
-					paint: {
-						...(layer?.config as MlGeoJsonLayerProps | undefined)?.options?.paint,
-						[key]: value,
+	const updatePaintProp = useCallback(
+(propKey: keyof paintPropsType, value: number | string) => {
+			const updatedLayer = {
+				...layer,
+				config: {
+					...layer?.config,
+					options: {
+						...(layer?.config as MlGeoJsonLayerProps | undefined)?.options,
+						paint: {
+							...(layer?.config as MlGeoJsonLayerProps | undefined)?.options?.paint,
+							[propKey]: value,
+						},
 					},
 				},
-			},
-		} as LayerConfig;
+			} as LayerConfig;
 
-		dispatch(
-			setLayerInMapConfig({
-				mapConfigKey: props.mapConfigKey,
-				layer: updatedLayer,
-			})
-		);
-	};
+			setLayerInMapConfig(props.mapConfigKey, updatedLayer);
+		},
+		[layer, props.mapConfigKey]
+	);
 
 	const getFormInputByType = useCallback(
-		(key: keyof paintPropsType) => {
+(formKey: keyof paintPropsType) => {
 			if (
-				paintProps?.[key] &&
-				mapPropKeyToFormInputTypeKeys.indexOf(key) !== -1 &&
-				(typeof paintProps[key] === 'number' || typeof paintProps[key] === 'string')
+				paintProps?.[formKey] &&
+				mapPropKeyToFormInputTypeKeys.indexOf(formKey) !== -1 &&
+				(typeof paintProps[formKey] === 'number' || typeof paintProps[formKey] === 'string')
 			) {
 				const label = (
-					<Typography id={key + '_label'} gutterBottom>
-						{key}
+<Typography id={formKey + '_label'} gutterBottom>
+						{formKey}
 					</Typography>
 				);
-				switch (mapPropKeyToFormInputType[key]) {
+				switch (mapPropKeyToFormInputType[formKey]) {
 					case 'slider':
 						return (
-							<React.Fragment key={key}>
+<React.Fragment key={formKey}>
 								{label}
 								<Slider
-									{...(inputPropsByPropKey[key] as SliderProps)}
-									value={paintProps[key] as number | number[] | undefined}
+									{...(inputPropsByPropKey[formKey] as SliderProps)}
+									value={paintProps[formKey] as number | number[] | undefined}
 									valueLabelDisplay="auto"
 									onChange={(_ev: Event, value: number | number[]) => {
 										if (value && typeof value === 'number') {
-											updatePaintProp(key, value);
+											updatePaintProp(formKey, value);
 										}
 									}}
 								/>
@@ -152,14 +144,14 @@ function LayerPropertyForm(props: LayerPropertyFormProps) {
 						break;
 					case 'numberfield':
 						return (
-							<React.Fragment key={key}>
+<React.Fragment key={formKey}>
 								{label}
 								<TextField
 									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
-									value={paintProps[key]}
+									value={paintProps[formKey]}
 									onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
 										if (ev?.target?.value) {
-											updatePaintProp(key, parseInt(ev.target.value));
+											updatePaintProp(formKey, parseInt(ev.target.value));
 										}
 									}}
 								/>
@@ -168,14 +160,14 @@ function LayerPropertyForm(props: LayerPropertyFormProps) {
 						break;
 					case 'colorpicker':
 						return (
-							<React.Fragment key={key}>
+<React.Fragment key={formKey}>
 								{label}
 								<Box sx={{ '& > div': { width: 'initial !important' } }}>
 									<ColorPicker
-										key={key}
-										value={paintProps[key] as string}
+										key={formKey}
+										value={paintProps[formKey] as string}
 										onChange={(value: string) => {
-											updatePaintProp(key, value);
+											updatePaintProp(formKey, value);
 										}}
 									/>
 								</Box>
@@ -186,11 +178,11 @@ function LayerPropertyForm(props: LayerPropertyFormProps) {
 			}
 			return null;
 		},
-		[paintProps]
+		[paintProps, updatePaintProp]
 	);
 
 	return (
-		<>
+<>
 			<PaperStyled>
 				<ListItem key={key.current + '_paintPropForm'}>
 					<BoxStyled>
@@ -204,4 +196,4 @@ function LayerPropertyForm(props: LayerPropertyFormProps) {
 		</>
 	);
 }
-export default LayerPropertyForm;
+export default React.memo(LayerPropertyForm);

@@ -120,25 +120,39 @@ export { default as MonokaiStyle } from './omt_styles/monokai';
 export { default as OceanicNextStyle } from './omt_styles/oceanic_next';
 export { default as SolarizedStyle } from './omt_styles/solarized';
 
-// Redux
+// Map Store (Zustand)
+import useMapStore from './stores/map.store';
 import {
-	default as MapStore_store,
 	setMapConfig,
 	removeMapConfig,
 	setLayerInMapConfig,
 	removeLayerFromMapConfig,
 	updateLayerOrder,
 	setMasterVisible,
+	useLayerOrder,
+	useLayers,
+	useLayerByUuid,
+	useMapConfig,
+	useLayerStoreOrderIds,
+	getLayerByUuid,
+	extractUuidsFromLayerOrder,
 } from './stores/map.store';
 
 const MapStore = {
-	store: MapStore_store,
+	store: useMapStore,
 	setMapConfig,
 	removeMapConfig,
 	setLayerInMapConfig,
 	removeLayerFromMapConfig,
 	updateLayerOrder,
 	setMasterVisible,
+	useLayerOrder,
+	useLayers,
+	useLayerByUuid,
+	useMapConfig,
+	useLayerStoreOrderIds,
+	getLayerByUuid,
+	extractUuidsFromLayerOrder,
 };
 
 export { MapStore };

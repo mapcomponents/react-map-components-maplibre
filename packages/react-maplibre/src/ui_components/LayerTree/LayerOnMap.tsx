@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { extractUuidsFromLayerOrder, LayerOrderItem, RootState } from '../../stores/map.store';
+import {
+	useLayers,
+	useLayerOrder,
+	useLayerStoreOrderIds,
+	LayerOrderItem,
+	LayerConfig,
+} from '../../stores/map.store';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer, {
@@ -16,16 +21,22 @@ interface LayerOnMapProps {
 }
 
 function LayerOnMap(props: LayerOnMapProps) {
-	const layers = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layers
-	);
-	const layerStoreOrder = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layerOrder
-	);
+	const layers = useLayers(props.mapConfigKey);
+	const layerStoreOrder = useLayerOrder(props.mapConfigKey);
 	const mapHook = useMap({ mapId: props?.mapId });
-	const layerStoreOrderIds = useSelector((state: RootState) =>
-		extractUuidsFromLayerOrder(state, props.mapConfigKey)
-	);
+	const layerStoreOrderIds = useLayerStoreOrderIds(props.mapConfigKey);
+
+	// Build a local index for O(1) lookups during render.
+	// This is derived from the reactive `layers` subscription so it's always current.
+	const layerIndex = useMemo(() => {
+		const map = new Map<string, LayerConfig>();
+		if (layers) {
+			for (const l of layers) {
+				map.set(l.uuid, l);
+			}
+		}
+		return map;
+	}, [layers]);
 
 	const previousLayerStoreOrderRef = useRef<LayerOrderItem[]>([]);
 
@@ -33,16 +44,16 @@ function LayerOnMap(props: LayerOnMapProps) {
 		if (!mapHook.map || !layerStoreOrder) return;
 
 		const adjustLayerOrderAtLevel = (
-			layers: LayerOrderItem[],
-			previousLayers: LayerOrderItem[],
-			map: MapLibreGlWrapper
-		) => {
-			for (let i = 0; i < layers.length; i++) {
-				const currentLayer = layers[i];
+layerItems: LayerOrderItem[],
+previousLayers: LayerOrderItem[],
+map: MapLibreGlWrapper
+) => {
+			for (let i = 0; i < layerItems.length; i++) {
+				const currentLayer = layerItems[i];
 				const previousLayer = previousLayers ? previousLayers[i] : null;
 				if (currentLayer.uuid !== previousLayer?.uuid) {
 					if (map.getLayer(currentLayer.uuid)) {
-						const beforeLayer = i > 0 ? layers[i - 1].uuid : undefined;
+						const beforeLayer = i > 0 ? layerItems[i - 1].uuid : undefined;
 						map.moveLayer(currentLayer.uuid, beforeLayer);
 					}
 				}
@@ -67,12 +78,11 @@ function LayerOnMap(props: LayerOnMapProps) {
 	}, [layerStoreOrderIds]);
 
 	function renderLayer(layer: LayerOrderItem): React.ReactNode {
-		const targetLayerIndex = layers.findIndex((el) => el.uuid === layer.uuid);
-		const layerConfig = layers[targetLayerIndex];
+		const layerConfig: LayerConfig | undefined = layerIndex.get(layer.uuid);
 		switch (layerConfig?.type) {
 			case 'geojson':
 				return (
-					<MlGeoJsonLayer
+<MlGeoJsonLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
 						insertBeforeLayer={'layer_id_' + layerConfig.uuid}
@@ -92,8 +102,8 @@ function LayerOnMap(props: LayerOnMapProps) {
 					/>
 				);
 			case 'vt': {
-				const l = layerConfig.config.layers.map((layer: ExtendedLayerSpecification) => {
-					const newLayer = { ...layer };
+				const l = layerConfig.config.layers.map((vtLayer: ExtendedLayerSpecification) => {
+					const newLayer = { ...vtLayer };
 
 					if (newLayer.layout) {
 						newLayer.layout = {
@@ -108,7 +118,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 				});
 
 				return (
-					<MlVectorTileLayer
+<MlVectorTileLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
 						insertBeforeLayer={'layer_id_' + layerConfig.uuid}
@@ -120,7 +130,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 			case 'wms': {
 				const visible = layerConfig.masterVisible === false ? false : layerConfig.config?.visible;
 				return (
-					<MlWmsLayer
+<MlWmsLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
 						insertBeforeLayer={'layer_id_' + layerConfig.uuid}
@@ -132,9 +142,9 @@ function LayerOnMap(props: LayerOnMapProps) {
 			}
 			case 'folder':
 				return layer?.layers ? (
-					layer.layers.map((subLayer: LayerOrderItem) => renderLayer(subLayer))
+layer.layers.map((subLayer: LayerOrderItem) => renderLayer(subLayer))
 				) : (
-					<></>
+<></>
 				);
 			default:
 				return null;
@@ -142,7 +152,7 @@ function LayerOnMap(props: LayerOnMapProps) {
 	}
 
 	return (
-		<>
+<>
 			<MlOrderLayers layerIds={orderLayers}></MlOrderLayers>
 			{layerStoreOrder?.map?.((layerOrderItem) => renderLayer(layerOrderItem))}
 		</>

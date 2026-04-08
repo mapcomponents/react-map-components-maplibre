@@ -1,7 +1,7 @@
-import { useSelector } from 'react-redux';
-import { LayerOrderItem, RootState } from '../../stores/map.store';
+import { useLayerOrder, LayerOrderItem } from '../../stores/map.store';
 import LayerTreeListItem from './LayerTreeListItem';
 import { List, styled } from '@mui/material';
+import React from 'react';
 
 interface LayerTreeProps {
 	mapConfigKey: string;
@@ -12,9 +12,7 @@ const ListStyled = styled(List)({
 });
 
 function LayerTree(props: LayerTreeProps) {
-	const layerOrder = useSelector(
-		(state: RootState) => state.mapConfig.mapConfigs?.[props.mapConfigKey]?.layerOrder
-	);
+	const layerOrder = useLayerOrder(props.mapConfigKey);
 
 	return (
 		<ListStyled>
@@ -23,10 +21,10 @@ function LayerTree(props: LayerTreeProps) {
 					key={el.uuid}
 					layerOrderConfig={el}
 					mapConfigKey={props.mapConfigKey}
-				></LayerTreeListItem>
+				/>
 			))}
 		</ListStyled>
 	);
 }
 
-export default LayerTree;
+export default React.memo(LayerTree);
