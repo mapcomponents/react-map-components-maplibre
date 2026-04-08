@@ -6,7 +6,6 @@ import { MapComponentsProvider } from '../../index';
 import MapLibreMap from '../../components/MapLibreMap/MapLibreMap';
 import getTheme from '../MapcomponentsTheme';
 import LayerTree from './LayerTree';
-import LayerOnMap from './LayerOnMap';
 import useMapStore, {
 	setMapConfig,
 	MapConfig,
@@ -145,7 +144,6 @@ function TestWrapper() {
 					mapId="map_1"
 				/>
 			</div>
-			<LayerOnMap mapConfigKey={MAP_CONFIG_KEY} mapId="map_1" />
 		</div>
 	);
 }
@@ -460,10 +458,10 @@ describe('LayerTree — checkbox visibility', () => {
 	});
 
 	// -------------------------------------------------------------------------
-	// Map integration: LayerOnMap reflects store state in map style
+	// Map integration: MapLayerRenderer reflects store state in map style
 	// -------------------------------------------------------------------------
 
-	describe('Map integration: LayerOnMap re-renders on visibility change', () => {
+	describe('Map integration: MapLayerRenderer re-renders on visibility change', () => {
 		it('geojson layer is visible on map initially', () => {
 			mountTestWrapper();
 			waitForMapLoad().then((map) => {

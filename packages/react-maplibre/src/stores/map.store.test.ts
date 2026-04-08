@@ -556,7 +556,7 @@ describe('map.store - Zustand', () => {
 
 			const updated = useMapStore.getState().mapConfigs['testKey']._layerIndex?.get('geojson-1');
 			expect(updated?.masterVisible).toBe(false);
-			// layout.visibility is still 'visible' — LayerOnMap uses masterVisible to override
+			// layout.visibility is still 'visible' — MapLayerRenderer uses masterVisible to override
 			if (updated?.type === 'geojson') {
 				expect(updated.config.options?.layout?.visibility).toBe('visible');
 			}

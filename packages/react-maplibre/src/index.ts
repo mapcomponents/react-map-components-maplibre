@@ -111,8 +111,6 @@ export { default as SpeedDial } from './ui_components/SpeedDial/SpeedDial';
 
 export { default as LayerTree } from './ui_components/LayerTree/LayerTree';
 export { default as MapLayerRenderer } from './ui_components/LayerTree/MapLayerRenderer';
-/** @deprecated Use `MapLayerRenderer` instead. */
-export { default as LayerOnMap } from './ui_components/LayerTree/LayerOnMap';
 export { default as LayerTreeListItem } from './ui_components/LayerTree/LayerTreeListItem';
 
 // Styles
@@ -131,6 +129,7 @@ import {
 	removeLayerFromMapConfig,
 	updateLayerOrder,
 	setMasterVisible,
+	updateStyle,
 	useLayerOrder,
 	useLayers,
 	useLayerByUuid,
@@ -148,6 +147,7 @@ const MapStore = {
 	removeLayerFromMapConfig,
 	updateLayerOrder,
 	setMasterVisible,
+	updateStyle,
 	useLayerOrder,
 	useLayers,
 	useLayerByUuid,

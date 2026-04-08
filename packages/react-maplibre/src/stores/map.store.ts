@@ -1,6 +1,7 @@
 import { Layer } from 'wms-capabilities';
 import { create } from 'zustand';
 import { useShallow } from 'zustand/shallow';
+import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 import { MlWmsLayerProps } from '../components/MlWmsLayer/MlWmsLayer';
 import { MlGeoJsonLayerProps } from '../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
@@ -76,6 +77,12 @@ export interface MapConfig {
 	mapProps: MapProps;
 	layers: LayerConfig[];
 	layerOrder: LayerOrderItem[];
+	/** Non-symbol layers from the active base map style (rendered below user layers). */
+	backgroundLayers?: LayerSpecification[];
+	/** Symbol/label layers from the active base map style (rendered above user layers). */
+	symbolLayers?: LayerSpecification[];
+	/** The source options (tile URL etc.) shared by the background style layers. */
+	backgroundSourceOptions?: import('../components/MlVectorTileLayer/MlVectorTileLayer').MlVectorTileLayerProps['sourceOptions'];
 	/** Internal index for O(1) uuid lookups. Auto-built by store actions if omitted. */
 	_layerIndex?: Map<string, LayerConfig>;
 }
@@ -92,6 +99,7 @@ export interface MapActions {
 	removeLayerFromMapConfig: (mapConfigKey: string, layerUuid: string) => void;
 	updateLayerOrder: (mapConfigKey: string, newOrder: LayerOrderItem[]) => void;
 	setMasterVisible: (mapConfigKey: string, layerId: string, masterVisible: boolean) => void;
+	updateStyle: (mapConfigKey: string, style: StyleSpecification) => void;
 }
 
 // --- Internal helpers ---
@@ -345,6 +353,41 @@ export const useMapStore = create<MapState & MapActions>()((set) => ({
 				},
 			};
 		}),
+	updateStyle: (mapConfigKey, style) =>
+		set((state) => {
+			const mapConfig = state.mapConfigs[mapConfigKey];
+			if (!mapConfig || !style?.layers) return state;
+
+			const backgroundLayers: LayerSpecification[] = [];
+			const symbolLayers: LayerSpecification[] = [];
+
+			style.layers.forEach((layer: LayerSpecification, idx: number) => {
+				if (layer.type === 'symbol') {
+					symbolLayers.push(layer);
+				} else {
+					// Give the first non-symbol layer a stable id derived from the style name
+					const l = idx === 0 ? { ...layer, id: style.name || 'background' } : layer;
+					backgroundLayers.push(l);
+				}
+			});
+
+			// Extract a shared source options from the first layer that references a vector source
+			const firstVectorSource = style.sources
+				? Object.values(style.sources).find((s) => (s as { type: string }).type === 'vector')
+				: undefined;
+
+			return {
+				mapConfigs: {
+					...state.mapConfigs,
+					[mapConfigKey]: {
+						...mapConfig,
+						backgroundLayers,
+						symbolLayers,
+						backgroundSourceOptions: firstVectorSource as MapConfig['backgroundSourceOptions'],
+					},
+				},
+			};
+		}),
 }));
 
 // --- Selector hooks ---
@@ -432,6 +475,9 @@ export const updateLayerOrder = (mapConfigKey: string, newOrder: LayerOrderItem[
 
 export const setMasterVisible = (mapConfigKey: string, layerId: string, masterVisible: boolean) =>
 	useMapStore.getState().setMasterVisible(mapConfigKey, layerId, masterVisible);
+
+export const updateStyle = (mapConfigKey: string, style: StyleSpecification) =>
+	useMapStore.getState().updateStyle(mapConfigKey, style);
 
 /** Exposed for use in LayerTreeListItem move operations (structural sharing, no JSON clone) */
 export const moveInLayerOrderHelper = moveInLayerOrder;

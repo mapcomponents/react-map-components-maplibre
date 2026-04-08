@@ -217,7 +217,8 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		const isSingleItem = props.isFirst && props.isLast;
 		let visible = true;
 		if (layer?.type === 'geojson') {
-			visible = layer?.config?.options?.layout?.visibility !== 'none';
+			// masterVisible:false overrides own visibility for the checkbox display
+			visible = layer.masterVisible !== false && layer?.config?.options?.layout?.visibility !== 'none';
 			return (
 <>
 					<ListItemStyled
@@ -305,6 +306,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 			);
 		}
 		if (layer?.type === 'vt') {
+			const vtVisible = layer.masterVisible !== false && (layer.visible ?? true);
 			return (
 <>
 					<ListItemStyled
@@ -339,9 +341,9 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							<CheckboxListItemIcon>
 								<CheckboxStyled
 									data-testid={`layer-checkbox-${layer.uuid}`}
-									checked={layer.visible}
+									checked={vtVisible}
 									disabled={layer.masterVisible === false}
-									onClick={() => handleToggleVisibility(layer.visible ?? false)}
+									onClick={() => handleToggleVisibility(vtVisible)}
 								/>
 							</CheckboxListItemIcon>
 						</ListItemIconStyled>
@@ -392,7 +394,7 @@ subLayer.id
 			);
 		}
 		if (layer?.type === 'wms') {
-			const visible = layer.config?.visible ?? true;
+			const visible = layer.masterVisible !== false && (layer.config?.visible ?? true);
 			return (
 <>
 					<ListItemStyled
@@ -442,6 +444,7 @@ subLayer.id
 			);
 		}
 		if (layer.type === 'folder') {
+			const folderVisible = layer.masterVisible !== false && (layer.visible ?? true);
 			return (
 <>
 					<ListItemStyled
@@ -476,9 +479,9 @@ subLayer.id
 							<CheckboxListItemIcon>
 								<CheckboxStyled
 									data-testid={`layer-checkbox-${layer.uuid}`}
-									checked={layer.visible}
+									checked={folderVisible}
 									disabled={layer.masterVisible === false}
-									onClick={() => handleToggleVisibility(!!layer.visible)}
+									onClick={() => handleToggleVisibility(folderVisible)}
 								/>
 							</CheckboxListItemIcon>
 						</ListItemIconStyled>

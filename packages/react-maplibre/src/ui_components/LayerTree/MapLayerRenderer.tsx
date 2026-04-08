@@ -3,6 +3,7 @@ import {
 	useLayers,
 	useLayerOrder,
 	useLayerStoreOrderIds,
+	useMapConfig,
 	LayerOrderItem,
 	LayerConfig,
 } from '../../stores/map.store';
@@ -25,6 +26,7 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 	const layerStoreOrder = useLayerOrder(props.mapConfigKey);
 	const mapHook = useMap({ mapId: props?.mapId });
 	const layerStoreOrderIds = useLayerStoreOrderIds(props.mapConfigKey);
+	const mapConfig = useMapConfig(props.mapConfigKey);
 
 	// Build a local index for O(1) lookups during render.
 	// This is derived from the reactive `layers` subscription so it's always current.
@@ -69,9 +71,12 @@ map: MapLibreGlWrapper
 	}, [layerStoreOrder, mapHook.map]);
 
 	const orderLayers = useMemo(() => {
+		// Reverse the order so that layerStoreOrderIds[0] (top of tree list)
+		// gets the highest order marker on the map (= rendered on top).
+		const reversedIds = [...layerStoreOrderIds].reverse();
 		const layerIds = [
 			'order-background',
-			...layerStoreOrderIds.map((el) => 'layer_id_' + el),
+			...reversedIds.map((el) => 'layer_id_' + el),
 			'order-labels',
 		];
 		return layerIds;
@@ -154,7 +159,27 @@ layer.layers.map((subLayer: LayerOrderItem) => renderLayer(subLayer))
 	return (
 <>
 			<MlOrderLayers layerIds={orderLayers}></MlOrderLayers>
+			{/* Background (non-symbol) layers from the active base map style */}
+			{mapConfig?.backgroundLayers && mapConfig.backgroundLayers.length > 0 && (
+				<MlVectorTileLayer
+					key={props.mapConfigKey + '-background'}
+					layerId={props.mapConfigKey + '-background'}
+					insertBeforeLayer="order-background"
+					layers={mapConfig.backgroundLayers as ExtendedLayerSpecification[]}
+					sourceOptions={mapConfig.backgroundSourceOptions}
+				/>
+			)}
 			{layerStoreOrder?.map?.((layerOrderItem) => renderLayer(layerOrderItem))}
+			{/* Symbol/label layers from the active base map style — rendered above user layers */}
+			{mapConfig?.symbolLayers && mapConfig.symbolLayers.length > 0 && (
+				<MlVectorTileLayer
+					key={props.mapConfigKey + '-labels'}
+					layerId={props.mapConfigKey + '-labels'}
+					insertBeforeLayer="order-labels"
+					layers={mapConfig.symbolLayers as ExtendedLayerSpecification[]}
+					sourceOptions={mapConfig.backgroundSourceOptions}
+				/>
+			)}
 		</>
 	);
 }
