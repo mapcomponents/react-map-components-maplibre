@@ -1,42 +1,84 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import LayerList from '../LayerList/LayerList';
-
-import EmptyMapDecorator from '../../decorators/EmptyMapDecorator';
+import MapContextDecorator from '../../decorators/MapContextDecorator';
 import Sidebar from '../Sidebar';
 
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 import AddLayerButton from './AddLayerButton';
-import LayerListItemFactory from '../LayerList/LayerListItemFactory';
-import LayerContext, { LayerConfig } from '../../contexts/LayerContext';
-import SelectStyleButton from '../SelectStyleButton/SelectStyleButton';
-import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
-import GruvboxStyle from '../../omt_styles/gruvbox';
+import { LayerConfig as ContextLayerConfig } from '../../contexts/LayerContext';
+import {
+	LayerConfig,
+	setMapConfig,
+	setLayerInMapConfig,
+	useMapStore,
+	updateLayerOrder,
+} from '../../stores/map.store';
+import LayerTree from '../LayerTree/LayerTree';
+import LayerOnMap from '../LayerTree/LayerOnMap';
+import { v4 as uuidv4 } from 'uuid';
+
+const MAP_CONFIG_KEY = 'addLayerConfig';
 
 const storyoptions = {
 	title: 'UiComponents/AddLayerButton',
 	component: AddLayerButton,
 	argTypes: {},
-	decorators: EmptyMapDecorator,
+	decorators: MapContextDecorator,
 };
 export default storyoptions;
 
-const FolderTemplate: any = () => {
+/** Convert the old LayerContext shape into a Zustand store LayerConfig */
+function contextConfigToStoreLayer(config: ContextLayerConfig): LayerConfig {
+	const uuid = uuidv4();
+	if (config.type === 'wms') {
+		return {
+			type: 'wms',
+			uuid,
+			name: config.name ?? 'WMS Layer',
+			config: config.config as LayerConfig & { type: 'wms' } extends { config: infer C } ? C : never,
+		} as LayerConfig;
+	}
+	if (config.type === 'vt') {
+		return {
+			type: 'vt',
+			uuid,
+			name: config.name ?? 'Vector Tile Layer',
+			visible: true,
+			config: config.config,
+		} as unknown as LayerConfig;
+	}
+	// geojson (default)
+	return {
+		type: 'geojson',
+		uuid,
+		name: config.name ?? 'GeoJSON Layer',
+		configurable: true,
+		config: config.config,
+	} as unknown as LayerConfig;
+}
+
+const AddLayerExample: any = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
-	const layerContext = useContext(LayerContext);
 
 	useEffect(() => {
-		let _layers = localStorage.getItem('layers');
-		_layers = _layers ? JSON.parse(_layers) : [];
-		layerContext.setLayers(_layers as unknown as LayerConfig[]);
+		setMapConfig(MAP_CONFIG_KEY, {
+			name: 'Add Layer Demo',
+			mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
+			layers: [],
+			layerOrder: [],
+		});
 	}, []);
 
-	useEffect(() => {
-		if (layerContext.layers.length > 0) {
-			localStorage.setItem('layers', JSON.stringify(layerContext.layers));
-		}
-	}, [layerContext.layers]);
+	const handleAddLayer = (config: ContextLayerConfig) => {
+		const storeState = useMapStore.getState();
+		const mapConfig = storeState.mapConfigs[MAP_CONFIG_KEY];
+		if (!mapConfig) return;
+
+		const newLayer = contextConfigToStoreLayer(config);
+		setLayerInMapConfig(MAP_CONFIG_KEY, newLayer);
+		updateLayerOrder(MAP_CONFIG_KEY, [...mapConfig.layerOrder, { uuid: newLayer.uuid }]);
+	};
 
 	return (
 		<>
@@ -49,127 +91,19 @@ const FolderTemplate: any = () => {
 							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
 						>
 							Sidebar
-						</Button>
-						<Button
-							onClick={() => {
-								localStorage.clear();
-								location.reload();
-							}}
-						>
-							reset
 						</Button>
 					</>
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
-				<AddLayerButton
-					onComplete={(config) => layerContext.setLayers((current) => [...current, config])}
-				/>
-				<SelectStyleButton sx={{ marginLeft: '5px' }} />
-				<LayerList>
-					<LayerListItemFactory
-						layers={layerContext.layers}
-						setLayers={layerContext.setLayers}
-						insertBeforeLayer="order-content"
-						sortable={true}
-					/>
-				</LayerList>
+				<AddLayerButton onComplete={handleAddLayer} />
+				<LayerTree mapConfigKey={MAP_CONFIG_KEY} />
 			</Sidebar>
+			<LayerOnMap mapConfigKey={MAP_CONFIG_KEY} />
 		</>
 	);
 };
-export const FolderExample = FolderTemplate.bind({});
-
-FolderExample.parameters = {};
-FolderExample.args = {};
-
-const StyleJsonTemplate: any = () => {
-	const [openSidebar, setOpenSidebar] = useState(true);
-
-	const layerContext = useContext(LayerContext);
-
-	useEffect(() => {
-		let _layers = localStorage.getItem('layers');
-		_layers = _layers ? JSON.parse(_layers) : [];
-		layerContext.setLayers(_layers as unknown as LayerConfig[]);
-	}, []);
-
-	useEffect(() => {
-		if (layerContext.layers.length > 0) {
-			localStorage.setItem(
-				'mc_background_style',
-				JSON.stringify({
-					backgroundLayers: layerContext.backgroundLayers,
-					symbolLayers: layerContext.symbolLayers,
-				})
-			);
-		}
-	}, [layerContext.backgroundLayers, layerContext.symbolLayers]);
-
-	useEffect(() => {
-		const _bgStyle = localStorage.getItem('mc_background_style');
-		const _parsedBgStyle: { [key: string]: LayerSpecification[] } = _bgStyle
-			? JSON.parse(_bgStyle)
-			: { backgroundLayers: [], symbolLayers: [] };
-
-		if (_parsedBgStyle.backgroundLayers.length > 0) {
-			layerContext.setBackgroundLayers(
-				_parsedBgStyle?.backgroundLayers as unknown as LayerSpecification[]
-			);
-			layerContext.setSymbolLayers(_parsedBgStyle?.symbolLayers as unknown as LayerSpecification[]);
-		} else {
-			layerContext.updateStyle(GruvboxStyle as StyleSpecification);
-		}
-	}, []);
-
-	useEffect(() => {
-		if (layerContext.layers.length > 0) {
-			console.log(layerContext.layers);
-			localStorage.setItem('layers', JSON.stringify(layerContext.layers));
-		}
-	}, [layerContext.layers]);
-	return (
-		<>
-			<TopToolbar
-				buttons={
-					<>
-						<Button
-							variant={openSidebar ? 'contained' : 'outlined'}
-							onClick={() => setOpenSidebar(!openSidebar)}
-							sx={{ marginRight: { xs: '0px', sm: '10px' } }}
-						>
-							Sidebar
-						</Button>
-						<Button
-							onClick={() => {
-								localStorage.clear();
-								location.reload();
-							}}
-						>
-							reset
-						</Button>
-					</>
-				}
-			/>
-			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'LayerListItemFactory'}>
-				<AddLayerButton
-					onComplete={(config) => {
-						layerContext.setLayers((current) => {
-							console.log([config, ...current]);
-							return [config, ...current];
-						});
-					}}
-				/>
-				<SelectStyleButton sx={{ marginLeft: '5px' }} />
-				<LayerList>
-					<LayerListItemFactory layers={layerContext.layers} setLayers={layerContext.setLayers} />
-				</LayerList>
-			</Sidebar>
-		</>
-	);
-};
-
-export const StyleJsonExample = StyleJsonTemplate.bind({});
-
-StyleJsonExample.parameters = {};
-StyleJsonExample.args = {};
+export const AddLayerExample_Story = AddLayerExample.bind({});
+AddLayerExample_Story.storyName = 'Add Layer Button';
+AddLayerExample_Story.parameters = {};
+AddLayerExample_Story.args = {};

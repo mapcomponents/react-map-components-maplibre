@@ -42,6 +42,8 @@ interface LayerTreeListItemProps {
 	sortable?: boolean;
 	mapConfigKey: string;
 	layerOrderConfig: LayerOrderItem;
+	isFirst?: boolean;
+	isLast?: boolean;
 }
 
 const TuneIconButton = styled(IconButton)({
@@ -224,7 +226,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							<>
 								{props?.buttons}
 								<IconButtonStyled
-									disabled={false}
+									disabled={props.isLast}
 									onClick={() => {
 										moveDown(layer.uuid);
 									}}
@@ -232,7 +234,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 									<ArrowCircleDownIcon />
 								</IconButtonStyled>
 								<IconButtonStyled
-									disabled={false}
+									disabled={props.isFirst}
 									onClick={() => {
 										moveUp(layer.uuid);
 									}}
@@ -240,15 +242,13 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 									<ArrowCircleUpIcon />
 								</IconButtonStyled>
 								{layer.configurable && (
-									<>
-										<TuneIconButton
-											edge={'end'}
-											aria-label="settings"
-											onClick={handleTogglePaintProps}
-										>
-											<TuneIcon />
-										</TuneIconButton>
-									</>
+									<TuneIconButton
+										edge={'end'}
+										aria-label="settings"
+										onClick={handleTogglePaintProps}
+									>
+										<TuneIcon />
+									</TuneIconButton>
 								)}
 							</>
 						}
@@ -267,7 +267,8 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							variant="layerlist"
 							primary={layer.name || ''}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
+							primaryTypographyProps={{ overflow: 'hidden', textOverflow: 'ellipsis', noWrap: true }}
+							sx={{ minWidth: 0, overflow: 'hidden' }}
 						/>
 					</ListItemStyled>
 					{layer.configurable && paintPropsFormVisible && (
@@ -301,7 +302,27 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		if (layer?.type === 'vt') {
 			return (
 <>
-					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }} secondaryAction={undefined}>
+					<ListItemStyled
+						key={layer.uuid}
+						sx={{ ...props.listItemSx }}
+						secondaryAction={
+							<>
+								{props?.buttons}
+								<IconButtonStyled
+									disabled={props.isLast}
+									onClick={() => moveDown(layer.uuid)}
+								>
+									<ArrowCircleDownIcon />
+								</IconButtonStyled>
+								<IconButtonStyled
+									disabled={props.isFirst}
+									onClick={() => moveUp(layer.uuid)}
+								>
+									<ArrowCircleUpIcon />
+								</IconButtonStyled>
+							</>
+						}
+					>
 						<ListItemIconStyled>
 							<IconButtonStyled edge="end" aria-label="open" onClick={handleToggleOpen}>
 								{open ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
@@ -319,7 +340,8 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							variant="layerlist"
 							primary={layer.name}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
+							primaryTypographyProps={{ overflow: 'hidden', textOverflow: 'ellipsis', noWrap: true }}
+							sx={{ minWidth: 0, overflow: 'hidden' }}
 						/>
 					</ListItemStyled>
 					<BoxStyled key={layer.uuid + '_list'} open={open}>
@@ -363,7 +385,27 @@ subLayer.id
 			const visible = layer.config?.visible ?? true;
 			return (
 <>
-					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }} secondaryAction={undefined}>
+					<ListItemStyled
+						key={layer.uuid}
+						sx={{ ...props.listItemSx }}
+						secondaryAction={
+							<>
+								{props?.buttons}
+								<IconButtonStyled
+									disabled={props.isLast}
+									onClick={() => moveDown(layer.uuid)}
+								>
+									<ArrowCircleDownIcon />
+								</IconButtonStyled>
+								<IconButtonStyled
+									disabled={props.isFirst}
+									onClick={() => moveUp(layer.uuid)}
+								>
+									<ArrowCircleUpIcon />
+								</IconButtonStyled>
+							</>
+						}
+					>
 						<ListItemIconStyled>
 							<CheckboxListItemIcon>
 								<CheckboxStyled
@@ -378,8 +420,9 @@ subLayer.id
 							variant="layerlist"
 							primary={layer.name}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
-						/>
+							primaryTypographyProps={{ overflow: 'hidden', textOverflow: 'ellipsis', noWrap: true }}
+							sx={{ minWidth: 0, overflow: 'hidden' }}
+					/>
 					</ListItemStyled>
 				</>
 			);
@@ -387,7 +430,27 @@ subLayer.id
 		if (layer.type === 'folder') {
 			return (
 <>
-					<ListItemStyled key={layer.uuid} sx={{ ...props.listItemSx }}>
+					<ListItemStyled
+						key={layer.uuid}
+						sx={{ ...props.listItemSx }}
+						secondaryAction={
+							<>
+								{props?.buttons}
+								<IconButtonStyled
+									disabled={props.isLast}
+									onClick={() => moveDown(layer.uuid)}
+								>
+									<ArrowCircleDownIcon />
+								</IconButtonStyled>
+								<IconButtonStyled
+									disabled={props.isFirst}
+									onClick={() => moveUp(layer.uuid)}
+								>
+									<ArrowCircleUpIcon />
+								</IconButtonStyled>
+							</>
+						}
+					>
 						<ListItemIconStyled>
 							<IconButtonStyled edge="end" aria-label="open" onClick={handleToggleOpen}>
 								{open ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
@@ -405,18 +468,21 @@ subLayer.id
 							variant="layerlist"
 							primary={layer.name}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
+							primaryTypographyProps={{ overflow: 'hidden', textOverflow: 'ellipsis', noWrap: true }}
+							sx={{ minWidth: 0, overflow: 'hidden' }}
 						/>
 					</ListItemStyled>
 					<BoxStyled key={layer.uuid + '_list'} open={open}>
 						<ListStyled disablePadding>
-							{props?.layerOrderConfig?.layers?.map((subLayer) => (
+					{props?.layerOrderConfig?.layers?.map((subLayer, idx, arr) => (
 <MemoizedLayerTreeListItem
-									layerOrderConfig={subLayer}
-									key={subLayer.uuid}
-									mapConfigKey={props.mapConfigKey}
-								/>
-							))}
+								layerOrderConfig={subLayer}
+								key={subLayer.uuid}
+								mapConfigKey={props.mapConfigKey}
+								isFirst={idx === 0}
+								isLast={idx === arr.length - 1}
+							/>
+						))}
 						</ListStyled>
 					</BoxStyled>
 				</>

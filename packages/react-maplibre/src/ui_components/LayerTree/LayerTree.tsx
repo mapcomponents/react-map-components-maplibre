@@ -16,11 +16,13 @@ function LayerTree(props: LayerTreeProps) {
 
 	return (
 		<ListStyled>
-			{layerOrder?.map?.((el: LayerOrderItem) => (
+			{layerOrder?.map?.((el: LayerOrderItem, idx: number, arr: LayerOrderItem[]) => (
 				<LayerTreeListItem
 					key={el.uuid}
 					layerOrderConfig={el}
 					mapConfigKey={props.mapConfigKey}
+					isFirst={idx === 0}
+					isLast={idx === arr.length - 1}
 				/>
 			))}
 		</ListStyled>

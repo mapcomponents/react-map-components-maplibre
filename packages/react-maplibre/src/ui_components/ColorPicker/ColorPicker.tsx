@@ -6,11 +6,11 @@ import { converters } from './transformers';
 
 export interface ColorPickerProps {
 	onChange?: (value: string) => void;
-	convert: 'rgb' | 'rgba' | 'rgba_hex' | 'hex' | 'rgba_rgb';
+	convert?: 'rgb' | 'rgba' | 'rgba_hex' | 'hex' | 'rgba_rgb';
 	value?: string;
 }
 
-const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
+const ColorPicker = ({ convert = 'rgba_hex', ...props }: ColorPickerProps) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const value = props?.value || '';
 
@@ -64,12 +64,6 @@ const ColorPicker = ({ convert, ...props }: ColorPickerProps) => {
 			)}
 		</>
 	);
-};
-
-ColorPicker.defaultProps = {
-	convert: 'rgba_hex',
-	label: 'Color',
-	name: 'color',
 };
 
 export default ColorPicker;
