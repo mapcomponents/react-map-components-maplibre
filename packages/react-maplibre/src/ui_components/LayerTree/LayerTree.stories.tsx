@@ -229,7 +229,11 @@ const LayerTreeMultipleLayertypes = () => {
 		<>
 			<Sidebar open={true}>
 				<Typography variant="h5">Example Layertree</Typography>
-				<LayerTree mapConfigKey="mapConfig1" />
+				<LayerTree
+					mapConfigKey="mapConfig1"
+					selectStyleButton
+					addLayerButton
+				/>
 			</Sidebar>
 		</>
 	);

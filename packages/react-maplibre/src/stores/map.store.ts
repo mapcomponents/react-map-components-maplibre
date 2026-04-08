@@ -382,16 +382,73 @@ export const useMapStore = create<MapState & MapActions>()((set) => ({
 				}
 			});
 
+			// --- Stable UUIDs for the style folders / VT entries ---
+			const bgFolderUuid = '__style-background-folder__';
+			const bgVtUuid = '__style-background-vt__';
+			const labelsFolderUuid = '__style-labels-folder__';
+			const labelsVtUuid = '__style-labels-vt__';
+
+			// Remove any previous style layer entries from layers array
+			const styleUuids = new Set([bgFolderUuid, bgVtUuid, labelsFolderUuid, labelsVtUuid]);
+			const userLayers = mapConfig.layers.filter((l) => !styleUuids.has(l.uuid));
+			const userLayerOrder = mapConfig.layerOrder.filter((o) => !styleUuids.has(o.uuid));
+
+			// Build new layer configs for the style entries
+			const newLayers: LayerConfig[] = [...userLayers];
+			const newLayerOrder: LayerOrderItem[] = [];
+
+			// Labels folder + VT (top of tree = top of map)
+			if (symbolLayers.length > 0) {
+				newLayers.push(
+					{ type: 'folder', uuid: labelsFolderUuid, name: 'Labels', visible: true },
+					{
+						type: 'vt',
+						uuid: labelsVtUuid,
+						name: style.name ? `${style.name} Labels` : 'Style Labels',
+						visible: true,
+						config: { layers: symbolLayers as MlVectorTileLayerProps['layers'] },
+					} as VtLayerConfig,
+				);
+				newLayerOrder.push({
+					uuid: labelsFolderUuid,
+					layers: [{ uuid: labelsVtUuid }],
+				});
+			}
+
+			// User layers in the middle
+			newLayerOrder.push(...userLayerOrder);
+
+			// Background folder + VT (bottom of tree = bottom of map)
+			if (backgroundLayers.length > 0) {
+				newLayers.push(
+					{ type: 'folder', uuid: bgFolderUuid, name: 'Background', visible: true },
+					{
+						type: 'vt',
+						uuid: bgVtUuid,
+						name: style.name ? `${style.name} Background` : 'Style Background',
+						visible: true,
+						config: { layers: backgroundLayers as MlVectorTileLayerProps['layers'] },
+					} as VtLayerConfig,
+				);
+				newLayerOrder.push({
+					uuid: bgFolderUuid,
+					layers: [{ uuid: bgVtUuid }],
+				});
+			}
+
 			return {
 				mapConfigs: {
 					...state.mapConfigs,
 					[mapConfigKey]: {
 						...mapConfig,
+						layers: newLayers,
+						layerOrder: newLayerOrder,
 						backgroundLayers,
 						symbolLayers,
 						styleSources: style.sources as { [key: string]: SourceSpecification } | undefined,
 						styleSprite: style.sprite,
 						styleGlyphs: style.glyphs,
+						_layerIndex: buildLayerIndex(newLayers),
 					},
 				},
 			};

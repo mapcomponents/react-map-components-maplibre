@@ -243,25 +243,7 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 	return (
 		<>
 			<MlOrderLayers layerIds={orderLayers}></MlOrderLayers>
-			{/* Background (non-symbol) layers from the active base map style */}
-			{mapConfig?.backgroundLayers && mapConfig.backgroundLayers.length > 0 && (
-				<MlVectorTileLayer
-					key={mapConfigKey + '-background'}
-					layerId={mapConfigKey + '-background'}
-					insertBeforeLayer="order-background"
-					layers={mapConfig.backgroundLayers as ExtendedLayerSpecification[]}
-				/>
-			)}
 			{layerStoreOrder?.map?.((layerOrderItem) => renderLayer(layerOrderItem))}
-			{/* Symbol/label layers from the active base map style — rendered above user layers */}
-			{mapConfig?.symbolLayers && mapConfig.symbolLayers.length > 0 && (
-				<MlVectorTileLayer
-					key={mapConfigKey + '-labels'}
-					layerId={mapConfigKey + '-labels'}
-					insertBeforeLayer="order-labels"
-					layers={mapConfig.symbolLayers as ExtendedLayerSpecification[]}
-				/>
-			)}
 		</>
 	);
 }

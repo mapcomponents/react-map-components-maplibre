@@ -105,11 +105,13 @@ export { default as TopToolbar } from './ui_components/TopToolbar';
 export { default as Sidebar } from './ui_components/Sidebar';
 export { default as UploadButton } from './ui_components/UploadButton';
 export { default as SelectStyleButton } from './ui_components/SelectStyleButton/SelectStyleButton';
+export type { SelectStyleButtonProps } from './ui_components/SelectStyleButton/SelectStyleButton';
 export { default as SelectStylePopup } from './ui_components/SelectStyleButton/SelectStylePopup';
 export { default as ConfirmDialog } from './ui_components/ConfirmDialog';
 export { default as SpeedDial } from './ui_components/SpeedDial/SpeedDial';
 
 export { default as LayerTree } from './ui_components/LayerTree/LayerTree';
+export type { LayerTreeProps } from './ui_components/LayerTree/LayerTree';
 export { default as MapLayerRenderer } from './ui_components/LayerTree/MapLayerRenderer';
 export { default as LayerTreeListItem } from './ui_components/LayerTree/LayerTreeListItem';
 
