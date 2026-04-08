@@ -27,13 +27,32 @@ export default storyoptions;
 // --- Helpers for generating large layer trees ---
 
 const colors = [
-	'#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-	'#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4',
-	'#469990', '#dcbeff', '#9A6324', '#800000', '#aaffc3',
-	'#808000', '#ffd8b1', '#000075', '#a9a9a9', '#000000',
+	'#e6194b',
+	'#3cb44b',
+	'#ffe119',
+	'#4363d8',
+	'#f58231',
+	'#911eb4',
+	'#42d4f4',
+	'#f032e6',
+	'#bfef45',
+	'#fabed4',
+	'#469990',
+	'#dcbeff',
+	'#9A6324',
+	'#800000',
+	'#aaffc3',
+	'#808000',
+	'#ffd8b1',
+	'#000075',
+	'#a9a9a9',
+	'#000000',
 ];
 
-function generateGeojsonLayer(name: string, colorIndex: number): { layer: GeojsonLayerConfig; uuid: string } {
+function generateGeojsonLayer(
+	name: string,
+	colorIndex: number
+): { layer: GeojsonLayerConfig; uuid: string } {
 	const uuid = uuidv4();
 	return {
 		uuid,
@@ -58,7 +77,10 @@ function generateGeojsonLayer(name: string, colorIndex: number): { layer: Geojso
 
 type GeojsonLayerConfig = Extract<LayerConfig, { type: 'geojson' }>;
 
-function generateVtLayer(name: string): { layer: Extract<LayerConfig, { type: 'vt' }>; uuid: string } {
+function generateVtLayer(name: string): {
+	layer: Extract<LayerConfig, { type: 'vt' }>;
+	uuid: string;
+} {
 	const uuid = uuidv4();
 	return {
 		uuid,
@@ -98,7 +120,10 @@ function generateVtLayer(name: string): { layer: Extract<LayerConfig, { type: 'v
 	};
 }
 
-function generateWmsLayer(name: string): { layer: Extract<LayerConfig, { type: 'wms' }>; uuid: string } {
+function generateWmsLayer(name: string): {
+	layer: Extract<LayerConfig, { type: 'wms' }>;
+	uuid: string;
+} {
 	const uuid = uuidv4();
 	return {
 		uuid,
@@ -118,81 +143,81 @@ function generateWmsLayer(name: string): { layer: Extract<LayerConfig, { type: '
 
 const LayerTreeMultipleLayertypes = () => {
 	const demoData: MapState = useMemo(
-() => ({
-mapConfigs: {
-mapConfig1: {
-name: 'Demo Map',
-mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
-layers: [
-{
-type: 'folder',
-uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
-name: 'layers in a folder',
-visible: true,
-},
-{
-type: 'geojson',
-uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
-name: 'Example Point Layer',
-configurable: true,
-config: { geojson: sample_points_inside_polygon as FeatureCollection },
-},
-{
-type: 'vt',
-uuid: '346ced38-142c-4b57-8193-d689ffc7dfc2',
-name: 'Vector Layer',
-visible: true,
-config: {
-layers: [
-{
-id: '7feaa47a-f667-49ee-9780-312eabaa872b',
-type: 'fill',
-'source-layer': 'water',
-source: 'openmaptiles',
-layout: { visibility: 'visible' },
-paint: { 'fill-color': '#0905f5', 'fill-opacity': 0.5 },
-maxzoom: 20,
-},
-{
-id: '346ced38-142c-4b57-8193-d689ffc7dfc2',
-type: 'fill',
-'source-layer': 'building',
-source: 'openmaptiles',
-layout: { visibility: 'none' },
-paint: { 'fill-color': '#717875' },
-maxzoom: 20,
-},
-],
-sourceOptions: {
-type: 'vector',
-minzoom: 0,
-tiles: ['https://wms.wheregroup.com/tileserver/tile/world-0-14/{z}/{x}/{y}.pbf'],
-},
-},
-},
-{
-type: 'wms',
-uuid: '0e8cd91b-bd49-419d-a19a-5b15dec17542',
-name: 'Example WMS Layer',
-config: {
-url: 'https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme',
-urlParameters: { layers: 'nw_uraufnahme_rw' },
-},
-},
-],
-layerOrder: [
-{
-uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
-layers: [
-{ uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523' },
-{ uuid: '346ced38-142c-4b57-8193-d689ffc7dfc2' },
-{ uuid: '0e8cd91b-bd49-419d-a19a-5b15dec17542' },
-],
-},
-],
-},
-},
-}),
+		() => ({
+			mapConfigs: {
+				mapConfig1: {
+					name: 'Demo Map',
+					mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
+					layers: [
+						{
+							type: 'folder',
+							uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
+							name: 'layers in a folder',
+							visible: true,
+						},
+						{
+							type: 'geojson',
+							uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
+							name: 'Example Point Layer',
+							configurable: true,
+							config: { geojson: sample_points_inside_polygon as FeatureCollection },
+						},
+						{
+							type: 'vt',
+							uuid: '346ced38-142c-4b57-8193-d689ffc7dfc2',
+							name: 'Vector Layer',
+							visible: true,
+							config: {
+								layers: [
+									{
+										id: '7feaa47a-f667-49ee-9780-312eabaa872b',
+										type: 'fill',
+										'source-layer': 'water',
+										source: 'openmaptiles',
+										layout: { visibility: 'visible' },
+										paint: { 'fill-color': '#0905f5', 'fill-opacity': 0.5 },
+										maxzoom: 20,
+									},
+									{
+										id: '346ced38-142c-4b57-8193-d689ffc7dfc2',
+										type: 'fill',
+										'source-layer': 'building',
+										source: 'openmaptiles',
+										layout: { visibility: 'none' },
+										paint: { 'fill-color': '#717875' },
+										maxzoom: 20,
+									},
+								],
+								sourceOptions: {
+									type: 'vector',
+									minzoom: 0,
+									tiles: ['https://wms.wheregroup.com/tileserver/tile/world-0-14/{z}/{x}/{y}.pbf'],
+								},
+							},
+						},
+						{
+							type: 'wms',
+							uuid: '0e8cd91b-bd49-419d-a19a-5b15dec17542',
+							name: 'Example WMS Layer',
+							config: {
+								url: 'https://www.wms.nrw.de/geobasis/wms_nw_uraufnahme',
+								urlParameters: { layers: 'nw_uraufnahme_rw' },
+							},
+						},
+					],
+					layerOrder: [
+						{
+							uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
+							layers: [
+								{ uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523' },
+								{ uuid: '346ced38-142c-4b57-8193-d689ffc7dfc2' },
+								{ uuid: '0e8cd91b-bd49-419d-a19a-5b15dec17542' },
+							],
+						},
+					],
+				},
+			},
+		}),
 		[]
 	);
 
@@ -201,7 +226,7 @@ layers: [
 	}, [demoData]);
 
 	return (
-<>
+		<>
 			<Sidebar open={true}>
 				<Typography variant="h5">Example Layertree</Typography>
 				<LayerTree mapConfigKey="mapConfig1" />
@@ -217,53 +242,53 @@ LayerTreeMultipleLayertypesExample.args = {};
 
 const MultipleLayerTrees: any = () => {
 	const demoData: MapState = useMemo(
-() => ({
-mapConfigs: {
-mapConfig1: {
-name: 'Demo Map',
-mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
-layers: [
-{
-type: 'folder',
-uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
-name: 'layers in a folder',
-visible: true,
-config: undefined,
-},
-{
-type: 'geojson',
-uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
-name: 'Example Point Layer',
-configurable: true,
-config: {
-type: 'circle',
-geojson: sample_points_inside_polygon as FeatureCollection,
-options: { paint: { 'circle-color': 'blue', 'circle-radius': 5 } },
-},
-},
-{
-type: 'geojson',
-uuid: '0587c0ed-aaa0-4315-bb77-a40937a684d7',
-name: 'Example Polygon Layer',
-configurable: true,
-config: {
-geojson: sample_polygon_1 as FeatureCollection,
-options: { paint: { 'fill-color': 'red' } },
-},
-},
-],
-layerOrder: [
-{
-uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
-layers: [
-{ uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523' },
-{ uuid: '0587c0ed-aaa0-4315-bb77-a40937a684d7' },
-],
-},
-],
-},
-},
-}),
+		() => ({
+			mapConfigs: {
+				mapConfig1: {
+					name: 'Demo Map',
+					mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
+					layers: [
+						{
+							type: 'folder',
+							uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
+							name: 'layers in a folder',
+							visible: true,
+							config: undefined,
+						},
+						{
+							type: 'geojson',
+							uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523',
+							name: 'Example Point Layer',
+							configurable: true,
+							config: {
+								type: 'circle',
+								geojson: sample_points_inside_polygon as FeatureCollection,
+								options: { paint: { 'circle-color': 'blue', 'circle-radius': 5 } },
+							},
+						},
+						{
+							type: 'geojson',
+							uuid: '0587c0ed-aaa0-4315-bb77-a40937a684d7',
+							name: 'Example Polygon Layer',
+							configurable: true,
+							config: {
+								geojson: sample_polygon_1 as FeatureCollection,
+								options: { paint: { 'fill-color': 'red' } },
+							},
+						},
+					],
+					layerOrder: [
+						{
+							uuid: 'acd3d99f-2f82-40a5-a5c9-f303d54f5606',
+							layers: [
+								{ uuid: 'fec837fa-1d5d-432b-89c2-b416c9773523' },
+								{ uuid: '0587c0ed-aaa0-4315-bb77-a40937a684d7' },
+							],
+						},
+					],
+				},
+			},
+		}),
 		[]
 	);
 
@@ -272,7 +297,7 @@ layers: [
 	}, [demoData]);
 
 	return (
-<>
+		<>
 			<Sidebar open={true}>
 				<Typography variant="h5">Layertree 1</Typography>
 				<LayerTree mapConfigKey="mapConfig1" />
@@ -301,21 +326,18 @@ const LargeLayerTree = () => {
 			const folderChildren: LayerOrderItem[] = [];
 
 			allLayers.push({
-type: 'folder',
-uuid: folderUuid,
-name: `Folder ${f + 1}`,
-visible: true,
-});
+				type: 'folder',
+				uuid: folderUuid,
+				name: `Folder ${f + 1}`,
+				visible: true,
+			});
 
 			for (let l = 0; l < layersPerFolder; l++) {
 				const layerIndex = f * layersPerFolder + l;
 				const mod = layerIndex % 3;
 
 				if (mod === 0) {
-					const { layer, uuid } = generateGeojsonLayer(
-`GeoJSON ${f + 1}-${l + 1}`,
-layerIndex
-);
+					const { layer, uuid } = generateGeojsonLayer(`GeoJSON ${f + 1}-${l + 1}`, layerIndex);
 					allLayers.push(layer);
 					folderChildren.push({ uuid });
 				} else if (mod === 1) {
@@ -345,11 +367,9 @@ layerIndex
 	}, [mapConfig]);
 
 	return (
-<>
+		<>
 			<Sidebar open={true}>
-				<Typography variant="h5">
-					Large LayerTree ({mapConfig.layers.length} layers)
-				</Typography>
+				<Typography variant="h5">Large LayerTree ({mapConfig.layers.length} layers)</Typography>
 				<LayerTree mapConfigKey="largeConfig" />
 			</Sidebar>
 		</>
@@ -369,11 +389,11 @@ const DeeplyNestedFolders = () => {
 		function buildLevel(depth: number, prefix: string): LayerOrderItem {
 			const folderUuid = uuidv4();
 			allLayers.push({
-type: 'folder',
-uuid: folderUuid,
-name: `${prefix} (depth ${depth})`,
-visible: true,
-});
+				type: 'folder',
+				uuid: folderUuid,
+				name: `${prefix} (depth ${depth})`,
+				visible: true,
+			});
 
 			const children: LayerOrderItem[] = [];
 
@@ -394,10 +414,7 @@ visible: true,
 			return { uuid: folderUuid, layers: children };
 		}
 
-		const layerOrder: LayerOrderItem[] = [
-			buildLevel(1, 'Root A'),
-			buildLevel(1, 'Root B'),
-		];
+		const layerOrder: LayerOrderItem[] = [buildLevel(1, 'Root A'), buildLevel(1, 'Root B')];
 
 		return {
 			name: 'Nested Demo Map',
@@ -412,7 +429,7 @@ visible: true,
 	}, [mapConfig]);
 
 	return (
-<>
+		<>
 			<Sidebar open={true}>
 				<Typography variant="h5">
 					Deeply Nested Folders ({mapConfig.layers.length} items)
@@ -431,18 +448,18 @@ DeeplyNestedFoldersExample.args = {};
 const DynamicLayerCRUD = () => {
 	useEffect(() => {
 		setMapConfig('dynamicConfig', {
-name: 'Dynamic Map',
-mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
-layers: [
-{
-type: 'folder',
-uuid: 'dynamic-root-folder',
-name: 'Dynamic Layers',
-visible: true,
-},
-],
-layerOrder: [{ uuid: 'dynamic-root-folder', layers: [] }],
-});
+			name: 'Dynamic Map',
+			mapProps: { center: [7.0851268, 50.73884], zoom: 12 },
+			layers: [
+				{
+					type: 'folder',
+					uuid: 'dynamic-root-folder',
+					name: 'Dynamic Layers',
+					visible: true,
+				},
+			],
+			layerOrder: [{ uuid: 'dynamic-root-folder', layers: [] }],
+		});
 	}, []);
 
 	const addRandomLayer = () => {
@@ -456,8 +473,8 @@ layerOrder: [{ uuid: 'dynamic-root-folder', layers: [] }],
 
 		if (rand < 0.5) {
 			const { layer, uuid } = generateGeojsonLayer(
-`Dynamic GeoJSON ${Date.now().toString(36)}`,
-Math.floor(Math.random() * 20)
+				`Dynamic GeoJSON ${Date.now().toString(36)}`,
+				Math.floor(Math.random() * 20)
 			);
 			newLayer = layer;
 			newUuid = uuid;
@@ -480,14 +497,14 @@ Math.floor(Math.random() * 20)
 		}
 
 		setMapConfig('dynamicConfig', {
-...mapConfig,
-layers: newLayers,
-layerOrder: newLayerOrder,
-});
+			...mapConfig,
+			layers: newLayers,
+			layerOrder: newLayerOrder,
+		});
 	};
 
 	return (
-<>
+		<>
 			<Sidebar open={true}>
 				<Typography variant="h5">Dynamic Layer CRUD</Typography>
 				<Stack direction="row" spacing={1} sx={{ mb: 2, px: 1 }}>

@@ -1,7 +1,7 @@
 import { Layer } from 'wms-capabilities';
 import { create } from 'zustand';
 import { useShallow } from 'zustand/shallow';
-import { LayerSpecification, StyleSpecification } from 'maplibre-gl';
+import { LayerSpecification, SourceSpecification, StyleSpecification } from 'maplibre-gl';
 import { MlWmsLayerProps } from '../components/MlWmsLayer/MlWmsLayer';
 import { MlGeoJsonLayerProps } from '../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { MlVectorTileLayerProps } from '../components/MlVectorTileLayer/MlVectorTileLayer';
@@ -81,8 +81,12 @@ export interface MapConfig {
 	backgroundLayers?: LayerSpecification[];
 	/** Symbol/label layers from the active base map style (rendered above user layers). */
 	symbolLayers?: LayerSpecification[];
-	/** The source options (tile URL etc.) shared by the background style layers. */
-	backgroundSourceOptions?: import('../components/MlVectorTileLayer/MlVectorTileLayer').MlVectorTileLayerProps['sourceOptions'];
+	/** Sources from the active base map style. */
+	styleSources?: { [key: string]: SourceSpecification };
+	/** Sprite URL from the active base map style. */
+	styleSprite?: StyleSpecification['sprite'];
+	/** Glyphs URL template from the active base map style. */
+	styleGlyphs?: string;
 	/** Internal index for O(1) uuid lookups. Auto-built by store actions if omitted. */
 	_layerIndex?: Map<string, LayerConfig>;
 }
@@ -355,8 +359,15 @@ export const useMapStore = create<MapState & MapActions>()((set) => ({
 		}),
 	updateStyle: (mapConfigKey, style) =>
 		set((state) => {
-			const mapConfig = state.mapConfigs[mapConfigKey];
-			if (!mapConfig || !style?.layers) return state;
+			if (!style?.layers) return state;
+
+			// Initialise a minimal mapConfig if none exists yet
+			const mapConfig: MapConfig = state.mapConfigs[mapConfigKey] ?? {
+				name: mapConfigKey,
+				mapProps: { center: [0, 0], zoom: 1 },
+				layers: [],
+				layerOrder: [],
+			};
 
 			const backgroundLayers: LayerSpecification[] = [];
 			const symbolLayers: LayerSpecification[] = [];
@@ -371,11 +382,6 @@ export const useMapStore = create<MapState & MapActions>()((set) => ({
 				}
 			});
 
-			// Extract a shared source options from the first layer that references a vector source
-			const firstVectorSource = style.sources
-				? Object.values(style.sources).find((s) => (s as { type: string }).type === 'vector')
-				: undefined;
-
 			return {
 				mapConfigs: {
 					...state.mapConfigs,
@@ -383,7 +389,9 @@ export const useMapStore = create<MapState & MapActions>()((set) => ({
 						...mapConfig,
 						backgroundLayers,
 						symbolLayers,
-						backgroundSourceOptions: firstVectorSource as MapConfig['backgroundSourceOptions'],
+						styleSources: style.sources as { [key: string]: SourceSpecification } | undefined,
+						styleSprite: style.sprite,
+						styleGlyphs: style.glyphs,
 					},
 				},
 			};

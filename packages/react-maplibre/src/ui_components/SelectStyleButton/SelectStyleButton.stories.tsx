@@ -9,7 +9,7 @@ import Sidebar from '../Sidebar';
 import { Button } from '@mui/material';
 import TopToolbar from '../TopToolbar';
 
-import { LayerListItemFactory, MonokaiStyle } from '../../index';
+import { MonokaiStyle } from '../../index';
 import LayerContext from '../../contexts/LayerContext';
 import { StyleSpecification } from 'maplibre-gl';
 
@@ -22,12 +22,7 @@ const storyoptions = {
 export default storyoptions;
 
 const SelectStyleTemplate: any = () => {
-	const layerContext = useContext(LayerContext);
 	const [openSidebar, setOpenSidebar] = useState(true);
-
-	useEffect(() => {
-		layerContext.updateStyle(MonokaiStyle as StyleSpecification);
-	}, []);
 
 	return (
 		<>
@@ -44,9 +39,6 @@ const SelectStyleTemplate: any = () => {
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Layers'}>
 				<SelectStyleButton />
-				<LayerList>
-					<LayerListItemFactory layers={[]} />
-				</LayerList>
 			</Sidebar>
 		</>
 	);

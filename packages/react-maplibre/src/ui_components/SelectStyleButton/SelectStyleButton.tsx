@@ -2,7 +2,7 @@ import { Button, SxProps } from '@mui/material';
 import React from 'react';
 import SelectStylePopup from './SelectStylePopup';
 import WallpaperIcon from '@mui/icons-material/Wallpaper';
-import LayerContext from '../../contexts/LayerContext';
+import { updateStyle } from '../../stores/map.store';
 import MonokaiStyle from '../../omt_styles/monokai';
 import SolarizedStyle from '../../omt_styles/solarized';
 import OceanicNextStyle from '../../omt_styles/oceanic_next';
@@ -13,22 +13,26 @@ import { StyleSpecification } from 'maplibre-gl';
 
 export interface SelectStyleButtonProps {
 	sx?: SxProps;
-	onComplete?: (config: StyleSpecification[]) => void;
+	mapId?: string;
+	/** The mapConfig key to apply the style to. */
+	mapConfigKey?: string;
+	onComplete?: (style: StyleSpecification) => void;
 	styles?: StyleSpecification[];
 	defaultStyles?: boolean;
 	styleThumbnailPaths?: { [key: string]: string };
 }
 
 const defaultStyleThumbnailPath =
-	'https://mapcomponents.github.io/react-map-components-maplibre/assets/style_thumbnails/';
+	'https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/assets/style_thumbnails/';
 
 const SelectStyleButton = ({
 	sx,
+	mapConfigKey = 'mapConfig1',
 	styles = [],
 	defaultStyles = true,
 	styleThumbnailPaths,
+	onComplete,
 }: SelectStyleButtonProps) => {
-	const layerContext = React.useContext(LayerContext);
 	const [popupOpen, setPopupOpen] = React.useState<boolean>(false);
 
 	return (
@@ -64,11 +68,8 @@ const SelectStyleButton = ({
 				open={popupOpen}
 				setOpen={setPopupOpen}
 				onSelect={(style) => {
-					// Todo: should be possible without clearing bg layers first & setTimeout
-					layerContext.setBackgroundLayers([]);
-					setTimeout(() => {
-						layerContext.updateStyle(style);
-					}, 100);
+					updateStyle(mapConfigKey, style);
+					onComplete?.(style);
 					setPopupOpen(false);
 				}}
 			/>
