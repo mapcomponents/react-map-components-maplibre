@@ -104,8 +104,8 @@ const AddLayerPopup = (props: AddLayerPopupProps) => {
 			)}
 			{layerConfig?.type === 'geojson' && originType === 'geojson' && (
 				<GeoJsonLayerForm
-					onSubmit={(config) => {
-						props?.onComplete?.({ ...layerConfig, config: config });
+					onSubmit={(config, name) => {
+						props?.onComplete?.({ ...layerConfig, config, ...(name ? { name } : {}) });
 						handleCancel();
 					}}
 					onCancel={handleCancel}

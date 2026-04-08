@@ -1,23 +1,29 @@
 import {
 	Accordion,
+	AccordionDetails,
 	AccordionSummary,
+	Box,
 	Button,
+	Chip,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
+	Divider,
+	List,
+	ListItem,
+	ListItemText,
 	Typography,
 } from '@mui/material';
+import MapIcon from '@mui/icons-material/Map';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useEffect, useMemo, useState } from 'react';
 import useMap from '../../../hooks/useMap';
 import { LayerSpecification } from 'maplibre-gl';
 import MbtilesLayerPropFormular from './utils/MbtilesLayerPropFormular';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { MlVectorTileLayerProps } from '../../../components/MlVectorTileLayer/MlVectorTileLayer';
-
-export interface WmsLayerConfig {
-	url: string;
-}
+import { useTranslation } from 'react-i18next';
 
 export interface MbtilesLayerFormProps {
 	originType: string;
@@ -28,46 +34,14 @@ export interface MbtilesLayerFormProps {
 }
 
 export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
+	const { t } = useTranslation();
 	const [config, setConfig] = React.useState<MlVectorTileLayerProps>(props.config);
 	const [fileName, setFileName] = useState<string>();
 	const [filePath, setFilePath] = useState<string>();
 	const [layers, setLayers] = useState<LayerSpecification[]>([]);
 	const mapHook = useMap({ mapId: props.mapId });
-	const [expanded, setExpanded] = useState<boolean>(false);
 
-	console.log(layers);
-
-	const LayersToCall = () => {
-		return (
-			<>
-				{layers.map((el, idx) => (
-					<Typography variant="body2" key={idx}>
-						{idx + 1}: {JSON.stringify(el)}
-					</Typography>
-				))}
-			</>
-		);
-	};
-
-	/**
-	 * A Vector Tile layer configuration with a mbtile Protocol url will passed to the onComplete function of the addLayerButton.
-	 * In order to visdualize the file content, a mbtiles ProtocolHandler must be added to the map Instanz.
-	 * See the MapComponents AddLayerButton demo and the documentation of useAddProtocolHook to find out more about Protocol handlers.
-	 */
-
-	/* example values:
-	 *	 	id: 'countries',
-	 *		type: 'fill',
-	 *		'source-layer': 'countries',
-	 *   layout: {},
-	 *   paint: { "fill-color": "#f9a5f5", "fill-opacity": 0.5 },
-	 */
-
-	const configIsValid = useMemo(() => {
-		if (!fileName) return false;
-
-		return true;
-	}, [fileName]);
+	const configIsValid = useMemo(() => !!fileName, [fileName]);
 
 	useEffect(() => {
 		if (typeof fileName !== 'undefined' && typeof filePath !== 'undefined') {
@@ -86,41 +60,102 @@ export default function MbtilesLayerForm(props: MbtilesLayerFormProps) {
 
 	return (
 		<>
-			<DialogTitle> Layer from mbtiles file</DialogTitle>
-			<DialogContent>
-				<Button variant="contained" component="label" sx={{ marginTop: '10px' }}>
-					Select origin file
-					<input
-						type="file"
-						hidden
-						accept={props.originType}
-						onChange={(ev) => {
-							setFileName(ev.target.files?.[0].name);
-
-							if (ev.target.files?.[0]) {
-								const dataUrl = URL.createObjectURL(ev.target.files?.[0]);
-								setFilePath(dataUrl);
-							}
-						}}
-					/>
-				</Button>
-
-				<Accordion expanded={expanded}>
-					<AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-						<Typography>MB-Tile Layer properties</Typography>
-						<Button onClick={() => setExpanded(!expanded)}>
-							{expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-						</Button>
+			<DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pb: 1 }}>
+				<MapIcon color="primary" />
+				{t('addLayerButton.mbtiles.title', 'Add MBTiles Layer')}
+			</DialogTitle>
+			<DialogContent sx={{ minWidth: 420, display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+				<Typography variant="body2" color="text.secondary">
+					{t(
+						'addLayerButton.mbtiles.description',
+						'Load a local MBTiles vector tile file. You can optionally define layer render properties below.'
+					)}
+				</Typography>
+				<Box>
+					<Button
+						variant="outlined"
+						component="label"
+						startIcon={fileName ? <CheckCircleIcon color="success" /> : <UploadFileIcon />}
+						color={fileName ? 'success' : 'primary'}
+						fullWidth
+						sx={{ py: 1.5 }}
+					>
+						{fileName
+							? t('addLayerButton.fileLoaded', 'File loaded')
+							: t('addLayerButton.mbtiles.selectFile', 'Select MBTiles file')}
+						<input
+							type="file"
+							hidden
+							accept={props.originType}
+							onChange={(ev) => {
+								setFileName(ev.target.files?.[0].name);
+								if (ev.target.files?.[0]) {
+									const dataUrl = URL.createObjectURL(ev.target.files[0]);
+									setFilePath(dataUrl);
+								}
+							}}
+						/>
+					</Button>
+					{fileName && (
+						<Box sx={{ mt: 1 }}>
+							<Chip
+								size="small"
+								icon={<CheckCircleIcon />}
+								color="success"
+								variant="outlined"
+								label={fileName}
+							/>
+						</Box>
+					)}
+				</Box>
+				<Divider />
+				<Accordion disableGutters elevation={0} sx={{ border: '1px solid', borderColor: 'divider', '&:before': { display: 'none' } }}>
+					<AccordionSummary expandIcon={<ExpandMoreIcon />}>
+						<Typography variant="subtitle2">
+							{t('addLayerButton.mbtiles.layerProps', 'Layer render properties')}
+						</Typography>
+						{layers.length > 0 && (
+							<Chip
+								size="small"
+								label={layers.length}
+								color="primary"
+								sx={{ ml: 1 }}
+							/>
+						)}
 					</AccordionSummary>
-					<Typography variant="body1"> Layers</Typography>
-					{layers.length > 0 ? <LayersToCall /> : <Typography variant="body2"> 0 </Typography>}
-					<MbtilesLayerPropFormular setter={setLayers} />
+					<AccordionDetails>
+						{layers.length > 0 ? (
+							<List dense disablePadding>
+								{layers.map((el, idx) => (
+									<ListItem key={idx} disableGutters>
+										<ListItemText
+											primary={`${idx + 1}. ${(el as { id?: string }).id ?? 'layer'}`}
+											secondary={el.type}
+										/>
+									</ListItem>
+								))}
+							</List>
+						) : (
+							<Typography variant="body2" color="text.secondary">
+								{t('addLayerButton.mbtiles.noLayers', 'No layer properties defined yet')}
+							</Typography>
+						)}
+						<Box sx={{ mt: 1 }}>
+							<MbtilesLayerPropFormular setter={setLayers} />
+						</Box>
+					</AccordionDetails>
 				</Accordion>
 			</DialogContent>
-			<DialogActions>
-				<Button onClick={props.onCancel}>Cancel</Button>
-				<Button disabled={!configIsValid} onClick={() => props.onSubmit(config)}>
-					Add
+			<DialogActions sx={{ px: 3, pb: 2 }}>
+				<Button onClick={props.onCancel} color="inherit">
+					{t('common.cancel', 'Cancel')}
+				</Button>
+				<Button
+					variant="contained"
+					disabled={!configIsValid}
+					onClick={() => props.onSubmit(config)}
+				>
+					{t('addLayerButton.addLayer', 'Add layer')}
 				</Button>
 			</DialogActions>
 		</>

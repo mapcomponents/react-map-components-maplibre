@@ -10,12 +10,9 @@ import { LayerConfig as ContextLayerConfig } from '../../contexts/LayerContext';
 import {
 	LayerConfig,
 	setMapConfig,
-	setLayerInMapConfig,
 	useMapStore,
-	updateLayerOrder,
 } from '../../stores/map.store';
 import LayerTree from '../LayerTree/LayerTree';
-import LayerOnMap from '../LayerTree/LayerOnMap';
 import { v4 as uuidv4 } from 'uuid';
 
 const MAP_CONFIG_KEY = 'addLayerConfig';
@@ -71,13 +68,15 @@ const AddLayerExample: any = () => {
 	}, []);
 
 	const handleAddLayer = (config: ContextLayerConfig) => {
-		const storeState = useMapStore.getState();
-		const mapConfig = storeState.mapConfigs[MAP_CONFIG_KEY];
+		const mapConfig = useMapStore.getState().mapConfigs[MAP_CONFIG_KEY];
 		if (!mapConfig) return;
 
 		const newLayer = contextConfigToStoreLayer(config);
-		setLayerInMapConfig(MAP_CONFIG_KEY, newLayer);
-		updateLayerOrder(MAP_CONFIG_KEY, [...mapConfig.layerOrder, { uuid: newLayer.uuid }]);
+		setMapConfig(MAP_CONFIG_KEY, {
+			...mapConfig,
+			layers: [...mapConfig.layers, newLayer],
+			layerOrder: [...mapConfig.layerOrder, { uuid: newLayer.uuid }],
+		});
 	};
 
 	return (
@@ -99,7 +98,6 @@ const AddLayerExample: any = () => {
 				<AddLayerButton onComplete={handleAddLayer} />
 				<LayerTree mapConfigKey={MAP_CONFIG_KEY} />
 			</Sidebar>
-			<LayerOnMap mapConfigKey={MAP_CONFIG_KEY} />
 		</>
 	);
 };

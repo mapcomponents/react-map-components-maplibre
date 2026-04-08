@@ -214,6 +214,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 	}, []);
 
 	function renderLayerItem(layer: LayerConfig): React.ReactNode {
+		const isSingleItem = props.isFirst && props.isLast;
 		let visible = true;
 		if (layer?.type === 'geojson') {
 			visible = layer?.config?.options?.layout?.visibility !== 'none';
@@ -225,22 +226,26 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<IconButtonStyled
-									disabled={props.isLast}
-									onClick={() => {
-										moveDown(layer.uuid);
-									}}
-								>
-									<ArrowCircleDownIcon />
-								</IconButtonStyled>
-								<IconButtonStyled
-									disabled={props.isFirst}
-									onClick={() => {
-										moveUp(layer.uuid);
-									}}
-								>
-									<ArrowCircleUpIcon />
-								</IconButtonStyled>
+								{!isSingleItem && (
+									<>
+										<IconButtonStyled
+											disabled={props.isLast}
+											onClick={() => {
+												moveDown(layer.uuid);
+											}}
+										>
+											<ArrowCircleDownIcon />
+										</IconButtonStyled>
+										<IconButtonStyled
+											disabled={props.isFirst}
+											onClick={() => {
+												moveUp(layer.uuid);
+											}}
+										>
+											<ArrowCircleUpIcon />
+										</IconButtonStyled>
+									</>
+								)}
 								{layer.configurable && (
 									<TuneIconButton
 										edge={'end'}
@@ -308,18 +313,22 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<IconButtonStyled
-									disabled={props.isLast}
-									onClick={() => moveDown(layer.uuid)}
-								>
-									<ArrowCircleDownIcon />
-								</IconButtonStyled>
-								<IconButtonStyled
-									disabled={props.isFirst}
-									onClick={() => moveUp(layer.uuid)}
-								>
-									<ArrowCircleUpIcon />
-								</IconButtonStyled>
+								{!isSingleItem && (
+									<>
+										<IconButtonStyled
+											disabled={props.isLast}
+											onClick={() => moveDown(layer.uuid)}
+										>
+											<ArrowCircleDownIcon />
+										</IconButtonStyled>
+										<IconButtonStyled
+											disabled={props.isFirst}
+											onClick={() => moveUp(layer.uuid)}
+										>
+											<ArrowCircleUpIcon />
+										</IconButtonStyled>
+									</>
+								)}
 							</>
 						}
 					>
@@ -372,7 +381,8 @@ subLayer.id
 										key={subLayer.id}
 										variant="layerlist"
 										primary={(subLayer as { [key: string]: unknown })['source-layer'] as string}
-										primaryTypographyProps={{ overflow: 'hidden' }}
+										primaryTypographyProps={{ overflow: 'hidden', textOverflow: 'ellipsis', noWrap: true }}
+										sx={{ minWidth: 0, overflow: 'hidden' }}
 									/>
 								</ListItemStyled>
 							))}
@@ -391,18 +401,22 @@ subLayer.id
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<IconButtonStyled
-									disabled={props.isLast}
-									onClick={() => moveDown(layer.uuid)}
-								>
-									<ArrowCircleDownIcon />
-								</IconButtonStyled>
-								<IconButtonStyled
-									disabled={props.isFirst}
-									onClick={() => moveUp(layer.uuid)}
-								>
-									<ArrowCircleUpIcon />
-								</IconButtonStyled>
+								{!isSingleItem && (
+									<>
+										<IconButtonStyled
+											disabled={props.isLast}
+											onClick={() => moveDown(layer.uuid)}
+										>
+											<ArrowCircleDownIcon />
+										</IconButtonStyled>
+										<IconButtonStyled
+											disabled={props.isFirst}
+											onClick={() => moveUp(layer.uuid)}
+										>
+											<ArrowCircleUpIcon />
+										</IconButtonStyled>
+									</>
+								)}
 							</>
 						}
 					>
@@ -436,18 +450,22 @@ subLayer.id
 						secondaryAction={
 							<>
 								{props?.buttons}
-								<IconButtonStyled
-									disabled={props.isLast}
-									onClick={() => moveDown(layer.uuid)}
-								>
-									<ArrowCircleDownIcon />
-								</IconButtonStyled>
-								<IconButtonStyled
-									disabled={props.isFirst}
-									onClick={() => moveUp(layer.uuid)}
-								>
-									<ArrowCircleUpIcon />
-								</IconButtonStyled>
+								{!isSingleItem && (
+									<>
+										<IconButtonStyled
+											disabled={props.isLast}
+											onClick={() => moveDown(layer.uuid)}
+										>
+											<ArrowCircleDownIcon />
+										</IconButtonStyled>
+										<IconButtonStyled
+											disabled={props.isFirst}
+											onClick={() => moveUp(layer.uuid)}
+										>
+											<ArrowCircleUpIcon />
+										</IconButtonStyled>
+									</>
+								)}
 							</>
 						}
 					>

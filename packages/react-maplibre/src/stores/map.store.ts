@@ -120,7 +120,10 @@ function getIndex(mc: MapConfig): Map<string, LayerConfig> {
 
 /** Recursively clone a layerOrder tree, removing items with the given uuid.
  *  Uses structural sharing: only clones ancestors of removed nodes. */
-function removeFromLayerOrder(items: LayerOrderItem[], targetUuid: string): { result: LayerOrderItem[]; changed: boolean } {
+function removeFromLayerOrder(
+	items: LayerOrderItem[],
+	targetUuid: string
+): { result: LayerOrderItem[]; changed: boolean } {
 	let changed = false;
 	const result: LayerOrderItem[] = [];
 
@@ -147,9 +150,9 @@ function removeFromLayerOrder(items: LayerOrderItem[], targetUuid: string): { re
 /** Recursively clone a layerOrder tree, applying a move operation.
  *  Uses structural sharing: only clones the array where the move happens. */
 function moveInLayerOrder(
-items: LayerOrderItem[],
-uuid: string,
-getNewPos: (oldPos: number) => number
+	items: LayerOrderItem[],
+	uuid: string,
+	getNewPos: (oldPos: number) => number
 ): { result: LayerOrderItem[]; found: boolean } {
 	for (let i = 0; i < items.length; i++) {
 		if (items[i].uuid === uuid) {
@@ -193,15 +196,15 @@ function extractUuidsFromItems(items: LayerOrderItem[]): string[] {
 // --- Zustand store ---
 
 export const useMapStore = create<MapState & MapActions>()((set) => ({
-mapConfigs: {},
+	mapConfigs: {},
 
-setMapConfig: (key, mapConfig) =>
+	setMapConfig: (key, mapConfig) =>
 		set((state) => ({
-mapConfigs: {
-...state.mapConfigs,
-[key]: ensureIndex(mapConfig),
-},
-})),
+			mapConfigs: {
+				...state.mapConfigs,
+				[key]: ensureIndex(mapConfig),
+			},
+		})),
 
 	removeMapConfig: (key) =>
 		set((state) => {
@@ -295,53 +298,53 @@ mapConfigs: {
 
 			if (layerConfig.type === 'folder') {
 				// Find this folder's children in layerOrder
-for (const folder of mapConfig.layerOrder) {
-if (folder.uuid !== layerId) continue;
-if (!folder.layers) continue;
-for (const child of folder.layers) {
-updateLayerAt(child.uuid, (childLayer) => {
-if (childLayer.type === 'vt' && childLayer.config?.layers) {
-return {
-...childLayer,
-masterVisible,
-config: {
-...childLayer.config,
-layers: childLayer.config.layers.map((sl) => ({
-...sl,
-masterVisible,
-})),
-},
-} as VtLayerConfig;
-}
-return { ...childLayer, masterVisible };
-});
-}
-}
-}
+				for (const folder of mapConfig.layerOrder) {
+					if (folder.uuid !== layerId) continue;
+					if (!folder.layers) continue;
+					for (const child of folder.layers) {
+						updateLayerAt(child.uuid, (childLayer) => {
+							if (childLayer.type === 'vt' && childLayer.config?.layers) {
+								return {
+									...childLayer,
+									masterVisible,
+									config: {
+										...childLayer.config,
+										layers: childLayer.config.layers.map((sl) => ({
+											...sl,
+											masterVisible,
+										})),
+									},
+								} as VtLayerConfig;
+							}
+							return { ...childLayer, masterVisible };
+						});
+					}
+				}
+			}
 
-if (layerConfig.type === 'vt' && layerConfig.config?.layers) {
-updateLayerAt(layerId, (l) => {
-const vt = l as VtLayerConfig;
-return {
-...vt,
-config: {
-...vt.config,
-layers: vt.config.layers.map((sl) => ({
-...sl,
-masterVisible,
-})),
-},
-} as VtLayerConfig;
-});
-}
+			if (layerConfig.type === 'vt' && layerConfig.config?.layers) {
+				updateLayerAt(layerId, (l) => {
+					const vt = l as VtLayerConfig;
+					return {
+						...vt,
+						config: {
+							...vt.config,
+							layers: vt.config.layers.map((sl) => ({
+								...sl,
+								masterVisible,
+							})),
+						},
+					} as VtLayerConfig;
+				});
+			}
 
-return {
-mapConfigs: {
-...state.mapConfigs,
-[mapConfigKey]: { ...mapConfig, layers: updatedLayers, _layerIndex: newIndex },
-},
-};
-}),
+			return {
+				mapConfigs: {
+					...state.mapConfigs,
+					[mapConfigKey]: { ...mapConfig, layers: updatedLayers, _layerIndex: newIndex },
+				},
+			};
+		}),
 }));
 
 // --- Selector hooks ---
@@ -350,34 +353,29 @@ mapConfigs: {
  * Get the layerOrder array for a specific mapConfig key.
  */
 export function useLayerOrder(mapConfigKey: string): LayerOrderItem[] | undefined {
-return useMapStore((state) => state.mapConfigs[mapConfigKey]?.layerOrder);
+	return useMapStore((state) => state.mapConfigs[mapConfigKey]?.layerOrder);
 }
 
 /**
  * Get the layers array for a specific mapConfig key.
  */
 export function useLayers(mapConfigKey: string): LayerConfig[] | undefined {
-return useMapStore((state) => state.mapConfigs[mapConfigKey]?.layers);
+	return useMapStore((state) => state.mapConfigs[mapConfigKey]?.layers);
 }
 
 /**
  * Get a single layer by uuid within a specific mapConfig.
  * O(1) lookup via the internal index. Only re-renders when that specific layer object changes.
  */
-export function useLayerByUuid(
-mapConfigKey: string,
-uuid: string
-): LayerConfig | undefined {
-return useMapStore(
-(state) => state.mapConfigs[mapConfigKey]?._layerIndex?.get(uuid)
-);
+export function useLayerByUuid(mapConfigKey: string, uuid: string): LayerConfig | undefined {
+	return useMapStore((state) => state.mapConfigs[mapConfigKey]?._layerIndex?.get(uuid));
 }
 
 /**
  * Get the full MapConfig for a specific key.
  */
 export function useMapConfig(mapConfigKey: string): MapConfig | undefined {
-return useMapStore((state) => state.mapConfigs[mapConfigKey]);
+	return useMapStore((state) => state.mapConfigs[mapConfigKey]);
 }
 
 /**
@@ -385,13 +383,13 @@ return useMapStore((state) => state.mapConfigs[mapConfigKey]);
  * Uses shallow comparison to avoid unnecessary re-renders.
  */
 export function useLayerStoreOrderIds(mapConfigKey: string): string[] {
-return useMapStore(
-useShallow((state) => {
-const mapConfig = state.mapConfigs[mapConfigKey];
-if (!mapConfig) return [];
-return extractUuidsFromItems(mapConfig.layerOrder);
-})
-);
+	return useMapStore(
+		useShallow((state) => {
+			const mapConfig = state.mapConfigs[mapConfigKey];
+			if (!mapConfig) return [];
+			return extractUuidsFromItems(mapConfig.layerOrder);
+		})
+	);
 }
 
 // --- Standalone selectors (non-hook, for use outside React) ---
@@ -400,41 +398,40 @@ return extractUuidsFromItems(mapConfig.layerOrder);
  * Find a layer by uuid across all mapConfigs. O(1) per mapConfig via index.
  */
 export const getLayerByUuid = (state: MapState, uuid: string): LayerConfig | null => {
-for (const key in state.mapConfigs) {
-const found = state.mapConfigs[key]._layerIndex?.get(uuid);
-if (found) return found;
-}
-return null;
+	for (const key in state.mapConfigs) {
+		const found = state.mapConfigs[key]._layerIndex?.get(uuid);
+		if (found) return found;
+	}
+	return null;
 };
 
 /**
  * Extract uuids from layerOrder for a mapConfig key (non-hook version).
  */
 export const extractUuidsFromLayerOrder = (state: MapState, mapConfigKey: string): string[] => {
-const mapConfig = state.mapConfigs[mapConfigKey];
-if (!mapConfig) return [];
-return extractUuidsFromItems(mapConfig.layerOrder);
+	const mapConfig = state.mapConfigs[mapConfigKey];
+	if (!mapConfig) return [];
+	return extractUuidsFromItems(mapConfig.layerOrder);
 };
 
 // --- Convenience action accessors (can be called outside React components) ---
 
 export const setMapConfig = (key: string, mapConfig: MapConfig) =>
-useMapStore.getState().setMapConfig(key, mapConfig);
+	useMapStore.getState().setMapConfig(key, mapConfig);
 
-export const removeMapConfig = (key: string) =>
-useMapStore.getState().removeMapConfig(key);
+export const removeMapConfig = (key: string) => useMapStore.getState().removeMapConfig(key);
 
 export const setLayerInMapConfig = (mapConfigKey: string, layer: LayerConfig) =>
-useMapStore.getState().setLayerInMapConfig(mapConfigKey, layer);
+	useMapStore.getState().setLayerInMapConfig(mapConfigKey, layer);
 
 export const removeLayerFromMapConfig = (mapConfigKey: string, layerUuid: string) =>
-useMapStore.getState().removeLayerFromMapConfig(mapConfigKey, layerUuid);
+	useMapStore.getState().removeLayerFromMapConfig(mapConfigKey, layerUuid);
 
 export const updateLayerOrder = (mapConfigKey: string, newOrder: LayerOrderItem[]) =>
-useMapStore.getState().updateLayerOrder(mapConfigKey, newOrder);
+	useMapStore.getState().updateLayerOrder(mapConfigKey, newOrder);
 
 export const setMasterVisible = (mapConfigKey: string, layerId: string, masterVisible: boolean) =>
-useMapStore.getState().setMasterVisible(mapConfigKey, layerId, masterVisible);
+	useMapStore.getState().setMasterVisible(mapConfigKey, layerId, masterVisible);
 
 /** Exposed for use in LayerTreeListItem move operations (structural sharing, no JSON clone) */
 export const moveInLayerOrderHelper = moveInLayerOrder;

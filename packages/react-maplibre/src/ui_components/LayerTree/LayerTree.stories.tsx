@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react';
 import LayerTree from './LayerTree';
-import LayerOnMap from './LayerOnMap';
 import Sidebar from '../Sidebar';
 import MapContextDecorator from '../../decorators/MapContextDecorator';
 import sample_polygon_1 from '../LayerList/assets/sample_polygon_1.json';
@@ -207,7 +206,6 @@ layers: [
 				<Typography variant="h5">Example Layertree</Typography>
 				<LayerTree mapConfigKey="mapConfig1" />
 			</Sidebar>
-			<LayerOnMap mapConfigKey="mapConfig1" />
 		</>
 	);
 };
@@ -281,7 +279,6 @@ layers: [
 				<Typography variant="h5">Layertree 2</Typography>
 				<LayerTree mapConfigKey="mapConfig1" />
 			</Sidebar>
-			<LayerOnMap mapConfigKey="mapConfig1" />
 		</>
 	);
 };
@@ -355,7 +352,6 @@ layerIndex
 				</Typography>
 				<LayerTree mapConfigKey="largeConfig" />
 			</Sidebar>
-			<LayerOnMap mapConfigKey="largeConfig" />
 		</>
 	);
 };
@@ -423,7 +419,6 @@ visible: true,
 				</Typography>
 				<LayerTree mapConfigKey="nestedConfig" />
 			</Sidebar>
-			<LayerOnMap mapConfigKey="nestedConfig" />
 		</>
 	);
 };
@@ -502,7 +497,6 @@ layerOrder: newLayerOrder,
 				</Stack>
 				<LayerTree mapConfigKey="dynamicConfig" />
 			</Sidebar>
-			<LayerOnMap mapConfigKey="dynamicConfig" />
 		</>
 	);
 };

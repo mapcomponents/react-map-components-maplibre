@@ -3,7 +3,9 @@ import MapLibreGlWrapper from '../components/MapLibreMap/lib/MapLibreGlWrapper';
 
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
-import { LayerContextProvider } from './LayerContext';
+import useMapStore from '../stores/map.store';
+import { useShallow } from 'zustand/shallow';
+import MapLayerRenderer from '../ui_components/LayerTree/MapLayerRenderer';
 
 export interface MapContextType {
 	mapIds: string[];
@@ -24,11 +26,38 @@ MapComponentsProvider must be used one level higher than the first use of MapCon
  * MapComponentsProvider requires at least one use of the MapLibreMap component somewhere down the component tree that will create the MapLibre-gl object and set the reference at MapContext.map. For MapLibre maps it is a good idea to provide a mapId attribute to the MapLibreMap Component even if you are only using a single map instance at start. It will make a later transition to using multiple instances within the same project much easier.
  */
 
-const MapComponentsProvider = ({ children }: { children: ReactNode }) => {
+/**
+ * Props for MapComponentsProvider.
+ *
+ * By default, `MapComponentsProvider` automatically renders a `MapLayerRenderer`
+ * for every `mapConfig` registered in the Zustand map store, so that layers added
+ * via `setMapConfig` appear on the map without any extra wiring.
+ *
+ * Set `disableLayerRenderer={true}` to opt out and render `<MapLayerRenderer>` manually.
+ */
+interface MapComponentsProviderProps {
+	children: ReactNode;
+	/**
+	 * When `true`, the automatic `MapLayerRenderer` instances are not rendered.
+	 * Use this when you want full manual control over when and how layers are rendered.
+	 */
+	disableLayerRenderer?: boolean;
+}
+
+const MapComponentsProvider = ({
+	children,
+	disableLayerRenderer = false,
+}: MapComponentsProviderProps) => {
 	const [map, setMap] = useState<MapLibreGlWrapper | undefined>(undefined);
 	const [mapIds, setMapIds] = useState<[...string[]]>([]);
 	const mapIds_raw = useRef<[...string[]]>([]);
 	const maps = useRef<{ [key: string]: MapLibreGlWrapper }>({});
+
+	// Subscribe to the Zustand store to get all registered mapConfig keys.
+	// useShallow ensures we only re-render when the set of keys changes.
+	const mapConfigKeys = useMapStore(
+		useShallow((state) => Object.keys(state.mapConfigs))
+	);
 
 	const removeMap = (mapId: string) => {
 		if (mapId) {
@@ -97,9 +126,13 @@ const MapComponentsProvider = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<MapContext.Provider value={value}>
-			<LayerContextProvider>
-				<MUIThemeProvider theme={getTheme('light')}>{children}</MUIThemeProvider>
-			</LayerContextProvider>
+			<MUIThemeProvider theme={getTheme('light')}>
+				{children}
+				{!disableLayerRenderer &&
+					mapConfigKeys.map((key) => (
+						<MapLayerRenderer key={key} mapConfigKey={key} />
+					))}
+			</MUIThemeProvider>
 		</MapContext.Provider>
 	);
 };

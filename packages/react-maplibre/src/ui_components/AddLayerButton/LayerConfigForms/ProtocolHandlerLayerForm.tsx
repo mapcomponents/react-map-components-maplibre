@@ -1,13 +1,22 @@
 import {
+	Box,
 	Button,
+	Chip,
 	DialogActions,
+	DialogContent,
 	DialogTitle,
+	Divider,
 	FormControl,
+	FormHelperText,
 	InputLabel,
 	MenuItem,
 	Select,
 	SelectChangeEvent,
+	Typography,
 } from '@mui/material';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RouteIcon from '@mui/icons-material/Route';
 import { useEffect, useMemo, useState } from 'react';
 import useAddProtocol from '../../../hooks/useAddProtocol/useAddProtocol';
 import CSVOptionsFormular from './utils/CSVOptionsFomular';
@@ -19,6 +28,7 @@ import { OSMProtocolHandler } from '../../../protocol_handlers/osm';
 import { XMLProtocolHandler } from '../../../protocol_handlers/xml';
 import * as csv2geojsonType from '../../../protocol_handlers/csv2geojson';
 import { MlGeoJsonLayerProps } from '../../../components/MlGeoJsonLayer/MlGeoJsonLayer';
+import { useTranslation } from 'react-i18next';
 
 export interface ProtocolHandlerLayerFormProps {
 	originType: string;
@@ -35,11 +45,12 @@ const handlers = {
 	gpx: XMLProtocolHandler,
 	kml: XMLProtocolHandler,
 	tcx: XMLProtocolHandler,
-	//mbtiles: mbTilesProtocolHandler
 };
 
 const types: string[] = ['fill', 'line', 'circle'];
+
 export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerFormProps) {
+	const { t } = useTranslation();
 	const [config, setConfig] = useState<Partial<MlGeoJsonLayerProps>>({ type: 'circle' });
 	const [fileName, setFileName] = useState<string>();
 	const [filePath, setFilePath] = useState<string>();
@@ -55,7 +66,7 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 	const configIsValid = useMemo(() => {
 		if (!config?.type) return false;
 		if (filePath && fileName) return true;
-		else return false;
+		return false;
 	}, [config, filePath, fileName]);
 
 	useEffect(() => {
@@ -69,11 +80,9 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 				});
 			config.options = { source: fileName };
 		}
-
 		return () => {};
 	}, [fileName, mapHook.map, filePath]);
 
-	//the temporally storage adress of the uploaded file will be revoked, after source and layer are loaded in the map
 	useEffect(() => {
 		if (filePath && fileName && mapHook.map?.getLayer(fileName)) {
 			URL.revokeObjectURL(filePath);
@@ -82,60 +91,101 @@ export default function ProtocolHandlerLayerForm(props: ProtocolHandlerLayerForm
 
 	function addOption(newObject: JSON) {
 		const newOptions = { ...optionsObject, ...newObject };
-
 		return setOptionsObject(newOptions);
 	}
 
 	return (
 		<>
-			<DialogTitle>Layer from {props.originType}</DialogTitle>
-			<FormControl fullWidth>
-				<InputLabel id="type-label">Type</InputLabel>
-				<Select
-					labelId="type-label"
-					value={config.type}
-					label="Type"
-					onChange={(ev: SelectChangeEvent) =>
-						setConfig((current) => ({
-							...current,
-							type: ev.target.value as MlGeoJsonLayerProps['type'],
-						}))
-					}
-				>
-					{types.map((type) => (
-						<MenuItem key={type} value={type}>
-							{type}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
-			<FormControl fullWidth>
-				<Button variant="contained" component="label" sx={{ marginTop: '10px' }}>
-					Select origin file
-					<input
-						type="file"
-						hidden
-						accept={props.originType}
-						onChange={(ev) => {
-							setFileName(ev.target.files?.[0].name);
-
-							if (ev.target.files?.[0]) {
-								const dataUrl = URL.createObjectURL(ev.target.files?.[0]);
-								setFilePath(dataUrl);
-							}
-						}}
-					/>
-				</Button>
+			<DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pb: 1 }}>
+				<RouteIcon color="primary" />
+				{t(
+					`addLayerButton.${props.originType}.title`,
+					`Add ${props.originType.toUpperCase()} Layer`
+				)}
+			</DialogTitle>
+			<DialogContent sx={{ minWidth: 400, display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+				<Typography variant="body2" color="text.secondary">
+					{t(
+						`addLayerButton.${props.originType}.description`,
+						`Load geographic data from a ${props.originType.toUpperCase()} file`
+					)}
+				</Typography>
+				<FormControl size="small" fullWidth>
+					<InputLabel id="protocol-type-label">
+						{t('addLayerButton.geojson.renderType', 'Render type')}
+					</InputLabel>
+					<Select
+						labelId="protocol-type-label"
+						value={config.type}
+						label={t('addLayerButton.geojson.renderType', 'Render type')}
+						onChange={(ev: SelectChangeEvent) =>
+							setConfig((current) => ({
+								...current,
+								type: ev.target.value as MlGeoJsonLayerProps['type'],
+							}))
+						}
+					>
+						{types.map((type) => (
+							<MenuItem key={type} value={type}>
+								{t(`addLayerButton.geojson.type.${type}`, type)}
+							</MenuItem>
+						))}
+					</Select>
+					<FormHelperText>
+						{t('addLayerButton.geojson.renderTypeHelp', 'How the geometry will be rendered on the map')}
+					</FormHelperText>
+				</FormControl>
+				<Divider />
+				<Box>
+					<Button
+						variant="outlined"
+						component="label"
+						startIcon={fileName ? <CheckCircleIcon color="success" /> : <UploadFileIcon />}
+						color={fileName ? 'success' : 'primary'}
+						fullWidth
+						sx={{ py: 1.5 }}
+					>
+						{fileName
+							? t('addLayerButton.fileLoaded', 'File loaded')
+							: t(`addLayerButton.${props.originType}.selectFile`, `Select ${props.originType.toUpperCase()} file`)}
+						<input
+							type="file"
+							hidden
+							accept={`.${props.originType}`}
+							onChange={(ev) => {
+								setFileName(ev.target.files?.[0].name);
+								if (ev.target.files?.[0]) {
+									const dataUrl = URL.createObjectURL(ev.target.files[0]);
+									setFilePath(dataUrl);
+								}
+							}}
+						/>
+					</Button>
+					{fileName && (
+						<Box sx={{ mt: 1 }}>
+							<Chip
+								size="small"
+								icon={<CheckCircleIcon />}
+								color="success"
+								variant="outlined"
+								label={fileName}
+							/>
+						</Box>
+					)}
+				</Box>
 				{props.originType === 'csv' && <CSVOptionsFormular setter={addOption} />}
 				{props.originType === 'osm' && <OsmOptionsFomular setter={addOption} />}
-			</FormControl>
-			<DialogActions>
-				<Button onClick={props.onCancel}>Cancel</Button>
+			</DialogContent>
+			<DialogActions sx={{ px: 3, pb: 2 }}>
+				<Button onClick={props.onCancel} color="inherit">
+					{t('common.cancel', 'Cancel')}
+				</Button>
 				<Button
+					variant="contained"
 					disabled={!configIsValid}
 					onClick={() => props.onSubmit(config as MlGeoJsonLayerProps)}
 				>
-					Add
+					{t('addLayerButton.addLayer', 'Add layer')}
 				</Button>
 			</DialogActions>
 		</>

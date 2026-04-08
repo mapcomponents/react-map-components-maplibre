@@ -16,15 +16,20 @@ function LayerTree(props: LayerTreeProps) {
 
 	return (
 		<ListStyled>
-			{layerOrder?.map?.((el: LayerOrderItem, idx: number, arr: LayerOrderItem[]) => (
-				<LayerTreeListItem
-					key={el.uuid}
-					layerOrderConfig={el}
-					mapConfigKey={props.mapConfigKey}
-					isFirst={idx === 0}
-					isLast={idx === arr.length - 1}
-				/>
-			))}
+			{layerOrder?.slice().reverse().map?.((el: LayerOrderItem, reversedIdx: number, arr: LayerOrderItem[]) => {
+				// isFirst/isLast reflect position in the *original* array (= map z-order)
+				// so the bottom item in the list (last in reversed) is index 0 in original → isFirst
+				const originalIdx = arr.length - 1 - reversedIdx;
+				return (
+					<LayerTreeListItem
+						key={el.uuid}
+						layerOrderConfig={el}
+						mapConfigKey={props.mapConfigKey}
+						isFirst={originalIdx === 0}
+						isLast={originalIdx === arr.length - 1}
+					/>
+				);
+			})}
 		</ListStyled>
 	);
 }
