@@ -322,8 +322,8 @@ const LargeLayerTree = () => {
 		const allLayers: LayerConfig[] = [];
 		const layerOrder: LayerOrderItem[] = [];
 
-		const folderCount = 10;
-		const layersPerFolder = 12; // 10 folders x 12 = 120 layers + 10 folders = 130 total
+		const folderCount = 5;
+		const layersPerFolder = 6; // 5 folders x 6 = 30 layers + 5 folders = 35 total
 
 		for (let f = 0; f < folderCount; f++) {
 			const folderUuid = uuidv4();
@@ -401,15 +401,15 @@ const DeeplyNestedFolders = () => {
 
 			const children: LayerOrderItem[] = [];
 
-			// Add 3 leaf layers
-			for (let i = 0; i < 3; i++) {
-				const { layer, uuid } = generateGeojsonLayer(`${prefix} Layer ${i + 1}`, depth * 3 + i);
+			// Add 2 leaf layers
+			for (let i = 0; i < 2; i++) {
+				const { layer, uuid } = generateGeojsonLayer(`${prefix} Layer ${i + 1}`, depth * 2 + i);
 				allLayers.push(layer);
 				children.push({ uuid });
 			}
 
 			// Recurse if not at max depth
-			if (depth < 4) {
+			if (depth < 3) {
 				for (let s = 0; s < 2; s++) {
 					children.push(buildLevel(depth + 1, `${prefix}.${s + 1}`));
 				}

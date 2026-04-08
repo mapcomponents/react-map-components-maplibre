@@ -308,29 +308,58 @@ export const useMapStore = create<MapState & MapActions>()((set) => ({
 				newIndex.set(uuid, updated);
 			};
 
-			if (layerConfig.type === 'folder') {
-				// Find this folder's children in layerOrder
-				for (const folder of mapConfig.layerOrder) {
-					if (folder.uuid !== layerId) continue;
-					if (!folder.layers) continue;
-					for (const child of folder.layers) {
-						updateLayerAt(child.uuid, (childLayer) => {
-							if (childLayer.type === 'vt' && childLayer.config?.layers) {
-								return {
-									...childLayer,
-									masterVisible,
-									config: {
-										...childLayer.config,
-										layers: childLayer.config.layers.map((sl) => ({
-											...sl,
-											masterVisible,
-										})),
-									},
-								} as VtLayerConfig;
-							}
-							return { ...childLayer, masterVisible };
-						});
+			// Recursively find a LayerOrderItem by uuid anywhere in the tree
+			const findOrderItem = (
+				items: LayerOrderItem[],
+				uuid: string
+			): LayerOrderItem | undefined => {
+				for (const item of items) {
+					if (item.uuid === uuid) return item;
+					if (item.layers) {
+						const found = findOrderItem(item.layers, uuid);
+						if (found) return found;
 					}
+				}
+				return undefined;
+			};
+
+			// Recursively propagate masterVisible to all descendants
+			const propagateToChildren = (orderItems: LayerOrderItem[]) => {
+				for (const child of orderItems) {
+					const childLayer = index.get(child.uuid);
+					if (!childLayer) continue;
+
+					if (childLayer.type === 'folder') {
+						// Mark the sub-folder itself, then recurse into its children
+						updateLayerAt(child.uuid, (l) => ({ ...l, masterVisible }));
+						if (child.layers) {
+							propagateToChildren(child.layers);
+						}
+					} else if (childLayer.type === 'vt' && childLayer.config?.layers) {
+						updateLayerAt(child.uuid, (l) => {
+							const vt = l as VtLayerConfig;
+							return {
+								...vt,
+								masterVisible,
+								config: {
+									...vt.config,
+									layers: vt.config.layers.map((sl) => ({
+										...sl,
+										masterVisible,
+									})),
+								},
+							} as VtLayerConfig;
+						});
+					} else {
+						updateLayerAt(child.uuid, (l) => ({ ...l, masterVisible }));
+					}
+				}
+			};
+
+			if (layerConfig.type === 'folder') {
+				const folderOrder = findOrderItem(mapConfig.layerOrder, layerId);
+				if (folderOrder?.layers) {
+					propagateToChildren(folderOrder.layers);
 				}
 			}
 
@@ -543,6 +572,8 @@ export const setMasterVisible = (mapConfigKey: string, layerId: string, masterVi
 
 export const updateStyle = (mapConfigKey: string, style: StyleSpecification) =>
 	useMapStore.getState().updateStyle(mapConfigKey, style);
+
+export const clearMapConfigs = () => useMapStore.setState({ mapConfigs: {} });
 
 /** Exposed for use in LayerTreeListItem move operations (structural sharing, no JSON clone) */
 export const moveInLayerOrderHelper = moveInLayerOrder;

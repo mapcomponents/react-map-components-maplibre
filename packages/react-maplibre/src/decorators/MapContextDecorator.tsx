@@ -1,4 +1,4 @@
-import { useMemo, ReactElement, FC } from 'react';
+import { useMemo, useRef, ReactElement, FC } from 'react';
 
 import { MapComponentsProvider } from '../index';
 import MapLibreMap, { MapLibreMapProps } from '../components/MapLibreMap/MapLibreMap';
@@ -7,6 +7,7 @@ import MlNavigationTools from '../components/MlNavigationTools/MlNavigationTools
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import getTheme from '../ui_components/MapcomponentsTheme';
 import { Decorator } from '@storybook/react-vite';
+import { clearMapConfigs } from '../stores/map.store';
 
 interface StoryContext {
 	globals: {
@@ -18,6 +19,13 @@ const makeMapContextDecorators = (options: MapLibreMapProps['options']): Decorat
 	return [
 		(Story: FC, context?: StoryContext): ReactElement => {
 			const theme = useMemo(() => getTheme(context?.globals?.theme), [context?.globals?.theme]);
+
+			// Clear stale store state synchronously on first render (before children mount)
+			const clearedRef = useRef(false);
+			if (!clearedRef.current) {
+				clearedRef.current = true;
+				clearMapConfigs();
+			}
 
 			return (
 <div className="fullscreen_map">
