@@ -119,7 +119,15 @@ function useLayer(props: useLayerProps): useLayerType {
 	const createLayer = useCallback(() => {
 		if (!mapHook.map || mapHook?.map.cancelled) return;
 
-		if (mapHook.map.map.getLayer(layerId.current)) {
+		const layerAlreadyExists = !!mapHook.map.map.getLayer(layerId.current);
+
+		if (layerAlreadyExists) {
+			// Only recreate if the layer type has genuinely changed.  In all
+			// other cases (stale event-handler closures, rapid re-renders,
+			// mapHook object identity churn) we bail out immediately.
+			if (props.options.type === layerTypeRef.current || layerTypeRef.current === '') {
+				return;
+			}
 			mapHook.cleanup();
 		}
 		if (typeof props?.options?.source !== 'string' && mapHook.map.map.getSource(layerId.current)) {
@@ -194,14 +202,14 @@ function useLayer(props: useLayerProps): useLayerType {
 		if (!mapHook.map) return;
 		if (!props.geojson && !props.options.source && props?.options?.type !== 'background') return;
 
-		if (
-			mapHook.map?.cancelled === false &&
-			mapHook?.map?.map?.getLayer?.(layerId.current) &&
-			(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) === -1 ||
-				(legalLayerTypes.indexOf(props.options.type as LayerSpecification['type']) !== -1 &&
-					props.options.type === layerTypeRef.current))
-		) {
-			return;
+		// If the layer already exists and its type hasn't changed, skip.
+		// Using the same logic as createLayer: an empty layerTypeRef means the
+		// layer was added by a previous createLayer invocation in this same
+		// render cycle — treat as "already exists".
+		if (mapHook?.map?.map?.getLayer?.(layerId.current)) {
+			if (props.options.type === layerTypeRef.current || layerTypeRef.current === '') {
+				return;
+			}
 		}
 		createLayer();
 	}, [mapHook.map, mapHook.mapIsReady, props, createLayer]);

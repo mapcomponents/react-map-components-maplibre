@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
 	useLayers,
 	useLayerOrder,
@@ -13,21 +13,21 @@ import MlVectorTileLayer, {
 	ExtendedLayerSpecification,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
+import MlLayer from '../../components/MlLayer/MlLayer';
 import { STYLE_LAYER_UUIDS } from './styleLayerUuids';
+import { useOrderReconciler } from './useOrderReconciler';
 
 interface MapLayerRendererProps {
 	mapConfigKey?: string;
 	mapId?: string;
 }
 
-// Root-level boundary marker IDs.
-// "order-labels" sits above custom layers; label style layers go above it.
-// "order-background" sits below custom layers; background style layers go below it.
+// Prefix for per-layer invisible order markers created by MlOrderLayers.
+const ORDER_PREFIX = 'order-';
+
+// Zone boundary marker IDs (also created by MlOrderLayers).
 const ORDER_LABELS = 'order-labels';
 const ORDER_BACKGROUND = 'order-background';
-
-// Transparent background paint for marker layers.
-const MARKER_PAINT = { 'background-color': 'rgba(0,0,0,0)' } as const;
 
 function MapLayerRenderer(props: MapLayerRendererProps) {
 	const mapConfigKey = props.mapConfigKey || 'map_1';
@@ -48,191 +48,79 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 		return map;
 	}, [layers]);
 
-	// ── Imperative layer ordering ───────────────────────────────
-	//
-	// Three stacking zones on the MapLibre map, separated by two
-	// invisible boundary markers:
-	//
-	//   ┌─ top of map ──────────────────────────────┐
-	//   │  Label style layers  (above order-labels)  │
-	//   │─────────── order-labels ───────────────────│
-	//   │  Custom / user layers                      │
-	//   │─────────── order-background ───────────────│
-	//   │  Background style layers (below it)        │
-	//   └─ bottom of map ───────────────────────────┘
-	//
-	// The reorder function positions every store layer into the
-	// correct zone by checking its UUID against the style-layer
-	// constants.
-
-	// Helper: ensure a transparent marker layer exists on the map.
-	const ensureMarker = useCallback(
-		(rawMap: maplibregl.Map, id: string, beforeId?: string) => {
-			if (!rawMap.getLayer(id)) {
-				try {
-					rawMap.addLayer(
-						{ id, type: 'background', paint: MARKER_PAINT } as maplibregl.BackgroundLayerSpecification,
-						beforeId
-					);
-				} catch {
-					/* layer may already exist from a concurrent path */
-				}
-			}
-		},
-		[]
-	);
-
-	useEffect(() => {
-		if (!mapHook.map) return;
-		const rawMap = mapHook.map.map;
-		if (!rawMap || !layerStoreOrderIds.length) return;
-
-		// --- classify store UUIDs into the three zones ---
-		const labelUuids: string[] = [];   // style label layers  → above ORDER_LABELS
-		const customUuids: string[] = [];  // user / custom layers → between markers
-		const bgUuids: string[] = [];      // style background     → below ORDER_BACKGROUND
-
+	// Classify store UUIDs into the three zones.
+	const { labelUuids, customUuids, bgUuids } = useMemo(() => {
 		const labelSet = new Set<string>([STYLE_LAYER_UUIDS.labelsFolder, STYLE_LAYER_UUIDS.labelsVt]);
 		const bgSet = new Set<string>([STYLE_LAYER_UUIDS.bgFolder, STYLE_LAYER_UUIDS.bgVt]);
 
+		const label: string[] = [];
+		const custom: string[] = [];
+		const bg: string[] = [];
+
 		for (const uuid of layerStoreOrderIds) {
-			if (labelSet.has(uuid)) labelUuids.push(uuid);
-			else if (bgSet.has(uuid)) bgUuids.push(uuid);
-			else customUuids.push(uuid);
+			if (labelSet.has(uuid)) label.push(uuid);
+			else if (bgSet.has(uuid)) bg.push(uuid);
+			else custom.push(uuid);
 		}
+		return { labelUuids: label, customUuids: custom, bgUuids: bg };
+	}, [layerStoreOrderIds]);
 
-		// Expand a store uuid into the actual MapLibre layer ids.
-		const expand = (uuid: string): string[] => {
-			const cfg = layerIndex.get(uuid);
-			if (cfg?.type === 'vt' && cfg.config?.layers) {
-				return cfg.config.layers.map((l: { id: string }) => l.id);
+	// ── Per-layer order markers ───────────────────────────────────
+	//
+	// Build an array of { id, insertBeforeLayer } entries for the
+	// invisible MlLayer order markers.  Each marker is chained to
+	// the one directly above it via insertBeforeLayer / waitForLayer,
+	// guaranteeing a deterministic creation order on the map.
+	//
+	//   order-{labelVtUuid}                   ← top (no insertBefore)
+	//   order-labels                          ← insertBefore = above
+	//   order-{customUuid1}                   ← insertBefore = order-labels
+	//   order-{customUuid2}                   ← insertBefore = order-{customUuid1}
+	//   order-background                      ← insertBefore = last custom
+	//   order-{bgVtUuid}                      ← insertBefore = order-background
+	//
+	// Each data layer component receives
+	//   insertBeforeLayer = "order-{uuid}"
+	// so it waits for its own order marker and is placed directly
+	// below it.
+	//
+	// IMPORTANT: once an order marker's insertBeforeLayer is assigned
+	// it must NEVER change, because useLayer re-creates the MapLibre
+	// layer every time insertBeforeLayer changes (new useMap call →
+	// new mapHook → effect re-fires → "already exists" error).
+	// We use a stable ref-map to freeze values after first assignment.
+
+	// Stable map: order-marker-id → its frozen insertBeforeLayer value.
+	const frozenInsertBeforeRef = useRef<Map<string, string | undefined>>(new Map());
+
+	const orderLayers = useMemo(() => {
+		const entries: { id: string; insertBeforeLayer?: string }[] = [];
+
+		// Skip folder UUIDs — they have no map layer.
+		const skipFolders = (uuids: string[]) =>
+			uuids.filter((uuid) => layerIndex.get(uuid)?.type !== 'folder');
+
+		const frozen = frozenInsertBeforeRef.current;
+
+		const push = (id: string) => {
+			const prev = entries.length > 0 ? entries[entries.length - 1].id : undefined;
+			// If we've already assigned this id an insertBeforeLayer value, keep it frozen.
+			// This prevents useLayer from re-creating the layer when the chain shifts
+			// (e.g. when updateStyle inserts new style-layer UUIDs above existing entries).
+			if (!frozen.has(id)) {
+				frozen.set(id, prev);
 			}
-			if (cfg?.type === 'folder') return []; // folders have no map layer
-			return [uuid];
+			entries.push({ id, insertBeforeLayer: frozen.get(id) });
 		};
 
-		// Build the full desired order (highest → lowest on the map)
-		// including the two boundary markers.
-		const buildDesiredOrder = (): string[] => {
-			const ids: string[] = [];
-			for (const uuid of labelUuids) {
-				for (const id of expand(uuid)) {
-					if (rawMap.getLayer(id)) ids.push(id);
-				}
-			}
-			ids.push(ORDER_LABELS);
-			for (const uuid of customUuids) {
-				for (const id of expand(uuid)) {
-					if (rawMap.getLayer(id)) ids.push(id);
-				}
-			}
-			ids.push(ORDER_BACKGROUND);
-			for (const uuid of bgUuids) {
-				for (const id of expand(uuid)) {
-					if (rawMap.getLayer(id)) ids.push(id);
-				}
-			}
-			return ids;
-		};
+		for (const uuid of skipFolders(labelUuids)) push(ORDER_PREFIX + uuid);
+		push(ORDER_LABELS);
+		for (const uuid of skipFolders(customUuids)) push(ORDER_PREFIX + uuid);
+		push(ORDER_BACKGROUND);
+		for (const uuid of skipFolders(bgUuids)) push(ORDER_PREFIX + uuid);
 
-		// Fast-path: check if layers are already in the right order.
-		const isInOrder = (): boolean => {
-			const desired = buildDesiredOrder();
-			if (desired.length <= 2) return true; // only markers
-
-			const allLayers = rawMap.getStyle()?.layers;
-			if (!allLayers) return true;
-
-			const layerIdToIndex = new Map<string, number>();
-			for (let i = 0; i < allLayers.length; i++) {
-				layerIdToIndex.set(allLayers[i].id, i);
-			}
-
-			// desired[0] = highest (largest index), each next should be lower.
-			let prevIdx = Infinity;
-			for (const id of desired) {
-				const idx = layerIdToIndex.get(id);
-				if (idx === undefined) return false;
-				if (idx > prevIdx) return false;
-				prevIdx = idx;
-			}
-			return true;
-		};
-
-		const tryMove = (id: string, before: string | undefined) => {
-			if (rawMap.getLayer(id)) {
-				try {
-					rawMap.moveLayer(id, before);
-				} catch {
-					/* noop */
-				}
-			}
-		};
-
-		// Move a group of store UUIDs so that the first UUID's layers
-		// are highest and each subsequent group is below. Returns the
-		// new beforeId (= the lowest layer placed).
-		const moveGroup = (uuids: string[], startBeforeId: string | undefined): string | undefined => {
-			let beforeId = startBeforeId;
-			for (const uuid of uuids) {
-				const cfg = layerIndex.get(uuid);
-				if (cfg?.type === 'vt' && cfg.config?.layers) {
-					// VT: move sub-layers in reverse so first spec
-					// layer ends up highest within the group.
-					for (let s = cfg.config.layers.length - 1; s >= 0; s--) {
-						const subId = cfg.config.layers[s].id;
-						tryMove(subId, beforeId);
-						if (rawMap.getLayer(subId)) beforeId = subId;
-					}
-				} else if (cfg?.type !== 'folder') {
-					tryMove(uuid, beforeId);
-					if (rawMap.getLayer(uuid)) beforeId = uuid;
-				}
-			}
-			return beforeId;
-		};
-
-		const reorder = () => {
-			if (isInOrder()) return;
-
-			// Ensure the two boundary markers exist.
-			ensureMarker(rawMap, ORDER_BACKGROUND);
-			ensureMarker(rawMap, ORDER_LABELS);
-
-			// --- 1. Label zone (top) ---
-			// Move label layers above ORDER_LABELS.
-			// We move them with beforeId = undefined → top of stack.
-			let beforeId: string | undefined;
-			beforeId = moveGroup(labelUuids, beforeId);
-
-			// --- 2. ORDER_LABELS marker ---
-			tryMove(ORDER_LABELS, beforeId);
-			if (rawMap.getLayer(ORDER_LABELS)) beforeId = ORDER_LABELS;
-
-			// --- 3. Custom zone (middle) ---
-			beforeId = moveGroup(customUuids, beforeId);
-
-			// --- 4. ORDER_BACKGROUND marker ---
-			tryMove(ORDER_BACKGROUND, beforeId);
-			if (rawMap.getLayer(ORDER_BACKGROUND)) beforeId = ORDER_BACKGROUND;
-
-			// --- 5. Background zone (bottom) ---
-			moveGroup(bgUuids, beforeId);
-		};
-
-		// Run immediately.
-		reorder();
-
-		// Run when a new layer appears on the map (data layer mount).
-		mapHook.map.wrapper.on('addlayer', reorder);
-		// Safety net for async layer recreation (styledata reloads).
-		rawMap.on('idle', reorder);
-
-		return () => {
-			mapHook.map?.wrapper.off('addlayer', reorder);
-			rawMap.off('idle', reorder);
-		};
-	}, [layerStoreOrderIds, layerIndex, mapHook.map, ensureMarker]);
+		return entries;
+	}, [labelUuids, customUuids, bgUuids, layerIndex]);
 
 	// ── Base map style: sources, glyphs & sprite ──────────────────────
 	//
@@ -325,14 +213,30 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 		};
 	}, [mapHook.map]);
 
+	// ── Layer order reconciler ────────────────────────────────────
+	// Checks the actual MapLibre layer stack after each addlayer event
+	// and fixes any zone violations with moveLayer calls.
+	useOrderReconciler({
+		mapWrapper: mapHook.map,
+		labelUuids,
+		customUuids,
+		bgUuids,
+		layerIndex,
+		sourcesReady,
+	});
+
 	function renderLayer(layer: LayerOrderItem): React.ReactNode {
 		const layerConfig: LayerConfig | undefined = layerIndex.get(layer.uuid);
+		// Each data layer's insertBeforeLayer points to its own order marker.
+		const insertBeforeLayer =
+			layerConfig?.type === 'folder' ? undefined : ORDER_PREFIX + layer.uuid;
 		switch (layerConfig?.type) {
 			case 'geojson':
 				return (
 					<MlGeoJsonLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
+						insertBeforeLayer={insertBeforeLayer}
 						{...layerConfig.config}
 						options={{
 							...layerConfig.config.options,
@@ -368,6 +272,7 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 					<MlVectorTileLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
+						insertBeforeLayer={insertBeforeLayer}
 						url={layerConfig.config.url}
 						layers={l}
 					/>
@@ -379,6 +284,7 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 					<MlWmsLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
+						insertBeforeLayer={insertBeforeLayer}
 						url={layerConfig.config?.url || ''}
 						urlParameters={layerConfig.config?.urlParameters}
 						visible={visible}
@@ -396,7 +302,39 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 		}
 	}
 
-	return <>{sourcesReady && layerStoreOrder?.map?.((layerOrderItem) => renderLayer(layerOrderItem))}</>;
+	// Walk the layerStoreOrder tree and collect all renderable LayerOrderItems
+	// in depth-first order (matching layerStoreOrderIds).
+	const allOrderItems = useMemo(() => {
+		const items: LayerOrderItem[] = [];
+		const walk = (list: LayerOrderItem[]) => {
+			for (const item of list) {
+				items.push(item);
+				if (item.layers) walk(item.layers);
+			}
+		};
+		if (layerStoreOrder) walk(layerStoreOrder);
+		return items;
+	}, [layerStoreOrder]);
+
+	return (
+		<>
+			{/* Per-layer order markers rendered as individual MlLayer
+			    components.  Each has a stable key and insertBeforeLayer
+			    pointing to the entry above it in the stack.  When new
+			    layers appear (e.g. after updateStyle), only new MlLayer
+			    instances are mounted — existing ones keep their props. */}
+			{orderLayers.map((entry) => (
+				<MlLayer
+					key={entry.id}
+					layerId={entry.id}
+					insertBeforeLayer={entry.insertBeforeLayer}
+				/>
+			))}
+
+			{/* Data layers — each references its own order-{uuid} marker */}
+			{sourcesReady && allOrderItems.map((item) => renderLayer(item))}
+		</>
+	);
 }
 
 export default MapLayerRenderer;

@@ -60,6 +60,11 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 
 		props.layers.forEach((layer) => {
 			if (!mapHook.map) return;
+			// Remove the individual layer first if it already exists to avoid
+			// "already exists" errors when createLayers is called more than once.
+			if (mapHook.map.map.getLayer(layer.id)) {
+				mapHook.map.map.removeLayer(layer.id);
+			}
 			mapHook.map.addLayer(
 				{
 					source: layerId.current,

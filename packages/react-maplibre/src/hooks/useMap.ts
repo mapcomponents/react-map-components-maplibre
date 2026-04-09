@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import MapContext, { MapContextType } from '../contexts/MapContext';
 import useMapState from './useMapState';
@@ -35,18 +35,18 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 
 	const componentId = useRef(uuidv4());
 
-	const cleanup = () => {
+	const cleanup = useCallback(() => {
 		if (mapRef.current) {
 			mapRef.current.cleanup(componentId.current);
 		}
-	};
+	}, []);
 
 	useEffect(() => {
 		return () => {
 			cleanup();
 			mapRef.current = null;
 		};
-	}, []);
+	}, [cleanup]);
 
 	useEffect(() => {
 		if (mapRef.current && mapRef.current.cancelled === true) {
@@ -73,13 +73,17 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 		setState({ map: mapRef.current, ready: true });
 	}, [mapContext.mapIds, mapState.layers, mapContext, props]);
 
-	return {
-		map: state.map,
-		mapIsReady: state.ready,
-		componentId: componentId.current,
-		layers: mapState.layers,
-		cleanup,
-	};
+	return useMemo(
+		() => ({
+			map: state.map,
+			mapIsReady: state.ready,
+			componentId: componentId.current,
+			layers: mapState.layers,
+			cleanup,
+		}),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[state.map, state.ready, mapState.layers, cleanup]
+	);
 }
 
 export default useMap;
