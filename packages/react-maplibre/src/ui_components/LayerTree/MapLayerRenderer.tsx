@@ -11,6 +11,7 @@ import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import useMap from '../../hooks/useMap';
 import MlVectorTileLayer, {
 	ExtendedLayerSpecification,
+	type MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
 import MlLayer from '../../components/MlLayer/MlLayer';
@@ -28,6 +29,24 @@ const ORDER_PREFIX = 'order-';
 // Zone boundary marker IDs (also created by MlOrderLayers).
 const ORDER_LABELS = 'order-labels';
 const ORDER_BACKGROUND = 'order-background';
+
+// Memoized wrapper so React skips re-rendering when layers/url/insertBeforeLayer
+// haven't changed (avoids unnecessary prop-diffing inside MlVectorTileLayer).
+const MemoizedMlVectorTileLayer = React.memo(MlVectorTileLayer, (prev: MlVectorTileLayerProps, next: MlVectorTileLayerProps) => {
+	// Re-render if url or insertBeforeLayer changed
+	if (prev.url !== next.url || prev.insertBeforeLayer !== next.insertBeforeLayer) return false;
+	// Re-render if layer count changed
+	if (prev.layers.length !== next.layers.length) return false;
+	// Re-render if any layer's layout/paint serialization changed
+	for (let i = 0; i < prev.layers.length; i++) {
+		const p = prev.layers[i];
+		const n = next.layers[i];
+		if (p.id !== n.id) return false;
+		if (JSON.stringify(p.layout) !== JSON.stringify(n.layout)) return false;
+		if (JSON.stringify(p.paint) !== JSON.stringify(n.paint)) return false;
+	}
+	return true; // props are equal → skip re-render
+});
 
 function MapLayerRenderer(props: MapLayerRendererProps) {
 	const mapConfigKey = props.mapConfigKey || 'map_1';
@@ -269,7 +288,7 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 				});
 
 				return (
-					<MlVectorTileLayer
+					<MemoizedMlVectorTileLayer
 						key={layerConfig.uuid}
 						layerId={layerConfig.uuid}
 						insertBeforeLayer={insertBeforeLayer}

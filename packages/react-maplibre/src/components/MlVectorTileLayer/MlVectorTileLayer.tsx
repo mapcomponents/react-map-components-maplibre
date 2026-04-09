@@ -33,8 +33,14 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 	const layerLayoutConfsRef = useRef<{ [key: string]: string }>({});
 	const initializedRef = useRef(false);
 
+	// Keep a stable ref to latest props so callbacks don't need to re-create
+	// every time props change (prevents the init effect from re-firing).
+	const propsRef = useRef(props);
+	propsRef.current = props;
+
 	const createLayers = useCallback(() => {
 		if (!mapHook.map) return;
+		const { url, layers, sourceOptions, insertBeforeLayer } = propsRef.current;
 
 		initializedRef.current = true;
 
@@ -48,17 +54,17 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 				layerId.current,
 				{
 					type: 'vector',
-					tiles: [props.url || ''],
+					tiles: [url || ''],
 					attribution: '',
 					minzoom: 0,
 					maxzoom: 14,
-					...props.sourceOptions,
+					...sourceOptions,
 				},
 				mapHook.componentId
 			);
 		}
 
-		props.layers.forEach((layer) => {
+		layers.forEach((layer) => {
 			if (!mapHook.map) return;
 			// Remove the individual layer first if it already exists to avoid
 			// "already exists" errors when createLayers is called more than once.
@@ -80,7 +86,7 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 					},
 					...layer,
 				},
-				props.insertBeforeLayer,
+				insertBeforeLayer,
 				mapHook.componentId
 			);
 			layerPaintConfsRef.current[layer.id] = JSON.stringify(layer.paint);
@@ -98,12 +104,14 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 				mapHook.componentId
 			);
 		});
-	}, [mapHook.map, props]);
+	// Only depends on the map hook — props are read from propsRef so this stays
+	// stable across prop changes, preventing unnecessary layer teardown/recreation.
+	}, [mapHook.map, mapHook.cleanup, mapHook.componentId]);
 
 	const updateLayers = useCallback(() => {
 		if (!initializedRef.current) return;
 
-		props.layers.forEach((layer) => {
+		propsRef.current.layers.forEach((layer) => {
 			if (!mapHook.map) return;
 			if (mapHook.map.map.getLayer(layer.id)) {
 				// update changed paint property
@@ -135,21 +143,21 @@ const MlVectorTileLayer = (props: MlVectorTileLayerProps) => {
 				layerLayoutConfsRef.current[layer.id] = layerLayoutConfString;
 			}
 		});
-	}, [mapHook.map, props.layers]);
+	}, [mapHook.map]);
 
-	// initial layer creation
+	// initial layer creation — only re-fires when the map becomes available
 	useEffect(() => {
 		if (initializedRef.current) return;
 		createLayers();
 	}, [createLayers]);
 
-	// if layers get removed or added
+	// if layers get removed or added — full recreate needed for count changes
 	useEffect(() => {
 		if (!mapHook.map || !initializedRef.current) return;
 		createLayers();
 	}, [props.layers.length, mapHook.map]);
 
-	// on layout/paint update
+	// on layout/paint update — cheap property-level updates only
 	useEffect(() => {
 		if (!mapHook.map || !initializedRef.current) return;
 		updateLayers();

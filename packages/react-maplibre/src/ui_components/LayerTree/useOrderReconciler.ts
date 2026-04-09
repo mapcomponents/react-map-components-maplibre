@@ -180,6 +180,21 @@ export function useOrderReconciler({
 	const paramsRef = useRef({ labelUuids, customUuids, bgUuids, layerIndex });
 	paramsRef.current = { labelUuids, customUuids, bgUuids, layerIndex };
 
+	// Run reconcile immediately whenever the intended order changes (e.g. after
+	// a drag-reorder).  This removes the visual flash where the map shows the
+	// old layer stacking until the next 'addlayer' event fires.
+	useEffect(() => {
+		if (!mapWrapper || !sourcesReady) return;
+		const rawMap = mapWrapper.map;
+		const expected = buildExpectedSequence(labelUuids, customUuids, bgUuids, layerIndex);
+		reconcile(expected, rawMap);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [mapWrapper, sourcesReady, labelUuids, customUuids, bgUuids]);
+	// Note: layerIndex intentionally omitted – it changes identity together with
+	// labelUuids/customUuids/bgUuids so the above deps already capture the right
+	// moment.  Including it would cause a redundant extra run on every layer
+	// config update (visibility etc.) which we don't need here.
+
 	useEffect(() => {
 		if (!mapWrapper || !sourcesReady) return;
 
@@ -190,9 +205,6 @@ export function useOrderReconciler({
 			const expected = buildExpectedSequence(labelUuids, customUuids, bgUuids, layerIndex);
 			reconcile(expected, rawMap);
 		};
-
-		// Run once immediately (catches layers already present).
-		runReconcile();
 
 		// Re-run whenever a layer is added (new layers may arrive out of order).
 		const onAddLayer = () => runReconcile();
