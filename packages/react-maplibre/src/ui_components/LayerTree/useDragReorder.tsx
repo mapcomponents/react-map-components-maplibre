@@ -1,6 +1,7 @@
 import React, {
 	useRef,
 	useCallback,
+	useEffect,
 	createContext,
 	useContext,
 	useMemo,
@@ -150,6 +151,7 @@ const NOOP_SNAPSHOT = () => SNAPSHOT_IDLE;
 export function useDragReorder({ uuid, onReorder, enabled = true }: UseDragReorderOpts) {
 	const store = useContext(DragContext);
 	const rowRef = useRef<HTMLLIElement | null>(null);
+	const handleRef = useRef<HTMLButtonElement | null>(null);
 
 	// Mutable ref for dead-zone hysteresis (never triggers renders)
 	const lastHalfRef = useRef<'top' | 'bottom' | null>(null);
@@ -260,7 +262,7 @@ export function useDragReorder({ uuid, onReorder, enabled = true }: UseDragReord
 	// ── Touch events (mobile) ──────────────────────────────────
 
 	const handleTouchStart = useCallback(
-		(e: React.TouchEvent) => {
+		(e: TouchEvent) => {
 			if (!store) return;
 			e.preventDefault();
 			touchRef.current.active = true;
@@ -270,7 +272,7 @@ export function useDragReorder({ uuid, onReorder, enabled = true }: UseDragReord
 	);
 
 	const handleTouchMove = useCallback(
-		(e: React.TouchEvent) => {
+		(e: TouchEvent) => {
 			if (!store) return;
 			if (!touchRef.current.active || store.dragUuid !== uuid) return;
 			e.preventDefault();
@@ -308,6 +310,22 @@ export function useDragReorder({ uuid, onReorder, enabled = true }: UseDragReord
 		store.reset();
 	}, [uuid, onReorder, store]);
 
+	// Attach touch listeners imperatively with { passive: false } so
+	// e.preventDefault() is allowed (React synthetic events are passive by default).
+	useEffect(() => {
+		if (!enabled) return;
+		const el = handleRef.current;
+		if (!el) return;
+		el.addEventListener('touchstart', handleTouchStart, { passive: false });
+		el.addEventListener('touchmove', handleTouchMove, { passive: false });
+		el.addEventListener('touchend', handleTouchEnd);
+		return () => {
+			el.removeEventListener('touchstart', handleTouchStart);
+			el.removeEventListener('touchmove', handleTouchMove);
+			el.removeEventListener('touchend', handleTouchEnd);
+		};
+	}, [enabled, handleTouchStart, handleTouchMove, handleTouchEnd]);
+
 	// ── Return stable prop objects ─────────────────────────────
 
 	const rowStyle = isDragging ? DRAGGING_STYLE : NORMAL_STYLE;
@@ -331,14 +349,13 @@ export function useDragReorder({ uuid, onReorder, enabled = true }: UseDragReord
 			enabled: true as const,
 			draggable: true,
 			onDragStart: handleDragStart,
-			onTouchStart: handleTouchStart,
-			onTouchMove: handleTouchMove,
-			onTouchEnd: handleTouchEnd,
+			// Touch events are attached imperatively via handleRef (passive: false)
 		};
-	}, [enabled, handleDragStart, handleTouchStart, handleTouchMove, handleTouchEnd]);
+	}, [enabled, handleDragStart]);
 
 	return {
 		rowRef,
+		handleRef,
 		isDragging,
 		showIndicatorAbove,
 		showIndicatorBelow,
@@ -361,16 +378,15 @@ export interface DragHandleProps {
 	enabled: boolean;
 	draggable?: boolean;
 	onDragStart?: (e: React.DragEvent) => void;
-	onTouchStart?: (e: React.TouchEvent) => void;
-	onTouchMove?: (e: React.TouchEvent) => void;
-	onTouchEnd?: (e: React.TouchEvent) => void;
 }
 
-export const DragHandle = React.memo(function DragHandle(props: DragHandleProps) {
+export const DragHandle = React.memo(function DragHandle(
+	props: DragHandleProps & { handleRef?: React.Ref<HTMLButtonElement> }
+) {
 	if (!props.enabled) return null;
-	const { enabled: _enabled, ...rest } = props;
+	const { enabled: _enabled, handleRef, ...rest } = props;
 	return (
-		<DragHandleButton size="small" tabIndex={-1} {...rest}>
+		<DragHandleButton size="small" tabIndex={-1} ref={handleRef} {...rest}>
 			<DragIndicatorIcon fontSize="small" sx={{ color: 'text.secondary' }} />
 		</DragHandleButton>
 	);

@@ -155,7 +155,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 		[props.mapId]
 	);
 
-	const { rowProps, dragHandleProps, showIndicatorAbove, showIndicatorBelow } = useDragReorder({
+	const { rowProps, dragHandleProps, handleRef, showIndicatorAbove, showIndicatorBelow } = useDragReorder({
 		uuid: props.layerOrderConfig.uuid,
 		onReorder,
 		enabled: showDnD,
@@ -300,7 +300,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							</>
 						}
 					>
-						<DragHandle {...dragHandleProps} />
+						<DragHandle {...dragHandleProps} handleRef={handleRef} />
 						<CheckboxListItemIcon>
 							<CheckboxStyled
 								data-testid={`layer-checkbox-${layer.uuid}`}
@@ -358,8 +358,8 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							</>
 						}
 					>
-						<DragHandle {...dragHandleProps} />
-						<IconButtonStyled edge="end" aria-label="open" onClick={handleToggleOpen}>
+				<DragHandle {...dragHandleProps} handleRef={handleRef} />
+				<IconButtonStyled edge="end" aria-label="open" onClick={handleToggleOpen}>
 							{open ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
 						</IconButtonStyled>
 						<CheckboxListItemIcon>
@@ -427,7 +427,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							</>
 						}
 					>
-						<DragHandle {...dragHandleProps} />
+						<DragHandle {...dragHandleProps} handleRef={handleRef} />
 						<CheckboxListItemIcon>
 							<CheckboxStyled
 								data-testid={`layer-checkbox-${layer.uuid}`}
@@ -482,7 +482,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							</>
 						}
 					>
-						<DragHandle {...dragHandleProps} />
+						<DragHandle {...dragHandleProps} handleRef={handleRef} />
 						<IconButtonStyled edge="end" aria-label="open" onClick={handleToggleOpen}>
 							{open ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
 						</IconButtonStyled>
