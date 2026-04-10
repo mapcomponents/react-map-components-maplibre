@@ -55,11 +55,22 @@ function useMap(props?: { mapId?: string; waitForLayer?: string }): useMapType {
 		}
 		if (mapRef.current || !mapContext.mapExists(props?.mapId)) return;
 
-		// check if waitForLayer (string, layer id of the layer this hook is supposed to wait for)
-		// exists as layer in the MapLibre instance
+		// ── Fast-path: if waitForLayer target already exists synchronously ──
+		// Order markers are now created imperatively (map.style.addLayer) in
+		// MapLayerRenderer's useLayoutEffect, so they're on the map before any
+		// data-layer component mounts.  We can skip the async layerState polling
+		// and resolve immediately by checking map.getLayer() directly.
 		if (props?.waitForLayer) {
-			let layerFound = false;
+			const mapInstance = mapContext.getMap(props?.mapId);
+			if (mapInstance && mapInstance.map.getLayer(props.waitForLayer)) {
+				mapRef.current = mapInstance;
+				setState({ map: mapInstance, ready: true });
+				return;
+			}
 
+			// Fall back to polling mapState.layers (async, for any layer that
+			// wasn't pre-created imperatively).
+			let layerFound = false;
 			mapState?.layers?.forEach((layer: any) => {
 				if (layer.id === props?.waitForLayer) {
 					layerFound = true;

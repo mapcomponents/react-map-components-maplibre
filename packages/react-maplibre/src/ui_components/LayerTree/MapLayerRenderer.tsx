@@ -14,9 +14,9 @@ import MlVectorTileLayer, {
 	type MlVectorTileLayerProps,
 } from '../../components/MlVectorTileLayer/MlVectorTileLayer';
 import MlWmsLayer from '../../components/MlWmsLayer/MlWmsLayer';
-import MlLayer from '../../components/MlLayer/MlLayer';
 import { STYLE_LAYER_UUIDS } from './styleLayerUuids';
 import { useOrderReconciler } from './useOrderReconciler';
+import { LayerSpecification } from 'maplibre-gl';
 
 interface MapLayerRendererProps {
 	mapConfigKey?: string;
@@ -86,67 +86,55 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 
 	// ── Per-layer order markers ───────────────────────────────────
 	//
-	// Build an array of { id, insertBeforeLayer } entries for the
-	// invisible MlLayer order markers.  Each marker is chained to
-	// the one directly above it via insertBeforeLayer / waitForLayer,
-	// guaranteeing a deterministic creation order on the map.
+	// Order markers are INVISIBLE background layers added to MapLibre in one
+	// synchronous batch (inside the useLayoutEffect below) so they exist on
+	// the map BEFORE any data-layer component mounts.  This eliminates the
+	// serial waitForLayer React-state chain that previously caused each data
+	// layer to wait for the previous marker's layerchange → setState cycle.
 	//
-	//   order-{labelVtUuid}                   ← top (no insertBefore)
-	//   order-labels                          ← insertBefore = above
-	//   order-{customUuid1}                   ← insertBefore = order-labels
-	//   order-{customUuid2}                   ← insertBefore = order-{customUuid1}
-	//   order-background                      ← insertBefore = last custom
-	//   order-{bgVtUuid}                      ← insertBefore = order-background
+	// Desired bottom → top stack:
+	//   order-{bgVtUuid}   order-background
+	//   order-{customUuid} ... order-labels
+	//   order-{labelUuid}
 	//
-	// Each data layer component receives
+	// Each data layer component still receives
 	//   insertBeforeLayer = "order-{uuid}"
-	// so it waits for its own order marker and is placed directly
-	// below it.
-	//
-	// IMPORTANT: once an order marker's insertBeforeLayer is assigned
-	// it must NEVER change, because useLayer re-creates the MapLibre
-	// layer every time insertBeforeLayer changes (new useMap call →
-	// new mapHook → effect re-fires → "already exists" error).
-	// We use a stable ref-map to freeze values after first assignment.
+	// so useMap(waitForLayer) resolves immediately via a synchronous
+	// map.getLayer() check (fast-path added to useMap).
 
-	// Stable map: order-marker-id → its frozen insertBeforeLayer value.
-	const frozenInsertBeforeRef = useRef<Map<string, string | undefined>>(new Map());
-
-	const orderLayers = useMemo(() => {
-		const entries: { id: string; insertBeforeLayer?: string }[] = [];
-
-		// Skip folder UUIDs — they have no map layer.
+	// Build the bottom→top ordered list of marker IDs that should exist.
+	const orderMarkerIds = useMemo(() => {
+		const ids: string[] = [];
 		const skipFolders = (uuids: string[]) =>
 			uuids.filter((uuid) => layerIndex.get(uuid)?.type !== 'folder');
 
-		const frozen = frozenInsertBeforeRef.current;
+		// Push in bottom→top order so index 0 = bottommost
+		for (const uuid of skipFolders(bgUuids).toReversed()) ids.push(ORDER_PREFIX + uuid);
+		ids.push(ORDER_BACKGROUND);
+		for (const uuid of skipFolders(customUuids).toReversed()) ids.push(ORDER_PREFIX + uuid);
+		ids.push(ORDER_LABELS);
+		for (const uuid of skipFolders(labelUuids).toReversed()) ids.push(ORDER_PREFIX + uuid);
 
-		const push = (id: string) => {
-			const prev = entries.length > 0 ? entries[entries.length - 1].id : undefined;
-			// If we've already assigned this id an insertBeforeLayer value, keep it frozen.
-			// This prevents useLayer from re-creating the layer when the chain shifts
-			// (e.g. when updateStyle inserts new style-layer UUIDs above existing entries).
-			if (!frozen.has(id)) {
-				frozen.set(id, prev);
-			}
-			entries.push({ id, insertBeforeLayer: frozen.get(id) });
-		};
-
-		for (const uuid of skipFolders(labelUuids)) push(ORDER_PREFIX + uuid);
-		push(ORDER_LABELS);
-		for (const uuid of skipFolders(customUuids)) push(ORDER_PREFIX + uuid);
-		push(ORDER_BACKGROUND);
-		for (const uuid of skipFolders(bgUuids)) push(ORDER_PREFIX + uuid);
-
-		return entries;
+		return ids;
 	}, [labelUuids, customUuids, bgUuids, layerIndex]);
 
-	// ── Base map style: sources, glyphs & sprite ──────────────────────
+	// Track which order marker IDs were imperatively created so we can
+	// clean them up when the layer list changes or the component unmounts.
+	const addedOrderMarkerIdsRef = useRef<string[]>([]);
+
+	// ── Base map style: sources, glyphs, sprite & layer data ────────────
 	//
 	// useLayoutEffect ensures sources exist BEFORE child component
 	// effects fire, preventing the race condition where VT layers
 	// call addLayer referencing source "openmaptiles" before it exists.
+	//
+	// Style layers (background zone + labels zone) are applied here
+	// directly via map.style.addLayer() — bypassing the React component
+	// lifecycle — and a single map._update() call triggers one redraw.
+	// This matches MapLibre's own setStyle() performance because it avoids
+	// the per-addLayer _update() call that useLayer/MlVectorTileLayer does.
 	const addedSourceIdsRef = useRef<string[]>([]);
+	const addedStyleLayerIdsRef = useRef<string[]>([]);
 	const [sourcesReady, setSourcesReady] = useState(false);
 
 	useLayoutEffect(() => {
@@ -154,13 +142,22 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 		if (!map) return;
 		const rawMap = map.map;
 
-		// Remove previously added sources
-		for (const id of addedSourceIdsRef.current) {
-			if (rawMap.getSource(id)) {
-				rawMap.removeSource(id);
+		// ── 1. Remove previously batch-applied style layers ──────────────
+		for (const id of addedStyleLayerIdsRef.current) {
+			if (rawMap.style?.getLayer(id)) {
+				rawMap.style.removeLayer(id);
 			}
 		}
-		addedSourceIdsRef.current = [];
+		addedStyleLayerIdsRef.current = [];
+
+		// ── 2. Sources: skip ones that are already present with same def ──
+		// Remove sources that no longer exist in the new style config.
+		const newSourceIds = new Set(Object.keys(mapConfig?.styleSources ?? {}));
+		const sourcesToRemove = addedSourceIdsRef.current.filter((id) => !newSourceIds.has(id));
+		for (const id of sourcesToRemove) {
+			if (rawMap.getSource(id)) rawMap.removeSource(id);
+		}
+		addedSourceIdsRef.current = addedSourceIdsRef.current.filter((id) => newSourceIds.has(id));
 
 		if (mapConfig?.styleSources) {
 			if (mapConfig?.styleGlyphs) {
@@ -175,42 +172,124 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 				}
 			}
 
-			const addedIds: string[] = [];
 			for (const [sourceId, sourceDef] of Object.entries(mapConfig.styleSources)) {
 				if (!rawMap.getSource(sourceId)) {
 					rawMap.addSource(sourceId, sourceDef);
-					addedIds.push(sourceId);
+					addedSourceIdsRef.current.push(sourceId);
 				}
 			}
-			addedSourceIdsRef.current = addedIds;
 		}
+
+		// ── 3. Batch-apply bg and label style layers directly ─────────────
+		// Insert before the first user-land order marker so they land in the
+		// correct zone without going through the React component pipeline.
+		// We call map.style.addLayer() (no _update per call) then _update once.
+		const bgLayers = mapConfig?.backgroundLayers ?? [];
+		const labelLayers = mapConfig?.symbolLayers ?? [];
+
+		// bg layers go below order-background; labels go above order-labels.
+		// We insert each layer "before" the appropriate boundary marker when
+		// it already exists, otherwise just append (reconciler will fix order).
+		const applyLayers = (layerSpecs: LayerSpecification[], insertBefore: string | undefined) => {
+			const addedIds: string[] = [];
+			for (const spec of layerSpecs) {
+				if (!rawMap.style?.getLayer(spec.id)) {
+					try {
+						const beforeId = insertBefore && rawMap.style?.getLayer(insertBefore)
+							? insertBefore
+							: undefined;
+						rawMap.style.addLayer(spec as Parameters<typeof rawMap.style.addLayer>[0], beforeId);
+						addedIds.push(spec.id);
+					} catch {
+						// layer may reference a source not yet loaded — reconciler will retry
+					}
+				}
+			}
+			return addedIds;
+		};
+
+		const bgIds = applyLayers(bgLayers as LayerSpecification[], ORDER_BACKGROUND);
+		const labelIds = applyLayers(labelLayers as LayerSpecification[], undefined /* topmost */);
+		addedStyleLayerIdsRef.current = [...bgIds, ...labelIds];
+
+		// ── 4. Batch-create order markers synchronously ───────────────────
+		// Remove stale markers that are no longer in the list.
+		const newMarkerSet = new Set(orderMarkerIds);
+		for (const id of addedOrderMarkerIdsRef.current) {
+			if (!newMarkerSet.has(id) && rawMap.style?.getLayer(id)) {
+				rawMap.style.removeLayer(id);
+			}
+		}
+		addedOrderMarkerIdsRef.current = [];
+
+		// Add markers that don't exist yet, bottom→top so each can be appended
+		// on top of the previous without specifying an insertBefore (they'll be
+		// in the right relative order and the reconciler handles absolute order).
+		for (const markerId of orderMarkerIds) {
+			if (!rawMap.style?.getLayer(markerId)) {
+				try {
+					rawMap.style.addLayer({
+						id: markerId,
+						type: 'background',
+						paint: { 'background-color': 'rgba(0,0,0,0)', 'background-opacity': 0 },
+					});
+					addedOrderMarkerIdsRef.current.push(markerId);
+				} catch {
+					// ignore — may already exist
+				}
+			} else {
+				addedOrderMarkerIdsRef.current.push(markerId);
+			}
+		}
+
+		// Single redraw for all the layers we just added
+		(rawMap as any)._update?.(true);
 
 		setSourcesReady(true);
 
-		// Recreate sources after a base-style reload wipes them
+		// ── 5. Re-apply after a base-style reload wipes our additions ──────
 		const onStyleData = () => {
-			if (
-				addedSourceIdsRef.current.length > 0 &&
-				!rawMap.getSource(addedSourceIdsRef.current[0]) &&
-				mapConfig?.styleSources
-			) {
+			const stillMissing =
+				addedSourceIdsRef.current.some((id) => !rawMap.getSource(id)) ||
+				addedStyleLayerIdsRef.current.some((id) => !rawMap.style?.getLayer(id)) ||
+				addedOrderMarkerIdsRef.current.some((id) => !rawMap.style?.getLayer(id));
+
+			if (!stillMissing) return;
+
+			// Re-add sources
+			if (mapConfig?.styleSources) {
 				for (const [sourceId, sourceDef] of Object.entries(mapConfig.styleSources)) {
-					if (!rawMap.getSource(sourceId)) {
-						rawMap.addSource(sourceId, sourceDef);
-					}
+					if (!rawMap.getSource(sourceId)) rawMap.addSource(sourceId, sourceDef);
 				}
-				if (mapConfig?.styleGlyphs) {
-					rawMap.style.setGlyphs(mapConfig.styleGlyphs);
-				}
+				if (mapConfig?.styleGlyphs) rawMap.style.setGlyphs(mapConfig.styleGlyphs);
 				if (mapConfig?.styleSprite) {
 					const sv = mapConfig.styleSprite;
-					if (typeof sv === 'string') {
-						rawMap.style.setSprite([{ id: 'default', url: sv }]);
-					} else if (Array.isArray(sv)) {
-						rawMap.style.setSprite(sv);
-					}
+					if (typeof sv === 'string') rawMap.style.setSprite([{ id: 'default', url: sv }]);
+					else if (Array.isArray(sv)) rawMap.style.setSprite(sv);
 				}
 			}
+
+			// Re-add style layers
+			addedStyleLayerIdsRef.current = [];
+			const rBg = applyLayers(bgLayers as LayerSpecification[], ORDER_BACKGROUND);
+			const rLabel = applyLayers(labelLayers as LayerSpecification[], undefined);
+			addedStyleLayerIdsRef.current = [...rBg, ...rLabel];
+
+			// Re-add order markers
+			addedOrderMarkerIdsRef.current = [];
+			for (const markerId of orderMarkerIds) {
+				if (!rawMap.style?.getLayer(markerId)) {
+					try {
+						rawMap.style.addLayer({
+							id: markerId,
+							type: 'background',
+							paint: { 'background-color': 'rgba(0,0,0,0)', 'background-opacity': 0 },
+						});
+					} catch { /* ignore */ }
+				}
+				addedOrderMarkerIdsRef.current.push(markerId);
+			}
+			if (rBg.length + rLabel.length > 0) (rawMap as any)._update?.(true);
 		};
 		rawMap.on('styledata', onStyleData);
 
@@ -218,14 +297,21 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 			rawMap.off('styledata', onStyleData);
 			setSourcesReady(false);
 		};
-	}, [mapHook.map, mapConfig?.styleSources, mapConfig?.styleGlyphs, mapConfig?.styleSprite]);
+	}, [mapHook.map, mapConfig?.styleSources, mapConfig?.styleGlyphs, mapConfig?.styleSprite,
+		mapConfig?.backgroundLayers, mapConfig?.symbolLayers, orderMarkerIds]);
 
-	// Cleanup sources on unmount
+	// Cleanup all imperatively-created layers and sources on unmount.
 	useEffect(() => {
 		return () => {
 			const map = mapHook.map;
 			if (!map) return;
 			const rawMap = map.map;
+			for (const id of addedStyleLayerIdsRef.current) {
+				if (rawMap.style?.getLayer(id)) rawMap.style.removeLayer(id);
+			}
+			for (const id of addedOrderMarkerIdsRef.current) {
+				if (rawMap.style?.getLayer(id)) rawMap.style.removeLayer(id);
+			}
 			for (const id of addedSourceIdsRef.current) {
 				if (rawMap.getSource(id)) rawMap.removeSource(id);
 			}
@@ -272,6 +358,15 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 					/>
 				);
 			case 'vt': {
+				// bg and labels VT layers are applied imperatively via map.style.addLayer()
+				// in the useLayoutEffect above — no React component needed.
+				if (
+					layerConfig.uuid === STYLE_LAYER_UUIDS.bgVt ||
+					layerConfig.uuid === STYLE_LAYER_UUIDS.labelsVt
+				) {
+					return null;
+				}
+
 				const l = layerConfig.config.layers.map((vtLayer: ExtendedLayerSpecification) => {
 					const newLayer = { ...vtLayer };
 
@@ -337,20 +432,10 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 
 	return (
 		<>
-			{/* Per-layer order markers rendered as individual MlLayer
-			    components.  Each has a stable key and insertBeforeLayer
-			    pointing to the entry above it in the stack.  When new
-			    layers appear (e.g. after updateStyle), only new MlLayer
-			    instances are mounted — existing ones keep their props. */}
-			{orderLayers.map((entry) => (
-				<MlLayer
-					key={entry.id}
-					layerId={entry.id}
-					insertBeforeLayer={entry.insertBeforeLayer}
-				/>
-			))}
-
-			{/* Data layers — each references its own order-{uuid} marker */}
+			{/* Data layers — each references its own order-{uuid} marker.
+			    Order markers are created imperatively in useLayoutEffect above
+			    so they exist synchronously before any data layer mounts,
+			    eliminating the serial waitForLayer React-state chain. */}
 			{sourcesReady && allOrderItems.map((item) => renderLayer(item))}
 		</>
 	);
