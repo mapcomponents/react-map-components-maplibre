@@ -97,6 +97,8 @@ function buildExpectedSequence(
 /**
  * Check whether the given layer IDs appear in the correct relative order
  * within the actual MapLibre layer list.
+ * Accepts the live order array directly to avoid building intermediate
+ * Set/Map when we already have them from the reconcile() pre-check.
  */
 function isInOrder(expectedSeq: string[], actualIds: Set<string>, actualIndex: Map<string, number>): boolean {
 	let lastPos = -1;
@@ -109,6 +111,19 @@ function isInOrder(expectedSeq: string[], actualIds: Set<string>, actualIndex: M
 	return true;
 }
 
+/** Read the current ordered layer-id array directly from MapLibre internals.
+ * This avoids the full style-clone that rawMap.getStyle() performs on every call.
+ * Falls back to getStyle() if the internal property isn't available.
+ */
+function getRawLayerOrder(rawMap: any): string[] {
+	// MapLibre keeps the live ordered array at map.style._order.
+	// It is an array of layer-id strings, updated in-place on every addLayer / moveLayer.
+	const order: unknown = rawMap.style?._order;
+	if (Array.isArray(order)) return order as string[];
+	// Fallback: older MapLibre builds or mocks that don't expose _order
+	return (rawMap.getStyle?.()?.layers ?? []).map((l: { id: string }) => l.id);
+}
+
 /**
  * Move layers into correct order using the minimum number of moveLayer
  * calls.  All moves are applied to map.style directly (no _update per
@@ -117,23 +132,26 @@ function isInOrder(expectedSeq: string[], actualIds: Set<string>, actualIndex: M
  *
  * Algorithm: walk top→bottom (highest z-index first) through the expected
  * sequence.  For each layer, insert it immediately before the previously
- * placed layer (its expected upper neighbour).  Re-reading the fresh index
- * after each move ensures every subsequent check reflects current state.
- * Layers that are already in the right place are skipped.
+ * placed layer (its expected upper neighbour).  Re-reading the live order
+ * array after each move ensures every subsequent check reflects current state.
  *
  * Walking top→bottom avoids the "block shift" failure that occurs when
  * walking bottom→top: once an item is placed at the top, all subsequent
  * insertions go below it, so the full block is correctly repositioned even
  * when all members of the block are already in the right relative order
  * but sitting in the wrong zone.
+ *
+ * Performance: getRawLayerOrder() reads rawMap.style._order directly —
+ * an in-place array that MapLibre updates on every addLayer/moveLayer — so
+ * there is no full style-clone per iteration (unlike getStyle().layers).
  */
 function reconcile(
 	expectedSeq: string[],
 	rawMap: { getStyle: () => { layers: { id: string }[] }; moveLayer: (id: string, beforeId?: string) => void; style?: { moveLayer?: (id: string, beforeId?: string) => void }; _update?: (force: boolean) => void }
 ) {
-	const actualLayers = rawMap.getStyle()?.layers ?? [];
-	const actualIds = new Set(actualLayers.map((l) => l.id));
-	const actualIndex = new Map(actualLayers.map((l, i) => [l.id, i]));
+	const initialOrder = getRawLayerOrder(rawMap);
+	const actualIds = new Set(initialOrder);
+	const actualIndex = new Map(initialOrder.map((id, i) => [id, i]));
 
 	// Filter expected sequence to only layers currently on the map.
 	const present = expectedSeq.filter((id) => actualIds.has(id));
@@ -154,19 +172,14 @@ function reconcile(
 		const id = present[i];
 		const aboveId = i + 1 < present.length ? present[i + 1] : undefined;
 
-		// Re-read positions after every move.
-		const freshLayers = rawMap.getStyle()?.layers ?? [];
-		const freshIndex = new Map(freshLayers.map((l, j) => [l.id, j]));
+		// Re-read the live order array (O(n) scan but no clone).
+		const freshOrder = getRawLayerOrder(rawMap);
+		const freshIndex = new Map(freshOrder.map((lid, j) => [lid, j]));
 
 		const currentPos = freshIndex.get(id) ?? -1;
 
 		if (aboveId) {
 			const abovePos = freshIndex.get(aboveId) ?? -1;
-			// id should be strictly below aboveId (currentPos < abovePos).
-			// Also check it is immediately below (currentPos === abovePos - 1)
-			// so we don't skip items that are "below" but with non-tracked layers
-			// sandwiched between them — those are fine as long as relative order holds.
-			// We only move when id is at or above its intended upper neighbour.
 			if (currentPos >= abovePos) {
 				try {
 					styleMoveLayer(id, aboveId);
@@ -175,13 +188,8 @@ function reconcile(
 					// layer may not exist yet — ignore
 				}
 			}
-		} else {
-			// id is the topmost tracked layer; ensure nothing tracked is above it.
-			// Find the highest position among remaining tracked layers (none here
-			// since we start from the top) — so id just needs to be below any
-			// layers that come after it in the full stack. No action needed as long
-			// as id is not above itself (tautologically true). Skip.
 		}
+		// topmost item: no action needed (see algorithm comment above)
 	}
 
 	if (moved) {

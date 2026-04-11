@@ -1,9 +1,9 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
-	useLayers,
 	useLayerOrder,
 	useLayerStoreOrderIds,
-	useMapConfig,
+	useStyleConfig,
+	useLayerIndex,
 	LayerOrderItem,
 	LayerConfig,
 } from '../../stores/map.store';
@@ -30,6 +30,20 @@ const ORDER_PREFIX = 'order-';
 const ORDER_LABELS = 'order-labels';
 const ORDER_BACKGROUND = 'order-background';
 
+/** Shallow-compare two plain objects by their key-value pairs.
+ * Much faster than JSON.stringify for small paint/layout objects.
+ */
+function shallowEqual(a: object | undefined, b: object | undefined): boolean {
+	if (a === b) return true;
+	if (!a || !b) return false;
+	const aKeys = Object.keys(a);
+	if (aKeys.length !== Object.keys(b).length) return false;
+	for (const k of aKeys) {
+		if ((a as any)[k] !== (b as any)[k]) return false;
+	}
+	return true;
+}
+
 // Memoized wrapper so React skips re-rendering when layers/url/insertBeforeLayer
 // haven't changed (avoids unnecessary prop-diffing inside MlVectorTileLayer).
 const MemoizedMlVectorTileLayer = React.memo(MlVectorTileLayer, (prev: MlVectorTileLayerProps, next: MlVectorTileLayerProps) => {
@@ -37,35 +51,28 @@ const MemoizedMlVectorTileLayer = React.memo(MlVectorTileLayer, (prev: MlVectorT
 	if (prev.url !== next.url || prev.insertBeforeLayer !== next.insertBeforeLayer) return false;
 	// Re-render if layer count changed
 	if (prev.layers.length !== next.layers.length) return false;
-	// Re-render if any layer's layout/paint serialization changed
+	// Re-render if any layer's id, layout, or paint changed (shallow compare — no JSON.stringify)
 	for (let i = 0; i < prev.layers.length; i++) {
 		const p = prev.layers[i];
 		const n = next.layers[i];
 		if (p.id !== n.id) return false;
-		if (JSON.stringify(p.layout) !== JSON.stringify(n.layout)) return false;
-		if (JSON.stringify(p.paint) !== JSON.stringify(n.paint)) return false;
+		if (!shallowEqual(p.layout, n.layout)) return false;
+		if (!shallowEqual(p.paint, n.paint)) return false;
 	}
 	return true; // props are equal → skip re-render
 });
 
 function MapLayerRenderer(props: MapLayerRendererProps) {
 	const mapConfigKey = props.mapConfigKey || 'map_1';
-	const layers = useLayers(mapConfigKey);
 	const layerStoreOrder = useLayerOrder(mapConfigKey);
 	const mapHook = useMap({ mapId: props?.mapId });
 	const layerStoreOrderIds = useLayerStoreOrderIds(mapConfigKey);
-	const mapConfig = useMapConfig(mapConfigKey);
-
-	// Build a local index for O(1) lookups during render.
-	const layerIndex = useMemo(() => {
-		const map = new Map<string, LayerConfig>();
-		if (layers) {
-			for (const l of layers) {
-				map.set(l.uuid, l);
-			}
-		}
-		return map;
-	}, [layers]);
+	// useStyleConfig: shallow-equal selector over the 5 style fields only.
+	// Unrelated store changes (visibility, layer names, etc.) do NOT trigger a re-render.
+	const styleConfig = useStyleConfig(mapConfigKey);
+	// useLayerIndex: returns the store's pre-built _layerIndex Map directly.
+	// No useMemo or manual Map construction needed.
+	const layerIndex = useLayerIndex(mapConfigKey);
 
 	// Classify store UUIDs into the three zones.
 	const { labelUuids, customUuids, bgUuids } = useMemo(() => {
@@ -152,19 +159,19 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 
 		// ── 2. Sources: skip ones that are already present with same def ──
 		// Remove sources that no longer exist in the new style config.
-		const newSourceIds = new Set(Object.keys(mapConfig?.styleSources ?? {}));
+		const newSourceIds = new Set(Object.keys(styleConfig.styleSources ?? {}));
 		const sourcesToRemove = addedSourceIdsRef.current.filter((id) => !newSourceIds.has(id));
 		for (const id of sourcesToRemove) {
 			if (rawMap.getSource(id)) rawMap.removeSource(id);
 		}
 		addedSourceIdsRef.current = addedSourceIdsRef.current.filter((id) => newSourceIds.has(id));
 
-		if (mapConfig?.styleSources) {
-			if (mapConfig?.styleGlyphs) {
-				rawMap.style.setGlyphs(mapConfig.styleGlyphs);
+		if (styleConfig.styleSources) {
+			if (styleConfig.styleGlyphs) {
+				rawMap.style.setGlyphs(styleConfig.styleGlyphs);
 			}
-			if (mapConfig?.styleSprite) {
-				const spriteValue = mapConfig.styleSprite;
+			if (styleConfig.styleSprite) {
+				const spriteValue = styleConfig.styleSprite;
 				if (typeof spriteValue === 'string') {
 					rawMap.style.setSprite([{ id: 'default', url: spriteValue }]);
 				} else if (Array.isArray(spriteValue)) {
@@ -172,7 +179,7 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 				}
 			}
 
-			for (const [sourceId, sourceDef] of Object.entries(mapConfig.styleSources)) {
+			for (const [sourceId, sourceDef] of Object.entries(styleConfig.styleSources)) {
 				if (!rawMap.getSource(sourceId)) {
 					rawMap.addSource(sourceId, sourceDef);
 					addedSourceIdsRef.current.push(sourceId);
@@ -184,8 +191,8 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 		// Insert before the first user-land order marker so they land in the
 		// correct zone without going through the React component pipeline.
 		// We call map.style.addLayer() (no _update per call) then _update once.
-		const bgLayers = mapConfig?.backgroundLayers ?? [];
-		const labelLayers = mapConfig?.symbolLayers ?? [];
+		const bgLayers = styleConfig.backgroundLayers ?? [];
+		const labelLayers = styleConfig.symbolLayers ?? [];
 
 		// bg layers go below order-background; labels go above order-labels.
 		// We insert each layer "before" the appropriate boundary marker when
@@ -257,13 +264,13 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 			if (!stillMissing) return;
 
 			// Re-add sources
-			if (mapConfig?.styleSources) {
-				for (const [sourceId, sourceDef] of Object.entries(mapConfig.styleSources)) {
+			if (styleConfig.styleSources) {
+				for (const [sourceId, sourceDef] of Object.entries(styleConfig.styleSources)) {
 					if (!rawMap.getSource(sourceId)) rawMap.addSource(sourceId, sourceDef);
 				}
-				if (mapConfig?.styleGlyphs) rawMap.style.setGlyphs(mapConfig.styleGlyphs);
-				if (mapConfig?.styleSprite) {
-					const sv = mapConfig.styleSprite;
+				if (styleConfig.styleGlyphs) rawMap.style.setGlyphs(styleConfig.styleGlyphs);
+				if (styleConfig.styleSprite) {
+					const sv = styleConfig.styleSprite;
 					if (typeof sv === 'string') rawMap.style.setSprite([{ id: 'default', url: sv }]);
 					else if (Array.isArray(sv)) rawMap.style.setSprite(sv);
 				}
@@ -297,8 +304,8 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 			rawMap.off('styledata', onStyleData);
 			setSourcesReady(false);
 		};
-	}, [mapHook.map, mapConfig?.styleSources, mapConfig?.styleGlyphs, mapConfig?.styleSprite,
-		mapConfig?.backgroundLayers, mapConfig?.symbolLayers, orderMarkerIds]);
+	}, [mapHook.map, styleConfig.styleSources, styleConfig.styleGlyphs, styleConfig.styleSprite,
+		styleConfig.backgroundLayers, styleConfig.symbolLayers, orderMarkerIds]);
 
 	// Cleanup all imperatively-created layers and sources on unmount.
 	useEffect(() => {

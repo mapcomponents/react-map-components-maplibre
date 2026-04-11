@@ -553,6 +553,45 @@ export function useMapConfig(mapConfigKey: string): MapConfig | undefined {
 }
 
 /**
+ * Return only the 5 style-related fields from a MapConfig.
+ * Uses shallow equality so any unrelated change (visibility, name, etc.) does NOT
+ * cause MapLayerRenderer's useLayoutEffect to re-fire.
+ */
+export interface StyleConfig {
+	backgroundLayers?: MapConfig['backgroundLayers'];
+	symbolLayers?: MapConfig['symbolLayers'];
+	styleSources?: MapConfig['styleSources'];
+	styleGlyphs?: MapConfig['styleGlyphs'];
+	styleSprite?: MapConfig['styleSprite'];
+}
+export function useStyleConfig(mapConfigKey: string): StyleConfig {
+	return useMapStore(
+		useShallow((state) => {
+			const mc = state.mapConfigs[mapConfigKey];
+			if (!mc) return {} as StyleConfig;
+			return {
+				backgroundLayers: mc.backgroundLayers,
+				symbolLayers: mc.symbolLayers,
+				styleSources: mc.styleSources,
+				styleGlyphs: mc.styleGlyphs,
+				styleSprite: mc.styleSprite,
+			} satisfies StyleConfig;
+		})
+	);
+}
+
+/**
+ * Return the store's pre-built _layerIndex Map directly.
+ * Never triggers a re-render just because a layer's config object changed
+ * within a stable index (the Map reference only changes when layers are
+ * added/removed, matching setLayerInMapConfig which updates the index in-place).
+ */
+export function useLayerIndex(mapConfigKey: string): Map<string, LayerConfig> {
+	return useMapStore((state) => state.mapConfigs[mapConfigKey]?._layerIndex ?? emptyLayerIndex);
+}
+const emptyLayerIndex: Map<string, LayerConfig> = new Map();
+
+/**
  * Get flattened uuid list from layerOrder for a specific mapConfig key.
  * Uses shallow comparison to avoid unnecessary re-renders.
  */

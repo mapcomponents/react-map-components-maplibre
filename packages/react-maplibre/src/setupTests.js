@@ -78,8 +78,10 @@ function mockCreateMapInstance() {
 	function _getLayer(id)  { return _layers.find((l) => l.id === id) || null; }
 
 	// ── map.style ──────────────────────────────────────────────────────────
+	// _order is kept as a live array (same reference) so getRawLayerOrder()
+	// in useOrderReconciler can read it directly without allocating a clone.
 	const style = {
-		get _order() { return _layers.map((l) => l.id); },
+		_order: _layerIds,   // live reference — same array as _layerIds
 		get _layers() { return Object.fromEntries(_layers.map((l) => [l.id, l])); },
 		get sourceCaches() {
 			return Object.fromEntries(Object.keys(_sources).map((k) => [k, {}]));
