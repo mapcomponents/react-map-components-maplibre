@@ -54,6 +54,7 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 	});
 
 	const initializedRef = useRef(false);
+	const isCreatingRef = useRef(false);
 	const layerId = useRef(props.layerId || 'MlWmsLayer-' + mapHook.componentId);
 
 	const tileUrl = useMemo(() => {
@@ -78,64 +79,89 @@ const MlWmsLayer = (props: MlWmsLayerProps) => {
 		return _wmsUrl + '?' + urlParamsStr;
 	}, [props.urlParameters, props.url]);
 
+	// Keep a stable ref to the latest props so createLayer doesn't need props
+	// in its dep array (which would recreate it — and re-run its effect — on
+	// every prop change).
+	const propsRef = useRef(props);
+	propsRef.current = props;
+	const tileUrlRef = useRef(tileUrl);
+	tileUrlRef.current = tileUrl;
+
 	const createLayer = useCallback(() => {
 		if (!mapHook.map) return;
+		if (isCreatingRef.current) return;
+		isCreatingRef.current = true;
+		try {
+			initializedRef.current = true;
 
-		initializedRef.current = true;
+			// Remove existing source+layer before recreating.
+			if (mapHook.map.map.getSource(layerId.current)) {
+				mapHook.cleanup();
+			}
 
-		if (mapHook.map.map.getLayer(layerId.current)) {
-			mapHook.cleanup();
+			// Double-check after cleanup — another effect may have beaten us here.
+			if (!mapHook.map.map.getSource(layerId.current)) {
+				mapHook.map.addSource(
+					layerId.current,
+					{
+						type: 'raster',
+						tiles: [tileUrlRef.current],
+						tileSize: 256,
+						attribution: propsRef.current.attribution ?? '',
+						...propsRef.current.sourceOptions,
+					},
+					mapHook.componentId
+				);
+			}
+
+			if (!mapHook.map.map.getLayer(layerId.current)) {
+				mapHook.map.addLayer(
+					{
+						id: layerId.current,
+						type: 'raster',
+						source: layerId.current,
+						...propsRef.current.layerOptions,
+					},
+					propsRef.current.insertBeforeLayer,
+					mapHook.componentId
+				);
+			}
+
+			if (propsRef.current.visible === false) {
+				mapHook.map.map.setLayoutProperty(layerId.current, 'visibility', 'none');
+			}
+		} finally {
+			isCreatingRef.current = false;
 		}
+	}, [mapHook.map, mapHook.cleanup, mapHook.componentId]);
 
-		mapHook.map.addSource(
-			layerId.current,
-			{
-				type: 'raster',
-				tiles: [tileUrl],
-				tileSize: 256,
-				attribution: props.attribution ?? '',
-				...props.sourceOptions,
-			},
-			mapHook.componentId
-		);
-
-		mapHook.map.addLayer(
-			{
-				id: layerId.current,
-				type: 'raster',
-				source: layerId.current,
-				...props.layerOptions,
-			},
-			props.insertBeforeLayer,
-			mapHook.componentId
-		);
-
-		// recreate layer if map style.json has changed
-		mapHook.map.on(
-			'styledata',
-			() => {
-				if (initializedRef.current && !mapHook.map?.map.getLayer(layerId.current)) {
-					console.log('Recreate Layer ' + layerId.current);
-					createLayer();
-				}
-			},
-			mapHook.componentId
-		);
-		if (props.visible === false) {
-			mapHook.map.map.setLayoutProperty(layerId.current, 'visibility', 'none');
-		}
-	}, [mapHook.map, props, tileUrl]);
-
+	// Initial creation — fires once when the map becomes available.
 	useEffect(() => {
-		if (
-			initializedRef.current &&
-			(mapHook?.map?.map?.getSource?.(layerId.current) as RasterSourceSpecification)?.tiles?.[0] ===
-				tileUrl
-		)
-			return;
-
+		if (initializedRef.current) return;
 		createLayer();
 	}, [createLayer]);
+
+	// Recreate after a base-style reload wipes the layer.
+	// One handler per map lifetime — not re-registered on every createLayer call.
+	useEffect(() => {
+		if (!mapHook.map) return;
+		const handler = () => {
+			if (initializedRef.current && !mapHook.map?.map.getSource(layerId.current)) {
+				createLayer();
+			}
+		};
+		mapHook.map.on('styledata', handler, mapHook.componentId);
+		return () => {
+			mapHook.map?.off('styledata', handler);
+		};
+	}, [mapHook.map, mapHook.componentId, createLayer]);
+
+	// Recreate when the tile URL changes (url/urlParameters changed).
+	// Only fires after initial creation is done (initializedRef guard).
+	useEffect(() => {
+		if (!mapHook.map || !initializedRef.current) return;
+		createLayer();
+	}, [tileUrl]); // intentionally omits mapHook.map — init effect handles first mount
 
 	useEffect(() => {
 		if (!mapHook.map || !initializedRef.current) return;
