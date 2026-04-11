@@ -378,6 +378,99 @@ describe('MapLayerRenderer style layers (background + labels)', () => {
 		const addedViaMapAddLayer = addLayerCalls.some(([spec]) => spec?.id === bgVtUuid);
 		expect(addedViaMapAddLayer).toBe(false);
 	});
+
+	/**
+	 * Regression: setMasterVisible on bgVt / labelsVt must update visibility
+	 * of the imperatively-applied style layers on the map.
+	 *
+	 * Background: bg and label layers are added to the map via style.addLayer()
+	 * in a useLayoutEffect.  The useLayoutEffect only re-fires when the style
+	 * spec arrays change, not when masterVisible changes.  A dedicated useEffect
+	 * must watch masterVisible and call setLayoutProperty('visibility', ...).
+	 */
+	it('setMasterVisible(bgVt, false) hides all background style layers', async () => {
+		const bg1 = { id: 'water-fill', type: 'fill' as const, source: 'fake', 'source-layer': 'water' };
+		const bg2 = { id: 'road-fill',  type: 'fill' as const, source: 'fake', 'source-layer': 'road' };
+		setMapConfig(MAP_CONFIG_KEY, makeMapConfig());
+		act(() => {
+			updateStyle(MAP_CONFIG_KEY, {
+				version: 8, name: 'test',
+				sources: { fake: { type: 'vector', tiles: [] } }, glyphs: '',
+				layers: [bg1, bg2],
+			});
+		});
+
+		mountRenderer();
+
+		// Wait for bg layers to be present on the map
+		await waitFor(() => {
+			const map = getMockMap()!;
+			expect(map.style.getLayer('road-fill')).not.toBeNull();
+		});
+
+		// Hide bg layers via masterVisible
+		act(() => {
+			useMapStore.getState().setMasterVisible(MAP_CONFIG_KEY, STYLE_LAYER_UUIDS.bgVt, false);
+		});
+
+		await waitFor(() => {
+			const map = getMockMap()!;
+			// 'test' is the renamed idx=0 layer; 'road-fill' is idx=1
+			expect(map.style.getLayoutProperty('test', 'visibility')).toBe('none');
+			expect(map.style.getLayoutProperty('road-fill', 'visibility')).toBe('none');
+		});
+
+		// Restore visibility
+		act(() => {
+			useMapStore.getState().setMasterVisible(MAP_CONFIG_KEY, STYLE_LAYER_UUIDS.bgVt, true);
+		});
+
+		await waitFor(() => {
+			const map = getMockMap()!;
+			expect(map.style.getLayoutProperty('test', 'visibility')).toBe('visible');
+			expect(map.style.getLayoutProperty('road-fill', 'visibility')).toBe('visible');
+		});
+	});
+
+	it('setMasterVisible(labelsVt, false) hides all symbol style layers', async () => {
+		const sym1 = { id: 'place-label', type: 'symbol' as const, source: 'fake', 'source-layer': 'place', layout: { 'text-field': '{name}' } };
+		const sym2 = { id: 'road-label',  type: 'symbol' as const, source: 'fake', 'source-layer': 'road',  layout: { 'text-field': '{ref}' } };
+		setMapConfig(MAP_CONFIG_KEY, makeMapConfig());
+		act(() => {
+			updateStyle(MAP_CONFIG_KEY, {
+				version: 8, name: 'test',
+				sources: { fake: { type: 'vector', tiles: [] } }, glyphs: '',
+				layers: [sym1, sym2],
+			});
+		});
+
+		mountRenderer();
+
+		await waitFor(() => {
+			const map = getMockMap()!;
+			expect(map.style.getLayer('road-label')).not.toBeNull();
+		});
+
+		act(() => {
+			useMapStore.getState().setMasterVisible(MAP_CONFIG_KEY, STYLE_LAYER_UUIDS.labelsVt, false);
+		});
+
+		await waitFor(() => {
+			const map = getMockMap()!;
+			expect(map.style.getLayoutProperty('place-label', 'visibility')).toBe('none');
+			expect(map.style.getLayoutProperty('road-label', 'visibility')).toBe('none');
+		});
+
+		act(() => {
+			useMapStore.getState().setMasterVisible(MAP_CONFIG_KEY, STYLE_LAYER_UUIDS.labelsVt, true);
+		});
+
+		await waitFor(() => {
+			const map = getMockMap()!;
+			expect(map.style.getLayoutProperty('place-label', 'visibility')).toBe('visible');
+			expect(map.style.getLayoutProperty('road-label', 'visibility')).toBe('visible');
+		});
+	});
 });
 
 // ─── Tests: sources setup ────────────────────────────────────────────────────

@@ -325,6 +325,32 @@ function MapLayerRenderer(props: MapLayerRendererProps) {
 		};
 	}, [mapHook.map]);
 
+	// ── Master visibility for imperatively-applied bg/label style layers ──
+	// setMasterVisible() on bgVt/labelsVt only updates the store entry's
+	// masterVisible flag. The useLayoutEffect above doesn't re-fire (its deps
+	// are the layer spec arrays, not masterVisible). This useEffect watches
+	// the flags via layerIndex and applies setLayoutProperty directly.
+	useEffect(() => {
+		const map = mapHook.map;
+		if (!map || !sourcesReady) return;
+		const rawMap = map.map;
+
+		const bgVisible = layerIndex.get(STYLE_LAYER_UUIDS.bgVt)?.masterVisible !== false;
+		const lblVisible = layerIndex.get(STYLE_LAYER_UUIDS.labelsVt)?.masterVisible !== false;
+		const visibility = (v: boolean) => (v ? 'visible' : 'none');
+
+		for (const layer of styleConfig.backgroundLayers ?? []) {
+			if (rawMap.style?.getLayer(layer.id)) {
+				rawMap.style.setLayoutProperty(layer.id, 'visibility', visibility(bgVisible));
+			}
+		}
+		for (const layer of styleConfig.symbolLayers ?? []) {
+			if (rawMap.style?.getLayer(layer.id)) {
+				rawMap.style.setLayoutProperty(layer.id, 'visibility', visibility(lblVisible));
+			}
+		}
+	}, [mapHook.map, sourcesReady, layerIndex, styleConfig.backgroundLayers, styleConfig.symbolLayers]);
+
 	// ── Layer order reconciler ────────────────────────────────────
 	// Checks the actual MapLibre layer stack after each addlayer event
 	// and fixes any zone violations with moveLayer calls.

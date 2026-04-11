@@ -400,23 +400,22 @@ export const useMapStore = create<MapState & MapActions>()((set) => ({
 				}
 			}
 
-			if (layerConfig.type === 'vt' && layerConfig.config?.layers) {
-				updateLayerAt(layerId, (l) => {
-					const vt = l as VtLayerConfig;
-					return {
-						...vt,
-						config: {
-							...vt.config,
-							layers: vt.config.layers.map((sl) => ({
-								...sl,
-								masterVisible,
-							})),
-						},
-					} as VtLayerConfig;
-				});
-			}
-
-			return {
+		if (layerConfig.type === 'vt' && layerConfig.config?.layers) {
+			updateLayerAt(layerId, (l) => {
+				const vt = l as VtLayerConfig;
+				return {
+					...vt,
+					masterVisible,
+					config: {
+						...vt.config,
+						layers: vt.config.layers.map((sl) => ({
+							...sl,
+							masterVisible,
+						})),
+					},
+				} as VtLayerConfig;
+			});
+		}			return {
 				mapConfigs: {
 					...state.mapConfigs,
 					[mapConfigKey]: { ...mapConfig, layers: updatedLayers, _layerIndex: newIndex },
