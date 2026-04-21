@@ -1,7 +1,7 @@
 {
 	"name": "@mapcomponents/deck-gl",
 	"version": "1.8.10",
-	"description": "A collection of DeckGl layers for MapLibre",
+	"description": "MapComponents components that integrate deck.gl layers into MapLibre maps.",
 	"main": "src/index.ts",
 	"module": "dist/index.mjs",
 	"license": "MIT",

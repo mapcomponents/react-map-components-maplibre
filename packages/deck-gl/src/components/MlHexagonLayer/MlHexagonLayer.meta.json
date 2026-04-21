@@ -1,11 +1,11 @@
 {
 	"name": "MlHexagonLayer",
 	"title": "Hexagon Layer using DeckGL",
-	"description": "A component demonstrating the use of the useDeckGL Hook to add a DeckGL Hexagon Layer to the MapLibre Map instance",
+	"description": "This component adds a deck.gl HexagonLayer to the MapComponents map, which spatially aggregates large (including real-time) point-based datasets and visualises them as a 3D hexagon heatmap.",
 	"i18n": {
 		"de": {
 			"title": "Hexagon Layer basierend auf DeckGL",
-			"description": "Eine Komponenten, die das Hinzufügen von DeckGL Hexagon Layern zur MapLibre Instanz mittels des useDeckGL Hooks demonstriert"
+			"description": "Diese Komponente fügt der MapComponents-Karte einen deck.gl HexagonLayer hinzu, der große (auch Echtzeit-)punktbasierte Datensätze räumlich aggregiert und als 3D‑Hexagon‑Heatmap visualisiert."
 		}
 	},
 	"tags": ["Map layer", "deckGL"],
