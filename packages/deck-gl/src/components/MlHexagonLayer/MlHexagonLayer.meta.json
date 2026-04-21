@@ -1,0 +1,21 @@
+{
+	"name": "MlHexagonLayer",
+	"title": "Hexagon Layer using DeckGL",
+	"description": "A component demonstrating the use of the useDeckGL Hook to add a DeckGL Hexagon Layer to the MapLibre Map instance",
+	"i18n": {
+		"de": {
+			"title": "Hexagon Layer basierend auf DeckGL",
+			"description": "Eine Komponenten, die das Hinzufügen von DeckGL Hexagon Layern zur MapLibre Instanz mittels des useDeckGL Hooks demonstriert"
+		}
+	},
+	"tags": ["Map layer", "deckGL"],
+	"category": "Map layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/iframe.html?args=&globals=&id=mapcomponents-mlhexagonlayer--custom-color-and-height-profile&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/thumbnails/MlLaermkarte.png"
+}
