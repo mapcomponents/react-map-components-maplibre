@@ -2,8 +2,7 @@ import storybook from 'eslint-plugin-storybook';
 import nx from '@nx/eslint-plugin';
 
 import react from 'eslint-plugin-react';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
+import tseslint from 'typescript-eslint';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
@@ -46,14 +45,12 @@ export default [
 	...compat.extends(
 		'eslint:recommended',
 		'plugin:react/recommended',
-		'plugin:@typescript-eslint/recommended',
 		'prettier',
 		'plugin:storybook/recommended'
 	),
 	{
 		plugins: {
 			react,
-			'@typescript-eslint': typescriptEslint,
 		},
 		languageOptions: {
 			globals: {
@@ -61,7 +58,7 @@ export default [
 				...globals.node,
 				...globals.jest,
 			},
-			parser: tsParser,
+			parser: tseslint.parser,
 			ecmaVersion: 'latest',
 			sourceType: 'module',
 		},
