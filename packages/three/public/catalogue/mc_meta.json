@@ -2,11 +2,11 @@
 	"MlThreeSplatLayer": {
 		"name": "MlThreeSplatLayer",
 		"title": "3D Splat Model",
-		"description": "Layer Component, that makes it possible to show 3D Gaussian Splatting Models on the map.",
+		"description": "Displays a Gaussian Splatting (GS) scene at a specific location on the map, enabling photorealistic 3D visuals captured from the real world. The scene can be positioned, rotated and scaled to fit the surroundings.",
 		"i18n": {
 			"de": {
 				"title": "3D Splat Modelle",
-				"description": "Layer Component, das es ermöglicht 3D Gaussian Splatting Modelle auf der Karte darzustellen."
+				"description": "Zeigt eine Gaussian-Splatting-Szene (GS) an einem bestimmten Ort auf der Karte an und ermöglicht fotorealistische 3D-Ansichten realer Umgebungen. Die Szene kann in Position, Ausrichtung und Größe angepasst werden."
 			}
 		},
 		"tags": ["Map layer", "3D", "Splat"],
@@ -23,11 +23,11 @@
 	"MlThreeModelLayer": {
 		"name": "MlThreeModelLayer",
 		"title": "3D Model",
-		"description": "Layer Component, that makes it possible to show 3D Models on the map.",
+		"description": "Renders a 3D model at a specific location on the map. The model can be loaded from a file and positioned, rotated and scaled to fit the scene.",
 		"i18n": {
 			"de": {
 				"title": "3D Modelle",
-				"description": "Layer Component, das es ermöglicht 3D Modelle auf der Karte darzustellen."
+				"description": "Rendert ein 3D-Modell an einem bestimmten Ort auf der Karte. Das Modell kann aus einer Datei geladen und in Position, Ausrichtung und Größe angepasst werden."
 			}
 		},
 		"tags": ["Map layer"],
