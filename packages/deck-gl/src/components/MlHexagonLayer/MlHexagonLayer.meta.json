@@ -1,11 +1,11 @@
 {
 	"name": "MlHexagonLayer",
 	"title": "Hexagon Layer using DeckGL",
-	"description": "This component adds a deck.gl HexagonLayer to the MapComponents map, which spatially aggregates large (including real-time) point-based datasets and visualises them as a 3D hexagon heatmap.",
+	"description": "Adds a deck.gl HexagonLayer to the map that spatially aggregates point-based datasets — including real-time data — and renders them as an interactive 3D hexagonal heatmap.",
 	"i18n": {
 		"de": {
 			"title": "Hexagon Layer basierend auf DeckGL",
-			"description": "Diese Komponente fügt der MapComponents-Karte einen deck.gl HexagonLayer hinzu, der große (auch Echtzeit-)punktbasierte Datensätze räumlich aggregiert und als 3D‑Hexagon‑Heatmap visualisiert."
+			"description": "Fügt der Karte einen deck.gl HexagonLayer hinzu, der punktbasierte Datensätze – einschließlich Echtzeit-Daten – räumlich aggregiert und als interaktive 3D-Hexagon-Heatmap darstellt."
 		}
 	},
 	"tags": ["Map layer", "deckGL"],
