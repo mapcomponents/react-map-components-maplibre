@@ -1,13 +1,4 @@
 {
-	"SpeedDial": {
-		"name": "SpeedDial",
-		"title": "Speed Dial",
-		"description": "",
-		"i18n": { "de": { "title": "Kurzwahl", "description": "" } },
-		"tags": [],
-		"category": "",
-		"type": "ui_component"
-	},
 	"useCameraFollowPath": {
 		"name": "useCameraFollowPath",
 		"title": "Move camera along linestring",
@@ -20,7 +11,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=hooks-usecamerafollowpath--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/useCameraFollowPath.png"
 	},
 	"MlWmsLoader": {
 		"name": "MlWmsLoader",
@@ -34,7 +32,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlwmsloader--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlWmsLoader.png"
 	},
 	"MlVectorTileLayer": {
 		"name": "MlVectorTileLayer",
@@ -48,7 +53,14 @@
 		},
 		"tags": ["Map layer"],
 		"category": "layer",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlvectortilelayer--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlVectorTileLayer.png"
 	},
 	"MlTransitionGeoJsonLayer": {
 		"name": "MlTransitionGeoJsonLayer",
@@ -62,21 +74,14 @@
 		},
 		"tags": ["Map layer"],
 		"category": "layer",
-		"type": "component"
-	},
-	"MlThreeJsLayer": {
-		"name": "MlThreeJsLayer",
-		"title": "3D Model",
-		"description": "Layer Component, that makes it possible to show 3D Models on the map.",
-		"i18n": {
-			"de": {
-				"title": "3D Modelle",
-				"description": "Layer Component, das es ermöglicht 3D Modelle auf der Karte darzustellen."
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mltransitiongeojsonlayer--example-config&viewMode=story"
 			}
-		},
-		"tags": ["Map layer"],
-		"category": "layer",
-		"type": "component"
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlTransitionGeoJsonLayer.png"
 	},
 	"MlTerrainLayer": {
 		"name": "MlTerrainLayer",
@@ -85,7 +90,14 @@
 		"i18n": { "de": { "title": "Terrain-Layer", "description": "Stellt ein Terrain Layer dar." } },
 		"tags": ["Map layer"],
 		"category": "layer",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlterrainlayer--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlTerrainLayer.png"
 	},
 	"MlTemporalController": {
 		"name": "MlTemporalController",
@@ -99,7 +111,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mltemporalcontroller--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlTemporalController.png"
 	},
 	"MlSpatialElevationProfile": {
 		"name": "MlSpatialElevationProfile",
@@ -113,7 +132,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlspatialelevationprofile--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlSpatialElevationProfile.png"
 	},
 	"MlSketchTool": {
 		"name": "MlSketchTool",
@@ -124,7 +150,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlsketchtool--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlSketchTool.png"
 	},
 	"MlScaleReference": {
 		"name": "MlScaleReference",
@@ -133,7 +166,35 @@
 		"i18n": { "de": { "title": "Maßstabsreferenz", "description": "Standard Maßstabsleiste" } },
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlscalereference--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlScaleReference.png"
+	},
+	"MlOgcApiFeatures": {
+		"name": "MlOgcApiFeatures",
+		"title": "OGC API Features",
+		"description": "Adds OGC API Features as Geojson to the Maplibre Map",
+		"i18n": {
+			"de": {
+				"title": "OGC API Features",
+				"description": "Fügt der Maplibre Karte Geojson Layer basierend auf OGC API Features hinzu"
+			}
+		},
+		"tags": ["Map layer"],
+		"category": "layer",
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlogcapifeatures--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlOgcApiFeatures.png"
 	},
 	"MlNavigationTools": {
 		"name": "MlNavigationTools",
@@ -144,7 +205,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlnavigationtools--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlNavigationTools.png"
 	},
 	"MlNavigationCompass": {
 		"name": "MlNavigationCompass",
@@ -158,7 +226,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlnavigationcompass--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlNavigationCompass.png"
 	},
 	"MlMeasureTool": {
 		"name": "MlMeasureTool",
@@ -172,21 +247,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
-	},
-	"MlLayerMagnify": {
-		"name": "MlLayerMagnify",
-		"title": "Map magnifier",
-		"description": "Hides a part of a map that is superimposed on another MapLibre map.",
-		"i18n": {
-			"de": {
-				"title": "Kartenlupe",
-				"description": "Kartenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus."
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlmeasuretool--catalogue-demo&viewMode=story"
 			}
-		},
-		"tags": ["Map add-on"],
-		"category": "add-ons",
-		"type": "component"
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlMeasureTool.png"
 	},
 	"MlLayerSwipe": {
 		"name": "MlLayerSwipe",
@@ -200,7 +268,35 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mllayerswipe--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlLayerSwipe.png"
+	},
+	"MlLayerMagnify": {
+		"name": "MlLayerMagnify",
+		"title": "Map magnifier",
+		"description": "Hides a part of a map that is superimposed on another MapLibre map.",
+		"i18n": {
+			"de": {
+				"title": "Kartenlupe",
+				"description": "Kartenlupe blendet einen Teil einer, von zwei übereinanderliegenden, MapLibre Karten aus."
+			}
+		},
+		"tags": ["Map add-on"],
+		"category": "add-ons",
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mllayermagnify--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlLayerMagnify.png"
 	},
 	"MlGpxViewer": {
 		"name": "MlGpxViewer",
@@ -211,18 +307,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
-	},
-	"MlGeoJsonLayer": {
-		"name": "MlGeoJsonLayer",
-		"title": "GeoJSON layer",
-		"description": "Presents GeoJSON objects.",
-		"i18n": {
-			"de": { "title": "GeoJSON Darstellung", "description": "Stellt GeoJSON Objekte dar" }
-		},
-		"tags": ["Map layer"],
-		"category": "layer",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlgpxviewer--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlGpxViewer.png"
 	},
 	"MlFollowGps": {
 		"name": "MlFollowGps",
@@ -236,21 +328,32 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
-	},
-	"MlFillExtrusionLayer": {
-		"name": "MlFillExtrusionLayer",
-		"title": "Simple 3D buildings",
-		"description": "Draws a level, out of the building outline and the height, extrudes 3D Objects as buildings.",
-		"i18n": {
-			"de": {
-				"title": "3D Gebäude",
-				"description": "Zeichnet eine Ebene mit einfach, aus den Gebäudeumrissen und anhand der Höhen, extrudierten 3D Objekten als Gebäude."
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlfollowgps--catalogue-demo&viewMode=story"
 			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlFollowGps.png"
+	},
+	"MlGeoJsonLayer": {
+		"name": "MlGeoJsonLayer",
+		"title": "GeoJSON layer",
+		"description": "Presents GeoJSON objects.",
+		"i18n": {
+			"de": { "title": "GeoJSON Darstellung", "description": "Stellt GeoJSON Objekte dar" }
 		},
-		"tags": ["Map add-on"],
-		"category": "add-ons",
-		"type": "component"
+		"tags": ["Map layer"],
+		"category": "layer",
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlgeojsonlayer--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlGeoJsonLayer.png"
 	},
 	"MlFeatureEditor": {
 		"name": "MlFeatureEditor",
@@ -261,7 +364,14 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlfeatureeditor--catalogue-demo&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlFeatureEditor.png"
 	},
 	"MlCreatePdfForm": {
 		"name": "MlCreatePdfForm",
@@ -275,6 +385,34 @@
 		},
 		"tags": ["Map add-on"],
 		"category": "add-ons",
-		"type": "component"
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlcreatepdfform--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlCreatePdfForm.png"
+	},
+	"MlFillExtrusionLayer": {
+		"name": "MlFillExtrusionLayer",
+		"title": "Simple 3D buildings",
+		"description": "Draws a level, out of the building outline and the height, extrudes 3D Objects as buildings.",
+		"i18n": {
+			"de": {
+				"title": "3D Gebäude",
+				"description": "Zeichnet eine Ebene mit einfach, aus den Gebäudeumrissen und anhand der Höhen, extrudierten 3D Objekten als Gebäude."
+			}
+		},
+		"tags": ["Map add-on"],
+		"category": "add-ons",
+		"type": "component",
+		"demos": [
+			{
+				"name": "Demo",
+				"url": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/iframe.html?id=mapcomponents-mlfillextrusionlayer--example-config&viewMode=story"
+			}
+		],
+		"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/react-maplibre/thumbnails/MlFillExtrusionLayer.png"
 	}
 }

@@ -1,0 +1,21 @@
+{
+	"name": "MlHexagonLayer",
+	"title": "Hexagon Layer using DeckGL",
+	"description": "Adds a deck.gl HexagonLayer to the map that spatially aggregates point-based datasets — including real-time data — and renders them as an interactive 3D hexagonal heatmap.",
+	"i18n": {
+		"de": {
+			"title": "Hexagon Layer basierend auf DeckGL",
+			"description": "Fügt der Karte einen deck.gl HexagonLayer hinzu, der punktbasierte Datensätze – einschließlich Echtzeit-Daten – räumlich aggregiert und als interaktive 3D-Hexagon-Heatmap darstellt."
+		}
+	},
+	"tags": ["Map layer", "deckGL"],
+	"category": "Map layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/iframe.html?args=&globals=&id=mapcomponents-mlhexagonlayer--custom-color-and-height-profile&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/thumbnails/MlLaermkarte.png"
+}
