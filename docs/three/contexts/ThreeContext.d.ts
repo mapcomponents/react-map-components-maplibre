@@ -10,6 +10,6 @@ export interface ThreeContextType {
     worldMatrix: Matrix4 | undefined;
     worldMatrixInv: Matrix4 | undefined;
 }
-export declare const ThreeContext: import('react').Context<ThreeContextType>;
+export declare const ThreeContext: import('../../../../node_modules/.pnpm/react@19.1.0/node_modules/react').Context<ThreeContextType>;
 export declare const useThree: () => ThreeContextType;
 //# sourceMappingURL=ThreeContext.d.ts.map
