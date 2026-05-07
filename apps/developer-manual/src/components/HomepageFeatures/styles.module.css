@@ -1,0 +1,28 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureSvg {
+  height: 200px;
+  width: 200px;
+}
+
+.leftAlign {
+  text-align: left;
+}
+
+.features ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.features li {
+  padding: 5px 0;
+}
+
+/* .features a {
+  color: #009fe3;
+} */
