@@ -1,33 +1,32 @@
 {
-	"name": "@mapcomponents/deck-gl",
-	"version": "1.8.10",
-	"description": "MapComponents components that integrate deck.gl layers into MapLibre maps.",
-	"main": "src/index.ts",
-	"module": "dist/index.mjs",
-	"license": "MIT",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js"
-	},
-	"dependencies": {
-		"@emotion/react": "^11.14.0",
-		"@emotion/styled": "^11.14.1",
-		"@mui/icons-material": "^7.3.2",
-		"@mui/system": "^7.3.2",
-		"@mui/material": "^7.3.2",
-		"@storybook/react": "^9.1.20",
-		"uuid": "^11.1.0"
-	},
-	"peerDependencies": {
-		"@deck.gl/aggregation-layers": "^9.2.6",
-		"@deck.gl/core": "^9.2.6",
-		"@deck.gl/geo-layers": "^9.2.6",
-		"@deck.gl/mapbox": "^9.2.6",
-		"@deck.gl/mesh-layers": "^9.2.6",
-		"@mapcomponents/react-maplibre": "workspace:*",
-		"maplibre-gl": "^5.16.0"
-	},
-	"devDependencies": {
-		"@types/geojson": "^7946.0.16"
-	}
+  "name": "@mapcomponents/deck-gl",
+  "version": "1.8.10",
+  "description": "MapComponents components that integrate deck.gl layers into MapLibre maps.",
+  "main": "src/index.ts",
+  "module": "dist/index.mjs",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.2",
+    "@mui/system": "^7.3.2",
+    "@mui/material": "^7.3.2",
+    "uuid": "^11.1.0"
+  },
+  "peerDependencies": {
+    "@deck.gl/aggregation-layers": "^9.2.6",
+    "@deck.gl/core": "^9.2.6",
+    "@deck.gl/geo-layers": "^9.2.6",
+    "@deck.gl/mapbox": "^9.2.6",
+    "@deck.gl/mesh-layers": "^9.2.6",
+    "@mapcomponents/react-maplibre": "workspace:*",
+    "maplibre-gl": "^5.16.0"
+  },
+  "devDependencies": {
+    "@types/geojson": "^7946.0.16"
+  }
 }
