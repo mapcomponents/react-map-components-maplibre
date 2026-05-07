@@ -1,27 +1,32 @@
 import './style.css';
 
-export const parameters = {
-	docs: {
-		inlineStories: false,
+const preview = {
+	parameters: {
+		layout: 'fullscreen',
+		docs: {
+			story: {
+				iframeHeight: 500,
+			},
+		},
+		actions: { argTypesRegex: '^on[A-Z].*' },
 	},
-	actions: { argTypesRegex: '^on[A-Z].*' },
-
-};
-
-export const globalTypes = {
-	theme: {
-		name: 'Theme',
-		title: 'Theme',
-		description: 'Theme for your components',
-		defaultValue: 'light',
-		toolbar: {
-			icon: 'paintbrush',
-			dynamicTitle: true,
-			items: [
-				{ value: 'light', left: '☀️', title: 'Light mode' },
-				{ value: 'dark', left: '🌙', title: 'Dark mode' },
-			],
+	globalTypes: {
+		theme: {
+			name: 'Theme',
+			title: 'Theme',
+			description: 'Theme for your components',
+			defaultValue: 'light',
+			toolbar: {
+				icon: 'paintbrush',
+				dynamicTitle: true,
+				items: [
+					{ value: 'light', left: '☀️', title: 'Light mode' },
+					{ value: 'dark', left: '🌙', title: 'Dark mode' },
+				],
+			},
 		},
 	},
+	tags: ['autodocs'],
 };
-export const tags = ['autodocs'];
+
+export default preview;
