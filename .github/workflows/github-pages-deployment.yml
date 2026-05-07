@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm nx
 
       - uses: actions/setup-node@v4
         with:
@@ -27,11 +27,11 @@ jobs:
 
       - name: Build Storybook
         run: |
-          npx nx run-many -t build-catalogue-meta --all --exclude docs
-          npx nx run-many -t build-storybook --all --exclude docs
+          nx run-many -t build-catalogue-meta --all --exclude docs
+          nx run-many -t build-storybook --all --exclude docs
 
       - name: Build Developer Manual
-        run: pnpm --filter developer-manual build
+        run: nx run developer-manual:build
 
       - name: Assemble deployment
         run: |
