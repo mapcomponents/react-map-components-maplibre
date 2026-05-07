@@ -1,19 +1,21 @@
+html, body, #storybook-root, #root {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 #root {
 	background-color: #000;
 	position: absolute;
-	min-height: 400px;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
 }
-.docs-story {
-	min-height: 400px;
-	display: flex;
-	align-items: stretch;
-}
-.docs-story > div:first-child {
-	width: 100%;
+
+#storybook-root > div,
+#root > div {
+	height: 100%;
 }
 
 .App {
@@ -23,6 +25,15 @@
 	bottom: 0;
 	left: 0;
 }
+
+.fullscreen_map {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
 .fullscreen_map .mapContainer {
 	position: absolute;
 	top: 0;
