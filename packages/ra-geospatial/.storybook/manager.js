@@ -1,6 +1,6 @@
-import { addons } from "@storybook/addons";
+import { addons } from "storybook/manager-api";
 import wheregroupTheme from "./wheregroupTheme";
 
 addons.setConfig({
-  theme: wheregroupTheme,
+	theme: wheregroupTheme,
 });
