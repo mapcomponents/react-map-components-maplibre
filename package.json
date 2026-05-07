@@ -54,6 +54,8 @@
 		"@vitejs/plugin-react": "^4.7.0",
 		"@vitest/ui": "^3.2.4",
 		"ajv": "^8.17.1",
+		"node-fetch": "^3.3.2",
+		"glob": "^11.0.3",
 		"cypress": "^14.5.4",
 		"eslint": "^9.34.0",
 		"eslint-config-prettier": "^10.1.8",

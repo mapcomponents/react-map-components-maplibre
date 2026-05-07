@@ -1,0 +1,21 @@
+{
+	"name": "MlScenegraphLayer",
+	"title": "Scenegraph Layer using DeckGL",
+	"description": "Adds a deck.gl ScenegraphLayer to the map that places instanced copies of a glTF 3D model at geographic data point locations. Position, orientation and scale can be configured per instance, and animated glTF models are fully supported. Demo model: https://github.com/KhronosGroup/glTF-Sample-Models/tree/main/2.0/BoxAnimated",
+	"i18n": {
+		"de": {
+			"title": "Scenegraph Layer basierend auf DeckGL",
+			"description": "Fügt der Karte einen deck.gl ScenegraphLayer hinzu, der instanzierte Kopien eines glTF-3D-Modells an geografischen Datenpunkten platziert. Position, Ausrichtung und Skalierung lassen sich pro Instanz konfigurieren; animierte glTF-Modelle werden vollständig unterstützt. Demo-Modell: https://github.com/KhronosGroup/glTF-Sample-Models/tree/main/2.0/BoxAnimated"
+		}
+	},
+	"tags": ["Map layer", "deckGL"],
+	"category": "Map layer",
+	"type": "component",
+	"demos": [
+		{
+			"name": "Demo",
+			"url": "https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/iframe.html?args=&globals=&id=mapcomponents-mlscenegraphlayer--deckgl-example&viewMode=story"
+		}
+	],
+	"thumbnail": "https://mapcomponents.github.io/react-map-components-maplibre/deck-gl/thumbnails/MlScenegraphLayer.png"
+}

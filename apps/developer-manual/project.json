@@ -1,0 +1,9 @@
+{
+	"name": "developer-manual",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "apps/developer-manual/src",
+	"projectType": "application",
+	"tags": [],
+	"// targets": "to see all targets run: nx show project developer-manual --web",
+	"targets": {}
+}

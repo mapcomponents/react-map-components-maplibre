@@ -1,11 +1,11 @@
 {
 	"name": "MlThreeModelLayer",
 	"title": "3D Model",
-	"description": "Layer Component, that makes it possible to show 3D Models on the map.",
+	"description": "Renders a 3D model at a specific location on the map. The model can be loaded from a file and positioned, rotated and scaled to fit the scene.",
 	"i18n": {
 		"de": {
 			"title": "3D Modelle",
-			"description": "Layer Component, das es ermöglicht 3D Modelle auf der Karte darzustellen."
+			"description": "Rendert ein 3D-Modell an einem bestimmten Ort auf der Karte. Das Modell kann aus einer Datei geladen und in Position, Ausrichtung und Größe angepasst werden."
 		}
 	},
 	"tags": ["Map layer"],
