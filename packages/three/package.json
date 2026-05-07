@@ -5,6 +5,9 @@
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
+	"scripts": {
+		"build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js"
+	},
 	"exports": {
 		".": {
 			"import": "dist/index.mjs",
