@@ -1,0 +1,73 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        run: npm install -g pnpm nx
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Storybook
+        run: |
+          nx run-many -t build-catalogue-meta --all --exclude docs
+          nx run-many -t build-storybook --all --exclude docs
+
+      - name: Build Developer Manual
+        run: nx run developer-manual:build
+
+      - name: Assemble deployment
+        run: |
+          mkdir -p github-pages-build/developer-manual
+          # Collect storybook builds
+          for dir in apps packages; do
+            for subdir in $dir/*/; do
+              name=$(basename "$subdir")
+              if [ -d "$subdir/storybook-static" ]; then
+                echo "Copying $subdir/storybook-static → github-pages-build/$name"
+                cp -r "$subdir/storybook-static" "github-pages-build/$name"
+              fi
+            done
+          done
+          # Copy developer manual
+          cp -r apps/developer-manual/build/* github-pages-build/developer-manual/
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: github-pages-build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
