@@ -2,9 +2,7 @@ import { composeStories } from '@storybook/testing-react';
 import { mount } from '@cypress/react';
 import * as stories from './MlCreatePdfForm.stories';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-const { ExampleConfig }: any = composeStories(stories);
+const { ExampleConfig }: any = composeStories(stories as any);
 
 describe('MlCreatePdfForm Tests', () => {
 	it('Should generate and download a PDF export of the current map preview', function () {

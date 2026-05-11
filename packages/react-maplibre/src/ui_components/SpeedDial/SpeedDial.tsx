@@ -62,10 +62,16 @@ const SpeedDial = () => {
 					<SpeedDialAction
 						key={action.name}
 						icon={action.icon}
-						tooltipTitle={action.name}
-						tooltipOpen
+						slotProps={{
+							tooltip: {
+								title: action.name,
+								open: true,
+							},
+							fab: {
+								sx: { color: 'text.primary' },
+							},
+						}}
 						onClick={handleClose}
-						FabProps={{ sx: { color: 'text.primary' } }}
 					/>
 				))}
 			</MuiSpeedDial>

@@ -1,8 +1,9 @@
 import MlGlobeButton, { MlGlobeButtonProps } from './MlGlobeButton';
 
 import lowZoomDecorator from '../../decorators/LowZoomDecorator';
+import type { Meta } from '@storybook/react';
 
-const storyoptions = {
+const storyoptions: Meta<typeof MlGlobeButton> = {
 	title: 'MapComponents/MlGlobeButton',
 	component: MlGlobeButton,
 	argTypes: {},

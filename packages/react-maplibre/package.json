@@ -27,6 +27,7 @@
 		"@mui/material": "^9.0.1",
 		"@mui/system": "^9.0.1",
 		"@reduxjs/toolkit": "^2.11.2",
+		"@storybook/testing-react": "^2.0.1",
 		"@testing-library/dom": "^10.4.1",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/user-event": "^14.6.1",

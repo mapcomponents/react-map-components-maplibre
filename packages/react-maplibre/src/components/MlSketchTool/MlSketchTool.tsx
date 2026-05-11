@@ -303,8 +303,8 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 					<Box key={el.id} sx={{ display: 'flex', flexDirection: 'column' }}>
 						<br />
 						<Box
-							flexDirection={'row'}
 							sx={{
+								flexDirection: 'row',
 								'&:hover': {
 									backgroundColor: 'rgb(177, 177, 177, 0.2)',
 								},

@@ -128,9 +128,10 @@ const removeExample: any = (args: any) => {
 			return;
 		}
 
+
 		mapHook.map.map.on('sourcedata', () => {
-			if (mapHook?.map?.map?.style.sourceCaches) {
-				setActiveSources(Object.keys(mapHook?.map?.map?.style.sourceCaches));
+			if ((mapHook?.map?.map?.style as any).sourceCaches) {
+				setActiveSources(Object.keys((mapHook?.map?.map?.style as any).sourceCaches));
 			}
 		});
 	}, [mapHook.map]);

@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MlMeasureTool, { MlMeasureToolOnChangeOptions, MlMeasureToolProps } from './MlMeasureTool';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import StraightenOutlinedIcon from '@mui/icons-material/StraightenOutlined';
 import SquareFootOutlinedIcon from '@mui/icons-material/SquareFootOutlined';
 import {
-	useTheme,
+	Box,
 	Button,
+	Checkbox,
+	FormControl,
+	FormControlLabel,
+	InputLabel,
 	MenuItem,
+	OutlinedInput,
+	Paper,
+	Radio,
+	RadioGroup,
 	Select,
 	SelectChangeEvent,
 	Typography,
-	FormControl,
-	RadioGroup,
-	FormControlLabel,
-	Radio,
-	Checkbox,
-	InputLabel,
-	OutlinedInput,
-	Box,
-	Paper,
+	useTheme,
 } from '@mui/material';
 import Sidebar from '../../ui_components/Sidebar';
 import TopToolbar from '../../ui_components/TopToolbar';
@@ -199,10 +199,12 @@ const CatalogueSidebar: React.FC<CatalogueSidebarProps> = ({ openSidebar, setOpe
 							onChange={handleUnitChange}
 							input={<OutlinedInput label="Unit" />}
 							MenuProps={{
-								PaperProps: {
-									style: {
-										maxHeight: 48 * 4.5 + 8,
-										width: 250,
+								slotProps: {
+									paper: {
+										style: {
+											maxHeight: 48 * 4.5 + 8,
+											width: 250,
+										},
 									},
 								},
 							}}

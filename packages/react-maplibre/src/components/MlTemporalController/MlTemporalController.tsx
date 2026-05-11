@@ -9,8 +9,7 @@ import {
 	LineLayerSpecification,
 	LngLatBoundsLike,
 	MapEventType,
-	SymbolLayoutProps,
-	SymbolPaintProps,
+	SymbolLayerSpecification,
 } from 'maplibre-gl';
 import usePaintPicker from './utils/paintPicker';
 import MlTemporalControllerLabels from './utils/MlTemporalControllerLabels';
@@ -130,14 +129,13 @@ export interface MlTemporalControllerProps {
 	 * Layout property object, that is passed to the labels layer.
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
 	 */
-	labelLayout?: SymbolLayoutProps;
-	//  | SymbolLayoutArray;
+	labelLayout?: SymbolLayerSpecification['layout'];
 
 	/**
 	 * Paint property object for the features layer.
 	 * https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
 	 */
-	labelPaint?: SymbolPaintProps;
+	labelPaint?: SymbolLayerSpecification['paint'];
 	/**
 	 * Hover event handler that is executed whenever a geometry rendered by this component is hovered.
 	 */

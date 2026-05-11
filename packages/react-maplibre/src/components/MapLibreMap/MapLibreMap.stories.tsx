@@ -6,9 +6,9 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 import { FeatureCollection } from 'geojson';
 import themeDecorator from '../../decorators/ThemeDecorator';
-import { StoryFn } from '@storybook/react-vite';
+import { StoryFn, type Meta } from '@storybook/react';
 
-const storyoptions = {
+const storyoptions: Meta<typeof MapLibreMap> = {
 	title: 'Core/MapLibreMap',
 	component: MapLibreMap,
 	argTypes: {

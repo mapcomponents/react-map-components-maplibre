@@ -1,10 +1,11 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
-import { Select, Typography, Slider, Stack, MenuItem, FormControl } from '@mui/material';
+import { FormControl, MenuItem, Select, Slider, Stack, Typography } from '@mui/material';
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
 import useMap from '../../../hooks/useMap';
-import { FeatureCollection, Feature } from 'geojson';
+import { Feature, FeatureCollection } from 'geojson';
+
 interface PolygonStylerProps {
 	geojson: FeatureCollection;
 	openSidebar: boolean;
@@ -66,7 +67,7 @@ const PolygonStyler: React.FC<PolygonStylerProps> = ({ geojson, openSidebar, set
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'GeoJson Layer Polygon'}>
-				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 15 }} alignItems="left">
+				<Stack sx={{ mb: 15, paddingTop: 5, spacing: 3, direction: 'column', alignItems: 'left' }}>
 					<FormControl>
 						<Typography>Geometry type:</Typography>
 						<Select
@@ -128,7 +129,7 @@ const PolygonStyler: React.FC<PolygonStylerProps> = ({ geojson, openSidebar, set
 							console.log(e);
 						}}
 					/>
-					<Typography paddingTop={4}>Stroke:</Typography>
+					<Typography sx={{ paddingTop: 4 }}>Stroke:</Typography>
 					<Slider
 						value={lineWidth}
 						aria-label="Default"

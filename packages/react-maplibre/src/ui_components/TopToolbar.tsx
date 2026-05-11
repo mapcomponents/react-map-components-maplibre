@@ -89,11 +89,13 @@ function TopToolbar(props: TopToolbarProps) {
 							}}
 							open={Boolean(anchorElNav)}
 							onClose={handleCloseNavMenu}
-							PaperProps={{
-								elevation: 24,
-								sx: {
-									overflow: 'visible',
-									mt: '15px',
+							slotProps={{
+								paper: {
+									elevation: 24,
+									sx: {
+										overflow: 'visible',
+										mt: '15px',
+									},
 								},
 							}}
 							sx={{

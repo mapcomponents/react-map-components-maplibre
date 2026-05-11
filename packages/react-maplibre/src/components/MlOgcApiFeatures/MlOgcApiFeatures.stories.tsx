@@ -166,7 +166,7 @@ const OGCLoaderTemplate: any = (props: TemplateProps) => {
 						setOpacity(v as number);
 					}}
 				/>
-				<Typography paddingTop={4}>Stroke:</Typography>
+				<Typography sx={{ paddingTop: 4 }}>Stroke:</Typography>
 				<Slider
 					value={lineWidth}
 					aria-label="Default"
@@ -239,7 +239,7 @@ const CatalogueTemplate: any = () => {
 			<TopToolbar
 				unmovableButtons={
 					<>
-						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
+						<Typography variant="h6" sx={{ color: 'ButtonText', marginRight: '20px' }}>
 							{(configTitles as { [key: string]: any })[selectedStory]}
 						</Typography>
 						<Button
@@ -264,8 +264,10 @@ const CatalogueTemplate: any = () => {
 							anchorEl={anchorEl}
 							open={open}
 							onClose={handleClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
+							slotProps={{
+								list: {
+									'aria-labelledby': 'basic-button',
+								},
 							}}
 						>
 							<MenuItem onClick={() => handleStorySelect('points')}>

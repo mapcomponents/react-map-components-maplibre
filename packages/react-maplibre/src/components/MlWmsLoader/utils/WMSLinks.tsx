@@ -86,7 +86,7 @@ export default function WMSLinks(props: wmsLinksProps) {
 							<Grid sx={{ marginTop: 5 }} key={el.id} size={12}>
 								<Accordion>
 									<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-										<Typography marginRight={1.5} variant="h6">
+										<Typography variant="h6" sx={{ marginRight: 1.5 }}>
 											{el.title}
 										</Typography>
 										<Button

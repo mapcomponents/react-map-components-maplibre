@@ -99,13 +99,17 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								/>
 							</React.Fragment>
 						);
-						break;
 					case 'numberfield':
 						return (
 							<React.Fragment key={key}>
 								{label}
 								<TextField
-									inputProps={{ inputMode: 'decimal', pattern: '[0-9]*' }}
+									slotProps={{
+										htmlInput: {
+											inputMode: 'decimal',
+											pattern: '[0-9]+',
+										},
+									}}
 									value={paintProps[key]}
 									onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
 										if (ev?.target?.value) {
@@ -118,7 +122,6 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								/>
 							</React.Fragment>
 						);
-						break;
 					case 'colorpicker':
 						return (
 							<React.Fragment key={key}>
@@ -133,7 +136,6 @@ function LayerPropertyForm({ paintProps = {}, setPaintProps }: LayerPropertyForm
 								</Box>
 							</React.Fragment>
 						);
-						break;
 				}
 			}
 			return null;

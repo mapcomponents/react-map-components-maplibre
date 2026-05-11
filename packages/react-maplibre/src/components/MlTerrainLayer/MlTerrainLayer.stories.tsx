@@ -4,8 +4,8 @@ import MapContextDecorator from '../../decorators/MapContextDecorator';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { Button } from '@mui/material';
 import useMap from '../../hooks/useMap';
-
-const storyoptions = {
+import type { Meta } from '@storybook/react';
+const storyoptions: Meta<typeof MlTerrainLayer> = {
 	title: 'MapComponents/MlTerrainLayer',
 	component: MlTerrainLayer,
 	argTypes: {},

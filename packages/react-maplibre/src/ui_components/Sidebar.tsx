@@ -53,19 +53,21 @@ export default function Sidebar({
 						variant="persistent"
 						anchor="left"
 						open={typeof props.open === 'undefined' ? drawerOpen : props.open}
-						PaperProps={{
-							...drawerPaperProps,
-							sx: {
-								maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
-								padding: { sm: '84px 20px 20px 20px', xs: '74px 10px 10px 10px' },
-								width: {
-									xs: '80%',
-									sm: '60%',
-									md: '350px',
-									lg: '350px',
+						slotProps={{
+							paper: {
+								...drawerPaperProps,
+								sx: {
+									maxWidth: { lg: '30%', md: '40%', sm: '50%', xs: '78%' },
+									padding: { sm: '84px 20px 20px 20px', xs: '74px 10px 10px 10px' },
+									width: {
+										xs: '80%',
+										sm: '60%',
+										md: '350px',
+										lg: '350px',
+									},
+									boxSizing: 'border-box',
+									...drawerPaperProps?.sx,
 								},
-								boxSizing: 'border-box',
-								...drawerPaperProps?.sx,
 							},
 						}}
 						sx={{
