@@ -23,5 +23,10 @@
 		"**/*.stories.jsx",
 		"**/*.stories.tsx"
 	],
-	"include": ["src/**/*", "../react-maplibre/src/**/*"]
+	"include": ["src/**/*", "../react-maplibre/src/**/*"],
+	"references": [
+		{
+			"path": "../react-maplibre/tsconfig.lib.json"
+		}
+	]
 }

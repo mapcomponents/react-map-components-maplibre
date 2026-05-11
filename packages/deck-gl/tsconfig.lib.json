@@ -31,5 +31,10 @@
 		"**/*.cy.js",
 		"**/*.cy.tsx",
 		"**/*.cy.jsx"
+	],
+	"references": [
+		{
+			"path": "../react-maplibre/tsconfig.lib.json"
+		}
 	]
 }

@@ -50,7 +50,7 @@ const Template: any = () => {
 	const [showLayer, setShowLayer] = useState(true);
 	const [scale, setScale] = useState(1);
 	const [rotation, setRotation] = useState({ x: 90, y: 90, z: 0 });
-	const [mapPosition, setMapPosition] = useState({ lng: 7.097, lat: 50.7355 });
+	const [mapPosition, setMapPosition] = useState({ lng: 7.0996, lat: 50.7339 });
 	const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 	const [enableTransformControls, setEnableTransformControls] = useState(false);
