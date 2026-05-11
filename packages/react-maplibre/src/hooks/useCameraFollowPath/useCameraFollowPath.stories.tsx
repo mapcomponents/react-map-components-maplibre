@@ -122,7 +122,10 @@ const Template: any = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Camera Settings'}>
-				<Box onClick={() => setShowRoute((prev) => !prev)} sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}>
+				<Box
+					onClick={() => setShowRoute((prev) => !prev)}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>{showRoute ? 'Hide route' : 'Show route'}</Typography>
 				</Box>
 				{showRoute && (
@@ -137,10 +140,16 @@ const Template: any = () => {
 						}}
 					/>
 				)}
-				<Box onClick={togglePause} sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}>
+				<Box
+					onClick={togglePause}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>{state.pause ? 'Start' : 'Pause'}</Typography>
 				</Box>
-				<Box onClick={resetCameraSettings} sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}>
+				<Box
+					onClick={resetCameraSettings}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>Reset</Typography>
 				</Box>
 
@@ -186,7 +195,10 @@ const Template: any = () => {
 						}}
 					/>
 				</Box>
-				<Box onClick={togglePitch} sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}>
+				<Box
+					onClick={togglePitch}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>{state.pitch === 0 ? '3D' : '2D'}</Typography>
 				</Box>
 			</Sidebar>

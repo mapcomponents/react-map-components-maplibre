@@ -15,7 +15,9 @@ export function normalizeWmsParams(
 	const entries =
 		params instanceof URLSearchParams ? Array.from(params.entries()) : Object.entries(params);
 
-	const filtered = filterFn ? entries.filter(([key, value]) => filterFn(key, String(value))) : entries;
+	const filtered = filterFn
+		? entries.filter(([key, value]) => filterFn(key, String(value)))
+		: entries;
 
 	return Object.fromEntries(filtered.map(([key, value]) => [key.toUpperCase(), value]));
 }

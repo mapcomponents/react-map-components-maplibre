@@ -24,7 +24,11 @@ const SelectStylePopup = (props: SelectStylePopupProps) => {
 	};
 
 	return (
-		<Dialog open={props.open} onClose={handleCancel} slotProps={{ paper:{ sx: {padding: '20px' }}}}>
+		<Dialog
+			open={props.open}
+			onClose={handleCancel}
+			slotProps={{ paper: { sx: { padding: '20px' } } }}
+		>
 			<DialogTitle>Select a style</DialogTitle>
 			<List>
 				{props?.styles?.map((style) => (

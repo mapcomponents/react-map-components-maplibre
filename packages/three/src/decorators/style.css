@@ -1,4 +1,7 @@
-html, body, #storybook-root, #root {
+html,
+body,
+#storybook-root,
+#root {
 	height: 100%;
 	margin: 0;
 	padding: 0;
