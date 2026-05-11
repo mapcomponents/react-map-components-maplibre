@@ -1,50 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { AppBar, Menu, Sidebar, useSidebarState } from 'react-admin';
-
-const Root = styled('div')(() => ({
-	display: 'flex',
-	flexDirection: 'column',
-	zIndex: 1,
-	minHeight: '100%',
-	position: 'relative',
-	backgroundColor: 'transparent',
-	pointerEvents: 'none',
-}));
-
-const AppFrame = styled('div')(() => ({
-	display: 'flex',
-	flexDirection: 'column',
-}));
-
-const ContentWithSidebar = styled('main')(() => ({
-	display: 'flex',
-	flexGrow: 1,
-	marginTop: '3em',
-}));
-
-const Content = styled('div')(() => ({
-	display: 'flex',
-	flexDirection: 'row',
-	justifyContent: 'center',
-	maxHeight: '50vh',
-	position: 'fixed',
-	bottom: '0',
-	width: '100%',
-	backgroundColor: '#fafafa',
-	overflow: 'auto',
-	pointerEvents: 'all',
-	boxShadow: '0px 0px 8px rgba(0,0,0,0.2)',
-}));
-
-const ContentWrapper = styled(Box)(() => ({
-	maxWidth: '600px',
-	width: '100%',
-	height: '100%',
-}));
 
 const GisLayout = ({ children, title }) => {
 	const [open] = useSidebarState();
@@ -54,10 +13,31 @@ const GisLayout = ({ children, title }) => {
 		setContentOpen(true);
 	}, [children]);
 	return (
-		<Root>
-			<AppFrame>
+		<Box
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				zIndex: 1,
+				minHeight: '100%',
+				position: 'relative',
+				backgroundColor: 'transparent',
+				pointerEvents: 'none',
+			}}
+		>
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+				}}
+			>
 				<AppBar title={title} open={open} sx={{ pointerEvents: 'all' }} />
-				<ContentWithSidebar>
+				<Box
+					sx={{
+						display: 'flex',
+						flexGrow: 1,
+						marginTop: '3em',
+					}}
+				>
 					<Sidebar
 						sx={{
 							backgroundColor: '#f0f0f0',
@@ -67,9 +47,20 @@ const GisLayout = ({ children, title }) => {
 					>
 						<Menu />
 					</Sidebar>
-					<Content
+					<Box
 						sx={{
-							...(contentOpen ? {} : { height: '40px', overflow: 'hidden' }),
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'center',
+							maxHeight: '50vh',
+							position: 'fixed',
+							bottom: '0',
+							width: '100%',
+							backgroundColor: '#fafafa',
+							overflow: 'auto',
+							pointerEvents: 'all',
+							boxShadow: '0px 0px 8px rgba(0,0,0,0.2)',
+							height: contentOpen ? 'auto' : '40px',
 						}}
 					>
 						<IconButton
@@ -79,11 +70,19 @@ const GisLayout = ({ children, title }) => {
 							{contentOpen ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
 						</IconButton>
 
-						<ContentWrapper>{children}</ContentWrapper>
-					</Content>
-				</ContentWithSidebar>
-			</AppFrame>
-		</Root>
+						<Box
+							sx={{
+								maxWidth: '600px',
+								width: '100%',
+								height: '100%',
+							}}
+						>
+							{children}
+						</Box>
+					</Box>
+				</Box>
+			</Box>
+		</Box>
 	);
 };
 
