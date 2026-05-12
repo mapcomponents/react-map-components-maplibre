@@ -160,7 +160,7 @@ const _transitionToGeojson = (
 	// use srcPerStepDistance as src coordinates are always animated backwards
 	let loopStepDistance = srcCoordinatesDistance;
 	if (loopStepDistance <= 0) {
-	// eslint-disable-next-line
+		// eslint-disable-next-line
 		loopStepDistance = 0.1;
 	}
 
