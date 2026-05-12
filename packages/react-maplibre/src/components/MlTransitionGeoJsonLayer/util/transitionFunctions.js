@@ -65,7 +65,9 @@ const _transitionToGeojson = (
 	// create a geojson that contains no common point between the two line features
 	const transitionCoordinatesShort = [];
 	const transitionCoordinatesLong = [];
+	// eslint-disable-next-line no-useless-assignment
 	let targetCoordinates = [];
+	// eslint-disable-next-line no-useless-assignment
 	let srcCoordinates = [];
 	transitionGeojsonCommonDataRef.current = [];
 	const sourceGeojson = oldGeojsonRef.current || {
@@ -158,6 +160,7 @@ const _transitionToGeojson = (
 	// use srcPerStepDistance as src coordinates are always animated backwards
 	let loopStepDistance = srcCoordinatesDistance;
 	if (loopStepDistance <= 0) {
+	// eslint-disable-next-line
 		loopStepDistance = 0.1;
 	}
 
