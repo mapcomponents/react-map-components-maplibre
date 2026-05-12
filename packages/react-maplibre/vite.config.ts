@@ -1,6 +1,5 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import * as path from 'path';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
@@ -9,7 +8,9 @@ import * as fs from 'node:fs';
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
-export default defineConfig(() => ({
+export default defineConfig(async () => {
+	const react = (await import('@vitejs/plugin-react')).default;
+	return {
 	root: __dirname,
 	cacheDir: '../../node_modules/.vite/packages/react-maplibre',
 	plugins: [
@@ -60,4 +61,5 @@ export default defineConfig(() => ({
 			input: [path.join(__dirname, 'src/index.ts')],
 		},
 	},
-}));
+	};
+});

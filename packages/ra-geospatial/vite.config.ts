@@ -1,12 +1,13 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import * as path from 'path';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
-export default defineConfig(() => ({
+export default defineConfig(async () => {
+	const react = (await import('@vitejs/plugin-react')).default;
+	return {
 	root: __dirname,
 	cacheDir: '../../node_modules/.vite/packages/ra-geospatial',
 	plugins: [
@@ -55,4 +56,5 @@ export default defineConfig(() => ({
 			input: [path.join(__dirname, 'src/index.ts')],
 		},
 	},
-}));
+	};
+});
