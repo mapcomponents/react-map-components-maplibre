@@ -6,28 +6,28 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 export default defineConfig(async () => {
 	const react = (await import('@vitejs/plugin-react')).default;
 	return {
-	root: __dirname,
-	cacheDir: '../../node_modules/.vite/apps/storybook-composition',
-	server: {
-		port: 4200,
-		host: 'localhost',
-	},
-	preview: {
-		port: 4200,
-		host: 'localhost',
-	},
-	plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
-	// Uncomment this if you are using workers.
-	// worker: {
-	//  plugins: [ nxViteTsPaths() ],
-	// },
-	build: {
-		outDir: '../../dist/apps/storybook-composition',
-		emptyOutDir: true,
-		reportCompressedSize: true,
-		commonjsOptions: {
-			transformMixedEsModules: true,
+		root: __dirname,
+		cacheDir: '../../node_modules/.vite/apps/storybook-composition',
+		server: {
+			port: 4200,
+			host: 'localhost',
 		},
-	},
+		preview: {
+			port: 4200,
+			host: 'localhost',
+		},
+		plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
+		// Uncomment this if you are using workers.
+		// worker: {
+		//  plugins: [ nxViteTsPaths() ],
+		// },
+		build: {
+			outDir: '../../dist/apps/storybook-composition',
+			emptyOutDir: true,
+			reportCompressedSize: true,
+			commonjsOptions: {
+				transformMixedEsModules: true,
+			},
+		},
 	};
 });
