@@ -4,5 +4,10 @@ packages:
 
 onlyBuiltDependencies:
   - cypress
+  - "@swc/core"
+  - core-js
+  - esbuild
+  - nx
+  - unrs-resolver
 
 sideEffectsCache: false
