@@ -18,7 +18,6 @@ import {
 	HalfFloatType,
 	InstancedBufferAttribute,
 	InstancedBufferGeometry,
-	LinearFilter,
 	Material,
 	Matrix4,
 	Mesh,

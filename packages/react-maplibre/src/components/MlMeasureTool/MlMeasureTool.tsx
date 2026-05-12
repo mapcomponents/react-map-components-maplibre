@@ -93,6 +93,7 @@ const MlMeasureTool = (props: MlMeasureToolProps) => {
 
 	useEffect(() => {
 		if (currentFeatures[0]) {
+			// eslint-disable-next-line no-useless-assignment
 			let result = 0;
 			if (props.measureType === 'polygon') {
 				// Calculate area in square meters

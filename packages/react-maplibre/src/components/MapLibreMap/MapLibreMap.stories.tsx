@@ -6,6 +6,7 @@ import TopToolbar from '../../ui_components/TopToolbar';
 import sample_geojson_1 from '../MlGeoJsonLayer/assets/sample_1.json';
 import { FeatureCollection } from 'geojson';
 import themeDecorator from '../../decorators/ThemeDecorator';
+// eslint-disable-next-line storybook/no-renderer-packages
 import { StoryFn, type Meta } from '@storybook/react';
 
 const storyoptions: Meta<typeof MapLibreMap> = {
