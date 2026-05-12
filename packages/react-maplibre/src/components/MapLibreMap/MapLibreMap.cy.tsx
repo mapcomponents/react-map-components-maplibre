@@ -1,4 +1,4 @@
-import { composeStories } from '@storybook/testing-react';
+import { composeStories } from '@storybook/react';
 import { mount } from '@cypress/react';
 import * as stories from './MapLibreMap.stories';
 import { expect } from 'chai';
