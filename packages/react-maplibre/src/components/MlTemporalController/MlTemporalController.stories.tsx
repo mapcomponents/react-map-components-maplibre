@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MlTemporalController, { MlTemporalControllerProps } from './MlTemporalController';
 import temporalControllerDecorator from '../../decorators/LowZoomDecorator';
-import { Typography, Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import TopToolbar from '../../ui_components/TopToolbar';
 import african_independency from './assets/african_independency.json';
 import earthq_5plus from './assets/earthq_5plus.json';
@@ -90,7 +90,7 @@ const catalogueTemplate: any = () => {
 			<TopToolbar
 				unmovableButtons={
 					<>
-						<Typography variant="h6" color={'ButtonText'} marginRight="20px">
+						<Typography variant="h6" sx={{ color: 'ButtonText', marginRight: '20px' }}>
 							{titels[titleNr]}
 						</Typography>
 						<Button
@@ -108,8 +108,10 @@ const catalogueTemplate: any = () => {
 							anchorEl={anchorEl}
 							open={open}
 							onClose={handleClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
+							slotProps={{
+								list: {
+									'aria-labelledby': 'basic-button',
+								},
 							}}
 						>
 							<MenuItem onClick={() => handleConfigSelect('Fill')}>Fill Configuration</MenuItem>

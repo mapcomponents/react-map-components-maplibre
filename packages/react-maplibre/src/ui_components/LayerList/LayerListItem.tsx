@@ -195,7 +195,7 @@ function LayerListItem({
 				variant="layerlist"
 				primary={name}
 				secondary={description}
-				primaryTypographyProps={{ overflow: 'hidden' }}
+				slotProps={{ primary: { sx: { overflow: 'hidden' } } }}
 			/>
 		</ListItemStyled>
 	);

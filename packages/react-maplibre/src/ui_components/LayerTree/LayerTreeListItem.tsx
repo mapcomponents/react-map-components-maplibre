@@ -280,7 +280,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 							variant="layerlist"
 							primary={layer.name || ''}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
+							slotProps={{ primary: { sx: { overflow: 'hidden' } } }}
 						/>
 						{props.buttons}
 					</ListItemStyled>
@@ -331,7 +331,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						<ListItemText
 							primary={layer.name}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
+							slotProps={{ primary: { sx: { overflow: 'hidden' } } }}
 						/>
 					</ListItemStyled>
 					<BoxStyled key={layer.uuid + '_list'} open={open}>
@@ -361,7 +361,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 										key={subLayer.id}
 										variant="layerlist"
 										primary={(subLayer as { [key: string]: any })['source-layer']}
-										primaryTypographyProps={{ overflow: 'hidden' }}
+										slotProps={{ primary: { sx: { overflow: 'hidden' } } }}
 									/>
 								</ListItemStyled>
 							))}
@@ -385,7 +385,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						<ListItemText
 							primary={layer.name}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
+							slotProps={{ primary: { sx: { overflow: 'hidden' } } }}
 						/>
 					</ListItemStyled>
 				</>
@@ -410,7 +410,7 @@ function LayerTreeListItem(props: LayerTreeListItemProps) {
 						<ListItemText
 							primary={layer.name}
 							secondary={props.description}
-							primaryTypographyProps={{ overflow: 'hidden' }}
+							slotProps={{ primary: { sx: { overflow: 'hidden' } } }}
 						/>
 					</ListItemStyled>
 					<BoxStyled key={layer.uuid + '_list'} open={open}>

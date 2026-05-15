@@ -17,7 +17,7 @@ function DemoDescriptions(props: DemoDescriptionsProps) {
 
 	return itemToDisplay()[0].description ? (
 		<>
-			<Typography variant="h6" marginBottom={3}>
+			<Typography variant="h6" sx={{ marginBottom: 3 }}>
 				{props.title}
 			</Typography>
 			<Typography

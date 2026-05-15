@@ -143,11 +143,9 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 					'& .MuiDrawer-paper': mediaIsMobile ? mobileScreenBoxStyle : bigScreenBoxStyle,
 				}}
 			>
-				<Grid container alignItems="center" justifyContent="space-between">
+				<Grid container sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
 					{/* Buttons - Centered */}
-					{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-					{/*@ts-expect-error*/}
-					<Grid item xs={12} sm={10} textAlign="center">
+					<Grid size={{ xs: 12, sm: 10 }} sx={{ textAlign: 'center' }}>
 						<Button onClick={handleFastRewind}>
 							<FastRewindIcon />
 						</Button>
@@ -162,9 +160,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 						</Button>
 					</Grid>
 					{props.display && !mediaIsMobile && (
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-expect-error
-						<Grid item xs={12} sm={5} textAlign="right">
+						<Grid size={{ xs: 12, sm: 5 }} sx={{ textAlign: 'right' }}>
 							<Typography variant={'h5'} sx={{ paddingRight: '25px' }}>
 								{Math.floor(currentVal)}
 							</Typography>
@@ -188,7 +184,7 @@ export default function TemporalControllerPlayer(props: TemporalControllerPlayer
 					max={props.maxVal}
 				/>
 				{mediaIsMobile && props.display && (
-					<Typography variant={'body1'} textAlign={'right'}>
+					<Typography variant={'body1'} sx={{ textAlign: 'right' }}>
 						{Math.floor(currentVal)}
 					</Typography>
 				)}

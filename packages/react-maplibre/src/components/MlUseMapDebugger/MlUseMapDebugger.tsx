@@ -19,7 +19,7 @@ type MlUseMapDebuggerComponent = FC<MlUseMapDebuggerProps>;
  *
  * @component
  */
-const MlUseMapDebugger: MlUseMapDebuggerComponent = (props) => {
+const MlUseMapDebugger: MlUseMapDebuggerComponent = (props: MlUseMapDebuggerProps) => {
 	const map = useMapState({
 		mapId: props.mapId,
 		watch: {
@@ -37,30 +37,6 @@ const MlUseMapDebugger: MlUseMapDebuggerComponent = (props) => {
 
 	return (
 		<>
-			{/*
-			<IconButton
-				sx={{ zIndex: 10000 }}
-				aria-label="delete"
-				size="small"
-				onClick={() => setDebuggerOpen(!debuggerOpen)}
-			>
-				<CodeIcon fontSize="inherit" />
-			</IconButton>
-			<Drawer
-				anchor="top"
-				open={debuggerOpen}
-				onClose={() => setDebuggerOpen(!debuggerOpen)}
-				PaperProps={{
-					sx: {
-						opacity: 0.85,
-						maxHeight: "100px",
-						position: "relative",
-					},
-				}}
-				hideBackdrop={true}
-				variant="persistent"
-			></Drawer>
-			*/}
 			<div style={{ overflow: 'hidden', width: '100px', height: '20px' }}>
 				Render: {renderCounter.current}
 				<br />

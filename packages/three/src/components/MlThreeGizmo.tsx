@@ -67,7 +67,6 @@ const MlThreeGizmo = (props: MlThreeGizmoProps) => {
 			controls.dispose();
 			controlsRef.current = null;
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [scene, camera, renderer, map, sceneRoot]);
 
 	// Update target object

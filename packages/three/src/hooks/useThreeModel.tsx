@@ -122,10 +122,12 @@ export const useThreeModel = (props: UseThreeModelProps) => {
 			initRef.current();
 		}
 
+		// eslint-disable-next-line no-useless-assignment
 		let extension = '';
 		try {
 			const urlObj = new URL(url, window.location.origin);
 			extension = urlObj.pathname.split('.').pop()?.toLowerCase() || '';
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			extension = url.split('.').pop()?.toLowerCase() || '';
 		}

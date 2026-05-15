@@ -10,6 +10,8 @@ import Sidebar from '../../ui_components/Sidebar';
 import './lib/preview.css';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
 import Draggable from 'react-draggable';
+// eslint-disable-next-line storybook/no-renderer-packages
+import type { Meta } from '@storybook/react';
 
 const PaperComponent = (props: object) => {
 	const nodeRef = React.useRef<HTMLDivElement>(null);
@@ -55,7 +57,7 @@ const MlDialog = ({
 	);
 };
 
-const storyoptions = {
+const storyoptions: Meta<typeof MlCreatePdfForm> = {
 	title: 'MapComponents/MlCreatePdfForm',
 	component: MlCreatePdfForm,
 	argTypes: {},

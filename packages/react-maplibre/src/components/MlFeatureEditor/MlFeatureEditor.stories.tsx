@@ -100,7 +100,11 @@ const catalogueTemplate: any = () => {
 			<TopToolbar
 				unmovableButtons={
 					<>
-						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'} marginTop={'1px'}>
+						<Typography
+							variant="h6"
+							color={'ButtonText'}
+							sx={{ marginRight: '20px', marginTop: '1px' }}
+						>
 							{(configTitles as { [key: string]: any })[selectedMode]}
 						</Typography>
 						<Button
@@ -118,8 +122,10 @@ const catalogueTemplate: any = () => {
 							anchorEl={anchorEl}
 							open={open}
 							onClose={handleClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
+							slotProps={{
+								list: {
+									'aria-labelledby': 'basic-button',
+								},
 							}}
 						>
 							<MenuItem onClick={() => setSelectedMode('EditPolygon')}>Edit Polygon</MenuItem>

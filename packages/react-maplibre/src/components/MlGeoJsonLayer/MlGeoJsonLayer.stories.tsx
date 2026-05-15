@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Feature, FeatureCollection, Geometry, GeometryCollection } from 'geojson';
 import { DataDrivenPropertyValueSpecification, SymbolLayerSpecification } from 'maplibre-gl';
-import { Typography, Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -396,7 +396,7 @@ const catalogueTemplate = (context: any) => {
 			<TopToolbar
 				unmovableButtons={
 					<>
-						<Typography variant="h6" color={'ButtonText'} marginRight={'20px'}>
+						<Typography variant="h6" sx={{ color: 'ButtonText', marginRight: '20px' }}>
 							{(configTitles as { [key: string]: any })[selectedLayer]}
 						</Typography>
 						{(selectedLayer === 'polygon' || selectedLayer === 'line') && (
@@ -423,8 +423,8 @@ const catalogueTemplate = (context: any) => {
 							anchorEl={anchorEl}
 							open={open}
 							onClose={handleClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
+							slotProps={{
+								list: { 'aria-labelledby': 'basic-button' },
 							}}
 						>
 							<MenuItem onClick={() => handleLayerSelect('circle')}>Circle Configuration</MenuItem>

@@ -113,5 +113,6 @@
 				"unitTestRunner": "none"
 			}
 		}
-	}
+	},
+	"analytics": false
 }

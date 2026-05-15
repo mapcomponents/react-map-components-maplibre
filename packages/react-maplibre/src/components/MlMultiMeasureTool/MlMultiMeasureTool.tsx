@@ -130,7 +130,7 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Multi Measure Tool'}>
 				<Box sx={{ flexGrow: 1 }}>
 					<br />
-					<Grid container spacing={4} justifyContent="flex-start">
+					<Grid container sx={{ spacing: 4, justifyContent: 'flex-start' }}>
 						<Grid size={3}>
 							<Tooltip title="Measure Area">
 								<Button
@@ -224,8 +224,8 @@ const MlMultiMeasureTool = (props: MlMultiMeasureToolProps) => {
 								<Box key={measure.measure} sx={{ display: 'flex', flexDirection: 'column' }}>
 									<br />
 									<Box
-										flexDirection={'row'}
 										sx={{
+											flexDirection: 'row',
 											'&:hover': {
 												backgroundColor: 'rgb(177, 177, 177, 0.2)',
 											},

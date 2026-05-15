@@ -26,7 +26,7 @@ const SelectStyleTemplate: any = () => {
 	const [openSidebar, setOpenSidebar] = useState(true);
 
 	useEffect(() => {
-		layerContext.updateStyle(MonokaiStyle as StyleSpecification);
+		layerContext.updateStyle(MonokaiStyle as unknown as StyleSpecification);
 	}, []);
 
 	return (

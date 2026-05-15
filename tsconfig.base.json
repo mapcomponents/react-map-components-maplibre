@@ -19,7 +19,7 @@
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"moduleResolution": "bundler",
-		"module": "es2015",
+		"module": "esnext",
 		"types": ["vite/client", "node"],
 		"composite": true,
 		"resolveJsonModule": true,

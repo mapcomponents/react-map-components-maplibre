@@ -219,7 +219,9 @@ const CustomFeatureInfoTemplate: any = () => {
 								variant="outlined"
 								size="small"
 								value={`Lng: ${featureInfoData.lngLat.lng.toFixed(6)}, Lat: ${featureInfoData.lngLat.lat.toFixed(6)}`}
-								InputProps={{ readOnly: true }}
+								slotProps={{
+									input: { readOnly: true },
+								}}
 								sx={{ marginBottom: '10px' }}
 							/>
 						</FormControl>
@@ -230,7 +232,9 @@ const CustomFeatureInfoTemplate: any = () => {
 								multiline
 								rows={10}
 								value={featureInfoData.content}
-								InputProps={{ readOnly: true }}
+								slotProps={{
+									input: { readOnly: true },
+								}}
 							/>
 						</FormControl>
 						<Button

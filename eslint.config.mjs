@@ -47,8 +47,7 @@ export default [
 		'eslint:recommended',
 		'plugin:react/recommended',
 		'plugin:@typescript-eslint/recommended',
-		'prettier',
-		'plugin:storybook/recommended'
+		'prettier'
 	),
 	{
 		plugins: {
@@ -67,7 +66,7 @@ export default [
 		},
 		settings: {
 			react: {
-				version: 'detect',
+				version: '19',
 			},
 		},
 		rules: {

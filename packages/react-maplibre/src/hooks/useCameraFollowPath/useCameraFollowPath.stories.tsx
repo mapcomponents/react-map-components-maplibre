@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useCameraFollowPath from './useCameraFollowPath';
 import TopToolbar from '../../ui_components/TopToolbar';
 import mapContextDecorator from '../../decorators/MapContextDecorator';
-import { Button, MenuItem, Slider, Typography } from '@mui/material';
+import { Button, Box, Slider, Typography } from '@mui/material';
 import MlGeoJsonLayer from '../../components/MlGeoJsonLayer/MlGeoJsonLayer';
 import { Feature } from 'geojson';
 import Sidebar from '../../ui_components/Sidebar';
@@ -122,9 +122,12 @@ const Template: any = () => {
 				}
 			/>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name={'Camera Settings'}>
-				<MenuItem onClick={() => setShowRoute((prev) => !prev)}>
+				<Box
+					onClick={() => setShowRoute((prev) => !prev)}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>{showRoute ? 'Hide route' : 'Show route'}</Typography>
-				</MenuItem>
+				</Box>
 				{showRoute && (
 					<MlGeoJsonLayer
 						geojson={routeJson}
@@ -137,14 +140,20 @@ const Template: any = () => {
 						}}
 					/>
 				)}
-				<MenuItem onClick={togglePause}>
+				<Box
+					onClick={togglePause}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>{state.pause ? 'Start' : 'Pause'}</Typography>
-				</MenuItem>
-				<MenuItem onClick={resetCameraSettings}>
+				</Box>
+				<Box
+					onClick={resetCameraSettings}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>Reset</Typography>
-				</MenuItem>
+				</Box>
 
-				<MenuItem>
+				<Box sx={{ padding: '16px' }}>
 					<Typography id="discrete-slider" style={{ marginLeft: '10px', marginRight: '10px' }}>
 						Zoom:
 					</Typography>
@@ -165,8 +174,8 @@ const Template: any = () => {
 							minWidth: '150px',
 						}}
 					/>
-				</MenuItem>
-				<MenuItem>
+				</Box>
+				<Box sx={{ padding: '16px' }}>
 					<Typography id="discrete-slider2" style={{ marginLeft: '10px', marginRight: '10px' }}>
 						Speed:
 					</Typography>
@@ -185,10 +194,13 @@ const Template: any = () => {
 							minWidth: '150px',
 						}}
 					/>
-				</MenuItem>
-				<MenuItem onClick={togglePitch}>
+				</Box>
+				<Box
+					onClick={togglePitch}
+					sx={{ cursor: 'pointer', padding: '16px', '&:hover': { backgroundColor: '#f5f5f5' } }}
+				>
 					<Typography>{state.pitch === 0 ? '3D' : '2D'}</Typography>
-				</MenuItem>
+				</Box>
 			</Sidebar>
 		</>
 	);

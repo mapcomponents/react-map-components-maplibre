@@ -157,6 +157,7 @@ export default class ThreejsSceneHelper {
 		map: MaplibreMap,
 		matrix: any,
 		worldMatrix: Matrix4,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		worldMatrixInv: Matrix4
 	): void {
 		const transform = map.transform;

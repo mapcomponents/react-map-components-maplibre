@@ -21,7 +21,7 @@ function useFitLayerBounds(props: useFitLayerBoundsPros) {
 	let geojson: AllGeoJSON | undefined;
 
 	if (source && (source as GeoJSONSource)._data) {
-		geojson = (source as GeoJSONSource)._data as AllGeoJSON;
+		geojson = (source as GeoJSONSource)._data as unknown as AllGeoJSON;
 	} else if (layerSource) {
 		const features = mapHook.map?.querySourceFeatures(layerSource);
 		if (features && features.length > 0) {

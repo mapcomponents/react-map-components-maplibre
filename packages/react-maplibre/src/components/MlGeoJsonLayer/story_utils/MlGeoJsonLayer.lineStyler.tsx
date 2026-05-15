@@ -1,19 +1,19 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Sidebar from '../../../ui_components/Sidebar';
 import {
+	Checkbox,
+	FormControl,
+	ListItemText,
+	MenuItem,
 	Select,
-	Typography,
+	SelectChangeEvent,
 	Slider,
 	Stack,
-	FormControl,
-	MenuItem,
-	Checkbox,
-	ListItemText,
-	SelectChangeEvent,
+	Typography,
 } from '@mui/material';
 import ColorPicker from '../../../ui_components/ColorPicker/ColorPicker';
 import MlGeoJsonLayer from '../MlGeoJsonLayer';
-import { GeoJSON, FeatureCollection } from 'geojson';
+import { FeatureCollection, GeoJSON } from 'geojson';
 import useMap from '../../../hooks/useMap';
 
 interface LineStylerProps {
@@ -54,10 +54,12 @@ const widthMarks: Mark[] = [
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-	PaperProps: {
-		style: {
-			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
+	slotProps: {
+		paper: {
+			style: {
+				maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+				width: 250,
+			},
 		},
 	},
 };
@@ -107,7 +109,7 @@ const LineStyler: React.FC<LineStylerProps> = ({ geojson, openSidebar, setOpenSi
 	return (
 		<>
 			<Sidebar open={openSidebar} setOpen={setOpenSidebar} name="GeoJson Layer">
-				<Stack paddingTop={5} spacing={3} direction="column" sx={{ mb: 15 }} alignItems="left">
+				<Stack sx={{ paddingTop: 5, spacing: 3, direction: 'column', mb: 15, alignItems: 'left' }}>
 					<Typography>Feature to show:</Typography>
 
 					<FormControl>
@@ -144,7 +146,7 @@ const LineStyler: React.FC<LineStylerProps> = ({ geojson, openSidebar, setOpenSi
 							setOpacity(v as number);
 						}}
 					/>
-					<Typography paddingTop={4}>Stroke:</Typography>
+					<Typography sx={{ paddingTop: 4 }}>Stroke:</Typography>
 					<Slider
 						value={lineWidth}
 						aria-label="Default"

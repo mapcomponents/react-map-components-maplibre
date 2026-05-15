@@ -1,8 +1,10 @@
 import MlGlobeButton, { MlGlobeButtonProps } from './MlGlobeButton';
 
 import lowZoomDecorator from '../../decorators/LowZoomDecorator';
+// eslint-disable-next-line storybook/no-renderer-packages
+import type { Meta } from '@storybook/react';
 
-const storyoptions = {
+const storyoptions: Meta<typeof MlGlobeButton> = {
 	title: 'MapComponents/MlGlobeButton',
 	component: MlGlobeButton,
 	argTypes: {},

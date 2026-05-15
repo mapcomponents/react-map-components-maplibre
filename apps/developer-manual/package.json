@@ -16,22 +16,12 @@
   "dependencies": {
     "@docusaurus/core": "^3.10.1",
     "@docusaurus/preset-classic": "^3.10.1",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
     "@mdx-js/react": "^3.1.1",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "clsx": "^2.1.1",
-    "mobx": "^6.15.2",
-    "mobx-react": "^9.2.1",
-    "prism-react-renderer": "^2.4.1",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "react-redux": "^9.2.0",
-    "redux": "^5.0.1"
-  },
-  "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.10.1"
+    "react-dom": "^19.2.6"
   },
   "browserslist": {
     "production": [

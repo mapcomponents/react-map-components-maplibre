@@ -15,8 +15,8 @@ import sample_geojson_2 from '../MlGeoJsonLayer/assets/sample_2.json';
 import List from '@mui/material/List';
 import MlGeoJsonLayer from '../MlGeoJsonLayer/MlGeoJsonLayer';
 import { Button, ToggleButton } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import TopToolbar from '../../ui_components/TopToolbar';
 import { Feature } from 'geojson';
 
@@ -81,7 +81,7 @@ const Template: any = () => {
 						setWatchState(!watchState);
 					}}
 				>
-					{watchState ? <CheckCircleOutlineIcon /> : <ErrorOutlineIcon />}
+					{watchState ? <CheckCircleOutlinedIcon /> : <ErrorOutlineOutlinedIcon />}
 
 					{watchState ? 'active' : 'inactive'}
 				</ToggleButton>

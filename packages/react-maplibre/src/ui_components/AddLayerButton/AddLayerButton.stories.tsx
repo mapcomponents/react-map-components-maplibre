@@ -118,7 +118,7 @@ const StyleJsonTemplate: any = () => {
 			);
 			layerContext.setSymbolLayers(_parsedBgStyle?.symbolLayers as unknown as LayerSpecification[]);
 		} else {
-			layerContext.updateStyle(GruvboxStyle as StyleSpecification);
+			layerContext.updateStyle(GruvboxStyle as unknown as StyleSpecification);
 		}
 	}, []);
 
