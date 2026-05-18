@@ -1,3 +1,61 @@
+## [1.8.11] (2026-05-18)
+
+## @mapcomponents/root
+
+### Changed
+
+- 36e8713: update workspace dependencies
+- 2dc160a: update Vite config to use dynamic import for React plugin
+
+### Removed
+
+- 76eb0a9: remove unnecessary dependencies from pnpm workspace configuration
+
+### Added
+
+- 531e6d9: add .npmrc to configure strict dependency builds
+
+### Fixed
+
+- 098d01c: enhance Cypress configuration to handle WebGL errors and improve stability
+- a7f2095: fix MlGlobeButton.cy.tsx
+
+## @mapcomponents/deck-gl
+
+### Changed
+
+- 199b13d: update Storybook configuration and TypeScript settings
+
+## @mapcomponents/ra-geospatial
+
+### Changed
+
+- 1196668: update Storybook configuration and TypeScript settings
+
+### Fixed
+
+- a55da5b: fix ra-geospatial storybook issues
+
+## @mapcomponents/react-maplibre
+
+### Changed
+
+- cbdbeec: update Storybook configuration and TypeScript settings
+
+### Fixed
+
+- b6df6e8: fix react-maplibre storybook/tsconfig issues
+
+## @mapcomponents/three
+
+### Changed
+
+- fdefff0: update Storybook configuration and TypeScript settings
+
+### Fixed
+
+- ea23b48: fix three storybook and tsconfig
+
 ## [1.8.10] (2026-04-02)
 
 ### Chanes
