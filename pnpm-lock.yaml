@@ -240,8 +240,8 @@ importers:
   apps/template:
     dependencies:
       '@mapcomponents/react-maplibre':
-        specifier: workspace:*
-        version: link:../../packages/react-maplibre
+        specifier: ^1.8.11
+        version: 1.8.11(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -2895,6 +2895,12 @@ packages:
   '@mapbox/whoots-js@3.1.0':
     resolution: {integrity: sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==}
     engines: {node: '>=6.0.0'}
+
+  '@mapcomponents/react-maplibre@1.8.11':
+    resolution: {integrity: sha512-vhh5duaMovX9/vpyQaEQfOR40+OeNBH9L5RDm5fJ6zPbRyTeHyfzUEYzVtwwyQ4yu+H8FKaUJO2F1Vt7/Da7XA==}
+    peerDependencies:
+      react: ^19.1.0
+      react-dom: ^19.1.0
 
   '@maplibre/geojson-vt@5.0.4':
     resolution: {integrity: sha512-KGg9sma45S+stfH9vPCJk1J0lSDLWZgCT9Y8u8qWZJyjFlP8MNP1WGTxIMYJZjDvVT3PDn05kN1C95Sut1HpgQ==}
@@ -16820,6 +16826,57 @@ snapshots:
       pbf: 4.0.1
 
   '@mapbox/whoots-js@3.1.0': {}
+
+  '@mapcomponents/react-maplibre@1.8.11(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)':
+    dependencies:
+      '@dnd-kit/core': 6.3.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@dnd-kit/modifiers': 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
+      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
+      '@dnd-kit/utilities': 3.2.2(react@19.2.6)
+      '@emotion/css': 11.13.5
+      '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.6)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
+      '@mapbox/mapbox-gl-draw': 1.5.1
+      '@mapbox/mapbox-gl-sync-move': 0.3.1
+      '@mui/icons-material': 9.0.1(@mui/material@9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
+      '@mui/material': 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@mui/system': 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
+      '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.6)(redux@5.0.1))(react@19.2.6)
+      '@storybook/react': 10.3.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      '@testing-library/dom': 10.4.1
+      '@testing-library/jest-dom': 6.9.1
+      '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
+      '@tmcw/togeojson': 7.1.2
+      '@turf/helpers': 7.3.5
+      '@turf/turf': 7.3.5
+      '@types/d3': 7.4.3
+      '@types/geojson': 7946.0.16
+      '@types/react-color': 3.0.13(@types/react@19.2.14)
+      '@types/topojson-client': 3.1.5
+      '@types/topojson-specification': 1.0.5
+      '@xmldom/xmldom': 0.9.10
+      camelcase: 9.0.0
+      csv2geojson: 5.1.2
+      d3: 7.9.0
+      jspdf: 4.2.1
+      maplibre-gl: 5.24.0
+      osm2geojson-lite: 2.0.1
+      pako: 2.1.0
+      react: 19.2.6
+      react-color: 2.19.3(react@19.2.6)
+      react-dom: 19.2.6(react@19.2.6)
+      react-moveable: 0.56.0
+      react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.6)(redux@5.0.1)
+      redux: 5.0.1
+      topojson-client: 3.1.0
+      uuid: 14.0.0
+      wms-capabilities: 0.6.0
+    transitivePeerDependencies:
+      - '@mui/material-pigment-css'
+      - '@types/react'
+      - storybook
+      - supports-color
+      - typescript
 
   '@maplibre/geojson-vt@5.0.4': {}
 

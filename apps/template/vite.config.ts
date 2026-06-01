@@ -8,14 +8,6 @@ export default defineConfig(async () => {
 	return {
 		root: __dirname,
 		cacheDir: '../../node_modules/.vite/apps/template',
-		server: {
-			port: 4200,
-			host: 'localhost',
-		},
-		preview: {
-			port: 4200,
-			host: 'localhost',
-		},
 		plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
 		// Uncomment this if you are using workers.
 		// worker: {
