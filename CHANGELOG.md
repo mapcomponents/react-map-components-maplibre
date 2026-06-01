@@ -1,3 +1,13 @@
+## 1.8.14 (2026-06-01)
+
+### 🩹 Fixes
+
+- downgrade @vitejs/plugin-react to version 5.2.0 and update pnpm-lock.yaml ([716a4e7f](https://github.com/mapcomponents/react-map-components-maplibre/commit/716a4e7f))
+
+### ❤️ Thank You
+
+- jannik brack
+
 ## 1.8.12 (2026-06-01)
 
 This was a version bump only, there were no code changes.
