@@ -1,4 +1,3 @@
-# /* eslint-disable */
 name: catalogue-meta-schema-check
 on:
   push:
@@ -11,14 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v4
         with:
-         persist-credentials: false
-      - name: Install pnpm
-        run: npm install -g pnpm --force
-      - name: Setup pnpm global bin
-        run: pnpm setup
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Install and build 🔧
         run: |
           pnpm install --frozen-lockfile
-          npx nx run-many -t build-catalogue-meta
+          pnpm exec nx run-many -t build-catalogue-meta
