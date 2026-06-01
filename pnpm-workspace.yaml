@@ -2,6 +2,12 @@ packages:
   - apps/**
   - packages/**
 
+# todo: pls remove temporary
+minimumReleaseAgeExclude:
+  - '@vitest/pretty-format@4.1.8'
+  - '@vitest/ui@4.1.8'
+  - '@vitest/utils@4.1.8'
+
 onlyBuiltDependencies:
   - '@swc/core'
   - core-js
