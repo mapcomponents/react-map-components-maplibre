@@ -46,7 +46,7 @@ export default defineConfig(async () => {
 				formats: ['es' as const, 'cjs' as const],
 			},
 			sourcemap: true,
-			rollupOptions: {
+			rolldownOptions: {
 				// External packages that should not be bundled into your library.
 				external: [
 					'react',
