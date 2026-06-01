@@ -1,6 +1,9 @@
 {
 	"name": "create-mapcomponents-app",
 	"version": "1.8.15",
+	"publishConfig": {
+		"access": "public"
+	},
 	"files": [
 		"index.js"
 	],
