@@ -1,6 +1,6 @@
 {
 	"name": "@mapcomponents/react-maplibre",
-	"version": "1.8.15",
+	"version": "1.8.16",
 	"publishConfig": {
 		"access": "public"
 	},
