@@ -8,13 +8,13 @@
     "migrate-changelog": "ts-node ./scripts/migrate_changelog.ts"
   },
   "dependencies": {
-    "@babel/plugin-transform-typescript": "^7.28.6",
+    "@babel/plugin-transform-typescript": "^7.29.7",
     "@cypress/react": "^9.0.2",
     "@eslint/eslintrc": "^3.3.5",
-    "@typescript-eslint/eslint-plugin": "^8.59.2",
-    "@typescript-eslint/parser": "^8.59.2",
+    "@typescript-eslint/eslint-plugin": "^8.60.0",
+    "@typescript-eslint/parser": "^8.60.0",
     "babel-plugin-inline-react-svg": "^2.0.2",
-    "babel-plugin-styled-components": "^2.1.4",
+    "babel-plugin-styled-components": "^2.3.0",
     "globals": "^17.6.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
@@ -23,7 +23,7 @@
     "@babel/core": "^7.29.7",
     "@babel/plugin-transform-private-property-in-object": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
-    "@cypress/webpack-dev-server": "^5.6.2",
+    "@cypress/webpack-dev-server": "5.6.1",
     "@eslint/js": "^10.0.1",
     "@nrwl/vite": "^19.8.14",
     "@nx/cypress": "^22.7.5",
