@@ -2,6 +2,14 @@ packages:
   - apps/**
   - packages/**
 
+allowBuilds:
+  '@swc/core': true
+  core-js: true
+  cypress: true
+  esbuild: true
+  nx: true
+  unrs-resolver: true
+
 # todo: pls remove temporary
 minimumReleaseAgeExclude:
   - '@vitest/pretty-format@4.1.8'
