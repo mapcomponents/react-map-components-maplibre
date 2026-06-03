@@ -1,3 +1,13 @@
+## 1.8.18-0 (2026-06-03)
+
+### 🚀 Features
+
+- add publishConfig to package.json for public access ([b5e86bef](https://github.com/mapcomponents/react-map-components-maplibre/commit/b5e86bef))
+
+### ❤️ Thank You
+
+- jannik brack
+
 ## 1.8.17 (2026-06-03)
 
 This was a version bump only, there were no code changes.
