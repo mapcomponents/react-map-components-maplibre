@@ -6,6 +6,9 @@
 	"module": "dist/index.js",
 	"license": "MIT",
 	"type": "module",
+	"scripts": {
+		"publish": "pnpm stage publish"
+	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.1",

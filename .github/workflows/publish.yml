@@ -22,6 +22,6 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --no-frozen-lockfile
       - run: npx nx run-many -t build --all --exclude storybook-composition docs
-      - run: npx nx run-many -t nx-release-publish --all --skip-nx-cache --exclude storybook-composition docs
+      - run: npx nx run-many -t publish --all
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
