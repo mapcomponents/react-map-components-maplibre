@@ -29,7 +29,7 @@ jobs:
         run: npm install -g pnpm@10.33.3
 
       - name: Install dependencies
-        run: pnpm ci
+        run: pnpm install
 
       - name: Run component tests
         run: npx nx run-many -t test:noninteractive --all --skip-nx-cache
