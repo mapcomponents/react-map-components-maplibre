@@ -23,5 +23,4 @@ jobs:
       - run: pnpm install --no-frozen-lockfile
       - run: npx nx run-many -t build --all --exclude storybook-composition docs
       - run: pnpm stage publish -r --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
