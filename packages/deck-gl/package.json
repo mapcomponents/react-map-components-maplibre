@@ -1,13 +1,13 @@
 {
 	"name": "@mapcomponents/deck-gl",
-	"version": "1.8.18-0",
+	"version": "1.8.19-0",
 	"description": "MapComponents components that integrate deck.gl layers into MapLibre maps.",
 	"main": "src/index.ts",
 	"module": "dist/index.mjs",
 	"license": "MIT",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js",
+		"build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
