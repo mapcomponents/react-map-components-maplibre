@@ -9,6 +9,9 @@
 	"module": "dist/index.mjs",
 	"source": "src/index.ts",
 	"types": "dist/index.d.ts",
+	"repository": {
+		"url": "https://github.com/mapcomponents/react-map-components-maplibre"
+	},
 	"scripts": {
 		"test": "node scripts/test.cjs --watchAll=false --coverage",
 		"test:noninteractive": "node scripts/test.cjs --verbose --watchAll=false --coverage",

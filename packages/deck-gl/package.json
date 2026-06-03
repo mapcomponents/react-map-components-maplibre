@@ -5,6 +5,9 @@
 	"main": "src/index.ts",
 	"module": "dist/index.mjs",
 	"license": "MIT",
+	"repository": {
+		"url": "https://github.com/mapcomponents/react-map-components-maplibre"
+	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js"

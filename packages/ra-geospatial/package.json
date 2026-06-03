@@ -6,6 +6,9 @@
 	"module": "dist/index.js",
 	"license": "MIT",
 	"type": "module",
+	"repository": {
+		"url": "https://github.com/mapcomponents/react-map-components-maplibre"
+	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.1",

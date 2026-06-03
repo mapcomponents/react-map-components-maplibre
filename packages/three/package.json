@@ -5,6 +5,9 @@
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
+	"repository": {
+		"url": "https://github.com/mapcomponents/react-map-components-maplibre"
+	},
 	"scripts": {
 		"build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js"
 	},
