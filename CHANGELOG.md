@@ -1,46 +1,10 @@
-## 1.8.19 (2026-06-03)
+## [1.8.21] (2026-06-03)
 
-### 🚀 Features
+## @mapcomponents/root
 
-- add publishConfig to package.json for public access ([b5e86bef](https://github.com/mapcomponents/react-map-components-maplibre/commit/b5e86bef))
-
-### ❤️ Thank You
-
-- jannik brack
-
-## 1.8.19-3 (2026-06-03)
-
-### 🚀 Features
-
-- add publishConfig to package.json for public access ([b5e86bef](https://github.com/mapcomponents/react-map-components-maplibre/commit/b5e86bef))
-
-### ❤️ Thank You
-
-- jannik brack
-
-## 1.8.19-2 (2026-06-03)
-
-### 🚀 Features
-
-- add publishConfig to package.json for public access ([b5e86bef](https://github.com/mapcomponents/react-map-components-maplibre/commit/b5e86bef))
-
-### ❤️ Thank You
-
-- jannik brack
-
-## 1.8.19-1 (2026-06-03)
-
-### 🚀 Features
-
-- add publishConfig to package.json for public access ([b5e86bef](https://github.com/mapcomponents/react-map-components-maplibre/commit/b5e86bef))
-
-### ❤️ Thank You
-
-- jannik brack
-
-## 1.8.12 (2026-06-01) - 1.8.19 (2026-06-01)
-
-This was a version bump only, there were no code changes.
+### Fixed
+ 
+- vite update
 
 ## [1.8.11] (2026-05-18)
 

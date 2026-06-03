@@ -20,5 +20,5 @@ jobs:
         run: pnpm setup
       - name: Install and build 🔧
         run: |
-          pnpm install --frozen-lockfile
+          pnpm ci
           npx nx run-many -t build-catalogue-meta

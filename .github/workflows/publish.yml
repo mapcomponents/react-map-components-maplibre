@@ -25,7 +25,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
       - run: pnpm ci
-      - run: pnpm install
       - run: npx nx run-many -t build --all --exclude storybook-composition docs
       - run: pnpm stage publish -r --no-git-checks
 

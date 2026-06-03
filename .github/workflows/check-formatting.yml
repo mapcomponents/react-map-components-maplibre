@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        run: pnpm install
+        run: pnpm ci
 
       - id: files
         uses: jitterbit/get-changed-files@v1
