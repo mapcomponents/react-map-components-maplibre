@@ -8,7 +8,6 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build-catalogue-meta": "node ../../scripts/build-catalogue-meta.js",
-		"publish": "pnpm stage publish"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
