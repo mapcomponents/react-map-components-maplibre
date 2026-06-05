@@ -4,11 +4,12 @@ import dts from 'vite-plugin-dts';
 import * as path from 'path';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
-import react from '@vitejs/plugin-react';
 
 const isExternal = (id: string) => !id.startsWith('.') && !path.isAbsolute(id);
 
-export default defineConfig(() => {
+export default defineConfig(async () => {
+	const react = (await import('@vitejs/plugin-react')).default;
+
 	return {
 		root: __dirname,
 		cacheDir: '../../node_modules/.vite/packages/deck-gl',
