@@ -21,4 +21,4 @@ jobs:
       - name: Install and build 🔧
         run: |
           pnpm ci
-          npx nx run-many -t build-catalogue-meta
+          npx nx run-many -t build-catalogue-meta --verbose

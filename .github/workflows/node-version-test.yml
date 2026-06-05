@@ -32,7 +32,7 @@ jobs:
         run: pnpm install
 
       - name: Run component tests
-        run: npx nx run-many -t test:noninteractive --all --skip-nx-cache
+        run: npx nx run-many -t test:noninteractive --all --skip-nx-cache --verbose
 
       - name: Build all projects
-        run: npx nx run-many -t build --all --exclude=storybook-composition,docs
+        run: npx nx run-many -t build --all --exclude=storybook-composition,docs --verbose

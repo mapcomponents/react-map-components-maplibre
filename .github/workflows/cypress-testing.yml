@@ -31,4 +31,4 @@ jobs:
         run: rm -f /tmp/.X99-lock
 
       - name: Run Cypress tests
-        run: npx nx run-many -t component-test --parallel=false
+        run: npx nx run-many -t component-test --parallel=false --verbose

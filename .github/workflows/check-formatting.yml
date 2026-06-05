@@ -44,7 +44,7 @@ jobs:
           format: csv
 
       - name: Lint all projects
-        run: npx nx run-many --target=lint --all --exclude docs
+        run: npx nx run-many --target=lint --all --exclude docs --verbose
 
       - name: Prettier all projects
         run: pnpm prettier:check
