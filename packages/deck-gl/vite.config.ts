@@ -8,7 +8,7 @@ import react from '@vitejs/plugin-react';
 
 const isExternal = (id: string) => !id.startsWith('.') && !path.isAbsolute(id);
 
-export default defineConfig(async () => {
+export default defineConfig(() => {
 	return {
 		root: __dirname,
 		cacheDir: '../../node_modules/.vite/packages/deck-gl',
