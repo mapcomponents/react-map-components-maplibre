@@ -38,6 +38,7 @@
 		"wellknown": "^0.5.0"
 	},
 	"devDependencies": {
-		"@types/geojson": "^7946.0.16"
+		"@types/geojson": "^7946.0.16",
+		"@vitejs/plugin-react": "^6.0.2"
 	}
 }

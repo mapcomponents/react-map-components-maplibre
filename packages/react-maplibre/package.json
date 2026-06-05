@@ -96,6 +96,7 @@
 		"react-dom": "^19.2.6",
 		"react-draggable": "^4.5.0",
 		"react-i18next": "^17.0.7",
+		"@vitejs/plugin-react": "^6.0.2",
 		"sql.js": "^1.14.1"
 	},
 	"jest": {
