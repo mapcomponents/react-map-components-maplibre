@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mapcomponents/react-maplibre": "^1.8.11"
+    "@mapcomponents/react-maplibre": "^1.8.20"
   },
 	"peerDependencies": {
     "react": "^19.2.6",

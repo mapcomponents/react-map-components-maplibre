@@ -12,9 +12,7 @@ allowBuilds:
 
 # todo: pls remove temporary
 minimumReleaseAgeExclude:
-  - '@vitest/pretty-format@4.1.8'
-  - '@vitest/ui@4.1.8'
-  - '@vitest/utils@4.1.8'
+  - '@mapcomponents/react-maplibre@1.8.20'
 
 onlyBuiltDependencies:
   - '@swc/core'
