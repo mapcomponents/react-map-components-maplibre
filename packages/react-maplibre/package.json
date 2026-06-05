@@ -4,11 +4,22 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"main": "dist/index.cjs.js",
+	"main": "dist/index.js",
 	"license": "MIT",
 	"module": "dist/index.mjs",
 	"source": "src/index.ts",
 	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist"
+	],
 	"repository": {
 		"url": "https://github.com/mapcomponents/react-map-components-maplibre"
 	},
@@ -33,10 +44,6 @@
 		"@mui/material": "^9.0.1",
 		"@mui/system": "^9.0.1",
 		"@reduxjs/toolkit": "^2.11.2",
-		"@storybook/react": "^10.3.6",
-		"@testing-library/dom": "^10.4.1",
-		"@testing-library/jest-dom": "^6.9.1",
-		"@testing-library/user-event": "^14.6.1",
 		"@tmcw/togeojson": "^7.1.2",
 		"@turf/helpers": "^7.3.5",
 		"@turf/turf": "^7.3.5",
@@ -66,7 +73,11 @@
 		"react-dom": "^19.1.0"
 	},
 	"devDependencies": {
+		"@storybook/react": "^10.3.6",
+		"@testing-library/dom": "^10.4.1",
+		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
+		"@testing-library/user-event": "^14.6.1",
 		"@types/chai": "^5.2.3",
 		"@types/mapbox__mapbox-gl-draw": "^1.4.9",
 		"@types/pako": "^2.0.4",

@@ -4,9 +4,11 @@ import dts from 'vite-plugin-dts';
 import * as path from 'path';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
+import react from '@vitejs/plugin-react';
+
+const isExternal = (id: string) => !id.startsWith('.') && !path.isAbsolute(id);
 
 export default defineConfig(async () => {
-	const react = (await import('@vitejs/plugin-react')).default;
 	return {
 		root: __dirname,
 		cacheDir: '../../node_modules/.vite/packages/three',
@@ -53,19 +55,9 @@ export default defineConfig(async () => {
 				formats: ['es' as const, 'cjs' as const],
 			},
 			rolldownOptions: {
-				// External packages that should not be bundled into your library.
-				external: [
-					'react',
-					'react-dom',
-					'react/jsx-runtime',
-					'@mapcomponents/react-maplibre',
-					'three',
-					'maplibre-gl',
-					'@mui/material',
-					'@mui/system',
-					'@emotion/react',
-					'@emotion/styled',
-				],
+				// Treat every bare import (react, deps, peer deps, sub-paths) as external
+				// so no third-party code is bundled into the library.
+				external: isExternal,
 			},
 		},
 	};

@@ -2,7 +2,7 @@
 	"name": "@mapcomponents/three",
 	"version": "1.8.20-1",
 	"license": "MIT",
-	"main": "dist/index.cjs.js",
+	"main": "dist/index.js",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
 	"repository": {
@@ -13,10 +13,15 @@
 	},
 	"exports": {
 		".": {
-			"import": "dist/index.mjs",
-			"require": "dist/index.cjs.js"
-		}
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
 	},
+	"files": [
+		"dist"
+	],
 	"publishConfig": {
 		"access": "public"
 	},
