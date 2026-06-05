@@ -1,6 +1,6 @@
 {
 	"name": "create-mapcomponents-app",
-	"version": "1.8.20-1",
+	"version": "1.8.20-3",
 	"repository": {
 		"url": "https://github.com/mapcomponents/react-map-components-maplibre"
 	},

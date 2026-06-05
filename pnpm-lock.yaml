@@ -358,9 +358,6 @@ importers:
       '@turf/turf':
         specifier: ^7.3.5
         version: 7.3.5
-      '@types/geojson':
-        specifier: ^7946.0.16
-        version: 7946.0.16
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
@@ -379,6 +376,10 @@ importers:
       wellknown:
         specifier: ^0.5.0
         version: 0.5.0
+    devDependencies:
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
 
   packages/react-maplibre:
     dependencies:
@@ -421,18 +422,6 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.11.2
         version: 2.12.0(react-redux@9.3.0(@types/react@19.2.15)(react@19.2.6)(redux@5.0.1))(react@19.2.6)
-      '@storybook/react':
-        specifier: ^10.3.6
-        version: 10.4.1(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
-      '@testing-library/dom':
-        specifier: ^10.4.1
-        version: 10.4.1
-      '@testing-library/jest-dom':
-        specifier: ^6.9.1
-        version: 6.9.1
-      '@testing-library/user-event':
-        specifier: ^14.6.1
-        version: 14.6.1(@testing-library/dom@10.4.1)
       '@tmcw/togeojson':
         specifier: ^7.1.2
         version: 7.1.2
@@ -503,9 +492,21 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
     devDependencies:
+      '@storybook/react':
+        specifier: ^10.3.6
+        version: 10.4.1(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(storybook@10.3.6(@testing-library/dom@10.4.1)(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
       '@testing-library/react':
         specifier: ^16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
       '@types/chai':
         specifier: ^5.2.3
         version: 5.2.3
