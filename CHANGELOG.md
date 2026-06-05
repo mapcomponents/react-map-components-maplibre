@@ -1,3 +1,19 @@
+## 1.8.20-5 (2026-06-05)
+
+### 🩹 Fixes
+
+- update nx package versions to use caret ranges ([d73cccde](https://github.com/mapcomponents/react-map-components-maplibre/commit/d73cccde))
+- update nx package versions to use caret ranges ([3f07b837](https://github.com/mapcomponents/react-map-components-maplibre/commit/3f07b837))
+- update nx package versions to use caret ranges ([dd2123e4](https://github.com/mapcomponents/react-map-components-maplibre/commit/dd2123e4))
+- add --verbose flag to nx run-many commands for better logging ([8ec1a14a](https://github.com/mapcomponents/react-map-components-maplibre/commit/8ec1a14a))
+- remove async from defineConfig in vite.config.ts ([34159016](https://github.com/mapcomponents/react-map-components-maplibre/commit/34159016))
+- update @vitejs/plugin-react to version 6.0.2 in package.json and pnpm-lock.yaml ([5516383d](https://github.com/mapcomponents/react-map-components-maplibre/commit/5516383d))
+- load @vitejs/plugin-react dynamically in vite.config.ts ([b5cfe16b](https://github.com/mapcomponents/react-map-components-maplibre/commit/b5cfe16b))
+
+### ❤️ Thank You
+
+- jannik brack
+
 ## 1.8.20-4 (2026-06-05)
 
 This was a version bump only, there were no code changes.
