@@ -1,20 +1,31 @@
-## [v## [1.8.5] (2026-02-04)
+## [v.1.8.11] (2026-05-18)
+
+### Changed
+
+- cbdbeec: update Storybook configuration and TypeScript settings
+
+### Fixed
+
+- b6df6e8: fix 
+## [v.1.8.9] (2026-03-21)
+
+### Fixes
+
+- dcf92c5: Fix CSS issue on navigation tool (#263) …
+
+## [v.1.8.5] (2026-02-04)
 
 ### Fixes
 
 - 0bd85e5, fd417a9: fix MlWmsLoader reinitialization on prop change bug (#255)
 
-
-
-## [v## [1.8.5] (2026-02-04)
+## [v.1.8.3] (2026-01-29)
 
 ### Fixes
 
 - make getFeatureInfoUrlParameter overrides default params in MlWmsLoader ([076daddc](https://github.com/mapcomponents/react-map-components-maplibre/commit/076daddc))
 
-
-
-## [v## [1.8.5] (2026-02-04)
+## [v.1.8.2] (2026-01-28)
 
 ### Changed
 

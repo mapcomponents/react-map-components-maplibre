@@ -1,8 +1,12 @@
-## 1.8.21 (2026-06-06)
+## [v.1.8.21] (2026-06-06)
 
-This was a version bump only, there were no code changes.
+## @mapcomponents/deck-gl
 
-## [1.8.20] (2026-06-03)
+### Changed
+
+- 762de05a: change component name: MlScenegraphlayer
+
+## [v.1.8.20] (2026-06-03)
 
 ## @mapcomponents/root
 
@@ -10,7 +14,7 @@ This was a version bump only, there were no code changes.
  
 - vite update
 
-## [1.8.11] (2026-05-18)
+## [v.1.8.11] (2026-05-18)
 
 ## @mapcomponents/root
 
@@ -68,7 +72,7 @@ This was a version bump only, there were no code changes.
 
 - ea23b48: fix three storybook and tsconfig
 
-## [1.8.10] (2026-04-02)
+## [v.1.8.10] (2026-04-02)
 
 ### Chanes
 
@@ -80,7 +84,7 @@ This was a version bump only, there were no code changes.
 
 - 52cb2b0: fix-mlhexagonlayer-mlgeojsonlayer (#267) …
 
-## [1.8.9] (2026-03-21)
+## [v.1.8.9] (2026-03-21)
 
 ## @mapcomponents/deck-gl
 
@@ -94,7 +98,7 @@ This was a version bump only, there were no code changes.
 
 - dcf92c5: Fix CSS issue on navigation tool (#263) …
 
-## [1.8.8] (2026-03-18)
+## [v.1.8.8] (2026-03-18)
 
 ## @mapcomponents/deck-gl
 
@@ -102,7 +106,7 @@ This was a version bump only, there were no code changes.
 
 - c41af13: Make mapId in DeckGlContextProvider optional (#262) …
 
-## [1.8.7] (2026-03-18)
+## [v.1.8.7] (2026-03-18)
 
 ## @mapcomponents/deck-gl
 
@@ -110,7 +114,7 @@ This was a version bump only, there were no code changes.
 
 - fb119e7: move all deck.gl dependencies to peerDependencies in package.json and update Vite config (#261)
 
-## [1.8.6] (2026-03-18)
+## [v.1.8.6] (2026-03-18)
 
 ## @mapcomponents/deck-gl
 
@@ -121,7 +125,7 @@ This was a version bump only, there were no code changes.
 - 22e1cebe: update mapId prop in MapContextDecorator component
 - 0eec3ec: 9add beforeId prop to MlHexagonLayer story
 
-## [1.8.5] (2026-02-04)
+## [v.1.8.5] (2026-02-04)
 
 ## @mapcomponents/react-maplibre
 
@@ -129,7 +133,7 @@ This was a version bump only, there were no code changes.
 
 - 0bd85e5, fd417a9: fix MlWmsLoader reinitialization on prop change bug (#255)
 
-## [1.8.3] (2026-01-29)
+## [v.1.8.3] (2026-01-29)
 
 ## @mapcomponents/react-maplibre
 
@@ -137,7 +141,7 @@ This was a version bump only, there were no code changes.
 
 - make getFeatureInfoUrlParameter overrides default params in MlWmsLoader ([076daddc](https://github.com/mapcomponents/react-map-components-maplibre/commit/076daddc))
 
-## [1.8.2] (2026-01-28)
+## [v.1.8.2] (2026-01-28)
 
 ## @mapcomponents/react-maplibre
 
