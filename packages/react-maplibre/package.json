@@ -65,7 +65,7 @@
 		"react-redux": "^9.2.0",
 		"redux": "^5.0.1",
 		"topojson-client": "^3.1.0",
-		"uuid": "^14.0.0",
+		"uuid": "^14.0.1",
 		"wms-capabilities": "^0.6.0"
 	},
 	"peerDependencies": {
