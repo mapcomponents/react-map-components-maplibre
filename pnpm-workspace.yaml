@@ -86,6 +86,7 @@ allowBuilds:
   cypress: true
   esbuild: true
   nx: true
+  '@parcel/watcher': true
   unrs-resolver: true
 
 onlyBuiltDependencies:
@@ -93,6 +94,7 @@ onlyBuiltDependencies:
   - core-js
   - cypress
   - nx
+  - '@parcel/watcher'
   - unrs-resolver
 
 sideEffectsCache: false

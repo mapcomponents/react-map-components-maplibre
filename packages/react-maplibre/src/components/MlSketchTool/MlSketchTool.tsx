@@ -266,9 +266,7 @@ const MlSketchTool = (props: MlSketchToolProps) => {
 									)?.coordinates;
 									const activeCoords = (
 										_sketchState.geometries[_sketchState.activeGeometryIndex]?.geometry as
-											| Point
-											| LineString
-											| Polygon
+											Point | LineString | Polygon
 									)?.coordinates;
 
 									// Compare coordinates

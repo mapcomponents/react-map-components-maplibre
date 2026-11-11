@@ -44,14 +44,7 @@ export interface MlMarkerProps {
 	onClose?: () => void;
 	/** Anchor position of the marker relative to its coordinates */
 	anchor?:
-		| 'top'
-		| 'bottom'
-		| 'left'
-		| 'right'
-		| 'top-left'
-		| 'top-right'
-		| 'bottom-left'
-		| 'bottom-right';
+		'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
 
 const getBoxTransform = (anchor: MlMarkerProps['anchor'] = 'top') => {

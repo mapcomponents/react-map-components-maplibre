@@ -133,10 +133,15 @@ async function main() {
 		const viteConfigPath = path.join(appRoot, 'vite.config.ts');
 		const originalViteConfig = fs.readFileSync(viteConfigPath, 'utf8');
 		const viteConfig = originalViteConfig
-			.replace("cacheDir: '../../node_modules/.vite/apps/template',", "cacheDir: './node_modules/.vite',")
+			.replace(
+				"cacheDir: '../../node_modules/.vite/apps/template',",
+				"cacheDir: './node_modules/.vite',"
+			)
 			.replace("outDir: '../../dist/apps/template',", "outDir: 'dist',");
 		if (viteConfig === originalViteConfig) {
-			throw new Error('Could not make the copied template Vite paths local to the temporary project');
+			throw new Error(
+				'Could not make the copied template Vite paths local to the temporary project'
+			);
 		}
 		fs.writeFileSync(viteConfigPath, viteConfig);
 
@@ -150,7 +155,11 @@ async function main() {
 		}
 		fs.writeFileSync(tsconfigPath, tsconfig);
 
-		run('pnpm', ['install', '--registry=https://registry.npmjs.org'], appRoot);
+		run(
+			'pnpm',
+			['install', '--registry=https://registry.npmjs.org', '--allow-build=core-js'],
+			appRoot
+		);
 
 		write(
 			'cypress.config.cjs',

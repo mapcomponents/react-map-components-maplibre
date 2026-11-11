@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "prettier:check": "prettier --check .",
+    "ci:local": "npm exec --yes --registry=https://registry.npmjs.org --package=pnpm@12.18.0 -- node scripts/ci-local.cjs",
     "migrate-changelog": "ts-node ./scripts/migrate_changelog.ts"
   },
   "dependencies": {
