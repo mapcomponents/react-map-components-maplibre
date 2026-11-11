@@ -94,7 +94,7 @@ async function withServer(args, port) {
 				'--config-file',
 				path.join(appRoot, 'cypress.config.cjs'),
 				'--browser',
-				'electron',
+				process.env.CYPRESS_SMOKE_BROWSER || 'chrome',
 			],
 			root,
 			{ env: { MAPCOMPONENTS_SMOKE_BASE_URL: url } }
@@ -141,12 +141,16 @@ async function main() {
 		fs.writeFileSync(viteConfigPath, viteConfig);
 
 		const tsconfigPath = path.join(appRoot, 'tsconfig.json');
-		const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, 'utf8'));
-		tsconfig.include = ['src/**/*.ts', 'src/**/*.tsx'];
-		delete tsconfig.references;
-		fs.writeFileSync(tsconfigPath, `${JSON.stringify(tsconfig, null, 2)}\n`);
+		const originalTsconfig = fs.readFileSync(tsconfigPath, 'utf8');
+		const tsconfig = originalTsconfig
+			.replace(/"include"\s*:\s*\[[^\]]*\]/, '"include": ["src/**/*.ts", "src/**/*.tsx"]')
+			.replace(/,\s*"references"\s*:\s*\[\s*\{[^}]*\}\s*\]/s, '');
+		if (tsconfig === originalTsconfig || tsconfig.includes('"references"')) {
+			throw new Error('Could not make the copied template TypeScript config standalone');
+		}
+		fs.writeFileSync(tsconfigPath, tsconfig);
 
-		run('npm', ['install', '--no-audit', '--no-fund'], appRoot);
+		run('pnpm', ['install', '--registry=https://registry.npmjs.org'], appRoot);
 
 		write(
 			'cypress.config.cjs',
@@ -159,7 +163,13 @@ async function main() {
     setupNodeEvents(on) {
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.family === 'chromium') {
-          launchOptions.args.push('--use-gl=angle', '--use-angle=swiftshader', '--enable-webgl');
+          launchOptions.args.push(
+            '--use-gl=angle',
+            '--use-angle=swiftshader',
+            '--ignore-gpu-blocklist',
+            '--disable-gpu-sandbox',
+            '--enable-webgl'
+          );
         }
         if (browser.name === 'electron') {
           launchOptions.preferences.webPreferences = {

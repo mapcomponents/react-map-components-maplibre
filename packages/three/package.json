@@ -33,12 +33,12 @@
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.1",
-		"@mui/material": "^9.0.1",
+		"@mui/material": "^9.5.0",
 		"maplibre-gl": "^5.24.0",
-		"three": "^0.184.0"
+		"three": "^0.187.0"
 	},
 	"devDependencies": {
-		"@types/three": "^0.184.1",
-		"@vitejs/plugin-react": "^6.0.2"
+		"@types/three": "^0.187.0",
+		"@vitejs/plugin-react": "^6.3.0"
 	}
 }

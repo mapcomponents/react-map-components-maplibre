@@ -26,19 +26,19 @@
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.1",
 		"@mapcomponents/react-maplibre": "workspace:*",
-		"@mui/icons-material": "^7.3.11",
-		"@mui/material": "^7.3.11",
-		"@turf/helpers": "^7.3.5",
-		"@turf/turf": "^7.3.5",
+		"@mui/icons-material": "^9.5.0",
+		"@mui/material": "^9.5.0",
+		"@turf/helpers": "^7.4.0",
+		"@turf/turf": "^7.4.0",
 		"lodash": "^4.18.1",
 		"maplibre-gl": "^5.24.0",
-		"ra-data-fakerest": "^5.14.6",
-		"react-admin": "^5.14.6",
-		"react-router-dom": "^7.15.0",
+		"ra-data-fakerest": "^5.15.6",
+		"react-admin": "^5.15.6",
+		"react-router-dom": "^7.18.5",
 		"wellknown": "^0.5.0"
 	},
 	"devDependencies": {
 		"@types/geojson": "^7946.0.16",
-		"@vitejs/plugin-react": "^6.0.2"
+		"@vitejs/plugin-react": "^6.3.0"
 	}
 }
