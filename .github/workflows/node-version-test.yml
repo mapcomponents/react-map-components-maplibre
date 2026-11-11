@@ -36,3 +36,6 @@ jobs:
 
       - name: Build all projects
         run: npx nx run-many -t build --all --exclude=storybook-composition,docs --verbose
+
+      - name: Test packed package in a new consumer project
+        run: node scripts/package-smoke-test.cjs
