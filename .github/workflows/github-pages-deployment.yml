@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install pnpm
-        run: npm install -g pnpm nx
+        run: npm install -g pnpm@12.18.0 nx
 
       - uses: actions/setup-node@v4
         with:
