@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
       # Install pnpm
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@12.18.0
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
@@ -27,4 +27,3 @@ jobs:
       - run: pnpm ci
       - run: npx nx run-many -t build --all --exclude storybook-composition docs
       - run: pnpm stage publish -r --no-git-checks
-

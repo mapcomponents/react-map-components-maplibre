@@ -4,8 +4,6 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 env:
   NX_DAEMON: false
@@ -26,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install pnpm
-        run: npm install -g pnpm@10.33.3
+        run: npm install -g pnpm@12.18.0
 
       - name: Install dependencies
         run: pnpm install
@@ -36,3 +34,6 @@ jobs:
 
       - name: Build all projects
         run: npx nx run-many -t build --all --exclude=storybook-composition,docs --verbose
+
+      - name: Test packed package in a new consumer project
+        run: node scripts/package-smoke-test.cjs

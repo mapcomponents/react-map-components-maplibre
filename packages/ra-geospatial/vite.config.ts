@@ -2,8 +2,7 @@
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import * as path from 'path';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
+import { copyRootMarkdown } from '../../scripts/vite-plugins/copy-root-markdown';
 
 const isExternal = (id: string) => !id.startsWith('.') && !path.isAbsolute(id);
 
@@ -13,20 +12,18 @@ export default defineConfig(async () => {
 	return {
 		root: __dirname,
 		cacheDir: '../../node_modules/.vite/packages/ra-geospatial',
+		resolve: {
+			tsconfigPaths: true,
+		},
 		plugins: [
 			react(),
-			nxViteTsPaths(),
-			nxCopyAssetsPlugin(['*.md']),
+			copyRootMarkdown(__dirname),
 			dts({
 				entryRoot: 'src',
 				tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
 				pathsToAliases: false,
 			}),
 		],
-		// Uncomment this if you are using workers.
-		// worker: {
-		//  plugins: [ nxViteTsPaths() ],
-		// },
 		// Configuration for building your library.
 		// See: https://vitejs.dev/guide/build.html#library-mode
 		build: {

@@ -15,7 +15,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Install pnpm
-        run: npm install -g pnpm --force
+        run: npm install -g pnpm@12.18.0 --force
       - name: Setup pnpm global bin
         run: pnpm setup
       - name: Install and build 🔧

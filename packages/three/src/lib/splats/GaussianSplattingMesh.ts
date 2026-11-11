@@ -684,9 +684,12 @@ export class GaussianSplattingMesh extends Mesh {
 			textureSize.y,
 			this.useRGBACovariants ? RGBAFormat : RGFormat
 		);
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const splatPositions = this.splatPositions;
+		if (!splatPositions) {
+			throw new Error('Splat positions must be initialized before creating textures');
+		}
 		this.centersTextureInternal = createF32Texture(
-			this.splatPositions!,
+			splatPositions,
 			textureSize.x,
 			textureSize.y,
 			RGBAFormat

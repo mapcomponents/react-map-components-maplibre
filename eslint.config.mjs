@@ -22,12 +22,14 @@ export default [
 	{
 		ignores: [
 			'**/.cache',
+			'**/.docusaurus',
 			'**/.github',
 			'**/.storybook',
 			'**/.vscode',
 			'**/config',
 			'**/coverage',
 			'**/dist',
+			'**/build',
 			'**/docs',
 			'**/docs-build',
 			'**/js-docs',
@@ -79,7 +81,10 @@ export default [
 				'error',
 				{
 					enforceBuildableLibDependency: true,
-					allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
+					allow: [
+						'^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$',
+						'^\\.\\./\\.\\./scripts/vite-plugins/copy-root-markdown$',
+					],
 					depConstraints: [
 						{
 							sourceTag: '*',

@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@12.18.0
 
       - name: Install Cypress binary
         run: npx cypress install
@@ -31,4 +31,4 @@ jobs:
         run: rm -f /tmp/.X99-lock
 
       - name: Run Cypress tests
-        run: npx nx run-many -t component-test --parallel=false --verbose
+        run: npx nx run-many -t component-test --parallel=false --verbose --browser=chrome
