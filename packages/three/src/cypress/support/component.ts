@@ -1,5 +1,9 @@
 import { mount } from 'cypress/react';
+import { setWorkerUrl } from 'maplibre-gl';
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import './commands';
+
+setWorkerUrl(maplibreWorkerUrl);
 
 // Ignore WebGL context creation errors (e.g. in headless/CI environments)
 Cypress.on('uncaught:exception', (err) => {

@@ -75,16 +75,10 @@ export const ThreeProvider: React.FC<ThreeProviderProps> = ({
 
 				mapInstance.triggerRepaint();
 			},
-			render: (gl, matrix) => {
+			render: (gl, renderOptions) => {
 				if (!rendererRef.current || !threeScene || !threeCamera) return;
 
-				helper.updateCameraForRender(
-					threeCamera,
-					map.map,
-					matrix,
-					worldMatrixRef.current,
-					worldMatrixInvRef.current
-				);
+				helper.updateCameraForRender(threeCamera, map.map, renderOptions, worldMatrixRef.current);
 
 				rendererRef.current.render(threeScene, threeCamera);
 				map.triggerRepaint();

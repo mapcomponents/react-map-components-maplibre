@@ -7,8 +7,10 @@ sidebar_position: 1
 ### 1. Add @mapcomponents/react-maplibre as a dependency
 
 ```bash
-yarn add @mapcomponents/react-maplibre
+yarn add @mapcomponents/react-maplibre maplibre-gl
 ```
+
+MapComponents 2 is ESM-only because MapLibre GL JS 6 no longer provides a CommonJS entry point. Use an ESM-capable bundler; loading the package with `require()` is not supported.
 
 ### 2. Add the MapComponentsProvider
 
@@ -19,10 +21,14 @@ Add the MapComponentsProvider to your application's React DOM at an appropriate 
 ```javascript
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { setWorkerUrl } from "maplibre-gl";
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { MapComponentsProvider } from "@mapcomponents/react-maplibre";
 import { StyleContextProvider } from "./contexts/StyleContext";
 import App from "./App";
 import "./index.css";
+
+setWorkerUrl(maplibreWorkerUrl);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 <React.StrictMode>
@@ -34,6 +40,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 </React.StrictMode>
 );
 ```
+
+MapLibre GL JS 6 ships as ESM and requires bundler-generated worker URLs. The example uses Vite's `?worker&url` import; for other bundlers, follow the [MapLibre installation guide](https://maplibre.org/maplibre-gl-js/docs/#installation).
 
 **For efficient map rendering and interaction management**:
 Ensure that only necessary components are within the provider's scope.

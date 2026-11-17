@@ -44,7 +44,7 @@ export default defineConfig(async () => {
 				fileName: 'index',
 				// Change this to the formats you want to support.
 				// Don't forget to update your package.json as well.
-				formats: ['es' as const, 'cjs' as const],
+				formats: ['es' as const],
 			},
 			rolldownOptions: {
 				// Treat every bare import (react, deps, peer deps, sub-paths) as external

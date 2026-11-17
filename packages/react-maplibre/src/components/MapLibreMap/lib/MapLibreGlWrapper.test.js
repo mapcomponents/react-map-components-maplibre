@@ -28,10 +28,13 @@ mockMapLibreMethods.style = {
 	...mockMapLibreMethods,
 };
 jest.mock('maplibre-gl', () => {
-	const originalModule = jest.requireActual('maplibre-gl');
-
 	return {
-		...originalModule,
+		setWorkerUrl: jest.fn(),
+		addProtocol: jest.fn(),
+		removeProtocol: jest.fn(),
+		Marker: jest.fn(),
+		Popup: jest.fn(),
+		GeolocateControl: jest.fn(),
 		Map: function () {
 			return {
 				...mockMapLibreMethods,

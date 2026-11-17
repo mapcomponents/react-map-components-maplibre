@@ -2,15 +2,14 @@
 	"name": "@mapcomponents/deck-gl",
 	"version": "1.8.21",
 	"description": "MapComponents components that integrate deck.gl layers into MapLibre maps.",
-	"main": "dist/index.js",
+	"main": "dist/index.mjs",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
 	"license": "MIT",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.js"
+			"import": "./dist/index.mjs"
 		},
 		"./package.json": "./package.json"
 	},
@@ -36,13 +35,14 @@
 		"react-dom": "^19.3.1"
 	},
 	"peerDependencies": {
-		"@deck.gl/aggregation-layers": "^9.3.2",
-		"@deck.gl/core": "^9.3.2",
-		"@deck.gl/geo-layers": "^9.3.2",
-		"@deck.gl/mapbox": "^9.3.2",
-		"@deck.gl/mesh-layers": "^9.3.2",
+		"@deck.gl/aggregation-layers": "^9.4.1",
+		"@deck.gl/core": "^9.4.1",
+		"@deck.gl/geo-layers": "^9.4.1",
+		"@deck.gl/maplibre": "^9.4.1",
+		"@deck.gl/mesh-layers": "^9.4.1",
+		"@luma.gl/core": "^9.4.1",
 		"@mapcomponents/react-maplibre": "workspace:*",
-		"maplibre-gl": "^5.24.0"
+		"maplibre-gl": "^6.18.0"
 	},
 	"devDependencies": {
 		"@types/geojson": "^7946.0.16",

@@ -2,6 +2,8 @@ packages:
   - 'apps/**'
   - 'packages/**'
 
+linkWorkspacePackages: true
+
 minimumReleaseAge: 1440 # minutes (24 hours)
 minimumReleaseAgeExclude:
   # Current lockfile versions rejected by the 24-hour scan; future versions stay gated.

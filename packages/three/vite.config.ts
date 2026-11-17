@@ -6,7 +6,7 @@ import { copyRootMarkdown } from '../../scripts/vite-plugins/copy-root-markdown'
 
 const isExternal = (id: string) => !id.startsWith('.') && !path.isAbsolute(id);
 
-export default defineConfig(async () => {
+export default defineConfig(async ({ command }) => {
 	const react = (await import('@vitejs/plugin-react')).default;
 
 	return {
@@ -14,7 +14,17 @@ export default defineConfig(async () => {
 		cacheDir: '../../node_modules/.vite/packages/three',
 		resolve: {
 			tsconfigPaths: true,
+			alias:
+				command === 'serve'
+					? [
+							{
+								find: /^@mapcomponents\/react-maplibre$/,
+								replacement: path.resolve(__dirname, '../react-maplibre/src/index.ts'),
+							},
+						]
+					: [],
 			dedupe: [
+				'@mapcomponents/react-maplibre',
 				'react',
 				'react-dom',
 				'@mui/material',
@@ -48,7 +58,7 @@ export default defineConfig(async () => {
 				fileName: 'index',
 				// Change this to the formats you want to support.
 				// Don't forget to update your package.json as well.
-				formats: ['es' as const, 'cjs' as const],
+				formats: ['es' as const],
 			},
 			rolldownOptions: {
 				// Treat every bare import (react, deps, peer deps, sub-paths) as external

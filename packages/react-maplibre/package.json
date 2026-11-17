@@ -4,7 +4,7 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"main": "dist/index.js",
+	"main": "dist/index.mjs",
 	"license": "MIT",
 	"module": "dist/index.mjs",
 	"source": "src/index.ts",
@@ -12,8 +12,7 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.js"
+			"import": "./dist/index.mjs"
 		},
 		"./package.json": "./package.json"
 	},
@@ -56,7 +55,7 @@
 		"csv2geojson": "^5.1.2",
 		"i18next": "^27.1.1",
 		"jspdf": "^4.2.1",
-		"maplibre-gl": "^5.24.0",
+		"maplibre-gl": "^6.18.0",
 		"osm2geojson-lite": "^2.4.0",
 		"pako": "^3.0.3",
 		"react-color": "^2.19.3",
@@ -130,7 +129,7 @@
 		"moduleNameMapper": {
 			"^react-native$": "react-native-web",
 			"^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
-			"^maplibre-gl/dist/maplibre-gl$": "<rootDir>/node_modules/maplibre-gl"
+			"^maplibre-gl$": "<rootDir>/config/jest/maplibre-gl.js"
 		},
 		"moduleFileExtensions": [
 			"web.js",

@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { useMap } from '@mapcomponents/react-maplibre';
 import { Effect, Layer } from '@deck.gl/core';
-import { MapboxOverlay } from '@deck.gl/mapbox';
+import { MapLibreOverlay } from '@deck.gl/maplibre';
 
 export interface DeckGlContextType {
 	deckGlLayerArray: Layer[];
@@ -21,14 +21,14 @@ const DeckGlContext = React.createContext({} as DeckGlContextType);
 const DeckGlContextProvider = ({ mapId, children }: DeckGlContextProviderProps) => {
 	const mapHook = useMap({ mapId });
 
-	const overlayRef = useRef<MapboxOverlay | undefined>(undefined);
+	const overlayRef = useRef<MapLibreOverlay | undefined>(undefined);
 	const [deckGlLayerArray, setDeckGlLayerArray] = useState<Layer[]>([]);
 	const [deckGlEffectArray, setDeckGlEffectArray] = useState<Effect[]>([]);
 
 	useEffect(() => {
 		if (!mapHook.map) return;
 
-		overlayRef.current = new MapboxOverlay({
+		overlayRef.current = new MapLibreOverlay({
 			id: overlayId,
 			interleaved: true,
 		});

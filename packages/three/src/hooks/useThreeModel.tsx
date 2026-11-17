@@ -10,7 +10,11 @@ export interface ThreeModelTransform {
 	position?: { x: number; y: number; z: number };
 }
 
-export type ModelLoader = (url: string, onSuccess: (object: THREE.Object3D) => void) => void;
+export type ModelLoader = (
+	url: string,
+	onSuccess: (object: THREE.Object3D) => void,
+	onError?: (error: unknown) => void
+) => void;
 
 export interface UseThreeModelProps {
 	url: string;
@@ -18,6 +22,7 @@ export interface UseThreeModelProps {
 	transform?: ThreeModelTransform;
 	init?: () => void;
 	onDone?: () => void;
+	onError?: (error: unknown) => void;
 	loaders: Record<string, ModelLoader>;
 	customLoaders?: Record<string, ModelLoader>;
 }
@@ -48,15 +53,17 @@ const disposeObject = (obj: THREE.Object3D): void => {
  * Hook to manage loading, transforming, and rendering a 3D model in the MapLibre/Three.js context.
  */
 export const useThreeModel = (props: UseThreeModelProps) => {
-	const { url, position, transform, init, onDone, loaders, customLoaders } = props;
+	const { url, position, transform, init, onDone, onError, loaders, customLoaders } = props;
 	const { scene, worldMatrixInv } = useThree();
 	const [model, setModel] = useState<THREE.Object3D | undefined>(undefined);
 	const modelRef = useRef<THREE.Object3D | undefined>(undefined);
 
 	const initRef = useRef(init);
 	const onDoneRef = useRef(onDone);
+	const onErrorRef = useRef(onError);
 	initRef.current = init;
 	onDoneRef.current = onDone;
+	onErrorRef.current = onError;
 
 	const transformRef = useRef({ position, transform });
 	transformRef.current = { position, transform };
@@ -163,7 +170,16 @@ export const useThreeModel = (props: UseThreeModelProps) => {
 			}
 		};
 
-		loader(url, handleLoad);
+		const handleError = (error: unknown) => {
+			if (isCanceled) return;
+			if (typeof onErrorRef.current === 'function') {
+				onErrorRef.current(error);
+			} else {
+				console.error(`useThreeModel: Failed to load "${url}"`, error);
+			}
+		};
+
+		loader(url, handleLoad, handleError);
 
 		return () => {
 			isCanceled = true;

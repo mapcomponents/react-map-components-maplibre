@@ -222,6 +222,12 @@ async function main() {
     cy.visit('/', {
       onBeforeLoad(window) {
         window.__mapcomponentsRuntimeErrors = [];
+        window.__mapcomponentsConsoleErrors = [];
+        const originalConsoleError = window.console.error.bind(window.console);
+        window.console.error = (...args) => {
+          window.__mapcomponentsConsoleErrors.push(args.map(String).join(' '));
+          originalConsoleError(...args);
+        };
         window.addEventListener('error', (event) => {
           window.__mapcomponentsRuntimeErrors.push(event.message || 'Resource load error');
         });
@@ -252,6 +258,7 @@ async function main() {
     });
     cy.window().then((window) => {
       expect(window.__mapcomponentsRuntimeErrors).to.deep.equal([]);
+      expect(window.__mapcomponentsConsoleErrors).to.deep.equal([]);
     });
   });
 });
