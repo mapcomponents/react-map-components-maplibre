@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
-const pnpmVersion = '12.18.0';
+const pnpmVersion = '12.21.0';
 const skipInstall = process.argv.includes('--skip-install');
 const unknownArgs = process.argv.slice(2).filter((arg) => arg !== '--' && arg !== '--skip-install');
 

@@ -30,9 +30,9 @@
 		"@turf/helpers": "^7.4.0",
 		"@turf/turf": "^7.4.0",
 		"lodash": "^4.18.1",
-		"maplibre-gl": "^6.18.0",
-		"ra-data-fakerest": "^5.15.6",
-		"react-admin": "^5.15.6",
+		"maplibre-gl": "^6.19.0",
+		"ra-data-fakerest": "^5.15.7",
+		"react-admin": "^5.15.7",
 		"react-router-dom": "^7.18.5",
 		"wellknown": "^0.5.0"
 	},
