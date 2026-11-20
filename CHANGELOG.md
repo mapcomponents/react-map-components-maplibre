@@ -1,3 +1,34 @@
+## [v.2.0.0] (2026-11-20)
+
+## @mapcomponents/react-maplibre
+
+### Removed
+
+- 8b09b9a: remove the exported `SimpleDataProvider`, which loaded JSON, CSV, or XML from a URL and provided `{ data, setData }`. No replacement is included; this is a breaking change.
+
+## @mapcomponents/deck-gl
+
+### Changed
+
+- 8b09b9a: use `MapLibreOverlay` from `@deck.gl/maplibre` instead of `MapboxOverlay`.
+
+## @mapcomponents/three
+
+### Added
+
+- 8b09b9a: forward model and splat loading errors through `onError`.
+
+### Changed
+
+- 8b09b9a: update custom camera rendering to use MapLibre's custom render input.
+- b3a12a5: fix Storybook build and deployment and Gaussian-splat mesh compatibility.
+
+## @mapcomponents/root
+
+### Changed
+
+- 8b09b9a: update workspace dependencies and CI/build tooling; add local CI validation and an installed-package smoke test.
+
 ## [v.1.8.21] (2026-06-06)
 
 ## @mapcomponents/deck-gl
