@@ -5,5 +5,29 @@
 	"projectType": "application",
 	"tags": [],
 	"// targets": "to see all targets run: nx show project template --web",
-	"targets": {}
+	"targets": {
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"cwd": "apps/template",
+				"command": "tsc --project tsconfig.app.json"
+			}
+		},
+		"build": {
+			"executor": "nx:run-commands",
+			"outputs": ["{workspaceRoot}/dist/apps/template"],
+			"options": {
+				"cwd": "apps/template",
+				"command": "npm run build -- --outDir ../../dist/apps/template --emptyOutDir"
+			}
+		},
+		"preview": {
+			"executor": "nx:run-commands",
+			"dependsOn": ["build"],
+			"options": {
+				"cwd": "apps/template",
+				"command": "vite preview --outDir ../../dist/apps/template"
+			}
+		}
+	}
 }

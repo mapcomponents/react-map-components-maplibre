@@ -1,4 +1,9 @@
 {
+	"nx": {
+		"sync": {
+			"ignoredDependencies": ["react-maplibre"]
+		}
+	},
 	"compilerOptions": {
 		"target": "ES2023",
 		"useDefineForClassFields": true,
@@ -21,6 +26,5 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"include": ["../react-map-components-maplibre/apps/template/src"],
-	"references": [{ "path": "./tsconfig.app.json" }]
+	"include": ["src"]
 }

@@ -59,7 +59,12 @@ const MlGlobeButton = (props: MlGlobeButtonProps) => {
 
 	return (
 		<>
-			<GlobeButtonStyled variant="navtools" onClick={handleClick} style={props.style}>
+			<GlobeButtonStyled
+				variant="navtools"
+				onClick={handleClick}
+				disabled={!mapHook.mapIsReady}
+				style={props.style}
+			>
 				{projection === 'globe' ? (
 					<PublicIcon data-testid="PublicIcon" sx={{ fontSize: { xs: '1.4em', md: '1em' } }} />
 				) : (

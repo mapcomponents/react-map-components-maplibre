@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc --project tsconfig.app.json && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mapcomponents/react-maplibre": "^1.8.20",
+    "@mapcomponents/react-maplibre": "^2.0.0",
     "maplibre-gl": "^6.19.0"
   },
   "peerDependencies": {
