@@ -240,8 +240,8 @@ importers:
   apps/template:
     dependencies:
       '@mapcomponents/react-maplibre':
-        specifier: ^1.8.20
-        version: 1.8.20(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: ^2.0.0
+        version: link:../../packages/react-maplibre
       maplibre-gl:
         specifier: ^6.19.0
         version: 6.19.0(@types/react@19.3.0)(immer@11.2.10)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))

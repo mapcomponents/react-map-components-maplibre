@@ -1,3 +1,4 @@
+const assert = require('node:assert/strict');
 const { spawn, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const http = require('node:http');
@@ -130,35 +131,26 @@ async function main() {
 		appManifest.dependencies['@mapcomponents/react-maplibre'] = `file:${tarballPath}`;
 		fs.writeFileSync(appManifestPath, `${JSON.stringify(appManifest, null, 2)}\n`);
 
-		const viteConfigPath = path.join(appRoot, 'vite.config.ts');
-		const originalViteConfig = fs.readFileSync(viteConfigPath, 'utf8');
-		const viteConfig = originalViteConfig
-			.replace(
-				"cacheDir: '../../node_modules/.vite/apps/template',",
-				"cacheDir: './node_modules/.vite',"
-			)
-			.replace("outDir: '../../dist/apps/template',", "outDir: 'dist',");
-		if (viteConfig === originalViteConfig) {
-			throw new Error(
-				'Could not make the copied template Vite paths local to the temporary project'
-			);
-		}
-		fs.writeFileSync(viteConfigPath, viteConfig);
+		run('npm', ['install', '--registry=https://registry.npmjs.org'], appRoot);
 
-		const tsconfigPath = path.join(appRoot, 'tsconfig.json');
-		const originalTsconfig = fs.readFileSync(tsconfigPath, 'utf8');
-		const tsconfig = originalTsconfig
-			.replace(/"include"\s*:\s*\[[^\]]*\]/, '"include": ["src/**/*.ts", "src/**/*.tsx"]')
-			.replace(/,\s*"references"\s*:\s*\[\s*\{[^}]*\}\s*\]/s, '');
-		if (tsconfig === originalTsconfig || tsconfig.includes('"references"')) {
-			throw new Error('Could not make the copied template TypeScript config standalone');
+		const typeErrorFile = 'src/package-smoke-type-error.ts';
+		write(typeErrorFile, 'export const packageSmokeTypeError: string = 123;\n');
+		try {
+			const result = spawnSync('npm', ['run', 'build'], {
+				cwd: appRoot,
+				encoding: 'utf8',
+			});
+			if (result.error) throw result.error;
+			assert.notEqual(result.status, 0, 'The template build must reject application type errors');
+			assert.match(result.stdout + result.stderr, /TS2322/);
+		} finally {
+			fs.unlinkSync(path.join(appRoot, typeErrorFile));
 		}
-		fs.writeFileSync(tsconfigPath, tsconfig);
 
-		run(
-			'pnpm',
-			['install', '--registry=https://registry.npmjs.org', '--allow-build=core-js'],
-			appRoot
+		run('npm', ['run', 'build'], appRoot);
+		assert.ok(
+			fs.existsSync(path.join(appRoot, 'dist/index.html')),
+			'The template must build into its own dist directory'
 		);
 
 		write(
@@ -265,7 +257,6 @@ async function main() {
 `
 		);
 
-		run('npm', ['run', 'build'], appRoot);
 		await withServer(['--mode', 'development'], await getFreePort());
 		await withServer(['preview'], await getFreePort());
 	} finally {
