@@ -414,7 +414,7 @@ export class GaussianSplattingMesh extends Mesh {
 		return this.updateDataAsync(data);
 	}
 
-	dispose(): void {
+	override dispose(): void {
 		this.covariancesATextureInternal?.dispose();
 		this.covariancesBTextureInternal?.dispose();
 		this.centersTextureInternal?.dispose();

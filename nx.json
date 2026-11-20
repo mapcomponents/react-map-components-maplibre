@@ -95,6 +95,9 @@
 		"build": {
 			"dependsOn": ["^build"]
 		},
+		"build-storybook": {
+			"dependsOn": ["^build"]
+		},
 		"test": {
 			"dependsOn": ["^build"]
 		}
