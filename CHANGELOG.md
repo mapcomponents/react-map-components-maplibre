@@ -1,3 +1,23 @@
+## [v.2.0.1] (2026-11-20)
+
+## @mapcomponents/react-maplibre
+
+### Fixed
+
+- 177349f9: disable `MlGlobeButton` until its map is ready to prevent ignored clicks; synchronize projection tests with the initialized map.
+
+## create-mapcomponents-app
+
+### Fixed
+
+- 177349f9: make the generated template build independently of the monorepo by removing workspace-only TypeScript and Vite paths; use the 2.x MapComponents dependency.
+
+## @mapcomponents/root
+
+### Fixed
+
+- 177349f9: preserve the template's Nx build integration and test the generated app without patching its TypeScript or Vite configuration in the installed-package smoke test.
+
 ## [v.2.0.0] (2026-11-20)
 
 ## @mapcomponents/react-maplibre
