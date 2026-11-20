@@ -80,7 +80,6 @@ export { default as useAddImage } from './hooks/useAddImage/useAddImage';
 // Context
 export { MapComponentsProvider } from './contexts/MapContext';
 export { default as MapContext } from './contexts/MapContext';
-export { default as SimpleDataProvider } from './contexts/SimpleDataProvider';
 export { default as SimpleDataContext } from './contexts/SimpleDataContext';
 export { default as LayerContext } from './contexts/LayerContext';
 export { LayerContextProvider } from './contexts/LayerContext';

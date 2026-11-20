@@ -14,14 +14,14 @@
     "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.10.1",
-    "@docusaurus/preset-classic": "^3.10.1",
+    "@docusaurus/core": "^3.10.2",
+    "@docusaurus/preset-classic": "^3.10.2",
     "@mdx-js/react": "^3.1.1",
-    "@mui/icons-material": "^9.0.1",
-    "@mui/material": "^9.0.1",
+    "@mui/icons-material": "^9.5.0",
+    "@mui/material": "^9.5.0",
     "clsx": "^2.1.1",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "browserslist": {
     "production": [

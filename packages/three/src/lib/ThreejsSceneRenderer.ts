@@ -43,7 +43,7 @@ export default class ThreejsSceneRenderer {
 		labelRenderer.domElement.style.top = '0px';
 		labelRenderer.domElement.style.pointerEvents = 'none';
 
-		map._container.appendChild(labelRenderer.domElement);
+		map.getContainer().appendChild(labelRenderer.domElement);
 		map.on('resize', () => {
 			const { clientWidth, clientHeight } = map.getContainer();
 			labelRenderer.setSize(clientWidth, clientHeight);

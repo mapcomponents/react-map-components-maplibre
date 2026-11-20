@@ -1,4 +1,9 @@
 import { mount } from 'cypress/react';
+import { setWorkerUrl } from 'maplibre-gl';
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+
+setWorkerUrl(maplibreWorkerUrl);
+
 // ***********************************************************
 // This example support/component.ts is processed and
 // loaded automatically before your test files.

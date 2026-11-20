@@ -21,12 +21,13 @@ const mockMapLibreMethods = {
 };
 export { mockMapLibreMethods };
 
-jest.mock('maplibre-gl/dist/maplibre-gl', () => {
-	const originalModule = jest.requireActual('maplibre-gl/dist/maplibre-gl');
-
+jest.mock('maplibre-gl', () => {
 	return {
-		...originalModule,
+		addProtocol: jest.fn(),
+		removeProtocol: jest.fn(),
+		setWorkerUrl: jest.fn(),
 		GeolocateControl: jest.fn(),
+		Marker: jest.fn(),
 		Map: function () {
 			// eslint-disable-next-line @typescript-eslint/no-this-alias
 			const self = this;
@@ -103,6 +104,7 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => {
 			};
 		},
 		NavigationControl: jest.fn(),
+		Popup: jest.fn(),
 	};
 });
 

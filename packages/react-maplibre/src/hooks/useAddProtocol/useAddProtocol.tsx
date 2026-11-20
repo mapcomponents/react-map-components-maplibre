@@ -1,4 +1,5 @@
-import maplibregl, { AddProtocolAction } from 'maplibre-gl';
+import { addProtocol, removeProtocol } from 'maplibre-gl';
+import type { AddProtocolAction } from 'maplibre-gl';
 import { useEffect } from 'react';
 
 export interface useAddProtocolProps {
@@ -21,10 +22,10 @@ const useAddProtocol = (props: useAddProtocolProps) => {
 	useEffect(() => {
 		if (!props.protocol || typeof props.handler !== 'function') return;
 
-		maplibregl.addProtocol(props.protocol, props.handler);
+		addProtocol(props.protocol, props.handler);
 
 		return () => {
-			maplibregl.removeProtocol(props.protocol);
+			removeProtocol(props.protocol);
 		};
 	}, [props]);
 

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import useMap from '../../hooks/useMap';
-import maplibregl from 'maplibre-gl';
+import { Marker } from 'maplibre-gl';
 import { Box, Paper, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -44,14 +44,7 @@ export interface MlMarkerProps {
 	onClose?: () => void;
 	/** Anchor position of the marker relative to its coordinates */
 	anchor?:
-		| 'top'
-		| 'bottom'
-		| 'left'
-		| 'right'
-		| 'top-left'
-		| 'top-right'
-		| 'bottom-left'
-		| 'bottom-right';
+		'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
 
 const getBoxTransform = (anchor: MlMarkerProps['anchor'] = 'top') => {
@@ -129,7 +122,7 @@ const MlMarker = ({
 		waitForLayer: props.insertBeforeLayer,
 	});
 
-	const [marker, setMarker] = useState<maplibregl.Marker | null>(null);
+	const [marker, setMarker] = useState<Marker | null>(null);
 	const [contentWidth, setContentWidth] = useState<number>(300);
 	const container = useRef<HTMLDivElement | null>(null);
 	const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -163,7 +156,7 @@ const MlMarker = ({
 			...props.markerStyle,
 		};
 
-		const maplibreMarker = new maplibregl.Marker({
+		const maplibreMarker = new Marker({
 			element: container.current,
 			anchor: 'center',
 		})

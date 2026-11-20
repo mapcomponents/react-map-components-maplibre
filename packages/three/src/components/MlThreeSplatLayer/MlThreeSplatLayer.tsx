@@ -14,17 +14,17 @@ export type MlThreeSplatLayerProps = Omit<UseThreeModelProps, 'loaders'> & {
 };
 
 const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
-	const { url, position, transform, init, onDone, customLoaders } = props;
+	const { url, position, transform, init, onDone, onError, customLoaders } = props;
 
 	const loaders = useMemo<Record<string, ModelLoader>>(
 		() => ({
-			splat: (url, onLoad) => {
+			splat: (url, onLoad, onError) => {
 				const loader = new SplatLoader();
-				loader.load(url, (splatMesh) => onLoad(splatMesh));
+				loader.load(url, (splatMesh) => onLoad(splatMesh), undefined, onError);
 			},
-			ply: (url, onLoad) => {
+			ply: (url, onLoad, onError) => {
 				const loader = new PlySplatLoader();
-				loader.load(url, (splatMesh) => onLoad(splatMesh));
+				loader.load(url, (splatMesh) => onLoad(splatMesh), undefined, onError);
 			},
 		}),
 		[]
@@ -36,6 +36,7 @@ const MlThreeSplatLayer = (props: MlThreeSplatLayerProps) => {
 		transform,
 		init,
 		onDone,
+		onError,
 		loaders,
 		customLoaders,
 	});

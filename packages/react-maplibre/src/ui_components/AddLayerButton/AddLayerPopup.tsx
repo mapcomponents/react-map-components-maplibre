@@ -18,14 +18,7 @@ export interface AddLayerPopupProps {
 }
 
 type validTypes =
-	| LayerConfig['type']
-	| 'csv'
-	| 'mbtiles'
-	| 'topojson'
-	| 'osm'
-	| 'gpx'
-	| 'kml'
-	| 'tcx';
+	LayerConfig['type'] | 'csv' | 'mbtiles' | 'topojson' | 'osm' | 'gpx' | 'kml' | 'tcx';
 
 const AddLayerPopup = (props: AddLayerPopupProps) => {
 	const [layerConfig, setLayerConfig] = useState<LayerConfig | undefined>(props?.config);

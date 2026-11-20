@@ -7,7 +7,19 @@ const { ExampleConfig }: any = composeStories(stories as any);
 
 describe('MlTerrainLayer Tests', () => {
 	it('Should display Maplibre map with osm bright style', () => {
+		cy.intercept('https://wms.wheregroup.com/tileserver/style/osm-bright.json', {
+			statusCode: 200,
+			headers: { 'access-control-allow-origin': '*' },
+			body: {
+				version: 8,
+				name: 'OSM Bright',
+				sources: {},
+				layers: [{ id: 'landcover-glacier', type: 'background' }],
+			},
+		}).as('osmBrightStyle');
+
 		mount(<ExampleConfig />);
+		cy.wait('@osmBrightStyle').its('response.statusCode').should('equal', 200);
 
 		// Wait for the map to be initialized and verify, that the terrain layer is added to the map
 		cy.window()
